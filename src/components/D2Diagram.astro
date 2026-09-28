@@ -9,6 +9,7 @@ type Props = {
 };
 
 const { title, description, desktop, mobile, caption, className = "" } = Astro.props;
+const hasTranscript = Astro.slots.has("default");
 ---
 <figure class={`d2-diagram ${className}`}>
   <picture>
@@ -21,6 +22,6 @@ const { title, description, desktop, mobile, caption, className = "" } = Astro.p
       {caption && <span>{caption}</span>}
       <a class="d2-diagram__source" href={desktop.replace("/images/diagrams/", "/diagrams/").replace(".svg", ".d2")}>Open the D2 source <span aria-hidden="true">↗</span></a>
     </div>
-    <details class="d2-diagram__transcript"><summary>Read the diagram in text</summary><slot /></details>
+    {hasTranscript && <details class="d2-diagram__transcript"><summary>Read the diagram in text</summary><slot /></details>}
   </figcaption>
 </figure>
