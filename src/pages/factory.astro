@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectRow from "../components/ProjectRow.astro";
 import StatusStamp from "../components/StatusStamp.astro";
+import FactoryPlate from "../components/FactoryPlate.astro";
 import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
 ---
 <BaseLayout
@@ -33,6 +34,8 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
         </div>
         <p>A practical ordering, not a percentage chart. Bubbles is nearest its current finish line; other work is held by quality, qualification, source parity or the physical world.</p>
       </div>
+      <p class="eyebrow">Operating model · a process diagram, not a live telemetry view</p>
+      <FactoryPlate />
       <div class="project-ledger">
         {projects.map((project) => <ProjectRow project={project} />)}
       </div>

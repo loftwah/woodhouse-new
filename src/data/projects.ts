@@ -16,11 +16,25 @@ export type Project = {
   teaches: string;
   remaining: string;
   proofBoundary: string;
+  siteUrl?: string;
+  siteOgTitle?: string;
+  siteOgDescription?: string;
+  siteFavicon?: string;
+  previewImage?: string;
+  previewAlt?: string;
+  previewCaption?: string;
 };
 
 export const projects: Project[] = [
   {
     slug: "bubbles",
+    siteUrl: "https://bubbles.loftwah.com/",
+    previewImage: "https://bubbles.loftwah.com/og-image.png",
+    siteOgTitle: "Bubbles",
+    siteOgDescription: "A faithful, premium web-game re-implementation of a classic bubble shooter. Aim, match, and clear.",
+    siteFavicon: "https://bubbles.loftwah.com/favicon-32.png",
+    previewAlt: "Promotional artwork on the Bubbles site: a glossy, colourful orb in an arcade scene.",
+    previewCaption: "Promotional image from the Bubbles site",
     name: "Bubbles",
     index: "01",
     discipline: "Game systems · deterministic play",
@@ -36,13 +50,20 @@ export const projects: Project[] = [
   },
   {
     slug: "fighter",
+    siteUrl: "https://fighter.loftwah.com/",
+    previewImage: "https://fighter.loftwah.com/assets/generated/promotional/loftwah-fighter-v3-social-2026-08.png",
+    siteOgTitle: "LOFTWAH FIGHTER · Pick Your Fight",
+    siteOgDescription: "Collect Characters, build your squad, and commit Moves on a shared real-time Charge Strip in LOFTWAH FIGHTER, a local-first browser battler.",
+    siteFavicon: "https://fighter.loftwah.com/favicon.svg",
+    previewAlt: "Promotional artwork on the Fighter site: its title beside a lineup of game characters.",
+    previewCaption: "Promotional image from the Fighter site",
     name: "Fighter",
     index: "02",
     discipline: "Game systems · authored journeys",
     state: "A+ convergence",
     stateTone: "amber",
     title: "The game is real. The quality bar is deliberately unreasonable.",
-    summary: "Fighter has grown into a deep game with Story, Tournament, Battle, Arcade, Survival, Daily Challenges and progression. The work now is to make the complete experience earn an A+.",
+    summary: "Fighter includes Story, Tournament, Battle, Arcade, Survival, Daily Challenges and progression. The remaining work is a whole-game review against the A+ bar.",
     why: "A large feature set can hide weak moments. Fighter is a proving ground for the difference between a technically complete game and one that feels authored from first run through the result.",
     current: "Functional maturity is very high. The reported remaining work is whole-game quality convergence, not a greenfield prototype.",
     teaches: "Passing geometry checks does not settle visual hierarchy, role, motion or whether a screen feels right in context.",
@@ -51,14 +72,21 @@ export const projects: Project[] = [
   },
   {
     slug: "shoalshot",
+    siteUrl: "https://shoalshot.loftwah.com/",
+    previewImage: "https://shoalshot.loftwah.com/og-shoalshot-v2.jpg",
+    siteOgTitle: "Shoalshot — Read the tide. Place the shot.",
+    siteOgDescription: "A tactile browser arcade game of visible risk, careful aim and one-more-shot momentum. Play the Tide Pool vertical slice.",
+    siteFavicon: "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg",
+    previewAlt: "Promotional artwork on the SHOALSHOT site: a fishing-game scene viewed from above.",
+    previewCaption: "Promotional image from the SHOALSHOT site",
     name: "SHOALSHOT",
     index: "03",
     discipline: "Game systems · mobile-first presentation",
     state: "Release convergence",
     stateTone: "amber",
     title: "Good software evidence still has to reach the water.",
-    summary: "SHOALSHOT is a richly developed fishing game whose recent work spans presentation, performance, responsive play and qualification.",
-    why: "Its hard problem is not whether the systems exist. It is whether the experience stays convincing across the full journey, on real devices, and at the exact version claimed to be live.",
+    summary: "SHOALSHOT is a fishing game with recent work in presentation, performance, responsive play and qualification.",
+    why: "The remaining question is whether the experience holds up through the full game on real devices, and whether the production claim matches the exact version tested.",
     current: "Functionally mature and increasingly polished. The supplied report calls for another clean production qualification and promotion pass.",
     teaches: "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
     remaining: "Obtain a valid qualification window, qualify the exact candidate, then verify the same state in production.",
@@ -66,6 +94,13 @@ export const projects: Project[] = [
   },
   {
     slug: "protocol-11",
+    siteUrl: "https://protocol11.loftwah.com/",
+    previewImage: "https://protocol11.loftwah.com/og/protocol-11.jpg",
+    siteOgTitle: "Protocol 11 — The table changes every round",
+    siteOgDescription: "A lively local card-table game for two to six seats. Complete eleven protocols, outplay bot rivals, or pass the device around the table.",
+    siteFavicon: "https://protocol11.loftwah.com/runtime/artpacks/late-night-party/brand/logo-square.webp",
+    previewAlt: "Promotional artwork on the Protocol 11 site: a tabletop game and its board.",
+    previewCaption: "Promotional image from the Protocol 11 site",
     name: "Protocol 11",
     index: "04",
     discipline: "Game systems · responsive table play",
@@ -81,6 +116,13 @@ export const projects: Project[] = [
   },
   {
     slug: "max",
+    siteUrl: "https://max.loftwah.com/",
+    previewImage: "https://max.loftwah.com/og-default.png",
+    siteOgTitle: "MAX — Your walker, made smarter.",
+    siteOgDescription: "Keep your walker. Add Max. The connected companion prototype is being built around a simple FIND button, with voice and family support in development.",
+    siteFavicon: "https://max.loftwah.com/brand/max-mark-32.png",
+    previewAlt: "Promotional illustration for MAX, an assistive walker project; it is not a photograph or physical-use evidence.",
+    previewCaption: "Illustration from the MAX site · not physical-use evidence",
     name: "MAX",
     index: "05",
     discipline: "Assistive technology · software and hardware",
@@ -111,6 +153,13 @@ export const projects: Project[] = [
   },
   {
     slug: "loftwahfm",
+    siteUrl: "https://fm.loftwah.com/",
+    previewImage: "https://fm.loftwah.com/heroimage-og.jpg",
+    siteOgTitle: "LoftwahFM | Music, branded radio, and streams",
+    siteOgDescription: "LoftwahFM is the home of Loftwah releases, branded radio segments, custom AI music, and 24/7 streams.",
+    siteFavicon: "https://fm.loftwah.com/favicon-32x32.png",
+    previewAlt: "Promotional artwork on the LoftwahFM site: a bright electric music mark on a dark field.",
+    previewCaption: "Promotional image from the LoftwahFM site",
     name: "LoftwahFM",
     index: "07",
     discipline: "Music platform · listener and venue product",
@@ -126,6 +175,13 @@ export const projects: Project[] = [
   },
   {
     slug: "social-club",
+    siteUrl: "https://club.loftwah.com/",
+    previewImage: "https://club.loftwah.com/og/default.svg",
+    siteOgTitle: "Plans With You",
+    siteOgDescription: "Protected time with a commitment that looks the part — and predictably gets cancelled.",
+    siteFavicon: "https://club.loftwah.com/favicon.svg",
+    previewAlt: "Artwork on the Social Club site, titled Plans With You.",
+    previewCaption: "Artwork from the Social Club site",
     name: "Social Club",
     index: "08",
     discipline: "Hospitality · membership experience",
@@ -133,9 +189,9 @@ export const projects: Project[] = [
     stateTone: "quiet",
     title: "The product works. The intended atmosphere has not arrived yet.",
     summary: "Social Club has a functional foundation for a private-club and hospitality experience.",
-    why: "A working feature set cannot make up for an identity that has not yet been designed. The next meaningful move is a coherent premium visual direction.",
+    why: "A working feature set cannot make up for an identity that has not yet been designed. The next step is to establish a coherent premium visual direction.",
     current: "The larger visual redesign is parked in the supplied report.",
-    teaches: "Product quality includes the feeling a coherent interface creates, not just the work its controls perform.",
+    teaches: "Product quality includes how a coherent interface feels as well as what its controls do.",
     remaining: "Resume the premium private-club, hospitality and editorial design pass when the project is active again.",
     proofBoundary: "The current visual direction is not represented as the intended finished experience."
   }

@@ -1,14 +1,53 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
+import { getSiteMetadata } from "../data/site-metadata";
 const { project, compact = false } = Astro.props;
+const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
+const siteMeta = project.siteUrl ? await getSiteMetadata(project) : null;
+const placeholder = `/og/projects/${project.slug}.svg`;
 ---
-<a class={"project-row" + (compact ? " project-row--compact" : "")} href={"/projects/" + project.slug + "/"}>
-  <span class="project-row__index">{project.index}</span>
-  <span class="project-row__main">
-    <span class="project-row__name">{project.name}</span>
+<article class={"project-row" + (compact ? " project-row--compact" : "")}>
+  <figure class="project-row__preview" data-project-artwork>
+    {siteMeta ? (
+      <a class="project-row__image" href={project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open the ${project.name} site to view its artwork`}>
+        <img
+          src={siteMeta.image}
+          alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
+          width="1200"
+          height="630"
+          loading="lazy"
+          decoding="async"
+          data-fallback-src={placeholder}
+          data-fallback-alt={`${project.name} Woodhouse placeholder. The project site's artwork could not be displayed.`}
+        />
+      </a>
+    ) : (
+      <div class="project-row__image project-row__image--placeholder">
+        <img src={placeholder} alt={`${project.name} Woodhouse placeholder. No public project site or demo is available.`} width="1200" height="630" loading="lazy" decoding="async" />
+      </div>
+    )}
+    <figcaption>
+      <span class="project-row__domainline">
+        {siteMeta?.icon && <img src={siteMeta.icon} width="20" height="20" alt="" aria-hidden="true" decoding="async" data-source-favicon />}
+        <span class="project-row__domain">{domain} · {siteMeta ? <span data-artwork-status>{siteMeta.freshness === "live" ? "SOURCE SITE ARTWORK" : "LAST REVIEWED SOURCE METADATA"}</span> : "WOODHOUSE PLACEHOLDER"}</span>
+      </span>
+      {siteMeta ? <>
+        <strong class="project-row__og-title">{siteMeta.title}</strong>
+        <span class="project-row__og-description">{siteMeta.description}</span>
+        {siteMeta.freshness === "fallback" && <span class="project-row__source-note">The site did not respond during this build; Woodhouse is showing its last reviewed image and metadata.</span>}
+      </> : <>
+        <strong class="project-row__og-title">No source image to display</strong>
+        <span class="project-row__og-description">This project has no public site or demo. The artwork above is clearly marked as a Woodhouse placeholder.</span>
+      </>}
+    </figcaption>
+  </figure>
+  <div class="project-row__record">
+    <span class="project-row__index">{project.index} / 08 · DOSSIER</span>
+    <h3><a class="project-row__name" href={"/projects/" + project.slug + "/"}>{project.name}</a></h3>
     <span class="project-row__discipline">{project.discipline}</span>
-  </span>
-  <span class="project-row__summary">{project.summary}</span>
-  <span class="project-row__state"><StatusStamp tone={project.stateTone} label={project.state} /></span>
-  <span class="project-row__arrow" aria-hidden="true">↗</span>
-</a>
+    <StatusStamp tone={project.stateTone} label={project.state} />
+    <p class="project-row__summary">{project.summary}</p>
+    <p class="project-row__proof"><strong>Next proof</strong>{project.remaining}</p>
+    <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>Read the Woodhouse dossier <span aria-hidden="true">↗</span></a>
+  </div>
+</article>

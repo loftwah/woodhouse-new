@@ -1,0 +1,26 @@
+---
+type Props = {
+  title: string;
+  description: string;
+  desktop: string;
+  mobile: string;
+  caption?: string;
+  className?: string;
+};
+
+const { title, description, desktop, mobile, caption, className = "" } = Astro.props;
+---
+<figure class={`d2-diagram ${className}`}>
+  <picture>
+    <source media="(max-width: 760px)" srcset={mobile} />
+    <img src={desktop} alt={description} loading="lazy" decoding="async" />
+  </picture>
+  <figcaption>
+    <div class="d2-diagram__caption">
+      <strong>{title}</strong>
+      {caption && <span>{caption}</span>}
+      <a class="d2-diagram__source" href={desktop.replace("/images/diagrams/", "/diagrams/").replace(".svg", ".d2")}>Open the D2 source <span aria-hidden="true">↗</span></a>
+    </div>
+    <details class="d2-diagram__transcript"><summary>Read the diagram in text</summary><slot /></details>
+  </figcaption>
+</figure>

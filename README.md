@@ -21,7 +21,7 @@ Use Node 22 and pnpm.
 - Install dependencies with pnpm install --frozen-lockfile.
 - Start the local site with pnpm dev.
 - Build with pnpm build.
-- Deploy with pnpm deploy.
+- Deploy with pnpm run deploy.
 
 The static Astro output is served by a Cloudflare Worker with Static Assets. The Wrangler configuration is the deployment source of truth.
 

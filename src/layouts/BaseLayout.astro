@@ -9,12 +9,13 @@ type Props = {
   description: string;
   path: string;
   image?: string;
+  fallbackImage?: string;
   currentPath?: string;
   type?: "website" | "article";
   publishedAt?: string;
 };
 
-const { title, description, path, image = "/og/woodhouse.jpg", currentPath = path, type = "website", publishedAt } = Astro.props;
+const { title, description, path, image = "/og/woodhouse.jpg", fallbackImage, currentPath = path, type = "website", publishedAt } = Astro.props;
 const fullTitle = title === "WOODHOUSE" ? "WOODHOUSE — The Loftwah Software Factory" : title + " — WOODHOUSE";
 const siteUrl = Astro.site ?? new URL("https://woodhouse.loftwah.com");
 const canonical = new URL(path, siteUrl).toString();
@@ -26,8 +27,8 @@ const imageAlt = title + " social preview for Woodhouse and the Loftwah Software
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#141512" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#171812" />
+    <meta name="color-scheme" content="light" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -42,6 +43,12 @@ const imageAlt = title + " social preview for Woodhouse and the Loftwah Software
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={imageAlt} />
+    {fallbackImage && <>
+      <meta property="og:image" content={new URL(fallbackImage, siteUrl).toString()} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={`${title} local Woodhouse preview fallback`} />
+    </>}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
@@ -51,6 +58,21 @@ const imageAlt = title + " social preview for Woodhouse and the Loftwah Software
     {publishedAt && <meta property="article:published_time" content={publishedAt} />}
     <title>{fullTitle}</title>
     <slot name="head" />
+    <script is:inline>
+      window.addEventListener("error", (event) => {
+        const image = event.target;
+        if (!(image instanceof HTMLImageElement)) return;
+        const fallback = image.dataset.fallbackSrc;
+        if (fallback && image.dataset.fallbackApplied !== "true") {
+          image.dataset.fallbackApplied = "true";
+          image.src = fallback;
+          if (image.dataset.fallbackAlt) image.alt = image.dataset.fallbackAlt;
+          const status = image.closest("[data-project-artwork]")?.querySelector("[data-artwork-status]");
+          if (status) status.textContent = "WOODHOUSE FALLBACK · SOURCE IMAGE DID NOT LOAD";
+        }
+        if (image.hasAttribute("data-source-favicon")) image.hidden = true;
+      }, true);
+    </script>
   </head>
   <body>
     <SiteHeader currentPath={currentPath}><BrandMark slot="brand" /></SiteHeader>

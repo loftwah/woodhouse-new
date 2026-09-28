@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TechnicalPlate from "../../components/TechnicalPlate.astro";
+import D2Diagram from "../../components/D2Diagram.astro";
 import { fieldNotes } from "../../data/field-notes";
 
 export function getStaticPaths() {
@@ -37,10 +38,14 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
         <p class="dossier-hero__summary">{note.deck}</p>
         <p class="origin-hero__source">A founder-supplied retrospective. Sequence is preserved; dates are used only where the public snapshot supports them.</p>
       </div>
-      <figure class="origin-hero__art">
-        <img src="/images/woodhouse-editorial.webp" width="1536" height="1024" alt="An original illustration of a steward at his desk overlooking an active operations floor." fetchpriority="high" decoding="async" />
-        <figcaption><span>WOODHOUSE / THE STEWARD'S OFFICE</span><span>A metaphor for the factory</span></figcaption>
-      </figure>
+      <D2Diagram
+        title="How the work changed"
+        description="A qualitative sequence from early web work to product delivery, cloud platforms, software agents and an evidence-led factory."
+        desktop="/images/diagrams/lineage.svg"
+        mobile="/images/diagrams/lineage-mobile.svg"
+        caption="This account follows changes in responsibility and decision-making, not a precise timeline."
+        className="origin-hero__art"
+      />
     </section>
   ) : (
     <section class="container dossier-hero">
@@ -143,7 +148,7 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
           </div>
           <h2>What the evidence could not see</h2>
           <p>A page can avoid clipping and still put the wrong thing first. A screen can be dimensionally correct while the player has to work to understand what matters, what changed or where to go next.</p>
-          <p>The factory therefore added separate visual forensics, full-journey review and an explicit unslop check. Each asks a human reviewer to identify the focal point, hierarchy, competing elements, context and quality of the complete experience.</p>
+          <p>The factory therefore added three human checks: a visual review of the whole experience, a review of complete journeys and a copy check for generic or machine-written language. Reviewers identify the focal point, hierarchy, competing elements, context and quality of the complete experience.</p>
           <div class="pullquote">Geometry is evidence about geometry. It is not evidence that the product feels finished.<cite>Control added after the failure</cite></div>
           <h2>The lesson travelled</h2>
           <p>The same distinction later mattered in Bubbles: a technically valid interface was still challenged against its actual product bar. The factory's lesson was not to discard automation. It was to stop asking one instrument to certify a different kind of quality.</p>
@@ -165,7 +170,7 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
           <h2>Keep uncertainty visible</h2>
           <p>Archaeology, specification, parity implementation and expansion are separate phases. Gate B remains locked until the reconstruction has enough source-backed coverage to support a claim of parity.</p>
           <div class="callout"><p class="callout__title">Decision</p><p>No procedural fork is approved while the original game's parity gate remains locked.</p></div>
-          <p>The useful output is not only recovered code. It is a visible boundary around what is known, what is missing and what agents are not yet authorised to invent.</p>
+          <p>The factory recovers code and records what is known, what is missing and what agents may not invent.</p>
         </>
       ) : (
         <>

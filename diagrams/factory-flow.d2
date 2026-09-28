@@ -1,0 +1,25 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+intent: {
+  direction: down
+  human: "HUMAN\nIntent · authority" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+  agents: "AGENTS\nBounded work" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+  human -> agents
+}
+
+release: {
+  direction: down
+  qualification: "QUALIFY\nReview exact state" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+  production: "PRODUCTION\nLive version" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+  qualification -> production
+}
+
+reality: {
+  direction: down
+  use: "REAL USE\nPeople · devices" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+}
+
+intent.agents -> release.qualification
+release.production -> reality.use
+reality.use -> intent.human {style.stroke: "#A83A20"; style.stroke-width: 3; style.stroke-dash: 7}

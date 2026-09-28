@@ -1,0 +1,48 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+evidence: {
+  label: "01 / ORIGINAL EVIDENCE"
+  direction: down
+  style.fill: "#FFF9ED"
+  style.stroke: "#B8B4A8"
+  style.stroke-width: 1
+  style.font-color: "#34352F"
+  style.font-size: 23
+  style.bold: true
+  source: "SOURCE\nOriginal game" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+  unknown: "SOURCE GAP\nUnknown stays open" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 3; style.font-color: "#632519"; style.font-size: 20; style.bold: true}
+  source -> unknown {style.stroke: "#A83A20"; style.stroke-width: 3; style.stroke-dash: 7}
+}
+
+reconstruction: {
+  label: "02 / REBUILD AND COMPARE"
+  direction: down
+  style.fill: "#FFF9ED"
+  style.stroke: "#B8B4A8"
+  style.stroke-width: 1
+  style.font-color: "#34352F"
+  style.font-size: 23
+  style.bold: true
+  rebuild: "REBUILD\nMatch the source" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+  parity: "INTEGRATED PARITY\nWhole game compared" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+  rebuild -> parity {style.stroke: "#171812"; style.stroke-width: 3}
+}
+
+gate: {
+  label: "03 / GATE B"
+  direction: down
+  style.fill: "#FFF9ED"
+  style.stroke: "#B8B4A8"
+  style.stroke-width: 1
+  style.font-color: "#34352F"
+  style.font-size: 23
+  style.bold: true
+  gateb: "GATE B · LOCKED\nExpansion waits" {style.fill: "#171812"; style.stroke: "#A83A20"; style.stroke-width: 5; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+  expansion: "EXPANSION\nAfter parity" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  gateb -> expansion {style.stroke: "#171812"; style.stroke-width: 3}
+}
+
+evidence.source -> reconstruction.rebuild {style.stroke: "#171812"; style.stroke-width: 3}
+evidence.unknown -> reconstruction.rebuild {style.stroke: "#A83A20"; style.stroke-width: 3; style.stroke-dash: 7}
+reconstruction.parity -> gate.gateb {style.stroke: "#A83A20"; style.stroke-width: 3}

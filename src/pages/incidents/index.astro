@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TechnicalPlate from "../../components/TechnicalPlate.astro";
 import { fieldNotes } from "../../data/field-notes";
 const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
 ---
@@ -9,7 +10,7 @@ const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Incidents</span></nav>
         <p class="eyebrow">The incident archive</p>
-        <h1 class="page-title">Failures are factory material.</h1>
+        <h1 class="page-title">Make the next run safer.</h1>
       </div>
       <aside class="page-intro__aside"><strong>Belief → failure → evidence → control</strong>An incident is not a footnote. It is the record of what the factory had to change.</aside>
     </div>
@@ -24,6 +25,43 @@ const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
         </article>
       ))}
       <p class="source-note"><strong>Method:</strong> the incident archive publishes reviewed lessons from project work. Private repository records are not reproduced.</p>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="failure-patterns-title">
+    <div class="container">
+      <div class="section-heading">
+        <div><span class="section-index">Factory learning</span><h2 id="failure-patterns-title">Put the lesson in the next check.</h2></div>
+        <p>The incident archive contains one published incident. The pattern register below collects risks in the reviewed project work. These are controls to keep, not six more incident reports.</p>
+      </div>
+      <TechnicalPlate
+        id="failure-loop"
+        number="03"
+        title="Turn a failure into a control"
+        variant="loop"
+        note="The loop is only complete when the changed control is rerun against the same failure class and the result is recorded."
+        steps={[
+          { label: "Observe", title: "See the outcome", detail: "Use the real screen." },
+          { label: "Trace", title: "Bind the claim", detail: "Use the exact revision." },
+          { label: "Contain", title: "Limit the harm", detail: "Stop unsupported action." },
+          { label: "Change", title: "Update the control", detail: "Fix gate or product." },
+          { label: "Recheck", title: "Same failure class", detail: "Prove and record." }
+        ]}
+      />
+      <div class="pattern-register">
+        <div class="pattern-register__intro">
+          <p class="eyebrow">AI and factory failure patterns</p>
+          <h3>A confident answer can still be wrong.</h3>
+          <p>The examples come from recurring project risks. Each one needs a control that survives the next run.</p>
+        </div>
+        <ol class="pattern-list">
+          <li><strong>Confident invention at a source gap</strong><p>Leave unknowns visible. Require a source for each factual claim and keep expansion behind the parity gate.</p></li>
+          <li><strong>Passing checks used to certify feel</strong><p>Tests can miss hierarchy, pacing and play quality. Inspect the screen in the real flow and intended viewport.</p></li>
+          <li><strong>Old proof attached to new code</strong><p>Bind a result to the exact source or release, then repeat the check after a change.</p></li>
+          <li><strong>One percentage hides changed scope</strong><p>Record what the denominator includes and when it changes. Name the work that remains.</p></li>
+          <li><strong>Simulation stands in for people and hardware</strong><p>Software checks cannot prove the device, environment or human path. Observe each physical boundary directly.</p></li>
+          <li><strong>Polish covers missing information</strong><p>Label promotional art, show the product state and next proof, and remove claims the source cannot support.</p></li>
+        </ol>
+      </div>
     </div>
   </section>
 </BaseLayout>

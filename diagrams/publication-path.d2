@@ -1,0 +1,26 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+source: {
+  direction: down
+  site: "PROJECT SITE\nOG image · SEO" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 20; style.bold: true}
+}
+
+build: {
+  direction: down
+  woodhouse: "WOODHOUSE\nReads source tags" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  private: "PRIVATE DATA\nNever published" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 3; style.font-color: "#632519"; style.font-size: 19; style.bold: true}
+  woodhouse -> private {style.stroke: "#A83A20"; style.stroke-dash: 7}
+}
+
+delivery: {
+  direction: down
+  page: "STATIC PAGE\nOriginal image URL" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+  browser: "BROWSER\nLoads source artwork" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  fallback: "LOCAL FALLBACK\nIf source image fails" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  page -> browser
+  browser -> fallback {style.stroke: "#A83A20"; style.stroke-dash: 7}
+}
+
+source.site -> build.woodhouse
+build.woodhouse -> delivery.page

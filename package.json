@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0",
     "deploy": "pnpm build && wrangler deploy",
-    "social-cards": "python3 scripts/render-social-cards.py"
+    "social-cards": "python3 scripts/render-social-cards.py",
+    "diagrams": "bash scripts/render-diagrams.sh"
   },
   "devDependencies": {
     "astro": "7.3.5",

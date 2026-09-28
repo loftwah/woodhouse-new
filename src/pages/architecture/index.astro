@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import FactoryPlate from "../../components/FactoryPlate.astro";
+import D2Diagram from "../../components/D2Diagram.astro";
 ---
 <BaseLayout title="Architecture" description="How Woodhouse turns a reviewed project report into a fast public record without exposing private repository data." path="/architecture/" image="/og/factory.jpg">
   <section class="container page-intro">
@@ -8,26 +8,41 @@ import FactoryPlate from "../../components/FactoryPlate.astro";
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Architecture</span></nav>
         <p class="eyebrow">The system behind the record</p>
-        <h1 class="page-title">A quiet site.<br /><em>Careful machinery.</em></h1>
+        <h1 class="page-title">A public record.<br /><em>Private inputs stay private.</em></h1>
       </div>
       <aside class="page-intro__aside"><strong>Astro · TypeScript · Cloudflare Workers</strong>The public edition is static and small. Its trust boundary is deliberate.</aside>
     </div>
   </section>
   <section class="section">
     <div class="container">
-      <FactoryPlate />
+      <D2Diagram
+        title="How each project's own artwork reaches this page"
+        description="Each product site supplies its page title, search and sharing details, favicon and main image. Woodhouse reads that information during the build and keeps the original image URL in static HTML. The visitor's browser loads the original image. A local Woodhouse SVG appears only when the project has no public site or its source image fails to load."
+        desktop="/images/diagrams/publication-path.svg"
+        mobile="/images/diagrams/publication-path-mobile.svg"
+        caption="Artwork stays at its source. Woodhouse provides a clearly labelled fallback only when the source image is absent."
+        className="publication-plate"
+      >
+        <ol class="diagram-transcript">
+          <li><strong>Project site</strong><span>Owns and serves its page title, search and sharing details, icon, description and main image.</span></li>
+          <li><strong>Woodhouse build</strong><span>Reads the source tags and stores the original image URL in the static page.</span></li>
+          <li><strong>Visitor's browser</strong><span>Loads the original project artwork directly and links to that project's own site.</span></li>
+          <li><strong>Local fallback</strong><span>Appears only when a project has no public site or the original image cannot load.</span></li>
+          <li><strong>Private data</strong><span>Issues, transcripts and credentials stay outside the public build.</span></li>
+        </ol>
+      </D2Diagram>
     </div>
   </section>
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><span class="section-index">The current request path</span><h2>Public pages do not need private credentials.</h2></div>
+        <div><span class="section-index">The current request path</span><h2>The browser gets a finished page.</h2></div>
         <p>GitHub remains authoritative. The current edition publishes a reviewed snapshot because most project repositories are private.</p>
       </div>
       <div class="two-column-list">
         <article class="method-step"><span class="method-step__n">01</span><div><h3>Review the source</h3><p>A human-readable, public-safe project report is the input. Private issue and pull request bodies stay in their repositories.</p></div></article>
         <article class="method-step"><span class="method-step__n">02</span><div><h3>Record the date</h3><p>Every state belongs to the 28 September 2026 snapshot. A later report must be reviewed before the date is moved.</p></div></article>
-        <article class="method-step"><span class="method-step__n">03</span><div><h3>Generate the site</h3><p>Astro builds static HTML, CSS, SVG plates, structured data, Open Graph cards, RSS, sitemap and Agent Reception JSON.</p></div></article>
+        <article class="method-step"><span class="method-step__n">03</span><div><h3>Generate the site</h3><p>Astro builds static pages, styles, diagrams, structured data, page-sharing cards, an RSS feed, a sitemap and the project summary for tools.</p></div></article>
         <article class="method-step"><span class="method-step__n">04</span><div><h3>Serve from the edge</h3><p>Cloudflare Worker Static Assets serves the pages at the requested custom domain. Reading a dossier requires no application account.</p></div></article>
       </div>
     </div>
@@ -36,8 +51,8 @@ import FactoryPlate from "../../components/FactoryPlate.astro";
     <div class="container split-section">
       <div class="split-section__copy">
         <p class="eyebrow">The public boundary</p>
-        <h2>Read broadly.<br />Write carefully.</h2>
-        <p>The public JSON contains project names, reviewed state, summary, next proof and its date. It cannot query private GitHub repositories or run a tool. A future collector must separate raw activity from interpretation and require editorial review before publication.</p>
+        <h2>Visitors can read the report. They cannot change it.</h2>
+        <p>The public JSON contains project names, reviewed state, summary, next proof and review date. It cannot query private GitHub repositories or run a tool. If a collector is added later, a person will review each proposed update before it is published.</p>
         <p>This release has no D1 event store, R2 evidence archive, public chat or private office. Cloud services enter when the product has a concrete need for them.</p>
       </div>
       <div class="factory-plate">

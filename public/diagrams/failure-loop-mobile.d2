@@ -1,0 +1,16 @@
+direction: down
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+belief: "01 · EXPECTATION\nState what should happen" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+attempt: "02 · CHANGE\nMake a reviewable revision" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+observe: "03 · OBSERVE\nInspect the real outcome" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+contain: "04 · CONTAIN\nStop unsupported action" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 2; style.font-color: "#632519"; style.font-size: 22; style.bold: true}
+control: "05 · CONTROL\nChange the gate or product" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
+recheck: "06 · RECHECK\nRepeat the failure class" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+
+belief -> attempt {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
+attempt -> observe {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
+observe -> contain {style.stroke: "#A83A20"; style.stroke-width: 2; style.font-size: 15}
+contain -> control {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
+control -> recheck {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
+recheck -> belief {style.stroke: "#E34E31"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 15}

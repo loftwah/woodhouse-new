@@ -1,0 +1,15 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+catalogue: "DEAN APPROVES\nArtwork · rights · price · spend caps" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+customer: "CUSTOMER\nPlaces an order" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+checkout: "CHECKOUT\nPayment provider" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 18; style.bold: true}
+event: "PAYMENT EVENT\nProvider is authoritative" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+verify: "VERIFY AND DEDUPLICATE\nPayment · order · event ID" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 17; style.bold: true}
+ledger: "ORDER LEDGER\nState · limits · evidence" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+fulfilment: "PRINTFUL ORDER\nOnly within approved policy" {style.fill: "#A83A20"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 18; style.bold: true}
+shipment: "SHIPMENT EVENT\nUpdate ledger · tell customer" {style.fill: "#D6EC6B"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+
+catalogue -> ledger {style.stroke: "#835500"; style.stroke-width: 3; style.stroke-dash: 7}
+customer -> checkout -> event -> verify -> ledger -> fulfilment -> shipment
+fulfilment -> ledger {style.stroke: "#4665E8"; style.stroke-width: 2; style.stroke-dash: 6}

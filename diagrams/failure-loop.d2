@@ -1,0 +1,27 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+intent: {
+  direction: down
+  expectation: "01 · EXPECT\nSet the result" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  change: "02 · CHANGE\nReviewable revision" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
+  expectation -> change
+}
+
+inspect: {
+  direction: down
+  observe: "03 · OBSERVE\nSee actual result" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  contain: "04 · CONTAIN\nStop unsupported work" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 3; style.font-color: "#632519"; style.font-size: 21; style.bold: true}
+  observe -> contain
+}
+
+learn: {
+  direction: down
+  control: "05 · CONTROL\nFix the cause" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  recheck: "06 · RECHECK\nRepeat same failure" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
+  control -> recheck
+}
+
+intent.change -> inspect.observe
+inspect.contain -> learn.control
+learn.recheck -> intent.expectation {style.stroke: "#A83A20"; style.stroke-width: 3; style.stroke-dash: 7}

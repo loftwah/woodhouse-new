@@ -1,0 +1,29 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+inputs: {
+  direction: down
+  event: "EVENT\nMilestone · release · failure" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+  schedule: "SCHEDULED CHECK\nHealth · dependencies · docs" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+  production: "PRODUCTION READ\nObserve · do not mutate" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+}
+
+proposal: "AGENT PROPOSAL\nDraft · issue · changeset" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+checks: "POLICY AND QUALIFICATION\nScope · rights · cost · rollback" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 18; style.bold: true}
+decision: "DEAN\nReview this exact candidate" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+
+outcomes: {
+  direction: down
+  approve: "APPROVE\nRun within policy" {style.fill: "#D6EC6B"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 17; style.bold: true}
+  return: "RETURN\nRevise, then qualify again" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 17; style.bold: true}
+  reject: "REJECT\nRecord the decision; stop" {style.fill: "#A83A20"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 17; style.bold: true}
+}
+
+inputs.event -> proposal
+inputs.schedule -> proposal
+inputs.production -> proposal {style.stroke-dash: 7}
+proposal -> checks
+checks -> decision
+decision -> outcomes.approve {style.stroke: "#24623E"; style.stroke-width: 3}
+decision -> outcomes.return {style.stroke: "#835500"; style.stroke-width: 3}
+decision -> outcomes.reject {style.stroke: "#A33425"; style.stroke-width: 3}

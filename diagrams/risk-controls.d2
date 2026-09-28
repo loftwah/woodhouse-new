@@ -1,0 +1,26 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+practice: {
+  direction: down
+  c00: "00 · THROWAWAY\nDiscard cheaply" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  c01: "01 · EXPERIMENT\nKeep useful learning" {style.fill: "#D6EC6B"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  c00 -> c01
+}
+
+product: {
+  direction: down
+  c02: "02 · PROJECT\nProtect work" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  c03: "03 · PRODUCT\nProve real use" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  c02 -> c03
+}
+
+stakes: {
+  direction: down
+  c04: "04 · COMMERCIAL\nProtect money" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+  c05: "05 · TREASURED\nRestrict access" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+  c04 -> c05 {style.stroke: "#A83A20"; style.stroke-width: 3}
+}
+
+practice.c01 -> product.c02
+product.c03 -> stakes.c04

@@ -1,0 +1,28 @@
+direction: right
+vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+
+work: {
+  direction: down
+  observed: "01 · OBSERVED\nSource examined" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 20; style.bold: true}
+  implemented: "02 · IMPLEMENTED\nChange exists" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 20; style.bold: true}
+  observed -> implemented
+}
+
+candidate: {
+  direction: down
+  merged: "03 · MERGED\nRevision integrated" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 20; style.bold: true}
+  qualified: "04 · QUALIFIED\nGates pass" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 20; style.bold: true}
+  merged -> qualified
+}
+
+realworld: {
+  direction: down
+  production: "05 · PRODUCTION\nLive version observed" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 20; style.bold: true}
+  accepted: "OWNER ACCEPTED\nHuman signs off" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 19; style.bold: true}
+  physical: "PHYSICAL PROOF\nDevice · place · person" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 3; style.font-color: "#632519"; style.font-size: 19; style.bold: true}
+  production -> accepted
+  production -> physical {style.stroke: "#A83A20"; style.stroke-width: 3; style.stroke-dash: 7}
+}
+
+work.implemented -> candidate.merged
+candidate.qualified -> realworld.production

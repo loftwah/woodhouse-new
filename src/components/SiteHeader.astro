@@ -1,7 +1,9 @@
 ---
+import SiteSearch from "./SiteSearch.astro";
 const { currentPath = "/" } = Astro.props;
 const links = [
   { label: "Factory", href: "/factory/" },
+  { label: "Projects", href: "/projects/" },
   { label: "Dispatches", href: "/dispatches/" },
   { label: "Doctrine", href: "/doctrine/" },
   { label: "Dean", href: "/dean/" },
@@ -13,21 +15,44 @@ const links = [
 <header class="site-header">
   <div class="site-header__inner">
     <div class="site-header__brand"><slot name="brand" /></div>
-    <nav class="desktop-nav" aria-label="Main navigation">
-      {links.map((link) => (
-        <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
-      ))}
-    </nav>
-    <details class="mobile-index">
-      <summary aria-label="Open the house index"><span>Index</span><span class="mobile-index__glyph" aria-hidden="true">＋</span></summary>
-      <nav aria-label="House index">
+    <div class="site-header__tools">
+      <nav class="desktop-nav" aria-label="Main navigation">
         {links.map((link) => (
           <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
         ))}
-        <a href="/architecture/">Architecture</a>
-        <a href="/conversations/">Conversations</a>
-        <a href="/contact/">Contact</a>
       </nav>
-    </details>
+      <SiteSearch />
+      <details class="mobile-index">
+        <summary aria-label="Open the house index"><span>Index</span><span class="mobile-index__glyph" aria-hidden="true">＋</span></summary>
+        <nav aria-label="House index">
+          <button class="mobile-index__search" type="button" data-site-search-open aria-haspopup="dialog" aria-controls="woodhouse-search" aria-keyshortcuts="Meta+K Control+K">Search Woodhouse <kbd>⌘ K</kbd></button>
+          {links.map((link) => (
+            <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+          ))}
+          <a href="/architecture/">Architecture</a>
+          <a href="/conversations/">Conversations</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+      </details>
+    </div>
   </div>
 </header>
+
+<style>
+  .mobile-index__search {
+    display: none;
+    width: 100%;
+    min-height: 3rem;
+    padding: .7rem .8rem;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 250, 240, .19);
+    color: #fffaf0;
+    background: transparent;
+    font: 700 .75rem/1.3 var(--sans);
+    text-align: left;
+    cursor: pointer;
+  }
+  .mobile-index__search kbd { float: right; font: 600 .62rem/1.3 var(--mono); }
+  .mobile-index__search:hover, .mobile-index__search:focus-visible { color: #171812; background: var(--acid); }
+  @media (max-width: 760px) { .mobile-index__search { display: block; } }
+</style>
