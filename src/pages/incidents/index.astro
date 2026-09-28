@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fieldNotes } from "../../data/field-notes";
+const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
+---
+<BaseLayout title="Incidents and factory learning" description="Incidents show what the factory believed, what failed, which control changed and what the lesson means elsewhere." path="/incidents/" image="/og/the-tests-passed.jpg">
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Incidents</span></nav>
+        <p class="eyebrow">The incident archive</p>
+        <h1 class="page-title">Failures are factory material.</h1>
+      </div>
+      <aside class="page-intro__aside"><strong>Belief → failure → evidence → control</strong>An incident is not a footnote. It is the record of what the factory had to change.</aside>
+    </div>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      {incidents.map((note, index) => (
+        <article class="ledger-note">
+          <span class="ledger-note__index">INCIDENT / 0{index + 1}</span>
+          <div class="ledger-note__main"><a href={"/dispatches/" + note.slug + "/"}><h2 class="ledger-note__title">{note.title}</h2></a><p class="ledger-note__deck">{note.deck}</p></div>
+          <div class="ledger-note__side"><strong>{note.kind}</strong>{note.date}<br />{note.readingTime}</div>
+        </article>
+      ))}
+      <p class="source-note"><strong>Method:</strong> the incident archive publishes reviewed lessons from project work. Private repository records are not reproduced.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+{
+  "name": "woodhouse",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "deploy": "pnpm build && wrangler deploy",
+    "social-cards": "python3 scripts/render-social-cards.py"
+  },
+  "devDependencies": {
+    "astro": "7.3.5",
+    "typescript": "^5.8.3",
+    "wrangler": "4.142.0"
+  }
+}

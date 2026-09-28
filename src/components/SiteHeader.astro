@@ -1,0 +1,33 @@
+---
+const { currentPath = "/" } = Astro.props;
+const links = [
+  { label: "Factory", href: "/factory/" },
+  { label: "Dispatches", href: "/dispatches/" },
+  { label: "Doctrine", href: "/doctrine/" },
+  { label: "Dean", href: "/dean/" },
+  { label: "Agent Reception", href: "/agents/" }
+];
+---
+
+<a class="skip-link" href="#main-content">Skip to the work</a>
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="site-header__brand"><slot name="brand" /></div>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      {links.map((link) => (
+        <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+      ))}
+    </nav>
+    <details class="mobile-index">
+      <summary aria-label="Open the house index"><span>Index</span><span class="mobile-index__glyph" aria-hidden="true">＋</span></summary>
+      <nav aria-label="House index">
+        {links.map((link) => (
+          <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+        ))}
+        <a href="/architecture/">Architecture</a>
+        <a href="/conversations/">Conversations</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+    </details>
+  </div>
+</header>

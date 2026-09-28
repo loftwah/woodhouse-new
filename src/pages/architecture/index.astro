@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FactoryPlate from "../../components/FactoryPlate.astro";
+---
+<BaseLayout title="Architecture" description="How Woodhouse turns a reviewed project report into a fast public record without exposing private repository data." path="/architecture/" image="/og/factory.jpg">
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Architecture</span></nav>
+        <p class="eyebrow">The system behind the record</p>
+        <h1 class="page-title">A quiet site.<br /><em>Careful machinery.</em></h1>
+      </div>
+      <aside class="page-intro__aside"><strong>Astro · TypeScript · Cloudflare Workers</strong>The public edition is static and small. Its trust boundary is deliberate.</aside>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <FactoryPlate />
+    </div>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      <div class="section-heading">
+        <div><span class="section-index">The current request path</span><h2>Public pages do not need private credentials.</h2></div>
+        <p>GitHub remains authoritative. The current edition publishes a reviewed snapshot because most project repositories are private.</p>
+      </div>
+      <div class="two-column-list">
+        <article class="method-step"><span class="method-step__n">01</span><div><h3>Review the source</h3><p>A human-readable, public-safe project report is the input. Private issue and pull request bodies stay in their repositories.</p></div></article>
+        <article class="method-step"><span class="method-step__n">02</span><div><h3>Record the date</h3><p>Every state belongs to the 28 September 2026 snapshot. A later report must be reviewed before the date is moved.</p></div></article>
+        <article class="method-step"><span class="method-step__n">03</span><div><h3>Generate the site</h3><p>Astro builds static HTML, CSS, SVG plates, structured data, Open Graph cards, RSS, sitemap and Agent Reception JSON.</p></div></article>
+        <article class="method-step"><span class="method-step__n">04</span><div><h3>Serve from the edge</h3><p>Cloudflare Worker Static Assets serves the pages at the requested custom domain. Reading a dossier requires no application account.</p></div></article>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container split-section">
+      <div class="split-section__copy">
+        <p class="eyebrow">The public boundary</p>
+        <h2>Read broadly.<br />Write carefully.</h2>
+        <p>The public JSON contains project names, reviewed state, summary, next proof and its date. It cannot query private GitHub repositories or run a tool. A future collector must separate raw activity from interpretation and require editorial review before publication.</p>
+        <p>This release has no D1 event store, R2 evidence archive, public chat or private office. Cloud services enter when the product has a concrete need for them.</p>
+      </div>
+      <div class="factory-plate">
+        <div class="factory-plate__heading"><span>DATA BOUNDARY</span><span>PUBLIC READ MODEL</span></div>
+        <div class="agent-entry" style="grid-template-columns:1fr;gap:1.1rem;margin-top:1rem;padding:1.2rem">
+          <div><span class="agent-entry__label">Allowed into public build</span><p>Reviewed summary · state · next proof · review date</p></div>
+          <div><span class="agent-entry__label">Stays outside public build</span><p>Issue bodies · private transcripts · repository credentials · unreviewed agent interpretation</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

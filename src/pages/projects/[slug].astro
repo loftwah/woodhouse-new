@@ -1,0 +1,82 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import StatusStamp from "../../components/StatusStamp.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
+import { projects, reviewDateLabel, snapshotSource } from "../../data/projects";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const nextProjects = projects.filter((item) => item.slug !== project.slug).slice(0, 3);
+---
+<BaseLayout
+  title={project.name}
+  description={project.summary}
+  path={"/projects/" + project.slug + "/"}
+  currentPath="/factory/"
+  image={"/og/projects/" + project.slug + ".jpg"}
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: project.name,
+      applicationCategory: project.discipline,
+      description: project.summary,
+      url: "https://woodhouse.loftwah.com/projects/" + project.slug + "/",
+      author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
+      dateModified: "2026-09-28"
+    })}
+  />
+  <section class="container dossier-hero">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/factory/">Factory</a><span>/</span><span>{project.name}</span></nav>
+      <p class="eyebrow">{project.discipline}</p>
+      <h1>{project.title}</h1>
+      <p class="dossier-hero__summary">{project.summary}</p>
+    </div>
+    <aside class="dossier-hero__side">
+      <StatusStamp tone={project.stateTone} label={project.state} />
+      <dl>
+        <dt>Record</dt><dd>{project.index} / 08</dd>
+        <dt>Reviewed</dt><dd>{reviewDateLabel}</dd>
+        <dt>Source</dt><dd>Operator-reviewed snapshot</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      <h2>Why this project matters</h2>
+      <p>{project.why}</p>
+      <div class="pullquote">{project.teaches}<cite>What the factory is learning</cite></div>
+      <h2>Where the work stands</h2>
+      <p>{project.current}</p>
+      <div class="callout">
+        <p class="callout__title">The next useful proof</p>
+        <p>{project.remaining}</p>
+      </div>
+      <h2>What this record does not claim</h2>
+      <p>{project.proofBoundary}</p>
+      <p>Project state is specific to the reviewed report. An implementation, merge, test result, production deployment and physical observation are separate claims; one does not automatically prove the next.</p>
+    </article>
+    <aside class="margin-rail" aria-label="Project notes">
+      <div class="margin-note"><span class="margin-note__label">House record</span><p><strong>{project.name}</strong><br />{snapshotSource}</p></div>
+      <div class="margin-note"><span class="margin-note__label">State</span><p>{project.state}. Read with the review date, not as a live status promise.</p></div>
+      <div class="margin-note"><span class="margin-note__label">Public source policy</span><p>Private issue and pull request bodies are not copied onto this site. Ask Dean for access to project-specific material.</p></div>
+      <div class="margin-note"><span class="margin-note__label">Related work</span><p><a href="/incidents/">Incidents</a><br /><a href="/doctrine/">Factory doctrine</a></p></div>
+    </aside>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      <div class="section-heading">
+        <div><span class="section-index">More from the floor</span><h2>Other work in view.</h2></div>
+        <a class="text-link section-heading__action" href="/factory/">See all eight projects <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="project-ledger">{nextProjects.map((item) => <ProjectRow project={item} compact={true} />)}</div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,22 @@
+# Agent instructions
+
+Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
+
+## Evidence
+
+- Keep every project state tied to an explicit review date.
+- Do not infer a production or physical claim from a passing test.
+- The private repository bodies and private conversations are not public content.
+- Do not add issue counts, percentages, event totals or timestamps unless they have a source in the public-safe snapshot.
+
+## Implementation
+
+- Prefer static Astro pages and native browser behaviour.
+- Preserve meaningful HTML, keyboard operation, visible focus and reduced-motion preferences.
+- Add page-specific title, description, canonical and Open Graph metadata.
+- Keep generated source documents in this repository untouched unless the operator explicitly asks to publish them.
+- Run the production build before deployment. Inspect representative pages at phone and desktop sizes after visual changes.
+
+## Publishing
+
+Deployment targets the Cloudflare Worker configured in wrangler.jsonc. A production deploy changes woodhouse.loftwah.com; report the deployed version and verify the live hostname before claiming completion.

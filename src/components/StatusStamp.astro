@@ -1,0 +1,10 @@
+---
+const { tone = "quiet", label, note } = Astro.props;
+---
+<span class={"status-stamp status-stamp--" + tone}>
+  <span class="status-stamp__symbol" aria-hidden="true"></span>
+  <span>
+    <span class="status-stamp__label">{label}</span>
+    {note && <span class="status-stamp__note">{note}</span>}
+  </span>
+</span>

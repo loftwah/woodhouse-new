@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Conversations" description="Selected conversations about building Woodhouse, running software agents and deciding what evidence belongs in public." path="/conversations/" image="/og/factory.jpg">
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Conversations</span></nav>
+        <p class="eyebrow">The office record</p>
+        <h1 class="page-title">A conversation can become a post.</h1>
+      </div>
+      <aside class="page-intro__aside"><strong>Private by default · published by review</strong>The working conversation is not a public stream. A human selects, edits, checks and approves what becomes part of the record.</aside>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container container--reading">
+      <div class="conversation">
+        <span class="conversation__speaker">Dean</span>
+        <p class="conversation__text">It would need to just watch the Git repos for activity and explain what is going on?</p>
+      </div>
+      <div class="conversation conversation--woodhouse">
+        <span class="conversation__speaker">Woodhouse</span>
+        <p class="conversation__text">Git tells Woodhouse what happened. The agent explains why it matters.</p>
+      </div>
+      <div class="conversation">
+        <span class="conversation__speaker">Dean</span>
+        <p class="conversation__text">It needs unslop from the start.</p>
+      </div>
+      <div class="conversation conversation--woodhouse">
+        <span class="conversation__speaker">Woodhouse</span>
+        <p class="conversation__text">UNSLOP cannot be a cleanup ticket for Woodhouse. It has to be constitutional law from commit one.</p>
+      </div>
+      <div class="callout">
+        <p class="callout__title">Publication boundary</p>
+        <p>These short excerpts were selected from the Woodhouse planning conversation supplied for this site. The full conversation stays private. This release has no public chat or automatic publishing endpoint.</p>
+      </div>
+      <a class="text-link" href="/dispatches/">Read the edited dispatches <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+</BaseLayout>

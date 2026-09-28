@@ -1,0 +1,60 @@
+---
+import "../styles/global.css";
+import BrandMark from "../components/BrandMark.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+type Props = {
+  title: string;
+  description: string;
+  path: string;
+  image?: string;
+  currentPath?: string;
+  type?: "website" | "article";
+  publishedAt?: string;
+};
+
+const { title, description, path, image = "/og/woodhouse.jpg", currentPath = path, type = "website", publishedAt } = Astro.props;
+const fullTitle = title === "WOODHOUSE" ? "WOODHOUSE — The Loftwah Software Factory" : title + " — WOODHOUSE";
+const siteUrl = Astro.site ?? new URL("https://woodhouse.loftwah.com");
+const canonical = new URL(path, siteUrl).toString();
+const imageUrl = new URL(image, siteUrl).toString();
+const imageAlt = title + " social preview for Woodhouse and the Loftwah Software Factory";
+---
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#141512" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="Woodhouse dispatches" href="/rss.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="WOODHOUSE" />
+    <meta property="og:locale" content="en_AU" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <meta name="author" content="Dean Lofts" />
+    {publishedAt && <meta property="article:published_time" content={publishedAt} />}
+    <title>{fullTitle}</title>
+    <slot name="head" />
+  </head>
+  <body>
+    <SiteHeader currentPath={currentPath}><BrandMark slot="brand" /></SiteHeader>
+    <main id="main-content"><slot /></main>
+    <SiteFooter />
+  </body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://woodhouse.loftwah.com/sitemap.xml

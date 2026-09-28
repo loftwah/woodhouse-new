@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
+import { projects, reviewDateLabel } from "../../data/projects";
+---
+<BaseLayout title="Project dossiers" description="Eight project dossiers from the Loftwah Software Factory. Each explains the product, the current read and the evidence still required." path="/projects/" image="/og/factory.jpg">
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Projects</span></nav>
+        <p class="eyebrow">Project dossiers</p>
+        <h1 class="page-title">Products as they are.</h1>
+      </div>
+      <aside class="page-intro__aside"><strong>Eight dossiers · reviewed {reviewDateLabel}</strong>Each page tells you why the product exists, what it teaches the factory and what its current state still does not prove.</aside>
+    </div>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      <div class="project-ledger">{projects.map((project) => <ProjectRow project={project} />)}</div>
+      <p class="source-note"><strong>Source:</strong> operator-reviewed public summary. Private repository material remains private.</p>
+    </div>
+  </section>
+</BaseLayout>

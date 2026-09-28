@@ -1,0 +1,154 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectRow from "../components/ProjectRow.astro";
+import FactoryPlate from "../components/FactoryPlate.astro";
+import StatusStamp from "../components/StatusStamp.astro";
+import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
+import { fieldNotes, originStory } from "../data/field-notes";
+
+const firstNote = fieldNotes[0];
+---
+<BaseLayout
+  title="WOODHOUSE"
+  description="An observable software factory: eight real projects, a workforce of software agents, one human operator, and a paper trail for what survived."
+  path="/"
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: "WOODHOUSE",
+      alternateName: "The Loftwah Software Factory",
+      url: "https://woodhouse.loftwah.com/",
+      author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
+      description: "An evidence-led public observatory for the Loftwah software factory."
+    })}
+  />
+  <section class="container hero" aria-labelledby="home-title">
+    <div class="hero__copy">
+      <p class="eyebrow">An observable software factory</p>
+      <h1 class="display-title" id="home-title">Keeping the <em>machinery</em> running.</h1>
+      <p class="lede">Eight products. A workforce of software agents. One human operator.</p>
+      <div class="link-group">
+        <a class="text-link" href="/factory/">See the factory <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/dean/">Start with the story <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero__note">
+        <span class="hero__seal" aria-hidden="true">W</span>
+        <span><strong>Woodhouse keeps the record.</strong> What was built, what was proved, and what reality still has to settle.</span>
+      </div>
+    </div>
+    <figure class="hero__art">
+      <img src="/images/woodhouse-editorial.webp" width="1536" height="1024" alt="An original editorial illustration of a composed steward in an archive looking out to a busy operations floor." fetchpriority="high" decoding="async" />
+      <span class="hero__corner">Office copy · 01</span>
+      <figcaption class="hero__art-caption">
+        <span>WOODHOUSE / THE STEWARD'S OFFICE</span>
+        <span>A visual metaphor, not a live view</span>
+      </figcaption>
+    </figure>
+  </section>
+  <div class="container hero__lower" aria-label="Snapshot details">
+    <span><strong>PORTFOLIO READOUT</strong> · reviewed {reviewDateLabel}</span>
+    <span>GITHUB REMAINS THE ENGINEERING SOURCE OF TRUTH</span>
+  </div>
+
+  <section class="section paper-section" aria-labelledby="floor-title">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="section-index">01 / The factory floor</span>
+          <h2 id="floor-title">Different work.<br />Different finish lines.</h2>
+        </div>
+        <p>Eight projects enter the same factory and expose different limits. This is a dated operator-reviewed readout, not a stream of invented Git events.</p>
+        <a class="text-link section-heading__action" href="/factory/">Enter the factory <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="snapshot-band">
+        <div class="snapshot-band__label">
+          <span>What the record says</span>
+          <span>Source: {snapshotSource}</span>
+        </div>
+        <div class="snapshot-band__text">
+          “Does it work?” is increasingly not the problem.
+          <small>The hard question is whether it feels finished, survives qualification, reaches production or works in the physical world.</small>
+        </div>
+      </div>
+      <div class="project-ledger" aria-label="Eight project snapshots">
+        {projects.map((project) => <ProjectRow project={project} />)}
+      </div>
+      <p class="source-note"><strong>Snapshot boundary:</strong> reviewed 28 September 2026. The underlying GitHub repositories are private; public entries summarise the shareable factory report and do not expose issue or pull request content.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="proof-title">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="section-index">02 / The operating model</span>
+          <h2 id="proof-title">A green build is one kind of proof.</h2>
+        </div>
+        <p>The factory keeps implementation, review, production and physical use as separate observations. The evidence comes back to the record.</p>
+      </div>
+      <FactoryPlate />
+      <p class="link-group" style="margin-top:1.5rem">
+        <a class="text-link" href="/architecture/">Read the architecture <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/doctrine/">Read the doctrine <span aria-hidden="true">↗</span></a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--compact" aria-labelledby="incident-title">
+    <div class="container dark-story">
+      <div class="dark-story__content">
+        <p class="eyebrow">A factory incident</p>
+        <h2 id="incident-title">{firstNote.title}</h2>
+        <p>{firstNote.deck}</p>
+        <a class="text-link" href={"/dispatches/" + firstNote.slug + "/"}>Read what changed <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="origin-title">
+    <div class="container split-section split-section--reverse">
+      <figure class="image-plate">
+        <img src="/images/woodhouse-editorial.webp" width="1536" height="1024" alt="Woodhouse's illustrated archive and operations floor." loading="lazy" decoding="async" />
+        <figcaption class="image-plate__caption"><span>Origin record</span><span>Illustrative scene</span></figcaption>
+      </figure>
+      <div class="split-section__copy">
+        <p class="eyebrow">A note from Dean</p>
+        <h2 id="origin-title">{originStory.title}</h2>
+        <p>{originStory.introduction}</p>
+        <p>The tools changed. APIs, cloud services, infrastructure, models, skills and agents started doing more of the work. Then the work spread across several products at once.</p>
+        <a class="text-link" href="/dean/">Meet the operator <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section paper-section" aria-labelledby="agent-title">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="section-index">03 / Agent Reception</span>
+          <h2 id="agent-title">A public entrance for people and agents.</h2>
+        </div>
+        <p>Project facts are available as a bounded, dated record. The endpoint is designed to answer factual questions without handing an agent private access or write authority.</p>
+        <a class="text-link section-heading__action" href="/agents/">Report to Agent Reception <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="agent-entry">
+        <div>
+          <span class="agent-entry__label">A useful first question</span>
+          <p class="serif" style="font-size:1.55rem">Is Pirates ready for its procedural fork?</p>
+          <p>No. The 28 September report says the parity gate is still locked. Expansion is waiting for source-backed reconstruction.</p>
+        </div>
+        <pre class="agent-entry__code" aria-label="Public machine-readable project fact">GET /agents/facts.json
+
+pirates
+state: Gate B locked
+parity-first: true
+procedural-fork: not approved
+reviewed: 2026-09-28</pre>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

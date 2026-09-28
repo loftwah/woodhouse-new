@@ -1,0 +1,101 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { fieldNotes } from "../../data/field-notes";
+
+export function getStaticPaths() {
+  return fieldNotes.map((note) => ({ params: { slug: note.slug }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const isTests = note.slug === "the-tests-passed";
+const image = isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-what-the-source-proves" ? "/og/dispatches/a-gate-for-what-the-source-proves.jpg" : "/og/dispatches/software-is-not-the-walker.jpg";
+---
+<BaseLayout title={note.title} description={note.deck} path={"/dispatches/" + note.slug + "/"} currentPath="/dispatches/" type="article" publishedAt="2026-09-28" image={image}>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: note.title,
+      description: note.deck,
+      datePublished: "2026-09-28",
+      dateModified: "2026-09-28",
+      author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
+      publisher: { "@type": "Organization", name: "WOODHOUSE", url: "https://woodhouse.loftwah.com/" },
+      mainEntityOfPage: "https://woodhouse.loftwah.com/dispatches/" + note.slug + "/"
+    })}
+  />
+  <section class="container dossier-hero">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
+      <p class="eyebrow">{note.kind} · {note.date}</p>
+      <h1>{note.title}</h1>
+      <p class="dossier-hero__summary">{note.deck}</p>
+    </div>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">{note.readingTime}</span>
+      <dl><dt>Filed under</dt><dd>Factory learning</dd><dt>Source state</dt><dd>Reviewed summary</dd></dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      {isTests ? (
+        <>
+          <p class="eyebrow">Fighter · visual qualification</p>
+          <p><strong>{note.lead}</strong></p>
+          <h2>The wrong question was easy to test.</h2>
+          <p>The checks asked whether the interface fit its container and whether its geometry remained inside expected bounds. It did. The result still lacked hierarchy and compositional intent.</p>
+          <p>That was not a failure of the geometry checks. They answered the question they were built to answer. The mistake was treating their answer as a complete product judgement.</p>
+          <div class="callout">
+            <p class="callout__title">Initial belief</p>
+            <p>Responsive geometry and screenshot checks would prevent the important visual failures.</p>
+          </div>
+          <h2>What the evidence could not see</h2>
+          <p>A page can avoid clipping and still put the wrong thing first. A screen can be dimensionally correct while the player has to work to understand what matters, what changed or where to go next.</p>
+          <p>The factory therefore added separate visual forensics, full-journey review and an explicit unslop check. Each asks a human reviewer to identify the focal point, hierarchy, competing elements, context and quality of the complete experience.</p>
+          <div class="pullquote">Geometry is evidence about geometry. It is not evidence that the product feels finished.<cite>Control added after the failure</cite></div>
+          <h2>The lesson travelled</h2>
+          <p>The same distinction later mattered in Bubbles: a technically valid interface was still challenged against its actual product bar. The factory's lesson was not to discard automation. It was to stop asking one instrument to certify a different kind of quality.</p>
+          <h2>What changed in the factory</h2>
+          <ul>
+            <li>Visual review became a named qualification stage.</li>
+            <li>Whole journeys are reviewed with the implementation context in view.</li>
+            <li>Responsive quality is judged at the states and orientations where people use the product.</li>
+            <li>Passing a machine check is reported only as the claim that check supports.</li>
+          </ul>
+        </>
+      ) : note.slug === "a-gate-for-what-the-source-proves" ? (
+        <>
+          <p class="eyebrow">Pirates · source reconstruction</p>
+          <p><strong>{note.lead}</strong></p>
+          <h2>A plausible rule can still be invented.</h2>
+          <p>Master of the Secret Sea is being reconstructed from original source evidence. The project is not yet free to treat an interesting idea as part of the original game.</p>
+          <p>That constraint matters because agentic systems can make missing details look finished. A familiar genre convention may be plausible, coherent and wrong for this specific source.</p>
+          <h2>Keep uncertainty visible</h2>
+          <p>Archaeology, specification, parity implementation and expansion are separate phases. Gate B remains locked until the reconstruction has enough source-backed coverage to support a claim of parity.</p>
+          <div class="callout"><p class="callout__title">Decision</p><p>No procedural fork is approved while the original game's parity gate remains locked.</p></div>
+          <p>The useful output is not only recovered code. It is a visible boundary around what is known, what is missing and what agents are not yet authorised to invent.</p>
+        </>
+      ) : (
+        <>
+          <p class="eyebrow">MAX · software and physical proof</p>
+          <p><strong>{note.lead}</strong></p>
+          <h2>Where the proof stops</h2>
+          <p>MAX has a serious software foundation: pairing, a gateway, offline behaviour and remote FIND and STOP flows. Those capabilities matter. They do not put a Raspberry Pi next to the actual walker or show that a person can use its controls in their environment.</p>
+          <p>The physical path still needs the actual device, microphone, speaker, lights, network conditions and a real human interaction. A simulation, browser run or mocked response cannot replace that observation.</p>
+          <div class="pullquote">Name the missing observation. Do not borrow confidence from software tests.<cite>Physical qualification boundary</cite></div>
+          <h2>What remains unproven</h2>
+          <p>The supplied factory report leaves real-walker FIND and the wider physical hardware path open. The public status keeps that limit visible instead of translating strong software maturity into a claim about a physical product.</p>
+        </>
+      )}
+      <div class="callout"><p class="callout__title">Record boundary</p><p>Project repositories are private. This public article contains the reviewed lesson, not private issue text or unpublished engineering records.</p></div>
+      <p><a href="/dispatches/">Back to the dispatches</a></p>
+    </article>
+    <aside class="margin-rail" aria-label="Article notes">
+      <div class="margin-note"><span class="margin-note__label">What changed</span><p><strong>{note.lesson}</strong></p></div>
+      <div class="margin-note"><span class="margin-note__label">Why publish it</span><p>The failure becomes useful when the factory records the missing control and later checks where it applies.</p></div>
+      <div class="margin-note"><span class="margin-note__label">Reviewed</span><p>28 September 2026<br />Operator-reviewed summary</p></div>
+    </aside>
+  </section>
+</BaseLayout>

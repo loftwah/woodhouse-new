@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+<BaseLayout title="Factory doctrine" description="The operating doctrine for the Loftwah Software Factory: move quickly while mistakes are cheap, add controls as value and consequence rise." path="/doctrine/" image="/og/factory.jpg">
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Doctrine</span></nav>
+        <p class="eyebrow">How the factory behaves</p>
+        <h1 class="page-title">Autonomy has a perimeter.</h1>
+      </div>
+      <aside class="page-intro__aside"><strong>Move quickly while mistakes are cheap.</strong>Add controls as value and consequence rise. A capable agent is not an unlimited authority.</aside>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="section-heading">
+        <div><span class="section-index">Value classes</span><h2>Process should scale with what can be lost.</h2></div>
+        <p>A throwaway experiment should not carry commercial process. Customer money, private data, valuable work and physical safety change the required evidence.</p>
+      </div>
+      <div class="value-ladder">
+        <article class="value-step"><span class="value-step__number">CLASS 00</span><h3>Throwaway</h3><p>Find out if an idea works. Replace or discard it cheaply.</p></article>
+        <article class="value-step"><span class="value-step__number">CLASS 01</span><h3>Experiment</h3><p>Preserve useful learning. Add only the checks that help the experiment.</p></article>
+        <article class="value-step"><span class="value-step__number">CLASS 02</span><h3>Project</h3><p>Keep the repository, architecture, repeatable build and issue history trustworthy.</p></article>
+        <article class="value-step"><span class="value-step__number">CLASS 03</span><h3>Product</h3><p>Real users, production, accessibility, security and observable release quality matter.</p></article>
+        <article class="value-step"><span class="value-step__number">CLASS 04</span><h3>Commercial</h3><p>Money and commitments require stronger idempotency, rollback, support and approval.</p></article>
+        <article class="value-step"><span class="value-step__number">CLASS 05</span><h3>Treasured</h3><p>Irreplaceable work or meaningful consequences need narrow authority and proven recovery.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="section paper-section">
+    <div class="container split-section">
+      <div class="split-section__copy">
+        <p class="eyebrow">Authority</p>
+        <h2>Observe more than you mutate.</h2>
+        <p>Agents can collect production evidence and propose a change. A consequential action needs a prepared diff, rationale, qualification and rollback path. Human approval is a durable system state, not a chat prompt an agent can ignore.</p>
+      </div>
+      <div class="two-column-list">
+        <article class="method-step"><span class="method-step__n">01</span><div><h3>Observe</h3><p>Read permitted state and source material.</p></div></article>
+        <article class="method-step"><span class="method-step__n">02</span><div><h3>Recommend</h3><p>Explain what changed and what remains uncertain.</p></div></article>
+        <article class="method-step"><span class="method-step__n">03</span><div><h3>Prepare</h3><p>Produce a reviewable change with evidence and rollback.</p></div></article>
+        <article class="method-step"><span class="method-step__n">04</span><div><h3>Execute by policy</h3><p>Bounded sandbox work may proceed; financial, destructive and physical decisions keep a human gate.</p></div></article>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container container--reading prose">
+      <h2>Failures teach the factory.</h2>
+      <p>Contain the failure. Record it. Investigate why the controls missed it. Fix the product, then decide whether the failure belongs in a regression check, release gate, policy, architecture or documentation.</p>
+      <p>A recurring failure should become harder to repeat because the factory learned from it. Public claims remain smaller than the evidence supporting them.</p>
+      <div class="pullquote">A good factory is not maximally autonomous. A good factory knows where autonomy is appropriate.<cite>Core doctrine</cite></div>
+    </div>
+  </section>
+</BaseLayout>
