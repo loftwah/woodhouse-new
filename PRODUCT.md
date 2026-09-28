@@ -14,7 +14,7 @@ Claims have a source and a review date. Implementation, qualification, productio
 
 ## First release
 
-The first release publishes the factory story, eight project dossiers, one flagship engineering incident, the operating doctrine, architecture and Agent Reception. It uses a dated, human-reviewed public snapshot because the project repositories are private. It does not claim to be a live feed or expose private issue contents.
+The first release publishes the founding essay, eight project dossiers, engineering incidents, the operating doctrine, architecture and Agent Reception. It uses a dated, reviewed public snapshot because the project repositories are private. It does not claim to be a live feed or expose private issue contents.
 
 ## Explicitly out of scope for this release
 

@@ -25,7 +25,7 @@ export const projects: Project[] = [
     index: "01",
     discipline: "Game systems · deterministic play",
     state: "Final convergence",
-    stateTone: "green",
+    stateTone: "amber",
     title: "A game can work and still be waiting to feel finished.",
     summary: "Bubbles is a polished arcade game with a serious deterministic core. Its remaining work is concentrated in the connected product experience, broad browser qualification and owner acceptance.",
     why: "The interesting question has changed. Bubbles no longer needs to prove that a game exists; it needs to prove that the whole product holds together across screens, states and actual play.",
@@ -65,21 +65,6 @@ export const projects: Project[] = [
     proofBoundary: "The supplied report does not claim that the current head is production verified."
   },
   {
-    slug: "pirates",
-    name: "Pirates",
-    index: "06",
-    discipline: "Game reconstruction · source archaeology",
-    state: "Gate B locked",
-    stateTone: "red",
-    title: "Reconstruct the original game before asking the agents to invent another one.",
-    summary: "Pirates is rebuilding Master of the Secret Sea from original source evidence. The work is deliberately parity-first.",
-    why: "Generative systems are good at filling gaps. In a reconstruction, that instinct can quietly turn an unknown into a confident invention. The project has to know what the source proves and what it does not.",
-    current: "Deep in archaeology and parity work. The original game must pass its gate before procedural or endless expansion begins.",
-    teaches: "Sometimes the most intelligent agent action is to stop at the edge of the evidence.",
-    remaining: "Complete the missing archaeology families and integrated parity before opening the expansion path.",
-    proofBoundary: "Gate B remains locked in the supplied snapshot. No procedural fork is represented as approved."
-  },
-  {
     slug: "protocol-11",
     name: "Protocol 11",
     index: "04",
@@ -108,6 +93,21 @@ export const projects: Project[] = [
     teaches: "Software proof and physical proof are different kinds of evidence.",
     remaining: "Build and qualify the real Pi and walker path with the actual microphone, speaker, lights and human use.",
     proofBoundary: "The supplied report explicitly leaves the physical product unproven."
+  },
+  {
+    slug: "pirates",
+    name: "Pirates",
+    index: "06",
+    discipline: "Game reconstruction · source archaeology",
+    state: "Gate B locked",
+    stateTone: "red",
+    title: "Reconstruct the original game before asking the agents to invent another one.",
+    summary: "Pirates is rebuilding Master of the Secret Sea from original source evidence. The work is deliberately parity-first.",
+    why: "Generative systems are good at filling gaps. In a reconstruction, that instinct can quietly turn an unknown into a confident invention. The project has to know what the source proves and what it does not.",
+    current: "Deep in archaeology and parity work. The original game must pass its gate before procedural or endless expansion begins.",
+    teaches: "Sometimes the most intelligent agent action is to stop at the edge of the evidence.",
+    remaining: "Complete the missing archaeology families and integrated parity before opening the expansion path.",
+    proofBoundary: "Gate B remains locked in the supplied snapshot. No procedural fork is represented as approved."
   },
   {
     slug: "loftwahfm",

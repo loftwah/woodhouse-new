@@ -7,6 +7,8 @@
 - https://woodhouse.loftwah.com/agents/
 - https://woodhouse.loftwah.com/agents/facts.json
 - https://woodhouse.loftwah.com/factory/
+- https://woodhouse.loftwah.com/dispatches/i-didnt-mean-to-build-a-software-factory/
+- https://woodhouse.loftwah.com/dispatches/
 - https://woodhouse.loftwah.com/architecture/
 - https://woodhouse.loftwah.com/doctrine/
 - https://woodhouse.loftwah.com/dean/

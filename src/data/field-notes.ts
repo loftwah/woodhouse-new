@@ -1,5 +1,15 @@
 export const fieldNotes = [
   {
+    slug: "i-didnt-mean-to-build-a-software-factory",
+    kind: "Founding essay",
+    title: "I Didn't Mean to Build a Software Factory",
+    deck: "A practical habit of composing tools grew into a system for directing software agents, checking their work and seeing what survived in the real world.",
+    date: "28 September 2026",
+    readingTime: "6 minute read",
+    lead: "The work began with making software. It grew into a system for deciding what the software had actually proved.",
+    lesson: "The factory exists to make intent, work and evidence legible across products."
+  },
+  {
     slug: "the-tests-passed",
     kind: "Factory incident",
     title: "The tests passed. The game still looked wrong.",

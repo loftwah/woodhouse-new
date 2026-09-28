@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import TechnicalPlate from "../../components/TechnicalPlate.astro";
 import { fieldNotes } from "../../data/field-notes";
 
 export function getStaticPaths() {
@@ -7,8 +8,9 @@ export function getStaticPaths() {
 }
 
 const { note } = Astro.props;
+const isOrigin = note.slug === "i-didnt-mean-to-build-a-software-factory";
 const isTests = note.slug === "the-tests-passed";
-const image = isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-what-the-source-proves" ? "/og/dispatches/a-gate-for-what-the-source-proves.jpg" : "/og/dispatches/software-is-not-the-walker.jpg";
+const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factory.jpg" : isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-what-the-source-proves" ? "/og/dispatches/a-gate-for-what-the-source-proves.jpg" : "/og/dispatches/software-is-not-the-walker.jpg";
 ---
 <BaseLayout title={note.title} description={note.deck} path={"/dispatches/" + note.slug + "/"} currentPath="/dispatches/" type="article" publishedAt="2026-09-28" image={image}>
   <script
@@ -26,21 +28,109 @@ const image = isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-w
       mainEntityOfPage: "https://woodhouse.loftwah.com/dispatches/" + note.slug + "/"
     })}
   />
-  <section class="container dossier-hero">
-    <div>
-      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
-      <p class="eyebrow">{note.kind} · {note.date}</p>
-      <h1>{note.title}</h1>
-      <p class="dossier-hero__summary">{note.deck}</p>
-    </div>
-    <aside class="dossier-hero__side">
-      <span class="micro-label">{note.readingTime}</span>
-      <dl><dt>Filed under</dt><dd>Factory learning</dd><dt>Source state</dt><dd>Reviewed summary</dd></dl>
-    </aside>
-  </section>
+  {isOrigin ? (
+    <section class="container origin-hero">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
+        <p class="eyebrow">{note.kind} · {note.date} · {note.readingTime}</p>
+        <h1>{note.title}</h1>
+        <p class="dossier-hero__summary">{note.deck}</p>
+        <p class="origin-hero__source">A founder-supplied retrospective. Sequence is preserved; dates are used only where the public snapshot supports them.</p>
+      </div>
+      <figure class="origin-hero__art">
+        <img src="/images/woodhouse-editorial.webp" width="1536" height="1024" alt="An original illustration of a steward at his desk overlooking an active operations floor." fetchpriority="high" decoding="async" />
+        <figcaption><span>WOODHOUSE / THE STEWARD'S OFFICE</span><span>A metaphor for the factory</span></figcaption>
+      </figure>
+    </section>
+  ) : (
+    <section class="container dossier-hero">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
+        <p class="eyebrow">{note.kind} · {note.date}</p>
+        <h1>{note.title}</h1>
+        <p class="dossier-hero__summary">{note.deck}</p>
+      </div>
+      <aside class="dossier-hero__side">
+        <span class="micro-label">{note.readingTime}</span>
+        <dl><dt>Filed under</dt><dd>Factory learning</dd><dt>Source state</dt><dd>Reviewed summary</dd></dl>
+      </aside>
+    </section>
+  )}
   <section class="container dossier-grid">
     <article class="prose">
-      {isTests ? (
+      {isOrigin ? (
+        <>
+          <p class="eyebrow">A public account of the work</p>
+          <p><strong>{note.lead}</strong></p>
+          <p>The first part of the story was ordinary web work: joining useful tools together instead of rebuilding each capability. A reverse proxy, a VPS and WordPress plugins formed a practical stack. The skill that lasted was composition: knowing which piece was good at a job and how to make the pieces cooperate.</p>
+          <p>The tools changed. Plugin-shaped capability gave way to APIs, cloud services, infrastructure, models, skills and agents. Development moved from assembling a website toward operating the platform and its delivery system.</p>
+
+          <h2>When one pair became a working system</h2>
+          <p>A coding agent first changes how one person writes software. Multiple agents change the shape of the work. Requests need to become bounded tasks; people and agents need clear ownership; competing changes need review; and release evidence must be attached to the exact state being claimed.</p>
+          <p>The supplied founding account describes agents working across several products for extended stretches. At that point, writing code was no longer the only bottleneck. The operator needed to see which work had started, what had changed, what had survived review and what still needed proof.</p>
+          <TechnicalPlate
+            id="factory-shift"
+            number="01"
+            title="From pair programming to factory"
+            variant="flow"
+            note="The operator supplies intent and remains accountable while bounded work moves through agents, review, qualification and production."
+            steps={[
+              { label: "Request", title: "Human intent", detail: "Goal and authority" },
+              { label: "Queue", title: "Durable work", detail: "Scope and owner" },
+              { label: "Workers", title: "Parallel agents", detail: "Bounded work" },
+              { label: "Review", title: "Independent check", detail: "Review the revision" },
+              { label: "Release", title: "Production proof", detail: "Observe the release" }
+            ]}
+          />
+
+          <h2>A backlog is useful when it tells the truth</h2>
+          <p>Delegation creates a new coordination problem. The task list has to show what the work means, who can act on it and which evidence closes it. Repository state and review records then provide a durable account that survives a chat ending or an agent stopping.</p>
+          <p>A green check cannot inherit authority it was never designed to provide. A build can establish that code compiled. Review can challenge a proposed change. Qualification can test a candidate. Only a live observation can support a production claim, and only the owner can decide whether the result meets the intended bar.</p>
+          <p>The system therefore needs to preserve several kinds of state instead of compressing them into a single percentage or a vague “done.”</p>
+
+          <h2>Failures become useful when the control changes</h2>
+          <p>The factory's projects expose different edges of the same problem. In Fighter, geometry checks passed while the interface still missed its visual purpose. Pirates has to account for original source rules before agents invent an expansion. MAX cannot use a browser test as evidence that a person can find the real walker. Bubbles can be functionally mature while browser and owner acceptance remain open.</p>
+          <p>These are not interchangeable bugs. Each needs its own evidence. The general pattern is to record what was expected, observe what happened, name the class of failure and put a control where it can catch the same mistake again.</p>
+          <TechnicalPlate
+            id="failure-loop"
+            number="02"
+            title="The failure loop"
+            variant="loop"
+            note="A lesson only becomes a factory control when it changes how later work is reviewed or qualified."
+            steps={[
+              { label: "Belief", title: "State the model", detail: "Record the expectation" },
+              { label: "Attempt", title: "Make the change", detail: "Implement against the model" },
+              { label: "Reality", title: "Observe the result", detail: "Check the real behaviour" },
+              { label: "Incident", title: "Name the miss", detail: "Identify what escaped" },
+              { label: "Control", title: "Change the system", detail: "Prevent repeat failures" }
+            ]}
+          />
+
+          <h2>Trust is a ladder, not a label</h2>
+          <p>The operating model separates what was observed from what was implemented, merged, qualified, verified in production and accepted by the owner. A project may have strong evidence at one rung and an open question on another.</p>
+          <TechnicalPlate
+            id="evidence-ladder"
+            number="03"
+            title="The evidence ladder"
+            variant="ladder"
+            note="Each step is a new claim. A result lower on the ladder does not automatically establish the steps above it."
+            steps={[
+              { label: "Observed", title: "A source or behaviour was inspected", detail: "Evidence has a place and a time" },
+              { label: "Implemented", title: "The requested change exists", detail: "The code or product state changed" },
+              { label: "Merged", title: "The reviewed change entered its branch", detail: "The integrated revision is identifiable" },
+              { label: "Qualified", title: "Required checks passed on the candidate", detail: "The named release gates were satisfied" },
+              { label: "Production verified", title: "The deployed version was observed", detail: "The live system matched the claim" },
+              { label: "Owner accepted", title: "The result met its intended bar", detail: "The accountable human confirmed it" }
+            ]}
+          />
+
+          <h2>Why Woodhouse exists</h2>
+          <p>Once the factory had several active products, a public record became another useful system: a place to see what each project is for, what its reviewed status means and which evidence is still missing. Woodhouse is designed for people and for agents that need a machine-readable account with clear limits.</p>
+          <p>This first release is a dated, operator-supplied portfolio snapshot. It does not connect to private repositories, stream GitHub activity or publish working conversations. Agent Reception is read-only. Those boundaries keep the public record useful without pretending it is live telemetry.</p>
+          <div class="callout"><p class="callout__title">Source and chronology</p><p>This article paraphrases the founder's supplied professional account and uses current project examples from the shareable factory report dated 28 September 2026. The account gives a sequence of changes rather than a fully dated timeline; dates and direct conversation quotations have been omitted where they are not part of the public record.</p></div>
+          <p><a href="/factory/">See how the projects currently stand</a>, or read the <a href="/doctrine/">factory doctrine</a> that governs their evidence.</p>
+        </>
+      ) : isTests ? (
         <>
           <p class="eyebrow">Fighter · visual qualification</p>
           <p><strong>{note.lead}</strong></p>
@@ -89,13 +179,13 @@ const image = isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-w
           <p>The supplied factory report leaves real-walker FIND and the wider physical hardware path open. The public status keeps that limit visible instead of translating strong software maturity into a claim about a physical product.</p>
         </>
       )}
-      <div class="callout"><p class="callout__title">Record boundary</p><p>Project repositories are private. This public article contains the reviewed lesson, not private issue text or unpublished engineering records.</p></div>
+      <div class="callout"><p class="callout__title">Record boundary</p><p>Some source repositories are private. This publication does not reproduce raw issue text or private conversation transcripts.</p></div>
       <p><a href="/dispatches/">Back to the dispatches</a></p>
     </article>
     <aside class="margin-rail" aria-label="Article notes">
-      <div class="margin-note"><span class="margin-note__label">What changed</span><p><strong>{note.lesson}</strong></p></div>
-      <div class="margin-note"><span class="margin-note__label">Why publish it</span><p>The failure becomes useful when the factory records the missing control and later checks where it applies.</p></div>
-      <div class="margin-note"><span class="margin-note__label">Reviewed</span><p>28 September 2026<br />Operator-reviewed summary</p></div>
+      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "The thesis" : "What changed"}</span><p><strong>{note.lesson}</strong></p></div>
+      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Source boundary" : "Why publish it"}</span><p>{isOrigin ? "Founder-supplied professional retrospective. Sequence is qualitative where a date is not sourced." : "The failure becomes useful when the factory records the missing control and later checks where it applies."}</p></div>
+      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Project examples" : "Reviewed"}</span><p>{isOrigin ? "Dated public-safe project snapshot · 28 September 2026" : <>28 September 2026<br />Operator-reviewed summary</>}</p></div>
     </aside>
   </section>
 </BaseLayout>

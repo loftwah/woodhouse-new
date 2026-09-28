@@ -9,6 +9,7 @@ CARDS = {
     "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Eight projects. One human operator."),
     "factory": ("THE FACTORY FLOOR", "Eight projects.", "Eight kinds of proof."),
     "dean": ("THE HUMAN OPERATOR", "Dean Lofts.", "Systems that turn intent into shipped software."),
+    "dispatches/i-didnt-mean-to-build-a-software-factory": ("FOUNDING ESSAY", "I Didn't Mean to Build a Software Factory", "How agents, evidence and real products became one system."),
     "the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong."),
     "dispatches/a-gate-for-what-the-source-proves": ("PIRATES · FIELD NOTE", "Parity before invention.", "The Gate B reconstruction stays locked until the source supports it."),
     "dispatches/software-is-not-the-walker": ("MAX · FIELD NOTE", "Software is not the walker.", "A green build cannot prove the real-world FIND path."),
