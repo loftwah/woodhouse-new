@@ -2,55 +2,51 @@
 
 ## Direction
 
-Woodhouse is an evidence-led public journal for a small software factory. The visual language is a bright engineering annual printed in a short run: real product artwork beside clear copy, diagrams that explain an actual system, and a visible record of what was reviewed.
+Woodhouse is an evidence-led public journal for a small software factory. Its world is a dark technical canvas with vivid, authored diagrams and the artwork each product publishes about itself. The result should feel like a confident engineering publication, not a dashboard or a generated portfolio template.
 
-The previous Steward's Office direction is retired. Do not bring back the staged steward image, dark-club palette, theme switch, faux archival material or office metaphors.
+The site is dark by design on every device. Do not follow the operating-system appearance, read or write a theme preference, offer a theme switch, or show a light surface between navigations.
 
 ## Colour and material
 
-- Warm paper `#FAF4E6` is the page ground; near-black `#171812` carries body text and the navigation.
-- Acid yellow `#E6F451` signals Woodhouse and marks a live focus or featured region.
-- Signal orange `#F2744A` highlights a decision, handoff or warning.
-- Electric blue `#4665E8` is used for a related path or diagram layer.
-- State colours remain labelled and readable without colour: qualified green, held amber and unresolved red.
-- Use flat ink and paper, crisp rules and occasional offset shadows on a featured artifact. No gradients, glass, soft dashboard tiles or nested cards.
-- The site is a single stable light canvas. Do not read or write a theme preference or change the palette after first paint. The dark navigation is part of the same composition, not an alternate theme.
+- Ink `#080D19` is the page ground. Raised surfaces stay within the same dark family: `#0F182A`, `#111A2C`, and `#17233A`.
+- Acid lime `#E9FF49` marks human direction and the Woodhouse identity.
+- Cyan `#79D8FF`, cobalt `#647DFF`, and coral `#FF746A` distinguish real system paths and evidence boundaries. A colour must never carry a state without a text label.
+- Use crisp edges, strong contrast and restrained light. No paper backgrounds, gradients for decoration, glass, soft dashboard tiles, or nests of boxes.
 
 ## Typography
 
-- Display titles use a heavy system grotesk with tight tracking and useful line breaks.
+- Display titles use locally hosted Bricolage Grotesque with deliberate line breaks and tight tracking.
 - Body copy uses the platform sans-serif at a readable measure of roughly 65–75 characters.
-- Monospace is limited to identifiers, source labels and compact technical detail.
-- Sentence case carries prose. Uppercase labels are small and short.
+- Monospace is reserved for identifiers, source labels and compact technical detail.
+- Sentence case carries prose. Uppercase is for short diagram labels, never whole paragraphs.
 
 ## Composition
 
-- The homepage opens on the real Open Graph artwork from product sites. The images remain at their source URL and keep their original crop and aspect ratio.
-- Project records pair the upstream image, favicon, title and description with the dated Woodhouse summary. Art is labelled as promotional; it is not release evidence.
-- If there is no public source image, a project-specific Woodhouse SVG fills the frame and names why. If an upstream image fails in the browser, replace it with that same local fallback and update the caption. On social previews, list a local fallback OG image after the source image.
-- Pages use large type, asymmetrical columns, image-led sections and decisive horizontal rules. Do not solve every section with a new box.
-- A diagram earns its area by explaining a real system or control. Keep its editable `.d2` source beside the checked-in SVG; ship a phone composition as well as the wider version. Provide an image description and a readable text transcript.
+- The homepage identifies the human operator and coding agents, then places the eight-project D2 network in the first view. The work map and the release/evidence flow are distinct diagrams because they explain different things.
+- Project artwork is fetched from each project's own published page metadata and shown from the source image URL at its original 1200×630 aspect ratio. Titles, descriptions, favicons and links identify the source. Do not copy or recreate source-site OG artwork as Woodhouse art.
+- Source-page metadata is read during the Woodhouse build; the image itself stays at the source URL. A source-site update appears on the next Woodhouse build (and an image-file update at a stable source URL is served directly).
+- If a project has no public site, or its source image fails in the browser, show a clearly labelled project-specific Woodhouse SVG. Never imitate missing product artwork as if it came from that project.
+- A diagram earns its area by explaining a real system, boundary or decision. Keep its editable `.d2` source beside the checked-in SVG, ship a phone composition as well as the wider version, and provide a meaningful image description and readable text transcript.
+- Pages use large type, asymmetrical composition and decisive horizontal rules. Do not solve every section with another box.
 
 ## Interaction and states
 
-- Keep the header and page colours fixed from first paint. There is no theme toggle.
-- Source images link to their project site. If one fails, the browser swaps to the local project SVG once and changes the source caption to explain the failure.
-- A missing public site uses the local SVG from the outset. Never imitate missing product artwork as if it came from that project.
-- Favicons are pulled from their source site and hidden if they fail.
-- Controls have visible focus, working keyboard and touch behavior, and clear labels. Hover adds detail but is never required.
+- Keep page colours fixed from first paint. Dark mode has no transition and no toggle.
+- Source artwork links to its project site. If an image fails, swap to the marked local project SVG and change the caption. Favicons hide cleanly if the source icon fails.
+- Diagram transcripts use native `<details>` and `<summary>`; do not render the control when there is no transcript.
 - The Woodhouse index is searchable from the keyboard with `⌘K` or `Ctrl+K`, and from the phone's House Index.
-- Motion is small and purposeful. Respect `prefers-reduced-motion` and do not animate every section into view.
+- Motion is small and purposeful. Respect `prefers-reduced-motion`; do not animate every section into view.
 
 ## Responsive and accessibility rules
 
-- Design the narrow reading order deliberately. Keep source images at their original aspect ratio and show the phone-specific D2 SVG at phone widths.
-- Nothing depends on hover. Do not hide diagrams on phones; include a text transcript for detail and screen readers.
-- Preserve readable contrast, visible focus, useful image text and link purpose. Keep the page free of horizontal overflow.
+- Design the narrow reading order deliberately. Keep source artwork at its original aspect ratio and show the phone-specific D2 SVG at phone widths.
+- Nothing depends on hover. Do not hide diagrams on phones; include a text transcript for detail and assistive technology.
+- Preserve readable contrast, visible focus, useful image text and clear link purpose. Keep the page free of horizontal overflow.
 
 ## Review
 
-1. Can a new visitor tell what the factory does in one viewport?
-2. Are the visible project images actually served by the project sites?
+1. Can a new visitor tell who runs the factory, what agents do and how many products it spans?
+2. Are project cards displaying the artwork and metadata their own sites publish?
 3. Does every absent or failed image explain its fallback?
-4. Does each diagram explain a real boundary, process or decision?
-5. Does every claim stay inside the evidence and its review date?
+4. Does each diagram explain a real boundary, process or decision and work on a phone?
+5. Does every project claim stay inside its source and review date?

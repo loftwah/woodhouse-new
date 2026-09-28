@@ -2,23 +2,23 @@ direction: down
 vars: {
   d2-config: {
     layout-engine: elk
-    theme-id: 0
+    theme-id: 201
   }
 }
 
 human: Human operator {
   label: "HUMAN OPERATOR\nIntent · authority"
-  style.fill: "#E6F451"
-  style.stroke: "#171812"
+  style.fill: "#E9FF49"
+  style.stroke: "#6E819F"
   style.stroke-width: 2
-  style.font-color: "#171812"
+  style.font-color: "#111A2C"
   style.font-size: 20
   style.bold: true
 }
 agents: Software agents {
   label: "SOFTWARE AGENTS\nBounded work"
-  style.fill: "#4665E8"
-  style.stroke: "#171812"
+  style.fill: "#647DFF"
+  style.stroke: "#6E819F"
   style.stroke-width: 2
   style.font-color: "#FFFFFF"
   style.font-size: 20
@@ -26,17 +26,17 @@ agents: Software agents {
 }
 qualification: Qualification {
   label: "QUALIFICATION\nChecks · review · exact state"
-  style.fill: "#F2744A"
-  style.stroke: "#171812"
+  style.fill: "#FF746A"
+  style.stroke: "#6E819F"
   style.stroke-width: 2
-  style.font-color: "#171812"
+  style.font-color: "#111A2C"
   style.font-size: 20
   style.bold: true
 }
 release: Production release {
   label: "PRODUCTION\nDeployed version · live behavior"
-  style.fill: "#171812"
-  style.stroke: "#171812"
+  style.fill: "#111A2C"
+  style.stroke: "#6E819F"
   style.stroke-width: 2
   style.font-color: "#FFFFFF"
   style.font-size: 20
@@ -45,15 +45,15 @@ release: Production release {
 reality: Real use {
   label: "REAL USE\nPeople · devices · environment"
   style.fill: "#FFFFFF"
-  style.stroke: "#171812"
+  style.stroke: "#6E819F"
   style.stroke-width: 2
-  style.font-color: "#171812"
+  style.font-color: "#111A2C"
   style.font-size: 20
   style.bold: true
 }
 
-human -> agents {style.stroke: "#171812"; style.stroke-width: 3; style.font-size: 16}
-agents -> qualification {style.stroke: "#171812"; style.stroke-width: 3; style.font-size: 16}
-qualification -> release {style.stroke: "#171812"; style.stroke-width: 3; style.font-size: 16}
-release -> reality {style.stroke: "#171812"; style.stroke-width: 3; style.font-size: 16}
-reality -> human {style.stroke: "#E34E31"; style.stroke-width: 3; style.stroke-dash: 7; style.font-size: 16}
+human -> agents {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
+agents -> qualification {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
+qualification -> release {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
+release -> reality {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
+reality -> human {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7; style.font-size: 16}

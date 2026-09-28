@@ -6,21 +6,22 @@ type Props = {
   mobile: string;
   caption?: string;
   className?: string;
+  priority?: boolean;
 };
 
-const { title, description, desktop, mobile, caption, className = "" } = Astro.props;
+const { title, description, desktop, mobile, caption, className = "", priority = false } = Astro.props;
 const hasTranscript = Astro.slots.has("default");
 ---
 <figure class={`d2-diagram ${className}`}>
   <picture>
     <source media="(max-width: 760px)" srcset={mobile} />
-    <img src={desktop} alt={description} loading="lazy" decoding="async" />
+    <img src={desktop} alt={description} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : "auto"} decoding="async" />
   </picture>
   <figcaption>
     <div class="d2-diagram__caption">
       <strong>{title}</strong>
       {caption && <span>{caption}</span>}
-      <a class="d2-diagram__source" href={desktop.replace("/images/diagrams/", "/diagrams/").replace(".svg", ".d2")}>Open the D2 source <span aria-hidden="true">↗</span></a>
+      <a class="d2-diagram__source" href={desktop.replace("/images/diagrams/", "/diagrams/").replace(".svg", ".d2")}>View the diagram source <span aria-hidden="true">↗</span></a>
     </div>
     {hasTranscript && <details class="d2-diagram__transcript"><summary>Read the diagram in text</summary><slot /></details>}
   </figcaption>

@@ -5,6 +5,7 @@ import tempfile
 import textwrap
 
 ROOT = Path(__file__).resolve().parents[1]
+FONT_PATH = ROOT / "scripts/assets/BricolageGrotesque-Variable.ttf"
 DEST = ROOT / "public" / "og"
 CARDS = {
     "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Eight projects. One human operator."),
@@ -24,32 +25,40 @@ def card_svg(label: str, title: str, subtitle: str) -> str:
     subtitle_lines = textwrap.wrap(subtitle, width=59, break_long_words=False, break_on_hyphens=False)
     longest_title_line = max(map(len, title_lines))
     title_size = "66" if longest_title_line < 15 else "54" if longest_title_line < 20 else "44" if longest_title_line < 23 else "34"
-    title_text = "\n  ".join(f'<text x="420" y="{263 + index * 58}" fill="#171812" font-family="Arial,sans-serif" font-size="{title_size}" font-weight="800">{html.escape(line)}</text>' for index, line in enumerate(title_lines))
-    subtitle_y = 263 + (len(title_lines) - 1) * 58 + 68
-    subtitle_text = "\n  ".join(f'<text x="420" y="{subtitle_y + index * 26}" fill="#34352f" font-family="Arial,sans-serif" font-size="18">{html.escape(line)}</text>' for index, line in enumerate(subtitle_lines))
+    title_text = "\n  ".join(f'<text x="416" y="{244 + index * 58}" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="{title_size}" font-weight="800">{html.escape(line)}</text>' for index, line in enumerate(title_lines))
+    subtitle_y = 244 + (len(title_lines) - 1) * 58 + 70
+    subtitle_text = "\n  ".join(f'<text x="416" y="{subtitle_y + index * 27}" fill="#b7c7df" font-family="Bricolage Grotesque" font-size="18">{html.escape(line)}</text>' for index, line in enumerate(subtitle_lines))
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#faf4e6"/>
-  <rect width="354" height="630" fill="#e6f451"/>
-  <path d="M354 0h22v630h-22z" fill="#171812"/>
-  <path d="M0 0h1200v18H0z" fill="#171812"/>
-  <path d="M56 58h44v44H56z" fill="#171812"/>
-  <path d="M65 70h26M65 80h26M65 90h18" stroke="#e6f451" stroke-width="3"/>
-  <text x="116" y="88" fill="#171812" font-family="Arial,sans-serif" font-size="17" font-weight="800" letter-spacing="2">WOODHOUSE</text>
-  <path d="M54 154H296M54 170H254M54 186H212" stroke="#171812" stroke-width="6"/>
-  <path d="M54 230h246v224H54z" fill="#f2744a" stroke="#171812" stroke-width="3"/>
-  <text x="78" y="284" fill="#171812" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">THE LOFTWAH</text>
-  <text x="78" y="314" fill="#171812" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">SOFTWARE FACTORY</text>
-  <path d="M78 346h174" stroke="#171812" stroke-width="4"/>
-  <text x="78" y="390" fill="#171812" font-family="Arial,sans-serif" font-size="16">Build · review · release</text>
-  <circle cx="1170" cy="580" r="176" fill="#4665e8"/>
-  <text x="420" y="127" fill="#a83a20" font-family="Menlo,monospace" font-size="16" font-weight="700" letter-spacing="3">{safe_label.upper()}</text>
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101b31"/><stop offset="1" stop-color="#080d19"/></linearGradient>
+    <linearGradient id="stripe" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#e9ff49"/><stop offset=".52" stop-color="#78d8ff"/><stop offset="1" stop-color="#ff746a"/></linearGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#8095bb" opacity=".32"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#wash)"/>
+  <rect width="1200" height="8" fill="url(#stripe)"/>
+  <path d="M0 8h350v622H0z" fill="#111a2c"/>
+  <path d="M0 8h350v622H0z" fill="url(#dots)"/>
+  <path d="M350 8h2v622h-2z" fill="#647dff"/>
+  <circle cx="62" cy="70" r="22" fill="#080d19" stroke="#e9ff49" stroke-width="2"/>
+  <path d="M52 64h20M54 70h16M57 76h10" stroke="#e9ff49" stroke-width="2"/>
+  <text x="99" y="66" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="18" font-weight="800" letter-spacing="2">WOODHOUSE</text>
+  <text x="99" y="88" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">THE LOFTWAH SOFTWARE FACTORY</text>
+  <text x="48" y="142" fill="#79d8ff" font-family="Menlo,monospace" font-size="12" font-weight="700" letter-spacing="1.4">ONE HUMAN · EIGHT PROJECTS</text>
+  <path d="M71 192V486" stroke="#647dff" stroke-width="3" stroke-dasharray="5 7"/>
+  <circle cx="71" cy="204" r="12" fill="#e9ff49"/><text x="104" y="201" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Intent</text><text x="104" y="220" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Human sets the boundary</text>
+  <circle cx="71" cy="273" r="12" fill="#79d8ff"/><text x="104" y="270" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Work</text><text x="104" y="289" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Agents move it forward</text>
+  <circle cx="71" cy="342" r="12" fill="#647dff"/><text x="104" y="339" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Review</text><text x="104" y="358" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">A person checks the change</text>
+  <circle cx="71" cy="411" r="12" fill="#ff746a"/><text x="104" y="408" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Release</text><text x="104" y="427" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Production makes it real</text>
+  <circle cx="71" cy="480" r="12" fill="#e9ff49"/><text x="104" y="477" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Evidence</text><text x="104" y="496" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Results return to the operator</text>
+  <path d="M416 94h116" stroke="#e9ff49" stroke-width="5"/>
+  <text x="416" y="130" fill="#79d8ff" font-family="Menlo,monospace" font-size="15" font-weight="700" letter-spacing="2">{safe_label.upper()}</text>
   {title_text}
-  <path d="M420 {subtitle_y - 34}h178" stroke="#f2744a" stroke-width="12"/>
+  <path d="M416 {subtitle_y - 34}h174" stroke="url(#stripe)" stroke-width="5"/>
   {subtitle_text}
-  <path d="M420 494H1128" stroke="#171812" stroke-width="2"/>
-  <text x="420" y="538" fill="#44453d" font-family="Menlo,monospace" font-size="14" letter-spacing="1">AN OBSERVABLE SOFTWARE FACTORY</text>
-  <text x="420" y="580" fill="#44453d" font-family="Menlo,monospace" font-size="13" letter-spacing="1">REVIEWED 28 SEPTEMBER 2026</text>
-  <text x="1128" y="580" fill="#171812" font-family="Menlo,monospace" font-size="13" text-anchor="end">LOFTWAH.COM</text>
+  <path d="M416 534H1148" stroke="#34425e" stroke-width="1"/>
+  <text x="416" y="571" fill="#a9b8d0" font-family="Menlo,monospace" font-size="13" letter-spacing="1">AN OBSERVABLE SOFTWARE FACTORY</text>
+  <text x="416" y="600" fill="#e9ff49" font-family="Menlo,monospace" font-size="13" letter-spacing="1">REVIEWED 28 SEPTEMBER 2026</text>
+  <text x="1148" y="600" fill="#a9b8d0" font-family="Menlo,monospace" font-size="13" text-anchor="end">LOFTWAH.COM</text>
 </svg>'''
 
 
@@ -63,8 +72,8 @@ def main() -> None:
             overlay = scratch_path / "overlay.png"
             source = scratch_path / "card.svg"
             source.write_text(card_svg(*content), encoding="utf-8")
-            subprocess.run(["magick", "-background", "none", str(source), str(overlay)], check=True)
-            subprocess.run(["magick", str(overlay), "-background", "#faf4e6", "-alpha", "remove", "-strip", "-quality", "90", str(jpg_path)], check=True)
+            subprocess.run(["magick", "-font", str(FONT_PATH), "-background", "none", str(source), str(overlay)], check=True)
+            subprocess.run(["magick", str(overlay), "-background", "#080d19", "-alpha", "remove", "-strip", "-quality", "90", str(jpg_path)], check=True)
         print(jpg_path.relative_to(ROOT))
 
 

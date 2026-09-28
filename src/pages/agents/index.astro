@@ -8,7 +8,6 @@ import { projects, reviewDateLabel } from "../../data/projects";
     <div class="page-intro__grid">
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Agent Reception</span></nav>
-        <p class="eyebrow">Built for agents too</p>
         <h1 class="page-title">Read the record.<br />Respect its limits.</h1>
       </div>
       <aside class="page-intro__aside"><strong>Read-only · public-safe · dated</strong>Agent Reception offers reviewed facts. It has no private repository connector and cannot initiate a change.</aside>
@@ -38,7 +37,7 @@ No credentials or raw issue text</pre>
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><span class="section-index">Current public record</span><h2>Eight summaries. One explicit date.</h2></div>
+        <div><h2>Eight summaries. One explicit date.</h2></div>
         <p>Use the source field and proof boundary with every answer. Do not turn a reviewed summary into a claim about current production state.</p>
       </div>
       <div class="project-ledger">{projects.map((project) => <ProjectRow project={project} compact={true} />)}</div>

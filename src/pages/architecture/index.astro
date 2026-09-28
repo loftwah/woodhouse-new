@@ -7,7 +7,6 @@ import D2Diagram from "../../components/D2Diagram.astro";
     <div class="page-intro__grid">
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Architecture</span></nav>
-        <p class="eyebrow">The system behind the record</p>
         <h1 class="page-title">A public record.<br /><em>Private inputs stay private.</em></h1>
       </div>
       <aside class="page-intro__aside"><strong>Astro · TypeScript · Cloudflare Workers</strong>The public edition is static and small. Its trust boundary is deliberate.</aside>
@@ -36,7 +35,7 @@ import D2Diagram from "../../components/D2Diagram.astro";
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><span class="section-index">The current request path</span><h2>The browser gets a finished page.</h2></div>
+        <div><h2>The browser gets a finished page.</h2></div>
         <p>GitHub remains authoritative. The current edition publishes a reviewed snapshot because most project repositories are private.</p>
       </div>
       <div class="two-column-list">
@@ -50,7 +49,6 @@ import D2Diagram from "../../components/D2Diagram.astro";
   <section class="section">
     <div class="container split-section">
       <div class="split-section__copy">
-        <p class="eyebrow">The public boundary</p>
         <h2>Visitors can read the report. They cannot change it.</h2>
         <p>The public JSON contains project names, reviewed state, summary, next proof and review date. It cannot query private GitHub repositories or run a tool. If a collector is added later, a person will review each proposed update before it is published.</p>
         <p>This release has no D1 event store, R2 evidence archive, public chat or private office. Cloud services enter when the product has a concrete need for them.</p>

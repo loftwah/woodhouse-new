@@ -33,8 +33,8 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
     <section class="container origin-hero">
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
-        <p class="eyebrow">{note.kind} · {note.date} · {note.readingTime}</p>
         <h1>{note.title}</h1>
+        <p class="article-meta">{note.kind} · {note.date} · {note.readingTime}</p>
         <p class="dossier-hero__summary">{note.deck}</p>
         <p class="origin-hero__source">A founder-supplied retrospective. Sequence is preserved; dates are used only where the public snapshot supports them.</p>
       </div>
@@ -45,14 +45,22 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
         mobile="/images/diagrams/lineage-mobile.svg"
         caption="This account follows changes in responsibility and decision-making, not a precise timeline."
         className="origin-hero__art"
-      />
+      >
+        <ol class="diagram-transcript">
+          <li><strong>Early web work</strong><span>Useful tools and plugins were assembled into working sites.</span></li>
+          <li><strong>Product delivery</strong><span>More of the experience moved into software products.</span></li>
+          <li><strong>Cloud platforms</strong><span>APIs and infrastructure carried more of the work.</span></li>
+          <li><strong>Software agents</strong><span>Delegated execution made it possible for software to change software.</span></li>
+          <li><strong>The factory</strong><span>Review, qualification and production evidence keep claims tied to what happened.</span></li>
+        </ol>
+      </D2Diagram>
     </section>
   ) : (
     <section class="container dossier-hero">
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/dispatches/">Dispatches</a><span>/</span><span>{note.kind}</span></nav>
-        <p class="eyebrow">{note.kind} · {note.date}</p>
         <h1>{note.title}</h1>
+        <p class="article-meta">{note.kind} · {note.date} · {note.readingTime}</p>
         <p class="dossier-hero__summary">{note.deck}</p>
       </div>
       <aside class="dossier-hero__side">
@@ -65,7 +73,6 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
     <article class="prose">
       {isOrigin ? (
         <>
-          <p class="eyebrow">A public account of the work</p>
           <p><strong>{note.lead}</strong></p>
           <p>The first part of the story was ordinary web work: joining useful tools together instead of rebuilding each capability. A reverse proxy, a VPS and WordPress plugins formed a practical stack. The skill that lasted was composition: knowing which piece was good at a job and how to make the pieces cooperate.</p>
           <p>The tools changed. Plugin-shaped capability gave way to APIs, cloud services, infrastructure, models, skills and agents. Development moved from assembling a website toward operating the platform and its delivery system.</p>
@@ -137,7 +144,6 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
         </>
       ) : isTests ? (
         <>
-          <p class="eyebrow">Fighter · visual qualification</p>
           <p><strong>{note.lead}</strong></p>
           <h2>The wrong question was easy to test.</h2>
           <p>The checks asked whether the interface fit its container and whether its geometry remained inside expected bounds. It did. The result still lacked hierarchy and compositional intent.</p>
@@ -162,7 +168,6 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
         </>
       ) : note.slug === "a-gate-for-what-the-source-proves" ? (
         <>
-          <p class="eyebrow">Pirates · source reconstruction</p>
           <p><strong>{note.lead}</strong></p>
           <h2>A plausible rule can still be invented.</h2>
           <p>Master of the Secret Sea is being reconstructed from original source evidence. The project is not yet free to treat an interesting idea as part of the original game.</p>
@@ -174,7 +179,6 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
         </>
       ) : (
         <>
-          <p class="eyebrow">MAX · software and physical proof</p>
           <p><strong>{note.lead}</strong></p>
           <h2>Where the proof stops</h2>
           <p>MAX has a serious software foundation: pairing, a gateway, offline behaviour and remote FIND and STOP flows. Those capabilities matter. They do not put a Raspberry Pi next to the actual walker or show that a person can use its controls in their environment.</p>

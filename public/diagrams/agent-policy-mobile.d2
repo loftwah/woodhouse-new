@@ -1,13 +1,13 @@
 direction: down
-vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+vars: {d2-config: {layout-engine: elk; theme-id: 201}}
 
-inputs: "TRIGGERS" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 28; style.bold: true}
-proposal: "AGENT PROPOSAL" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 28; style.bold: true}
-checks: "POLICY + QUALIFICATION" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 26; style.bold: true}
-decision: "DEAN REVIEWS CANDIDATE" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 25; style.bold: true}
-outcome: "APPROVE  ·  RETURN  ·  REJECT" {style.fill: "#D6EC6B"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 24; style.bold: true}
+inputs: "TRIGGERS" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 28; style.bold: true}
+proposal: "AGENT PROPOSAL" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 28; style.bold: true}
+checks: "POLICY + QUALIFICATION" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 26; style.bold: true}
+decision: "DEAN REVIEWS CANDIDATE" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 25; style.bold: true}
+outcome: "APPROVE  ·  RETURN  ·  REJECT" {style.fill: "#BEF05E"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 24; style.bold: true}
 
-inputs -> proposal {style.stroke: "#171812"; style.stroke-width: 2}
-proposal -> checks {style.stroke: "#171812"; style.stroke-width: 2}
-checks -> decision {style.stroke: "#171812"; style.stroke-width: 2}
+inputs -> proposal {style.stroke: "#6E819F"; style.stroke-width: 2}
+proposal -> checks {style.stroke: "#6E819F"; style.stroke-width: 2}
+checks -> decision {style.stroke: "#6E819F"; style.stroke-width: 2}
 decision -> outcome {style.stroke: "#24623E"; style.stroke-width: 2}

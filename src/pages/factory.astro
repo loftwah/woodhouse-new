@@ -16,7 +16,6 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
     <div class="page-intro__grid">
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Factory</span></nav>
-        <p class="eyebrow">The factory floor</p>
         <h1 class="page-title">Eight projects.<br /><em>Eight kinds</em> of proof.</h1>
       </div>
       <aside class="page-intro__aside">
@@ -29,12 +28,11 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
     <div class="container">
       <div class="section-heading">
         <div>
-          <span class="section-index">Convergence order · current read</span>
           <h2>Where attention is going.</h2>
         </div>
         <p>A practical ordering, not a percentage chart. Bubbles is nearest its current finish line; other work is held by quality, qualification, source parity or the physical world.</p>
       </div>
-      <p class="eyebrow">Operating model · a process diagram, not a live telemetry view</p>
+      <p class="body-copy">This is the operating model, not live telemetry.</p>
       <FactoryPlate />
       <div class="project-ledger">
         {projects.map((project) => <ProjectRow project={project} />)}

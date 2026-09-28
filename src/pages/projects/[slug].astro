@@ -41,8 +41,8 @@ const socialFallback = "/og/project-preview-unavailable.jpg";
   <section class="container dossier-hero">
     <div>
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/factory/">Factory</a><span>/</span><span>{project.name}</span></nav>
-      <p class="eyebrow">{project.discipline}</p>
       <h1>{project.title}</h1>
+      <p class="article-meta">{project.discipline}</p>
       <p class="dossier-hero__summary">{project.summary}</p>
     </div>
     <aside class="dossier-hero__side">
@@ -121,7 +121,7 @@ const socialFallback = "/og/project-preview-unavailable.jpg";
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><span class="section-index">More from the floor</span><h2>Other work in view.</h2></div>
+        <div><h2>Other work in view.</h2></div>
         <a class="text-link section-heading__action" href="/factory/">See all eight projects <span aria-hidden="true">↗</span></a>
       </div>
       <div class="project-ledger">{nextProjects.map((item) => <ProjectRow project={item} compact={true} />)}</div>

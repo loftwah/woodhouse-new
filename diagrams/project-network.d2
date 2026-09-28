@@ -1,0 +1,45 @@
+direction: right
+vars: { d2-config: { layout-engine: elk; theme-id: 201 } }
+
+operator: "THE OPERATOR\nSets direction + authority" {
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.bold: true
+}
+
+agents: "CODING AGENTS\nBounded, reviewable work" {
+  style.fill: "#647DFF"
+  style.stroke: "#8DA0FF"
+  style.stroke-width: 2
+  style.font-color: "#FFFFFF"
+  style.font-size: 24
+  style.bold: true
+}
+
+projects: {
+  label: "EIGHT REAL PROJECTS · DIFFERENT FINISH LINES"
+  grid-rows: 2
+  grid-columns: 4
+  grid-gap: 14
+  style.fill: "#0F182A"
+  style.stroke: "#455575"
+  style.stroke-width: 2
+  style.font-color: "#DCE6F5"
+  style.font-size: 22
+  style.bold: true
+
+  bubbles: "BUBBLES\nArcade systems" {style.fill: "#FF746A"; style.font-color: "#080D19"}
+  fighter: "FIGHTER\nAuthored game" {style.fill: "#647DFF"; style.font-color: "#FFFFFF"}
+  shoalshot: "SHOALSHOT\nFishing game" {style.fill: "#79D8FF"; style.font-color: "#080D19"}
+  protocol: "PROTOCOL 11\nCard-table play" {style.fill: "#E9FF49"; style.font-color: "#080D19"}
+  max: "MAX\nAssistive tech" {style.fill: "#79D8FF"; style.font-color: "#080D19"}
+  pirates: "PIRATES\nSource study" {style.fill: "#FF746A"; style.font-color: "#080D19"}
+  fm: "LOFTWAHFM\nMusic platform" {style.fill: "#647DFF"; style.font-color: "#FFFFFF"}
+  club: "SOCIAL CLUB\nHospitality" {style.fill: "#E9FF49"; style.font-color: "#080D19"}
+}
+
+operator -> agents: "sets the boundary" {style.stroke: "#E9FF49"; style.stroke-width: 3; style.font-size: 20}
+agents -> projects: "bounded work, across the portfolio" {style.stroke: "#79D8FF"; style.stroke-width: 3; style.font-size: 20}

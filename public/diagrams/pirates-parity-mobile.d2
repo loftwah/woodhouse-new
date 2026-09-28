@@ -1,16 +1,16 @@
 direction: down
-vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+vars: {d2-config: {layout-engine: elk; theme-id: 201}}
 
-source: "SOURCE\nOriginal game evidence" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-rebuild: "RECONSTRUCTION\nRebuild the original game" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-parity: "INTEGRATED PARITY\nCompare the full reconstruction" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-gate: "GATE B · LOCKED\nParity remains unresolved" {style.fill: "#171812"; style.stroke: "#A83A20"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-expansion: "EXPANSION\nOpens only after the gate" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-unknown: "SOURCE GAP\nLeave unknowns visible" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 2; style.font-color: "#632519"; style.font-size: 22; style.bold: true}
+source: "SOURCE\nOriginal game evidence" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+rebuild: "RECONSTRUCTION\nRebuild the original game" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+parity: "INTEGRATED PARITY\nCompare the full reconstruction" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+gate: "GATE B · LOCKED\nParity remains unresolved" {style.fill: "#111A2C"; style.stroke: "#FF746A"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+expansion: "EXPANSION\nOpens only after the gate" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+unknown: "SOURCE GAP\nLeave unknowns visible" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
 
-source -> rebuild {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-rebuild -> parity {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-parity -> gate {style.stroke: "#A83A20"; style.stroke-width: 2; style.font-size: 15}
-gate -> expansion {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-source -> unknown {style.stroke: "#A83A20"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
-unknown -> rebuild {style.stroke: "#A83A20"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+source -> rebuild {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+rebuild -> parity {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+parity -> gate {style.stroke: "#FF746A"; style.stroke-width: 2; style.font-size: 15}
+gate -> expansion {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+source -> unknown {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+unknown -> rebuild {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}

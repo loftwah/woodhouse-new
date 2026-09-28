@@ -2,31 +2,31 @@ direction: down
 vars: {
   d2-config: {
     layout-engine: elk
-    theme-id: 0
+    theme-id: 201
   }
 }
 
-source: "PROJECT SITE\nOwn SEO · favicon · OG image URL" {
-  style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true
+source: "PROJECT SITE\nTitle · artwork · icon" {
+  style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
-build: "WOODHOUSE BUILD\nReads the source tags\nUses reviewed fields if offline" {
-  style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true
+build: "WOODHOUSE BUILD\nReads site details\nUses saved details if offline" {
+  style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
-html: "STATIC WOODHOUSE PAGE\nReferences the original image URL" {
-  style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true
+html: "WOODHOUSE PAGE\nShows the project artwork" {
+  style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true
 }
-browser: "VISITOR'S BROWSER\nLoads the project artwork" {
-  style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true
+browser: "YOUR BROWSER\nLoads the project artwork" {
+  style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
-fallback: "LOCAL SVG FALLBACK\nOnly if the source image fails" {
-  style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true
+fallback: "LOCAL ART FALLBACK\nOnly if source art fails" {
+  style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
 boundary: "PRIVATE DATA\nNever published" {
-  style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 2; style.font-color: "#632519"; style.font-size: 22; style.bold: true
+  style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
 
-source -> build {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 16}
-build -> html {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 16}
-html -> browser {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 16}
-browser -> fallback {style.stroke: "#E34E31"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 16}
-source -> boundary {style.stroke: "#A83A20"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+source -> build {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
+build -> html {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
+html -> browser {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
+browser -> fallback {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 16}
+source -> boundary {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}

@@ -1,15 +1,15 @@
 direction: down
-vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+vars: {d2-config: {layout-engine: elk; theme-id: 201}}
 
-catalogue: "APPROVED PRODUCT" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 27; style.bold: true}
-customer: "CUSTOMER ORDER" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 27; style.bold: true}
-checkout: "PAYMENT PROVIDER" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 27; style.bold: true}
-event: "VERIFIED PAYMENT" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 27; style.bold: true}
-verify: "DEDUPLICATED EVENT" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 26; style.bold: true}
-ledger: "ORDER LEDGER" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 27; style.bold: true}
-fulfilment: "PRINTFUL · WITHIN LIMITS" {style.fill: "#A83A20"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 25; style.bold: true}
-shipment: "SHIPMENT EVENT" {style.fill: "#D6EC6B"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 27; style.bold: true}
+catalogue: "APPROVED PRODUCT" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 27; style.bold: true}
+customer: "CUSTOMER ORDER" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 27; style.bold: true}
+checkout: "PAYMENT PROVIDER" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 27; style.bold: true}
+event: "VERIFIED PAYMENT" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 27; style.bold: true}
+verify: "DEDUPLICATED EVENT" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 26; style.bold: true}
+ledger: "ORDER LEDGER" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 27; style.bold: true}
+fulfilment: "PRINTFUL · WITHIN LIMITS" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 25; style.bold: true}
+shipment: "SHIPMENT EVENT" {style.fill: "#BEF05E"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 27; style.bold: true}
 
 catalogue -> ledger {style.stroke: "#835500"; style.stroke-width: 2; style.stroke-dash: 6}
-customer -> checkout -> event -> verify -> ledger -> fulfilment -> shipment {style.stroke: "#171812"; style.stroke-width: 2}
-fulfilment -> ledger {style.stroke: "#4665E8"; style.stroke-width: 2; style.stroke-dash: 5}
+customer -> checkout -> event -> verify -> ledger -> fulfilment -> shipment {style.stroke: "#6E819F"; style.stroke-width: 2}
+fulfilment -> ledger {style.stroke: "#647DFF"; style.stroke-width: 2; style.stroke-dash: 5}

@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
+import ProjectNetwork from "../components/ProjectNetwork.astro";
 import LineagePlate from "../components/LineagePlate.astro";
 import StatusStamp from "../components/StatusStamp.astro";
 import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
@@ -34,76 +35,67 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
       description: "An evidence-led public observatory for the Loftwah software factory."
     })}
   />
-  <section class="container hero" aria-labelledby="home-title">
-    <div class="hero__copy">
-      <p class="eyebrow">The Loftwah Software Factory</p>
-      <h1 class="display-title" id="home-title" aria-label="I run a software factory.">I run a<br />software<br /><em>factory.</em></h1>
-      <p class="lede">Coding agents work across eight real projects. I set their scope, review their work and decide what reaches production.</p>
-      <div class="link-group">
-        <a class="text-link" href="/factory/">See the factory <span aria-hidden="true">↗</span></a>
-        <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">Start with the story <span aria-hidden="true">↗</span></a>
+  <section class="container home-shell" aria-labelledby="home-title">
+    <div class="home-intro">
+      <div class="home-intro__lead">
+        <h1 class="display-title home-title" id="home-title">I run a<br /><em>software <span class="home-title__last">factory.</span></em></h1>
       </div>
-      <div class="hero__note">
-        <span class="hero__seal" aria-hidden="true">01</span>
-        <span><strong>A dated public readout, not a live feed.</strong> See what each project is for, what its report says and which proof is still missing.</span>
+      <div class="home-intro__copy">
+        <p class="lede">Coding agents work across eight real projects. I set their scope, review their work and decide what reaches production.</p>
+        <div class="link-group home-intro__links">
+          <a class="text-link" href="/factory/">See how the factory works <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">Read the story <span aria-hidden="true">↗</span></a>
+        </div>
+        <p class="home-intro__note"><strong>A dated public readout, not a live feed.</strong> Every project has a clear boundary between reported work and proof still to come.</p>
       </div>
     </div>
-    <div class="hero__art" aria-label="Artwork from three project sites">
-      {featuredArtwork[0] && <figure class="hero__art-feature" data-project-artwork>
-        <a href={featuredArtwork[0].project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit the ${featuredArtwork[0].project.name} site to view its artwork`}>
-          <img
-            src={featuredArtwork[0].metadata.image}
-            width="1200"
-            height="630"
-            alt={featuredArtwork[0].project.previewAlt ?? `Artwork from the ${featuredArtwork[0].project.name} site.`}
-            fetchpriority="high"
-            decoding="async"
-            data-fallback-src={`/og/projects/${featuredArtwork[0].project.slug}.svg`}
-            data-fallback-alt={`${featuredArtwork[0].project.name} Woodhouse placeholder. The project site's artwork could not be displayed.`}
-          />
-        </a>
-        <figcaption>
-          <span class="hero__art-label">{featuredArtwork[0].project.name} · FROM ITS SITE</span>
-          <strong>{featuredArtwork[0].metadata.title}</strong>
-          <span>{featuredArtwork[0].metadata.description}</span>
-          <a class="hero__art-source" href={featuredArtwork[0].project.siteUrl} target="_blank" rel="noopener noreferrer">Open {featuredArtwork[0].project.name} <span aria-hidden="true">↗</span></a>
-        </figcaption>
-      </figure>}
-      <div class="hero__art-rail">
-        {featuredArtwork.slice(1).map(({ project, metadata }) => (
-          <figure class="hero__art-small" data-project-artwork>
-            <a href={project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit the ${project.name} site to view its artwork`}>
+
+    <ProjectNetwork />
+
+    <section class="home-artwork" aria-labelledby="home-artwork-title">
+      <div class="home-artwork__heading">
+        <h2 id="home-artwork-title">The projects, in their own words.</h2>
+        <p>Artwork, icons, titles and descriptions are read from each project's site. A marked Woodhouse image appears only when a site's own artwork cannot load.</p>
+      </div>
+      <div class="home-artwork__grid">
+        {featuredArtwork.map(({ project, metadata }) => (
+          <figure class="home-artwork__card" data-project-artwork>
+            <a class="home-artwork__image" href={project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} to view the original project artwork`}>
               <img
                 src={metadata.image}
                 width="1200"
                 height="630"
                 alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
-                loading="lazy"
+                loading={project.slug === "bubbles" ? "eager" : "lazy"}
+                fetchpriority={project.slug === "bubbles" ? "high" : "auto"}
                 decoding="async"
                 data-fallback-src={`/og/projects/${project.slug}.svg`}
                 data-fallback-alt={`${project.name} Woodhouse placeholder. The project site's artwork could not be displayed.`}
               />
             </a>
             <figcaption>
-              {metadata.icon && <img src={metadata.icon} width="24" height="24" alt="" aria-hidden="true" data-source-favicon />}
-              <span><strong>{project.name}</strong><small>{metadata.title}</small></span>
+              <span class="home-artwork__source" data-artwork-status>
+                {metadata.icon && <img src={metadata.icon} width="24" height="24" alt="" aria-hidden="true" data-source-favicon />}
+                <span>Artwork from {project.name}</span>
+              </span>
+              <strong>{metadata.title}</strong>
+              <span class="home-artwork__description">{metadata.description}</span>
+              <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">Visit {project.name} <span aria-hidden="true">↗</span></a>
             </figcaption>
           </figure>
         ))}
-        <p>Artwork is served by the project sites. Woodhouse only supplies the local fallback.</p>
       </div>
-    </div>
+    </section>
   </section>
-  <div class="container hero__lower" aria-label="Snapshot details">
-    <span><strong>PORTFOLIO READOUT</strong> · reviewed {reviewDateLabel}</span>
-    <span>GITHUB REMAINS THE ENGINEERING SOURCE OF TRUTH</span>
+  <div class="container home-meta" aria-label="Snapshot details">
+    <span><strong>Reviewed {reviewDateLabel}</strong></span>
+    <span>Eight real projects · one dated public record</span>
   </div>
 
   <section class="section paper-section" aria-labelledby="floor-title">
     <div class="container">
       <div class="section-heading">
         <div>
-          <span class="section-index">01 / The factory floor</span>
           <h2 id="floor-title">Different work.<br />Different finish lines.</h2>
         </div>
         <p>Eight projects enter the same factory and expose different limits. This is a dated operator-reviewed readout, not a stream of invented Git events.</p>
@@ -111,14 +103,19 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
       </div>
       <div class="snapshot-band">
         <div class="snapshot-band__label">
-          <span>What the record says</span>
-          <span>Source: {snapshotSource}</span>
+          <span>Reviewed {reviewDateLabel}</span>
+          <span>{snapshotSource}</span>
         </div>
         <div class="snapshot-band__text">
           Functionality is one part of the readout.
           <small>A project may still need product polish, release checks or evidence from the physical world.</small>
         </div>
       </div>
+      <FactoryPlate />
+      <p class="link-group factory-links">
+        <a class="text-link" href="/architecture/">Read the architecture <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/doctrine/">Read the doctrine <span aria-hidden="true">↗</span></a>
+      </p>
       <div class="project-ledger" aria-label="Eight project snapshots">
         {projects.map((project) => <ProjectRow project={project} />)}
       </div>
@@ -126,27 +123,9 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
     </div>
   </section>
 
-  <section class="section" aria-labelledby="proof-title">
-    <div class="container">
-      <div class="section-heading">
-        <div>
-          <span class="section-index">02 / The operating model</span>
-          <h2 id="proof-title">A release has several checkpoints.</h2>
-        </div>
-        <p>Code review, release checks and real use answer different questions. Each project record shows what was checked and when.</p>
-      </div>
-      <FactoryPlate />
-      <p class="link-group" style="margin-top:1.5rem">
-        <a class="text-link" href="/architecture/">Read the architecture <span aria-hidden="true">↗</span></a>
-        <a class="text-link" href="/doctrine/">Read the doctrine <span aria-hidden="true">↗</span></a>
-      </p>
-    </div>
-  </section>
-
   {firstNote && <section class="section section--compact" aria-labelledby="founding-title">
     <div class="container dark-story founding-note">
       <div class="dark-story__content">
-        <p class="eyebrow">Founding essay</p>
         <h2 id="founding-title">{firstNote.title}</h2>
         <p>{firstNote.deck}</p>
         <a class="text-link" href={"/dispatches/" + firstNote.slug + "/"}>Read the essay <span aria-hidden="true">↗</span></a>
@@ -158,7 +137,6 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
     <div class="container split-section split-section--reverse">
       <LineagePlate />
       <div class="split-section__copy">
-        <p class="eyebrow">A note from Dean</p>
         <h2 id="origin-title">{originStory.title}</h2>
         <p>{originStory.introduction}</p>
         <p>The tools changed. APIs, cloud services, infrastructure, models, skills and agents started doing more of the work. Then the work spread across several products at once.</p>
@@ -171,7 +149,6 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
     <div class="container">
       <div class="section-heading">
         <div>
-          <span class="section-index">03 / Agent Reception</span>
           <h2 id="agent-title">Project facts, published for people and agents.</h2>
         </div>
         <p>The endpoint serves a reviewed, dated project record. It does not expose private repositories or give an agent permission to change anything.</p>

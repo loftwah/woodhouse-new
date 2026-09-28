@@ -1,19 +1,19 @@
 direction: down
 vars: {
-  d2-config: {layout-engine: elk; theme-id: 0}
+  d2-config: {layout-engine: elk; theme-id: 201}
 }
 
-observed: "01 · OBSERVED\nSource or behavior inspected" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-implemented: "02 · IMPLEMENTED\nRequested change exists" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-merged: "03 · MERGED\nIntegrated revision identified" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-qualified: "04 · QUALIFIED\nNamed gates passed" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-production: "05 · PRODUCTION VERIFIED\nDeployed version observed" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-accepted: "OWNER ACCEPTED\nAccountable person confirms the bar" {style.fill: "#FFFFFF"; style.stroke: "#171812"; style.stroke-width: 2; style.font-color: "#171812"; style.font-size: 22; style.bold: true}
-physical: "PHYSICAL PROOF · WHEN RELEVANT\nReal device · environment · human use" {style.fill: "#F7DDD1"; style.stroke: "#A83A20"; style.stroke-width: 2; style.font-color: "#632519"; style.font-size: 22; style.bold: true}
+observed: "01 · OBSERVED\nSource or behavior inspected" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+implemented: "02 · IMPLEMENTED\nRequested change exists" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+merged: "03 · MERGED\nIntegrated revision identified" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+qualified: "04 · QUALIFIED\nNamed gates passed" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+production: "05 · PRODUCTION VERIFIED\nDeployed version observed" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
+accepted: "OWNER ACCEPTED\nAccountable person confirms the bar" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
+physical: "PHYSICAL PROOF · WHEN RELEVANT\nReal device · environment · human use" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
 
-observed -> implemented {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-implemented -> merged {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-merged -> qualified {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-qualified -> production {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 15}
-production -> accepted {style.stroke: "#171812"; style.stroke-width: 2; style.font-size: 14}
-production -> physical {style.stroke: "#A83A20"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+observed -> implemented {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+implemented -> merged {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+merged -> qualified {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+qualified -> production {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
+production -> accepted {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 14}
+production -> physical {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}

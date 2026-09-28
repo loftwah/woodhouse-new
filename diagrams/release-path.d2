@@ -1,0 +1,42 @@
+direction: right
+vars: { d2-config: { layout-engine: elk; theme-id: 201 } }
+
+candidate: "RELEASE CANDIDATE\nOne exact version" {
+  style.fill: "#FF746A"
+  style.stroke: "#FF968F"
+  style.stroke-width: 2
+  style.font-color: "#080D19"
+  style.font-size: 25
+  style.bold: true
+}
+
+qualify: "REVIEW + QUALIFY\nHuman decision + checks" {
+  style.fill: "#B58AFF"
+  style.stroke: "#D0B8FF"
+  style.stroke-width: 2
+  style.font-color: "#080D19"
+  style.font-size: 25
+  style.bold: true
+}
+
+production: "PRODUCTION\nOnly after approval" {
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  style.font-color: "#080D19"
+  style.font-size: 25
+  style.bold: true
+}
+
+real_use: "REAL USE\nPeople + devices" {
+  style.fill: "#79D8FF"
+  style.stroke: "#9BE4FF"
+  style.stroke-width: 2
+  style.font-color: "#080D19"
+  style.font-size: 25
+  style.bold: true
+}
+
+candidate -> qualify: "exact scope" {style.stroke: "#FF746A"; style.stroke-width: 3; style.font-size: 20}
+qualify -> production: "evidence clears the gate" {style.stroke: "#B58AFF"; style.stroke-width: 3; style.font-size: 20}
+production -> real_use: "verify in the world" {style.stroke: "#79D8FF"; style.stroke-width: 3; style.font-size: 20}

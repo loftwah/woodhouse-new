@@ -1,24 +1,24 @@
 direction: right
-vars: {d2-config: {layout-engine: elk; theme-id: 0}}
+vars: {d2-config: {layout-engine: elk; theme-id: 201}}
 
 origins: {
   direction: down
-  early: "EARLY WEB\nWordPress" {style.fill: "#E6F451"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
-  delivery: "PRODUCTS\nSites · apps" {style.fill: "#F2744A"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  early: "EARLY WEB\nWordPress" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
+  delivery: "PRODUCTS\nSites · apps" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
   early -> delivery
 }
 
 platforms: {
   direction: down
-  cloud: "CLOUD\nServices" {style.fill: "#4665E8"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
-  agents: "AGENTS\nDelegated work" {style.fill: "#F1BF54"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#171812"; style.font-size: 21; style.bold: true}
+  cloud: "CLOUD\nServices" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
+  agents: "AGENTS\nDelegated work" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
   cloud -> agents
 }
 
 factory: {
   direction: down
-  evidence: "FACTORY\nEvidence · release" {style.fill: "#171812"; style.stroke: "#171812"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
+  evidence: "FACTORY\nEvidence · release" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
 }
 
 origins.delivery -> platforms.cloud
-platforms.agents -> factory.evidence {style.stroke: "#A83A20"; style.stroke-width: 3}
+platforms.agents -> factory.evidence {style.stroke: "#FF746A"; style.stroke-width: 3}

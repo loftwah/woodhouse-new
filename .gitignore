@@ -9,3 +9,5 @@ dist/
 !.env.example
 conversation.md
 /output/
+.impeccable/mocks/
+.impeccable/screenshots/

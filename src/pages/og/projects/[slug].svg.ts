@@ -1,7 +1,7 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { projects, reviewDateLabel } from "../../../data/projects";
 
-const inks = ["#E6F451", "#F2744A", "#4665E8", "#F1BF54", "#65BDA7", "#E88B48", "#B08CEB", "#68BEC7"];
+const inks = ["#E9FF49", "#FF746A", "#647DFF", "#FFC95A", "#54D9C5", "#FF9B6B", "#B794FF", "#79D8FF"];
 
 function escapeXml(value: string): string {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&apos;");
@@ -25,28 +25,26 @@ export const GET: APIRoute = ({ props }) => {
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
   <title id="title">${escapeXml(project.name)} project preview placeholder</title>
   <desc id="description">Woodhouse fallback artwork. ${escapeXml(sourceLabel)}.</desc>
-  <rect width="1200" height="630" fill="#faf4e6"/>
-  <path d="M0 0h22v630H0z" fill="#151612"/>
-  <path d="M22 0h316v630H22z" fill="${accent}"/>
-  <path d="M338 0h12v630h-12z" fill="#151612"/>
-  <path d="M54 50h34v34H54z" fill="#151612"/>
-  <path d="M61 61h20M61 68h20M61 75h14" stroke="${accent}" stroke-width="3"/>
-  <text x="102" y="77" fill="#151612" font-family="Arial, sans-serif" font-size="19" font-weight="800" letter-spacing="4">WOODHOUSE</text>
-  <text x="54" y="262" fill="#151612" font-family="Arial Black, Arial, sans-serif" font-size="164" font-weight="900" letter-spacing="-12">${escapeXml(project.index)}</text>
-  <path d="M54 293h228" stroke="#151612" stroke-width="4"/>
-  <text x="54" y="338" fill="#151612" font-family="Arial, sans-serif" font-size="17" font-weight="700" letter-spacing="2">PROJECT DOSSIER</text>
-  <text x="390" y="88" fill="#a83a20" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2.5">LOCAL PREVIEW · ${escapeXml(reviewDateLabel.toUpperCase())}</text>
-  <text x="390" y="218" fill="#151612" font-family="Arial Black, Arial, sans-serif" font-size="${titleSize}" font-weight="900" letter-spacing="-2">${escapeXml(project.name)}</text>
-  <path d="M390 252h116" stroke="${accent}" stroke-width="13"/>
-  <text x="390" y="316" fill="#20211b" font-family="Arial, sans-serif" font-size="25" font-weight="600">${escapeXml(project.discipline)}</text>
-  <rect x="390" y="369" width="730" height="92" fill="#151612"/>
-  <path d="M390 369h18v92h-18z" fill="${accent}"/>
-  <text x="435" y="408" fill="${accent}" font-family="Menlo, monospace" font-size="15" font-weight="700" letter-spacing="2">${escapeXml(sourceLabel)}</text>
-  <text x="435" y="439" fill="#fff9ed" font-family="Arial, sans-serif" font-size="19">${escapeXml(project.state)}</text>
-  <text x="390" y="519" fill="#525247" font-family="Arial, sans-serif" font-size="18">${escapeXml(fallbackLine1)}</text>
-  <text x="390" y="552" fill="#525247" font-family="Arial, sans-serif" font-size="18">${escapeXml(fallbackLine2)}</text>
-  <text x="1146" y="590" text-anchor="end" fill="#151612" font-family="Menlo, monospace" font-size="13" font-weight="700" letter-spacing="1">WOODHOUSE / ${escapeXml(project.index)} OF 08</text>
-  <path d="M1138 40v36m-18-18h36" stroke="#151612" stroke-width="2"/>
+  <rect width="1200" height="630" fill="#080d19"/>
+  <path d="M0 0h16v630H0z" fill="${accent}"/>
+  <path d="M66 50h42v42H66z" fill="#141d32" stroke="#62708d" stroke-width="1"/>
+  <path d="M75 64h24M75 72h24M75 80h17" stroke="${accent}" stroke-width="3"/>
+  <text x="128" y="80" fill="#f4f7fd" font-family="Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="4">WOODHOUSE</text>
+  <text x="66" y="275" fill="${accent}" font-family="Arial, sans-serif" font-size="176" font-weight="700" letter-spacing="-12">${escapeXml(project.index)}</text>
+  <path d="M66 307h234" stroke="#62708d" stroke-width="2"/>
+  <text x="66" y="354" fill="#a9b8d0" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2">PROJECT DOSSIER</text>
+  <text x="390" y="88" fill="${accent}" font-family="Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="2.5">LOCAL PREVIEW · ${escapeXml(reviewDateLabel.toUpperCase())}</text>
+  <text x="390" y="218" fill="#f4f7fd" font-family="Arial, sans-serif" font-size="${titleSize}" font-weight="700" letter-spacing="-2">${escapeXml(project.name)}</text>
+  <path d="M390 252h116" stroke="${accent}" stroke-width="8"/>
+  <text x="390" y="316" fill="#dce6f5" font-family="Arial, sans-serif" font-size="25" font-weight="600">${escapeXml(project.discipline)}</text>
+  <rect x="390" y="369" width="730" height="92" fill="#141d32" stroke="#394967" stroke-width="1"/>
+  <path d="M390 369h8v92h-8z" fill="${accent}"/>
+  <text x="425" y="408" fill="${accent}" font-family="Menlo, monospace" font-size="15" font-weight="700" letter-spacing="2">${escapeXml(sourceLabel)}</text>
+  <text x="425" y="439" fill="#f4f7fd" font-family="Arial, sans-serif" font-size="19">${escapeXml(project.state)}</text>
+  <text x="390" y="519" fill="#b4c0d2" font-family="Arial, sans-serif" font-size="18">${escapeXml(fallbackLine1)}</text>
+  <text x="390" y="552" fill="#b4c0d2" font-family="Arial, sans-serif" font-size="18">${escapeXml(fallbackLine2)}</text>
+  <text x="1146" y="590" text-anchor="end" fill="#a9b8d0" font-family="Menlo, monospace" font-size="13" font-weight="700" letter-spacing="1">WOODHOUSE / ${escapeXml(project.index)} OF 08</text>
+  <path d="M1138 40v36m-18-18h36" stroke="${accent}" stroke-width="2"/>
 </svg>`;
 
   return new Response(svg, {

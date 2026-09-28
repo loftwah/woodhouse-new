@@ -29,7 +29,7 @@ const placeholder = `/og/projects/${project.slug}.svg`;
     <figcaption>
       <span class="project-row__domainline">
         {siteMeta?.icon && <img src={siteMeta.icon} width="20" height="20" alt="" aria-hidden="true" decoding="async" data-source-favicon />}
-        <span class="project-row__domain">{domain} · {siteMeta ? <span data-artwork-status>{siteMeta.freshness === "live" ? "SOURCE SITE ARTWORK" : "LAST REVIEWED SOURCE METADATA"}</span> : "WOODHOUSE PLACEHOLDER"}</span>
+      <span class="project-row__domain">{domain} · {siteMeta ? <span data-artwork-status>{siteMeta.freshness === "live" ? `ARTWORK FROM ${project.name.toUpperCase()}` : "LAST REVIEWED SITE DETAILS"}</span> : "WOODHOUSE PLACEHOLDER"}</span>
       </span>
       {siteMeta ? <>
         <strong class="project-row__og-title">{siteMeta.title}</strong>
