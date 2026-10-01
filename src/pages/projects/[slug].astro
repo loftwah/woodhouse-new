@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
-import { projects, reviewDateLabel, snapshotSource } from "../../data/projects";
+import { projects, reviewDate, reviewDateLabel, snapshotSource } from "../../data/projects";
 import { getSiteMetadata } from "../../data/site-metadata";
 
 export function getStaticPaths() {
@@ -35,7 +35,7 @@ const socialFallback = "/og/project-preview-unavailable.jpg";
       description: project.summary,
       url: "https://woodhouse.loftwah.com/projects/" + project.slug + "/",
       author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
-      dateModified: "2026-09-28"
+      dateModified: reviewDate
     })}
   />
   <section class="container dossier-hero">

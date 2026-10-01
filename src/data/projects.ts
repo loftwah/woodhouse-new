@@ -1,6 +1,6 @@
-export const reviewDate = "2026-09-28";
-export const reviewDateLabel = "28 September 2026";
-export const snapshotSource = "The shareable factory SITREP supplied for the Woodhouse launch.";
+export const reviewDate = "2026-10-01";
+export const reviewDateLabel = "1 October 2026";
+export const snapshotSource = "Operator-reviewed, public-safe report.";
 
 export type Project = {
   slug: string;
@@ -38,15 +38,15 @@ export const projects: Project[] = [
     name: "Bubbles",
     index: "01",
     discipline: "Game systems · deterministic play",
-    state: "Final convergence",
+    state: "Near convergence · product polish remains",
     stateTone: "amber",
     title: "A game can work and still be waiting to feel finished.",
     summary: "Bubbles is a polished arcade game with a serious deterministic core. Its remaining work is concentrated in the connected product experience, broad browser qualification and owner acceptance.",
     why: "The interesting question has changed. Bubbles no longer needs to prove that a game exists; it needs to prove that the whole product holds together across screens, states and actual play.",
-    current: "Mechanically and functionally very mature. The current convergence order places Bubbles closest to its stated finish line.",
+    current: "Bubbles is playable and heavily qualified. Its remaining product polish and visual acceptance are still open; production evidence for an earlier milestone does not establish that current main is live.",
     teaches: "Closing an issue is a record of work. It is not proof that the product has finished the job.",
-    remaining: "Finish connected-product polish, complete a clean browser qualification and secure owner acceptance.",
-    proofBoundary: "This is a reviewed portfolio snapshot. It does not claim that the latest browser matrix is green or that every remaining acceptance gate has passed."
+    remaining: "Resolve the remaining presentation and aiming issues, qualify the current candidate, then secure owner visual acceptance.",
+    proofBoundary: "Earlier production evidence applies to a specific milestone. This snapshot does not claim that current main is deployed or that the owner has accepted the final presentation."
   },
   {
     slug: "fighter",
@@ -60,15 +60,15 @@ export const projects: Project[] = [
     name: "Fighter",
     index: "02",
     discipline: "Game systems · authored journeys",
-    state: "A+ convergence",
+    state: "Highly functional · shareability work remains",
     stateTone: "amber",
     title: "The game is real. The quality bar is deliberately unreasonable.",
     summary: "Fighter includes Story, Tournament, Battle, Arcade, Survival, Daily Challenges and progression. The remaining work is a whole-game review against the A+ bar.",
     why: "A large feature set can hide weak moments. Fighter is a proving ground for the difference between a technically complete game and one that feels authored from first run through the result.",
-    current: "Functional maturity is very high. The reported remaining work is whole-game quality convergence, not a greenfield prototype.",
+    current: "Fighter is highly functional and has fresh evidence for specific player-facing fixes. The overall visual and shareability bar remains open.",
     teaches: "Passing geometry checks does not settle visual hierarchy, role, motion or whether a screen feels right in context.",
-    remaining: "Keep reconciling the complete product against the A+ bar and qualify the exact current release state.",
-    proofBoundary: "The snapshot describes broad functional maturity. It does not assert that the latest source has passed every whole-game or production gate."
+    remaining: "Reconcile the remaining whole-game UI and shareability work, then gather current-release and owner-play evidence.",
+    proofBoundary: "Evidence for individual fixes does not establish that the current whole game has met its final visual, shareability or owner-acceptance bar."
   },
   {
     slug: "shoalshot",
@@ -82,15 +82,15 @@ export const projects: Project[] = [
     name: "SHOALSHOT",
     index: "03",
     discipline: "Game systems · mobile-first presentation",
-    state: "Release convergence",
+    state: "Deep playable · visual convergence ongoing",
     stateTone: "amber",
     title: "Good software evidence still has to reach the water.",
     summary: "SHOALSHOT is a fishing game with recent work in presentation, performance, responsive play and qualification.",
     why: "The remaining question is whether the experience holds up through the full game on real devices, and whether the production claim matches the exact version tested.",
-    current: "Functionally mature and increasingly polished. The supplied report calls for another clean production qualification and promotion pass.",
+    current: "SHOALSHOT is a deep playable game with recent mobile-presentation and evidence work. Its wider visual and UX convergence is still in progress.",
     teaches: "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
-    remaining: "Obtain a valid qualification window, qualify the exact candidate, then verify the same state in production.",
-    proofBoundary: "The supplied report does not claim that the current head is production verified."
+    remaining: "Continue the visual and UX convergence, qualify the exact candidate in a valid window, and verify that same version in production.",
+    proofBoundary: "The report does not establish production verification for the current head."
   },
   {
     slug: "protocol-11",
@@ -104,15 +104,15 @@ export const projects: Project[] = [
     name: "Protocol 11",
     index: "04",
     discipline: "Game systems · responsive table play",
-    state: "Qualification and tracker reconciliation",
+    state: "Broad systems · table and card UX remains",
     stateTone: "amber",
     title: "A mature game can still have an immature record of what is done.",
     summary: "Protocol 11 has mature game systems and a substantially recovered frontend, including better mobile, table and tablet composition.",
     why: "A tracker is part of the product's evidence chain. If a closed item still contradicts its own definition of done, the system must reconcile the record before treating it as progress.",
-    current: "The supplied report points to qualification and tracker reconciliation as the main unresolved work.",
+    current: "Protocol 11 has broad local and remote game functionality. Recent work improved hands, turns, bot pacing, score receipts and mobile readability; final table and card composition remains unfinished.",
     teaches: "State needs a trustworthy source. A green label is not more authoritative than the evidence beneath it.",
-    remaining: "Resolve the tracker contradictions, refresh the project record and qualify the actual current build.",
-    proofBoundary: "No statement here treats issue closure as proof of completion."
+    remaining: "Finish the hand, turn and table experience, reconcile the project record, then qualify the current build.",
+    proofBoundary: "Broad functionality does not establish the finished card-table experience or the production state of the current build."
   },
   {
     slug: "max",
@@ -131,25 +131,25 @@ export const projects: Project[] = [
     title: "The software cannot prove that a person can find the real walker.",
     summary: "MAX is an assistive-technology project with a substantial software platform: PWA, pairing, gateway, offline behaviour, remote FIND and STOP, privacy and device control.",
     why: "The product crosses a physical boundary. Simulation and a green software suite cannot prove that a real walker, microphone, speaker and lights work for a person in their environment.",
-    current: "Software capability is advancing. The actual Pi, walker and real-world FIND experience remain the defining reality check.",
+    current: "MAX is a strong software prototype. Its trusted local offline FIND and STOP path and privacy-support workflow do not establish behaviour on real hardware.",
     teaches: "Software proof and physical proof are different kinds of evidence.",
-    remaining: "Build and qualify the real Pi and walker path with the actual microphone, speaker, lights and human use.",
-    proofBoundary: "The supplied report explicitly leaves the physical product unproven."
+    remaining: "Bench the real Raspberry Pi and walker, including the microphone, speaker, lights, FIND and STOP, with a person using the device.",
+    proofBoundary: "The physical walker experience remains unproven. Software and simulated-device evidence cannot replace a real-world trial."
   },
   {
     slug: "pirates",
     name: "Pirates",
     index: "06",
     discipline: "Game reconstruction · source archaeology",
-    state: "Gate B locked",
+    state: "Source reconstruction · parity incomplete",
     stateTone: "red",
     title: "Reconstruct the original game before asking the agents to invent another one.",
     summary: "Pirates is rebuilding Master of the Secret Sea from original source evidence. The work is deliberately parity-first.",
     why: "Generative systems are good at filling gaps. In a reconstruction, that instinct can quietly turn an unknown into a confident invention. The project has to know what the source proves and what it does not.",
-    current: "Deep in archaeology and parity work. The original game must pass its gate before procedural or endless expansion begins.",
+    current: "Pirates continues source-backed reconstruction. Integrated parity with the original game is incomplete, so expansion remains behind its gate.",
     teaches: "Sometimes the most intelligent agent action is to stop at the edge of the evidence.",
-    remaining: "Complete the missing archaeology families and integrated parity before opening the expansion path.",
-    proofBoundary: "Gate B remains locked in the supplied snapshot. No procedural fork is represented as approved."
+    remaining: "Continue bounded source recovery and reconstruction. Keep expansion closed until integrated parity is supported by the original evidence.",
+    proofBoundary: "Parity is not established and expansion is not approved. Unknown source behaviour stays unknown."
   },
   {
     slug: "loftwahfm",
@@ -163,15 +163,15 @@ export const projects: Project[] = [
     name: "LoftwahFM",
     index: "07",
     discipline: "Music platform · listener and venue product",
-    state: "Parked against the larger roadmap",
+    state: "Public listener product · business roadmap paused",
     stateTone: "quiet",
     title: "A mature listener product and an unfinished venue business can both be true.",
     summary: "LoftwahFM is already a substantial working music product. The larger business-music roadmap adds a second, broader product with venue reliability, control and operations still to build.",
     why: "One percentage would hide the distinction between the listener experience that exists and the more ambitious venue product that remains.",
-    current: "The supplied report describes the expanded business-music roadmap as parked, with little recent application movement.",
+    current: "The public listening product has earlier exact-release and live-smoke evidence. The wider business-music product remains unfinished and recent implementation has been quiet.",
     teaches: "A project can be useful today and still have a much larger unfinished ambition.",
-    remaining: "Make an explicit decision to resume a bounded roadmap slice or keep the broader venue programme parked.",
-    proofBoundary: "This snapshot separates the existing music product from the paused business-music roadmap."
+    remaining: "Choose a bounded business-product outcome to resume, or keep that roadmap paused; refresh evidence before making a current release claim.",
+    proofBoundary: "Production evidence for the public listener product does not establish completion of the broader business-music product."
   },
   {
     slug: "social-club",
@@ -185,15 +185,15 @@ export const projects: Project[] = [
     name: "Social Club",
     index: "08",
     discipline: "Hospitality · membership experience",
-    state: "Parked",
+    state: "Foundation built · product execution quiet",
     stateTone: "quiet",
     title: "The product works. The intended atmosphere has not arrived yet.",
     summary: "Social Club has a functional foundation for a private-club and hospitality experience.",
     why: "A working feature set cannot make up for an identity that has not yet been designed. The next step is to establish a coherent premium visual direction.",
-    current: "The larger visual redesign is parked in the supplied report.",
+    current: "Social Club has a useful product and preview foundation, while recent product implementation has been quiet.",
     teaches: "Product quality includes how a coherent interface feels as well as what its controls do.",
-    remaining: "Resume the premium private-club, hospitality and editorial design pass when the project is active again.",
-    proofBoundary: "The current visual direction is not represented as the intended finished experience."
+    remaining: "Set a bounded UX outcome and resume the product and visual work if the project is active again.",
+    proofBoundary: "The report does not describe the current experience as the intended finished product."
   }
 ];
 

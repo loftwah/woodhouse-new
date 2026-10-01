@@ -2,18 +2,21 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TechnicalPlate from "../../components/TechnicalPlate.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
 import { fieldNotes } from "../../data/field-notes";
+import { projects } from "../../data/projects";
 
 export function getStaticPaths() {
   return fieldNotes.map((note) => ({ params: { slug: note.slug }, props: { note } }));
 }
 
 const { note } = Astro.props;
+const isPortfolioReport = note.slug === "eight-finish-lines";
 const isOrigin = note.slug === "i-didnt-mean-to-build-a-software-factory";
 const isTests = note.slug === "the-tests-passed";
-const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factory.jpg" : isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-what-the-source-proves" ? "/og/dispatches/a-gate-for-what-the-source-proves.jpg" : "/og/dispatches/software-is-not-the-walker.jpg";
+const image = isPortfolioReport ? "/og/factory.jpg" : isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factory.jpg" : isTests ? "/og/the-tests-passed.jpg" : note.slug === "a-gate-for-what-the-source-proves" ? "/og/dispatches/a-gate-for-what-the-source-proves.jpg" : "/og/dispatches/software-is-not-the-walker.jpg";
 ---
-<BaseLayout title={note.title} description={note.deck} path={"/dispatches/" + note.slug + "/"} currentPath="/dispatches/" type="article" publishedAt="2026-09-28" image={image}>
+<BaseLayout title={note.title} description={note.deck} path={"/dispatches/" + note.slug + "/"} currentPath="/dispatches/" type="article" publishedAt={note.dateISO} image={image}>
   <script
     slot="head"
     type="application/ld+json"
@@ -22,8 +25,8 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
       "@type": "Article",
       headline: note.title,
       description: note.deck,
-      datePublished: "2026-09-28",
-      dateModified: "2026-09-28",
+      datePublished: note.dateISO,
+      dateModified: note.dateISO,
       author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
       publisher: { "@type": "Organization", name: "WOODHOUSE", url: "https://woodhouse.loftwah.com/" },
       mainEntityOfPage: "https://woodhouse.loftwah.com/dispatches/" + note.slug + "/"
@@ -65,13 +68,42 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
       </div>
       <aside class="dossier-hero__side">
         <span class="micro-label">{note.readingTime}</span>
-        <dl><dt>Filed under</dt><dd>Factory learning</dd><dt>Source state</dt><dd>Reviewed summary</dd></dl>
+        <dl><dt>Filed under</dt><dd>Factory learning</dd><dt>Source state</dt><dd>{isPortfolioReport ? "Public-safe report" : "Reviewed summary"}</dd></dl>
       </aside>
     </section>
   )}
   <section class="container dossier-grid">
     <article class="prose">
-      {isOrigin ? (
+      {isPortfolioReport ? (
+        <>
+          <p><strong>{note.lead}</strong></p>
+          <p>
+            This review puts eight projects on one dated page without pretending they share one
+            definition of done. Some work is held by product quality, some by release evidence, some
+            by source parity, and some by a real-world hardware trial.
+          </p>
+          <h2>Read each project on its own terms</h2>
+          <p>
+            The summaries below describe the reviewed state and the next useful proof. A strong
+            software result does not certify a finished product; a past production observation does
+            not establish that today's source is live.
+          </p>
+          <div class="project-ledger" aria-label={`Projects reviewed ${note.date}`}>
+            {projects.map((project) => <ProjectRow project={project} compact={true} />)}
+          </div>
+          <h2>What the report keeps separate</h2>
+          <ul>
+            <li>Implementation and qualification are different records.</li>
+            <li>A production claim belongs to the exact version observed.</li>
+            <li>Software tests cannot prove how physical hardware works for a person.</li>
+            <li>Unknown source behaviour stays unknown until evidence resolves it.</li>
+          </ul>
+          <div class="pullquote">
+            Progress is real when the work moves. Completion is real when the required evidence
+            supports the claim.<cite>Portfolio review</cite>
+          </div>
+        </>
+      ) : isOrigin ? (
         <>
           <p><strong>{note.lead}</strong></p>
           <p>The first part of the story was ordinary web work: joining useful tools together instead of rebuilding each capability. A reverse proxy, a VPS and WordPress plugins formed a practical stack. The skill that lasted was composition: knowing which piece was good at a job and how to make the pieces cooperate.</p>
@@ -192,9 +224,9 @@ const image = isOrigin ? "/og/dispatches/i-didnt-mean-to-build-a-software-factor
       <p><a href="/dispatches/">Back to the dispatches</a></p>
     </article>
     <aside class="margin-rail" aria-label="Article notes">
-      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "The thesis" : "What changed"}</span><p><strong>{note.lesson}</strong></p></div>
-      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Source boundary" : "Why publish it"}</span><p>{isOrigin ? "Founder-supplied professional retrospective. Sequence is qualitative where a date is not sourced." : "The failure becomes useful when the factory records the missing control and later checks where it applies."}</p></div>
-      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Project examples" : "Reviewed"}</span><p>{isOrigin ? "Dated public-safe project snapshot · 28 September 2026" : <>28 September 2026<br />Operator-reviewed summary</>}</p></div>
+      <div class="margin-note"><span class="margin-note__label">{isPortfolioReport || isOrigin ? "The thesis" : "What changed"}</span><p><strong>{note.lesson}</strong></p></div>
+      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Source boundary" : isPortfolioReport ? "Report boundary" : "Why publish it"}</span><p>{isOrigin ? "Founder-supplied professional retrospective. Sequence is qualitative where a date is not sourced." : isPortfolioReport ? "Edited, public-safe summaries. Private issue and pull request bodies and private conversation text are not reproduced." : "The failure becomes useful when the factory records the missing control and later checks where it applies."}</p></div>
+      <div class="margin-note"><span class="margin-note__label">{isOrigin ? "Project examples" : "Reviewed"}</span><p>{isOrigin ? "Dated public-safe project snapshot · 28 September 2026" : <>{note.date}<br />Operator-reviewed summary</>}</p></div>
     </aside>
   </section>
 </BaseLayout>

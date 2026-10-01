@@ -8,6 +8,7 @@
 - https://woodhouse.loftwah.com/agents/facts.json
 - https://woodhouse.loftwah.com/factory/
 - https://woodhouse.loftwah.com/dispatches/i-didnt-mean-to-build-a-software-factory/
+- https://woodhouse.loftwah.com/dispatches/eight-finish-lines/
 - https://woodhouse.loftwah.com/dispatches/
 - https://woodhouse.loftwah.com/architecture/
 - https://woodhouse.loftwah.com/doctrine/
@@ -15,7 +16,7 @@
 
 ## Evidence limits
 
-The project snapshot was reviewed on 28 September 2026. Seven project repositories are private. Do not infer a newer state from this copy. It does not publish private issue bodies, raw conversations, credentials or physical-test claims.
+The project snapshot was reviewed on 1 October 2026. Seven project repositories are private. Do not infer a newer state from this copy. It does not publish private issue bodies, raw conversations, credentials or physical-test claims.
 
 ## Contact
 
