@@ -5,11 +5,12 @@ import FactoryPlate from "../components/FactoryPlate.astro";
 import ProjectNetwork from "../components/ProjectNetwork.astro";
 import LineagePlate from "../components/LineagePlate.astro";
 import StatusStamp from "../components/StatusStamp.astro";
-import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
+import { projects, reviewDate, reviewDateLabel, snapshotSource } from "../data/projects";
 import { fieldNotes, originStory } from "../data/field-notes";
 import { getSiteMetadata } from "../data/site-metadata";
 
 const firstNote = fieldNotes.find((note) => note.kind === "Founding essay");
+const latestReport = fieldNotes.find((note) => note.kind === "Portfolio report");
 const featuredProjects = ["bubbles", "protocol-11", "max"]
   .flatMap((slug) => {
     const project = projects.find((item) => item.slug === slug);
@@ -45,6 +46,7 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
         <div class="link-group home-intro__links">
           <a class="text-link" href="/factory/">See how the factory works <span aria-hidden="true">↗</span></a>
           <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">Read the story <span aria-hidden="true">↗</span></a>
+          {latestReport && <a class="text-link" href={`/dispatches/${latestReport.slug}/`}>Read the portfolio report <span aria-hidden="true">↗</span></a>}
         </div>
         <p class="home-intro__note"><strong>A dated public readout, not a live feed.</strong> Every project has a clear boundary between reported work and proof still to come.</p>
       </div>
@@ -119,7 +121,7 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
       <div class="project-ledger" aria-label="Eight project snapshots">
         {projects.map((project) => <ProjectRow project={project} />)}
       </div>
-      <p class="source-note"><strong>Snapshot boundary:</strong> reviewed 28 September 2026. The underlying GitHub repositories are private; public entries summarise the shareable factory report and do not expose issue or pull request content.</p>
+      <p class="source-note"><strong>Snapshot boundary:</strong> reviewed {reviewDateLabel}. The underlying GitHub repositories are private; public entries summarise the reviewed public-safe report and do not reproduce issue or pull request content.</p>
     </div>
   </section>
 
@@ -158,7 +160,7 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
         <div>
           <span class="agent-entry__label">A useful first question</span>
           <p class="serif" style="font-size:1.55rem">Is Pirates ready for its procedural fork?</p>
-          <p>No. The 28 September report says the parity gate is still locked. Expansion is waiting for source-backed reconstruction.</p>
+          <p>No. The {reviewDateLabel} report says integrated parity is incomplete. Expansion is waiting for source-backed reconstruction.</p>
         </div>
         <pre class="agent-entry__code" aria-label="Public machine-readable project fact">GET /agents/facts.json
 
@@ -166,7 +168,7 @@ pirates
 state: Gate B locked
 parity-first: true
 procedural-fork: not approved
-reviewed: 2026-09-28</pre>
+reviewed: {reviewDate}</pre>
       </div>
     </div>
   </section>
