@@ -13,10 +13,14 @@ type Props = {
 };
 
 const { id, number, title, note, variant, diagram, steps } = Astro.props;
-const source = diagram ?? (variant === "loop" ? "failure-loop" : variant === "ladder" ? "evidence-ladder" : "factory-flow");
+const source =
+  diagram ??
+  (variant === "loop" ? "failure-loop" : variant === "ladder" ? "evidence-ladder" : "factory-flow");
 const base = `/images/diagrams/${source}`;
 ---
+
 <D2Diagram
+  id={id}
   title={title}
   description={note}
   desktop={`${base}.svg`}
@@ -25,6 +29,13 @@ const base = `/images/diagrams/${source}`;
   className={`technical-plate technical-plate--${variant}`}
 >
   <ol class="technical-plate__steps" aria-label={`Diagram ${number}: ${title}`}>
-    {steps.map((step) => <li><strong>{step.label} · {step.title}</strong><span>{step.detail}</span></li>)}
+    {steps.map((step) => (
+      <li>
+        <strong>
+          {step.label} · {step.title}
+        </strong>
+        <span>{step.detail}</span>
+      </li>
+    ))}
   </ol>
 </D2Diagram>

@@ -25,14 +25,14 @@ The site is dark by design on every device. Do not follow the operating-system a
 - The homepage identifies the human operator and coding agents, then places the eight-project D2 network in the first view. The work map and the release/evidence flow are distinct diagrams because they explain different things.
 - Project artwork is fetched from each project's own published page metadata and shown from the source image URL at its original 1200×630 aspect ratio. Titles, descriptions, favicons and links identify the source. Do not copy or recreate source-site OG artwork as Woodhouse art.
 - Source-page metadata is read during the Woodhouse build; the image itself stays at the source URL. A source-site update appears on the next Woodhouse build (and an image-file update at a stable source URL is served directly).
-- If a project has no public site, or its source image fails in the browser, show a clearly labelled project-specific Woodhouse SVG. Never imitate missing product artwork as if it came from that project.
+- Credit product artwork to its project and Woodhouse-made illustrations to Woodhouse. Never present a Woodhouse illustration as product artwork.
 - A diagram earns its area by explaining a real system, boundary or decision. Keep its editable `.d2` source beside the checked-in SVG, ship a phone composition as well as the wider version, and provide a meaningful image description and readable text transcript.
 - Pages use large type, asymmetrical composition and decisive horizontal rules. Do not solve every section with another box.
 
 ## Interaction and states
 
 - Keep page colours fixed from first paint. Dark mode has no transition and no toggle.
-- Source artwork links to its project site. If an image fails, swap to the marked local project SVG and change the caption. Favicons hide cleanly if the source icon fails.
+- Source artwork links to its project site. Credit Woodhouse-made illustrations as Woodhouse artwork. Remove failed source icons cleanly.
 - Diagram transcripts use native `<details>` and `<summary>`; do not render the control when there is no transcript.
 - The Woodhouse index is searchable from the keyboard with `⌘K` or `Ctrl+K`, and from the phone's House Index.
 - Motion is small and purposeful. Respect `prefers-reduced-motion`; do not animate every section into view.
@@ -47,6 +47,6 @@ The site is dark by design on every device. Do not follow the operating-system a
 
 1. Can a new visitor tell who runs the factory, what agents do and how many products it spans?
 2. Are project cards displaying the artwork and metadata their own sites publish?
-3. Does every absent or failed image explain its fallback?
+3. Does every image name its source or creator accurately?
 4. Does each diagram explain a real boundary, process or decision and work on a phone?
 5. Does every project claim stay inside its source and review date?

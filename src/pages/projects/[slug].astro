@@ -3,128 +3,257 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
-import { projects, reviewDateLabel, snapshotSource } from "../../data/projects";
+import { listProjectRecords, getProjectRecord } from "../../content/repository";
 import { getSiteMetadata } from "../../data/site-metadata";
+import { toJsonLd } from "../../data/safe-json";
 
-export function getStaticPaths() {
-  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
-}
-
-const { project } = Astro.props;
-const nextProjects = projects.filter((item) => item.slug !== project.slug).slice(0, 3);
-const siteMeta = project.siteUrl ? await getSiteMetadata(project) : null;
+export const prerender = false;
+const slug = Astro.params.slug;
+const current = slug ? await getProjectRecord(slug) : null;
+if (current?.error)
+  return new Response("Unable to load this public project dossier.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const project = current?.project;
+const isPreview = current?.isPreview === true;
+const projectEntry = current?.projectEntry;
+const statusEntry = current?.status;
+if (!project)
+  return new Response("Project not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+if (isPreview) {
+  Astro.cache?.set(false);
+  Astro.response.headers.set("cache-control", "private, no-store, max-age=0");
+  Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+} else if (Astro.cache?.enabled)
+  for (const hint of current?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
+const allProjects = await listProjectRecords();
+if (allProjects.error)
+  return new Response("Unable to load public project records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled) for (const hint of allProjects.cacheHints) Astro.cache.set(hint);
+const nextProjects = allProjects.projects.filter((item) => item.slug !== project?.slug).slice(0, 3);
+const reviewDateLabel = project
+  ? new Date(`${project.reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
+      dateStyle: "long",
+      timeZone: "Australia/Melbourne"
+    })
+  : "Review date unavailable";
+const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
+const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const placeholder = `/og/projects/${project.slug}.svg`;
-const socialFallback = "/og/project-preview-unavailable.jpg";
+const socialPreview = "/og/project-dossier-preview.jpg";
+const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 ---
+
 <BaseLayout
   title={project.name}
   description={project.summary}
   path={"/projects/" + project.slug + "/"}
   currentPath="/projects/"
-  image={siteMeta?.image ?? project.previewImage ?? socialFallback}
-  fallbackImage={siteMeta ? socialFallback : undefined}
+  image={siteMeta?.image ?? project.previewImage ?? socialPreview}
+  fallbackImage={siteMeta ? socialPreview : undefined}
+  type="website"
+  contentRef={{ collection: "projects", id: projectEntry?.id ?? project.slug, slug: project.slug }}
+  contentSeo={projectEntry ? { data: projectEntry.data } : undefined}
+  noindex={isPreview}
 >
   <script
     slot="head"
     type="application/ld+json"
-    set:html={JSON.stringify({
+    set:html={toJsonLd({
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       name: project.name,
       applicationCategory: project.discipline,
       description: project.summary,
-      url: "https://woodhouse.loftwah.com/projects/" + project.slug + "/",
-      author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
-      dateModified: "2026-09-28"
+      url: `${siteOrigin}/projects/${project.slug}/`,
+      author: { "@type": "Person", name: "Dean Lofts", url: `${siteOrigin}/dean/` },
+      dateModified: project.reviewDate
     })}
   />
-  <section class="container dossier-hero">
+  {isPreview && (
+    <p class="container source-note">
+      <strong>Unpublished preview.</strong> This project draft is shown only through authenticated
+      EmDash preview.
+    </p>
+  )}
+  <section class="container dossier-hero" {...projectEntry?.edit}>
     <div>
-      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><a href="/factory/">Factory</a><span>/</span><span>{project.name}</span></nav>
-      <h1>{project.title}</h1>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/factory/">Factory</a>
+        <span>/</span>
+        <span>{project.name}</span>
+      </nav>
+      <h1 {...projectEntry?.edit.title}>{project.title}</h1>
       <p class="article-meta">{project.discipline}</p>
-      <p class="dossier-hero__summary">{project.summary}</p>
+      <p class="dossier-hero__summary" {...projectEntry?.edit.summary}>
+        {project.summary}
+      </p>
     </div>
     <aside class="dossier-hero__side">
       <StatusStamp tone={project.stateTone} label={project.state} />
       <dl>
-        <dt>Record</dt><dd>{project.index} / 08</dd>
-        <dt>Reviewed</dt><dd>{reviewDateLabel}</dd>
-        <dt>Source</dt><dd>Operator-reviewed snapshot</dd>
-        <dt>Preview</dt><dd>{siteMeta ? "Product site" : "No public site or demo"}</dd>
+        <dt>Record</dt>
+        <dd>{project.index} / 08</dd>
+        <dt>Reviewed</dt>
+        <dd>{reviewDateLabel}</dd>
+        <dt>Source</dt>
+        <dd>Operator-reviewed snapshot</dd>
+        <dt>Preview</dt>
+        <dd>{siteMeta ? "Product site" : "No public site or demo"}</dd>
       </dl>
     </aside>
   </section>
-  <figure class="container dossier-preview" aria-label={`Source artwork for ${project.name}`} data-project-artwork>
-      <img
-        src={siteMeta?.image ?? placeholder}
-        width="1200"
-        height="630"
-        alt={siteMeta ? (project.previewAlt ?? `Artwork from the ${project.name} site.`) : `${project.name} Woodhouse placeholder. No public site or demo is available.`}
-        loading="eager"
-        decoding="async"
-        data-fallback-src={siteMeta ? placeholder : undefined}
-        data-fallback-alt={siteMeta ? `${project.name} Woodhouse placeholder. The project site's artwork could not be displayed.` : undefined}
-      />
-      <figcaption>
-        <span>
-          <strong data-artwork-status>{siteMeta ? (siteMeta.freshness === "live" ? "ARTWORK FROM THIS SITE · READ DURING THIS BUILD" : "LAST REVIEWED SOURCE SITE METADATA") : "WOODHOUSE FALLBACK · NO PUBLIC PROJECT SITE"}</strong>
-          {siteMeta ? <>
+  <figure
+    class="container dossier-preview"
+    aria-label={`Source artwork for ${project.name}`}
+    data-project-artwork
+    {...projectEntry?.edit.site_og_image}
+  >
+    <img
+      src={siteMeta?.image ?? placeholder}
+      width="1200"
+      height="630"
+      alt={
+        siteMeta
+          ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
+          : `Woodhouse illustration for ${project.name}.`
+      }
+      loading="eager"
+      decoding="async"
+      data-fallback-src={siteMeta ? placeholder : undefined}
+      data-fallback-alt={siteMeta ? `Woodhouse illustration for ${project.name}.` : undefined}
+    />
+    <figcaption>
+      <span>
+        <strong data-artwork-status>
+          {siteMeta ? "LAST REVIEWED PROJECT-SITE DETAILS" : "WOODHOUSE ILLUSTRATION"}
+        </strong>
+        {siteMeta ? (
+          <>
             <span class="dossier-preview__title">{siteMeta.title}</span>
             <span class="dossier-preview__description">{siteMeta.description}</span>
-            <span class="dossier-preview__caption">{project.previewCaption ?? "Artwork displayed directly from the project site."}</span>
-            {siteMeta.freshness === "fallback" && <span class="project-row__source-note">The site did not respond during this build; Woodhouse is showing its last reviewed image and metadata.</span>}
-          </> : <span class="dossier-preview__description">This project has no public demo. The image is a Woodhouse placeholder, not product artwork.</span>}
-        </span>
-        {project.siteUrl && <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">Visit {project.name} <span aria-hidden="true">↗</span></a>}
-      </figcaption>
+            <span class="dossier-preview__caption">
+              {project.previewCaption ?? "Artwork displayed directly from the project site."}
+            </span>
+          </>
+        ) : (
+          <span class="dossier-preview__description">Made for this dossier.</span>
+        )}
+      </span>
+      {project.siteUrl && (
+        <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
+          Visit {project.name} <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </figcaption>
   </figure>
-  {project.slug === "pirates" && <section class="container project-visual" aria-label="Pirates reconstruction path">
-    <D2Diagram
-      title="Parity before expansion"
-      description="Original game evidence informs reconstruction; the reconstructed game must reach integrated parity before Gate B can open. Unresolved source details stay unknown rather than being invented."
-      desktop="/images/diagrams/pirates-parity.svg"
-      mobile="/images/diagrams/pirates-parity-mobile.svg"
-      caption="Gate B stays locked until integrated parity is supported by the original game's evidence."
-      className="project-parity"
-    >
-      <ol class="diagram-transcript">
-        <li><strong>Original game evidence</strong><span>Keep source claims tied to what is available.</span></li>
-        <li><strong>Reconstruction</strong><span>Rebuild the original game's behavior before adding new systems.</span></li>
-        <li><strong>Integrated parity</strong><span>Compare the reconstructed game against its source.</span></li>
-        <li><strong>Gate B</strong><span>Expansion stays locked while parity remains unresolved.</span></li>
-      </ol>
-    </D2Diagram>
-  </section>}
+  {project.slug === "pirates" && (
+    <section class="container project-visual" aria-label="Pirates reconstruction path">
+      <D2Diagram
+        title="Parity before expansion"
+        description="Original game evidence informs reconstruction; the reconstructed game must reach integrated parity before Gate B can open. Unresolved source details stay unknown rather than being invented."
+        desktop="/images/diagrams/pirates-parity.svg"
+        mobile="/images/diagrams/pirates-parity-mobile.svg"
+        caption="Gate B stays locked until integrated parity is supported by the original game's evidence."
+        className="project-parity"
+      >
+        <ol class="diagram-transcript">
+          <li>
+            <strong>Original game evidence</strong>
+            <span>Keep source claims tied to what is available.</span>
+          </li>
+          <li>
+            <strong>Reconstruction</strong>
+            <span>Rebuild the original game's behavior before adding new systems.</span>
+          </li>
+          <li>
+            <strong>Integrated parity</strong>
+            <span>Compare the reconstructed game against its source.</span>
+          </li>
+          <li>
+            <strong>Gate B</strong>
+            <span>Expansion stays locked while parity remains unresolved.</span>
+          </li>
+        </ol>
+      </D2Diagram>
+    </section>
+  )}
   <section class="container dossier-grid">
     <article class="prose">
       <h2>Why this project matters</h2>
-      <p>{project.why}</p>
-      <div class="pullquote">{project.teaches}<cite>What the factory is learning</cite></div>
+      <p {...projectEntry?.edit.why}>{project.why}</p>
+      <div class="pullquote" {...projectEntry?.edit.teaches}>
+        {project.teaches}
+        <cite>What the factory is learning</cite>
+      </div>
       <h2>Where the work stands</h2>
-      <p>{project.current}</p>
+      <p {...statusEntry?.edit.current}>{project.current}</p>
       <div class="callout">
         <p class="callout__title">The next useful proof</p>
-        <p>{project.remaining}</p>
+        <p {...statusEntry?.edit.next_proof}>{project.remaining}</p>
       </div>
       <h2>What this record does not claim</h2>
-      <p>{project.proofBoundary}</p>
-      <p>Project state is specific to the reviewed report. An implementation, merge, test result, production deployment and physical observation are separate claims; one does not automatically prove the next.</p>
+      <p {...statusEntry?.edit.proof_boundary}>{project.proofBoundary}</p>
+      <p>
+        Project state is specific to the reviewed report. An implementation, merge, test result,
+        production deployment and physical observation are separate claims; one does not
+        automatically prove the next.
+      </p>
     </article>
     <aside class="margin-rail" aria-label="Project notes">
-      <div class="margin-note"><span class="margin-note__label">House record</span><p><strong>{project.name}</strong><br />{snapshotSource}</p></div>
-      <div class="margin-note"><span class="margin-note__label">State</span><p>{project.state}. Read with the review date, not as a live status promise.</p></div>
-      <div class="margin-note"><span class="margin-note__label">Public source policy</span><p>Private issue and pull request bodies are not copied onto this site. Ask Dean for access to project-specific material.</p></div>
-      <div class="margin-note"><span class="margin-note__label">Related work</span><p><a href="/incidents/">Incidents</a><br /><a href="/doctrine/">Factory doctrine</a></p></div>
+      <div class="margin-note">
+        <span class="margin-note__label">House record</span>
+        <p>
+          <strong>{project.name}</strong>
+          <br />
+          {snapshotSource}
+        </p>
+      </div>
+      <div class="margin-note" {...statusEntry?.edit.state}>
+        <span class="margin-note__label">State</span>
+        <p>{project.state}. Read with the review date, not as a live status promise.</p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">Public source policy</span>
+        <p>
+          Private issue and pull request bodies are not copied onto this site. Ask Dean for access
+          to project-specific material.
+        </p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">Related work</span>
+        <p>
+          <a href="/incidents/">Incidents</a>
+          <br />
+          <a href="/doctrine/">Factory doctrine</a>
+        </p>
+      </div>
     </aside>
   </section>
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>Other work in view.</h2></div>
-        <a class="text-link section-heading__action" href="/factory/">See all eight projects <span aria-hidden="true">↗</span></a>
+        <div>
+          <h2>Other work in view.</h2>
+        </div>
+        <a class="text-link section-heading__action" href="/factory/">
+          See all eight projects <span aria-hidden="true">↗</span>
+        </a>
       </div>
-      <div class="project-ledger">{nextProjects.map((item) => <ProjectRow project={item} compact={true} />)}</div>
+      <div class="project-ledger">
+        {nextProjects.map((item) => (
+          <ProjectRow project={item} compact={true} />
+        ))}
+      </div>
     </div>
   </section>
 </BaseLayout>

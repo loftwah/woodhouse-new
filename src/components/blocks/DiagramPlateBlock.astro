@@ -1,0 +1,41 @@
+---
+import D2Diagram from "../D2Diagram.astro";
+import { PortableText } from "emdash/ui";
+
+type DiagramBlock = import("../../../emdash-env").DispatchContentDiagramPlateBlock;
+type Props = {
+  value: DiagramBlock;
+};
+
+const { value } = Astro.props;
+const sources: Record<DiagramBlock["diagram_id"], { desktop: string; mobile: string }> = {
+  lineage: {
+    desktop: "/images/diagrams/lineage.svg",
+    mobile: "/images/diagrams/lineage-mobile.svg"
+  },
+  "pirates-parity": {
+    desktop: "/images/diagrams/pirates-parity.svg",
+    mobile: "/images/diagrams/pirates-parity-mobile.svg"
+  }
+};
+const source = sources[value.diagram_id];
+---
+
+{source ? (
+  <D2Diagram
+    title={value.title}
+    description={value.description}
+    desktop={source.desktop}
+    mobile={source.mobile}
+    caption={value.caption}
+  >
+    <div class="diagram-transcript">
+      <PortableText value={value.transcript} />
+    </div>
+  </D2Diagram>
+) : (
+  <aside class="source-note">
+    <strong>Diagram unavailable.</strong> This checked-in Woodhouse diagram is not in the active
+    allowlist.
+  </aside>
+)}

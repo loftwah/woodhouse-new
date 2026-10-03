@@ -1,0 +1,13 @@
+---
+import TechnicalPlate from "../TechnicalPlate.astro";
+const { value } = Astro.props;
+---
+
+<TechnicalPlate
+  id={value.id}
+  number={value.number}
+  title={value.title}
+  variant={value.variant}
+  note={value.note}
+  steps={value.steps ?? []}
+/>

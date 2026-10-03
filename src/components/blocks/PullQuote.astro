@@ -1,0 +1,8 @@
+---
+const { value } = Astro.props;
+---
+
+<figure class="pullquote">
+  <blockquote>{value.quote}</blockquote>
+  {value.attribution && <figcaption>{value.attribution}</figcaption>}
+</figure>

@@ -1,0 +1,17 @@
+---
+const { value } = Astro.props;
+const slug =
+  typeof value.evidence_key === "string" && /^[a-z0-9-]+$/.test(value.evidence_key)
+    ? value.evidence_key
+    : null;
+---
+
+{slug && (
+  <aside class="margin-note evidence-link">
+    <span class="margin-note__label">Evidence record</span>
+    <p>{value.context}</p>
+    <a href={`/evidence/${slug}/`}>
+      {value.label} <span aria-hidden="true">↗</span>
+    </a>
+  </aside>
+)}

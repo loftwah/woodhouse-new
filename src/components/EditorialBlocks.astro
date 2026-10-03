@@ -1,0 +1,30 @@
+---
+import { Blocks } from "emdash/ui";
+import Prose from "./blocks/Prose.astro";
+import PullQuote from "./blocks/PullQuote.astro";
+import Callout from "./blocks/Callout.astro";
+import TechnicalPlateBlock from "./blocks/TechnicalPlateBlock.astro";
+import DiagramPlateBlock from "./blocks/DiagramPlateBlock.astro";
+import ImagePlateBlock from "./blocks/ImagePlateBlock.astro";
+import EvidenceLinkBlock from "./blocks/EvidenceLinkBlock.astro";
+import ProjectReferenceBlock from "./blocks/ProjectReferenceBlock.astro";
+import UnknownBlock from "./blocks/UnknownBlock.astro";
+
+type Props = {
+  value?: import("../../emdash-env").DispatchContentBlock[];
+};
+
+const { value = [] } = Astro.props;
+const components = {
+  prose: Prose,
+  pull_quote: PullQuote,
+  callout: Callout,
+  technical_plate: TechnicalPlateBlock,
+  diagram_plate: DiagramPlateBlock,
+  image_plate: ImagePlateBlock,
+  evidence_link: EvidenceLinkBlock,
+  project_reference: ProjectReferenceBlock
+};
+---
+
+<Blocks value={value} components={components} fallback={UnknownBlock} />

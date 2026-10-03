@@ -1,0 +1,16 @@
+---
+const { value } = Astro.props;
+const key =
+  typeof value.project_key === "string" && /^[a-z0-9-]+$/.test(value.project_key)
+    ? value.project_key
+    : null;
+const label = typeof value.label === "string" && value.label.trim() ? value.label.trim() : key;
+---
+
+{key && label && (
+  <p class="project-reference">
+    <a href={`/projects/${key}/`}>
+      {label} <span aria-hidden="true">↗</span>
+    </a>
+  </p>
+)}

@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { asText, listPublicEvidence } from "../../content/repository";
+
+export const prerender = false;
+const result = await listPublicEvidence();
+if (result.error)
+  return new Response("Unable to load public evidence records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled && result.cacheHint) Astro.cache.set(result.cacheHint);
+---
+
+<BaseLayout
+  title="Evidence records"
+  description="Reviewed public claims, their source, and the point where each claim stops."
+  path="/evidence/"
+  image="/og/factory.jpg"
+>
+  <section class="container page-intro">
+    <div class="page-intro__grid">
+      <div>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Evidence</span>
+        </nav>
+        <h1 class="page-title">Claims with their edges showing.</h1>
+      </div>
+      <aside class="page-intro__aside">
+        <strong>Observation is one rung.</strong>Every record names what was reviewed and what it
+        does not prove. Tests, production observations and physical use stay distinct.
+      </aside>
+    </div>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      {result.evidence.map((item, index) => (
+        <article class="ledger-note">
+          <span class="ledger-note__index">EVIDENCE / {String(index + 1).padStart(2, "0")}</span>
+          <div class="ledger-note__main">
+            <a href={`/evidence/${item.id}/`}>
+              <h2 class="ledger-note__title">{asText(item.data, "title")}</h2>
+            </a>
+            <p class="ledger-note__deck">{asText(item.data, "summary")}</p>
+          </div>
+          <div class="ledger-note__side">
+            <strong>{asText(item.data, "evidence_kind")}</strong>Reviewed{" "}
+            {asText(item.data, "reviewed_at")}
+          </div>
+        </article>
+      ))}
+      {result.evidence.length === 0 && (
+        <p class="source-note">No evidence records are currently published.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

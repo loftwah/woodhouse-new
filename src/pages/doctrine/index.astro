@@ -2,22 +2,41 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TechnicalPlate from "../../components/TechnicalPlate.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
+export const prerender = false;
 ---
-<BaseLayout title="Factory doctrine" description="The operating doctrine for the Loftwah Software Factory: move quickly while mistakes are cheap, add controls as value and consequence rise." path="/doctrine/" image="/og/factory.jpg">
+
+<BaseLayout
+  title="Factory doctrine"
+  description="The operating doctrine for the Loftwah Software Factory: move quickly while mistakes are cheap, add controls as value and consequence rise."
+  path="/doctrine/"
+  image="/og/factory.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Doctrine</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Doctrine</span>
+        </nav>
         <h1 class="page-title">Authority follows the cost of a mistake.</h1>
       </div>
-      <aside class="page-intro__aside"><strong>Move quickly while mistakes are cheap.</strong>Add controls as value and consequence rise. A capable agent is not an unlimited authority.</aside>
+      <aside class="page-intro__aside">
+        <strong>Move quickly while mistakes are cheap.</strong>Add controls as value and consequence
+        rise. A capable agent is not an unlimited authority.
+      </aside>
     </div>
   </section>
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>Process should scale with what can be lost.</h2></div>
-        <p>A throwaway experiment should not carry commercial process. Customer money, private data, valuable work and physical safety change the required evidence.</p>
+        <div>
+          <h2>Process should scale with what can be lost.</h2>
+        </div>
+        <p>
+          A throwaway experiment should not carry commercial process. Customer money, private data,
+          valuable work and physical safety change the required evidence.
+        </p>
       </div>
       <TechnicalPlate
         id="value-classes"
@@ -28,11 +47,31 @@ import D2Diagram from "../../components/D2Diagram.astro";
         note="Controls increase with value, irreversibility and consequence. Classification is a working judgement, not an automatic risk score."
         steps={[
           { label: "Class 00", title: "Throwaway", detail: "Explore freely; discard cheaply." },
-          { label: "Class 01", title: "Experiment", detail: "Preserve learning; add useful checks." },
-          { label: "Class 02", title: "Project", detail: "Protect source, repeatability and records." },
-          { label: "Class 03", title: "Product", detail: "Prove users, access and production quality." },
-          { label: "Class 04", title: "Commercial", detail: "Control money, promises and rollback." },
-          { label: "Class 05", title: "Treasured", detail: "Narrow authority; prove recovery and safety." }
+          {
+            label: "Class 01",
+            title: "Experiment",
+            detail: "Preserve learning; add useful checks."
+          },
+          {
+            label: "Class 02",
+            title: "Project",
+            detail: "Protect source, repeatability and records."
+          },
+          {
+            label: "Class 03",
+            title: "Product",
+            detail: "Prove users, access and production quality."
+          },
+          {
+            label: "Class 04",
+            title: "Commercial",
+            detail: "Control money, promises and rollback."
+          },
+          {
+            label: "Class 05",
+            title: "Treasured",
+            detail: "Narrow authority; prove recovery and safety."
+          }
         ]}
       />
     </div>
@@ -40,17 +79,41 @@ import D2Diagram from "../../components/D2Diagram.astro";
   <section class="section paper-section">
     <div class="container container--reading prose">
       <h2>A prompt can end with a real object.</h2>
-      <p>The factory can compose software with a payment provider, a printer, a manufacturer, a contractor or a person doing work that software cannot. MAX makes the boundary obvious: a working PWA is not a real walker. The hardware, mounting, microphone, speaker, lights and the person's ability to use FIND still need physical proof.</p>
-      <p>The same route could take approved artwork to a poster, shirt or book through a fulfilment provider such as Printful. Agents can prepare the files, product details and order workflow. A provider makes and ships the object. The factory records what happened and what still needs a person to check.</p>
-      <p>An eligible event could ask an AI system to draft artwork, copy, a diagram or a product variant. That output stays a candidate. Check the brief, rights, visual quality, print dimensions and cost, then ask Dean to approve, return or reject it before it becomes a listing.</p>
-      <p>Before work crosses that boundary, confirm that it is legal, the assets may be used, the provider is authorised, the budget is available, the result is safe and the outcome can be verified. If any of those answers is missing, stop at a proposal.</p>
+      <p>
+        The factory can compose software with a payment provider, a printer, a manufacturer, a
+        contractor or a person doing work that software cannot. MAX makes the boundary obvious: a
+        working PWA is not a real walker. The hardware, mounting, microphone, speaker, lights and
+        the person's ability to use FIND still need physical proof.
+      </p>
+      <p>
+        The same route could take approved artwork to a poster, shirt or book through a fulfilment
+        provider such as Printful. Agents can prepare the files, product details and order workflow.
+        A provider makes and ships the object. The factory records what happened and what still
+        needs a person to check.
+      </p>
+      <p>
+        An eligible event could ask an AI system to draft artwork, copy, a diagram or a product
+        variant. That output stays a candidate. Check the brief, rights, visual quality, print
+        dimensions and cost, then ask Dean to approve, return or reject it before it becomes a
+        listing.
+      </p>
+      <p>
+        Before work crosses that boundary, confirm that it is legal, the assets may be used, the
+        provider is authorised, the budget is available, the result is safe and the outcome can be
+        verified. If any of those answers is missing, stop at a proposal.
+      </p>
     </div>
   </section>
   <section class="section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>Events and schedules can start work. They cannot approve it.</h2></div>
-        <p>A milestone, failed check, shipment event or scheduled review can ask an agent to prepare the next change. Production access starts read-only.</p>
+        <div>
+          <h2>Events and schedules can start work. They cannot approve it.</h2>
+        </div>
+        <p>
+          A milestone, failed check, shipment event or scheduled review can ask an agent to prepare
+          the next change. Production access starts read-only.
+        </p>
       </div>
       <D2Diagram
         title="Work stops at the human gate"
@@ -61,24 +124,67 @@ import D2Diagram from "../../components/D2Diagram.astro";
         className="agent-policy-plate"
       >
         <ol class="diagram-transcript">
-          <li><strong>Event or scheduled review</strong><span>A release, failed check, order, shipment or recurring audit may start a bounded task.</span></li>
-          <li><strong>Read-only production</strong><span>Agents gather permitted evidence. They do not turn an observation into a production write.</span></li>
-          <li><strong>Proposal</strong><span>The output is a draft, issue or changeset with evidence, rationale, risk and rollback.</span></li>
-          <li><strong>Policy and qualification</strong><span>Check scope, asset rights, spend, required gates and recovery before asking for a decision.</span></li>
-          <li><strong>Dean decides</strong><span>Approve the qualified candidate, return it for changes or reject it. A new revision needs a new review.</span></li>
+          <li>
+            <strong>Event or scheduled review</strong>
+            <span>
+              A release, failed check, order, shipment or recurring audit may start a bounded task.
+            </span>
+          </li>
+          <li>
+            <strong>Read-only production</strong>
+            <span>
+              Agents gather permitted evidence. They do not turn an observation into a production
+              write.
+            </span>
+          </li>
+          <li>
+            <strong>Proposal</strong>
+            <span>
+              The output is a draft, issue or changeset with evidence, rationale, risk and rollback.
+            </span>
+          </li>
+          <li>
+            <strong>Policy and qualification</strong>
+            <span>
+              Check scope, asset rights, spend, required gates and recovery before asking for a
+              decision.
+            </span>
+          </li>
+          <li>
+            <strong>Dean decides</strong>
+            <span>
+              Approve the qualified candidate, return it for changes or reject it. A new revision
+              needs a new review.
+            </span>
+          </li>
         </ol>
       </D2Diagram>
       <div class="container--reading prose">
-        <p>Scheduled improvement works the same way. A check can spot an old dependency, stale screenshot, broken journey or drifting document. It creates a proposal or work item. It does not silently edit or deploy production.</p>
-        <p>Project value sets the amount of process. A throwaway experiment stays cheap to change. Customer money, promises, private data, hard-to-replace work or physical safety add controls when a project earns them. A repository count or an AI-generated market estimate does not make something a company. Record actual customers, revenue, use, replacement cost, creative value and operating risk separately.</p>
+        <p>
+          Scheduled improvement works the same way. A check can spot an old dependency, stale
+          screenshot, broken journey or drifting document. It creates a proposal or work item. It
+          does not silently edit or deploy production.
+        </p>
+        <p>
+          Project value sets the amount of process. A throwaway experiment stays cheap to change.
+          Customer money, promises, private data, hard-to-replace work or physical safety add
+          controls when a project earns them. A repository count or an AI-generated market estimate
+          does not make something a company. Record actual customers, revenue, use, replacement
+          cost, creative value and operating risk separately.
+        </p>
       </div>
     </div>
   </section>
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>A payment event must lead to one controlled fulfilment.</h2></div>
-        <p>A browser redirect cannot settle an order. Payment state comes from the payment provider, then a durable workflow records the fulfilment that follows.</p>
+        <div>
+          <h2>A payment event must lead to one controlled fulfilment.</h2>
+        </div>
+        <p>
+          A browser redirect cannot settle an order. Payment state comes from the payment provider,
+          then a durable workflow records the fulfilment that follows.
+        </p>
       </div>
       <D2Diagram
         title="One paid order, one fulfilment path"
@@ -89,18 +195,99 @@ import D2Diagram from "../../components/D2Diagram.astro";
         className="payment-fulfilment-plate"
       >
         <ol class="diagram-transcript">
-          <li><strong>Approve the catalogue</strong><span>Dean approves artwork, rights, price, provider and per-order spend limits before a product is offered.</span></li>
-          <li><strong>Confirm payment from its source</strong><span>Verify the webhook signature, payment status, amount and order. A return to a success URL is not proof of payment.</span></li>
-          <li><strong>Deduplicate before acting</strong><span>Record stable event and order IDs. Use idempotent provider requests so a retry cannot make a second order.</span></li>
-          <li><strong>Fulfil within policy</strong><span>Send Printful an approved order only when the item and spend fit the published limits. Hold exceptions for Dean.</span></li>
-          <li><strong>Follow the shipment</strong><span>Provider events update the order record and customer notification. Physical product quality still needs a real check.</span></li>
+          <li>
+            <strong>Approve the catalogue</strong>
+            <span>
+              Dean approves artwork, rights, price, provider and per-order spend limits before a
+              product is offered.
+            </span>
+          </li>
+          <li>
+            <strong>Confirm payment from its source</strong>
+            <span>
+              Verify the webhook signature, payment status, amount and order. A return to a success
+              URL is not proof of payment.
+            </span>
+          </li>
+          <li>
+            <strong>Deduplicate before acting</strong>
+            <span>
+              Record stable event and order IDs. Use idempotent provider requests so a retry cannot
+              make a second order.
+            </span>
+          </li>
+          <li>
+            <strong>Fulfil within policy</strong>
+            <span>
+              Send Printful an approved order only when the item and spend fit the published limits.
+              Hold exceptions for Dean.
+            </span>
+          </li>
+          <li>
+            <strong>Follow the shipment</strong>
+            <span>
+              Provider events update the order record and customer notification. Physical product
+              quality still needs a real check.
+            </span>
+          </li>
         </ol>
       </D2Diagram>
       <div class="container container--reading prose">
-        <p>A commercial pipeline can automate orders inside limits Dean approved in advance. A new product, unusual amount, refund, supplier purchase or other exception waits for a decision. The approval is durable and records whether Dean approved it, returned it with notes or rejected it.</p>
-        <p>Validate events, make handlers idempotent and keep an order ledger. A retry must not charge twice, buy two shirts, send duplicate refunds or tell a customer that an unshipped order shipped. Payment details stay with the payment provider; Woodhouse's order record needs the provider's event and transaction references, not card numbers.</p>
-        <p class="source-note"><strong>Technical references:</strong> <a href="https://docs.stripe.com/payments/existing-customers?platform=web&amp;ui=stripe-hosted" target="_blank" rel="noopener noreferrer">Stripe payment events</a> · <a href="https://docs.stripe.com/api/idempotent_requests" target="_blank" rel="noopener noreferrer">Stripe idempotency</a> · <a href="https://developers.printful.com/docs/" target="_blank" rel="noopener noreferrer">Printful orders and webhooks</a> · <a href="https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/" target="_blank" rel="noopener noreferrer">Cloudflare human approval workflows</a> · <a href="https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/" target="_blank" rel="noopener noreferrer">Cloudflare scheduled agent tasks</a>.</p>
-        <p class="source-note"><strong>Scope:</strong> Woodhouse publishes these rules. This release does not process payments, call Printful, schedule agent work or write to production.</p>
+        <p>
+          A commercial pipeline can automate orders inside limits Dean approved in advance. A new
+          product, unusual amount, refund, supplier purchase or other exception waits for a
+          decision. The approval is durable and records whether Dean approved it, returned it with
+          notes or rejected it.
+        </p>
+        <p>
+          Validate events, make handlers idempotent and keep an order ledger. A retry must not
+          charge twice, buy two shirts, send duplicate refunds or tell a customer that an unshipped
+          order shipped. Payment details stay with the payment provider; Woodhouse's order record
+          needs the provider's event and transaction references, not card numbers.
+        </p>
+        <p class="source-note">
+          <strong>Technical references:</strong>{" "}
+          <a
+            href="https://docs.stripe.com/payments/existing-customers?platform=web&amp;ui=stripe-hosted"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Stripe payment events
+          </a>{" "}
+          ·{" "}
+          <a
+            href="https://docs.stripe.com/api/idempotent_requests"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Stripe idempotency
+          </a>{" "}
+          ·{" "}
+          <a href="https://developers.printful.com/docs/" target="_blank" rel="noopener noreferrer">
+            Printful orders and webhooks
+          </a>{" "}
+          ·{" "}
+          <a
+            href="https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Cloudflare human approval workflows
+          </a>{" "}
+          ·{" "}
+          <a
+            href="https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Cloudflare scheduled agent tasks
+          </a>
+          .
+        </p>
+        <p class="source-note">
+          <strong>Scope:</strong> Woodhouse publishes these rules. This release does not process
+          payments, call Printful, schedule agent work or write to production.
+        </p>
       </div>
     </div>
   </section>
@@ -108,22 +295,65 @@ import D2Diagram from "../../components/D2Diagram.astro";
     <div class="container split-section">
       <div class="split-section__copy">
         <h2>Observe more than you mutate.</h2>
-        <p>Agents can collect production evidence and prepare a change. Before a consequential action, the change needs a reviewable diff, a reason, qualification and a rollback path. The approval is tied to that exact candidate and cannot be skipped by asking again in chat.</p>
+        <p>
+          Agents can collect production evidence and prepare a change. Before a consequential
+          action, the change needs a reviewable diff, a reason, qualification and a rollback path.
+          The approval is tied to that exact candidate and cannot be skipped by asking again in
+          chat.
+        </p>
       </div>
       <div class="two-column-list">
-        <article class="method-step"><span class="method-step__n">01</span><div><h3>Observe</h3><p>Read permitted state and source material.</p></div></article>
-        <article class="method-step"><span class="method-step__n">02</span><div><h3>Recommend</h3><p>Explain what changed and what remains uncertain.</p></div></article>
-        <article class="method-step"><span class="method-step__n">03</span><div><h3>Prepare</h3><p>Produce a reviewable change with evidence and rollback.</p></div></article>
-        <article class="method-step"><span class="method-step__n">04</span><div><h3>Execute by policy</h3><p>Bounded work may proceed inside approved limits. New financial, destructive or physical actions wait for a human decision.</p></div></article>
+        <article class="method-step">
+          <span class="method-step__n">01</span>
+          <div>
+            <h3>Observe</h3>
+            <p>Read permitted state and source material.</p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">02</span>
+          <div>
+            <h3>Recommend</h3>
+            <p>Explain what changed and what remains uncertain.</p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">03</span>
+          <div>
+            <h3>Prepare</h3>
+            <p>Produce a reviewable change with evidence and rollback.</p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">04</span>
+          <div>
+            <h3>Execute by policy</h3>
+            <p>
+              Bounded work may proceed inside approved limits. New financial, destructive or
+              physical actions wait for a human decision.
+            </p>
+          </div>
+        </article>
       </div>
     </div>
   </section>
   <section class="section">
     <div class="container container--reading prose">
       <h2>Failures teach the factory.</h2>
-      <p>Contain the failure. Record it as an incident or tracked defect, attach the evidence, and investigate which control missed it. Link the work item to the changeset, qualification and production follow-up. Then decide whether the factory needs a regression check, release gate, policy, architecture or documentation change.</p>
-      <p>A recurring failure should become harder to repeat because the factory learned from it. Public claims remain smaller than the evidence supporting them.</p>
-      <div class="pullquote">Give agents room to work where mistakes are cheap. Add review where a mistake can cost users, money, data or safety.<cite>Core doctrine</cite></div>
+      <p>
+        Contain the failure. Record it as an incident or tracked defect, attach the evidence, and
+        investigate which control missed it. Link the work item to the changeset, qualification and
+        production follow-up. Then decide whether the factory needs a regression check, release
+        gate, policy, architecture or documentation change.
+      </p>
+      <p>
+        A recurring failure should become harder to repeat because the factory learned from it.
+        Public claims remain smaller than the evidence supporting them.
+      </p>
+      <div class="pullquote">
+        Give agents room to work where mistakes are cheap. Add review where a mistake can cost
+        users, money, data or safety.<cite>Core doctrine</cite>
+      </div>
     </div>
   </section>
 </BaseLayout>

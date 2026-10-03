@@ -1,30 +1,73 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { fieldNotes } from "../../data/field-notes";
+import { listPublishedDispatches } from "../../content/repository";
+
+const result = await listPublishedDispatches();
+if (result.error) console.error("Failed to load published EmDash dispatches:", result.error);
+const editorialDispatches = result.dispatches;
+if (Astro.cache?.enabled) Astro.cache.set(result.cacheHint);
+
+export const prerender = false;
 ---
-<BaseLayout title="Dispatches" description="Factory dispatches, field notes and incidents about software agents, quality gates, production evidence and physical proof." path="/dispatches/" currentPath="/dispatches/" image="/og/factory.jpg">
+
+<BaseLayout
+  title="Dispatches"
+  description="Factory dispatches, field notes and incidents about software agents, quality gates, production evidence and physical proof."
+  path="/dispatches/"
+  currentPath="/dispatches/"
+  image="/og/factory.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Dispatches</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Dispatches</span>
+        </nav>
         <h1 class="page-title">What the work taught us.</h1>
       </div>
-      <aside class="page-intro__aside"><strong>Dispatches · field notes · incidents</strong>Writing follows real project work. Failures stay in the story because the resulting factory change is the useful part.</aside>
+      <aside class="page-intro__aside">
+        <strong>Dispatches · field notes · incidents</strong>Writing follows real project work.
+        Failures stay in the story because the resulting factory change is the useful part.
+      </aside>
     </div>
   </section>
   <section class="section paper-section">
     <div class="container">
-      {fieldNotes.map((note, index) => (
+      {editorialDispatches.map((dispatch, index) => (
         <article class="ledger-note">
-          <span class="ledger-note__index">NOTE / 0{index + 1}</span>
+          <span class="ledger-note__index">DISPATCH / {String(index + 1).padStart(2, "0")}</span>
           <div class="ledger-note__main">
-            <a href={"/dispatches/" + note.slug + "/"}><h2 class="ledger-note__title">{note.title}</h2></a>
-            <p class="ledger-note__deck">{note.deck}</p>
+            <a href={"/dispatches/" + dispatch.slug + "/"}>
+              <h2 class="ledger-note__title">{dispatch.title}</h2>
+            </a>
+            <p class="ledger-note__deck">{dispatch.deck}</p>
           </div>
-          <div class="ledger-note__side"><strong>{note.kind}</strong>{note.date}<br />{note.readingTime}</div>
+          <div class="ledger-note__side">
+            <strong>{dispatch.kind}</strong>
+            {dispatch.publishedAt
+              ? new Date(dispatch.publishedAt).toLocaleDateString("en-AU", {
+                  dateStyle: "medium",
+                  timeZone: "Australia/Melbourne"
+                })
+              : dispatch.reviewDate}
+            <br />
+            Evidence reviewed {dispatch.reviewDate}
+          </div>
         </article>
       ))}
-      <p class="source-note"><strong>Editorial policy:</strong> every public note is reviewed for private project details. This is a small, curated journal; it does not imply an automatic private-conversation publisher.</p>
+      {result.error ? (
+        <p class="source-note">
+          <strong>Some recent dispatches may be missing.</strong> The published archive remains
+          available. Private conversations are never published automatically.
+        </p>
+      ) : (
+        <p class="source-note">
+          <strong>Editorial policy:</strong> every public note is reviewed for private project
+          details. Private conversations remain private unless Dean publishes an edited article.
+        </p>
+      )}
     </div>
   </section>
 </BaseLayout>

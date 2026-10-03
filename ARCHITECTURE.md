@@ -1,36 +1,32 @@
 # Architecture
 
-## Current release
+Reviewed 30 September 2026.
 
-Reviewed public-safe factory report
-                 |
-                 v
-       Typed snapshot in src/data
-                 |
-                 +-- Astro pages and dossiers
-                 +-- Agent Reception JSON
-                 +-- sitemap, robots and llms.txt
-                 +-- page-specific social cards
-                 |
-                 v
-     Static HTML, CSS, SVG and images
-                 |
-                 v
-     Cloudflare Worker Static Assets
-                 |
-                 v
-      woodhouse.loftwah.com
+```text
+Public visitor / authenticated editor / authorised authoring agent
+                            |
+                Cloudflare Worker Cache
+                            |
+           Astro + Woodhouse presentation layer
+               |                         |
+        EmDash public queries        EmDash Office / MCP
+               |                         |
+       D1 content and history     Authenticated mutations
+               |
+          KV object cache
 
-Astro generates static pages. Wrangler publishes the built dist directory as Worker Static Assets and attaches the Worker to the custom domain.
+        R2 media and private backups
+        Worker Loader sandboxed plugins
+```
 
-## Data boundary
+Astro owns page structure, CSS, diagrams, editorial block renderers and accessible browser behaviour. EmDash owns structured content, editorial state, authors, revisions, previews, media, taxonomy, menus, search records and scheduled publishing. The Worker serves public pages from the published read model; admin, MCP, preview and mutation responses are private. The shared navigation and search index are live CMS data, so public HTML is server-rendered while checked-in styles, diagrams, fonts and images remain static assets.
 
-GitHub remains authoritative for repository state. Seven project repositories are private. This release therefore consumes the human-reviewed, shareable report rather than scraping and republishing private data. The snapshot has an explicit date and is not represented as real-time telemetry.
+`src/content/repository.ts` is the only Woodhouse query boundary. Every public query asks for published entries and then checks the explicit `public_safe` flag; public conversations also require `source_reviewed`. CMS links and project metadata are constrained to root-relative or HTTPS URLs. A review date and proof boundary are shown with project state. The current state is a dated editorial record, never live repository telemetry.
 
-Agent Reception serves curated JSON that is safe to publish. It cannot execute tools, modify repositories, receive private context or publish a conversation.
+The seeded model contains seven collections: project identity, append-only factory snapshots, reviewed project statuses, evidence records, dispatches, structured incident records and an intentionally empty conversations collection. A project status points to a snapshot; evidence records also point to a project and snapshot. Dispatches link to the project/topic context they discuss. The relation keeps historical state instead of overwriting it when a project is reviewed again.
 
-## Later collector boundary
+The Cloudflare Worker binds D1 as `DB`, private R2 as `MEDIA`, KV as `CACHE` and `SESSION`, and Worker Loader as `LOADER`. A one-minute scheduled handler runs EmDash maintenance, scheduled publishing and plugin cron work. Automatic EmDash JSON backups are not yet enabled or verified. Production and preview have separate database, media and KV resources. The root Wrangler target defaults to preview; the named production environment owns the custom-domain route.
 
-A future collector may observe GitHub events, but it must normalise them, retain source links and timestamps, separate raw events from interpretation, and require publication review before content appears publicly. Public site requests must never contain repository credentials.
+The public Agent Reception is a curated, read-only interface. It cannot call private repositories, run tools, mutate content or publish conversations. The authenticated EmDash MCP endpoint is a separate authoring interface; its token and assigned role determine what a client can do. No public agent receives write access.
 
-If the product later stores event history, content drafts or approval state, add a Cloudflare data service only for that concrete need. Public static content remains cacheable; editorial drafts and authenticated office data must not share a public cache path.
+See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.

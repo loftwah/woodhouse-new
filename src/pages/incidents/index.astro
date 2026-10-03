@@ -1,36 +1,78 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TechnicalPlate from "../../components/TechnicalPlate.astro";
-import { fieldNotes } from "../../data/field-notes";
-const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
+import { asText, listPublicIncidents } from "../../content/repository";
+
+const result = await listPublicIncidents();
+if (result.error) console.error("Failed to load EmDash incidents:", result.error);
+const incidents = result.incidents;
+if (Astro.cache?.enabled) Astro.cache.set(result.cacheHint);
+export const prerender = false;
 ---
-<BaseLayout title="Incidents and factory learning" description="Incidents show what the factory believed, what failed, which control changed and what the lesson means elsewhere." path="/incidents/" image="/og/the-tests-passed.jpg">
+
+<BaseLayout
+  title="Incidents and factory learning"
+  description="Incidents show what the factory believed, what failed, which control changed and what the lesson means elsewhere."
+  path="/incidents/"
+  image="/og/the-tests-passed.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Incidents</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Incidents</span>
+        </nav>
         <h1 class="page-title">Make the next run safer.</h1>
       </div>
-      <aside class="page-intro__aside"><strong>Belief → failure → evidence → control</strong>An incident is not a footnote. It is the record of what the factory had to change.</aside>
+      <aside class="page-intro__aside">
+        <strong>Belief → failure → evidence → control</strong>An incident is not a footnote. It is
+        the record of what the factory had to change.
+      </aside>
     </div>
   </section>
   <section class="section paper-section">
     <div class="container">
       {incidents.map((note, index) => (
         <article class="ledger-note">
-          <span class="ledger-note__index">INCIDENT / 0{index + 1}</span>
-          <div class="ledger-note__main"><a href={"/dispatches/" + note.slug + "/"}><h2 class="ledger-note__title">{note.title}</h2></a><p class="ledger-note__deck">{note.deck}</p></div>
-          <div class="ledger-note__side"><strong>{note.kind}</strong>{note.date}<br />{note.readingTime}</div>
+          <span class="ledger-note__index">INCIDENT / {String(index + 1).padStart(2, "0")}</span>
+          <div class="ledger-note__main">
+            <a href={`/incidents/${note.id}/`}>
+              <h2 class="ledger-note__title">{asText(note.data, "title")}</h2>
+            </a>
+            <p class="ledger-note__deck">{asText(note.data, "what_happened")}</p>
+          </div>
+          <div class="ledger-note__side">
+            <strong>Reviewed record</strong>
+            {asText(note.data, "reviewed_at")}
+          </div>
         </article>
       ))}
-      <p class="source-note"><strong>Method:</strong> the incident archive publishes reviewed lessons from project work. Private repository records are not reproduced.</p>
+      {result.error ? (
+        <p class="source-note">
+          <strong>Some recent incidents may be missing.</strong> The reviewed archive remains
+          available.
+        </p>
+      ) : (
+        <p class="source-note">
+          <strong>Method:</strong> the incident archive publishes reviewed lessons from project
+          work. Private repository records are not reproduced.
+        </p>
+      )}
     </div>
   </section>
   <section class="section" aria-labelledby="failure-patterns-title">
     <div class="container">
       <div class="section-heading">
-        <div><h2 id="failure-patterns-title">Put the lesson in the next check.</h2></div>
-        <p>The incident archive contains one published incident. The pattern register below collects risks in the reviewed project work. These are controls to keep, not six more incident reports.</p>
+        <div>
+          <h2 id="failure-patterns-title">Put the lesson in the next check.</h2>
+        </div>
+        <p>
+          The incident archive contains reviewed accounts of failures and the controls that
+          followed. The pattern register below collects risks in the reviewed project work. These
+          are controls to keep, not additional incident reports.
+        </p>
       </div>
       <TechnicalPlate
         id="failure-loop"
@@ -49,15 +91,52 @@ const incidents = fieldNotes.filter((note) => note.kind === "Factory incident");
       <div class="pattern-register">
         <div class="pattern-register__intro">
           <h3>A confident answer can still be wrong.</h3>
-          <p>The examples come from recurring project risks. Each one needs a control that survives the next run.</p>
+          <p>
+            The examples come from recurring project risks. Each one needs a control that survives
+            the next run.
+          </p>
         </div>
         <ol class="pattern-list">
-          <li><strong>Confident invention at a source gap</strong><p>Leave unknowns visible. Require a source for each factual claim and keep expansion behind the parity gate.</p></li>
-          <li><strong>Passing checks used to certify feel</strong><p>Tests can miss hierarchy, pacing and play quality. Inspect the screen in the real flow and intended viewport.</p></li>
-          <li><strong>Old proof attached to new code</strong><p>Bind a result to the exact source or release, then repeat the check after a change.</p></li>
-          <li><strong>One percentage hides changed scope</strong><p>Record what the denominator includes and when it changes. Name the work that remains.</p></li>
-          <li><strong>Simulation stands in for people and hardware</strong><p>Software checks cannot prove the device, environment or human path. Observe each physical boundary directly.</p></li>
-          <li><strong>Polish covers missing information</strong><p>Label promotional art, show the product state and next proof, and remove claims the source cannot support.</p></li>
+          <li>
+            <strong>Confident invention at a source gap</strong>
+            <p>
+              Leave unknowns visible. Require a source for each factual claim and keep expansion
+              behind the parity gate.
+            </p>
+          </li>
+          <li>
+            <strong>Passing checks used to certify feel</strong>
+            <p>
+              Tests can miss hierarchy, pacing and play quality. Inspect the screen in the real flow
+              and intended viewport.
+            </p>
+          </li>
+          <li>
+            <strong>Old proof attached to new code</strong>
+            <p>
+              Bind a result to the exact source or release, then repeat the check after a change.
+            </p>
+          </li>
+          <li>
+            <strong>One percentage hides changed scope</strong>
+            <p>
+              Record what the denominator includes and when it changes. Name the work that remains.
+            </p>
+          </li>
+          <li>
+            <strong>Simulation stands in for people and hardware</strong>
+            <p>
+              Software checks cannot prove the device, environment or human path. Observe each
+              physical boundary directly.
+            </p>
+          </li>
+          <li>
+            <strong>Polish covers missing information</strong>
+            <p>
+              Label promotional art, show the product state and next proof, and remove claims the
+              source cannot support.
+            </p>
+          </li>
         </ol>
       </div>
     </div>

@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getEmDashEntry } from "emdash";
+import { asText, getProjectRecord } from "../../content/repository";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const result = slug
+  ? await getEmDashEntry("incidents", slug)
+  : { entry: undefined, error: undefined, cacheHint: undefined };
+if (result.error)
+  return new Response("Unable to load this incident record.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const incident = result.entry;
+if (!incident || incident.data.public_safe !== true)
+  return new Response("Incident not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+if (Astro.cache?.enabled && result.cacheHint) Astro.cache.set(result.cacheHint);
+const projectKey = asText(incident.data, "project_key");
+const projectResult = projectKey ? await getProjectRecord(projectKey) : null;
+if (projectResult?.error)
+  return new Response("Unable to load the associated public project.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled)
+  for (const hint of projectResult?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
+const title = asText(incident.data, "title");
+---
+
+<BaseLayout
+  title={title}
+  description={asText(incident.data, "what_happened")}
+  path={`/incidents/${incident.id}/`}
+  type="article"
+  image="/og/the-tests-passed.jpg"
+>
+  <section class="container dossier-hero">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/incidents/">Incidents</a>
+        <span>/</span>
+        <span>{projectResult?.project?.name ?? projectKey}</span>
+      </nav>
+      <h1>{title}</h1>
+      <p class="article-meta">Reviewed {asText(incident.data, "reviewed_at")}</p>
+    </div>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">Belief → failure → evidence → control</span>
+      <dl>
+        <dt>Project</dt>
+        <dd>{projectResult?.project?.name ?? projectKey}</dd>
+        <dt>Review date</dt>
+        <dd>{asText(incident.data, "reviewed_at")}</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      <h2>Initial belief</h2>
+      <p>{asText(incident.data, "initial_belief")}</p>
+      <h2>What happened</h2>
+      <p>{asText(incident.data, "what_happened")}</p>
+      <h2>Evidence</h2>
+      <p>{asText(incident.data, "evidence")}</p>
+      <h2>Root cause</h2>
+      <p>{asText(incident.data, "root_cause")}</p>
+      <h2>Factory change</h2>
+      <p>{asText(incident.data, "factory_change")}</p>
+      <h2>Later reuse</h2>
+      <p>{asText(incident.data, "later_reuse")}</p>
+      <aside class="callout">
+        <p class="callout__title">Proof boundary</p>
+        <p>{asText(incident.data, "proof_boundary")}</p>
+      </aside>
+      <p>
+        <a href={`/dispatches/${asText(incident.data, "dispatch_slug")}/`}>
+          Read the full dispatch <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </article>
+    <aside class="margin-rail">
+      <div class="margin-note">
+        <span class="margin-note__label">Reviewed public source</span>
+        <p>{asText(incident.data, "reviewed_at")}. Private source material remains private.</p>
+      </div>
+    </aside>
+  </section>
+</BaseLayout>

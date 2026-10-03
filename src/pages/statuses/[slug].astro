@@ -1,0 +1,147 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import StatusStamp from "../../components/StatusStamp.astro";
+import { getEmDashEntry } from "emdash";
+import { asText } from "../../content/repository";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const result = slug ? await getEmDashEntry("project_statuses", slug) : null;
+if (result?.error)
+  return new Response("Unable to load this project status.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const status = result?.entry;
+const isPreview = result?.isPreview === true;
+if (!status || (!isPreview && status.data.public_safe !== true))
+  return new Response("Project status not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+const projectKey = asText(status.data, "project_key");
+const snapshotKey = asText(status.data, "snapshot_key");
+const [projectResult, snapshotResult] = await Promise.all([
+  projectKey ? getEmDashEntry("projects", projectKey) : null,
+  snapshotKey ? getEmDashEntry("factory_snapshots", snapshotKey) : null
+]);
+if (projectResult?.error || snapshotResult?.error)
+  return new Response("Unable to load the linked public records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const project = projectResult?.entry;
+const snapshot = snapshotResult?.entry;
+if (
+  (!project ||
+    project.data.public_safe !== true ||
+    !snapshot ||
+    snapshot.data.public_safe !== true) &&
+  !isPreview
+)
+  return new Response("Linked public record not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+if (isPreview) {
+  Astro.cache?.set(false);
+  Astro.response.headers.set("cache-control", "private, no-store, max-age=0");
+  Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+} else if (Astro.cache?.enabled) {
+  for (const hint of [result?.cacheHint, projectResult?.cacheHint, snapshotResult?.cacheHint])
+    if (hint) Astro.cache.set(hint);
+}
+const title = asText(status.data, "state") || "Project status";
+---
+
+<BaseLayout
+  title={`${project ? asText(project.data, "name") : projectKey} · ${title}`}
+  description={asText(status.data, "current") || "A dated project status preview."}
+  path={`/statuses/${status.id}/`}
+  type="article"
+  pageType="article"
+  publishedAt={
+    status.data.publishedAt instanceof Date ? status.data.publishedAt.toISOString() : undefined
+  }
+  modifiedAt={
+    status.data.updatedAt instanceof Date ? status.data.updatedAt.toISOString() : undefined
+  }
+  contentRef={{ collection: "project_statuses", id: status.id, slug: status.id }}
+  image="/og/factory.jpg"
+  noindex={isPreview}
+>
+  {isPreview && (
+    <p class="container source-note">
+      <strong>Unpublished preview.</strong> This status draft is visible only through authenticated
+      EmDash preview.
+    </p>
+  )}
+  <section class="container dossier-hero" {...status.edit}>
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/factory/">Factory</a>
+        <span>/</span>
+        <span>Status record</span>
+      </nav>
+      <h1 {...status.edit.state}>{title}</h1>
+      <p class="article-meta" {...status.edit.reviewed_at}>
+        Reviewed {asText(status.data, "reviewed_at") || "date not supplied"}
+      </p>
+      <p class="dossier-hero__summary" {...status.edit.current}>
+        {asText(status.data, "current") || "No current-read text has been added yet."}
+      </p>
+    </div>
+    <aside class="dossier-hero__side">
+      <StatusStamp tone={status.data.state_tone} label={title} />
+      <dl>
+        <dt>Project</dt>
+        <dd>{project ? asText(project.data, "name") : projectKey || "Not linked"}</dd>
+        <dt>Snapshot</dt>
+        <dd>{snapshot ? asText(snapshot.data, "title") : snapshotKey || "Not linked"}</dd>
+        <dt>Review date</dt>
+        <dd>{asText(status.data, "reviewed_at") || "Not reviewed"}</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      <h2>What this record says</h2>
+      <p>{asText(status.data, "current") || "No current-read text has been added yet."}</p>
+      <div class="callout">
+        <p class="callout__title">The next useful proof</p>
+        <p {...status.edit.next_proof}>
+          {asText(status.data, "next_proof") || "A next-proof item has not been set."}
+        </p>
+      </div>
+      <h2>Where the proof stops</h2>
+      <p {...status.edit.proof_boundary}>
+        {asText(status.data, "proof_boundary") ||
+          "This draft does not yet state its evidence boundary."}
+      </p>
+      <p>
+        {project && (
+          <a href={`/projects/${projectKey}/`}>
+            Read the {asText(project.data, "name")} project dossier
+          </a>
+        )}
+        {snapshot && (
+          <>
+            {" "}
+            · <a href={`/snapshots/${snapshotKey}/`}>Read the reviewed snapshot</a>
+          </>
+        )}
+      </p>
+    </article>
+    <aside class="margin-rail">
+      <div class="margin-note">
+        <span class="margin-note__label">Chronology</span>
+        <p>
+          This status belongs to one reviewed snapshot. Later reviews should add a new status record
+          and keep this one as history.
+        </p>
+      </div>
+    </aside>
+  </section>
+</BaseLayout>

@@ -1,0 +1,8 @@
+dist/
+node_modules/
+.astro/
+.emdash/
+.release/
+emdash-env.d.ts
+src/cloudflare-env.d.ts
+public/images/diagrams/*.svg

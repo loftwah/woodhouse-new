@@ -4,19 +4,46 @@ import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import ProjectNetwork from "../components/ProjectNetwork.astro";
 import LineagePlate from "../components/LineagePlate.astro";
-import StatusStamp from "../components/StatusStamp.astro";
-import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
-import { fieldNotes, originStory } from "../data/field-notes";
+import { toJsonLd } from "../data/safe-json";
+import { listProjectRecords, listPublishedDispatches } from "../content/repository";
 import { getSiteMetadata } from "../data/site-metadata";
 
-const firstNote = fieldNotes.find((note) => note.kind === "Founding essay");
-const featuredProjects = ["bubbles", "protocol-11", "max"]
-  .flatMap((slug) => {
-    const project = projects.find((item) => item.slug === slug);
-    return project?.siteUrl ? [project] : [];
+const [projectResult, dispatchResult] = await Promise.all([
+  listProjectRecords(),
+  listPublishedDispatches()
+]);
+if (projectResult.error || dispatchResult.error)
+  return new Response("Unable to load the public Woodhouse record.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
   });
-const featuredArtwork = await Promise.all(featuredProjects.map(async (project) => ({ project, metadata: await getSiteMetadata(project) })));
+const projects = projectResult.projects;
+const firstNote = dispatchResult.dispatches.find((note) => note.kind === "Founding essay");
+if (Astro.cache?.enabled) {
+  for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
+  Astro.cache.set(dispatchResult.cacheHint);
+}
+const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
+const reviewDateLabel =
+  reviewDate === "Review date unavailable"
+    ? reviewDate
+    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
+        dateStyle: "long",
+        timeZone: "Australia/Melbourne"
+      });
+const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
+const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+const featuredProjects = ["bubbles", "protocol-11", "max"].flatMap((slug) => {
+  const project = projects.find((item) => item.slug === slug);
+  return project?.siteUrl ? [project] : [];
+});
+const featuredArtwork = featuredProjects.map((project) => ({
+  project,
+  metadata: getSiteMetadata(project)
+}));
+export const prerender = false;
 ---
+
 <BaseLayout
   title="WOODHOUSE"
   description="Eight software projects, a workforce of agents and one human operator. Woodhouse publishes a dated record of what changed and what each project still needs."
@@ -25,28 +52,43 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
   <script
     slot="head"
     type="application/ld+json"
-    set:html={JSON.stringify({
+    set:html={toJsonLd({
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "WOODHOUSE",
       alternateName: "The Loftwah Software Factory",
-      url: "https://woodhouse.loftwah.com/",
-      author: { "@type": "Person", name: "Dean Lofts", url: "https://woodhouse.loftwah.com/dean/" },
+      url: `${siteOrigin}/`,
+      author: { "@type": "Person", name: "Dean Lofts", url: `${siteOrigin}/dean/` },
       description: "An evidence-led public observatory for the Loftwah software factory."
     })}
   />
   <section class="container home-shell" aria-labelledby="home-title">
     <div class="home-intro">
       <div class="home-intro__lead">
-        <h1 class="display-title home-title" id="home-title">I run a<br /><em>software <span class="home-title__last">factory.</span></em></h1>
+        <h1 class="display-title home-title" id="home-title">
+          I run a<br />
+          <em>
+            software <span class="home-title__last">factory.</span>
+          </em>
+        </h1>
       </div>
       <div class="home-intro__copy">
-        <p class="lede">Coding agents work across eight real projects. I set their scope, review their work and decide what reaches production.</p>
+        <p class="lede">
+          Coding agents work across {projects.length} real projects. I set their scope, review their
+          work and decide what reaches production.
+        </p>
         <div class="link-group home-intro__links">
-          <a class="text-link" href="/factory/">See how the factory works <span aria-hidden="true">↗</span></a>
-          <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">Read the story <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="/factory/">
+            See how the factory works <span aria-hidden="true">↗</span>
+          </a>
+          <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">
+            Read the story <span aria-hidden="true">↗</span>
+          </a>
         </div>
-        <p class="home-intro__note"><strong>A dated public readout, not a live feed.</strong> Every project has a clear boundary between reported work and proof still to come.</p>
+        <p class="home-intro__note">
+          <strong>A dated public readout, not a live feed.</strong> Every project has a clear
+          boundary between reported work and proof still to come.
+        </p>
       </div>
     </div>
 
@@ -55,12 +97,18 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
     <section class="home-artwork" aria-labelledby="home-artwork-title">
       <div class="home-artwork__heading">
         <h2 id="home-artwork-title">The projects, in their own words.</h2>
-        <p>Artwork, icons, titles and descriptions are read from each project's site. A marked Woodhouse image appears only when a site's own artwork cannot load.</p>
+        <p>Each project brings its own name, description and artwork.</p>
       </div>
       <div class="home-artwork__grid">
         {featuredArtwork.map(({ project, metadata }) => (
           <figure class="home-artwork__card" data-project-artwork>
-            <a class="home-artwork__image" href={project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${project.name} to view the original project artwork`}>
+            <a
+              class="home-artwork__image"
+              href={project.siteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Visit ${project.name} to view the original project artwork`}
+            >
               <img
                 src={metadata.image}
                 width="1200"
@@ -70,17 +118,28 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
                 fetchpriority={project.slug === "bubbles" ? "high" : "auto"}
                 decoding="async"
                 data-fallback-src={`/og/projects/${project.slug}.svg`}
-                data-fallback-alt={`${project.name} Woodhouse placeholder. The project site's artwork could not be displayed.`}
+                data-fallback-alt={`Woodhouse illustration for ${project.name}.`}
               />
             </a>
             <figcaption>
               <span class="home-artwork__source" data-artwork-status>
-                {metadata.icon && <img src={metadata.icon} width="24" height="24" alt="" aria-hidden="true" data-source-favicon />}
+                {metadata.icon && (
+                  <img
+                    src={metadata.icon}
+                    width="24"
+                    height="24"
+                    alt=""
+                    aria-hidden="true"
+                    data-source-favicon
+                  />
+                )}
                 <span>Artwork from {project.name}</span>
               </span>
               <strong>{metadata.title}</strong>
               <span class="home-artwork__description">{metadata.description}</span>
-              <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">Visit {project.name} <span aria-hidden="true">↗</span></a>
+              <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
+                Visit {project.name} <span aria-hidden="true">↗</span>
+              </a>
             </figcaption>
           </figure>
         ))}
@@ -88,18 +147,29 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
     </section>
   </section>
   <div class="container home-meta" aria-label="Snapshot details">
-    <span><strong>Reviewed {reviewDateLabel}</strong></span>
-    <span>Eight real projects · one dated public record</span>
+    <span>
+      <strong>Reviewed {reviewDateLabel}</strong>
+    </span>
+    <span>{projects.length} real projects · one dated public record</span>
   </div>
 
   <section class="section paper-section" aria-labelledby="floor-title">
     <div class="container">
       <div class="section-heading">
         <div>
-          <h2 id="floor-title">Different work.<br />Different finish lines.</h2>
+          <h2 id="floor-title">
+            Different work.
+            <br />
+            Different finish lines.
+          </h2>
         </div>
-        <p>Eight projects enter the same factory and expose different limits. This is a dated operator-reviewed readout, not a stream of invented Git events.</p>
-        <a class="text-link section-heading__action" href="/factory/">Enter the factory <span aria-hidden="true">↗</span></a>
+        <p>
+          {projects.length} projects enter the same factory and expose different limits. This is a
+          dated operator-reviewed readout, not a stream of invented Git events.
+        </p>
+        <a class="text-link section-heading__action" href="/factory/">
+          Enter the factory <span aria-hidden="true">↗</span>
+        </a>
       </div>
       <div class="snapshot-band">
         <div class="snapshot-band__label">
@@ -108,39 +178,64 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
         </div>
         <div class="snapshot-band__text">
           Functionality is one part of the readout.
-          <small>A project may still need product polish, release checks or evidence from the physical world.</small>
+          <small>
+            A project may still need product polish, release checks or evidence from the physical
+            world.
+          </small>
         </div>
       </div>
       <FactoryPlate />
       <p class="link-group factory-links">
-        <a class="text-link" href="/architecture/">Read the architecture <span aria-hidden="true">↗</span></a>
-        <a class="text-link" href="/doctrine/">Read the doctrine <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="/architecture/">
+          Read the architecture <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-link" href="/doctrine/">
+          Read the doctrine <span aria-hidden="true">↗</span>
+        </a>
       </p>
-      <div class="project-ledger" aria-label="Eight project snapshots">
-        {projects.map((project) => <ProjectRow project={project} />)}
+      <div class="project-ledger" aria-label={`${projects.length} project snapshots`}>
+        {projects.map((project) => (
+          <ProjectRow project={project} />
+        ))}
       </div>
-      <p class="source-note"><strong>Snapshot boundary:</strong> reviewed 28 September 2026. The underlying GitHub repositories are private; public entries summarise the shareable factory report and do not expose issue or pull request content.</p>
+      <p class="source-note">
+        <strong>Snapshot boundary:</strong> reviewed 28 September 2026. The underlying GitHub
+        repositories are private; public entries summarise the shareable factory report and do not
+        expose issue or pull request content.
+      </p>
     </div>
   </section>
 
-  {firstNote && <section class="section section--compact" aria-labelledby="founding-title">
-    <div class="container dark-story founding-note">
-      <div class="dark-story__content">
-        <h2 id="founding-title">{firstNote.title}</h2>
-        <p>{firstNote.deck}</p>
-        <a class="text-link" href={"/dispatches/" + firstNote.slug + "/"}>Read the essay <span aria-hidden="true">↗</span></a>
+  {firstNote && (
+    <section class="section section--compact" aria-labelledby="founding-title">
+      <div class="container dark-story founding-note">
+        <div class="dark-story__content">
+          <h2 id="founding-title">{firstNote.title}</h2>
+          <p>{firstNote.deck}</p>
+          <a class="text-link" href={"/dispatches/" + firstNote.slug + "/"}>
+            Read the essay <span aria-hidden="true">↗</span>
+          </a>
+        </div>
       </div>
-    </div>
-  </section>}
+    </section>
+  )}
 
   <section class="section" aria-labelledby="origin-title">
     <div class="container split-section split-section--reverse">
       <LineagePlate />
       <div class="split-section__copy">
-        <h2 id="origin-title">{originStory.title}</h2>
-        <p>{originStory.introduction}</p>
-        <p>The tools changed. APIs, cloud services, infrastructure, models, skills and agents started doing more of the work. Then the work spread across several products at once.</p>
-        <a class="text-link" href="/dean/">Meet the operator <span aria-hidden="true">↗</span></a>
+        <h2 id="origin-title">A software factory was not the original plan.</h2>
+        <p>
+          {firstNote?.lead ??
+            "The useful skill was knowing which tools belonged together and what each one could prove."}
+        </p>
+        <p>
+          The tools changed. APIs, cloud services, infrastructure, models, skills and agents started
+          doing more of the work. Then the work spread across several products at once.
+        </p>
+        <a class="text-link" href="/dean/">
+          Meet the operator <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </div>
   </section>
@@ -151,16 +246,29 @@ const featuredArtwork = await Promise.all(featuredProjects.map(async (project) =
         <div>
           <h2 id="agent-title">Project facts, published for people and agents.</h2>
         </div>
-        <p>The endpoint serves a reviewed, dated project record. It does not expose private repositories or give an agent permission to change anything.</p>
-        <a class="text-link section-heading__action" href="/agents/">Report to Agent Reception <span aria-hidden="true">↗</span></a>
+        <p>
+          The endpoint serves a reviewed, dated project record. It does not expose private
+          repositories or give an agent permission to change anything.
+        </p>
+        <a class="text-link section-heading__action" href="/agents/">
+          Report to Agent Reception <span aria-hidden="true">↗</span>
+        </a>
       </div>
       <div class="agent-entry">
         <div>
           <span class="agent-entry__label">A useful first question</span>
-          <p class="serif" style="font-size:1.55rem">Is Pirates ready for its procedural fork?</p>
-          <p>No. The 28 September report says the parity gate is still locked. Expansion is waiting for source-backed reconstruction.</p>
+          <p class="serif" style="font-size:1.55rem">
+            Is Pirates ready for its procedural fork?
+          </p>
+          <p>
+            No. The 28 September report says the parity gate is still locked. Expansion is waiting
+            for source-backed reconstruction.
+          </p>
         </div>
-        <pre class="agent-entry__code" aria-label="Public machine-readable project fact">GET /agents/facts.json
+        <pre
+          class="agent-entry__code"
+          aria-label="Public machine-readable project fact"
+        >GET /agents/facts.json
 
 pirates
 state: Gate B locked

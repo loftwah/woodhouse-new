@@ -13,5 +13,6 @@ This is how the factory works. A generic generated-looking website fails the pro
 - No hover-only controls, surprise motion or large client-side framework for static reading.
 - No “autonomous”, “qualified”, “production verified” or “physically proven” without evidence for that specific claim.
 - No private conversation or repository payload in public assets.
+- Do not explain internal fallback, retry, cache or recovery behavior in copy written for readers. State the useful source, status or limitation from the reader's point of view.
 
 The product is not optimised to look like a portfolio. It is designed to be Woodhouse.

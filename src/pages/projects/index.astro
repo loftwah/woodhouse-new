@@ -1,22 +1,62 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
-import { projects, reviewDateLabel } from "../../data/projects";
+import { listProjectRecords } from "../../content/repository";
+const result = await listProjectRecords();
+if (result.error)
+  return new Response("Unable to load public project records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const projects = result.projects;
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+const reviewDate = projects[0]?.reviewDate ?? "review date unavailable";
+const reviewDateLabel =
+  reviewDate === "review date unavailable"
+    ? reviewDate
+    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
+        dateStyle: "long",
+        timeZone: "Australia/Melbourne"
+      });
+export const prerender = false;
 ---
-<BaseLayout title="Project dossiers" description="Eight project dossiers from the Loftwah Software Factory. Each explains the product, the current read and the evidence still required." path="/projects/" image="/og/factory.jpg">
+
+<BaseLayout
+  title="Project dossiers"
+  description="Eight project dossiers from the Loftwah Software Factory. Each explains the product, the current read and the evidence still required."
+  path="/projects/"
+  image="/og/factory.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Projects</span></nav>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Projects</span>
+        </nav>
         <h1 class="page-title">Products as they are.</h1>
       </div>
-      <aside class="page-intro__aside"><strong>Eight dossiers · reviewed {reviewDateLabel}</strong>Each row displays the product site's artwork, favicon, title and description. Woodhouse adds a labelled local image only when the source artwork is missing. Artwork is not release evidence.</aside>
+      <aside class="page-intro__aside">
+        <strong>
+          {projects.length} dossiers · reviewed {reviewDateLabel}
+        </strong>
+        Each dossier pairs project details with public artwork where available. Artwork is not
+        release evidence.
+      </aside>
     </div>
   </section>
   <section class="section paper-section">
     <div class="container">
-      <div class="project-ledger">{projects.map((project) => <ProjectRow project={project} />)}</div>
-      <p class="source-note"><strong>Source:</strong> operator-reviewed public summary. Private repository material remains private.</p>
+      <div class="project-ledger">
+        {projects.map((project) => (
+          <ProjectRow project={project} />
+        ))}
+      </div>
+      <p class="source-note">
+        <strong>Source:</strong> operator-reviewed public summary. Private repository material
+        remains private.
+      </p>
     </div>
   </section>
 </BaseLayout>

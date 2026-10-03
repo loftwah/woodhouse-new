@@ -1,0 +1,2733 @@
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "defaultLocale": "en-AU",
+  "meta": {
+    "name": "WOODHOUSE",
+    "description": "Editorial records for the Loftwah Software Factory",
+    "author": "WOODHOUSE"
+  },
+  "settings": {
+    "title": "WOODHOUSE",
+    "tagline": "The Loftwah Software Factory",
+    "url": "https://woodhouse.loftwah.com",
+    "timezone": "Australia/Melbourne",
+    "dateFormat": "yyyy/MM/dd",
+    "social": {
+      "twitter": "loftwah",
+      "github": "loftwah",
+      "linkedin": "deanlofts"
+    },
+    "seo": { "titleSeparator": " — " }
+  },
+  "blockTypes": [
+    {
+      "slug": "prose",
+      "label": "Prose",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "content",
+              "label": "Prose content",
+              "type": "portableText",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "pull_quote",
+      "label": "Pull quote",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "quote",
+              "label": "Quote",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "attribution",
+              "label": "Context or attribution",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "callout",
+      "label": "Evidence callout",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "body",
+              "label": "Body",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "kind",
+              "label": "Tone",
+              "type": "select",
+              "required": true,
+              "validation": {
+                "options": [
+                  "plain",
+                  "evidence",
+                  "boundary"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "technical_plate",
+      "label": "Technical plate",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "id",
+              "label": "Stable plate id",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "number",
+              "label": "Plate number",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "variant",
+              "label": "Diagram form",
+              "type": "select",
+              "required": true,
+              "validation": {
+                "options": [
+                  "flow",
+                  "loop",
+                  "ladder"
+                ]
+              }
+            },
+            {
+              "slug": "note",
+              "label": "Annotation",
+              "type": "text"
+            },
+            {
+              "slug": "steps",
+              "label": "Steps",
+              "type": "repeater",
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "label",
+                    "label": "Label",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "title",
+                    "label": "Step title",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "detail",
+                    "label": "Detail",
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "diagram_plate",
+      "label": "D2 diagram plate",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "diagram_id",
+              "label": "Checked-in diagram",
+              "type": "select",
+              "required": true,
+              "validation": {
+                "options": [
+                  "lineage",
+                  "pirates-parity"
+                ]
+              }
+            },
+            {
+              "slug": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "description",
+              "label": "Accessible description",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "caption",
+              "label": "Caption",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "transcript",
+              "label": "Diagram transcript",
+              "type": "portableText",
+              "required": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "image_plate",
+      "label": "Editorial image plate",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "image",
+              "label": "Image",
+              "type": "image",
+              "required": true
+            },
+            {
+              "slug": "caption",
+              "label": "Caption",
+              "type": "text"
+            },
+            {
+              "slug": "variant",
+              "label": "Presentation",
+              "type": "select",
+              "validation": {
+                "options": [
+                  "wide",
+                  "full-bleed",
+                  "inline"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "evidence_link",
+      "label": "Evidence link",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "evidence_key",
+              "label": "Public evidence slug",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "label",
+              "label": "Label",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "context",
+              "label": "Context",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "project_reference",
+      "label": "Project reference",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "project_key",
+              "label": "Public project slug",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "label",
+              "label": "Link text",
+              "type": "string"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "collections": [
+    {
+      "slug": "projects",
+      "label": "Projects",
+      "labelSingular": "Project",
+      "description": "Evergreen public-safe identity and dossier facts for factory projects.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/projects/{slug}",
+      "routable": true,
+      "titleField": "name",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "name",
+          "label": "Project name",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "index",
+          "label": "Portfolio order",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "discipline",
+          "label": "Discipline",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "title",
+          "label": "Dossier title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "summary",
+          "label": "Summary",
+          "type": "text",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "why",
+          "label": "Why it matters",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "teaches",
+          "label": "Factory lesson",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "site_url",
+          "label": "Public site",
+          "type": "url"
+        },
+        {
+          "slug": "site_og_image",
+          "label": "Project social image URL",
+          "type": "url"
+        },
+        {
+          "slug": "site_og_title",
+          "label": "Project social title",
+          "type": "string"
+        },
+        {
+          "slug": "site_og_description",
+          "label": "Project social description",
+          "type": "text"
+        },
+        {
+          "slug": "site_favicon",
+          "label": "Project favicon URL",
+          "type": "url"
+        },
+        {
+          "slug": "preview_alt",
+          "label": "Artwork alt text",
+          "type": "text"
+        },
+        {
+          "slug": "preview_caption",
+          "label": "Artwork caption",
+          "type": "text"
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe record",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "slug": "factory_snapshots",
+      "label": "Factory snapshots",
+      "labelSingular": "Factory snapshot",
+      "description": "Append-only operator-reviewed public portfolio states.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/snapshots/{slug}",
+      "routable": true,
+      "titleField": "title",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Snapshot title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "reviewed_at",
+          "label": "Review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "source_description",
+          "label": "Source description",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "scope",
+          "label": "Scope",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "editorial_notes",
+          "label": "Editorial notes",
+          "type": "text"
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe snapshot",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "slug": "project_statuses",
+      "label": "Project statuses",
+      "labelSingular": "Project status",
+      "description": "Dated project state linked to a reviewed snapshot; new reviews append records.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/statuses/{slug}",
+      "routable": true,
+      "titleField": "state",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "project",
+          "label": "Project",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "projects",
+            "multiple": false,
+            "relation": "project_statuses_project"
+          }
+        },
+        {
+          "slug": "snapshot",
+          "label": "Reviewed snapshot",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "factory_snapshots",
+            "multiple": false,
+            "relation": "project_statuses_snapshot"
+          }
+        },
+        {
+          "slug": "project_key",
+          "label": "Project slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "snapshot_key",
+          "label": "Snapshot slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "state",
+          "label": "State label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "state_tone",
+          "label": "State tone",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "green",
+              "amber",
+              "red",
+              "quiet"
+            ]
+          }
+        },
+        {
+          "slug": "current",
+          "label": "Current read",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "next_proof",
+          "label": "Next useful proof",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "proof_boundary",
+          "label": "What this does not claim",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "reviewed_at",
+          "label": "Review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "sort_order",
+          "label": "Portfolio order",
+          "type": "integer",
+          "required": true
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe record",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "slug": "evidence_records",
+      "label": "Evidence records",
+      "labelSingular": "Evidence record",
+      "description": "Public evidence claims with explicit scope and proof boundaries.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/evidence/{slug}",
+      "routable": true,
+      "titleField": "title",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Evidence record",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "project",
+          "label": "Project",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "projects",
+            "multiple": false,
+            "relation": "evidence_records_project"
+          }
+        },
+        {
+          "slug": "snapshot",
+          "label": "Reviewed snapshot",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "factory_snapshots",
+            "multiple": false,
+            "relation": "evidence_records_snapshot"
+          }
+        },
+        {
+          "slug": "project_key",
+          "label": "Project slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "snapshot_key",
+          "label": "Snapshot slug",
+          "type": "string"
+        },
+        {
+          "slug": "claim",
+          "label": "Claim",
+          "type": "text",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "evidence_kind",
+          "label": "Evidence kind",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "observation",
+              "source evidence",
+              "implementation",
+              "merge/integration",
+              "qualification",
+              "production verification",
+              "owner acceptance",
+              "physical proof"
+            ]
+          }
+        },
+        {
+          "slug": "evidence_state",
+          "label": "Evidence state",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "reviewed",
+              "reported",
+              "not established"
+            ]
+          }
+        },
+        {
+          "slug": "occurred_at",
+          "label": "Observed date (YYYY-MM-DD)",
+          "type": "string"
+        },
+        {
+          "slug": "reviewed_at",
+          "label": "Review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "summary",
+          "label": "Summary",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "source_label",
+          "label": "Source label",
+          "type": "string"
+        },
+        {
+          "slug": "source_url",
+          "label": "Public source URL",
+          "type": "url"
+        },
+        {
+          "slug": "revision",
+          "label": "Public revision or build identifier",
+          "type": "string"
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe record",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        },
+        {
+          "slug": "proof_boundary",
+          "label": "Proof boundary",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "slug": "dispatches",
+      "label": "Dispatches",
+      "labelSingular": "Dispatch",
+      "description": "Reviewed public writing rendered by Woodhouse templates.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/dispatches/{slug}",
+      "routable": true,
+      "titleField": "title",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "kind",
+          "label": "Dispatch type",
+          "type": "select",
+          "required": true,
+          "validation": {
+            "options": [
+              "Field note",
+              "Factory incident",
+              "Founding essay",
+              "Case study",
+              "Conversation",
+              "Doctrine"
+            ]
+          }
+        },
+        {
+          "slug": "deck",
+          "label": "Summary",
+          "type": "text",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "review_date",
+          "label": "Evidence review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "source_reference",
+          "label": "Source description",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "lead",
+          "label": "Lead",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "lesson",
+          "label": "Factory lesson",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe publication approval",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        },
+        {
+          "slug": "featured_image",
+          "label": "Featured image",
+          "type": "image"
+        },
+        {
+          "slug": "projects",
+          "label": "Related projects",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "projects",
+            "multiple": true,
+            "relation": "dispatches_projects"
+          }
+        },
+        {
+          "slug": "content",
+          "label": "Editorial blocks",
+          "type": "blocks",
+          "validation": {
+            "allowedTypes": [
+              "prose",
+              "pull_quote",
+              "callout",
+              "technical_plate",
+              "diagram_plate",
+              "image_plate",
+              "evidence_link",
+              "project_reference"
+            ],
+            "maxItems": 100
+          }
+        }
+      ]
+    },
+    {
+      "slug": "incidents",
+      "label": "Incidents",
+      "labelSingular": "Incident",
+      "description": "Structured failure, evidence, cause, control and reuse records.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/incidents/{slug}",
+      "routable": true,
+      "titleField": "title",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Incident title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "project",
+          "label": "Project",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "projects",
+            "multiple": false,
+            "relation": "incidents_project"
+          }
+        },
+        {
+          "slug": "snapshot",
+          "label": "Reviewed snapshot",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "factory_snapshots",
+            "multiple": false,
+            "relation": "incidents_snapshot"
+          }
+        },
+        {
+          "slug": "dispatch",
+          "label": "Related dispatch",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "dispatches",
+            "multiple": false,
+            "relation": "incidents_dispatch"
+          }
+        },
+        {
+          "slug": "project_key",
+          "label": "Project slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "snapshot_key",
+          "label": "Snapshot slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "dispatch_slug",
+          "label": "Dispatch slug",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "initial_belief",
+          "label": "Initial belief",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "what_happened",
+          "label": "What happened",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "evidence",
+          "label": "Evidence",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "root_cause",
+          "label": "Root cause",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "factory_change",
+          "label": "Factory change",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "later_reuse",
+          "label": "Later reuse",
+          "type": "text"
+        },
+        {
+          "slug": "reviewed_at",
+          "label": "Review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "public_safe",
+          "label": "Public-safe incident",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        },
+        {
+          "slug": "proof_boundary",
+          "label": "Proof boundary",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
+      "slug": "conversations",
+      "label": "Public conversation lessons",
+      "labelSingular": "Conversation",
+      "description": "Only manually reviewed public-safe lessons; never a transcript ingestion target.",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "scheduling",
+        "search",
+        "seo"
+      ],
+      "urlPattern": "/conversations/{slug}",
+      "routable": true,
+      "titleField": "title",
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Title",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "context",
+          "label": "Context",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "edited_summary",
+          "label": "Edited public summary",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "lesson",
+          "label": "What changed",
+          "type": "text",
+          "required": true
+        },
+        {
+          "slug": "project",
+          "label": "Related project",
+          "type": "reference",
+          "validation": {
+            "targetCollection": "projects",
+            "multiple": false,
+            "relation": "conversations_project"
+          }
+        },
+        {
+          "slug": "reviewed_at",
+          "label": "Review date (YYYY-MM-DD)",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "source_reviewed",
+          "label": "Source consciously reviewed",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "slug": "public_safe",
+          "label": "Explicit public-safe approval",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": false
+        },
+        {
+          "slug": "proof_boundary",
+          "label": "Proof boundary",
+          "type": "text",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "slug": "project_statuses_project",
+      "parentCollection": "project_statuses",
+      "childCollection": "projects",
+      "parentLabel": "Project statuses",
+      "parentLabelSingular": "Project status",
+      "childLabel": "Project",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "project_statuses_snapshot",
+      "parentCollection": "project_statuses",
+      "childCollection": "factory_snapshots",
+      "parentLabel": "Project statuses",
+      "parentLabelSingular": "Project status",
+      "childLabel": "Reviewed snapshot",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "evidence_records_project",
+      "parentCollection": "evidence_records",
+      "childCollection": "projects",
+      "parentLabel": "Evidence records",
+      "parentLabelSingular": "Evidence record",
+      "childLabel": "Project",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "evidence_records_snapshot",
+      "parentCollection": "evidence_records",
+      "childCollection": "factory_snapshots",
+      "parentLabel": "Evidence records",
+      "parentLabelSingular": "Evidence record",
+      "childLabel": "Reviewed snapshot",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "dispatches_projects",
+      "parentCollection": "dispatches",
+      "childCollection": "projects",
+      "parentLabel": "Dispatches",
+      "parentLabelSingular": "Dispatch",
+      "childLabel": "Related projects"
+    },
+    {
+      "slug": "incidents_project",
+      "parentCollection": "incidents",
+      "childCollection": "projects",
+      "parentLabel": "Incidents",
+      "parentLabelSingular": "Incident",
+      "childLabel": "Project",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "incidents_snapshot",
+      "parentCollection": "incidents",
+      "childCollection": "factory_snapshots",
+      "parentLabel": "Incidents",
+      "parentLabelSingular": "Incident",
+      "childLabel": "Reviewed snapshot",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "incidents_dispatch",
+      "parentCollection": "incidents",
+      "childCollection": "dispatches",
+      "parentLabel": "Incidents",
+      "parentLabelSingular": "Incident",
+      "childLabel": "Related dispatch",
+      "maxChildrenPerParent": 1
+    },
+    {
+      "slug": "conversations_project",
+      "parentCollection": "conversations",
+      "childCollection": "projects",
+      "parentLabel": "Public conversation lessons",
+      "parentLabelSingular": "Conversation",
+      "childLabel": "Related project",
+      "maxChildrenPerParent": 1
+    }
+  ],
+  "taxonomies": [
+    {
+      "name": "topic",
+      "label": "Topics",
+      "labelSingular": "Topic",
+      "hierarchical": false,
+      "collections": [
+        "dispatches"
+      ],
+      "terms": [
+        {
+          "slug": "agent-operations",
+          "label": "Agent operations"
+        },
+        {
+          "slug": "platform-engineering",
+          "label": "Platform engineering"
+        },
+        {
+          "slug": "product-design",
+          "label": "Product design"
+        },
+        {
+          "slug": "qualification",
+          "label": "Qualification"
+        },
+        {
+          "slug": "source-archaeology",
+          "label": "Source archaeology"
+        },
+        {
+          "slug": "release-engineering",
+          "label": "Release engineering"
+        },
+        {
+          "slug": "accessibility",
+          "label": "Accessibility"
+        },
+        {
+          "slug": "physical-systems",
+          "label": "Physical systems"
+        }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "name": "primary",
+      "label": "Primary navigation",
+      "items": [
+        {
+          "type": "custom",
+          "label": "Factory",
+          "url": "/factory/"
+        },
+        {
+          "type": "custom",
+          "label": "Projects",
+          "url": "/projects/"
+        },
+        {
+          "type": "custom",
+          "label": "Dispatches",
+          "url": "/dispatches/"
+        },
+        {
+          "type": "custom",
+          "label": "Doctrine",
+          "url": "/doctrine/"
+        },
+        {
+          "type": "custom",
+          "label": "Dean",
+          "url": "/dean/"
+        },
+        {
+          "type": "custom",
+          "label": "Agent Reception",
+          "url": "/agents/"
+        }
+      ]
+    },
+    {
+      "name": "footer",
+      "label": "Footer navigation",
+      "items": [
+        {
+          "type": "custom",
+          "label": "Architecture",
+          "url": "/architecture/"
+        },
+        {
+          "type": "custom",
+          "label": "Incidents",
+          "url": "/incidents/"
+        },
+        {
+          "type": "custom",
+          "label": "Conversations",
+          "url": "/conversations/"
+        },
+        {
+          "type": "custom",
+          "label": "Contact",
+          "url": "/contact/"
+        },
+        {
+          "type": "custom",
+          "label": "X",
+          "url": "https://x.com/loftwah"
+        },
+        {
+          "type": "custom",
+          "label": "LinkedIn",
+          "url": "https://www.linkedin.com/in/deanlofts/"
+        },
+        {
+          "type": "custom",
+          "label": "GitHub",
+          "url": "https://github.com/loftwah"
+        }
+      ]
+    },
+    {
+      "name": "house_index",
+      "label": "House index",
+      "items": [
+        {
+          "type": "custom",
+          "label": "Architecture",
+          "url": "/architecture/"
+        },
+        {
+          "type": "custom",
+          "label": "Incidents",
+          "url": "/incidents/"
+        },
+        {
+          "type": "custom",
+          "label": "Conversations",
+          "url": "/conversations/"
+        },
+        {
+          "type": "custom",
+          "label": "Contact",
+          "url": "/contact/"
+        }
+      ]
+    }
+  ],
+  "bylines": [
+    {
+      "id": "byline-dean-lofts",
+      "slug": "dean-lofts",
+      "displayName": "Dean Lofts",
+      "bio": "Operator of the Loftwah Software Factory. Public work and evidence are reviewed before they are published.",
+      "websiteUrl": "https://woodhouse.loftwah.com/dean/"
+    }
+  ],
+  "sections": [
+    {
+      "slug": "proof-boundary",
+      "title": "Proof boundary",
+      "description": "A reusable reminder that claims stay within their evidence.",
+      "keywords": [
+        "evidence",
+        "proof",
+        "review"
+      ],
+      "source": "theme",
+      "content": [
+        {
+          "_type": "block",
+          "style": "normal",
+          "children": [
+            {
+              "_type": "span",
+              "text": "A test, merge, deployment, production observation and physical use are different claims. State what this record proves and where the proof stops."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "content": {
+    "projects": [
+      {
+        "id": "project-bubbles",
+        "slug": "bubbles",
+        "status": "published",
+        "data": {
+          "name": "Bubbles",
+          "index": "01",
+          "discipline": "Game systems · deterministic play",
+          "title": "A game can work and still be waiting to feel finished.",
+          "summary": "Bubbles is a polished arcade game with a serious deterministic core. Its remaining work is concentrated in the connected product experience, broad browser qualification and owner acceptance.",
+          "why": "The interesting question has changed. Bubbles no longer needs to prove that a game exists; it needs to prove that the whole product holds together across screens, states and actual play.",
+          "teaches": "Closing an issue is a record of work. It is not proof that the product has finished the job.",
+          "site_url": "https://bubbles.loftwah.com/",
+          "site_og_image": "https://bubbles.loftwah.com/og-image.png",
+          "site_og_title": "Bubbles",
+          "site_og_description": "A faithful, premium web-game re-implementation of a classic bubble shooter. Aim, match, and clear.",
+          "site_favicon": "https://bubbles.loftwah.com/favicon-32.png",
+          "preview_alt": "Promotional artwork on the Bubbles site: a glossy, colourful orb in an arcade scene.",
+          "preview_caption": "Promotional image from the Bubbles site",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-fighter",
+        "slug": "fighter",
+        "status": "published",
+        "data": {
+          "name": "Fighter",
+          "index": "02",
+          "discipline": "Game systems · authored journeys",
+          "title": "The game is real. The quality bar is deliberately unreasonable.",
+          "summary": "Fighter includes Story, Tournament, Battle, Arcade, Survival, Daily Challenges and progression. The remaining work is a whole-game review against the A+ bar.",
+          "why": "A large feature set can hide weak moments. Fighter is a proving ground for the difference between a technically complete game and one that feels authored from first run through the result.",
+          "teaches": "Passing geometry checks does not settle visual hierarchy, role, motion or whether a screen feels right in context.",
+          "site_url": "https://fighter.loftwah.com/",
+          "site_og_image": "https://fighter.loftwah.com/assets/generated/promotional/loftwah-fighter-v3-social-2026-08.png",
+          "site_og_title": "LOFTWAH FIGHTER · Pick Your Fight",
+          "site_og_description": "Collect Characters, build your squad, and commit Moves on a shared real-time Charge Strip in LOFTWAH FIGHTER, a local-first browser battler.",
+          "site_favicon": "https://fighter.loftwah.com/favicon.svg",
+          "preview_alt": "Promotional artwork on the Fighter site: its title beside a lineup of game characters.",
+          "preview_caption": "Promotional image from the Fighter site",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-shoalshot",
+        "slug": "shoalshot",
+        "status": "published",
+        "data": {
+          "name": "SHOALSHOT",
+          "index": "03",
+          "discipline": "Game systems · mobile-first presentation",
+          "title": "Good software evidence still has to reach the water.",
+          "summary": "SHOALSHOT is a fishing game with recent work in presentation, performance, responsive play and qualification.",
+          "why": "The remaining question is whether the experience holds up through the full game on real devices, and whether the production claim matches the exact version tested.",
+          "teaches": "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
+          "site_url": "https://shoalshot.loftwah.com/",
+          "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v2.jpg",
+          "site_og_title": "Shoalshot — Read the tide. Place the shot.",
+          "site_og_description": "A tactile browser arcade game of visible risk, careful aim and one-more-shot momentum. Play the Tide Pool vertical slice.",
+          "site_favicon": "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg",
+          "preview_alt": "Promotional artwork on the SHOALSHOT site: a fishing-game scene viewed from above.",
+          "preview_caption": "Promotional image from the SHOALSHOT site",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-protocol-11",
+        "slug": "protocol-11",
+        "status": "published",
+        "data": {
+          "name": "Protocol 11",
+          "index": "04",
+          "discipline": "Game systems · responsive table play",
+          "title": "A mature game can still have an immature record of what is done.",
+          "summary": "Protocol 11 has mature game systems and a substantially recovered frontend, including better mobile, table and tablet composition.",
+          "why": "A tracker is part of the product's evidence chain. If a closed item still contradicts its own definition of done, the system must reconcile the record before treating it as progress.",
+          "teaches": "State needs a trustworthy source. A green label is not more authoritative than the evidence beneath it.",
+          "site_url": "https://protocol11.loftwah.com/",
+          "site_og_image": "https://protocol11.loftwah.com/og/protocol-11.jpg",
+          "site_og_title": "Protocol 11 — The table changes every round",
+          "site_og_description": "A lively local card-table game for two to six seats. Complete eleven protocols, outplay bot rivals, or pass the device around the table.",
+          "site_favicon": "https://protocol11.loftwah.com/runtime/artpacks/late-night-party/brand/logo-square.webp",
+          "preview_alt": "Promotional artwork on the Protocol 11 site: a tabletop game and its board.",
+          "preview_caption": "Promotional image from the Protocol 11 site",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-max",
+        "slug": "max",
+        "status": "published",
+        "data": {
+          "name": "MAX",
+          "index": "05",
+          "discipline": "Assistive technology · software and hardware",
+          "title": "The software cannot prove that a person can find the real walker.",
+          "summary": "MAX is an assistive-technology project with a substantial software platform: PWA, pairing, gateway, offline behaviour, remote FIND and STOP, privacy and device control.",
+          "why": "The product crosses a physical boundary. Simulation and a green software suite cannot prove that a real walker, microphone, speaker and lights work for a person in their environment.",
+          "teaches": "Software proof and physical proof are different kinds of evidence.",
+          "site_url": "https://max.loftwah.com/",
+          "site_og_image": "https://max.loftwah.com/og-default.png",
+          "site_og_title": "MAX — Your walker, made smarter.",
+          "site_og_description": "Keep your walker. Add Max. The connected companion prototype is being built around a simple FIND button, with voice and family support in development.",
+          "site_favicon": "https://max.loftwah.com/brand/max-mark-32.png",
+          "preview_alt": "Promotional illustration for MAX, an assistive walker project; it is not a photograph or physical-use evidence.",
+          "preview_caption": "Illustration from the MAX site · not physical-use evidence",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-pirates",
+        "slug": "pirates",
+        "status": "published",
+        "data": {
+          "name": "Pirates",
+          "index": "06",
+          "discipline": "Game reconstruction · source archaeology",
+          "title": "Reconstruct the original game before asking the agents to invent another one.",
+          "summary": "Pirates is rebuilding Master of the Secret Sea from original source evidence. The work is deliberately parity-first.",
+          "why": "Generative systems are good at filling gaps. In a reconstruction, that instinct can quietly turn an unknown into a confident invention. The project has to know what the source proves and what it does not.",
+          "teaches": "Sometimes the most intelligent agent action is to stop at the edge of the evidence.",
+          "site_url": "",
+          "site_og_image": "",
+          "site_og_title": "",
+          "site_og_description": "",
+          "site_favicon": "",
+          "preview_alt": "",
+          "preview_caption": "",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-loftwahfm",
+        "slug": "loftwahfm",
+        "status": "published",
+        "data": {
+          "name": "LoftwahFM",
+          "index": "07",
+          "discipline": "Music platform · listener and venue product",
+          "title": "A mature listener product and an unfinished venue business can both be true.",
+          "summary": "LoftwahFM is already a substantial working music product. The larger business-music roadmap adds a second, broader product with venue reliability, control and operations still to build.",
+          "why": "One percentage would hide the distinction between the listener experience that exists and the more ambitious venue product that remains.",
+          "teaches": "A project can be useful today and still have a much larger unfinished ambition.",
+          "site_url": "https://fm.loftwah.com/",
+          "site_og_image": "https://fm.loftwah.com/heroimage-og.jpg",
+          "site_og_title": "LoftwahFM | Music, branded radio, and streams",
+          "site_og_description": "LoftwahFM is the home of Loftwah releases, branded radio segments, custom AI music, and 24/7 streams.",
+          "site_favicon": "https://fm.loftwah.com/favicon-32x32.png",
+          "preview_alt": "Promotional artwork on the LoftwahFM site: a bright electric music mark on a dark field.",
+          "preview_caption": "Promotional image from the LoftwahFM site",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "project-social-club",
+        "slug": "social-club",
+        "status": "published",
+        "data": {
+          "name": "Social Club",
+          "index": "08",
+          "discipline": "Hospitality · membership experience",
+          "title": "The product works. The intended atmosphere has not arrived yet.",
+          "summary": "Social Club has a functional foundation for a private-club and hospitality experience.",
+          "why": "A working feature set cannot make up for an identity that has not yet been designed. The next step is to establish a coherent premium visual direction.",
+          "teaches": "Product quality includes how a coherent interface feels as well as what its controls do.",
+          "site_url": "https://club.loftwah.com/",
+          "site_og_image": "https://club.loftwah.com/og/default.svg",
+          "site_og_title": "Plans With You",
+          "site_og_description": "Protected time with a commitment that looks the part — and predictably gets cancelled.",
+          "site_favicon": "https://club.loftwah.com/favicon.svg",
+          "preview_alt": "Artwork on the Social Club site, titled Plans With You.",
+          "preview_caption": "Artwork from the Social Club site",
+          "public_safe": true
+        }
+      }
+    ],
+    "factory_snapshots": [
+      {
+        "id": "snapshot-2026-09-28",
+        "slug": "2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Factory snapshot · 28 September 2026",
+          "reviewed_at": "2026-09-28",
+          "source_description": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "scope": "Eight public-safe project summaries supplied for the Woodhouse launch.",
+          "editorial_notes": "A dated operator-reviewed summary. It is not a live feed from private repositories.",
+          "public_safe": true
+        }
+      }
+    ],
+    "project_statuses": [
+      {
+        "id": "status-bubbles-2026-09-28",
+        "slug": "bubbles-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-09-28",
+          "state": "Final convergence",
+          "state_tone": "amber",
+          "current": "Mechanically and functionally very mature. The current convergence order places Bubbles closest to its stated finish line.",
+          "next_proof": "Finish connected-product polish, complete a clean browser qualification and secure owner acceptance.",
+          "proof_boundary": "This is a reviewed portfolio snapshot. It does not claim that the latest browser matrix is green or that every remaining acceptance gate has passed.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-fighter-2026-09-28",
+        "slug": "fighter-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "fighter",
+          "snapshot_key": "2026-09-28",
+          "state": "A+ convergence",
+          "state_tone": "amber",
+          "current": "Functional maturity is very high. The reported remaining work is whole-game quality convergence, not a greenfield prototype.",
+          "next_proof": "Keep reconciling the complete product against the A+ bar and qualify the exact current release state.",
+          "proof_boundary": "The snapshot describes broad functional maturity. It does not assert that the latest source has passed every whole-game or production gate.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 2,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-shoalshot-2026-09-28",
+        "slug": "shoalshot-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-09-28",
+          "state": "Release convergence",
+          "state_tone": "amber",
+          "current": "Functionally mature and increasingly polished. The supplied report calls for another clean production qualification and promotion pass.",
+          "next_proof": "Obtain a valid qualification window, qualify the exact candidate, then verify the same state in production.",
+          "proof_boundary": "The supplied report does not claim that the current head is production verified.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 3,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-protocol-11-2026-09-28",
+        "slug": "protocol-11-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-09-28",
+          "state": "Qualification and tracker reconciliation",
+          "state_tone": "amber",
+          "current": "The supplied report points to qualification and tracker reconciliation as the main unresolved work.",
+          "next_proof": "Resolve the tracker contradictions, refresh the project record and qualify the actual current build.",
+          "proof_boundary": "No statement here treats issue closure as proof of completion.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 4,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-max-2026-09-28",
+        "slug": "max-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-max",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "max",
+          "snapshot_key": "2026-09-28",
+          "state": "Physical proof required",
+          "state_tone": "red",
+          "current": "Software capability is advancing. The actual Pi, walker and real-world FIND experience remain the defining reality check.",
+          "next_proof": "Build and qualify the real Pi and walker path with the actual microphone, speaker, lights and human use.",
+          "proof_boundary": "The supplied report explicitly leaves the physical product unproven.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 5,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-pirates-2026-09-28",
+        "slug": "pirates-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "pirates",
+          "snapshot_key": "2026-09-28",
+          "state": "Gate B locked",
+          "state_tone": "red",
+          "current": "Deep in archaeology and parity work. The original game must pass its gate before procedural or endless expansion begins.",
+          "next_proof": "Complete the missing archaeology families and integrated parity before opening the expansion path.",
+          "proof_boundary": "Gate B remains locked in the supplied snapshot. No procedural fork is represented as approved.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 6,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-09-28",
+        "slug": "loftwahfm-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-09-28",
+          "state": "Parked against the larger roadmap",
+          "state_tone": "quiet",
+          "current": "The supplied report describes the expanded business-music roadmap as parked, with little recent application movement.",
+          "next_proof": "Make an explicit decision to resume a bounded roadmap slice or keep the broader venue programme parked.",
+          "proof_boundary": "This snapshot separates the existing music product from the paused business-music roadmap.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-social-club-2026-09-28",
+        "slug": "social-club-2026-09-28",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "social-club",
+          "snapshot_key": "2026-09-28",
+          "state": "Parked",
+          "state_tone": "quiet",
+          "current": "The larger visual redesign is parked in the supplied report.",
+          "next_proof": "Resume the premium private-club, hospitality and editorial design pass when the project is active again.",
+          "proof_boundary": "The current visual direction is not represented as the intended finished experience.",
+          "reviewed_at": "2026-09-28",
+          "sort_order": 8,
+          "public_safe": true
+        }
+      }
+    ],
+    "evidence_records": [
+      {
+        "id": "evidence-bubbles-2026-09-28",
+        "slug": "bubbles-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Bubbles · reviewed public snapshot",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for Bubbles was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "Mechanically and functionally very mature. The current convergence order places Bubbles closest to its stated finish line.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "This is a reviewed portfolio snapshot. It does not claim that the latest browser matrix is green or that every remaining acceptance gate has passed."
+        }
+      },
+      {
+        "id": "evidence-fighter-2026-09-28",
+        "slug": "fighter-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Fighter · reviewed public snapshot",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "fighter",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for Fighter was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "Functional maturity is very high. The reported remaining work is whole-game quality convergence, not a greenfield prototype.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "The snapshot describes broad functional maturity. It does not assert that the latest source has passed every whole-game or production gate."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-2026-09-28",
+        "slug": "shoalshot-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · reviewed public snapshot",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for SHOALSHOT was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "Functionally mature and increasingly polished. The supplied report calls for another clean production qualification and promotion pass.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "The supplied report does not claim that the current head is production verified."
+        }
+      },
+      {
+        "id": "evidence-protocol-11-2026-09-28",
+        "slug": "protocol-11-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Protocol 11 · reviewed public snapshot",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for Protocol 11 was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "The supplied report points to qualification and tracker reconciliation as the main unresolved work.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "No statement here treats issue closure as proof of completion."
+        }
+      },
+      {
+        "id": "evidence-max-2026-09-28",
+        "slug": "max-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "MAX · reviewed public snapshot",
+          "project": "$ref:project-max",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "max",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for MAX was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "Software capability is advancing. The actual Pi, walker and real-world FIND experience remain the defining reality check.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "The supplied report explicitly leaves the physical product unproven."
+        }
+      },
+      {
+        "id": "evidence-pirates-2026-09-28",
+        "slug": "pirates-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Pirates · reviewed public snapshot",
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "pirates",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for Pirates was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "Deep in archaeology and parity work. The original game must pass its gate before procedural or endless expansion begins.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Gate B remains locked in the supplied snapshot. No procedural fork is represented as approved."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-2026-09-28",
+        "slug": "loftwahfm-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · reviewed public snapshot",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for LoftwahFM was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "The supplied report describes the expanded business-music roadmap as parked, with little recent application movement.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "This snapshot separates the existing music product from the paused business-music roadmap."
+        }
+      },
+      {
+        "id": "evidence-social-club-2026-09-28",
+        "slug": "social-club-review-2026-09-28",
+        "status": "published",
+        "data": {
+          "title": "Social Club · reviewed public snapshot",
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "project_key": "social-club",
+          "snapshot_key": "2026-09-28",
+          "claim": "The public Woodhouse record for Social Club was reviewed on 28 September 2026.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-09-28",
+          "reviewed_at": "2026-09-28",
+          "summary": "The larger visual redesign is parked in the supplied report.",
+          "source_label": "The shareable factory SITREP supplied for the Woodhouse launch.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "The current visual direction is not represented as the intended finished experience."
+        }
+      }
+    ],
+    "dispatches": [
+      {
+        "id": "dispatch-i-didnt-mean-to-build-a-software-factory",
+        "slug": "i-didnt-mean-to-build-a-software-factory",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "platform-engineering"
+          ]
+        },
+        "data": {
+          "title": "I Didn't Mean to Build a Software Factory",
+          "kind": "Founding essay",
+          "deck": "A practical habit of composing tools grew into a system for directing software agents, checking their work and seeing what survived in the real world.",
+          "review_date": "2026-09-28",
+          "source_reference": "Founder-supplied professional retrospective and the shareable factory snapshot reviewed 28 September 2026.",
+          "lead": "The work began with making software. It grew into a system for deciding what the software had actually proved.",
+          "lesson": "The factory exists to make intent, work and evidence legible across products.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-hvkxy8k",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The work began with making software. It grew into a system for deciding what the software had actually proved."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The first part of the story was ordinary web work: joining useful tools together instead of rebuilding each capability. A reverse proxy, a VPS and WordPress plugins formed a practical stack. The skill that lasted was composition: knowing which piece was good at a job and how to make the pieces cooperate."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The tools changed. Plugin-shaped capability gave way to APIs, cloud services, infrastructure, models, skills and agents. Development moved from assembling a website toward operating the platform and its delivery system."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "When one pair became a working system"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A coding agent first changes how one person writes software. Multiple agents change the shape of the work. Requests need to become bounded tasks; people and agents need clear ownership; competing changes need review; and release evidence must be attached to the exact state being claimed."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The supplied founding account describes agents working across several products for extended stretches. At that point, writing code was no longer the only bottleneck. The operator needed to see which work had started, what had changed, what had survived review and what still needed proof."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "technical_plate",
+              "_version": 1,
+              "_key": "factory-shift",
+              "id": "factory-shift",
+              "number": "01",
+              "title": "From pair programming to factory",
+              "variant": "flow",
+              "note": "The operator supplies intent and remains accountable while bounded work moves through agents, review, qualification and production.",
+              "steps": [
+                {
+                  "label": "Request",
+                  "title": "Human intent",
+                  "detail": "Goal and authority"
+                },
+                {
+                  "label": "Queue",
+                  "title": "Durable work",
+                  "detail": "Scope and owner"
+                },
+                {
+                  "label": "Workers",
+                  "title": "Parallel agents",
+                  "detail": "Bounded work"
+                },
+                {
+                  "label": "Review",
+                  "title": "Independent check",
+                  "detail": "Review the revision"
+                },
+                {
+                  "label": "Release",
+                  "title": "Production proof",
+                  "detail": "Observe the release"
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-civa2rh",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A backlog is useful when it tells the truth"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Delegation creates a new coordination problem. The task list has to show what the work means, who can act on it and which evidence closes it. Repository state and review records then provide a durable account that survives a chat ending or an agent stopping."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A green check cannot inherit authority it was never designed to provide. A build can establish that code compiled. Review can challenge a proposed change. Qualification can test a candidate. Only a live observation can support a production claim, and only the owner can decide whether the result meets the intended bar."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The system therefore needs to preserve several kinds of state instead of compressing them into a single percentage or a vague “done.”"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Failures become useful when the control changes"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The factory’s projects expose different edges of the same problem. In Fighter, geometry checks passed while the interface still missed its visual purpose. Pirates has to account for original source rules before agents invent an expansion. MAX cannot use a browser test as evidence that a person can find the real walker. Bubbles can be functionally mature while browser and owner acceptance remain open."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "These are not interchangeable bugs. Each needs its own evidence. The general pattern is to record what was expected, observe what happened, name the class of failure and put a control where it can catch the same mistake again."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "technical_plate",
+              "_version": 1,
+              "_key": "failure-loop",
+              "id": "failure-loop",
+              "number": "02",
+              "title": "The failure loop",
+              "variant": "loop",
+              "note": "A lesson only becomes a factory control when it changes how later work is reviewed or qualified.",
+              "steps": [
+                {
+                  "label": "Belief",
+                  "title": "State the model",
+                  "detail": "Record the expectation"
+                },
+                {
+                  "label": "Attempt",
+                  "title": "Make the change",
+                  "detail": "Implement against the model"
+                },
+                {
+                  "label": "Reality",
+                  "title": "Observe the result",
+                  "detail": "Check the real behaviour"
+                },
+                {
+                  "label": "Incident",
+                  "title": "Name the miss",
+                  "detail": "Identify what escaped"
+                },
+                {
+                  "label": "Control",
+                  "title": "Change the system",
+                  "detail": "Prevent repeat failures"
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-40r4fp4",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Trust is a ladder, not a label"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The operating model separates what was observed from what was implemented, merged, qualified, verified in production and accepted by the owner. A project may have strong evidence at one rung and an open question on another."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "technical_plate",
+              "_version": 1,
+              "_key": "evidence-ladder",
+              "id": "evidence-ladder",
+              "number": "03",
+              "title": "The evidence ladder",
+              "variant": "ladder",
+              "note": "Each step is a new claim. A result lower on the ladder does not automatically establish the steps above it.",
+              "steps": [
+                {
+                  "label": "Observed",
+                  "title": "A source or behaviour was inspected",
+                  "detail": "Evidence has a place and a time"
+                },
+                {
+                  "label": "Implemented",
+                  "title": "The requested change exists",
+                  "detail": "The code or product state changed"
+                },
+                {
+                  "label": "Merged",
+                  "title": "The reviewed change entered its branch",
+                  "detail": "The integrated revision is identifiable"
+                },
+                {
+                  "label": "Qualified",
+                  "title": "Required checks passed on the candidate",
+                  "detail": "The named release gates were satisfied"
+                },
+                {
+                  "label": "Production verified",
+                  "title": "The deployed version was observed",
+                  "detail": "The live system matched the claim"
+                },
+                {
+                  "label": "Owner accepted",
+                  "title": "The result met its intended bar",
+                  "detail": "The accountable human confirmed it"
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-pubzhei",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Why Woodhouse exists"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Once the factory had several active products, a public record became another useful system: a place to see what each project is for, what its reviewed status means and which evidence is still missing. Woodhouse is designed for people and for agents that need a machine-readable account with clear limits."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This first release is a dated, operator-supplied portfolio snapshot. It does not connect to private repositories, stream GitHub activity or publish working conversations. Agent Reception is read-only. Those boundaries keep the public record useful without pretending it is live telemetry."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "See how the projects currently stand, or read the factory doctrine that governs their evidence."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "source-and-chronology",
+              "title": "Source and chronology",
+              "body": "This article paraphrases the founder’s supplied professional account and uses current project examples from the shareable factory report dated 28 September 2026. The account gives a sequence of changes rather than a fully dated timeline; dates and direct conversation quotations have been omitted where they are not part of the public record.",
+              "kind": "plain"
+            }
+          ],
+          "projects": [
+            "$ref:project-bubbles",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot",
+            "$ref:project-protocol-11",
+            "$ref:project-max",
+            "$ref:project-pirates",
+            "$ref:project-loftwahfm",
+            "$ref:project-social-club"
+          ]
+        }
+      },
+      {
+        "id": "dispatch-the-tests-passed",
+        "slug": "the-tests-passed",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "product-design",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "The tests passed. The game still looked wrong.",
+          "kind": "Factory incident",
+          "deck": "Fighter passed its geometry checks and still fell short of the product bar. The factory had measured whether the interface fitted. It had not measured whether the interface worked as a composition.",
+          "review_date": "2026-09-28",
+          "source_reference": "Shareable factory snapshot reviewed 28 September 2026; no private repository or conversation material is reproduced.",
+          "lead": "The interface did what the tests could see. The tests could not see what the player felt.",
+          "lesson": "Geometry is evidence about geometry. Product judgement needs its own review.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-ov2brgs",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The interface did what the tests could see. The tests could not see what the player felt."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The wrong question was easy to test."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The checks asked whether the interface fit its container and whether its geometry remained inside expected bounds. It did. The result still lacked hierarchy and compositional intent."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That was not a failure of the geometry checks. They answered the question they were built to answer. The mistake was treating their answer as a complete product judgement."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "initial-belief",
+              "title": "Initial belief",
+              "body": "Responsive geometry and screenshot checks would prevent the important visual failures.",
+              "kind": "plain"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-dnmswww",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What the evidence could not see"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A page can avoid clipping and still put the wrong thing first. A screen can be dimensionally correct while the player has to work to understand what matters, what changed or where to go next."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The factory therefore added three human checks: a visual review of the whole experience, a review of complete journeys and a copy check for generic or machine-written language. Reviewers identify the focal point, hierarchy, competing elements, context and quality of the complete experience."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "pull_quote",
+              "_version": 1,
+              "_key": "control-added-after-the-failure",
+              "quote": "Geometry is evidence about geometry. It is not evidence that the product feels finished.",
+              "attribution": "Control added after the failure"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-1npnur9",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The lesson travelled"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The same distinction later mattered in Bubbles: a technically valid interface was still challenged against its actual product bar. The factory’s lesson was not to discard automation. It was to stop asking one instrument to certify a different kind of quality."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What changed in the factory"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Visual review became a named qualification stage. Whole journeys are reviewed with the implementation context in view. Responsive quality is judged at the states and orientations where people use the product. Passing a machine check is reported only as the claim that check supports."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "record-boundary",
+              "title": "Record boundary",
+              "body": "Some source repositories are private. This publication does not reproduce raw issue text or private conversation transcripts.",
+              "kind": "plain"
+            }
+          ],
+          "projects": [
+            "$ref:project-fighter",
+            "$ref:project-bubbles"
+          ]
+        }
+      },
+      {
+        "id": "dispatch-a-gate-for-what-the-source-proves",
+        "slug": "a-gate-for-what-the-source-proves",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "source-archaeology",
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "Pirates is learning when not to invent.",
+          "kind": "Field note",
+          "deck": "The source reconstruction stays behind a parity gate until the original game is accounted for. Expansion waits for evidence.",
+          "review_date": "2026-09-28",
+          "source_reference": "Shareable factory snapshot reviewed 28 September 2026; no private repository or conversation material is reproduced.",
+          "lead": "A generative system can produce a plausible answer to an unknown. Plausibility is not a recovered rule.",
+          "lesson": "An explicit locked gate makes uncertainty visible and keeps creativity out of the wrong phase.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-36trqr1",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A generative system can produce a plausible answer to an unknown. Plausibility is not a recovered rule."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A plausible rule can still be invented."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Master of the Secret Sea is being reconstructed from original source evidence. The project is not yet free to treat an interesting idea as part of the original game."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That constraint matters because agentic systems can make missing details look finished. A familiar genre convention may be plausible, coherent and wrong for this specific source."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Keep uncertainty visible"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Archaeology, specification, parity implementation and expansion are separate phases. Gate B remains locked until the reconstruction has enough source-backed coverage to support a claim of parity."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The factory recovers code and records what is known, what is missing and what agents may not invent."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "decision",
+              "title": "Decision",
+              "body": "No procedural fork is approved while the original game’s parity gate remains locked.",
+              "kind": "plain"
+            },
+            {
+              "_type": "diagram_plate",
+              "_version": 1,
+              "_key": "pirates-parity",
+              "diagram_id": "pirates-parity",
+              "title": "Parity before expansion",
+              "description": "Original game evidence informs reconstruction; the reconstructed game must reach integrated parity before Gate B can open. Unresolved source details stay unknown rather than being invented.",
+              "caption": "Gate B stays locked until integrated parity is supported by the original game’s evidence.",
+              "transcript": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Original game evidence — keep source claims tied to what is available."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Reconstruction — rebuild the original game’s behavior before adding new systems."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Integrated parity — compare the reconstructed game against its source."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Gate B — expansion stays locked while parity remains unresolved."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "record-boundary",
+              "title": "Record boundary",
+              "body": "Some source repositories are private. This publication does not reproduce raw issue text or private conversation transcripts.",
+              "kind": "plain"
+            }
+          ],
+          "projects": [
+            "$ref:project-pirates"
+          ]
+        }
+      },
+      {
+        "id": "dispatch-software-is-not-the-walker",
+        "slug": "software-is-not-the-walker",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "physical-systems",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "A green build cannot find the real walker.",
+          "kind": "Field note",
+          "deck": "MAX is a reminder that software qualification ends where physical use begins. The Pi, walker and person using FIND still have to meet in the real world.",
+          "review_date": "2026-09-28",
+          "source_reference": "Shareable factory snapshot reviewed 28 September 2026; no private repository or conversation material is reproduced.",
+          "lead": "A complete simulation is still a simulation.",
+          "lesson": "Name the physical observation that remains. Do not borrow confidence from software tests.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "prose-uk0dvbp",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A complete simulation is still a simulation."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Where the proof stops"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "MAX has a serious software foundation: pairing, a gateway, offline behaviour and remote FIND and STOP flows. Those capabilities matter. They do not put a Raspberry Pi next to the actual walker or show that a person can use its controls in their environment."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The physical path still needs the actual device, microphone, speaker, lights, network conditions and a real human interaction. A simulation, browser run or mocked response cannot replace that observation."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What remains unproven"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The supplied factory report leaves real-walker FIND and the wider physical hardware path open. The public status keeps that limit visible instead of translating strong software maturity into a claim about a physical product."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "pull_quote",
+              "_version": 1,
+              "_key": "physical-qualification-boundary",
+              "quote": "Name the missing observation. Do not borrow confidence from software tests.",
+              "attribution": "Physical qualification boundary"
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "record-boundary",
+              "title": "Record boundary",
+              "body": "Some source repositories are private. This publication does not reproduce raw issue text or private conversation transcripts.",
+              "kind": "plain"
+            }
+          ],
+          "projects": [
+            "$ref:project-max"
+          ]
+        }
+      }
+    ],
+    "incidents": [
+      {
+        "id": "incident-visual-quality",
+        "slug": "the-tests-passed",
+        "status": "published",
+        "data": {
+          "title": "The tests passed. The game still looked wrong.",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-09-28",
+          "dispatch": "$ref:dispatch-the-tests-passed",
+          "project_key": "fighter",
+          "snapshot_key": "2026-09-28",
+          "dispatch_slug": "the-tests-passed",
+          "initial_belief": "Responsive geometry and screenshot checks were sufficient to prevent major UI quality failures.",
+          "what_happened": "The interface passed automated checks while remaining compositionally poor.",
+          "evidence": "Geometry checks confirmed containment and expected bounds; they did not establish hierarchy or product quality.",
+          "root_cause": "The system measured containment and geometry, not visual hierarchy or product judgement.",
+          "factory_change": "Visual review of the whole experience, complete journeys and copy became distinct review stages.",
+          "later_reuse": "The same distinction later informed visual review of Bubbles, as described in the public dispatch.",
+          "reviewed_at": "2026-09-28",
+          "public_safe": true,
+          "proof_boundary": "This record is a reviewed summary. It does not reproduce private issue or pull request bodies."
+        }
+      }
+    ],
+    "conversations": []
+  }
+}

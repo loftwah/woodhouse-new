@@ -19,6 +19,6 @@ The project snapshot was reviewed on 28 September 2026. Seven project repositori
 
 ## Contact
 
-- GitHub: https://github.com/loftwah
 - X: https://x.com/loftwah
-- LinkedIn: https://au.linkedin.com/in/deanlofts
+- LinkedIn: https://www.linkedin.com/in/deanlofts/
+- GitHub: https://github.com/loftwah

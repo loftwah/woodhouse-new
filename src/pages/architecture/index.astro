@@ -1,33 +1,71 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
+export const prerender = false;
 ---
-<BaseLayout title="Architecture" description="How Woodhouse turns a reviewed project report into a fast public record without exposing private repository data." path="/architecture/" image="/og/factory.jpg">
+
+<BaseLayout
+  title="Architecture"
+  description="How Woodhouse keeps its reviewed project snapshot separate from EmDash editorial publishing on Cloudflare Workers."
+  path="/architecture/"
+  image="/og/factory.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Architecture</span></nav>
-        <h1 class="page-title">A public record.<br /><em>Private inputs stay private.</em></h1>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Architecture</span>
+        </nav>
+        <h1 class="page-title">
+          A public record.
+          <br />
+          <em>Private inputs stay private.</em>
+        </h1>
       </div>
-      <aside class="page-intro__aside"><strong>Astro · TypeScript · Cloudflare Workers</strong>The public edition is static and small. Its trust boundary is deliberate.</aside>
+      <aside class="page-intro__aside">
+        <strong>Astro · EmDash · Cloudflare Workers</strong>Woodhouse keeps its authored
+        presentation; EmDash supplies reviewed content at request time.
+      </aside>
     </div>
   </section>
   <section class="section">
     <div class="container">
       <D2Diagram
-        title="How each project's own artwork reaches this page"
-        description="Each product site supplies its page title, search and sharing details, favicon and main image. Woodhouse reads that information during the build and keeps the original image URL in static HTML. The visitor's browser loads the original image. A local Woodhouse SVG appears only when the project has no public site or its source image fails to load."
+        title="Artwork keeps its source"
+        description="Each product site has its own title, icon, description and main image. Woodhouse credits and links to the project behind each image. Illustrations made for project dossiers are credited to Woodhouse."
         desktop="/images/diagrams/publication-path.svg"
         mobile="/images/diagrams/publication-path-mobile.svg"
-        caption="Artwork stays at its source. Woodhouse provides a clearly labelled fallback only when the source image is absent."
+        caption="Project artwork links to its source. Woodhouse illustrations carry a clear credit."
         className="publication-plate"
       >
         <ol class="diagram-transcript">
-          <li><strong>Project site</strong><span>Owns and serves its page title, search and sharing details, icon, description and main image.</span></li>
-          <li><strong>Woodhouse build</strong><span>Reads the source tags and stores the original image URL in the static page.</span></li>
-          <li><strong>Visitor's browser</strong><span>Loads the original project artwork directly and links to that project's own site.</span></li>
-          <li><strong>Local fallback</strong><span>Appears only when a project has no public site or the original image cannot load.</span></li>
-          <li><strong>Private data</strong><span>Issues, transcripts and credentials stay outside the public build.</span></li>
+          <li>
+            <strong>Project site</strong>
+            <span>
+              Owns and serves its page title, search and sharing details, icon, description and main
+              image.
+            </span>
+          </li>
+          <li>
+            <strong>Woodhouse build</strong>
+            <span>
+              Records public details and preserves the source of each project's own image.
+            </span>
+          </li>
+          <li>
+            <strong>Visitor's browser</strong>
+            <span>Shows the credited artwork and links to that project's own site.</span>
+          </li>
+          <li>
+            <strong>Woodhouse illustration</strong>
+            <span>Project-dossier illustrations are credited to Woodhouse.</span>
+          </li>
+          <li>
+            <strong>Private data</strong>
+            <span>Issues, transcripts and credentials stay outside the public build.</span>
+          </li>
         </ol>
       </D2Diagram>
     </div>
@@ -35,14 +73,57 @@ import D2Diagram from "../../components/D2Diagram.astro";
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>The browser gets a finished page.</h2></div>
-        <p>GitHub remains authoritative. The current edition publishes a reviewed snapshot because most project repositories are private.</p>
+        <div>
+          <h2>The browser gets a finished page.</h2>
+        </div>
+        <p>
+          GitHub remains authoritative. The current edition publishes a reviewed snapshot because
+          most project repositories are private.
+        </p>
       </div>
       <div class="two-column-list">
-        <article class="method-step"><span class="method-step__n">01</span><div><h3>Review the source</h3><p>A human-readable, public-safe project report is the input. Private issue and pull request bodies stay in their repositories.</p></div></article>
-        <article class="method-step"><span class="method-step__n">02</span><div><h3>Record the date</h3><p>Every state belongs to the 28 September 2026 snapshot. A later report must be reviewed before the date is moved.</p></div></article>
-        <article class="method-step"><span class="method-step__n">03</span><div><h3>Generate the site</h3><p>Astro builds static pages, styles, diagrams, structured data, page-sharing cards, an RSS feed, a sitemap and the project summary for tools.</p></div></article>
-        <article class="method-step"><span class="method-step__n">04</span><div><h3>Serve from the edge</h3><p>Cloudflare Worker Static Assets serves the pages at the requested custom domain. Reading a dossier requires no application account.</p></div></article>
+        <article class="method-step">
+          <span class="method-step__n">01</span>
+          <div>
+            <h3>Review the source</h3>
+            <p>
+              A human-readable, public-safe project report is the input. Private issue and pull
+              request bodies stay in their repositories.
+            </p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">02</span>
+          <div>
+            <h3>Record the date</h3>
+            <p>
+              Every state belongs to the 28 September 2026 snapshot. A later report must be reviewed
+              before the date is moved.
+            </p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">03</span>
+          <div>
+            <h3>Review and publish</h3>
+            <p>
+              EmDash holds structured project states, evidence, dispatches, drafts, revisions,
+              approved media and publishing schedules. Astro renders each public page with the
+              existing Woodhouse components.
+            </p>
+          </div>
+        </article>
+        <article class="method-step">
+          <span class="method-step__n">04</span>
+          <div>
+            <h3>Serve from the edge</h3>
+            <p>
+              The Cloudflare Worker renders the public read model from published EmDash records and
+              serves static assets at the edge. Readers need no account; editors use the
+              authenticated EmDash office.
+            </p>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -50,14 +131,37 @@ import D2Diagram from "../../components/D2Diagram.astro";
     <div class="container split-section">
       <div class="split-section__copy">
         <h2>Visitors can read the report. They cannot change it.</h2>
-        <p>The public JSON contains project names, reviewed state, summary, next proof and review date. It cannot query private GitHub repositories or run a tool. If a collector is added later, a person will review each proposed update before it is published.</p>
-        <p>This release has no D1 event store, R2 evidence archive, public chat or private office. Cloud services enter when the product has a concrete need for them.</p>
+        <p>
+          The public JSON contains project names, reviewed state, summary, next proof and review
+          date. It cannot query private GitHub repositories or run a tool. If a collector is added
+          later, a person will review each proposed update before it is published.
+        </p>
+        <p>
+          EmDash uses D1 for editorial records and R2 for approved media. Woodhouse has no D1 event
+          store, R2 evidence archive, public chat or private project office. Editorial storage does
+          not receive repository credentials or private project data.
+        </p>
       </div>
       <div class="factory-plate">
-        <div class="factory-plate__heading"><span>DATA BOUNDARY</span><span>PUBLIC READ MODEL</span></div>
-        <div class="agent-entry" style="grid-template-columns:1fr;gap:1.1rem;margin-top:1rem;padding:1.2rem">
-          <div><span class="agent-entry__label">Allowed into public build</span><p>Reviewed summary · state · next proof · review date</p></div>
-          <div><span class="agent-entry__label">Stays outside public build</span><p>Issue bodies · private transcripts · repository credentials · unreviewed agent interpretation</p></div>
+        <div class="factory-plate__heading">
+          <span>DATA BOUNDARY</span>
+          <span>PUBLIC READ MODEL</span>
+        </div>
+        <div
+          class="agent-entry"
+          style="grid-template-columns:1fr;gap:1.1rem;margin-top:1rem;padding:1.2rem"
+        >
+          <div>
+            <span class="agent-entry__label">Approved for publication</span>
+            <p>Reviewed summary · state · next proof · review date · edited dispatches</p>
+          </div>
+          <div>
+            <span class="agent-entry__label">Stays outside public content</span>
+            <p>
+              Issue bodies · private transcripts · repository credentials · unreviewed agent
+              interpretation
+            </p>
+          </div>
         </div>
       </div>
     </div>

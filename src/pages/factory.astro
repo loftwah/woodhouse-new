@@ -1,10 +1,28 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProjectRow from "../components/ProjectRow.astro";
-import StatusStamp from "../components/StatusStamp.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
-import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
+import { listProjectRecords } from "../content/repository";
+const result = await listProjectRecords();
+if (result.error)
+  return new Response("Unable to load the reviewed factory snapshot.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const projects = result.projects;
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
+const reviewDateLabel =
+  reviewDate === "Review date unavailable"
+    ? reviewDate
+    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
+        dateStyle: "long",
+        timeZone: "Australia/Melbourne"
+      });
+const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
+export const prerender = false;
 ---
+
 <BaseLayout
   title="The factory floor"
   description="An operator-reviewed snapshot of eight software projects, their current work and the proof each one still needs."
@@ -15,8 +33,16 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Factory</span></nav>
-        <h1 class="page-title">Eight projects.<br /><em>Eight kinds</em> of proof.</h1>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Factory</span>
+        </nav>
+        <h1 class="page-title">
+          {projects.length} projects.
+          <br />
+          <em>{projects.length} kinds</em> of proof.
+        </h1>
       </div>
       <aside class="page-intro__aside">
         <strong>Portfolio readout · {reviewDateLabel}</strong>
@@ -30,12 +56,17 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
         <div>
           <h2>Where attention is going.</h2>
         </div>
-        <p>A practical ordering, not a percentage chart. Bubbles is nearest its current finish line; other work is held by quality, qualification, source parity or the physical world.</p>
+        <p>
+          A practical ordering, not a percentage chart. Bubbles is nearest its current finish line;
+          other work is held by quality, qualification, source parity or the physical world.
+        </p>
       </div>
       <p class="body-copy">This is the operating model, not live telemetry.</p>
       <FactoryPlate />
       <div class="project-ledger">
-        {projects.map((project) => <ProjectRow project={project} />)}
+        {projects.map((project) => (
+          <ProjectRow project={project} />
+        ))}
       </div>
       <div class="snapshot-band" style="margin-top:2.5rem">
         <div class="snapshot-band__label">
@@ -44,10 +75,18 @@ import { projects, reviewDateLabel, snapshotSource } from "../data/projects";
         </div>
         <div class="snapshot-band__text">
           “Done” is a project-specific claim.
-          <small>Bubbles has whole-product browser and owner acceptance ahead. MAX still needs physical walker evidence. Pirates cannot expand until parity is established. The rest carry their own release and quality gates.</small>
+          <small>
+            Bubbles has whole-product browser and owner acceptance ahead. MAX still needs physical
+            walker evidence. Pirates cannot expand until parity is established. The rest carry their
+            own release and quality gates.
+          </small>
         </div>
       </div>
-      <p class="source-note"><strong>Data policy:</strong> repository issues and pull requests are not exposed here because the project repositories are private. The public record uses only the shareable project readout provided for Woodhouse.</p>
+      <p class="source-note">
+        <strong>Data policy:</strong> repository issues and pull requests are not exposed here
+        because the project repositories are private. The public record uses only the shareable
+        project readout provided for Woodhouse.
+      </p>
     </div>
   </section>
 </BaseLayout>

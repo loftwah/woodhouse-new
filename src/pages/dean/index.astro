@@ -1,44 +1,124 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { originStory } from "../../data/field-notes";
+import { toJsonLd } from "../../data/safe-json";
+const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+export const prerender = false;
 ---
-<BaseLayout title="Dean Lofts" description="Dean Lofts builds systems that turn intent into shipped software, then builds controls around what reality proves was wrong." path="/dean/" image="/og/dean.jpg">
+
+<BaseLayout
+  title="Dean Lofts"
+  description="Dean Lofts builds systems that turn intent into shipped software, then builds controls around what reality proves was wrong."
+  path="/dean/"
+  image="/og/dean.jpg"
+>
   <script
     slot="head"
     type="application/ld+json"
-    set:html={JSON.stringify({
+    set:html={toJsonLd({
       "@context": "https://schema.org",
       "@type": "Person",
       name: "Dean Lofts",
-      url: "https://woodhouse.loftwah.com/dean/",
-      sameAs: ["https://github.com/loftwah", "https://x.com/loftwah", "https://au.linkedin.com/in/deanlofts"]
+      url: `${siteOrigin}/dean/`,
+      sameAs: [
+        "https://github.com/loftwah",
+        "https://x.com/loftwah",
+        "https://www.linkedin.com/in/deanlofts/"
+      ]
     })}
   />
   <section class="container dossier-hero">
     <div>
-      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Dean</span></nav>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <span>Dean</span>
+      </nav>
       <h1>Dean Lofts.</h1>
-      <p class="dossier-hero__summary">{originStory.close}</p>
+      <p class="dossier-hero__summary">
+        I build systems that turn intent into shipped software, then build controls around whatever
+        reality proves was wrong.
+      </p>
     </div>
-    <aside class="dossier-hero__side"><span class="micro-label">Systems · platform · products · agents</span><dl><dt>Based</dt><dd>Melbourne, Australia</dd><dt>Working on</dt><dd>The Loftwah Software Factory</dd></dl></aside>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">Systems · platform · products · agents</span>
+      <dl>
+        <dt>Based</dt>
+        <dd>Melbourne, Australia</dd>
+        <dt>Working on</dt>
+        <dd>The Loftwah Software Factory</dd>
+      </dl>
+    </aside>
   </section>
   <section class="container dossier-grid">
     <article class="prose">
       <h2>How the work got here</h2>
-      <p>{originStory.introduction}</p>
-      {originStory.body.map((paragraph) => <p>{paragraph}</p>)}
+      <p>
+        I started by gluing websites together with plugins. The useful skill was knowing what did
+        each job well and not rebuilding capability that already existed.
+      </p>
+      <p>
+        The tools changed. Plugins became APIs, cloud services, infrastructure, models, skills and
+        agents. Platform engineering became a way to compose work. One coding agent became several.
+      </p>
+      <p>
+        Then the agents worked across more than one product at a time. I needed a system to
+        understand what had changed, what had survived review and what the software had actually
+        proved.
+      </p>
       <h2>What I build</h2>
-      <p>Systems that move an idea toward a running product: applications, infrastructure, release paths, agent workflows and the controls that keep their claims honest.</p>
-      <p>The projects are varied on purpose. Games expose product and visual judgement. Media systems expose catalog, playback and delivery. Reconstruction work tests whether an agent can stay inside source evidence. MAX tests where software proof stops and physical proof begins.</p>
-      <p>Read the full founding account, <a href="/dispatches/i-didnt-mean-to-build-a-software-factory/">I Didn't Mean to Build a Software Factory</a>, for the system behind the work.</p>
+      <p>
+        Systems that move an idea toward a running product: applications, infrastructure, release
+        paths, agent workflows and the controls that keep their claims honest.
+      </p>
+      <p>
+        The projects are varied on purpose. Games expose product and visual judgement. Media systems
+        expose catalog, playback and delivery. Reconstruction work tests whether an agent can stay
+        inside source evidence. MAX tests where software proof stops and physical proof begins.
+      </p>
+      <p>
+        Read the full founding account,{" "}
+        <a href="/dispatches/i-didnt-mean-to-build-a-software-factory/">
+          I Didn't Mean to Build a Software Factory
+        </a>
+        , for the system behind the work.
+      </p>
       <h2>The work should carry the résumé</h2>
-      <p>Woodhouse is a public record of the products, their architecture and the factory lessons that survive. It is not a list of unsupported adjectives. Start with the <a href="/factory/">projects</a>, then follow the <a href="/incidents/">incidents</a> and <a href="/architecture/">architecture</a>.</p>
+      <p>
+        Woodhouse is a public record of the products, their architecture and the factory lessons
+        that survive. It is not a list of unsupported adjectives. Start with the{" "}
+        <a href="/factory/">projects</a>, then follow the <a href="/incidents/">incidents</a> and{" "}
+        <a href="/architecture/">architecture</a>.
+      </p>
     </article>
     <aside class="margin-rail" aria-label="Links to Dean">
-      <div class="margin-note"><span class="margin-note__label">GitHub</span><p><a href="https://github.com/loftwah" rel="me">github.com/loftwah ↗</a></p></div>
-      <div class="margin-note"><span class="margin-note__label">X</span><p><a href="https://x.com/loftwah" rel="me">x.com/loftwah ↗</a></p></div>
-      <div class="margin-note"><span class="margin-note__label">LinkedIn</span><p><a href="https://au.linkedin.com/in/deanlofts" rel="me">linkedin.com/in/deanlofts ↗</a></p></div>
-      <div class="margin-note"><span class="margin-note__label">Get in touch</span><p>For work that fits the projects and practices here, contact Dean through X or GitHub.</p></div>
+      <div class="margin-note">
+        <span class="margin-note__label">GitHub</span>
+        <p>
+          <a href="https://github.com/loftwah" rel="me">
+            github.com/loftwah ↗
+          </a>
+        </p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">X</span>
+        <p>
+          <a href="https://x.com/loftwah" rel="me">
+            x.com/loftwah ↗
+          </a>
+        </p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">LinkedIn</span>
+        <p>
+          <a href="https://www.linkedin.com/in/deanlofts/" rel="me">
+            linkedin.com/in/deanlofts ↗
+          </a>
+        </p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">Get in touch</span>
+        <p>For work that fits the projects and practices here, contact Dean through X or GitHub.</p>
+      </div>
     </aside>
   </section>
 </BaseLayout>

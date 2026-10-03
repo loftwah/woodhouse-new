@@ -1,16 +1,50 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
-import { projects, reviewDateLabel } from "../../data/projects";
+import { listProjectRecords } from "../../content/repository";
+const result = await listProjectRecords();
+if (result.error)
+  return new Response("Unable to load the public project record.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const projects = result.projects;
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
+const reviewDateLabel =
+  reviewDate === "Review date unavailable"
+    ? reviewDate
+    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
+        dateStyle: "long",
+        timeZone: "Australia/Melbourne"
+      });
+export const prerender = false;
 ---
-<BaseLayout title="Agent Reception" description="A bounded public interface for agents to inspect reviewed project state, evidence boundaries and approved contact channels." path="/agents/" image="/og/factory.jpg">
+
+<BaseLayout
+  title="Agent Reception"
+  description="A bounded public interface for agents to inspect reviewed project state, evidence boundaries and approved contact channels."
+  path="/agents/"
+  image="/og/factory.jpg"
+>
   <section class="container page-intro">
     <div class="page-intro__grid">
       <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">WOODHOUSE</a><span>/</span><span>Agent Reception</span></nav>
-        <h1 class="page-title">Read the record.<br />Respect its limits.</h1>
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <span>Agent Reception</span>
+        </nav>
+        <h1 class="page-title">
+          Read the record.
+          <br />
+          Respect its limits.
+        </h1>
       </div>
-      <aside class="page-intro__aside"><strong>Read-only · public-safe · dated</strong>Agent Reception offers reviewed facts. It has no private repository connector and cannot initiate a change.</aside>
+      <aside class="page-intro__aside">
+        <strong>Read-only · public-safe · dated</strong>Agent Reception offers reviewed facts. It
+        has no private repository connector and cannot initiate a change.
+      </aside>
     </div>
   </section>
   <section class="section">
@@ -18,17 +52,25 @@ import { projects, reviewDateLabel } from "../../data/projects";
       <div class="agent-entry">
         <div>
           <span class="agent-entry__label">How to answer with evidence</span>
-          <p><strong>Question:</strong> Is Pirates ready for a procedural fork?</p>
-          <p><strong>Answer from this snapshot:</strong> No. Its parity gate remains locked. The supplied report says the original reconstruction must pass parity before expansion.</p>
-          <p><strong>Boundary:</strong> Reviewed {reviewDateLabel}; the project repository is private and no later source state is implied.</p>
+          <p>
+            <strong>Question:</strong> Is Pirates ready for a procedural fork?
+          </p>
+          <p>
+            <strong>Answer from this snapshot:</strong> No. Its parity gate remains locked. The
+            supplied report says the original reconstruction must pass parity before expansion.
+          </p>
+          <p>
+            <strong>Boundary:</strong> Reviewed {reviewDateLabel}; the project repository is private
+            and no later source state is implied.
+          </p>
         </div>
         <div>
           <span class="agent-entry__label">Machine-readable record</span>
           <pre class="agent-entry__code"><a href="/agents/facts.json">GET /agents/facts.json</a>
 
 Read-only JSON
-8 project summaries
-Review date: 2026-09-28
+{projects.length} public project summaries
+Review date: {reviewDate}
 No credentials or raw issue text</pre>
         </div>
       </div>
@@ -37,11 +79,26 @@ No credentials or raw issue text</pre>
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
-        <div><h2>Eight summaries. One explicit date.</h2></div>
-        <p>Use the source field and proof boundary with every answer. Do not turn a reviewed summary into a claim about current production state.</p>
+        <div>
+          <h2>Eight summaries. One explicit date.</h2>
+        </div>
+        <p>
+          Use the source field and proof boundary with every answer. Do not turn a reviewed summary
+          into a claim about current production state.
+        </p>
       </div>
-      <div class="project-ledger">{projects.map((project) => <ProjectRow project={project} compact={true} />)}</div>
-      <p class="source-note"><strong>Contact:</strong> If a human needs to reach Dean, use <a href="https://x.com/loftwah">X / @loftwah</a>, <a href="https://au.linkedin.com/in/deanlofts">LinkedIn</a> or the <a href="https://github.com/loftwah">GitHub profile</a>. Do not share private user data.</p>
+      <div class="project-ledger">
+        {projects.map((project) => (
+          <ProjectRow project={project} compact={true} />
+        ))}
+      </div>
+      <p class="source-note">
+        <strong>Contact:</strong> If a human needs to reach Dean, use{" "}
+        <a href="https://x.com/loftwah">X / @loftwah</a>,{" "}
+        <a href="https://www.linkedin.com/in/deanlofts/">LinkedIn</a>, the{" "}
+        <a href="https://github.com/loftwah">GitHub profile</a> or the{" "}
+        <a href="/contact/">Woodhouse enquiry form</a>. Do not share private user data.
+      </p>
     </div>
   </section>
 </BaseLayout>

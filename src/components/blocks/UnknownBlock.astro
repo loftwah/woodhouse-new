@@ -1,0 +1,9 @@
+---
+const { value } = Astro.props;
+const type = typeof value?._type === "string" ? value._type : "unknown";
+---
+
+<aside class="source-note">
+  <strong>Editorial block “{type}” needs an updated renderer.</strong> The stored material is
+  retained and has not been silently removed.
+</aside>

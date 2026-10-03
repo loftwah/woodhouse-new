@@ -1,33 +1,90 @@
 ---
-import { projects } from "../data/projects";
-import { fieldNotes } from "../data/field-notes";
+import type { PublicSearchItem } from "../content/repository";
 
-const pages = [
-  { title: "Home", description: "The Loftwah Software Factory and its eight projects.", href: "/", section: "Start here" },
-  { title: "The factory floor", description: "Project order, current state and the next proof each project needs.", href: "/factory/", section: "Factory" },
-  { title: "Project dossiers", description: "All eight products, their artwork and reviewed records.", href: "/projects/", section: "Projects" },
-  { title: "Dispatches", description: "Field notes, incidents and the engineering journal.", href: "/dispatches/", section: "Writing" },
-  { title: "Incidents", description: "What failed, what changed and which control came next.", href: "/incidents/", section: "Writing" },
-  { title: "Factory doctrine", description: "Value, autonomy, commercial controls and physical work.", keywords: "payments payment Printful fulfilment fulfillment order orders Stripe webhooks idempotency scheduled agent approval approve reject return artwork rights budget walker physical", href: "/doctrine/", section: "Factory" },
-  { title: "Architecture", description: "How the public record is built and what stays private.", href: "/architecture/", section: "Factory" },
-  { title: "Agent Reception", description: "The dated, machine-readable public project record.", href: "/agents/", section: "For agents" },
-  { title: "Dean Lofts", description: "The operator behind the factory.", href: "/dean/", section: "People" },
-  { title: "Contact", description: "Public ways to reach Dean.", href: "/contact/", section: "People" },
-  { title: "Conversations", description: "What Woodhouse publishes and what remains private.", href: "/conversations/", section: "About this record" },
-  ...projects.map((project) => ({
-    title: project.name,
-    description: `${project.discipline}. ${project.summary}`,
-    href: `/projects/${project.slug}/`,
+type SearchPage = PublicSearchItem & { keywords?: string };
+type Props = {
+  pages?: PublicSearchItem[];
+};
+
+const { pages: contentPages = [] } = Astro.props;
+
+const destinationPages: SearchPage[] = [
+  {
+    title: "Home",
+    description: "The Loftwah Software Factory and its eight projects.",
+    href: "/",
+    section: "Start here"
+  },
+  {
+    title: "The factory floor",
+    description: "Project order, current state and the next proof each project needs.",
+    href: "/factory/",
+    section: "Factory"
+  },
+  {
+    title: "Project dossiers",
+    description: "All eight products, their artwork and reviewed records.",
+    href: "/projects/",
     section: "Projects"
-  })),
-  ...fieldNotes.map((note) => ({
-    title: note.title,
-    description: `${note.kind}. ${note.deck}`,
-    href: `/dispatches/${note.slug}/`,
-    section: note.kind
-  }))
+  },
+  {
+    title: "Dispatches",
+    description: "Field notes, incidents and the engineering journal.",
+    href: "/dispatches/",
+    section: "Writing"
+  },
+  {
+    title: "Incidents",
+    description: "What failed, what changed and which control came next.",
+    href: "/incidents/",
+    section: "Writing"
+  },
+  {
+    title: "Factory doctrine",
+    description: "Value, autonomy, commercial controls and physical work.",
+    keywords:
+      "payments payment Printful fulfilment fulfillment order orders Stripe webhooks idempotency scheduled agent approval approve reject return artwork rights budget walker physical",
+    href: "/doctrine/",
+    section: "Factory"
+  },
+  {
+    title: "Architecture",
+    description: "How the public record is built and what stays private.",
+    href: "/architecture/",
+    section: "Factory"
+  },
+  {
+    title: "Agent Reception",
+    description: "The dated, machine-readable public project record.",
+    href: "/agents/",
+    section: "For agents"
+  },
+  {
+    title: "Dean Lofts",
+    description: "The operator behind the factory.",
+    href: "/dean/",
+    section: "People"
+  },
+  {
+    title: "Contact",
+    description: "Public ways to reach Dean.",
+    href: "/contact/",
+    section: "People"
+  },
+  {
+    title: "Conversations",
+    description: "What Woodhouse publishes and what remains private.",
+    href: "/conversations/",
+    section: "About this record"
+  }
+];
+const contentHrefs = new Set(contentPages.map((page) => page.href));
+const pages: SearchPage[] = [
+  ...destinationPages.filter((page) => !contentHrefs.has(page.href)),
+  ...contentPages
 ];
 ---
+
 <div class="site-search">
   <button
     class="site-search__trigger"
@@ -38,17 +95,31 @@ const pages = [
     aria-controls="woodhouse-search"
     aria-keyshortcuts="Meta+K Control+K"
   >
-    <span>Search</span><kbd aria-hidden="true">⌘ K</kbd>
+    <span>Search</span>
+    <kbd aria-hidden="true">⌘ K</kbd>
   </button>
-  <dialog class="site-search__dialog" id="woodhouse-search" aria-labelledby="woodhouse-search-title">
+  <dialog
+    class="site-search__dialog"
+    id="woodhouse-search"
+    aria-labelledby="woodhouse-search-title"
+  >
     <div class="site-search__panel">
       <div class="site-search__heading">
         <div>
           <h2 id="woodhouse-search-title">Find a project or subject.</h2>
         </div>
-        <button class="site-search__close" type="button" data-site-search-close aria-label="Close search">×</button>
+        <button
+          class="site-search__close"
+          type="button"
+          data-site-search-close
+          aria-label="Close search"
+        >
+          ×
+        </button>
       </div>
-      <label class="site-search__label" for="woodhouse-search-input">Search the public record</label>
+      <label class="site-search__label" for="woodhouse-search-input">
+        Search the public record
+      </label>
       <input
         id="woodhouse-search-input"
         class="site-search__input"
@@ -58,21 +129,34 @@ const pages = [
         enterkeyhint="search"
         aria-controls="woodhouse-search-results"
       />
-      <p class="site-search__status" id="woodhouse-search-status" role="status" aria-live="polite">{pages.length} pages in the index</p>
+      <p class="site-search__status" id="woodhouse-search-status" role="status" aria-live="polite">
+        {pages.length} pages in the index
+      </p>
       <nav class="site-search__results" aria-label="Search results">
         <ul id="woodhouse-search-results">
           {pages.map((page) => (
-            <li data-search-item data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""}`.toLowerCase()}>
+            <li
+              data-search-item
+              data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""}`.toLowerCase()}
+            >
               <a href={page.href}>
-                <span><strong>{page.title}</strong><small>{page.description}</small></span>
+                <span>
+                  <strong>{page.title}</strong>
+                  <small>{page.description}</small>
+                </span>
                 <em>{page.section}</em>
               </a>
             </li>
           ))}
         </ul>
-        <p class="site-search__empty" hidden>No matches. Try a project name or a different word.</p>
+        <p class="site-search__empty" hidden>
+          No matches. Try a project name or a different word.
+        </p>
       </nav>
-      <p class="site-search__hint"><kbd>Esc</kbd> closes search <span aria-hidden="true">·</span> <kbd>⌘ K</kbd> or <kbd>Ctrl K</kbd> opens it</p>
+      <p class="site-search__hint">
+        <kbd>Esc</kbd> closes search <span aria-hidden="true">·</span> <kbd>⌘ K</kbd> or{" "}
+        <kbd>Ctrl K</kbd> opens it
+      </p>
     </div>
   </dialog>
 </div>
@@ -83,10 +167,17 @@ const pages = [
     const input = document.getElementById("woodhouse-search-input");
     const status = document.getElementById("woodhouse-search-status");
     const list = document.getElementById("woodhouse-search-results");
-    if (!(dialog instanceof HTMLDialogElement) || !(input instanceof HTMLInputElement) || !status || !list) return;
+    if (
+      !(dialog instanceof HTMLDialogElement) ||
+      !(input instanceof HTMLInputElement) ||
+      !status ||
+      !list
+    )
+      return;
 
     const items = [...list.querySelectorAll("[data-search-item]")];
     const empty = dialog.querySelector(".site-search__empty");
+    let returnFocusTo = null;
 
     const filter = () => {
       const query = input.value.trim().toLocaleLowerCase();
@@ -97,59 +188,92 @@ const pages = [
         if (matches) shown += 1;
       }
       if (empty) empty.hidden = shown !== 0;
-      status.textContent = query ? `${shown} ${shown === 1 ? "match" : "matches"}` : `${items.length} pages in the index`;
+      status.textContent = query
+        ? `${shown} ${shown === 1 ? "match" : "matches"}`
+        : `${items.length} pages in the index`;
     };
 
     const open = () => {
-      if (!dialog.open) dialog.showModal();
+      if (!dialog.open) {
+        const active = document.activeElement;
+        returnFocusTo =
+          active instanceof HTMLElement && active !== document.body
+            ? active
+            : document.querySelector("[data-site-search-open]");
+        dialog.showModal();
+      }
       input.value = "";
       filter();
       input.focus();
     };
 
     document.addEventListener("click", (event) => {
-      if (event.target instanceof Element && event.target.closest("[data-site-search-open]")) open();
+      if (event.target instanceof Element && event.target.closest("[data-site-search-open]"))
+        open();
     });
-    dialog.querySelector("[data-site-search-close]")?.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => {
+      if (returnFocusTo instanceof HTMLElement && returnFocusTo.isConnected) returnFocusTo.focus();
+      returnFocusTo = null;
+    });
+    dialog
+      .querySelector("[data-site-search-close]")
+      ?.addEventListener("click", () => dialog.close());
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
     });
     input.addEventListener("input", filter);
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && dialog.open) {
-        event.preventDefault();
-        dialog.close();
-        return;
-      }
-      if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        open();
-      }
-    }, true);
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && dialog.open) {
+          event.preventDefault();
+          dialog.close();
+          return;
+        }
+        if (
+          (event.metaKey || event.ctrlKey) &&
+          !event.altKey &&
+          !event.shiftKey &&
+          event.key.toLowerCase() === "k"
+        ) {
+          event.preventDefault();
+          open();
+        }
+      },
+      true
+    );
   })();
 </script>
 
 <style>
-  .site-search { display: flex; align-items: center; }
+  .site-search {
+    display: flex;
+    align-items: center;
+  }
   .site-search__trigger {
     display: inline-flex;
     align-items: center;
-    gap: .7rem;
+    gap: 0.7rem;
     min-height: 2.45rem;
-    padding: .35rem .55rem .35rem .8rem;
+    padding: 0.35rem 0.55rem 0.35rem 0.8rem;
     border: 1px solid var(--line-dark);
     color: #fffaf0;
     background: transparent;
     font: inherit;
-    font-size: .7rem;
+    font-size: 0.7rem;
     font-weight: 700;
     cursor: pointer;
   }
-  .site-search__trigger:hover, .site-search__trigger:focus-visible { color: #171812; background: var(--acid); }
-  .site-search__trigger kbd, .site-search__hint kbd {
-    padding: .16rem .32rem;
+  .site-search__trigger:hover,
+  .site-search__trigger:focus-visible {
+    color: #171812;
+    background: var(--acid);
+  }
+  .site-search__trigger kbd,
+  .site-search__hint kbd {
+    padding: 0.16rem 0.32rem;
     border: 1px solid currentColor;
-    font: 600 .62rem/1.3 var(--mono);
+    font: 600 0.62rem/1.3 var(--mono);
   }
   .site-search__dialog {
     width: min(46rem, calc(100vw - 2rem));
@@ -160,29 +284,134 @@ const pages = [
     border: 3px solid var(--paper);
     color: var(--paper);
     background: var(--ink);
-    box-shadow: 0 1.5rem 4rem -1.5rem rgba(100, 125, 255, .72);
+    box-shadow: 0 1.5rem 4rem -1.5rem rgba(100, 125, 255, 0.72);
   }
-  .site-search__dialog::backdrop { background: rgba(3, 6, 13, .78); }
-  .site-search__panel { display: grid; grid-template-rows: auto auto auto auto minmax(0, 1fr) auto; max-height: min(84dvh, 52rem); padding: clamp(1rem, 3vw, 1.7rem); }
-  .site-search__heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; padding-bottom: 1rem; }
-  .site-search__heading h2 { max-width: 18ch; margin: 0; font: 800 clamp(1.5rem, 4vw, 2.2rem)/1 var(--display); letter-spacing: -.03em; }
-  .site-search__close { width: 2.5rem; height: 2.5rem; border: 2px solid var(--paper); color: var(--paper); background: transparent; font: 400 1.6rem/1 var(--sans); cursor: pointer; }
-  .site-search__close:hover { color: var(--paper); background: var(--signal); }
-  .site-search__label { margin-bottom: .35rem; font: 700 .65rem/1.4 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
-  .site-search__input { width: 100%; min-height: 3.3rem; padding: .65rem .8rem; border: 1px solid var(--line-dark); border-radius: 0; color: var(--paper); background: var(--surface-soft); font: 600 1rem/1.3 var(--sans); }
-  .site-search__input:focus-visible { outline: 4px solid var(--signal); outline-offset: 2px; }
-  .site-search__status { margin: .55rem 0; color: var(--copy-soft); font-size: .7rem; }
-  .site-search__results { min-height: 0; overflow-y: auto; overscroll-behavior: contain; border-top: 1px solid var(--line); }
-  .site-search__results ul { display: grid; padding: 0; margin: 0; list-style: none; }
-  .site-search__results li { border-bottom: 1px solid var(--line); }
-  .site-search__results li[hidden] { display: none; }
-  .site-search__results a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .8rem; padding: .7rem .3rem; color: var(--paper); text-decoration: none; }
-  .site-search__results a:hover, .site-search__results a:focus-visible { color: var(--paper); background: var(--hover-surface); }
-  .site-search__results a span { display: grid; gap: .15rem; }
-  .site-search__results strong { font-size: .88rem; }
-  .site-search__results small { color: var(--copy-soft); font-size: .7rem; line-height: 1.4; }
-  .site-search__results em { color: var(--brass); font: 700 .55rem/1.3 var(--mono); text-align: right; text-transform: uppercase; }
-  .site-search__empty { padding: 1.2rem .3rem; color: var(--copy-soft); }
-  .site-search__hint { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; margin: .8rem 0 0; color: var(--copy-soft); font-size: .65rem; }
-  @media (max-width: 760px) { .site-search__trigger { display: none; } }
+  .site-search__dialog::backdrop {
+    background: rgba(3, 6, 13, 0.78);
+  }
+  .site-search__panel {
+    display: grid;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+    max-height: min(84dvh, 52rem);
+    padding: clamp(1rem, 3vw, 1.7rem);
+  }
+  .site-search__heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  .site-search__heading h2 {
+    max-width: 18ch;
+    margin: 0;
+    font: 800 clamp(1.5rem, 4vw, 2.2rem)/1 var(--display);
+    letter-spacing: -0.03em;
+  }
+  .site-search__close {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 2px solid var(--paper);
+    color: var(--paper);
+    background: transparent;
+    font: 400 1.6rem/1 var(--sans);
+    cursor: pointer;
+  }
+  .site-search__close:hover {
+    color: var(--paper);
+    background: var(--signal);
+  }
+  .site-search__label {
+    margin-bottom: 0.35rem;
+    font: 700 0.65rem/1.4 var(--mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .site-search__input {
+    width: 100%;
+    min-height: 3.3rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line-dark);
+    border-radius: 0;
+    color: var(--paper);
+    background: var(--surface-soft);
+    font: 600 1rem/1.3 var(--sans);
+  }
+  .site-search__input:focus-visible {
+    outline: 4px solid var(--signal);
+    outline-offset: 2px;
+  }
+  .site-search__status {
+    margin: 0.55rem 0;
+    color: var(--copy-soft);
+    font-size: 0.7rem;
+  }
+  .site-search__results {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-top: 1px solid var(--line);
+  }
+  .site-search__results ul {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .site-search__results li {
+    border-bottom: 1px solid var(--line);
+  }
+  .site-search__results li[hidden] {
+    display: none;
+  }
+  .site-search__results a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.3rem;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .site-search__results a:hover,
+  .site-search__results a:focus-visible {
+    color: var(--paper);
+    background: var(--hover-surface);
+  }
+  .site-search__results a span {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .site-search__results strong {
+    font-size: 0.88rem;
+  }
+  .site-search__results small {
+    color: var(--copy-soft);
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+  .site-search__results em {
+    color: var(--brass);
+    font: 700 0.55rem/1.3 var(--mono);
+    text-align: right;
+    text-transform: uppercase;
+  }
+  .site-search__empty {
+    padding: 1.2rem 0.3rem;
+    color: var(--copy-soft);
+  }
+  .site-search__hint {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0.8rem 0 0;
+    color: var(--copy-soft);
+    font-size: 0.65rem;
+  }
+  @media (max-width: 760px) {
+    .site-search__trigger {
+      display: none;
+    }
+  }
 </style>

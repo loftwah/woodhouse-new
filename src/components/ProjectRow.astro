@@ -3,13 +3,20 @@ import StatusStamp from "./StatusStamp.astro";
 import { getSiteMetadata } from "../data/site-metadata";
 const { project, compact = false } = Astro.props;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
-const siteMeta = project.siteUrl ? await getSiteMetadata(project) : null;
+const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const placeholder = `/og/projects/${project.slug}.svg`;
 ---
+
 <article class={"project-row" + (compact ? " project-row--compact" : "")}>
   <figure class="project-row__preview" data-project-artwork>
     {siteMeta ? (
-      <a class="project-row__image" href={project.siteUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open the ${project.name} site to view its artwork`}>
+      <a
+        class="project-row__image"
+        href={project.siteUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Open the ${project.name} site to view its artwork`}
+      >
         <img
           src={siteMeta.image}
           alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
@@ -18,36 +25,72 @@ const placeholder = `/og/projects/${project.slug}.svg`;
           loading="lazy"
           decoding="async"
           data-fallback-src={placeholder}
-          data-fallback-alt={`${project.name} Woodhouse placeholder. The project site's artwork could not be displayed.`}
+          data-fallback-alt={`Woodhouse illustration for ${project.name}.`}
         />
       </a>
     ) : (
       <div class="project-row__image project-row__image--placeholder">
-        <img src={placeholder} alt={`${project.name} Woodhouse placeholder. No public project site or demo is available.`} width="1200" height="630" loading="lazy" decoding="async" />
+        <img
+          src={placeholder}
+          alt={`Woodhouse illustration for ${project.name}.`}
+          width="1200"
+          height="630"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     )}
     <figcaption>
       <span class="project-row__domainline">
-        {siteMeta?.icon && <img src={siteMeta.icon} width="20" height="20" alt="" aria-hidden="true" decoding="async" data-source-favicon />}
-      <span class="project-row__domain">{domain} · {siteMeta ? <span data-artwork-status>{siteMeta.freshness === "live" ? `ARTWORK FROM ${project.name.toUpperCase()}` : "LAST REVIEWED SITE DETAILS"}</span> : "WOODHOUSE PLACEHOLDER"}</span>
+        {siteMeta?.icon && (
+          <img
+            src={siteMeta.icon}
+            width="20"
+            height="20"
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+            data-source-favicon
+          />
+        )}
+        <span class="project-row__domain">
+          {domain} ·{" "}
+          {siteMeta ? (
+            <span data-artwork-status>LAST REVIEWED SITE DETAILS</span>
+          ) : (
+            <span data-artwork-status>WOODHOUSE ILLUSTRATION</span>
+          )}
+        </span>
       </span>
-      {siteMeta ? <>
-        <strong class="project-row__og-title">{siteMeta.title}</strong>
-        <span class="project-row__og-description">{siteMeta.description}</span>
-        {siteMeta.freshness === "fallback" && <span class="project-row__source-note">The site did not respond during this build; Woodhouse is showing its last reviewed image and metadata.</span>}
-      </> : <>
-        <strong class="project-row__og-title">No source image to display</strong>
-        <span class="project-row__og-description">This project has no public site or demo. The artwork above is clearly marked as a Woodhouse placeholder.</span>
-      </>}
+      {siteMeta ? (
+        <>
+          <strong class="project-row__og-title">{siteMeta.title}</strong>
+          <span class="project-row__og-description">{siteMeta.description}</span>
+        </>
+      ) : (
+        <>
+          <strong class="project-row__og-title">Woodhouse illustration</strong>
+          <span class="project-row__og-description">Made for this dossier.</span>
+        </>
+      )}
     </figcaption>
   </figure>
   <div class="project-row__record">
     <span class="project-row__index">{project.index} / 08 · DOSSIER</span>
-    <h3><a class="project-row__name" href={"/projects/" + project.slug + "/"}>{project.name}</a></h3>
+    <h3>
+      <a class="project-row__name" href={"/projects/" + project.slug + "/"}>
+        {project.name}
+      </a>
+    </h3>
     <span class="project-row__discipline">{project.discipline}</span>
     <StatusStamp tone={project.stateTone} label={project.state} />
     <p class="project-row__summary">{project.summary}</p>
-    <p class="project-row__proof"><strong>Next proof</strong>{project.remaining}</p>
-    <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>Read the Woodhouse dossier <span aria-hidden="true">↗</span></a>
+    <p class="project-row__proof">
+      <strong>Next proof</strong>
+      {project.remaining}
+    </p>
+    <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>
+      Read the Woodhouse dossier <span aria-hidden="true">↗</span>
+    </a>
   </div>
 </article>

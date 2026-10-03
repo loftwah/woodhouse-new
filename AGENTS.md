@@ -1,5 +1,7 @@
 # Agent instructions
 
+When working with EmDash, query the official EmDash documentation rather than relying on remembered APIs or examples. Never include private Woodhouse code, credentials or personal information in documentation-search queries.
+
 Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
 
 ## Evidence

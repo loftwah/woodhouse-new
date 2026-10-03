@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getEmDashEntry } from "emdash";
+import { asText, getProjectRecord } from "../../content/repository";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const result = slug
+  ? await getEmDashEntry("evidence_records", slug)
+  : { entry: undefined, error: undefined, cacheHint: undefined };
+if (result.error)
+  return new Response("Unable to load this evidence record.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const item = result.entry;
+if (!item || item.data.public_safe !== true)
+  return new Response("Evidence record not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+if (Astro.cache?.enabled && result.cacheHint) Astro.cache.set(result.cacheHint);
+const projectKey = asText(item.data, "project_key");
+const projectResult = projectKey ? await getProjectRecord(projectKey) : null;
+if (projectResult?.error)
+  return new Response("Unable to load the associated public project.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled)
+  for (const hint of projectResult?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
+const title = asText(item.data, "title");
+---
+
+<BaseLayout
+  title={title}
+  description={asText(item.data, "claim")}
+  path={`/evidence/${item.id}/`}
+  type="article"
+  image="/og/factory.jpg"
+>
+  <section class="container dossier-hero">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/evidence/">Evidence</a>
+        <span>/</span>
+        <span>{projectResult?.project?.name ?? projectKey}</span>
+      </nav>
+      <h1>{title}</h1>
+      <p class="dossier-hero__summary">{asText(item.data, "claim")}</p>
+    </div>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">{asText(item.data, "evidence_kind")}</span>
+      <dl>
+        <dt>Evidence state</dt>
+        <dd>{asText(item.data, "evidence_state")}</dd>
+        <dt>Reviewed</dt>
+        <dd>{asText(item.data, "reviewed_at")}</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      <h2>What the record says</h2>
+      <p>{asText(item.data, "summary")}</p>
+      <h2>Source</h2>
+      <p>
+        {asText(item.data, "source_label") ||
+          "No external source link is published with this record."}
+      </p>
+      <h2>Where the proof stops</h2>
+      <p>{asText(item.data, "proof_boundary")}</p>
+      {projectResult?.project && (
+        <p>
+          Related project: <a href={`/projects/${projectKey}/`}>{projectResult.project.name}</a>.
+        </p>
+      )}
+    </article>
+    <aside class="margin-rail">
+      <div class="margin-note">
+        <span class="margin-note__label">Review date</span>
+        <p>{asText(item.data, "reviewed_at")}</p>
+      </div>
+      <div class="margin-note">
+        <span class="margin-note__label">Evidence boundary</span>
+        <p>
+          This reviewed public observation does not imply implementation, merge, qualification,
+          production verification, owner acceptance or physical proof.
+        </p>
+      </div>
+    </aside>
+  </section>
+</BaseLayout>

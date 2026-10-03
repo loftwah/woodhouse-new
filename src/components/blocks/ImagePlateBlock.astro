@@ -1,0 +1,11 @@
+---
+import { Image } from "emdash/ui";
+const { value } = Astro.props;
+---
+
+{value.image && (
+  <figure class:list={["image-plate", value.variant && `image-plate--${value.variant}`]}>
+    <Image image={value.image} />
+    {value.caption && <figcaption>{value.caption}</figcaption>}
+  </figure>
+)}

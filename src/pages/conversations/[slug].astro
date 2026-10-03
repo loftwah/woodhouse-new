@@ -1,0 +1,110 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getEmDashEntry } from "emdash";
+import { asText } from "../../content/repository";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const result = slug
+  ? await getEmDashEntry("conversations", slug, { references: { project: true } })
+  : null;
+if (result?.error)
+  return new Response("Unable to load this edited conversation piece.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const entry = result?.entry;
+const isPreview = result?.isPreview === true;
+if (
+  !entry ||
+  (!isPreview && (entry.data.public_safe !== true || entry.data.source_reviewed !== true))
+)
+  return new Response("Edited conversation piece not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+if (isPreview) {
+  Astro.cache?.set(false);
+  Astro.response.headers.set("cache-control", "private, no-store, max-age=0");
+  Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+} else if (Astro.cache?.enabled && result?.cacheHint) Astro.cache.set(result.cacheHint);
+const title = asText(entry.data, "title") || "Edited conversation piece";
+const project = entry.references?.project.entries[0];
+---
+
+<BaseLayout
+  title={title}
+  description={
+    asText(entry.data, "edited_summary") ||
+    "A human-reviewed public summary informed by a private conversation."
+  }
+  path={`/conversations/${entry.id}/`}
+  type="article"
+  pageType="article"
+  contentRef={{ collection: "conversations", id: entry.id, slug: entry.id }}
+  contentSeo={{ data: entry.data }}
+  image="/og/factory.jpg"
+  noindex={isPreview}
+>
+  {isPreview && (
+    <p class="container source-note">
+      <strong>Unpublished preview.</strong> This edited summary is shown only through authenticated
+      EmDash preview.
+    </p>
+  )}
+  <section class="container dossier-hero" {...entry.edit}>
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/conversations/">Conversations</a>
+        <span>/</span>
+        <span>Edited piece</span>
+      </nav>
+      <h1 {...entry.edit.title}>{title}</h1>
+      <p class="article-meta" {...entry.edit.reviewed_at}>
+        Reviewed {asText(entry.data, "reviewed_at") || "date not supplied"}
+      </p>
+      <p class="dossier-hero__summary" {...entry.edit.edited_summary}>
+        {asText(entry.data, "edited_summary") || "No edited summary has been supplied yet."}
+      </p>
+    </div>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">Human-reviewed public summary</span>
+      <dl>
+        <dt>Source status</dt>
+        <dd>{entry.data.source_reviewed ? "Reviewed" : "Review required"}</dd>
+        <dt>Related project</dt>
+        <dd>{project?.data.name ?? "No project linked"}</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="container dossier-grid">
+    <article class="prose">
+      <h2>Context</h2>
+      <p {...entry.edit.context}>{asText(entry.data, "context") || "No context supplied."}</p>
+      <h2>What changed</h2>
+      <p {...entry.edit.lesson}>{asText(entry.data, "lesson") || "No lesson supplied."}</p>
+      <div class="callout">
+        <p class="callout__title">Publication boundary</p>
+        <p {...entry.edit.proof_boundary}>
+          {asText(entry.data, "proof_boundary") ||
+            "This draft does not yet state its publication boundary."}{" "}
+          The source conversation is not published verbatim.
+        </p>
+      </div>
+      <p>
+        <a href="/conversations/">Back to the conversations policy and archive</a>
+      </p>
+    </article>
+    <aside class="margin-rail">
+      <div class="margin-note">
+        <span class="margin-note__label">Privacy</span>
+        <p>
+          This is an edited record selected for public use. Private conversation material remains
+          private.
+        </p>
+      </div>
+    </aside>
+  </section>
+</BaseLayout>

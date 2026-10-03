@@ -1,15 +1,68 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "woodhouse-loftwah",
+  "name": "woodhouse-loftwah-preview",
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-09-28",
-  "assets": {
-    "directory": "./dist",
-    "not_found_handling": "404-page"
-  },
-  "routes": [
+  "compatibility_flags": ["nodejs_compat"],
+  "placement": { "mode": "smart" },
+  "workers_dev": true,
+  "worker_loaders": [{ "binding": "LOADER" }],
+  "d1_databases": [
     {
-      "pattern": "woodhouse.loftwah.com",
-      "custom_domain": true
+      "binding": "DB",
+      "database_name": "woodhouse-emdash-preview",
+      "database_id": "f5274c8f-d22e-4d63-bb0e-832e2d2b4f00"
     }
-  ]
+  ],
+  "kv_namespaces": [
+    { "binding": "CACHE", "id": "756d893239394378bf4fad91bd55a22a" },
+    { "binding": "SESSION", "id": "af0af0c0541b494cbfb6ce022fe6be91" }
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "woodhouse-emdash-media-preview" }],
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": { "WOODHOUSE_ENVIRONMENT": "preview" },
+  "env": {
+    "preview": {
+      "name": "woodhouse-loftwah-preview",
+      "workers_dev": true,
+      "placement": { "mode": "smart" },
+      "routes": [],
+      "worker_loaders": [{ "binding": "LOADER" }],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "woodhouse-emdash-preview",
+          "database_id": "f5274c8f-d22e-4d63-bb0e-832e2d2b4f00"
+        }
+      ],
+      "kv_namespaces": [
+        { "binding": "CACHE", "id": "756d893239394378bf4fad91bd55a22a" },
+        { "binding": "SESSION", "id": "af0af0c0541b494cbfb6ce022fe6be91" }
+      ],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "woodhouse-emdash-media-preview" }],
+      "triggers": { "crons": ["* * * * *"] },
+      "vars": { "WOODHOUSE_ENVIRONMENT": "preview" }
+    },
+    "production": {
+      "name": "woodhouse-loftwah",
+      "workers_dev": false,
+      "placement": { "mode": "smart" },
+      "routes": [{ "pattern": "woodhouse.loftwah.com", "custom_domain": true }],
+      "worker_loaders": [{ "binding": "LOADER" }],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "woodhouse-emdash",
+          "database_id": "b62500b4-b25a-4fad-8969-eff9ba3c8efa"
+        }
+      ],
+      "kv_namespaces": [
+        { "binding": "CACHE", "id": "e6a825b66fc445f8bc425a9af2a027ec" },
+        { "binding": "SESSION", "id": "fc5ed72d180343e49a351ef10dec1e51" }
+      ],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "woodhouse-emdash-media" }],
+      "triggers": { "crons": ["* * * * *"] },
+      "vars": { "WOODHOUSE_ENVIRONMENT": "production" }
+    }
+  }
 }

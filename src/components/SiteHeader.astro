@@ -1,37 +1,74 @@
 ---
-import SiteSearch from "./SiteSearch.astro";
-const { currentPath = "/" } = Astro.props;
-const links = [
-  { label: "Factory", href: "/factory/" },
-  { label: "Projects", href: "/projects/" },
-  { label: "Dispatches", href: "/dispatches/" },
-  { label: "Doctrine", href: "/doctrine/" },
-  { label: "Dean", href: "/dean/" },
-  { label: "Agent Reception", href: "/agents/" }
-];
+import type { PublicMenuItem } from "../content/repository";
+
+type Props = {
+  currentPath?: string;
+  links?: PublicMenuItem[];
+  houseIndexLinks?: PublicMenuItem[];
+};
+
+const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
 ---
 
-<a class="skip-link" href="#main-content">Skip to the work</a>
+<a class="skip-link" href="#main-content">
+  Skip to the work
+</a>
 <header class="site-header">
   <div class="site-header__inner">
-    <div class="site-header__brand"><slot name="brand" /></div>
+    <div class="site-header__brand">
+      <slot name="brand" />
+    </div>
     <div class="site-header__tools">
       <nav class="desktop-nav" aria-label="Main navigation">
         {links.map((link) => (
-          <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+          <a
+            href={link.url}
+            target={link.target}
+            rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+            aria-current={currentPath === link.url ? "page" : undefined}
+          >
+            {link.label}
+          </a>
         ))}
       </nav>
-      <SiteSearch />
+      <slot />
       <details class="mobile-index">
-        <summary aria-label="Open the house index"><span>Index</span><span class="mobile-index__glyph" aria-hidden="true">＋</span></summary>
+        <summary aria-label="Open the house index">
+          <span>Index</span>
+          <span class="mobile-index__glyph" aria-hidden="true">
+            ＋
+          </span>
+        </summary>
         <nav aria-label="House index">
-          <button class="mobile-index__search" type="button" data-site-search-open aria-haspopup="dialog" aria-controls="woodhouse-search" aria-keyshortcuts="Meta+K Control+K">Search Woodhouse <kbd>⌘ K</kbd></button>
+          <button
+            class="mobile-index__search"
+            type="button"
+            data-site-search-open
+            aria-haspopup="dialog"
+            aria-controls="woodhouse-search"
+            aria-keyshortcuts="Meta+K Control+K"
+          >
+            Search Woodhouse <kbd>⌘ K</kbd>
+          </button>
           {links.map((link) => (
-            <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>{link.label}</a>
+            <a
+              href={link.url}
+              target={link.target}
+              rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+              aria-current={currentPath === link.url ? "page" : undefined}
+            >
+              {link.label}
+            </a>
           ))}
-          <a href="/architecture/">Architecture</a>
-          <a href="/conversations/">Conversations</a>
-          <a href="/contact/">Contact</a>
+          {houseIndexLinks.map((link) => (
+            <a
+              href={link.url}
+              target={link.target}
+              rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
       </details>
     </div>
@@ -43,16 +80,27 @@ const links = [
     display: none;
     width: 100%;
     min-height: 3rem;
-    padding: .7rem .8rem;
+    padding: 0.7rem 0.8rem;
     border: 0;
     border-bottom: 1px solid var(--line);
     color: #fffaf0;
     background: transparent;
-    font: 700 .75rem/1.3 var(--sans);
+    font: 700 0.75rem/1.3 var(--sans);
     text-align: left;
     cursor: pointer;
   }
-  .mobile-index__search kbd { float: right; font: 600 .62rem/1.3 var(--mono); }
-  .mobile-index__search:hover, .mobile-index__search:focus-visible { color: #171812; background: var(--acid); }
-  @media (max-width: 760px) { .mobile-index__search { display: block; } }
+  .mobile-index__search kbd {
+    float: right;
+    font: 600 0.62rem/1.3 var(--mono);
+  }
+  .mobile-index__search:hover,
+  .mobile-index__search:focus-visible {
+    color: #171812;
+    background: var(--acid);
+  }
+  @media (max-width: 760px) {
+    .mobile-index__search {
+      display: block;
+    }
+  }
 </style>

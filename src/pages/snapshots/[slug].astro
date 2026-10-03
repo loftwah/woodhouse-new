@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getEmDashCollection, getEmDashEntry } from "emdash";
+import StatusStamp from "../../components/StatusStamp.astro";
+import { asText } from "../../content/repository";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const result = slug ? await getEmDashEntry("factory_snapshots", slug) : null;
+if (result?.error)
+  return new Response("Unable to load this factory snapshot.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const snapshot = result?.entry;
+const isPreview = result?.isPreview === true;
+if (!snapshot || (!isPreview && snapshot.data.public_safe !== true))
+  return new Response("Factory snapshot not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+const statusResult = await getEmDashCollection("project_statuses", {
+  status: "published",
+  where: { snapshot_key: snapshot.id },
+  orderBy: { sort_order: "asc" },
+  limit: 100
+});
+if (statusResult.error)
+  return new Response("Unable to load the snapshot's project records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const statuses = statusResult.entries.filter((entry) => entry.data.public_safe);
+if (isPreview) {
+  Astro.cache?.set(false);
+  Astro.response.headers.set("cache-control", "private, no-store, max-age=0");
+  Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
+} else if (Astro.cache?.enabled && result?.cacheHint) {
+  Astro.cache.set(result.cacheHint);
+  if (statusResult.cacheHint) Astro.cache.set(statusResult.cacheHint);
+}
+const title = asText(snapshot.data, "title") || "Factory snapshot";
+---
+
+<BaseLayout
+  title={title}
+  description={asText(snapshot.data, "scope") || "A dated operator-reviewed factory snapshot."}
+  path={`/snapshots/${snapshot.id}/`}
+  type="article"
+  pageType="article"
+  contentRef={{ collection: "factory_snapshots", id: snapshot.id, slug: snapshot.id }}
+  contentSeo={{ data: snapshot.data }}
+  image="/og/factory.jpg"
+  noindex={isPreview}
+>
+  {isPreview && (
+    <p class="container source-note">
+      <strong>Unpublished preview.</strong> This snapshot draft is visible only through
+      authenticated EmDash preview.
+    </p>
+  )}
+  <section class="container dossier-hero" {...snapshot.edit}>
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/factory/">Factory</a>
+        <span>/</span>
+        <span>Snapshot archive</span>
+      </nav>
+      <h1 {...snapshot.edit.title}>{title}</h1>
+      <p class="article-meta" {...snapshot.edit.reviewed_at}>
+        Reviewed {asText(snapshot.data, "reviewed_at") || "date not supplied"}
+      </p>
+      <p class="dossier-hero__summary" {...snapshot.edit.scope}>
+        {asText(snapshot.data, "scope") || "Scope not yet supplied."}
+      </p>
+    </div>
+    <aside class="dossier-hero__side">
+      <span class="micro-label">Source-backed review</span>
+      <dl>
+        <dt>Source</dt>
+        <dd>{asText(snapshot.data, "source_description") || "Not supplied"}</dd>
+        <dt>Records</dt>
+        <dd>{statuses.length} public project statuses</dd>
+      </dl>
+    </aside>
+  </section>
+  <section class="section paper-section">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <h2>Project states at this review.</h2>
+        </div>
+        <p>
+          Each row belongs to this dated snapshot. A later status does not rewrite this archive.
+        </p>
+      </div>
+      {statuses.map((status) => (
+        <article class="ledger-note" {...status.edit}>
+          <span class="ledger-note__index">{asText(status.data, "reviewed_at")}</span>
+          <div class="ledger-note__main">
+            <h3 class="ledger-note__title">
+              <a href={`/statuses/${status.id}/`}>
+                {asText(status.data, "project_key")}: {asText(status.data, "state")}
+              </a>
+            </h3>
+            <p class="ledger-note__deck">{asText(status.data, "current")}</p>
+            <p class="source-note">Next proof: {asText(status.data, "next_proof")}</p>
+          </div>
+          <div class="ledger-note__side">
+            <StatusStamp tone={status.data.state_tone} label={status.data.state} />
+            <a href={`/statuses/${status.id}/`}>Read status</a>
+          </div>
+        </article>
+      ))}
+      {statuses.length === 0 && (
+        <p class="source-note">No public-safe status records are linked to this snapshot yet.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
