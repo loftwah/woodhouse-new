@@ -1,7 +1,14 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
+import { listPublicSnapshots } from "../../content/repository";
+import { formatReviewDate } from "../../data/review-date";
+
 export const prerender = false;
+
+const snapshotResult = await listPublicSnapshots();
+const currentReview = formatReviewDate(snapshotResult.snapshots[0]?.data.reviewed_at);
+if (Astro.cache?.enabled) Astro.cache.set(snapshotResult.cacheHint);
 ---
 
 <BaseLayout
@@ -97,8 +104,9 @@ export const prerender = false;
           <div>
             <h3>Record the date</h3>
             <p>
-              Every state belongs to the 28 September 2026 snapshot. A later report must be reviewed
-              before the date is moved.
+              Every state belongs to the{" "}
+              {currentReview ? `${currentReview} snapshot` : "most recent reviewed snapshot"}. A
+              later report must be reviewed before the date is moved.
             </p>
           </div>
         </article>

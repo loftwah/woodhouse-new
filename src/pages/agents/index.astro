@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatReviewDate } from "../../data/review-date";
 import ProjectRow from "../../components/ProjectRow.astro";
 import { listProjectRecords } from "../../content/repository";
 const result = await listProjectRecords();
@@ -11,13 +12,7 @@ if (result.error)
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
-const reviewDateLabel =
-  reviewDate === "Review date unavailable"
-    ? reviewDate
-    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
-        dateStyle: "long",
-        timeZone: "Australia/Melbourne"
-      });
+const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
 export const prerender = false;
 ---
 
@@ -80,7 +75,7 @@ No credentials or raw issue text</pre>
     <div class="container">
       <div class="section-heading">
         <div>
-          <h2>Eight summaries. One explicit date.</h2>
+          <h2>{projects.length} summaries. One explicit date.</h2>
         </div>
         <p>
           Use the source field and proof boundary with every answer. Do not turn a reviewed summary
@@ -89,7 +84,7 @@ No credentials or raw issue text</pre>
       </div>
       <div class="project-ledger">
         {projects.map((project) => (
-          <ProjectRow project={project} compact={true} />
+          <ProjectRow project={project} total={projects.length} compact={true} />
         ))}
       </div>
       <p class="source-note">

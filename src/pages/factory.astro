@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { formatReviewDate } from "../data/review-date";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import { listProjectRecords } from "../content/repository";
@@ -12,13 +13,7 @@ if (result.error)
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
-const reviewDateLabel =
-  reviewDate === "Review date unavailable"
-    ? reviewDate
-    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
-        dateStyle: "long",
-        timeZone: "Australia/Melbourne"
-      });
+const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
 const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
 export const prerender = false;
 ---
@@ -73,7 +68,7 @@ export const prerender = false;
       <FactoryPlate />
       <div class="project-ledger">
         {projects.map((project) => (
-          <ProjectRow project={project} />
+          <ProjectRow project={project} total={projects.length} />
         ))}
       </div>
       <div class="snapshot-band" style="margin-top:2.5rem">

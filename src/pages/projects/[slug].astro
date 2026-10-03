@@ -5,6 +5,7 @@ import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
 import { listProjectRecords, getProjectRecord } from "../../content/repository";
 import { getSiteMetadata } from "../../data/site-metadata";
+import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
 
 export const prerender = false;
@@ -38,12 +39,7 @@ if (allProjects.error)
   });
 if (Astro.cache?.enabled) for (const hint of allProjects.cacheHints) Astro.cache.set(hint);
 const nextProjects = allProjects.projects.filter((item) => item.slug !== project?.slug).slice(0, 3);
-const reviewDateLabel = project
-  ? new Date(`${project.reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
-      dateStyle: "long",
-      timeZone: "Australia/Melbourne"
-    })
-  : "Review date unavailable";
+const reviewDateLabel = formatReviewDate(project?.reviewDate) ?? "Review date unavailable";
 const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const placeholder = `/og/projects/${project.slug}.svg`;
@@ -102,7 +98,9 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
       <StatusStamp tone={project.stateTone} label={project.state} />
       <dl>
         <dt>Record</dt>
-        <dd>{project.index} / 08</dd>
+        <dd>
+          {project.index} / {allProjects.projects.length}
+        </dd>
         <dt>Reviewed</dt>
         <dd>{reviewDateLabel}</dd>
         <dt>Source</dt>
@@ -259,12 +257,12 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
           <h2>Other work in view.</h2>
         </div>
         <a class="text-link section-heading__action" href="/factory/">
-          See all eight projects <span aria-hidden="true">↗</span>
+          See all {allProjects.projects.length} projects <span aria-hidden="true">↗</span>
         </a>
       </div>
       <div class="project-ledger">
         {nextProjects.map((item) => (
-          <ProjectRow project={item} compact={true} />
+          <ProjectRow project={item} total={allProjects.projects.length} compact={true} />
         ))}
       </div>
     </div>

@@ -539,18 +539,8 @@ export async function listPublicSearchItems() {
       href: `/conversations/${item.id}/`,
       section: "Conversations"
     })),
-    ...projectResult.projects.flatMap((project) => [
-      ...(project.snapshotId
-        ? [
-            {
-              title: `${project.name} · ${project.reviewDate} snapshot`,
-              description: project.snapshotSource,
-              href: `/snapshots/${project.snapshotId}/`,
-              section: "Snapshots"
-            }
-          ]
-        : []),
-      ...(project.statusId
+    ...projectResult.projects.flatMap((project) =>
+      project.statusId
         ? [
             {
               title: `${project.name} · ${project.state}`,
@@ -559,11 +549,26 @@ export async function listPublicSearchItems() {
               section: "Statuses"
             }
           ]
-        : [])
-    ])
+        : []
+    )
   ];
+  // One snapshot page covers the whole portfolio, so list it once rather than
+  // once per project.
+  const currentSnapshot = projectResult.projects.find((project) => project.snapshotId);
+  if (currentSnapshot?.snapshotId) {
+    pages.push({
+      title: `Factory snapshot · ${currentSnapshot.reviewDate}`,
+      description: currentSnapshot.snapshotSource,
+      href: `/snapshots/${currentSnapshot.snapshotId}/`,
+      section: "Snapshots"
+    });
+  }
+  // Keep the first destination for any repeated href so the index never sends
+  // a reader to the same page under two names.
+  const uniquePages = new Map<string, PublicSearchItem>();
+  for (const page of pages) if (!uniquePages.has(page.href)) uniquePages.set(page.href, page);
   return {
-    pages,
+    pages: [...uniquePages.values()],
     cacheHints: [
       ...projectResult.cacheHints,
       dispatchResult.cacheHint,

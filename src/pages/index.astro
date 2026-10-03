@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { formatReviewDate } from "../data/review-date";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import ProjectNetwork from "../components/ProjectNetwork.astro";
@@ -24,13 +25,7 @@ if (Astro.cache?.enabled) {
   Astro.cache.set(dispatchResult.cacheHint);
 }
 const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
-const reviewDateLabel =
-  reviewDate === "Review date unavailable"
-    ? reviewDate
-    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
-        dateStyle: "long",
-        timeZone: "Australia/Melbourne"
-      });
+const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
 const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const featuredProjects = ["bubbles", "protocol-11", "max"].flatMap((slug) => {
@@ -195,11 +190,11 @@ export const prerender = false;
       </p>
       <div class="project-ledger" aria-label={`${projects.length} project snapshots`}>
         {projects.map((project) => (
-          <ProjectRow project={project} />
+          <ProjectRow project={project} total={projects.length} />
         ))}
       </div>
       <p class="source-note">
-        <strong>Snapshot boundary:</strong> reviewed 28 September 2026. The underlying GitHub
+        <strong>Snapshot boundary:</strong> reviewed {reviewDateLabel}. The underlying GitHub
         repositories are private; public entries summarise the shareable factory report and do not
         expose issue or pull request content.
       </p>
@@ -261,8 +256,8 @@ export const prerender = false;
             Is Pirates ready for its procedural fork?
           </p>
           <p>
-            No. The 28 September report says the parity gate is still locked. Expansion is waiting
-            for source-backed reconstruction.
+            No. The {reviewDateLabel} report says the parity gate is still locked. Expansion is
+            waiting for source-backed reconstruction.
           </p>
         </div>
         <pre
@@ -274,7 +269,7 @@ pirates
 state: Gate B locked
 parity-first: true
 procedural-fork: not approved
-reviewed: 2026-09-28</pre>
+reviewed: {reviewDate}</pre>
       </div>
     </div>
   </section>

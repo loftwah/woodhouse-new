@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatReviewDate } from "../../data/review-date";
 import ProjectRow from "../../components/ProjectRow.astro";
 import { listProjectRecords } from "../../content/repository";
 const result = await listProjectRecords();
@@ -11,13 +12,7 @@ if (result.error)
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const reviewDate = projects[0]?.reviewDate ?? "review date unavailable";
-const reviewDateLabel =
-  reviewDate === "review date unavailable"
-    ? reviewDate
-    : new Date(`${reviewDate}T00:00:00Z`).toLocaleDateString("en-AU", {
-        dateStyle: "long",
-        timeZone: "Australia/Melbourne"
-      });
+const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
 export const prerender = false;
 ---
 
@@ -50,7 +45,7 @@ export const prerender = false;
     <div class="container">
       <div class="project-ledger">
         {projects.map((project) => (
-          <ProjectRow project={project} headingLevel="h2" />
+          <ProjectRow project={project} total={projects.length} headingLevel="h2" />
         ))}
       </div>
       <p class="source-note">

@@ -249,6 +249,8 @@ const internalLinks = new Map();
 const checked = [];
 
 const canonicals = new Map();
+const searchHrefs = new Map();
+let searchIndexChecked = false;
 
 async function canonicalOf(pathname) {
   if (canonicals.has(pathname)) return canonicals.get(pathname);
@@ -286,7 +288,7 @@ for (const page of pages) {
   }
 
   const targets = new Set();
-  for (const anchor of tags(html, "a")) {
+  for (const anchor of elements(html, "a")) {
     const href = anchor.attrs.get("href");
     if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:"))
       continue;
@@ -301,6 +303,26 @@ for (const page of pages) {
     targets.add(resolved.pathname);
   }
   internalLinks.set(page, [...targets]);
+
+  // The search index is rendered on every page, so check it once. A repeated
+  // href means the same destination under two names, and the count in the
+  // dialog becomes a fiction.
+  if (!searchIndexChecked) {
+    searchIndexChecked = true;
+    const searchTargets = [
+      ...html.matchAll(/<li[^>]*data-search-item[^>]*>[\s\S]*?href="([^"]+)"/g)
+    ]
+      .map((match) => match[1])
+      .filter((href) => href.startsWith("/"));
+    for (const href of searchTargets) {
+      const seen = searchHrefs.get(href);
+      if (seen) report(page, `search index lists ${href} more than once`);
+      else searchHrefs.set(href, page);
+    }
+    const announced = /([\d,]+) pages in the index/.exec(html)?.[1];
+    if (announced && Number(announced.replaceAll(",", "")) !== searchTargets.length)
+      report(page, `search dialog announces ${announced} pages but lists ${searchTargets.length}`);
+  }
   checked.push(page);
 }
 
