@@ -27,6 +27,7 @@ Use Node 22.16 or later and pnpm.
 - Validate the EmDash seed with pnpm run emdash:seed:validate; regenerate schema types with pnpm run emdash:types.
 - Re-render the diagrams and refresh their reserved sizes with pnpm run diagrams.
 - Build and deploy the isolated Cloudflare preview with `pnpm run deploy:preview`.
+- Read the production release posture with `pnpm run release:status`. It compares the recorded preview against the current source, confirms the active preview deployment, runs the read-only production checks and verifies every acceptance artifact for freshness, permissions and digest. It exits non-zero while anything is blocked.
 - The root Wrangler target defaults to the preview Worker. Production requires the explicit `production` environment; use the guarded `pnpm run deploy` path, which requires private workflow evidence, the migrated content model, verified starter content and recovery checks. A direct explicit Wrangler production deploy bypasses the repository acceptance gate. See [EMDASH.md](EMDASH.md) for the receipt fields and release requirements.
 
 Astro keeps the authored Woodhouse presentation, while EmDash supplies published content and global menus/search at request time. The Cloudflare Worker uses D1 (`DB`), private R2 media (`MEDIA`), KV object cache (`CACHE`), and a Worker Loader sandbox (`LOADER`). The preview environment has separate D1, R2 and KV resources and no production custom-domain route.
