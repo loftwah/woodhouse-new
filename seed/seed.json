@@ -18,7 +18,9 @@
       "github": "loftwah",
       "linkedin": "deanlofts"
     },
-    "seo": { "titleSeparator": " — " }
+    "seo": {
+      "titleSeparator": " — "
+    }
   },
   "blockTypes": [
     {
@@ -1848,6 +1850,209 @@
       }
     ],
     "dispatches": [
+      {
+        "id": "dispatch-eight-finish-lines",
+        "slug": "eight-finish-lines",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "release-engineering"
+          ]
+        },
+        "data": {
+          "title": "Eight projects. Eight different finish lines.",
+          "kind": "Portfolio report",
+          "deck": "A fresh review of the factory's eight projects separates what each can do from the evidence and decisions still needed.",
+          "review_date": "2026-10-01",
+          "source_reference": "Shareable factory portfolio report reviewed 1 October 2026. Edited, public-safe summaries; private issue, pull request and conversation bodies are not reproduced.",
+          "lead": "The most useful result was not a ranking. It was a clear boundary between what each project can do and what still needs proof.",
+          "lesson": "A portfolio has no single finish line. Each project's state belongs to its own evidence and review date.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "portfolio-introduction",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The most useful result was not a ranking. It was a clear boundary between what each project can do and what still needs proof."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This review puts eight projects on one dated page without pretending they share one definition of done. Some work is held by product quality, some by release evidence, some by source parity, and some by a real-world hardware trial."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "read-each-project-on-its-own-terms",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read each project on its own terms"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Every project has its own dossier on this site. Each one states the reviewed state, the next useful proof and the boundary that state does not cross. A strong software result does not certify a finished product, and a past production observation does not establish that today's source is live."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Implementation, qualification, production verification and physical proof remain four separate records. Collapsing them is the most common way a portfolio report overstates a factory."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-the-report-keeps-separate",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What the report keeps separate"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Four boundaries run through every project in this factory, and each one has cost real work when it was blurred."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Implementation is not qualification. Code that exists and has been reviewed is a different record from code that has passed the checks required to be released."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A production claim belongs to the exact version observed. A deployment receipt names one Worker version and one review date; it does not speak for later source."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Software tests cannot prove how physical hardware behaves for a person in the world. That claim needs a physical trial and a dated observation."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Unknown source behaviour stays unknown until evidence resolves it. A reconstruction that cannot be read is recorded as ambiguous, not guessed."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "pull_quote",
+              "_version": 1,
+              "_key": "progress-versus-completion",
+              "quote": "Progress is real when the work moves. Completion is real when the required evidence supports the claim.",
+              "attribution": "Portfolio review"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "how-to-read-this-report",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "How to read this report"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Every project dossier states its own review date and source. Where this report summarises a project, the dossier is the authority; where the two disagree, the dossier and its dated snapshot are what the site publishes."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "projects": [
+            "$ref:project-bubbles",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot",
+            "$ref:project-protocol-11",
+            "$ref:project-max",
+            "$ref:project-pirates",
+            "$ref:project-loftwahfm",
+            "$ref:project-social-club"
+          ]
+        }
+      },
       {
         "id": "dispatch-i-didnt-mean-to-build-a-software-factory",
         "slug": "i-didnt-mean-to-build-a-software-factory",
