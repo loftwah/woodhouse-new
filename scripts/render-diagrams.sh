@@ -17,3 +17,5 @@ for source in "$SOURCE_DIR"/*.d2; do
   d2 "$source" "$IMAGE_DIR/$name.svg"
   cp "$source" "$PUBLIC_SOURCE_DIR/$name.d2"
 done
+
+node "$ROOT/scripts/diagram-sizes.mjs"

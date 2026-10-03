@@ -1,7 +1,8 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
 import { getSiteMetadata } from "../data/site-metadata";
-const { project, compact = false } = Astro.props;
+const { project, compact = false, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const placeholder = `/og/projects/${project.slug}.svg`;
@@ -77,11 +78,11 @@ const placeholder = `/og/projects/${project.slug}.svg`;
   </figure>
   <div class="project-row__record">
     <span class="project-row__index">{project.index} / 08 · DOSSIER</span>
-    <h3>
+    <Heading>
       <a class="project-row__name" href={"/projects/" + project.slug + "/"}>
         {project.name}
       </a>
-    </h3>
+    </Heading>
     <span class="project-row__discipline">{project.discipline}</span>
     <StatusStamp tone={project.stateTone} label={project.state} />
     <p class="project-row__summary">{project.summary}</p>

@@ -2749,6 +2749,7 @@ a.project-row__image:hover img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: var(--d2-ratio, auto);
 }
 .d2-diagram figcaption {
   display: grid;
@@ -3359,6 +3360,7 @@ body {
   }
   .d2-diagram picture img {
     max-width: 100%;
+    aspect-ratio: var(--d2-mobile-ratio, auto);
   }
   .d2-diagram figcaption {
     grid-template-columns: 1fr;

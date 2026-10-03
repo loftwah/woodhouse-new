@@ -11,6 +11,7 @@ const checks = [
   ["format", "format:check"],
   ["lint", "lint"],
   ["unused code", "deadcode"],
+  ["diagram intrinsic sizes", "diagrams:sizes:check"],
   ["dependency audit", "audit"],
   ["EmDash local schema", "emdash:doctor"],
   ["tests", "test"],

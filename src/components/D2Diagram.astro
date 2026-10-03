@@ -1,4 +1,8 @@
 ---
+import diagramSizes from "../data/diagram-sizes.json";
+
+const sizes: Record<string, { width: number; height: number }> = diagramSizes;
+
 type Props = {
   title: string;
   description: string;
@@ -21,14 +25,23 @@ const {
   priority = false
 } = Astro.props;
 const hasTranscript = Astro.slots.has("default");
+const sizeOf = (src: string) => sizes[src.replace(/^.*\//, "").replace(/\.svg$/, "")];
+const desktopSize = sizeOf(desktop);
+const mobileSize = sizeOf(mobile);
+const style =
+  desktopSize && mobileSize
+    ? `--d2-ratio:${desktopSize.width}/${desktopSize.height};--d2-mobile-ratio:${mobileSize.width}/${mobileSize.height};`
+    : undefined;
 ---
 
-<figure id={id} class={`d2-diagram ${className}`}>
+<figure id={id} class={`d2-diagram ${className}`} style={style}>
   <picture>
     <source media="(max-width: 760px)" srcset={mobile} />
     <img
       src={desktop}
       alt={description}
+      width={desktopSize?.width}
+      height={desktopSize?.height}
       loading={priority ? "eager" : "lazy"}
       fetchpriority={priority ? "high" : "auto"}
       decoding="async"

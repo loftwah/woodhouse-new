@@ -30,10 +30,12 @@ if (projectResult?.error)
 if (Astro.cache?.enabled)
   for (const hint of projectResult?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
 const title = asText(incident.data, "title");
+const recordTitle = `Factory incident: ${title}`;
 ---
 
 <BaseLayout
-  title={title}
+  title={recordTitle}
+  ogTitle={title}
   description={asText(incident.data, "what_happened")}
   path={`/incidents/${incident.id}/`}
   type="article"

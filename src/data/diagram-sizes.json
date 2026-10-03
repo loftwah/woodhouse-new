@@ -1,0 +1,90 @@
+{
+  "agent-policy-mobile": {
+    "width": 569,
+    "height": 875
+  },
+  "agent-policy": {
+    "width": 2021,
+    "height": 600
+  },
+  "evidence-ladder-mobile": {
+    "width": 1044,
+    "height": 1132
+  },
+  "evidence-ladder": {
+    "width": 2147,
+    "height": 498
+  },
+  "factory-flow-mobile": {
+    "width": 624,
+    "height": 957
+  },
+  "factory-flow": {
+    "width": 1894,
+    "height": 438
+  },
+  "failure-loop-mobile": {
+    "width": 604,
+    "height": 1142
+  },
+  "failure-loop": {
+    "width": 2234,
+    "height": 436
+  },
+  "lineage-mobile": {
+    "width": 583,
+    "height": 1067
+  },
+  "lineage": {
+    "width": 1629,
+    "height": 395
+  },
+  "payment-fulfilment-mobile": {
+    "width": 820,
+    "height": 1193
+  },
+  "payment-fulfilment": {
+    "width": 2343,
+    "height": 395
+  },
+  "pirates-parity-mobile": {
+    "width": 606,
+    "height": 1142
+  },
+  "pirates-parity": {
+    "width": 2138,
+    "height": 439
+  },
+  "project-network-mobile": {
+    "width": 665,
+    "height": 1131
+  },
+  "project-network": {
+    "width": 2246,
+    "height": 432
+  },
+  "publication-path-mobile": {
+    "width": 691,
+    "height": 802
+  },
+  "publication-path": {
+    "width": 1908,
+    "height": 474
+  },
+  "release-path-mobile": {
+    "width": 500,
+    "height": 1079
+  },
+  "release-path": {
+    "width": 2139,
+    "height": 304
+  },
+  "risk-controls-mobile": {
+    "width": 560,
+    "height": 1122
+  },
+  "risk-controls": {
+    "width": 1973,
+    "height": 390
+  }
+}
