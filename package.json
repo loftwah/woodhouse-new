@@ -21,6 +21,7 @@
     "deploy:preview": "node scripts/deploy-preview.mjs",
     "deploy": "node scripts/deploy-production.mjs",
     "release:status": "node scripts/release-status.mjs",
+    "evidence:capture": "node scripts/capture-acceptance-evidence.mjs",
     "evidence:record": "node scripts/record-evidence.mjs",
     "secrets:production": "node scripts/set-production-secrets.mjs",
     "smoke:preview": "node scripts/smoke-preview.mjs",
