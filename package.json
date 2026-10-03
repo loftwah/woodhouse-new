@@ -21,6 +21,7 @@
     "deploy:preview": "node scripts/deploy-preview.mjs",
     "deploy": "node scripts/deploy-production.mjs",
     "release:status": "node scripts/release-status.mjs",
+    "evidence:record": "node scripts/record-evidence.mjs",
     "smoke:preview": "node scripts/smoke-preview.mjs",
     "backup:d1": "node scripts/backup-d1.mjs",
     "backup:d1:bookmark": "node scripts/backup-d1-bookmark.mjs",

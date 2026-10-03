@@ -112,6 +112,8 @@ Supplementary notes inside an article are plain elements or labelled `section` r
 
 `pnpm run release:status` reports the same posture without attempting a deploy: whether the recorded preview matches the current source fingerprint, whether that Worker is the active 100% deployment, the read-only production migration, content and secret-name results, and for every required acceptance check whether its artifact exists, is owner-only, is under 30 days old and matches its SHA-256. It exits non-zero while anything is blocked, so it works as a release gate in its own right. On 3 October 2026 it reported the preview as ready and production as blocked on the content model, both secret names, and the acceptance receipt itself.
 
+`pnpm run evidence:record -- <check> <artifact-under-.release>` writes one acceptance entry into the private receipt. It validates that the check name is required, that the artifact exists under ignored `.release` and is non-empty and owner-only, then records the artifact's SHA-256 and the observation time. It refuses to overwrite an existing entry without `--replace`, refuses an artifact outside `.release`, refuses a world-readable artifact, refuses an unknown check name, and refuses to create a receipt at all unless the operator passes `--confirm-hostname woodhouse.loftwah.com`. It does not decide that a check passed and it cannot invent an observation: the operator supplies the artifact and asserts it. Use it so nobody has to hand-edit a digest or a file mode in a security-relevant file.
+
 The readiness receipt is a private operator record, not an approval switch. Its shape is:
 
 ```json

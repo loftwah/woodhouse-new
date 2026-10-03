@@ -168,35 +168,34 @@ if (!receipt) {
   if (!receipt.production?.backup?.encryptionKeyBackupReference)
     blocked.push("The receipt does not name an out-of-band encryption-key recovery record.");
 
-  const recorded = [];
+  const fresh = [];
   const stale = [];
+  const unrecorded = [];
   for (const check of requiredChecks) {
     const evidence = receipt.preview?.checks?.[check];
     if (!evidence || evidence.passed !== true) {
-      recorded.push(`  ${check}: not recorded`);
+      unrecorded.push(`  ${check}: not recorded`);
       continue;
     }
     const observedAt = Date.parse(evidence.observedAt ?? "");
     const artifact = await lstat(path.resolve(root, evidence.artifactPath ?? "")).catch(() => null);
-    const fresh =
+    const isFresh =
       Number.isFinite(observedAt) &&
       observedAt <= Date.now() + 60_000 &&
       Date.now() - observedAt < 30 * 24 * 60 * 60 * 1000;
-    const intact =
+    const isIntact =
       artifact?.isFile() &&
       artifact.size > 0 &&
       (artifact.mode & 0o077) === 0 &&
       (await digestOf(path.resolve(root, evidence.artifactPath))) === evidence.sha256;
-    if (fresh && intact)
-      recorded.push(`  ${check}: evidence from ${evidence.observedAt.slice(0, 10)}`);
+    if (isFresh && isIntact)
+      fresh.push(`  ${check}: evidence from ${evidence.observedAt.slice(0, 10)}`);
     else stale.push(`  ${check}: evidence is older than 30 days or does not match its digest`);
   }
-  const accepted = requiredChecks.length - recorded.length - stale.length;
   console.log(
-    `\nPreview acceptance evidence: ${accepted}/${requiredChecks.length} checks carry a fresh, intact artifact.`
+    `\nPreview acceptance evidence: ${fresh.length}/${requiredChecks.length} checks carry a fresh, intact artifact.`
   );
-  if (recorded.length) console.log(recorded.join("\n"));
-  if (stale.length) console.log(stale.join("\n"));
+  for (const line of [...fresh, ...stale, ...unrecorded]) console.log(line);
 }
 
 console.log("");
