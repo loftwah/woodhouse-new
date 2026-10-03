@@ -47,6 +47,14 @@ export const prerender = false;
       <aside class="page-intro__aside">
         <strong>Portfolio readout · {reviewDateLabel}</strong>
         {snapshotSource} Each state is a reviewed summary, not a live GitHub feed.
+        {projects[0]?.snapshotId && (
+          <>
+            {" "}
+            <a href={`/snapshots/${projects[0].snapshotId}/`}>
+              Read the dated snapshot archive <span aria-hidden="true">↗</span>
+            </a>
+          </>
+        )}
       </aside>
     </div>
   </section>

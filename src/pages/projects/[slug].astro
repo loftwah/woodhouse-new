@@ -221,6 +221,19 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
       <div class="margin-note" {...statusEntry?.edit.state}>
         <span class="margin-note__label">State</span>
         <p>{project.state}. Read with the review date, not as a live status promise.</p>
+        {(project.statusId || project.snapshotId) && (
+          <p>
+            {project.statusId && (
+              <>
+                <a href={`/statuses/${project.statusId}/`}>Status record</a>
+                {" · "}
+              </>
+            )}
+            {project.snapshotId && (
+              <a href={`/snapshots/${project.snapshotId}/`}>Reviewed snapshot</a>
+            )}
+          </p>
+        )}
       </div>
       <div class="margin-note">
         <span class="margin-note__label">Public source policy</span>

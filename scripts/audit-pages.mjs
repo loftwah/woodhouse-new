@@ -218,7 +218,10 @@ function auditDocument(page, html) {
 }
 
 // Each run reads the current deployment rather than a shared cached body, so a
-// stale edge response cannot mask or invent a finding.
+// stale edge response cannot mask or invent a finding. Public routes still
+// serve through the Worker cache for up to its own TTL, which is keyed by path
+// rather than by query, so a finding right after a deploy can be a pre-deploy
+// body. Re-run after the route TTL (60s) to confirm.
 const stamp = Date.now().toString(36);
 async function request(url) {
   const target = new URL(url);
@@ -240,6 +243,22 @@ const titles = new Map();
 const internalLinks = new Map();
 const checked = [];
 
+const canonicals = new Map();
+
+async function canonicalOf(pathname) {
+  if (canonicals.has(pathname)) return canonicals.get(pathname);
+  const response = await request(`${origin}${pathname}`);
+  if (response.status !== 200) {
+    canonicals.set(pathname, null);
+    return null;
+  }
+  const html = await response.text();
+  const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
+  const path = canonical ? new URL(canonical).pathname.replace(/\/$/, "") : null;
+  canonicals.set(pathname, path);
+  return path;
+}
+
 for (const page of pages) {
   const response = await request(`${origin}${page}`);
   if (response.status !== 200) {
@@ -247,6 +266,7 @@ for (const page of pages) {
     continue;
   }
   const html = await response.text();
+  await canonicalOf(page);
   const privacy = scanPublicText(html, { privateValues });
   if (privacy.length) report(page, `privacy scan found ${privacy.join(", ")}`);
   auditDocument(page, html);
@@ -291,6 +311,17 @@ for (const [page, targets] of internalLinks) {
 
 const orphans = pages.filter((page) => page !== "/" && !linkedFrom.has(page));
 for (const orphan of orphans) report(orphan, "is listed for discovery but no page links to it");
+
+// An internal link must point at the page's own canonical URL. A record id
+// used as a path segment resolves but splits one page across several
+// crawlable addresses, which is how the dated records drifted apart before.
+for (const [page, targets] of internalLinks) {
+  for (const target of targets) {
+    const canonical = await canonicalOf(target);
+    if (canonical && canonical !== target.replace(/\/$/, ""))
+      report(page, `links to ${target}, whose canonical URL is ${canonical}`);
+  }
+}
 
 for (const [image, page] of socialImages) {
   const response = await request(`${origin}${image}`);

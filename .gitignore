@@ -3,6 +3,7 @@ dist/
 .astro/
 .wrangler/
 .playwright-cli/
+.playwright-mcp/
 .emdash/migrations.json
 .emdash/auth.json
 .emdash/build/

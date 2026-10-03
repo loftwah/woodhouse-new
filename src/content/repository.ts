@@ -25,6 +25,10 @@ export type WoodhouseProject = {
   proofBoundary: string;
   reviewDate: string;
   snapshotSource: string;
+  /** Id of the reviewed snapshot this state belongs to, for the dated archive. */
+  snapshotId: string | null;
+  /** Id of the reviewed status record behind this state. */
+  statusId: string | null;
 };
 
 export type EditorialDispatch = {
@@ -169,7 +173,9 @@ function toWoodhouseProject(
       currentStatus?.proof_boundary ??
       "This is an unpublished project preview and makes no public status claim.",
     reviewDate: currentStatus?.reviewed_at ?? "Not reviewed",
-    snapshotSource: snapshot?.data.source_description ?? "No published snapshot is linked yet."
+    snapshotSource: snapshot?.data.source_description ?? "No published snapshot is linked yet.",
+    snapshotId: snapshot?.id ?? null,
+    statusId: status?.id ?? null
   };
 }
 
@@ -532,7 +538,29 @@ export async function listPublicSearchItems() {
       description: item.data.edited_summary,
       href: `/conversations/${item.id}/`,
       section: "Conversations"
-    }))
+    })),
+    ...projectResult.projects.flatMap((project) => [
+      ...(project.snapshotId
+        ? [
+            {
+              title: `${project.name} · ${project.reviewDate} snapshot`,
+              description: project.snapshotSource,
+              href: `/snapshots/${project.snapshotId}/`,
+              section: "Snapshots"
+            }
+          ]
+        : []),
+      ...(project.statusId
+        ? [
+            {
+              title: `${project.name} · ${project.state}`,
+              description: project.current,
+              href: `/statuses/${project.statusId}/`,
+              section: "Statuses"
+            }
+          ]
+        : [])
+    ])
   ];
   return {
     pages,
