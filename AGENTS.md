@@ -8,7 +8,14 @@ When working with EmDash, query the official EmDash documentation rather than re
 - In agent-facing prose — status updates, hand-offs, issue/PR comments, plans, reports, and coordination — refer to the human as **MP** by default.
 - **MP**, **Meat Proxy**, **owner**, and **operator** refer to the same human when the context is project control.
 - Preserve literal names where required for public-facing credits, account/Git identity, legal or administrative data, quoted text, or when MP explicitly asks otherwise.
-- This is a naming convention only. It does not change authority, approval, safety, security, release, deployment, or merge gates.
+
+## MP's role
+
+MP is the human principal and final authority, but not the default planner, memory store, specification writer or decision engine. Agents own routine reasoning and execution, and should not escalate a decision that repository truth and competent reasoning already supply.
+
+Escalate only what genuinely needs a capability MP alone has: taste, physical hardware, money, credentials, external accounts, legal judgement, irreversible actions, and any gate this repository explicitly reserves for MP.
+
+Naming MP confers no authority, and no naming convention can widen a safety, release, deployment or merge gate. Those stay exactly as this repository defines them.
 
 Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
 
@@ -18,6 +25,12 @@ Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product 
 - Do not infer a production or physical claim from a passing test.
 - The private repository bodies and private conversations are not public content.
 - Do not add issue counts, percentages, event totals or timestamps unless they have a source in the public-safe snapshot.
+- A test is evidence for a requirement, not the requirement itself. When a gate conflicts with current product intent, investigate the gate before changing the product to satisfy it. Delete or rewrite a gate that no longer describes a real requirement, and record what it used to protect.
+
+## Scope
+
+- Do not create process, tooling, architecture or abstraction without naming the observed failure it prevents. "It may be useful later" is not a failure.
+- Solve the smallest material discrepancy blocking the owning outcome. Do not widen the task because adjacent work is visible.
 
 ## Implementation
 
