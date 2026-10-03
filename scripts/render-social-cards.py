@@ -16,6 +16,7 @@ CARDS = {
     "the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong."),
     "dispatches/a-gate-for-what-the-source-proves": ("PIRATES · FIELD NOTE", "Parity before invention.", "The Gate B reconstruction stays locked until the source supports it."),
     "dispatches/software-is-not-the-walker": ("MAX · FIELD NOTE", "Software is not the walker.", "A green build cannot prove the real-world FIND path."),
+    "dispatches/the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong."),
 }
 
 

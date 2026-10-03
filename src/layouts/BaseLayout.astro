@@ -15,6 +15,8 @@ type Props = {
   description: string;
   path: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   fallbackImage?: string | undefined;
   currentPath?: string;
   type?: "website" | "article";
@@ -34,6 +36,8 @@ const {
   description,
   path,
   image = "/og/woodhouse.jpg",
+  imageWidth = 1200,
+  imageHeight = 630,
   fallbackImage,
   currentPath = path,
   type = "website",
@@ -149,14 +153,14 @@ const houseIndexLinks = houseIndexResult.menu?.items ?? [];
     <EmDashHead page={page} />
     {structuredSiteName === undefined && <meta property="og:site_name" content={siteTitle} />}
     <meta property="og:locale" content="en_AU" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
+    <meta property="og:image:width" content={String(imageWidth)} />
+    <meta property="og:image:height" content={String(imageHeight)} />
     <meta property="og:image:alt" content={imageAlt} />
     {fallbackImage && (
       <>
         <meta property="og:image" content={new URL(fallbackImage, siteUrl).toString()} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:width" content={String(imageWidth)} />
+        <meta property="og:image:height" content={String(imageHeight)} />
         <meta property="og:image:alt" content={`Woodhouse project illustration for ${title}`} />
       </>
     )}

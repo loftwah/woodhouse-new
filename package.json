@@ -12,7 +12,7 @@
     "format:check": "prettier --check astro.config.mjs eslint.config.mjs knip.json 'src/**/*.astro' 'src/**/*.ts' 'src/**/*.css' 'scripts/**/*.mjs' package.json tsconfig.json wrangler.jsonc",
     "lint": "eslint astro.config.mjs eslint.config.mjs 'src/**/*.{astro,ts}' 'scripts/**/*.mjs'",
     "deadcode": "knip",
-    "audit": "pnpm audit",
+    "audit": "node scripts/audit-dependencies.mjs",
     "audit:pages": "node scripts/audit-pages.mjs",
     "diagrams:sizes": "node scripts/diagram-sizes.mjs",
     "diagrams:sizes:check": "node scripts/diagram-sizes.mjs --check",

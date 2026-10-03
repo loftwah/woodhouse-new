@@ -108,6 +108,9 @@ function headingLevels(html) {
   return levels;
 }
 
+const socialImages = new Map();
+const socialImageStatus = new Map();
+
 function auditDocument(page, html) {
   const htmlTag = /<html\b([^>]*)>/i.exec(html)?.[1] ?? "";
   if (!/\blang="[a-zA-Z-]+"/.test(htmlTag)) report(page, "missing html lang attribute");
@@ -143,6 +146,25 @@ function auditDocument(page, html) {
   for (const property of ["og:title", "og:image", "og:description"]) {
     if (!new RegExp(`<meta[^>]+property="${property}"[^>]+content="[^"]+"`, "i").test(html))
       report(page, `missing ${property} meta`);
+  }
+
+  const socialImage = /<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i.exec(html)?.[1];
+  if (socialImage) {
+    let resolved;
+    try {
+      resolved = new URL(socialImage, `${origin}${page}`);
+    } catch {
+      report(page, `og:image is not a usable URL: ${socialImage}`);
+    }
+    if (resolved?.origin === new URL(origin).origin) {
+      for (const property of ["og:image:width", "og:image:height"])
+        if (!new RegExp(`<meta[^>]+property="${property}"[^>]+content="\\d+"`, "i").test(html))
+          report(page, `social image without ${property}`);
+      if (!socialImages.has(resolved.pathname)) {
+        socialImages.set(resolved.pathname, page);
+        socialImageStatus.set(resolved.pathname, undefined);
+      }
+    }
   }
 
   const headings = headingLevels(html);
@@ -270,8 +292,16 @@ for (const [page, targets] of internalLinks) {
 const orphans = pages.filter((page) => page !== "/" && !linkedFrom.has(page));
 for (const orphan of orphans) report(orphan, "is listed for discovery but no page links to it");
 
+for (const [image, page] of socialImages) {
+  const response = await request(`${origin}${image}`);
+  const type = response.headers.get("content-type") ?? "";
+  socialImageStatus.set(image, response.status);
+  if (response.status !== 200) report(page, `og:image ${image} returned HTTP ${response.status}`);
+  else if (!/^image\//.test(type)) report(page, `og:image ${image} served ${type || "no type"}`);
+}
+
 console.log(
-  `Audited ${checked.length} pages, ${linkedFrom.size} distinct internal link targets and ${titles.size} unique titles at ${origin}.`
+  `Audited ${checked.length} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}.`
 );
 if (findings.length) {
   for (const finding of findings) console.error("Page audit failed: " + finding);
