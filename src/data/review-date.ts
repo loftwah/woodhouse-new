@@ -4,8 +4,10 @@
  * printing an invented or machine-formatted date.
  */
 export function formatReviewDate(value: string | null | undefined): string | null {
-  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value.trim())) return null;
-  const parsed = new Date(`${value}T00:00:00Z`);
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return null;
+  const parsed = new Date(`${trimmed}T00:00:00Z`);
   if (Number.isNaN(parsed.valueOf())) return null;
   return parsed.toLocaleDateString("en-AU", {
     dateStyle: "long",
