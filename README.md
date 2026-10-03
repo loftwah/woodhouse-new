@@ -22,8 +22,10 @@ Use Node 22.16 or later and pnpm.
 - Start the local site with pnpm dev.
 - Open the EmDash editor at `http://localhost:4321/_emdash/admin/`.
 - Build with pnpm build.
-- Run the complete local checks with pnpm run verify.
+- Run the complete local checks with pnpm run verify: seed validation, generated types, format, lint, dead code, diagram sizes, the reviewed dependency audit, EmDash Doctor, tests, typecheck and the production build with its privacy scan.
+- Audit a deployed origin with pnpm run audit:pages -- https://host. It checks document structure, internal link integrity, canonical consistency, page discovery, social images and privacy across every sitemap page.
 - Validate the EmDash seed with pnpm run emdash:seed:validate; regenerate schema types with pnpm run emdash:types.
+- Re-render the diagrams and refresh their reserved sizes with pnpm run diagrams.
 - Build and deploy the isolated Cloudflare preview with `pnpm run deploy:preview`.
 - The root Wrangler target defaults to the preview Worker. Production requires the explicit `production` environment; use the guarded `pnpm run deploy` path, which requires private workflow evidence, the migrated content model, verified starter content and recovery checks. A direct explicit Wrangler production deploy bypasses the repository acceptance gate. See [EMDASH.md](EMDASH.md) for the receipt fields and release requirements.
 
@@ -41,4 +43,4 @@ EmDash's authenticated content MCP endpoint is `/_emdash/api/mcp`. Connect only 
 
 The current portfolio snapshot is dated 28 September 2026. Update the `projects`, `factory_snapshots`, `project_statuses` and `evidence_records` in EmDash from a reviewed, public-safe report before changing review dates. Do not copy private issue or pull request bodies into public data.
 
-The social-card script regenerates the page-specific raster previews from the shared artwork. It requires ImageMagick on the machine running it.
+`pnpm run social-cards` regenerates the page-specific raster previews from the shared artwork. It requires ImageMagick on the machine running it. Each dispatch has its own card under `public/og/dispatches/`, named for its slug; a dispatch without one falls back to the shared factory card.

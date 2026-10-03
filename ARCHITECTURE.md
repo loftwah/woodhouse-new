@@ -1,6 +1,6 @@
 # Architecture
 
-Reviewed 30 September 2026.
+Reviewed 3 October 2026.
 
 ```text
 Public visitor / authenticated editor / authorised authoring agent
@@ -28,5 +28,7 @@ The seeded model contains seven collections: project identity, append-only facto
 The Cloudflare Worker binds D1 as `DB`, private R2 as `MEDIA`, KV as `CACHE` and `SESSION`, and Worker Loader as `LOADER`. A one-minute scheduled handler runs EmDash maintenance, scheduled publishing and plugin cron work. Automatic EmDash JSON backups are not yet enabled or verified. Production and preview have separate database, media and KV resources. The root Wrangler target defaults to preview; the named production environment owns the custom-domain route.
 
 The public Agent Reception is a curated, read-only interface. It cannot call private repositories, run tools, mutate content or publish conversations. The authenticated EmDash MCP endpoint is a separate authoring interface; its token and assigned role determine what a client can do. No public agent receives write access.
+
+`pnpm run audit:pages` audits a deployed origin for document structure, link integrity, canonical consistency, discovery, social images and privacy. `pnpm run audit` compares `pnpm audit` against a reviewed-advisory list and fails on anything without a recorded exposure and removal condition. `pnpm run smoke:preview` covers the deployed route matrix and the private EmDash response headers.
 
 See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.
