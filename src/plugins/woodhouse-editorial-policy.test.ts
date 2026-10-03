@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { publicationBlock } from "./woodhouse-editorial-policy.ts";
 
+// Every real publish carries an origin. The default here is the Admin's own API,
+// which is the human path; agent paths are constructed explicitly below.
 function event(collection: string, data: Record<string, unknown>) {
-  return { collection, content: { data } };
+  return { collection, content: { data }, origin: { source: "api" as const } };
 }
 
 test("editorial policy requires explicit public approval", () => {
@@ -124,4 +126,26 @@ test("an agent refusal precedes the field checks, so it cannot be satisfied", ()
   const refusal = publicationBlock(dispatchFrom("mcp", 50));
   assert.ok(refusal && refusal.startsWith("Agent-originated"));
   assert.equal(publicationBlock(event("dispatches", satisfiedDispatch)), undefined);
+});
+
+test("a missing or unknown publish origin fails closed", () => {
+  const base = { collection: "dispatches", content: { data: satisfiedDispatch } };
+  const expected =
+    "Agent-originated changes cannot be published. Leave the record as a draft for human review.";
+  // A caller that forgets to declare an origin must not be able to publish.
+  assert.equal(publicationBlock(base as never), expected);
+  // Nor may a source EmDash adds later, until someone confirms it is human.
+  assert.equal(publicationBlock({ ...base, origin: { source: "import" } } as never), expected);
+});
+
+test("collections outside the editorial contract stay untouched", () => {
+  // The agent refusal is scoped to controlled collections only.
+  assert.equal(
+    publicationBlock({
+      collection: "pages",
+      content: { data: {} },
+      origin: { source: "mcp" }
+    } as never),
+    undefined
+  );
 });

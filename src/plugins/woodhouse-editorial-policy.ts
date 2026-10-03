@@ -76,8 +76,16 @@ function validReviewDate(value: unknown): boolean {
   return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
 }
 
+// Surfaces a human can publish from: the Admin's own API and the visual editor.
+// Deliberately not `mcp`.
+type HumanPublishSource = "api" | "visual-editor";
+const humanPublishSources: ReadonlySet<string> = new Set<HumanPublishSource>([
+  "api",
+  "visual-editor"
+]);
+
 export function publicationBlock(
-  event: Pick<ContentPolicyEvent, "collection" | "content" | "origin" | "actor">
+  event: Pick<ContentPolicyEvent, "collection" | "content" | "origin">
 ): string | undefined {
   if (!isControlledCollection(event.collection)) return undefined;
 
@@ -88,7 +96,12 @@ export function publicationBlock(
   // only inspect field values, and the agent supplies those values itself, so
   // without this rule an agent can satisfy every requirement and publish. The
   // agent leaves a draft; a human publishes it in the Admin.
-  if (event.origin?.source === "mcp")
+  //
+  // This is an allowlist rather than a refusal of "mcp", so a missing or
+  // unrecognised origin fails closed. A new EmDash source is refused until
+  // someone decides it is a human surface, which is the safe direction: a
+  // blocked publish is visible and recoverable, a leaked one is not.
+  if (!humanPublishSources.has(event.origin?.source as HumanPublishSource))
     return "Agent-originated changes cannot be published. Leave the record as a draft for human review.";
 
   const data = isRecord(event.content.data) ? event.content.data : {};
