@@ -65,6 +65,36 @@ if (!details?.isFile() || details.size === 0) fail("the artifact is missing or e
 if ((details.mode & 0o077) !== 0)
   fail("the artifact must be readable by its owner only (chmod 600).");
 
+// An evidence artifact is transcribed into the receipt and read by whoever
+// reviews the release, so it must never carry a live credential. Raw token
+// values are returned exactly once at creation and then unrecoverable, which
+// makes a leaked copy unrevokable by rotation alone in the reader's hands.
+const body = await readFile(artifactAbsolute, "utf8");
+
+const credentialShapes = [
+  ["EmDash API token", /\bec_pat_[A-Za-z0-9_-]{16,}/g],
+  ["Resend API key", /\bre_[A-Za-z0-9_-]{16,}/g],
+  ["private key block", /-----BEGIN [A-Z ]*PRIVATE KEY-----/g]
+];
+
+const leaked = credentialShapes.filter(([, pattern]) => pattern.test(body)).map(([label]) => label);
+
+let envValues = [];
+try {
+  const env = await readFile(path.join(root, ".env"), "utf8");
+  envValues = [...env.matchAll(/^\s*(?:export\s+)?[A-Za-z_][A-Za-z0-9_]*\s*=\s*(.*?)\s*$/gm)]
+    .map((match) => match[1])
+    .filter((value) => value.length >= 12 && !value.includes("${"));
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
+if (envValues.some((value) => body.includes(value))) leaked.push("a value from .env");
+
+if (leaked.length)
+  fail(
+    `the artifact contains ${leaked.join(", ")}. Revoke or roll that credential, then record evidence that only describes it by name.`
+  );
+
 const hash = createHash("sha256");
 for await (const chunk of createReadStream(artifactAbsolute)) hash.update(chunk);
 const sha256 = hash.digest("hex");
