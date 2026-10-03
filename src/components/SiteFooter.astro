@@ -3,9 +3,10 @@ import type { PublicMenuItem } from "../content/repository";
 
 type Props = {
   links?: PublicMenuItem[];
+  reviewDateLabel?: string | undefined;
 };
 
-const { links = [] } = Astro.props;
+const { links = [], reviewDateLabel } = Astro.props;
 ---
 
 <footer class="site-footer">
@@ -21,7 +22,9 @@ const { links = [] } = Astro.props;
     <a href="/" class="footer-wordmark">
       WOODHOUSE
     </a>
-    <span>The Loftwah Software Factory</span>
+    <span>
+      The Loftwah Software Factory{reviewDateLabel ? ` · Reviewed ${reviewDateLabel}` : ""}
+    </span>
     <nav aria-label="Footer navigation">
       {links.map((link) => (
         <a

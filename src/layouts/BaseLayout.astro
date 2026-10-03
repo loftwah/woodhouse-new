@@ -8,7 +8,8 @@ import { getSeoMeta, getSiteSettings } from "emdash";
 import type { SeoContentInput } from "emdash/seo";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashHead } from "emdash/ui";
-import { getPublicMenu, listPublicSearchItems } from "../content/repository";
+import { getPublicMenu, listProjectRecords, listPublicSearchItems } from "../content/repository";
+import { formatReviewDate } from "../data/review-date";
 
 type Props = {
   title: string;
@@ -118,20 +119,24 @@ const page = createPublicPageContext({
       }
     : {})
 });
-const [primaryResult, footerResult, houseIndexResult, searchResult] = await Promise.all([
-  getPublicMenu("primary"),
-  getPublicMenu("footer"),
-  getPublicMenu("house_index"),
-  listPublicSearchItems()
-]);
+const [primaryResult, footerResult, houseIndexResult, searchResult, projectResult] =
+  await Promise.all([
+    getPublicMenu("primary"),
+    getPublicMenu("footer"),
+    getPublicMenu("house_index"),
+    listPublicSearchItems(),
+    listProjectRecords()
+  ]);
 if (Astro.cache?.enabled) {
   for (const result of [primaryResult, footerResult, houseIndexResult])
     Astro.cache.set(result.cacheHint);
   for (const hint of searchResult.cacheHints) Astro.cache.set(hint);
+  for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
 }
 const primaryLinks = primaryResult.menu?.items ?? [];
 const footerLinks = footerResult.menu?.items ?? [];
 const houseIndexLinks = houseIndexResult.menu?.items ?? [];
+const footerReviewDate = formatReviewDate(projectResult.projects[0]?.reviewDate ?? "") ?? undefined;
 ---
 
 <!doctype html>
@@ -199,6 +204,6 @@ const houseIndexLinks = houseIndexResult.menu?.items ?? [];
     <main id="main-content">
       <slot />
     </main>
-    <SiteFooter links={footerLinks} />
+    <SiteFooter links={footerLinks} reviewDateLabel={footerReviewDate} />
   </body>
 </html>
