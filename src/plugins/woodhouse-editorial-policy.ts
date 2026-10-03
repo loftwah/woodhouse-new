@@ -77,9 +77,19 @@ function validReviewDate(value: unknown): boolean {
 }
 
 export function publicationBlock(
-  event: Pick<ContentPolicyEvent, "collection" | "content">
+  event: Pick<ContentPolicyEvent, "collection" | "content" | "origin" | "actor">
 ): string | undefined {
   if (!isControlledCollection(event.collection)) return undefined;
+
+  // An agent cannot be the party that makes a record public. EmDash's token
+  // scopes cannot express this: `content_publish` requires only `content:write`,
+  // and publishing then resolves from the token owner's role, so a token can
+  // reach publication no matter how narrow it is. The remaining checks below
+  // only inspect field values, and the agent supplies those values itself, so
+  // without this rule an agent can satisfy every requirement and publish. The
+  // agent leaves a draft; a human publishes it in the Admin.
+  if (event.origin?.source === "mcp")
+    return "Agent-originated changes cannot be published. Leave the record as a draft for human review.";
 
   const data = isRecord(event.content.data) ? event.content.data : {};
   if (data.public_safe !== true)

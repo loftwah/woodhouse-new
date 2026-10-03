@@ -76,3 +76,52 @@ test("valid reviewed records pass and unrelated collections are untouched", () =
   );
   assert.equal(publicationBlock(event("pages", { public_safe: false })), undefined);
 });
+
+const satisfiedDispatch = {
+  public_safe: true,
+  title: "Dispatch",
+  kind: "Field note",
+  deck: "A reviewed summary.",
+  review_date: "2026-10-03",
+  source_reference: "Reviewed on preview.",
+  lead: "What we believed.",
+  lesson: "What we learned.",
+  content: [{ _type: "prose", content: [] }]
+};
+
+function dispatchFrom(source: "api" | "mcp" | "visual-editor", role: number) {
+  return {
+    collection: "dispatches",
+    content: { data: satisfiedDispatch },
+    origin: { source },
+    actor: { id: "01TEST", role, source }
+  };
+}
+
+test("an agent cannot publish a record that satisfies every other rule", () => {
+  assert.equal(
+    publicationBlock(dispatchFrom("mcp", 50)),
+    "Agent-originated changes cannot be published. Leave the record as a draft for human review."
+  );
+});
+
+test("an agent cannot schedule around the publish gate either", () => {
+  const scheduled = { ...dispatchFrom("mcp", 50), scheduledAt: "2026-10-04T09:00:00Z" };
+  assert.equal(
+    publicationBlock(scheduled),
+    "Agent-originated changes cannot be published. Leave the record as a draft for human review."
+  );
+});
+
+test("a human publishing in the Admin or the visual editor is unaffected", () => {
+  assert.equal(publicationBlock(dispatchFrom("api", 50)), undefined);
+  assert.equal(publicationBlock(dispatchFrom("visual-editor", 40)), undefined);
+});
+
+test("an agent refusal precedes the field checks, so it cannot be satisfied", () => {
+  // Even a record that is public_safe, fully written and block-populated is
+  // refused, because the block is about who is asking rather than what they set.
+  const refusal = publicationBlock(dispatchFrom("mcp", 50));
+  assert.ok(refusal && refusal.startsWith("Agent-originated"));
+  assert.equal(publicationBlock(event("dispatches", satisfiedDispatch)), undefined);
+});
