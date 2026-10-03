@@ -51,7 +51,7 @@ const title = asText(item.data, "title");
       <h1>{title}</h1>
       <p class="dossier-hero__summary">{asText(item.data, "claim")}</p>
     </div>
-    <aside class="dossier-hero__side">
+    <div class="dossier-hero__side">
       <span class="micro-label">{asText(item.data, "evidence_kind")}</span>
       <dl>
         <dt>Evidence state</dt>
@@ -59,7 +59,7 @@ const title = asText(item.data, "title");
         <dt>Reviewed</dt>
         <dd>{asText(item.data, "reviewed_at")}</dd>
       </dl>
-    </aside>
+    </div>
   </section>
   <section class="container dossier-grid">
     <article class="prose">
@@ -78,7 +78,7 @@ const title = asText(item.data, "title");
         </p>
       )}
     </article>
-    <aside class="margin-rail">
+    <section class="margin-rail" aria-label="Evidence notes">
       <div class="margin-note">
         <span class="margin-note__label">Review date</span>
         <p>{asText(item.data, "reviewed_at")}</p>
@@ -90,6 +90,6 @@ const title = asText(item.data, "title");
           production verification, owner acceptance or physical proof.
         </p>
       </div>
-    </aside>
+    </section>
   </section>
 </BaseLayout>

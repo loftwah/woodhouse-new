@@ -44,7 +44,7 @@ export const prerender = false;
           <em>{projects.length} kinds</em> of proof.
         </h1>
       </div>
-      <aside class="page-intro__aside">
+      <div class="page-intro__aside">
         <strong>Portfolio readout · {reviewDateLabel}</strong>
         {snapshotSource} Each state is a reviewed summary, not a live GitHub feed.
         {projects[0]?.snapshotId && (
@@ -55,7 +55,7 @@ export const prerender = false;
             </a>
           </>
         )}
-      </aside>
+      </div>
     </div>
   </section>
   <section class="section paper-section">

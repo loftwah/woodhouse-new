@@ -3,7 +3,7 @@ const { value } = Astro.props;
 const kind = ["plain", "evidence", "boundary"].includes(value.kind) ? value.kind : "plain";
 ---
 
-<aside class:list={["callout", `callout--${kind}`]}>
+<div class:list={["callout", `callout--${kind}`]}>
   <p class="callout__title">{value.title}</p>
   <p>{value.body}</p>
-</aside>
+</div>

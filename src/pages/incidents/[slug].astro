@@ -53,7 +53,7 @@ const recordTitle = `Factory incident: ${title}`;
       <h1>{title}</h1>
       <p class="article-meta">Reviewed {asText(incident.data, "reviewed_at")}</p>
     </div>
-    <aside class="dossier-hero__side">
+    <div class="dossier-hero__side">
       <span class="micro-label">Belief → failure → evidence → control</span>
       <dl>
         <dt>Project</dt>
@@ -61,7 +61,7 @@ const recordTitle = `Factory incident: ${title}`;
         <dt>Review date</dt>
         <dd>{asText(incident.data, "reviewed_at")}</dd>
       </dl>
-    </aside>
+    </div>
   </section>
   <section class="container dossier-grid">
     <article class="prose">
@@ -77,21 +77,21 @@ const recordTitle = `Factory incident: ${title}`;
       <p>{asText(incident.data, "factory_change")}</p>
       <h2>Later reuse</h2>
       <p>{asText(incident.data, "later_reuse")}</p>
-      <aside class="callout">
+      <div class="callout">
         <p class="callout__title">Proof boundary</p>
         <p>{asText(incident.data, "proof_boundary")}</p>
-      </aside>
+      </div>
       <p>
         <a href={`/dispatches/${asText(incident.data, "dispatch_slug")}/`}>
           Read the full dispatch <span aria-hidden="true">↗</span>
         </a>
       </p>
     </article>
-    <aside class="margin-rail">
+    <section class="margin-rail" aria-label="Incident notes">
       <div class="margin-note">
         <span class="margin-note__label">Reviewed public source</span>
         <p>{asText(incident.data, "reviewed_at")}. Private source material remains private.</p>
       </div>
-    </aside>
+    </section>
   </section>
 </BaseLayout>

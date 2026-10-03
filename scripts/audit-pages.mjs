@@ -187,6 +187,11 @@ function auditDocument(page, html) {
     seenIds.add(id);
   }
 
+  // A complementary landmark inside <main> is exposed as a second page-level
+  // region. Supplementary notes belong to the article, not beside it.
+  const main = /<main\b[^>]*>([\s\S]*)<\/main>/i.exec(html)?.[1] ?? "";
+  if (/<aside\b/i.test(main)) report(page, "has an aside landmark inside main");
+
   for (const anchor of elements(html, "a")) {
     const href = anchor.attrs.get("href") ?? "";
     if (!anchor.attrs.has("href")) report(page, `anchor without href: ${anchor.raw.slice(0, 80)}`);

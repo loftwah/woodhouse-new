@@ -73,7 +73,7 @@ if (isPreview) {
           {editorial.deck}
         </p>
       </div>
-      <aside class="dossier-hero__side">
+      <div class="dossier-hero__side">
         <span class="micro-label">Evidence reviewed {editorial.reviewDate}</span>
         <dl>
           <dt>Filed under</dt>
@@ -81,7 +81,7 @@ if (isPreview) {
           <dt>Source state</dt>
           <dd>Editor-reviewed public summary</dd>
         </dl>
-      </aside>
+      </div>
     </section>
     <section class="container dossier-grid">
       <article class="prose" {...entry?.edit}>
@@ -107,7 +107,7 @@ if (isPreview) {
           <a href="/dispatches/">Back to the dispatches</a>
         </p>
       </article>
-      <aside class="margin-rail" aria-label="Article notes">
+      <section class="margin-rail" aria-label="Article notes">
         <div class="margin-note" {...entry?.edit.lesson}>
           <span class="margin-note__label">What changed</span>
           <p>
@@ -121,7 +121,7 @@ if (isPreview) {
             transcript.
           </p>
         </div>
-      </aside>
+      </section>
     </section>
   </BaseLayout>
 ) : (

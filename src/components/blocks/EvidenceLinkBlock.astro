@@ -7,11 +7,11 @@ const slug =
 ---
 
 {slug && (
-  <aside class="margin-note evidence-link">
+  <div class="margin-note evidence-link">
     <span class="margin-note__label">Evidence record</span>
     <p>{value.context}</p>
     <a href={`/evidence/${slug}/`}>
       {value.label} <span aria-hidden="true">↗</span>
     </a>
-  </aside>
+  </div>
 )}

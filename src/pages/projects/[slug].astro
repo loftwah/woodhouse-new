@@ -98,7 +98,7 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
         {project.summary}
       </p>
     </div>
-    <aside class="dossier-hero__side">
+    <div class="dossier-hero__side">
       <StatusStamp tone={project.stateTone} label={project.state} />
       <dl>
         <dt>Record</dt>
@@ -110,7 +110,7 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
         <dt>Preview</dt>
         <dd>{siteMeta ? "Product site" : "No public site or demo"}</dd>
       </dl>
-    </aside>
+    </div>
   </section>
   <figure
     class="container dossier-preview"
@@ -209,7 +209,7 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
         automatically prove the next.
       </p>
     </article>
-    <aside class="margin-rail" aria-label="Project notes">
+    <section class="margin-rail" aria-label="Project notes">
       <div class="margin-note">
         <span class="margin-note__label">House record</span>
         <p>
@@ -250,7 +250,7 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
           <a href="/doctrine/">Factory doctrine</a>
         </p>
       </div>
-    </aside>
+    </section>
   </section>
   <section class="section paper-section">
     <div class="container">

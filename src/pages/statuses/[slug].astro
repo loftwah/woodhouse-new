@@ -93,7 +93,7 @@ const title = asText(status.data, "state") || "Project status";
         {asText(status.data, "current") || "No current-read text has been added yet."}
       </p>
     </div>
-    <aside class="dossier-hero__side">
+    <div class="dossier-hero__side">
       <StatusStamp tone={status.data.state_tone} label={title} />
       <dl>
         <dt>Project</dt>
@@ -103,7 +103,7 @@ const title = asText(status.data, "state") || "Project status";
         <dt>Review date</dt>
         <dd>{asText(status.data, "reviewed_at") || "Not reviewed"}</dd>
       </dl>
-    </aside>
+    </div>
   </section>
   <section class="container dossier-grid">
     <article class="prose">
@@ -134,7 +134,7 @@ const title = asText(status.data, "state") || "Project status";
         )}
       </p>
     </article>
-    <aside class="margin-rail">
+    <section class="margin-rail" aria-label="Status notes">
       <div class="margin-note">
         <span class="margin-note__label">Chronology</span>
         <p>
@@ -142,6 +142,6 @@ const title = asText(status.data, "state") || "Project status";
           and keep this one as history.
         </p>
       </div>
-    </aside>
+    </section>
   </section>
 </BaseLayout>
