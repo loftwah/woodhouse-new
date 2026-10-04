@@ -27,6 +27,16 @@ Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product 
 - Do not add issue counts, percentages, event totals or timestamps unless they have a source in the public-safe snapshot.
 - A test is evidence for a requirement, not the requirement itself. When a gate conflicts with current product intent, investigate the gate before changing the product to satisfy it. Delete or rewrite a gate that no longer describes a real requirement, and record what it used to protect.
 
+## Cloudflare platform decisions
+
+Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It records what the platform offers, what this factory actually uses, and the decision already taken on each capability that is not in use, with sources and a re-check trigger.
+
+- Follow the owning issue and the current source. Do not create duplicate work from that guide, and do not treat it as a backlog.
+- Re-check the official documentation, capabilities, pricing and availability before introducing or materially changing an integration. Announced, roadmap and request-access functionality is not a shipping assumption.
+- Continue executable local work while an unrelated provider or credential gate is blocked. Record the blocked step; do not stop, and do not invent a human approval gate for ordinary local work.
+- No GitHub Actions, no new paid commitment and no cloud resource change merely to make an evaluation look complete. Installing a package or adding a document is not proof of a runtime integration.
+- GitHub remains authoritative for repository, issue and pull-request state unless MP changes that decision.
+
 ## Scope
 
 - Do not create process, tooling, architecture or abstraction without naming the observed failure it prevents. "It may be useful later" is not a failure.

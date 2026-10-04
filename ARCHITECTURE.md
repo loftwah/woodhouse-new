@@ -50,3 +50,5 @@ The remaining constraint on a first production deploy is not the content model. 
 ## See also
 
 See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.
+
+See [PLATFORM.md](PLATFORM.md) for what the Cloudflare platform offers this factory, what is actually in use, and the recorded decision on each capability that is not. Read it before proposing a Cloudflare service; it is the map that says which question is already answered.

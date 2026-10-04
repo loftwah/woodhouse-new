@@ -34,6 +34,8 @@ Use Node 22.16 or later and pnpm.
 
 Astro keeps the authored Woodhouse presentation, while EmDash supplies published content and global menus/search at request time. The Cloudflare Worker uses D1 (`DB`), private R2 media (`MEDIA`), KV object cache (`CACHE`), and a Worker Loader sandbox (`LOADER`). The preview environment has separate D1, R2 and KV resources and no production custom-domain route.
 
+See [PLATFORM.md](PLATFORM.md) before proposing a Cloudflare service. It records the platform capabilities this factory has assessed, which are in use, and the decision taken on each one that is not.
+
 Email uses the site-owned `woodhouse-resend-email` provider in `src/plugins/resend-email.ts`, with `woodhouse@loftwah.com` as its sender. Keep `RESEND_API_KEY` and `EMDASH_ENCRYPTION_KEY` in ignored local `.env` for development and configure them as Cloudflare Worker secrets per environment. The provider reads the Resend key at runtime. Activate it and select it under EmDash Admin → Settings → Email. Complete non-empty R2 recovery uses separate, bucket-scoped R2 S3 access keys in ignored local `.env`; see [EMDASH.md](EMDASH.md) for backup and isolated restore commands.
 
 ### Protecting the editorial service
