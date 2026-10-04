@@ -16,6 +16,7 @@
 // Usage: node scripts/measure-content-visibility.mjs --environment=preview
 
 import { spawnSync } from "node:child_process";
+import { hasProbeToken, stripProbeToken } from "./visibility-probe.mjs";
 
 const args = process.argv.slice(2);
 const environment = (args.find((argument) => argument.startsWith("--environment=")) ?? "").split(
@@ -54,11 +55,29 @@ function sql(statement) {
 }
 
 const quote = (value) => `'${String(value).replaceAll("'", "''")}'`;
+
 const currentDeck = sql(`SELECT deck FROM ec_dispatches WHERE slug = ${quote(SLUG)}`)[0]?.deck;
 if (typeof currentDeck !== "string")
   throw new Error(`${SLUG} has no deck to probe; is the reviewed model installed?`);
-if (currentDeck.includes("visibility-probe-"))
-  throw new Error(`${SLUG} already carries a probe token; run the cleanup path first.`);
+
+// `--revert` exists because the script refuses to run over a leftover token. It
+// detected the interrupted-run state correctly and then offered no way out of
+// it, which is worse than not detecting it.
+if (args.includes("--revert")) {
+  const cleaned = stripProbeToken(currentDeck);
+  if (cleaned === currentDeck.trim()) {
+    console.log(`${SLUG} carries no probe token; nothing to revert.`);
+  } else {
+    sql(`UPDATE ec_dispatches SET deck = ${quote(cleaned)} WHERE slug = ${quote(SLUG)}`);
+    console.log(`Reverted the probe token from ${SLUG}.`);
+  }
+  process.exit(0);
+}
+if (hasProbeToken(currentDeck))
+  throw new Error(
+    `${SLUG} already carries a probe token from an interrupted run. ` +
+      `Re-run with --revert to remove it.`
+  );
 
 async function visible() {
   const response = await fetch(`${origin}${PATH}`, {
@@ -70,6 +89,34 @@ async function visible() {
 }
 
 const result = { environment, origin, path: PATH, token, polls: [] };
+
+function revert() {
+  sql(`UPDATE ec_dispatches SET deck = ${quote(currentDeck)} WHERE slug = ${quote(SLUG)}`);
+  result.reverted = true;
+}
+
+// A measurement takes up to 15 minutes, so it is very likely to be interrupted.
+// The `finally` block does not run for SIGINT or SIGTERM, and a probe token left
+// in a published dispatch is reader-visible text. Two runs were abandoned this way
+// while measuring the preview cache, each leaving a token in a live record.
+let reverting = false;
+const onSignal = (signal) => {
+  if (reverting) return;
+  reverting = true;
+  try {
+    revert();
+    console.error(`\nReverted the probe token after ${signal}.`);
+  } catch (error) {
+    console.error(
+      `\nCould not revert the probe token after ${signal}: ${error.message}\n` +
+        `Re-run with --revert to remove ${token} from ${SLUG}.`
+    );
+  }
+  process.exit(signal === "SIGINT" ? 130 : 143);
+};
+process.on("SIGINT", onSignal);
+process.on("SIGTERM", onSignal);
+
 try {
   // Confirm the record is not already visible, so the measurement cannot pass by
   // accident.
@@ -91,8 +138,9 @@ try {
   }
   if (!seen) result.visibleAfterSeconds = null;
 } finally {
-  sql(`UPDATE ec_dispatches SET deck = ${quote(currentDeck)} WHERE slug = ${quote(SLUG)}`);
-  result.reverted = true;
+  revert();
+  process.off("SIGINT", onSignal);
+  process.off("SIGTERM", onSignal);
 }
 
 console.log(JSON.stringify(result, null, 2));

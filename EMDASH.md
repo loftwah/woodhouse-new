@@ -21,11 +21,36 @@ Preview and production D1, media, cache and session bindings are isolated. The r
 
 Public pages query published EmDash entries and the live CMS navigation/search index, so they render at request time. Static assets stay on the edge. The EmDash cache hints are forwarded into Astro’s cache; public HTML has a short 60-second edge lifetime with 60 seconds of stale revalidation. The Worker wrapper adds `private, no-store` and `noindex` headers to `/_emdash/*` responses, including the admin redirect, auth API and MCP endpoint. Preview output is not indexed as production content.
 
+### How long an out-of-band content write stays invisible
+
+The 60-second declaration above describes the **edge**. It does not describe how quickly a write made outside the Worker reaches a reader, because a request that refreshes the edge still re-reads a cached read model.
+
+Woodhouse installs its reviewed model by replaying SQL, and upstream EmDash has no programmatic purge path for content written that way ([issue 2435](https://github.com/emdash-cms/emdash/issues/2435)). Three layers therefore compose the real bound: the KV object cache (`defaultTtl: 300`), the edge lifetime (60s) and its stale window (60s). A public page reads seven collections, and each query carries its own cache key, so the last key to expire gates visibility.
+
+**Measured on preview, 5 October 2026: 864 seconds** (14m 24s) from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds. The record was reverted afterwards.
+
+Two things follow, and both matter more than the number:
+
+- **The edge cache is not poisoned.** Entries created before the `Cache-Control` fix did expire on their own. An earlier belief that they would not self-heal, and that a dashboard purge was needed, was wrong — the write did become visible, just slowly.
+- **The declared edge lifetime overstates end-to-end freshness.** A page can be revalidated from the edge every 60 seconds and still serve up to a stale read model for roughly a quarter of an hour. The header is not lying about the edge; it is simply not the whole bound.
+
+This only affects writes made outside the Worker. EmDash invalidates the Astro cache by tag when a record is published through it, so an editor publishing in the Admin is not waiting on this window; an operator who installs the content model with `pnpm run emdash:seed:remote` is. `pnpm run measure:visibility` measures the number rather than assuming it, and its probe reverts the record it writes.
+
+A deploy must not be judged on a single read either. Publishing a Worker version propagates over a short window, so the first request after a deploy can be answered by the version being replaced. `awaitBuildIdentity` in `scripts/verify-build-identity.mjs` retries within a bounded window and reports every attempt; before that, a successful preview deploy was reported as a failure.
+
 Both live D1 databases report Cloudflare region `OC` and read replication `disabled` in `wrangler d1 info` (30 September 2026). EmDash D1 sessions are also explicitly disabled. Wrangler uses Smart Placement in the preview and production manifests because D1 reports only this coarse Cloudflare region, while Worker placement hints require a cloud-provider region; no AWS, GCP or Azure region is inferred. [D1 location](https://developers.cloudflare.com/d1/configuration/data-location/) · [Worker placement](https://developers.cloudflare.com/workers/configuration/placement/). The latest preview deployment includes Smart Placement; a cache-miss response reported `cf-placement: local-MEL`, so that request ran near the visitor. Cloudflare may take up to 15 minutes and consistent multi-region traffic to analyse placement; no latency improvement is claimed. Production remains on its previous Worker version and has not received this configuration. Static assets remain edge-served.
 
 ## Content model
 
 The validated seed is `seed/seed.json`. Its source-backed starter records are two dated factory snapshots, nine project identities, nine linked project states, nine evidence records, six edited dispatches and one public incident. The conversations collection is empty by design. Those values come from the reviewed public-safe source snapshot, not a live query.
+
+### Which date a dispatch is filed under
+
+EmDash sets `published_at` when a record is published. Because the reviewed model is installed by replaying SQL rather than through EmDash, every seeded dispatch received the **same** `published_at` — the instant the replay ran. Measured on preview, all seven fell inside a 30-millisecond window on 4 October 2026, including dispatches whose evidence was reviewed on 28 September.
+
+Left alone that produced three false claims a reader could see: `/dispatches/` ordered the journal by delivery instead of chronology, every dispatch printed "Published 4 October 2026", and the sitemap and RSS feed reported the install day as `lastmod` and `pubDate` for the entire journal.
+
+The review date decides all three. It is the operator's own decision, it is what the product promises, and it is the only one of the two that is a fact about the writing rather than about the deployment. `published_at` is still read where a record has no usable review date — an editor publishing through EmDash sets a real one. `src/data/dispatch-dates.ts` holds the rule; its test records the install-window measurement that motivated it.
 
 | Collection          | Role                                                                            | Required editorial controls                                                                  |
 | ------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
