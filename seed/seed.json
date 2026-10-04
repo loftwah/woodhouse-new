@@ -1886,16 +1886,6 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The most useful result was not a ranking. It was a clear boundary between what each project can do and what still needs proof."
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
                       "text": "This review puts eight projects on one dated page without pretending they share one definition of done. Some work is held by product quality, some by release evidence, some by source parity, and some by a real-world hardware trial."
                     }
                   ]
@@ -2083,16 +2073,6 @@
               "_version": 1,
               "_key": "prose-hvkxy8k",
               "content": [
-                {
-                  "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
-                      "text": "The work began with making software. It grew into a system for deciding what the software had actually proved."
-                    }
-                  ]
-                },
                 {
                   "_type": "block",
                   "style": "normal",
@@ -2465,16 +2445,6 @@
               "content": [
                 {
                   "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
-                      "text": "The interface did what the tests could see. The tests could not see what the player felt."
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
                   "style": "h2",
                   "children": [
                     {
@@ -2651,16 +2621,6 @@
               "content": [
                 {
                   "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
-                      "text": "A generative system can produce a plausible answer to an unknown. Plausibility is not a recovered rule."
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
                   "style": "h2",
                   "children": [
                     {
@@ -2826,16 +2786,6 @@
               "content": [
                 {
                   "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
-                      "text": "A complete simulation is still a simulation."
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
                   "style": "h2",
                   "children": [
                     {
@@ -2937,16 +2887,6 @@
               "_version": 1,
               "_key": "the-gap",
               "content": [
-                {
-                  "_type": "block",
-                  "style": "normal",
-                  "children": [
-                    {
-                      "_type": "span",
-                      "text": "A deploy receipt records what was intended to ship. For a long time nothing recorded what the public origin was actually serving, so those stayed two different claims."
-                    }
-                  ]
-                },
                 {
                   "_type": "block",
                   "style": "normal",
