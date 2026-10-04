@@ -2906,6 +2906,247 @@
             "$ref:project-max"
           ]
         }
+      },
+      {
+        "id": "dispatch-prove-which-build-is-live",
+        "slug": "prove-which-build-is-live",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "release-engineering",
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "Prove which build is live, or admit you do not know",
+          "kind": "Case study",
+          "deck": "A public origin could not state which source it was serving. Rather than document that gap, this closes it: the build stamps its own fingerprint, the origin publishes it, and the deploy refuses to finish if the two disagree.",
+          "review_date": "2026-10-04",
+          "source_reference": "The Woodhouse repository itself: the build-identity integration, the /build.json route, the shared verifier and the production deploy gate, reviewed 4 October 2026.",
+          "lead": "A deploy receipt records what was intended to ship. For a long time nothing recorded what the public origin was actually serving, so those stayed two different claims.",
+          "lesson": "A deployment that cannot report its own identity cannot be verified as current. Publishing the fingerprint is what turns \"deployed\" into \"serving this exact build\".",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "the-gap",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A deploy receipt records what was intended to ship. For a long time nothing recorded what the public origin was actually serving, so those stayed two different claims."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This was not a missing feature so much as a missing question. Every repository in this factory writes deploy notes, and several of them record a receipt naming a commit and a release. What none of them could do was ask the live origin what it was serving and get an answer. So a green deploy and a stale production could look identical from the outside, and the difference only surfaced later, as a bug report."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "One product in this factory discovered the same gap from the other direction: it found production running behind its own default branch, with several hundred audit findings that were really just staleness. It had no way to name the live commit. That is the failure this work removes."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-the-build-stamps",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What the build stamps"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A small build step computes a fingerprint over the exact source files that go into a deploy, alongside the commit that working tree sat on and whether that tree was clean. The value is substituted into the bundle at compile time, so nothing extra is written into the source tree and the deployed artefact carries no new file."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Reporting the tree's cleanliness matters more than it looks. A build made from a dirty tree corresponds to no reviewable commit at all, so a receipt naming a commit would be describing something that never existed as a unit."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-the-origin-refuses-to-claim",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What the origin refuses to claim"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The endpoint does not report a Cloudflare Worker version identifier, because the runtime cannot know it. Only the deploy tool's output reveals it, and that value belongs in the private release receipt where it was observed rather than inferred."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That distinction is the whole point. An endpoint that could only approximate its own identity would eventually be quoted as though it were exact, and a number that is nearly right is worse than one that is honestly absent."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "the-gate",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The gate is the useful half"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Publishing an identity proves nothing on its own. The control that matters is the comparison."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Both deploy paths now read the live origin after deployment and refuse to continue unless the fingerprint it reports is the one that run just built. Preview is held to the same standard, because a preview that cannot prove its own source cannot support a production acceptance receipt."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The check was written once and shared. Standing alone it answers the question that is otherwise pure guesswork, which is what any given origin is serving right now. That matters most for products this factory does not own, where nobody has local access to compare against."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "pull_quote",
+              "_version": 1,
+              "_key": "verified-as-current",
+              "quote": "A deployment that cannot report its own identity cannot be verified as current.",
+              "attribution": "Release doctrine"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "reuse",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Reuse across the factory"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The identity shape is deliberately small and published as a versioned schema, so a single verifier can check any product that adopts it. The products can keep their own judgement about what should ship; only the mechanism for proving what is live is meant to be shared."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This is the intended division: centralise the mechanism, keep the product judgement local. A shared media pipeline, a repository census or a resource lease earns the same treatment, but only once it has been shown to be genuinely the same problem in more than one place."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Adopting it is not retroactive. Nothing here claims another product publishes this yet, and no product is named as compliant. The capability exists, one product uses it, and the rest are free to ignore it until the question comes up."
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "projects": []
+        }
       }
     ],
     "incidents": [

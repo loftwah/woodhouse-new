@@ -33,4 +33,12 @@ The public Agent Reception is a curated, read-only interface. It cannot call pri
 
 A local Astro integration stamps the build with the source fingerprint, the commit it was built from and whether that tree was clean. `/build.json` returns that identity under the shared factory shape `loftwah.build-identity/1`, and both deploy scripts fail unless the live origin reports the fingerprint they intended to ship. The Worker cannot learn its own Cloudflare version id, so it does not claim one; the private release receipt records the version. The shape is intended to be reusable, so any product in the factory can be checked by the same comparison.
 
+## Known release constraint
+
+The first production deploy of the EmDash build is blocked by an ordering problem rather than by a missing control. `deploy-production.mjs` requires production to already hold the content model and starter records before it will deploy, but that content model cannot be created by any command: the runtime auto-seed gate is shut once migrations are applied, `emdash seed --database` takes only a local SQLite file, `emdash d1 export` refuses a database with fts5 virtual tables, and `emdash site import` requires an empty site. It has to be entered in EmDash Office, and Office is served by the build that has not deployed yet.
+
+This is recorded rather than worked around. The correct fix is to make the content model deliverable to a remote D1, not to relax the gate or deploy around it. Until then, a first production deploy needs an operator with an authenticated EmDash session.
+
+## See also
+
 See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.
