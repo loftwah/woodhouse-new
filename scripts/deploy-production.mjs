@@ -4,6 +4,11 @@ import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { computeSourceDigest } from "./source-digest.mjs";
+import {
+  compareBuildIdentity,
+  describeIdentity,
+  readBuildIdentity
+} from "./verify-build-identity.mjs";
 import { verifyDatabaseReadiness } from "./deployment-readiness.mjs";
 import { scanPublicText } from "./public-privacy.mjs";
 import {
@@ -418,28 +423,21 @@ if (!workerVersion) fail("production deployed, but Wrangler did not report a Wor
 // The deployed origin has to report the source this run intended to ship. A
 // Worker can answer this even after the local tree moves on, so it is the only
 // evidence that production is serving this build and not an earlier one.
-const buildIdentity = await fetch(new URL("/build.json", productionUrl), {
-  signal: AbortSignal.timeout(30000),
-  redirect: "manual"
-}).catch(() => null);
-if (!buildIdentity?.ok)
+const liveIdentity = await readBuildIdentity(productionUrl);
+const identityProblems = [
+  ...liveIdentity.problems,
+  ...compareBuildIdentity(liveIdentity.identity, {
+    expectedDigest: currentSourceDigest,
+    expectedEnvironment: "production"
+  })
+];
+if (identityProblems.length)
   fail(
-    `production deployed as ${workerVersion} but ${productionUrl}/build.json did not respond, so the live build identity is unproven.`
+    `production deployed as ${workerVersion} but its reported build identity does not match: ${identityProblems.join("; ")}.`
   );
-const liveIdentity = await buildIdentity.json().catch(() => null);
-if (liveIdentity?.sourceDigest !== currentSourceDigest)
-  fail(
-    `production reports source digest ${liveIdentity?.sourceDigest ?? "none"} but this run built ${currentSourceDigest}. Production is not serving the build just deployed.`
-  );
-if (liveIdentity?.environment !== "production")
-  fail(
-    `production reports environment ${liveIdentity?.environment ?? "none"}; expected production.`
-  );
-if (liveIdentity?.gitClean !== true)
+if (liveIdentity.identity?.gitClean !== true)
   fail("the deployed build was made from a dirty working tree; it has no reviewable commit.");
-console.log(
-  `Production reports the deployed source ${String(liveIdentity.sourceDigest).slice(0, 19)}… from ${liveIdentity.gitCommit?.slice(0, 12) ?? "unknown"}.`
-);
+console.log(`Production reports the deployed source ${describeIdentity(liveIdentity.identity)}`);
 
 const smokePaths = [
   "/",

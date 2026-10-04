@@ -3,6 +3,11 @@ import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises
 import os from "node:os";
 import path from "node:path";
 import { computeSourceDigest } from "./source-digest.mjs";
+import {
+  compareBuildIdentity,
+  describeIdentity,
+  readBuildIdentity
+} from "./verify-build-identity.mjs";
 
 const root = process.cwd();
 const previewUrl = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
@@ -134,23 +139,17 @@ if (!response.ok)
 
 // A preview that cannot prove which source it serves cannot support a
 // production acceptance receipt.
-const identityResponse = await fetch(`${previewUrl}/build.json?verify=${Date.now()}`, {
-  signal: AbortSignal.timeout(30000)
-}).catch(() => null);
-if (!identityResponse?.ok)
-  throw new Error(
-    `Preview did not serve a build identity at ${previewUrl}/build.json; the live source is unproven.`
-  );
-const identity = await identityResponse.json().catch(() => null);
-if (identity?.sourceDigest !== sourceDigest)
-  throw new Error(
-    `Preview reports source digest ${identity?.sourceDigest ?? "none"} but this run built ${sourceDigest}.`
-  );
-if (identity?.environment !== "preview")
-  throw new Error(
-    `Preview reports environment ${identity?.environment ?? "none"}; expected preview.`
-  );
-console.log(`Preview reports the deployed source ${String(identity.sourceDigest).slice(0, 19)}…`);
+const previewIdentity = await readBuildIdentity(previewUrl);
+const previewProblems = [
+  ...previewIdentity.problems,
+  ...compareBuildIdentity(previewIdentity.identity, {
+    expectedDigest: sourceDigest,
+    expectedEnvironment: "preview"
+  })
+];
+if (previewProblems.length)
+  throw new Error(`Preview build identity is unproven: ${previewProblems.join("; ")}.`);
+console.log(`Preview reports the deployed source ${describeIdentity(previewIdentity.identity)}`);
 const workerVersion = /Current Version ID:\s*([0-9a-f-]{36})/i.exec(deploymentOutput)?.[1];
 if (!workerVersion)
   throw new Error(
