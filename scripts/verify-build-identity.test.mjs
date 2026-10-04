@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  awaitBuildIdentity,
   compareBuildIdentity,
   describeIdentity,
   identityProblems,
@@ -98,4 +99,83 @@ test("a well-formed content generation passes the structural check", () => {
     content: { available: true, generation: `sha256:${"f".repeat(64)}`, counts: { projects: 8 } }
   };
   assert.deepEqual(identityProblems(proper), []);
+});
+
+// The failure these encode, measured on preview: a deploy that had already
+// succeeded was reported as failed because the identity check was a single
+// request. `origin serves sha256:07c90ac… but sha256:89fafe31… was expected`,
+// and the origin served the expected digest on the very next request. Publishing
+// a Worker version propagates over a short window, so the first request after a
+// deploy can still be answered by the version being replaced.
+test("a previous Worker version is waited out rather than failed", async () => {
+  const expectedDigest = `sha256:${"c".repeat(64)}`;
+  const outgoing = { ...good, environment: "preview", sourceDigest: `sha256:${"a".repeat(64)}` };
+  const reads = [
+    { origin: "https://preview.test", ok: true, problems: [], identity: outgoing },
+    {
+      origin: "https://preview.test",
+      ok: true,
+      problems: [],
+      identity: { ...good, environment: "preview" }
+    }
+  ];
+  const slept = [];
+  const result = await awaitBuildIdentity("https://preview.test", {
+    expectedDigest,
+    expectedEnvironment: "preview",
+    read: async () => reads.shift(),
+    sleep: async (ms) => slept.push(ms),
+    intervalMs: 5000
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.attempts, 2);
+  assert.equal(result.identity.sourceDigest, expectedDigest);
+  // The first mismatch was the outgoing version, so it waited rather than failing.
+  assert.deepEqual(slept, [5000]);
+  assert.match(result.attempts_log[0], /sha256:aaaa/);
+  assert.match(result.attempts_log[1], /sha256:cccc/);
+});
+
+test("a single successful read is not delayed", async () => {
+  const slept = [];
+  const result = await awaitBuildIdentity("https://preview.test", {
+    expectedDigest: `sha256:${"c".repeat(64)}`,
+    expectedEnvironment: "production",
+    read: async () => ({ origin: "https://preview.test", ok: true, problems: [], identity: good }),
+    sleep: async (ms) => slept.push(ms)
+  });
+  assert.equal(result.ok, true);
+  assert.equal(result.attempts, 1);
+  assert.deepEqual(slept, []);
+});
+
+test("a genuinely wrong build still fails, and says how long it waited", async () => {
+  const wrong = { ...good, sourceDigest: `sha256:${"b".repeat(64)}` };
+  const result = await awaitBuildIdentity("https://preview.test", {
+    expectedDigest: `sha256:${"c".repeat(64)}`,
+    expectedEnvironment: "production",
+    attempts: 3,
+    read: async () => ({ origin: "https://preview.test", ok: true, problems: [], identity: wrong }),
+    sleep: async () => {}
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.attempts, 3);
+  assert.equal(result.attempts_log.length, 3);
+  assert.ok(result.problems.some((problem) => problem.includes("was expected")));
+});
+
+test("an origin that never serves an identity fails rather than hanging", async () => {
+  const result = await awaitBuildIdentity("https://preview.test", {
+    expectedDigest: `sha256:${"c".repeat(64)}`,
+    attempts: 2,
+    read: async () => ({
+      origin: "https://preview.test",
+      ok: false,
+      problems: ["/build.json could not be reached (network error)"],
+      identity: null
+    }),
+    sleep: async () => {}
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.attempts, 2);
 });

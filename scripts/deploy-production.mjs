@@ -4,11 +4,7 @@ import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { computeSourceDigest } from "./source-digest.mjs";
-import {
-  compareBuildIdentity,
-  describeIdentity,
-  readBuildIdentity
-} from "./verify-build-identity.mjs";
+import { awaitBuildIdentity, describeIdentity } from "./verify-build-identity.mjs";
 import { verifyDatabaseReadiness } from "./deployment-readiness.mjs";
 import { scanPublicText } from "./public-privacy.mjs";
 import {
@@ -423,17 +419,21 @@ if (!workerVersion) fail("production deployed, but Wrangler did not report a Wor
 // The deployed origin has to report the source this run intended to ship. A
 // Worker can answer this even after the local tree moves on, so it is the only
 // evidence that production is serving this build and not an earlier one.
-const liveIdentity = await readBuildIdentity(productionUrl);
-const identityProblems = [
-  ...liveIdentity.problems,
-  ...compareBuildIdentity(liveIdentity.identity, {
-    expectedDigest: currentSourceDigest,
-    expectedEnvironment: "production"
-  })
-];
-if (identityProblems.length)
+// Retried, not read once: publishing a version propagates over a short window,
+// and a single request straight after the deploy can be served by the version
+// being replaced. That reported a successful production deploy as a failure.
+const liveIdentity = await awaitBuildIdentity(productionUrl, {
+  expectedDigest: currentSourceDigest,
+  expectedEnvironment: "production"
+});
+if (!liveIdentity.ok)
   fail(
-    `production deployed as ${workerVersion} but its reported build identity does not match: ${identityProblems.join("; ")}.`
+    `production deployed as ${workerVersion} but its reported build identity did not match ` +
+      `after ${liveIdentity.attempts} attempts: ${liveIdentity.problems.join("; ")}.`
+  );
+if (liveIdentity.attempts > 1)
+  console.log(
+    `Production needed ${liveIdentity.attempts} attempts before reporting the new build.`
   );
 if (liveIdentity.identity?.gitClean !== true)
   fail("the deployed build was made from a dirty working tree; it has no reviewable commit.");

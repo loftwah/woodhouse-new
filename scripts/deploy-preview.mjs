@@ -3,11 +3,7 @@ import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises
 import os from "node:os";
 import path from "node:path";
 import { computeSourceDigest } from "./source-digest.mjs";
-import {
-  compareBuildIdentity,
-  describeIdentity,
-  readBuildIdentity
-} from "./verify-build-identity.mjs";
+import { awaitBuildIdentity, describeIdentity } from "./verify-build-identity.mjs";
 
 const root = process.cwd();
 const previewUrl = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
@@ -168,17 +164,23 @@ const warmupSummary =
     : "";
 
 // A preview that cannot prove which source it serves cannot support a
-// production acceptance receipt.
-const previewIdentity = await readBuildIdentity(previewUrl);
-const previewProblems = [
-  ...previewIdentity.problems,
-  ...compareBuildIdentity(previewIdentity.identity, {
-    expectedDigest: sourceDigest,
-    expectedEnvironment: "preview"
-  })
-];
-if (previewProblems.length)
-  throw new Error(`Preview build identity is unproven: ${previewProblems.join("; ")}.`);
+// production acceptance receipt. The wait is bounded and retried because a
+// single request straight after a deploy can still reach the version being
+// replaced — that reported a successful deploy as a failure.
+const previewIdentity = await awaitBuildIdentity(previewUrl, {
+  expectedDigest: sourceDigest,
+  expectedEnvironment: "preview"
+});
+if (!previewIdentity.ok) {
+  for (const line of previewIdentity.attempts_log) console.error(`  ${line}`);
+  throw new Error(
+    `Preview build identity is unproven after ${previewIdentity.attempts} attempts: ${previewIdentity.problems.join("; ")}.`
+  );
+}
+if (previewIdentity.attempts > 1)
+  console.log(
+    `Preview needed ${previewIdentity.attempts} attempts before reporting the new build.`
+  );
 console.log(`Preview reports the deployed source ${describeIdentity(previewIdentity.identity)}`);
 const workerVersion = /Current Version ID:\s*([0-9a-f-]{36})/i.exec(deploymentOutput)?.[1];
 if (!workerVersion)

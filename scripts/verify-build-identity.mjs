@@ -115,6 +115,72 @@ export function describeIdentity(identity) {
   return `${identity.name ?? "unnamed"} ${identity.environment ?? "unknown"} · ${short}… · ${commit} · ${clean} · built ${identity.builtAt ?? "unknown"}`;
 }
 
+/**
+ * Wait until an origin serves the identity the caller intended to ship.
+ *
+ * `readBuildIdentity` busts the edge cache with a unique query string, so it does
+ * not read a stale cached response. It can still read the *previous Worker
+ * version*: publishing a version propagates to Cloudflare's network over a short
+ * window, and a single request immediately after a deploy can be served by the
+ * version that is being replaced.
+ *
+ * Measured on preview: `pnpm run deploy:preview` reported
+ * `origin serves sha256:07c90ac… but sha256:89fafe31… was expected` on a deploy
+ * that had in fact succeeded, and the origin served the expected digest on the
+ * next request. The gate was reporting a successful deploy as a failure.
+ *
+ * So the check retries for a bounded window and reports every attempt. A digest
+ * mismatch is retried, because it may be the outgoing version; a structurally
+ * invalid identity or an unreachable origin is also retried, because a freshly
+ * published version can briefly fail to initialise.
+ */
+export async function awaitBuildIdentity(
+  origin,
+  {
+    expectedDigest,
+    expectedEnvironment,
+    attempts = 12,
+    intervalMs = 5000,
+    timeoutMs = 30000,
+    read = readBuildIdentity,
+    sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  } = {}
+) {
+  const seen = [];
+  let last = { origin, ok: false, problems: ["no attempt was made"], identity: null };
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    last = await read(origin, { timeoutMs });
+    const problems = [
+      ...last.problems,
+      ...compareBuildIdentity(last.identity, { expectedDigest, expectedEnvironment })
+    ];
+    seen.push(
+      problems.length
+        ? `attempt ${attempt}: ${problems.join("; ")}`
+        : `attempt ${attempt}: ${describeIdentity(last.identity)}`
+    );
+    if (!problems.length)
+      return {
+        ok: true,
+        identity: last.identity,
+        problems: [],
+        attempts: attempt,
+        attempts_log: seen
+      };
+    if (attempt < attempts) await sleep(intervalMs);
+  }
+  return {
+    ok: false,
+    identity: last.identity,
+    problems: [
+      ...last.problems,
+      ...compareBuildIdentity(last.identity, { expectedDigest, expectedEnvironment })
+    ],
+    attempts,
+    attempts_log: seen
+  };
+}
+
 // CLI
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);

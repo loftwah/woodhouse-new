@@ -23,7 +23,11 @@ function xmlSafe(value: string) {
  * work reviewed up to a week earlier.
  */
 function publicationDate(publishedAt: string | null, reviewed: string | null) {
-  const reviewInstant = validReviewDay(reviewed) ? new Date(`${reviewed}T00:00:00+10:00`) : null;
+  // Midnight UTC, not midnight in Melbourne. `00:00+10:00` is 14:00 on the
+  // *previous* day in UTC, so every feed reader outside Australia saw a dispatch
+  // reviewed on 4 October published on 3 October. Midnight UTC keeps the reviewed
+  // calendar day correct on both sides.
+  const reviewInstant = validReviewDay(reviewed) ? new Date(`${reviewed}T00:00:00Z`) : null;
   if (reviewInstant && !Number.isNaN(reviewInstant.valueOf())) return reviewInstant;
   const published = publishedAt ? new Date(publishedAt) : null;
   return published && !Number.isNaN(published.valueOf()) ? published : new Date(0);
