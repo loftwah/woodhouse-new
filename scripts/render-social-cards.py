@@ -8,19 +8,25 @@ ROOT = Path(__file__).resolve().parents[1]
 FONT_PATH = ROOT / "scripts/assets/BricolageGrotesque-Variable.ttf"
 DEST = ROOT / "public" / "og"
 # The project dossier preview is an authored image, separate from this batch renderer.
+# name -> (label, title, subtitle, review date). The review date is per card
+# because a card that names the wrong review date is a claim about work that
+# was not reviewed on that day.
 CARDS = {
-    "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Eight projects. One human operator."),
-    "factory": ("THE FACTORY FLOOR", "Eight projects.", "Eight kinds of proof."),
-    "dean": ("THE HUMAN OPERATOR", "Dean Lofts.", "Systems that turn intent into shipped software."),
-    "dispatches/i-didnt-mean-to-build-a-software-factory": ("FOUNDING ESSAY", "I Didn't Mean to Build a Software Factory", "How agents, evidence and real products became one system."),
-    "the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong."),
-    "dispatches/a-gate-for-what-the-source-proves": ("PIRATES · FIELD NOTE", "Parity before invention.", "The Gate B reconstruction stays locked until the source supports it."),
-    "dispatches/software-is-not-the-walker": ("MAX · FIELD NOTE", "Software is not the walker.", "A green build cannot prove the real-world FIND path."),
-    "dispatches/the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong."),
+    "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Nine projects. One human operator.", "28 September 2026"),
+    "factory": ("THE FACTORY FLOOR", "Nine projects.", "Nine kinds of proof.", "4 October 2026"),
+    "dean": ("THE HUMAN OPERATOR", "Dean Lofts.", "Systems that turn intent into shipped software.", "28 September 2026"),
+    "dispatches/i-didnt-mean-to-build-a-software-factory": ("FOUNDING ESSAY", "I Didn't Mean to Build a Software Factory", "How agents, evidence and real products became one system.", "28 September 2026"),
+    "the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong.", "28 September 2026"),
+    "dispatches/a-gate-for-what-the-source-proves": ("PIRATES · FIELD NOTE", "Parity before invention.", "The Gate B reconstruction stays locked until the source supports it.", "28 September 2026"),
+    "dispatches/software-is-not-the-walker": ("MAX · FIELD NOTE", "Software is not the walker.", "A green build cannot prove the real-world FIND path.", "28 September 2026"),
+    "dispatches/the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong.", "28 September 2026"),
+    "dispatches/eight-finish-lines": ("PORTFOLIO REPORT", "Eight projects. Eight different finish lines.", "A dated review separates what each project can do from the proof still needed.", "1 October 2026"),
+    "dispatches/prove-which-build-is-live": ("FIELD NOTE", "Prove which build is live.", "A deploy receipt records intent. The origin now reports what it actually serves.", "4 October 2026"),
+    "dispatches/nine-projects-and-the-first-one-you-can-check": ("PORTFOLIO REPORT", "Nine projects, and the first one you can check.", "Asset Hunter publishes the commit it was built from. The other eight are reviewed summaries.", "4 October 2026"),
 }
 
 
-def card_svg(label: str, title: str, subtitle: str) -> str:
+def card_svg(label: str, title: str, subtitle: str, reviewed: str) -> str:
     safe_label = html.escape(label)
     title_lines = textwrap.wrap(title, width=22, break_long_words=False, break_on_hyphens=False)
     subtitle_lines = textwrap.wrap(subtitle, width=59, break_long_words=False, break_on_hyphens=False)
@@ -44,7 +50,7 @@ def card_svg(label: str, title: str, subtitle: str) -> str:
   <path d="M52 64h20M54 70h16M57 76h10" stroke="#e9ff49" stroke-width="2"/>
   <text x="99" y="66" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="18" font-weight="800" letter-spacing="2">WOODHOUSE</text>
   <text x="99" y="88" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">THE LOFTWAH SOFTWARE FACTORY</text>
-  <text x="48" y="142" fill="#79d8ff" font-family="Menlo,monospace" font-size="12" font-weight="700" letter-spacing="1.4">ONE HUMAN · EIGHT PROJECTS</text>
+  <text x="48" y="142" fill="#79d8ff" font-family="Menlo,monospace" font-size="12" font-weight="700" letter-spacing="1.4">ONE HUMAN · NINE PROJECTS</text>
   <path d="M71 192V486" stroke="#647dff" stroke-width="3" stroke-dasharray="5 7"/>
   <circle cx="71" cy="204" r="12" fill="#e9ff49"/><text x="104" y="201" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Intent</text><text x="104" y="220" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Human sets the boundary</text>
   <circle cx="71" cy="273" r="12" fill="#79d8ff"/><text x="104" y="270" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Work</text><text x="104" y="289" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Agents move it forward</text>
@@ -58,7 +64,7 @@ def card_svg(label: str, title: str, subtitle: str) -> str:
   {subtitle_text}
   <path d="M416 534H1148" stroke="#34425e" stroke-width="1"/>
   <text x="416" y="571" fill="#a9b8d0" font-family="Menlo,monospace" font-size="13" letter-spacing="1">AN OBSERVABLE SOFTWARE FACTORY</text>
-  <text x="416" y="600" fill="#e9ff49" font-family="Menlo,monospace" font-size="13" letter-spacing="1">REVIEWED 28 SEPTEMBER 2026</text>
+  <text x="416" y="600" fill="#e9ff49" font-family="Menlo,monospace" font-size="13" letter-spacing="1">REVIEWED {html.escape(reviewed.upper())}</text>
   <text x="1148" y="600" fill="#a9b8d0" font-family="Menlo,monospace" font-size="13" text-anchor="end">LOFTWAH.COM</text>
 </svg>'''
 

@@ -12,6 +12,7 @@ const checks = [
   ["lint", "lint"],
   ["unused code", "deadcode"],
   ["diagram intrinsic sizes", "diagrams:sizes:check"],
+  ["dispatch social cards", "social-cards:check"],
   ["dependency audit", "audit"],
   ["EmDash local schema", "emdash:doctor"],
   ["tests", "test"],

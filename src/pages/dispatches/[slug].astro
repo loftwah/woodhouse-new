@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import EditorialBlocks from "../../components/EditorialBlocks.astro";
 import { Image } from "emdash/ui";
 import { decodeEditorialSlug, getEditorialDispatch } from "../../content/repository";
+import { dispatchSocialCard } from "../../data/social-cards";
 
 export const prerender = false;
 
@@ -20,9 +21,10 @@ if (result?.error) {
 const editorial = result?.dispatch ?? null;
 const entry = result?.entry;
 const isPreview = result?.isPreview === true;
-// Each dispatch has its own reviewed social card where one exists; the
-// fallback is the shared factory card rather than an unrelated article image.
-const socialCard = slug ? `/og/dispatches/${encodeURIComponent(slug)}.jpg` : null;
+// Each dispatch has its own rendered social card where one exists; a dispatch
+// without one falls back to the shared factory card rather than advertising a
+// path that was never rendered.
+const socialCard = dispatchSocialCard(slug);
 if (slug && !editorial) Astro.response.status = 404;
 if (isPreview) {
   Astro.cache?.set(false);
@@ -44,7 +46,7 @@ if (isPreview) {
     authorName={entry?.data.bylines?.[0]?.byline.displayName ?? "Dean Lofts"}
     contentRef={{ collection: "dispatches", id: entry?.id ?? editorial.slug, slug: editorial.slug }}
     contentSeo={entry ? { data: entry.data } : undefined}
-    image={socialCard ?? "/og/factory.jpg"}
+    image={socialCard}
     noindex={isPreview}
   >
     {isPreview && (
