@@ -241,7 +241,8 @@ async function surfaceMentionsDraft(path) {
 }
 
 const isolation = [];
-let draftRemoved = false;
+let draftRemoved;
+const leakedSurfaces = [];
 try {
   const before = query(`SELECT COUNT(*) AS n FROM ec_dispatches`);
   query(
@@ -271,6 +272,7 @@ try {
     "/projects/"
   ]) {
     const surface = await surfaceMentionsDraft(path);
+    if (surface.leaked) leakedSurfaces.push(surface.path);
     isolation.push(
       `\`${surface.path}\` HTTP ${surface.status} — draft marker ${surface.leaked ? "VISIBLE (LEAK)" : "absent"}.`
     );
@@ -292,10 +294,20 @@ try {
   );
   draftRemoved = Number(remaining[0]?.n ?? 0) === 0;
 }
-isolation.push(`Probe draft removed after the observation: ${draftRemoved ? "yes" : "NO"}.`);
-const anyLeak = isolation.some(
-  (line) => line.includes("LEAK") || line.includes("draft marker VISIBLE")
+isolation.push(
+  `Probe draft removed after the observation: ${draftRemoved ? "yes" : "NO"}. ` +
+    "The direct URL was also requested; a draft that answers 200 there is a leak even though it is absent from every index."
 );
+// A leak is reported loudly rather than written into an artifact and forgotten.
+// Recording evidence must not be the thing that swallows a finding.
+if (leakedSurfaces.length || draftRemoved === false) {
+  console.error(
+    "\npublicDraftIsolation FAILED:" +
+      (leakedSurfaces.length ? ` the draft was reachable on ${leakedSurfaces.join(", ")}` : "") +
+      (draftRemoved === false ? " the probe row was not removed" : "") +
+      ". This is recorded in .release/evidence/publicDraftIsolation.md and must not be attested as a pass."
+  );
+}
 await artifact(
   "publicDraftIsolation",
   "Public draft isolation against preview",
