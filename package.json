@@ -42,6 +42,8 @@
     "emdash:migrate:check": "emdash migrate --check --wrangler-config wrangler.jsonc --wrangler-env preview --json",
     "emdash:site:export": "emdash site export --output .release/woodhouse-site.emdash",
     "test": "node --experimental-strip-types --test scripts/*.test.mjs \"src/**/*.test.ts\"",
+    "lab:artifacts": "node lab/artifacts-lifecycle/report.mjs",
+    "lab:test": "node --test lab/**/*.test.mjs",
     "verify": "node scripts/verify.mjs",
     "social-cards": "python3 scripts/render-social-cards.py",
     "social-cards:record": "node scripts/social-cards.mjs",
