@@ -121,7 +121,7 @@ export interface Dispatch {
   slug: string | null;
   status: string;
   title: string;
-  kind: "Field note" | "Factory incident" | "Founding essay" | "Case study" | "Conversation" | "Doctrine";
+  kind: "Field note" | "Factory incident" | "Founding essay" | "Case study" | "Conversation" | "Doctrine" | "Portfolio report";
   deck: string;
   review_date: string;
   source_reference: string;

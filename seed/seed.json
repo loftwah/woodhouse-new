@@ -762,7 +762,8 @@
               "Founding essay",
               "Case study",
               "Conversation",
-              "Doctrine"
+              "Doctrine",
+              "Portfolio report"
             ]
           }
         },
@@ -3163,6 +3164,179 @@
             }
           ],
           "projects": []
+        }
+      },
+      {
+        "id": "dispatch-nine-projects-and-the-first-one-you-can-check",
+        "slug": "nine-projects-and-the-first-one-you-can-check",
+        "status": "published",
+        "data": {
+          "title": "Nine projects, and the first one you can check.",
+          "kind": "Portfolio report",
+          "deck": "Asset Hunter joins the portfolio as the first Woodhouse project whose repository and deployed commit anyone can verify. That changes what the other eight are allowed to imply.",
+          "review_date": "2026-10-04",
+          "source_reference": "The public repository loftwah/asset-hunter and the public site assets.loftwah.com, reviewed 4 October 2026. Public commit identifiers and public issue titles are cited; no private repository body is reproduced.",
+          "lead": "Eight projects on this site are summarised from a private readout. The ninth publishes the exact commit it was built from. That is not a small difference in confidence; it is a different kind of evidence.",
+          "lesson": "A dated summary is evidence about a person. A pinned commit is evidence about a build. A portfolio needs both, and they are not interchangeable.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-bubbles",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot",
+            "$ref:project-protocol-11",
+            "$ref:project-max",
+            "$ref:project-pirates",
+            "$ref:project-loftwahfm",
+            "$ref:project-social-club",
+            "$ref:project-asset-hunter"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-changed",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Asset Hunter is the ninth project on this site and the first one whose evidence anyone outside the factory can check. Its repository is public, its site publishes the commit it was built from, and its catalogue states its own size. Everything else here is an operator-reviewed summary of work the public cannot see."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The portfolio is reviewed project by project, not all at once, so this record now reports its newest review and says how many projects predate it. The eight launch projects still carry their 28 September 2026 date. Nothing about them was re-reviewed today, and nothing about them was changed."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-a-public-repository-allows",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What a public repository allows Woodhouse to claim"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "On 4 October 2026 the public Asset Hunter site reported commit 149836b4 as its build, and that commit was the head of its public main branch at the same moment. The two facts were read from the site and the repository rather than inferred from a deploy message, and a reader can repeat the check."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That is a stronger claim than any other project on this site can currently support. It establishes which source produced the page in front of you. It does not establish that the catalogue is complete, that any individual entry has cleared rights, or that the same commit will be live tomorrow. One observation of one origin on one day is what it is."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "what-a-private-readout-cannot",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What a private readout cannot"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The other eight projects are described from a shareable readout. Their states are accurate to the best of a dated human review, and this site will not pretend otherwise: the dossier for each one carries its own review date, its own source description and the boundary its state does not cross."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The asymmetry is worth stating plainly rather than smoothing over. A public repository lets a reader audit the record; a private one asks them to trust the operator. Both are legitimate records. Presenting the second as though it were the first would be the exact overstatement this publication exists to avoid."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "pull_quote",
+              "_version": 1,
+              "_key": "summary-and-pin",
+              "quote": "A dated summary is evidence about a person. A pinned commit is evidence about a build.",
+              "attribution": "Portfolio review, 4 October 2026"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "the-work-still-open",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The work still open"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Asset Hunter was public and moving on the review date, with 34 possibilities in the published catalogue and 53 issues plus one image-optimisation pull request open. The open work that matters is not feature count. It is rights correction and takedown, security and hostile-content review of a public catalogue, and production release evidence with a restore drill."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Until those exist, the catalogue is a growing public reference rather than a dependable one. Its dossier says so, and names those three as the next proofs."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       }
     ],
