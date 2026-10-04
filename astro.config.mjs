@@ -100,7 +100,15 @@ export default defineConfig({
     emdash({
       database: d1({ binding: "DB", session: "disabled" }),
       storage: r2({ binding: "MEDIA" }),
-      objectCache: kvCache({ binding: "CACHE", defaultTtl: 300, keyPrefix: "woodhouse:emdash:" }),
+      // 60 s, not 300. The read model is the inner cache: an edge revalidation
+      // still re-reads it, so a longer TTL here sets how long an out-of-band
+      // write stays invisible. Measured on preview at 300 s, an out-of-band write
+      // took 864 s and 698 s on two runs to reach the public site — 10-15 minutes
+      // against a declared edge window of 120 s. 60 s is the Workers KV floor, so
+      // it is the tightest value that actually caches anything; it moves the
+      // dominant term from the read model to the edge lifetime, which is fixed.
+      // See EMDASH.md, "How long an out-of-band content write stays invisible".
+      objectCache: kvCache({ binding: "CACHE", defaultTtl: 60, keyPrefix: "woodhouse:emdash:" }),
       siteUrl: siteOrigin,
       sandboxed: [auditLog, editorialPolicy, enquiries],
       sandboxRunner: sandbox(),
