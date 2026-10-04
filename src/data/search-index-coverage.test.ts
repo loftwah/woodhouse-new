@@ -13,10 +13,7 @@ import test from "node:test";
 // and linked*; it does not compare the sitemap against the search index. So this
 // asserts the two agree, from the seed, rather than trusting either query.
 const seed = JSON.parse(await readFile(new URL("../../seed/seed.json", import.meta.url), "utf8"));
-const repository = await readFile(
-  new URL("../content/repository.ts", import.meta.url),
-  "utf8"
-);
+const repository = await readFile(new URL("../content/repository.ts", import.meta.url), "utf8");
 
 const snapshots: Array<{ slug: string; status: string; data?: { public_safe?: boolean } }> =
   seed.content.factory_snapshots ?? [];
