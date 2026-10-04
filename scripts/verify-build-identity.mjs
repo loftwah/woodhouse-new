@@ -28,6 +28,42 @@ function normaliseOrigin(value) {
  * Fetches and structurally validates an origin's identity. Returns a result
  * object rather than throwing so callers can report every problem at once.
  */
+/**
+ * Structural checks for an identity that was read elsewhere. Exported so the
+ * rules can be tested without a network round trip.
+ */
+export function identityProblems(identity) {
+  const problems = [];
+  if (
+    typeof identity?.schema !== "string" ||
+    !identity.schema.startsWith("loftwah.build-identity/")
+  )
+    problems.push(
+      `schema ${JSON.stringify(identity?.schema ?? null)} is not a build-identity schema`
+    );
+  if (
+    typeof identity?.sourceDigest !== "string" ||
+    !/^sha256:[a-f0-9]{64}$/.test(identity.sourceDigest)
+  )
+    problems.push(
+      `sourceDigest ${JSON.stringify(identity?.sourceDigest ?? null)} is not a sha256 fingerprint`
+    );
+  if (!Number.isFinite(Date.parse(identity?.builtAt ?? "")))
+    problems.push("builtAt is missing or not a date");
+  if (identity?.content && identity.content.available === true) {
+    if (
+      typeof identity.content.generation !== "string" ||
+      !/^sha256:[a-f0-9]{64}$/.test(identity.content.generation)
+    )
+      problems.push(
+        `content.generation ${JSON.stringify(identity.content.generation ?? null)} is not a sha256 fingerprint`
+      );
+    if (!identity.content.counts || typeof identity.content.counts !== "object")
+      problems.push("content.counts is missing");
+  }
+  return problems;
+}
+
 export async function readBuildIdentity(origin, { timeoutMs = 30000 } = {}) {
   const base = normaliseOrigin(origin);
   const response = await fetch(`${base}${IDENTITY_PATH}?verify=${Date.now()}`, {
@@ -50,20 +86,7 @@ export async function readBuildIdentity(origin, { timeoutMs = 30000 } = {}) {
       identity: null
     };
   }
-  const problems = [];
-  if (typeof identity.schema !== "string" || !identity.schema.startsWith("loftwah.build-identity/"))
-    problems.push(
-      `schema ${JSON.stringify(identity.schema ?? null)} is not a build-identity schema`
-    );
-  if (
-    typeof identity.sourceDigest !== "string" ||
-    !/^sha256:[a-f0-9]{64}$/.test(identity.sourceDigest)
-  )
-    problems.push(
-      `sourceDigest ${JSON.stringify(identity.sourceDigest ?? null)} is not a sha256 fingerprint`
-    );
-  if (!Number.isFinite(Date.parse(identity.builtAt ?? "")))
-    problems.push("builtAt is missing or not a date");
+  const problems = identityProblems(identity);
   return { origin: base, ok: problems.length === 0, problems, identity };
 }
 
@@ -120,7 +143,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   console.log(`${read.origin}\n  ${describeIdentity(read.identity)}`);
   if (read.identity?.content)
     console.log(
-      `  content snapshot reviewed ${read.identity.content.snapshotReviewed ?? "not available"}`
+      `  content ${read.identity.content.available ? read.identity.content.generation : "unavailable"}` +
+        (read.identity.content.snapshotReviewed
+          ? ` · snapshot reviewed ${read.identity.content.snapshotReviewed}`
+          : "")
     );
   if (problems.length) {
     console.error(`\nBuild identity check failed:\n- ${problems.join("\n- ")}`);

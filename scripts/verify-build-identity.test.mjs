@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   compareBuildIdentity,
   describeIdentity,
+  identityProblems,
   readBuildIdentity
 } from "./verify-build-identity.mjs";
 
@@ -77,4 +78,24 @@ test("the description never invents a worker version", () => {
   assert.ok(!/version/i.test(text));
   assert.match(describeIdentity({ ...good, gitClean: false }), /dirty or unreported tree/);
   assert.equal(describeIdentity(null), "no identity");
+});
+
+test("a mislabelled content generation is rejected even when the build identity is valid", () => {
+  // Regression guard: a sha1 digest relabelled as sha256 must not verify.
+  const mislabelled = {
+    ...good,
+    content: { available: true, generation: `sha256:${"f".repeat(40)}`, counts: {} }
+  };
+  assert.ok(
+    identityProblems(mislabelled).some((problem) => problem.includes("content.generation"))
+  );
+  assert.ok(!/^sha256:[a-f0-9]{64}$/.test(mislabelled.content.generation));
+});
+
+test("a well-formed content generation passes the structural check", () => {
+  const proper = {
+    ...good,
+    content: { available: true, generation: `sha256:${"f".repeat(64)}`, counts: { projects: 8 } }
+  };
+  assert.deepEqual(identityProblems(proper), []);
 });

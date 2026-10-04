@@ -1,5 +1,6 @@
 import { decodeSlug, getEmDashCollection, getEmDashEntry, getMenuWithCacheHint } from "emdash";
 import type { CacheHint, ContentEntry } from "emdash";
+import { contentGenerationDigest } from "../data/content-generation";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
 export type WoodhouseProject = {
@@ -407,6 +408,91 @@ export async function listPublicConversations() {
     ),
     error: result.error,
     cacheHint: result.cacheHint
+  };
+}
+
+/**
+ * A fingerprint of the published public read model.
+ *
+ * A build fingerprint says which source is live. It says nothing about which
+ * content that source is serving, and code can be current while content is
+ * stale — the failure mode where production looks deployed but is months
+ * behind its own seed. This returns the identity of the content half.
+ *
+ * The digest covers each record's identifier and full data, so any edit to a
+ * published record changes it. Counts are reported alongside because a count
+ * is cheap for a human to sanity-check against a digest they cannot read.
+ */
+export async function listPublicContentGeneration() {
+  const [
+    projectResult,
+    statusResult,
+    snapshotResult,
+    evidenceResult,
+    dispatchResult,
+    incidentResult,
+    conversationResult
+  ] = await Promise.all([
+    listProjectRecords(),
+    listPublicStatusRecords(),
+    listPublicSnapshots(),
+    listPublicEvidence(),
+    listPublishedDispatches(),
+    listPublicIncidents(),
+    listPublicConversations()
+  ]);
+
+  const cacheHints = [
+    ...projectResult.cacheHints,
+    ...[statusResult, snapshotResult, evidenceResult, dispatchResult, incidentResult]
+      .map((result) => result.cacheHint)
+      .filter(Boolean),
+    conversationResult.cacheHint
+  ].filter(Boolean) as CacheHint[];
+
+  const errors = [
+    projectResult.error,
+    statusResult.error,
+    snapshotResult.error,
+    evidenceResult.error,
+    dispatchResult.error,
+    incidentResult.error,
+    conversationResult.error
+  ].filter(Boolean);
+  if (errors.length)
+    return { generation: null, counts: null, error: errors[0], cacheHints, reviewDate: null };
+
+  // Projects and dispatches are returned as mapped records rather than raw
+  // entries, so every group is normalised to an id plus data before hashing.
+  const groups: Array<[string, Array<{ id: string; data: unknown }>]> = [
+    ["projects", projectResult.projects.map((project) => ({ id: project.slug, data: project }))],
+    ["project_statuses", statusResult.statuses],
+    ["factory_snapshots", snapshotResult.snapshots],
+    ["evidence_records", evidenceResult.evidence],
+    [
+      "dispatches",
+      dispatchResult.dispatches.map((dispatch) => ({ id: dispatch.slug, data: dispatch }))
+    ],
+    ["incidents", incidentResult.incidents],
+    ["conversations", conversationResult.conversations]
+  ];
+
+  const counts: Record<string, number> = {};
+  const lines: string[] = [];
+  for (const [collection, records] of groups) {
+    counts[collection] = records.length;
+    for (const record of [...records].sort((left, right) =>
+      String(left.id).localeCompare(String(right.id))
+    ))
+      lines.push(`${collection} ${record.id} ${JSON.stringify(record.data ?? null)}`);
+  }
+
+  return {
+    generation: await contentGenerationDigest(lines),
+    counts,
+    reviewDate: snapshotResult.snapshots[0]?.data.reviewed_at ?? null,
+    error: undefined,
+    cacheHints
   };
 }
 

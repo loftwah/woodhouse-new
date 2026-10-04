@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import type { BuildIdentity } from "../data/build-identity";
-import { listProjectRecords } from "../content/repository";
+import { listPublicContentGeneration } from "../content/repository";
 
 // Reports exactly which source this deployed Worker was built from.
 //
@@ -21,16 +21,17 @@ export const GET: APIRoute = async ({ cache }) => {
   const identity = __WOODHOUSE_BUILD_IDENTITY__;
 
   // The build identity is the point of this route and never depends on the
-  // content read. A content failure is reported honestly as absent rather than
-  // turning a working identity endpoint into an error.
-  const projectResult = await listProjectRecords().catch(() => ({
-    projects: [],
+  // content read. Code and content are delivered by different mechanisms, so a
+  // content failure is reported honestly as absent rather than turning a
+  // working identity endpoint into an error.
+  const content = await listPublicContentGeneration().catch(() => ({
+    generation: null,
+    counts: null,
+    reviewDate: null,
     cacheHints: [],
-    error: new Error("content unavailable")
+    error: new Error("content read unavailable")
   }));
-  for (const hint of projectResult.cacheHints ?? []) cache.set(hint);
-
-  const reviewDate = projectResult.projects?.[0]?.reviewDate ?? null;
+  for (const hint of content.cacheHints ?? []) cache.set(hint);
 
   const body = {
     schema: identity.schema,
@@ -40,14 +41,19 @@ export const GET: APIRoute = async ({ cache }) => {
     gitCommit: identity.gitCommit,
     gitClean: identity.gitClean,
     builtAt: identity.builtAt,
-    content: {
-      snapshotReviewed: reviewDate,
-      source: reviewDate ? "published EmDash read model" : null
-    },
+    content: content.error
+      ? { available: false, generation: null, counts: null, snapshotReviewed: null }
+      : {
+          available: true,
+          generation: content.generation,
+          counts: content.counts,
+          snapshotReviewed: content.reviewDate ?? null
+        },
     verification: {
-      method: "compare sourceDigest against the digest the release intended to ship",
+      method:
+        "compare sourceDigest and content.generation against what the release intended to ship",
       intended:
-        "The deploy gate fails if this value differs from the digest it built and deployed.",
+        "The deploy gate fails if the source fingerprint differs from the one it built and deployed. The content generation is reported so a stale read model stays visible even when the code is current.",
       note: "This endpoint cannot report its own Cloudflare Worker version id; the release receipt records that."
     },
     origin: siteOrigin,
