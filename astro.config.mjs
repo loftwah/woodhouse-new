@@ -100,14 +100,14 @@ export default defineConfig({
     emdash({
       database: d1({ binding: "DB", session: "disabled" }),
       storage: r2({ binding: "MEDIA" }),
-      // 300 s is measured, not chosen. Lowering it to the 60 s Workers KV floor was
-      // tried on 5 October 2026 on the reasonable theory that a shorter read-model
-      // TTL would shorten the window in which an out-of-band write is invisible.
-      // It did the opposite: the probe never became visible within the 15-minute
-      // measurement window, against 864 s and 698 s at this value. The mechanism
-      // is not established, so this stays at the measured setting rather than the
-      // tidier-looking one. See EMDASH.md, "How long an out-of-band content write
-      // stays invisible".
+      // 300 s. Lowering it to the 60 s Workers KV floor was tried on 5 October 2026, on
+      // the theory that a shorter read-model TTL would shorten the window in which
+      // an out-of-band write stays invisible. The experiment was inconclusive: the
+      // probe stopped becoming visible within 15 minutes both at 60 s and, on a
+      // later run, back at 300 s, so the lengthening cannot be attributed to the
+      // TTL. It stays here because that is the last value measured as working, not
+      // because it was shown to be better. See EMDASH.md, "How long an out-of-band
+      // content write stays invisible".
       objectCache: kvCache({ binding: "CACHE", defaultTtl: 300, keyPrefix: "woodhouse:emdash:" }),
       siteUrl: siteOrigin,
       sandboxed: [auditLog, editorialPolicy, enquiries],

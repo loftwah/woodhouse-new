@@ -27,11 +27,25 @@ The 60-second declaration above describes the **edge**. It does not describe how
 
 Woodhouse installs its reviewed model by replaying SQL, and upstream EmDash has no programmatic purge path for content written that way ([issue 2435](https://github.com/emdash-cms/emdash/issues/2435)). Three layers therefore compose the real bound: the KV object cache (`defaultTtl: 300`), the edge lifetime (60s) and its stale window (60s). A public page reads seven collections, and each query carries its own cache key, so the last key to expire gates visibility.
 
-**Measured on preview, 5 October 2026: 864 s and 698 s** on two independent runs at `defaultTtl: 300`, from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds and reverted afterwards. Treat the visibility window as **10–15 minutes**, not as the 120 seconds the edge header implies, and not as a fixed number: the samples differ by 166 s because each of the seven query cache keys expires on its own clock, and whichever expires last gates the page.
+Measured on preview, 5 October 2026, four runs at `defaultTtl` 300 and one at 60. **Four measurements, and the window is not bounded by anything this repository controls:**
 
-**Lowering the TTL was tried and made it worse.** The obvious fix — drop `defaultTtl` from 300 s to the 60 s Workers KV floor, so the read model stops being the dominant term — was deployed to preview and measured. The probe **never became visible within the 15-minute window** (`visibleAfterSeconds: null`), against 864 s and 698 s at 300 s. One sample, but the direction is unambiguous, so `defaultTtl` stayed at 300 and the configuration carries that measurement as a comment.
+| Run | `defaultTtl` | Visible after |
+| --- | --- | --- |
+| 1 | 300 s | 864 s |
+| 2 | 300 s | 698 s |
+| 3 | 60 s | not within 15 min |
+| 4 | 300 s | not within 15 min |
 
-The mechanism is not established, and it is recorded as unknown rather than guessed at. Workers KV reads are eventually consistent, and a shorter TTL means more frequent re-reads and re-writes; why that should *delay* convergence is not obvious from here. Anyone revisiting this should measure before changing the value, and should treat "shorter cache TTL means fresher reads" as the thing that was wrong.
+The window is therefore **10 minutes to longer than 15 minutes**, against a declared edge window of 120 s. It does not have a floor and, on this evidence, no ceiling short of "until something evicts it".
+
+Two conclusions, and the second is the one that bit:
+
+- **An out-of-band write has no predictable visibility time.** Do not install the reviewed model and then check the public site. Check it with `pnpm run measure:visibility`, and expect to wait.
+- **The `defaultTtl` experiment was inconclusive, not negative.** Run 3 at 60 s reported no visibility, and the natural reading was that shortening the read-model TTL had backfired. Run 4 then repeated the measurement at the original 300 s and *also* reported no visibility, which shows the lengthening was not caused by the TTL. The two earlier successes and the two later failures are more consistent with the window drifting longer over the session than with either configuration. Anyone who reads run 3 alone will draw the wrong conclusion, which is why all four are recorded.
+
+The measurement's own 15-minute timeout is now too short to characterise the window, so `pnpm run measure:visibility` can no longer answer the question it was written to answer. That is a limitation of the tool, not a finding about the cache.
+
+`defaultTtl` stays at 300 s because that is the last value at which a write was observed to land, not because it was shown to be better than 60 s. Re-measure before changing it.
 
 Two things follow, and both matter more than the number:
 

@@ -13,7 +13,8 @@
 // query-string change would address a different cache entry and measure nothing.
 // The probe reverts the record afterwards, so the environment is left as it was.
 //
-// Usage: node scripts/measure-content-visibility.mjs --environment=preview
+// Usage: node scripts/measure-content-visibility.mjs --environment=preview [--revert]
+//        [--timeout-minutes=60]
 
 import { spawnSync } from "node:child_process";
 import { hasProbeToken, stripProbeToken } from "./visibility-probe.mjs";
@@ -37,7 +38,25 @@ const database = databases[environment];
 const SLUG = "prove-which-build-is-live";
 const PATH = `/dispatches/${SLUG}/`;
 const POLL_INTERVAL_MS = 5000;
-const TIMEOUT_MS = 15 * 60 * 1000;
+// Raised from 15 minutes to 60 on 5 October 2026. Four runs measured the window
+// at 864 s, 698 s and then twice as longer than 15 minutes, so the tool's own
+// timeout had stopped being able to answer the question the tool exists for — it
+// could report "not visible" without distinguishing a fifteen-minute window from
+// a two-hour one.
+//
+// A run that reaches the limit still exits non-zero and still reports
+// `visibleAfterSeconds: null`, but that now means "still invisible after an hour",
+// which is a real bound rather than an artefact of a short timeout. Pass
+// --timeout-minutes=N to override it.
+const timeoutMinutes = (() => {
+  const flag = args.find((argument) => argument.startsWith("--timeout-minutes="));
+  if (!flag) return 60;
+  const parsed = Number(flag.slice("--timeout-minutes=".length));
+  if (!Number.isFinite(parsed) || parsed <= 0)
+    throw new Error("--timeout-minutes must be a positive number.");
+  return parsed;
+})();
+const TIMEOUT_MS = timeoutMinutes * 60 * 1000;
 
 const token = `visibility-probe-${Date.now().toString(36)}`;
 
@@ -146,7 +165,10 @@ try {
 console.log(JSON.stringify(result, null, 2));
 console.log(
   result.visibleAfterSeconds === null
-    ? `\nThe probe was never visible within ${Math.round(TIMEOUT_MS / 60000)} minutes.`
+    ? `\nThe probe was still invisible after ${timeoutMinutes} minutes at ${origin}${PATH}. ` +
+        `That is a lower bound, not a measurement: nothing here evicts the cached read ` +
+        `model, so the window may be longer still. Re-run with a longer --timeout-minutes ` +
+        `if you need to know how much longer.`
     : `\nThe out-of-band write became visible after ${result.visibleAfterSeconds}s at ${origin}${PATH}.`
 );
 if (result.visibleAfterSeconds === null) process.exitCode = 1;
