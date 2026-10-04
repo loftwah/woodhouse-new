@@ -128,14 +128,44 @@ try {
   await rm(tempDir, { recursive: true, force: true });
 }
 
-const response = await fetch(previewUrl, {
-  signal: AbortSignal.timeout(60000),
-  redirect: "manual"
-});
-if (!response.ok)
+/**
+ * Wait for the newly-deployed version to answer.
+ *
+ * A Worker version that has just been published can briefly return an error
+ * while it initialises, so a single immediate request is not evidence of a
+ * broken deploy. A cold version is retried for a bounded time and every attempt
+ * is reported; a persistently failing preview still stops the deploy.
+ */
+const WARMUP_ATTEMPTS = 6;
+const WARMUP_INTERVAL_MS = 5000;
+const warmupStatuses = [];
+let response = null;
+for (let attempt = 1; attempt <= WARMUP_ATTEMPTS; attempt++) {
+  response = await fetch(previewUrl, {
+    signal: AbortSignal.timeout(60000),
+    redirect: "manual"
+  }).catch((error) => {
+    warmupStatuses.push(`no response (${error.name ?? "unknown"})`);
+    return null;
+  });
+  if (response?.ok) {
+    warmupStatuses.push(String(response.status));
+    break;
+  }
+  if (response) warmupStatuses.push(String(response.status));
+  if (attempt < WARMUP_ATTEMPTS)
+    await new Promise((resolve) => setTimeout(resolve, WARMUP_INTERVAL_MS));
+}
+if (!response?.ok)
   throw new Error(
-    `Preview Worker returned HTTP ${response.status} at ${previewUrl}; inspect the preview before proceeding.`
+    `Preview Worker did not return a successful response at ${previewUrl} after ${WARMUP_ATTEMPTS} ` +
+      `attempts over ${Math.round(((WARMUP_ATTEMPTS - 1) * WARMUP_INTERVAL_MS) / 1000)}s ` +
+      `(saw ${warmupStatuses.join(", ")}); inspect the preview before proceeding.`
   );
+const warmupSummary =
+  warmupStatuses.length > 1
+    ? ` after ${warmupStatuses.length} attempts (${warmupStatuses.join(", ")})`
+    : "";
 
 // A preview that cannot prove which source it serves cannot support a
 // production acceptance receipt.
@@ -182,5 +212,5 @@ await writeFile(
 );
 await chmod(previewManifestPath, 0o600);
 console.log(
-  `Preview responded at ${previewUrl} (HTTP ${response.status}); source fingerprint recorded privately.`
+  `Preview responded at ${previewUrl} (HTTP ${response.status}${warmupSummary}); source fingerprint recorded privately.`
 );
