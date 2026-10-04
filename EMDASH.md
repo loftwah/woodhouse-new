@@ -27,7 +27,11 @@ The 60-second declaration above describes the **edge**. It does not describe how
 
 Woodhouse installs its reviewed model by replaying SQL, and upstream EmDash has no programmatic purge path for content written that way ([issue 2435](https://github.com/emdash-cms/emdash/issues/2435)). Three layers therefore compose the real bound: the KV object cache (`defaultTtl: 300`), the edge lifetime (60s) and its stale window (60s). A public page reads seven collections, and each query carries its own cache key, so the last key to expire gates visibility.
 
-**Measured on preview, 5 October 2026: 864 s and 698 s** on two independent runs, from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds and reverted afterwards. Treat the visibility window as **10–15 minutes**, not as the 120 seconds the edge header implies, and not as a fixed number: the samples differ by 166 s because each of the seven query cache keys expires on its own clock, and whichever expires last gates the page.
+**Measured on preview, 5 October 2026: 864 s and 698 s** on two independent runs at `defaultTtl: 300`, from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds and reverted afterwards. Treat the visibility window as **10–15 minutes**, not as the 120 seconds the edge header implies, and not as a fixed number: the samples differ by 166 s because each of the seven query cache keys expires on its own clock, and whichever expires last gates the page.
+
+**Lowering the TTL was tried and made it worse.** The obvious fix — drop `defaultTtl` from 300 s to the 60 s Workers KV floor, so the read model stops being the dominant term — was deployed to preview and measured. The probe **never became visible within the 15-minute window** (`visibleAfterSeconds: null`), against 864 s and 698 s at 300 s. One sample, but the direction is unambiguous, so `defaultTtl` stayed at 300 and the configuration carries that measurement as a comment.
+
+The mechanism is not established, and it is recorded as unknown rather than guessed at. Workers KV reads are eventually consistent, and a shorter TTL means more frequent re-reads and re-writes; why that should *delay* convergence is not obvious from here. Anyone revisiting this should measure before changing the value, and should treat "shorter cache TTL means fresher reads" as the thing that was wrong.
 
 Two things follow, and both matter more than the number:
 
