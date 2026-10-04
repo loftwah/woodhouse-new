@@ -534,14 +534,21 @@ export async function getPublicMenu(name: string) {
 }
 
 export async function listPublicSearchItems() {
-  const [projectResult, dispatchResult, incidentResult, evidenceResult, conversationResult] =
-    await Promise.all([
-      listProjectRecords(),
-      listPublishedDispatches(),
-      listPublicIncidents(),
-      listPublicEvidence(),
-      listPublicConversations()
-    ]);
+  const [
+    projectResult,
+    dispatchResult,
+    incidentResult,
+    evidenceResult,
+    conversationResult,
+    snapshotResult
+  ] = await Promise.all([
+    listProjectRecords(),
+    listPublishedDispatches(),
+    listPublicIncidents(),
+    listPublicEvidence(),
+    listPublicConversations(),
+    listPublicSnapshots()
+  ]);
   const pages: PublicSearchItem[] = [
     ...[
       {
@@ -657,14 +664,19 @@ export async function listPublicSearchItems() {
         : []
     )
   ];
-  // One snapshot page covers the whole portfolio, so list it once rather than
-  // once per project.
-  const currentSnapshot = projectResult.projects.find((project) => project.snapshotId);
-  if (currentSnapshot?.snapshotId) {
+  // Every published snapshot is a dated archive page in its own right, so every
+  // one of them is indexed. This used to add a single entry, taken from the first
+  // project that had a snapshot, on the reasoning that one page covers the whole
+  // portfolio. That stopped being true when a second review produced a second
+  // snapshot: both pages stayed in the sitemap, and the newer one —
+  // `/snapshots/2026-10-04/`, the archive of the current nine-project record —
+  // became unreachable by search.
+  for (const snapshot of snapshotResult.snapshots) {
+    const reviewDate = asText(snapshot.data, "reviewed_at");
     pages.push({
-      title: `Factory snapshot · ${currentSnapshot.reviewDate}`,
-      description: currentSnapshot.snapshotSource,
-      href: `/snapshots/${currentSnapshot.snapshotId}/`,
+      title: `Factory snapshot · ${reviewDate || "review date unavailable"}`,
+      description: asText(snapshot.data, "source_description"),
+      href: `/snapshots/${snapshot.id}/`,
       section: "Snapshots"
     });
   }
@@ -679,13 +691,15 @@ export async function listPublicSearchItems() {
       dispatchResult.cacheHint,
       incidentResult.cacheHint,
       evidenceResult.cacheHint,
-      conversationResult.cacheHint
+      conversationResult.cacheHint,
+      snapshotResult.cacheHint
     ],
     error:
       projectResult.error ??
       dispatchResult.error ??
       incidentResult.error ??
       evidenceResult.error ??
+      snapshotResult.error ??
       conversationResult.error
   };
 }
