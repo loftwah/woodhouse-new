@@ -72,7 +72,9 @@ if (isPreview) {
         </nav>
         <h1 {...entry?.edit.title}>{editorial.title}</h1>
         <p class="article-meta">
-          {editorial.kind} · Reviewed
+          {/* The explicit space matters: JSX drops a line break between two text
+              nodes, which rendered "Reviewed28 September 2026". */}
+          {editorial.kind} · Reviewed{" "}
           {formatReviewDate(editorial.reviewDate) ?? editorial.reviewDate}
         </p>
         <p class="dossier-hero__summary" {...entry?.edit.deck}>

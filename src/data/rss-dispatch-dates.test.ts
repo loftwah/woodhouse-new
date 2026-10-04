@@ -34,3 +34,31 @@ test("the feed still has a real date to fall back on", () => {
     "2026-10-04"
   );
 });
+
+// Found by looking at the deployed page rather than at a green test suite: the
+// article meta line rendered "Reviewed28 September 2026". JSX drops a line break
+// between two text nodes, so wrapping the review date onto its own line silently
+// removed the space in front of it. Typecheck, unit tests and `audit:pages` all
+// passed while the page read wrong.
+const dispatchPage = await readFile(
+  new URL("../pages/dispatches/[slug].astro", import.meta.url),
+  "utf8"
+);
+
+test("the article meta line keeps the space before the review date", () => {
+  assert.match(
+    dispatchPage,
+    /Reviewed\{" "\}/,
+    'the review date needs an explicit {" "} — a JSX line break is not whitespace'
+  );
+  assert.doesNotMatch(dispatchPage, /Reviewed\n\s*\{formatReviewDate/);
+});
+
+test("the article meta line states the review date, not a publication date", () => {
+  assert.match(dispatchPage, /formatReviewDate\(editorial\.reviewDate\)/);
+  assert.doesNotMatch(
+    dispatchPage,
+    /· Published \$\{new Date\(editorial\.publishedAt\)/,
+    "the install instant must not be shown to a reader as a publication date"
+  );
+});

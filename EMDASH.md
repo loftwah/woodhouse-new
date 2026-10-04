@@ -27,12 +27,12 @@ The 60-second declaration above describes the **edge**. It does not describe how
 
 Woodhouse installs its reviewed model by replaying SQL, and upstream EmDash has no programmatic purge path for content written that way ([issue 2435](https://github.com/emdash-cms/emdash/issues/2435)). Three layers therefore compose the real bound: the KV object cache (`defaultTtl: 300`), the edge lifetime (60s) and its stale window (60s). A public page reads seven collections, and each query carries its own cache key, so the last key to expire gates visibility.
 
-**Measured on preview, 5 October 2026: 864 seconds** (14m 24s) from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds. The record was reverted afterwards.
+**Measured on preview, 5 October 2026: 864 s and 698 s** on two independent runs, from a direct D1 write to the token appearing on the plain public URL, polled every 5 seconds and reverted afterwards. Treat the visibility window as **10–15 minutes**, not as the 120 seconds the edge header implies, and not as a fixed number: the samples differ by 166 s because each of the seven query cache keys expires on its own clock, and whichever expires last gates the page.
 
 Two things follow, and both matter more than the number:
 
 - **The edge cache is not poisoned.** Entries created before the `Cache-Control` fix did expire on their own. An earlier belief that they would not self-heal, and that a dashboard purge was needed, was wrong — the write did become visible, just slowly.
-- **The declared edge lifetime overstates end-to-end freshness.** A page can be revalidated from the edge every 60 seconds and still serve up to a stale read model for roughly a quarter of an hour. The header is not lying about the edge; it is simply not the whole bound.
+- **The declared edge lifetime overstates end-to-end freshness.** A page can be revalidated from the edge every 60 seconds and still serve a stale read model for ten to fifteen minutes. The header is not lying about the edge; it is simply not the whole bound.
 
 This only affects writes made outside the Worker. EmDash invalidates the Astro cache by tag when a record is published through it, so an editor publishing in the Admin is not waiting on this window; an operator who installs the content model with `pnpm run emdash:seed:remote` is. `pnpm run measure:visibility` measures the number rather than assuming it, and its probe reverts the record it writes.
 
