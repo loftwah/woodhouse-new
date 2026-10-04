@@ -133,6 +133,7 @@ for (const path of [
   "/projects/",
   "/dispatches/",
   "/agents/facts.json",
+  "/build.json",
   "/llms.txt",
   "/sitemap.xml",
   "/rss.xml"

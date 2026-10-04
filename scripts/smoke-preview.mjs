@@ -21,7 +21,8 @@ const fixedPaths = [
   "/robots.txt",
   "/rss.xml",
   "/sitemap.xml",
-  "/agents/facts.json"
+  "/agents/facts.json",
+  "/build.json"
 ];
 
 function fail(message) {

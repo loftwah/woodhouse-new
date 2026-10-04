@@ -6,6 +6,7 @@ import { d1, kvCache, r2, sandbox } from "@emdash-cms/cloudflare";
 import auditLog from "@emdash-cms/plugin-audit-log";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
+import { buildIdentityIntegration } from "./scripts/build-identity.mjs";
 
 const siteOrigin =
   process.env.WOODHOUSE_SITE_URL ??
@@ -89,10 +90,12 @@ export default defineConfig({
     "/evidence/[slug]/": { maxAge: 60, swr: 60, tags: ["woodhouse-evidence"] },
     "/incidents/[slug]/": { maxAge: 60, swr: 60, tags: ["woodhouse-incidents"] },
     "/agents/facts.json": { maxAge: 60, swr: 60, tags: ["woodhouse-facts"] },
+    "/build.json": { maxAge: 60, swr: 60, tags: ["woodhouse-build"] },
     "/rss.xml": { maxAge: 60, swr: 60, tags: ["woodhouse-dispatches"] },
     "/sitemap.xml": { maxAge: 60, swr: 60, tags: ["woodhouse-public"] }
   },
   integrations: [
+    buildIdentityIntegration(),
     react(),
     emdash({
       database: d1({ binding: "DB", session: "disabled" }),

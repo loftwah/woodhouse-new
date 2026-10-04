@@ -415,6 +415,32 @@ for (const line of deploymentOutput.split(/\r?\n/)) {
 const workerVersion = /Current Version ID:\s*([0-9a-f-]{36})/i.exec(deploymentOutput)?.[1];
 if (!workerVersion) fail("production deployed, but Wrangler did not report a Worker version ID.");
 
+// The deployed origin has to report the source this run intended to ship. A
+// Worker can answer this even after the local tree moves on, so it is the only
+// evidence that production is serving this build and not an earlier one.
+const buildIdentity = await fetch(new URL("/build.json", productionUrl), {
+  signal: AbortSignal.timeout(30000),
+  redirect: "manual"
+}).catch(() => null);
+if (!buildIdentity?.ok)
+  fail(
+    `production deployed as ${workerVersion} but ${productionUrl}/build.json did not respond, so the live build identity is unproven.`
+  );
+const liveIdentity = await buildIdentity.json().catch(() => null);
+if (liveIdentity?.sourceDigest !== currentSourceDigest)
+  fail(
+    `production reports source digest ${liveIdentity?.sourceDigest ?? "none"} but this run built ${currentSourceDigest}. Production is not serving the build just deployed.`
+  );
+if (liveIdentity?.environment !== "production")
+  fail(
+    `production reports environment ${liveIdentity?.environment ?? "none"}; expected production.`
+  );
+if (liveIdentity?.gitClean !== true)
+  fail("the deployed build was made from a dirty working tree; it has no reviewable commit.");
+console.log(
+  `Production reports the deployed source ${String(liveIdentity.sourceDigest).slice(0, 19)}… from ${liveIdentity.gitCommit?.slice(0, 12) ?? "unknown"}.`
+);
+
 const smokePaths = [
   "/",
   "/projects/",
@@ -423,7 +449,8 @@ const smokePaths = [
   "/sitemap.xml",
   "/robots.txt",
   "/rss.xml",
-  "/agents/facts.json"
+  "/agents/facts.json",
+  "/build.json"
 ];
 let localEnv = new Map();
 try {
