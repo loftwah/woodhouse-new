@@ -137,7 +137,7 @@ const pages: SearchPage[] = [
           {pages.map((page) => (
             <li
               data-search-item
-              data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""}`.toLowerCase()}
+              data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""} ${page.searchText ?? ""}`.toLowerCase()}
             >
               <a href={page.href}>
                 <span>

@@ -1,6 +1,7 @@
 import { decodeSlug, getEmDashCollection, getEmDashEntry, getMenuWithCacheHint } from "emdash";
 import type { CacheHint, ContentEntry } from "emdash";
 import { contentGenerationDigest } from "../data/content-generation";
+import { searchTextFromBlocks } from "../data/search-text";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
 export type WoodhouseProject = {
@@ -58,6 +59,12 @@ export type PublicSearchItem = {
   description: string;
   href: string;
   section: string;
+  /**
+   * Body text used only for matching. EmDash cannot index a block body — see
+   * `src/data/search-text.ts` — so this is the application-side projection of it.
+   * It is never rendered, so it cannot widen what a reader sees.
+   */
+  searchText?: string;
 };
 
 function dateToIso(value: Date | null | undefined): string | null {
@@ -599,19 +606,22 @@ export async function listPublicSearchItems() {
       title: project.name,
       description: `${project.discipline}. ${project.summary}`,
       href: `/projects/${project.slug}/`,
-      section: "Projects"
+      section: "Projects",
+      searchText: `${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
       title: dispatch.title,
       description: `${dispatch.kind}. ${dispatch.deck}`,
       href: `/dispatches/${dispatch.slug}/`,
-      section: dispatch.kind
+      section: dispatch.kind,
+      searchText: `${dispatch.lead} ${searchTextFromBlocks(dispatch.content)}`
     })),
     ...incidentResult.incidents.map((item) => ({
       title: item.data.title,
       description: item.data.what_happened,
       href: `/incidents/${item.id}/`,
-      section: "Incidents"
+      section: "Incidents",
+      searchText: `${item.data.root_cause} ${item.data.evidence} ${item.data.factory_change} ${item.data.later_reuse ?? ""}`
     })),
     ...evidenceResult.evidence.map((item) => ({
       title: item.data.title,
