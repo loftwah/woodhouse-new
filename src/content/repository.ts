@@ -1,6 +1,7 @@
 import { decodeSlug, getEmDashCollection, getEmDashEntry, getMenuWithCacheHint } from "emdash";
 import type { CacheHint, ContentEntry } from "emdash";
 import { contentGenerationDigest } from "../data/content-generation";
+import { byDispatchDate } from "../data/dispatch-dates";
 import { searchTextFromBlocks } from "../data/search-text";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
@@ -138,6 +139,8 @@ function toEditorialDispatch(
     lesson: data.lesson,
     content: data.content ?? [],
     featuredImage: data.featured_image ?? null,
+    // `src/data/dispatch-dates.ts` explains why this is only the EmDash
+    // timestamp and not the date the record is filed under.
     publishedAt: dateToIso(data.publishedAt),
     updatedAt: dateToIso(data.updatedAt)
   };
@@ -197,9 +200,13 @@ export async function listPublishedDispatches() {
   let cursor: string | undefined;
 
   do {
+    // Ordered by `review_date`, not `published_at`. The reviewed model is
+    // installed by replaying SQL, so `published_at` carries the install instant
+    // for every seeded dispatch and orders the journal by delivery, not by
+    // chronology. See `src/data/dispatch-dates.ts`.
     const result = await getEmDashCollection("dispatches", {
       status: "published",
-      orderBy: { published_at: "desc" },
+      orderBy: { review_date: "desc" },
       limit: 100,
       ...(cursor ? { cursor } : {})
     });
@@ -212,10 +219,12 @@ export async function listPublishedDispatches() {
   } while (cursor);
 
   return {
-    dispatches: entries.flatMap((entry) => {
-      const dispatch = toEditorialDispatch(entry);
-      return dispatch ? [dispatch] : [];
-    }),
+    dispatches: byDispatchDate(
+      entries.flatMap((entry) => {
+        const dispatch = toEditorialDispatch(entry);
+        return dispatch ? [dispatch] : [];
+      })
+    ),
     error: undefined,
     cacheHint: mergeCacheHints(...cacheHints)
   };

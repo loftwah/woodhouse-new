@@ -21,6 +21,11 @@ if (projectResult.error || dispatchResult.error)
   });
 const projects = projectResult.projects;
 const firstNote = dispatchResult.dispatches.find((note) => note.kind === "Founding essay");
+// The newest portfolio report. The list is already ordered newest-first by
+// review date, so this is the current report rather than whichever one happens
+// to sort first. It is the entry point the EmDash migration dropped, and the
+// homepage is the only place a first-time visitor is offered the report.
+const latestReport = dispatchResult.dispatches.find((note) => note.kind === "Portfolio report");
 if (Astro.cache?.enabled) {
   for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(dispatchResult.cacheHint);
@@ -86,6 +91,11 @@ export const prerender = false;
           <a class="text-link" href="/dispatches/i-didnt-mean-to-build-a-software-factory/">
             Read the story <span aria-hidden="true">↗</span>
           </a>
+          {latestReport && (
+            <a class="text-link" href={`/dispatches/${latestReport.slug}/`}>
+              Read the portfolio report <span aria-hidden="true">↗</span>
+            </a>
+          )}
         </div>
         <p class="home-intro__note">
           <strong>A dated public readout, not a live feed.</strong> Every project has a clear

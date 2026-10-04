@@ -3,6 +3,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import EditorialBlocks from "../../components/EditorialBlocks.astro";
 import { Image } from "emdash/ui";
 import { decodeEditorialSlug, getEditorialDispatch } from "../../content/repository";
+import { validReviewDay } from "../../data/dispatch-dates";
+import { formatReviewDate } from "../../data/review-date";
 import { dispatchSocialCard } from "../../data/social-cards";
 
 export const prerender = false;
@@ -41,7 +43,11 @@ if (isPreview) {
     currentPath="/dispatches/"
     type="article"
     pageType="article"
-    publishedAt={editorial.publishedAt ?? undefined}
+    // `datePublished` is the review date. `publishedAt` is EmDash's install
+    // timestamp for a SQL-replayed record, and emitting it as an article
+    // publication date would tell every reader and crawler the dispatch is
+    // days younger than the evidence it reports.
+    publishedAt={validReviewDay(editorial.reviewDate) ?? undefined}
     modifiedAt={editorial.updatedAt ?? undefined}
     authorName={entry?.data.bylines?.[0]?.byline.displayName ?? "Dean Lofts"}
     contentRef={{ collection: "dispatches", id: entry?.id ?? editorial.slug, slug: editorial.slug }}
@@ -66,10 +72,8 @@ if (isPreview) {
         </nav>
         <h1 {...entry?.edit.title}>{editorial.title}</h1>
         <p class="article-meta">
-          {editorial.kind} · Reviewed {editorial.reviewDate}
-          {editorial.publishedAt
-            ? ` · Published ${new Date(editorial.publishedAt).toLocaleDateString("en-AU", { dateStyle: "long", timeZone: "Australia/Melbourne" })}`
-            : ""}
+          {editorial.kind} · Reviewed
+          {formatReviewDate(editorial.reviewDate) ?? editorial.reviewDate}
         </p>
         <p class="dossier-hero__summary" {...entry?.edit.deck}>
           {editorial.deck}

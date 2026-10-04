@@ -22,12 +22,6 @@ function xmlSafe(value: string) {
     .replaceAll("'", "&apos;");
 }
 
-function dateOnly(value: string | null | undefined): string | undefined {
-  if (!value) return undefined;
-  const date = new Date(value);
-  return Number.isNaN(date.valueOf()) ? undefined : date.toISOString().slice(0, 10);
-}
-
 export const GET: APIRoute = async ({ cache }) => {
   const [
     projectResult,
@@ -90,7 +84,11 @@ export const GET: APIRoute = async ({ cache }) => {
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
       path: `/dispatches/${encodeURIComponent(dispatch.slug)}/`,
-      lastmod: dateOnly(dispatch.updatedAt ?? dispatch.publishedAt) ?? dispatch.reviewDate
+      // The review date, not `published_at`. Every seeded dispatch carries the
+      // same SQL install instant as its publication date, so a sitemap built
+      // from it would tell a crawler the whole journal was rewritten on the day
+      // the content model was delivered.
+      lastmod: dispatch.reviewDate
     })),
     ...evidenceResult.evidence.map((item) => ({
       path: `/evidence/${encodeURIComponent(item.id)}/`,

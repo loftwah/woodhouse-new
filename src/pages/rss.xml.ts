@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { listPublishedDispatches } from "../content/repository";
+import { validReviewDay } from "../data/dispatch-dates";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -13,9 +14,19 @@ function xmlSafe(value: string) {
     .replaceAll("'", "&apos;");
 }
 
-function publicationDate(value: string | null, reviewed: string) {
-  const date = value ? new Date(value) : new Date(`${reviewed}T00:00:00+10:00`);
-  return Number.isNaN(date.valueOf()) ? new Date(`${reviewed}T00:00:00+10:00`) : date;
+/**
+ * The instant a feed reader should treat an item as published.
+ *
+ * The review date wins. `published_at` is EmDash's own timestamp, and because
+ * the reviewed model is installed by replaying SQL it holds the install instant
+ * for every seeded dispatch — a feed of `pubDate` values one day old, describing
+ * work reviewed up to a week earlier.
+ */
+function publicationDate(publishedAt: string | null, reviewed: string | null) {
+  const reviewInstant = validReviewDay(reviewed) ? new Date(`${reviewed}T00:00:00+10:00`) : null;
+  if (reviewInstant && !Number.isNaN(reviewInstant.valueOf())) return reviewInstant;
+  const published = publishedAt ? new Date(publishedAt) : null;
+  return published && !Number.isNaN(published.valueOf()) ? published : new Date(0);
 }
 
 export const GET: APIRoute = async ({ cache }) => {

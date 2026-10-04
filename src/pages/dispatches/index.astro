@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { listPublishedDispatches } from "../../content/repository";
+import { formatReviewDate } from "../../data/review-date";
 
 const result = await listPublishedDispatches();
 if (result.error) console.error("Failed to load published EmDash dispatches:", result.error);
@@ -46,12 +47,7 @@ export const prerender = false;
           </div>
           <div class="ledger-note__side">
             <strong>{dispatch.kind}</strong>
-            {dispatch.publishedAt
-              ? new Date(dispatch.publishedAt).toLocaleDateString("en-AU", {
-                  dateStyle: "medium",
-                  timeZone: "Australia/Melbourne"
-                })
-              : dispatch.reviewDate}
+            {formatReviewDate(dispatch.reviewDate) ?? dispatch.reviewDate}
             <br />
             Evidence reviewed {dispatch.reviewDate}
           </div>
