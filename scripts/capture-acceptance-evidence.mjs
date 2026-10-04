@@ -11,6 +11,10 @@ import { spawnSync } from "node:child_process";
 // Checks that need a signed-in operator session (editor journey, media upload,
 // menu editing, MCP authoring, enquiry delivery, backup retention) are listed
 // as outstanding rather than guessed at.
+//
+// A check moves out of that list only when it can be observed from outside a
+// session without asserting something untrue. `publicDraftIsolation` did: the
+// leak direction needs no session, only a draft row and a set of public requests.
 
 const root = process.cwd();
 const PREVIEW = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
@@ -208,6 +212,103 @@ await artifact(
   ]
 );
 
+/**
+ * Public draft isolation, observed from outside a session.
+ *
+ * This was listed as needing an authenticated editor, and it does for the
+ * *publish* direction. The leak direction needs no session at all: write a draft
+ * straight into D1 and ask every public surface whether it can be reached. A
+ * draft is `status: 'draft'` with `public_safe = 1`, so it is public-marked but
+ * unpublished — exactly the state a real draft occupies, and the one a filter
+ * that checked only `public_safe` would leak.
+ *
+ * The draft is removed afterwards, whether the observation passed or failed.
+ */
+const DRAFT_SLUG = `draft-isolation-probe-${Date.now().toString(36)}`;
+const DRAFT_MARKER = `draft-isolation-marker-${Date.now().toString(36)}`;
+const draftQuote = (value) => `'${String(value).replaceAll("'", "''")}'`;
+
+async function surfaceMentionsDraft(path) {
+  const response = await fetch(`${PREVIEW}${path}?evidence=${Date.now()}`, {
+    signal: AbortSignal.timeout(30000),
+    redirect: "manual"
+  });
+  return {
+    path,
+    status: response.status,
+    leaked: (await response.text()).includes(DRAFT_MARKER)
+  };
+}
+
+const isolation = [];
+let draftRemoved = false;
+try {
+  const before = query(`SELECT COUNT(*) AS n FROM ec_dispatches`);
+  query(
+    `INSERT INTO ec_dispatches (id, slug, status, title, kind, deck, review_date, source_reference, lead, lesson, public_safe, content) ` +
+      `VALUES (${draftQuote(DRAFT_SLUG)}, ${draftQuote(DRAFT_SLUG)}, 'draft', ` +
+      `${draftQuote("Draft isolation probe")}, ${draftQuote("Field note")}, ${draftQuote(DRAFT_MARKER)}, ` +
+      `${draftQuote("2026-10-05")}, ${draftQuote("Automated draft-isolation probe.")}, ` +
+      `${draftQuote(DRAFT_MARKER)}, ${draftQuote(DRAFT_MARKER)}, 1, '[]')`
+  );
+  const present = query(
+    `SELECT slug, status, public_safe FROM ec_dispatches WHERE slug = ${draftQuote(DRAFT_SLUG)}`
+  );
+  isolation.push(
+    `Wrote a draft dispatch \`${DRAFT_SLUG}\` directly into preview D1: ` +
+      (present[0]
+        ? `status=${present[0].status}, public_safe=${present[0].public_safe}. ` +
+          "The draft is marked public but unpublished, which is the state a filter checking only `public_safe` would leak."
+        : "the row could not be read back. ")
+  );
+  for (const path of [
+    "/",
+    "/dispatches/",
+    "/sitemap.xml",
+    "/rss.xml",
+    "/llms.txt",
+    "/agents/facts.json",
+    "/projects/"
+  ]) {
+    const surface = await surfaceMentionsDraft(path);
+    isolation.push(
+      `\`${surface.path}\` HTTP ${surface.status} — draft marker ${surface.leaked ? "VISIBLE (LEAK)" : "absent"}.`
+    );
+  }
+  const direct = await surfaceMentionsDraft(`/dispatches/${DRAFT_SLUG}/`);
+  isolation.push(
+    `\`/dispatches/${DRAFT_SLUG}/\` HTTP ${direct.status} — ${
+      direct.status === 404 ? "404, as an unpublished record should be" : "returned a page"
+    }.`
+  );
+  const after = query(`SELECT COUNT(*) AS n FROM ec_dispatches`);
+  isolation.push(
+    `Draft count in the collection: ${before[0]?.n ?? "?"} before, ${after[0]?.n ?? "?"} with the probe present.`
+  );
+} finally {
+  query(`DELETE FROM ec_dispatches WHERE slug = ${draftQuote(DRAFT_SLUG)}`);
+  const remaining = query(
+    `SELECT COUNT(*) AS n FROM ec_dispatches WHERE slug = ${draftQuote(DRAFT_SLUG)}`
+  );
+  draftRemoved = Number(remaining[0]?.n ?? 0) === 0;
+}
+isolation.push(`Probe draft removed after the observation: ${draftRemoved ? "yes" : "NO"}.`);
+const anyLeak = isolation.some(
+  (line) => line.includes("LEAK") || line.includes("draft marker VISIBLE")
+);
+await artifact(
+  "publicDraftIsolation",
+  "Public draft isolation against preview",
+  "Inserted a draft dispatch directly into preview D1 with `public_safe = 1` and `status = 'draft'`, then asked every public surface whether it could be reached. The probe row is deleted afterwards, in a `finally`, whether the observation passed or not.",
+  isolation,
+  [
+    "That EmDash's own publish path refuses an incomplete draft. This checks the leak direction only: a draft that is already in the database must not be readable on a public route, in the sitemap, the feed, the search index, Agent Reception or the LLM summary.",
+    "That a *private* draft leaks nothing. The probe is `public_safe = 1` because that is the harder case; a private draft has one more filter in front of it.",
+    "Nothing about an authenticated editor session, a signed preview URL or the Admin surface.",
+    `The probe row was removed: ${draftRemoved ? "confirmed" : "NOT CONFIRMED — inspect preview D1 for " + DRAFT_SLUG}.`
+  ]
+);
+
 const conversations = query("SELECT COUNT(*) AS n FROM ec_conversations");
 const conversationPublicSafe = query(
   "SELECT COUNT(*) AS n FROM ec_conversations WHERE public_safe = 1 AND source_reviewed = 1"
@@ -242,5 +343,5 @@ await artifact(
 );
 
 console.log(
-  "\nOutstanding and requiring an authenticated operator session: editorDraftRevisionPreviewSchedulePublish, searchRssSitemapUpdates, mediaUploadAndRender, publicDraftIsolation, menuEditing, agentMcpSchemaReadAndDraftReadback, agentMcpRoleBoundary, enquiryDelivery, backupRecoveryDrill, automaticBackupRetention, scheduledPublishCron, desktopAndMobile."
+  "\nOutstanding and requiring an authenticated operator session: editorDraftRevisionPreviewSchedulePublish, searchRssSitemapUpdates, mediaUploadAndRender, menuEditing, agentMcpSchemaReadAndDraftReadback, agentMcpRoleBoundary, enquiryDelivery, backupRecoveryDrill, automaticBackupRetention, scheduledPublishCron, desktopAndMobile."
 );
