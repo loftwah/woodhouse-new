@@ -14,6 +14,7 @@
     "deadcode": "knip",
     "audit": "node scripts/audit-dependencies.mjs",
     "audit:pages": "node scripts/audit-pages.mjs",
+    "measure:visibility": "node scripts/measure-content-visibility.mjs",
     "diagrams:sizes": "node scripts/diagram-sizes.mjs",
     "diagrams:sizes:check": "node scripts/diagram-sizes.mjs --check",
     "typecheck": "astro check && tsc --noEmit",
