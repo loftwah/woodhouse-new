@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { listProjectRecords, listPublicEvidence } from "../../content/repository";
+import { portfolioReadout } from "../../data/portfolio";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -43,7 +44,7 @@ export const GET: APIRoute = async ({ cache }) => {
         : null
     };
   });
-  const reviewDate = projectResult.projects[0]?.reviewDate ?? null;
+  const readout = portfolioReadout(projectResult.projects);
   const pirates = projectResult.projects.find((project) => project.slug === "pirates");
   const bubbles = projectResult.projects.find((project) => project.slug === "bubbles");
   const max = projectResult.projects.find((project) => project.slug === "max");
@@ -51,12 +52,17 @@ export const GET: APIRoute = async ({ cache }) => {
     name: "WOODHOUSE",
     description: "The Loftwah Software Factory: a public observatory and engineering journal.",
     recordType: "operator-reviewed public snapshot",
-    reviewed: reviewDate,
-    source: projectResult.projects[0]?.snapshotSource ?? null,
-    currentAsOf: reviewDate,
+    reviewed: readout.reviewDate,
+    source: readout.snapshotSource ?? null,
+    currentAsOf: readout.reviewDate,
     liveTelemetry: false,
+    // A portfolio is reviewed project by project, so the record reports the newest
+    // review and how many projects predate it rather than one date for all of them.
+    portfolioReviewed: readout.reviewDate,
+    projectsReviewedEarlier: readout.olderCount,
     repositoryPolicy:
-      "Private repository contents are not published or connected to this endpoint.",
+      "Private repository contents are not published or connected to this endpoint. " +
+      "A project whose repository is public is summarised from that repository and its published site.",
     projectCount: projects.length,
     projects,
     knownAnswers: {
@@ -67,19 +73,19 @@ export const GET: APIRoute = async ({ cache }) => {
             : "see current reviewed project state",
         reason: pirates?.proofBoundary ?? "No public Pirates state is available.",
         project: "pirates",
-        reviewed: pirates?.reviewDate ?? reviewDate
+        reviewed: pirates?.reviewDate ?? readout.reviewDate
       },
       bubblesExactProductionBuild: {
         answer: "not established by this public snapshot",
         reason: "No exact deployed build identity or production receipt is published here.",
         project: "bubbles",
-        reviewed: bubbles?.reviewDate ?? reviewDate
+        reviewed: bubbles?.reviewDate ?? readout.reviewDate
       },
       maxPhysicalWalker: {
         answer: "not physically proven",
         reason: max?.proofBoundary ?? "No public MAX state is available.",
         project: "max",
-        reviewed: max?.reviewDate ?? reviewDate
+        reviewed: max?.reviewDate ?? readout.reviewDate
       }
     },
     contact: {

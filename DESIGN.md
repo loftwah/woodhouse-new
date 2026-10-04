@@ -22,7 +22,7 @@ The site is dark by design on every device. Do not follow the operating-system a
 
 ## Composition
 
-- The homepage identifies the human operator and coding agents, then places the eight-project D2 network in the first view. The work map and the release/evidence flow are distinct diagrams because they explain different things.
+- The homepage identifies the human operator and coding agents, then places the project D2 network in the first view. The work map and the release/evidence flow are distinct diagrams because they explain different things.
 - Project artwork is fetched from each project's own published page metadata and shown from the source image URL at its original 1200×630 aspect ratio. Titles, descriptions, favicons and links identify the source. Do not copy or recreate source-site OG artwork as Woodhouse art.
 - Source-page metadata is read during the Woodhouse build; the image itself stays at the source URL. A source-site update appears on the next Woodhouse build (and an image-file update at a stable source URL is served directly).
 - Credit product artwork to its project and Woodhouse-made illustrations to Woodhouse. Never present a Woodhouse illustration as product artwork.

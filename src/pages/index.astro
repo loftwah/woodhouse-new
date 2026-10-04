@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../data/review-date";
+import { portfolioReadout } from "../data/portfolio";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import ProjectNetwork from "../components/ProjectNetwork.astro";
@@ -24,9 +25,15 @@ if (Astro.cache?.enabled) {
   for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(dispatchResult.cacheHint);
 }
-const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
-const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
-const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
+// The newest review in the portfolio, not the first project's: projects are
+// reviewed separately, so the first row is not necessarily the current one.
+const readout = portfolioReadout(projects);
+const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
+const snapshotSource = readout.snapshotSource ?? "No public snapshot is available.";
+// The machine-readable example below is about one project, so it carries that
+// project's own review date rather than the portfolio's newest one.
+const piratesReviewDate =
+  projects.find((project) => project.slug === "pirates")?.reviewDate ?? null;
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const featuredProjects = ["bubbles", "protocol-11", "max"].flatMap((slug) => {
   const project = projects.find((item) => item.slug === slug);
@@ -41,7 +48,7 @@ export const prerender = false;
 
 <BaseLayout
   title="WOODHOUSE"
-  description="Eight software projects, a workforce of agents and one human operator. Woodhouse publishes a dated record of what changed and what each project still needs."
+  description="Nine software projects, a workforce of agents and one human operator. Woodhouse publishes a dated record of what changed and what each project still needs."
   path="/"
 >
   <script
@@ -143,7 +150,7 @@ export const prerender = false;
   </section>
   <div class="container home-meta" aria-label="Snapshot details">
     <span>
-      <strong>Reviewed {reviewDateLabel}</strong>
+      <strong>Newest review {reviewDateLabel}</strong>
     </span>
     <span>{projects.length} real projects · one dated public record</span>
   </div>
@@ -168,7 +175,7 @@ export const prerender = false;
       </div>
       <div class="snapshot-band">
         <div class="snapshot-band__label">
-          <span>Reviewed {reviewDateLabel}</span>
+          <span>Newest review {reviewDateLabel}</span>
           <span>{snapshotSource}</span>
         </div>
         <div class="snapshot-band__text">
@@ -194,7 +201,7 @@ export const prerender = false;
         ))}
       </div>
       <p class="source-note">
-        <strong>Snapshot boundary:</strong> reviewed {reviewDateLabel}. The underlying GitHub
+        <strong>Snapshot boundary:</strong> newest review {reviewDateLabel}. The underlying GitHub
         repositories are private; public entries summarise the shareable factory report and do not
         expose issue or pull request content.
       </p>
@@ -256,8 +263,8 @@ export const prerender = false;
             Is Pirates ready for its procedural fork?
           </p>
           <p>
-            No. The {reviewDateLabel} report says the parity gate is still locked. Expansion is
-            waiting for source-backed reconstruction.
+            No. The reviewed record says the parity gate is still locked. Expansion is waiting for
+            source-backed reconstruction.
           </p>
         </div>
         <pre
@@ -269,7 +276,7 @@ pirates
 state: Gate B locked
 parity-first: true
 procedural-fork: not approved
-reviewed: {reviewDate}</pre>
+reviewed: {piratesReviewDate ?? "not reviewed"}</pre>
       </div>
     </div>
   </section>

@@ -1492,6 +1492,28 @@
           "preview_caption": "Artwork from the Social Club site",
           "public_safe": true
         }
+      },
+      {
+        "id": "project-asset-hunter",
+        "slug": "asset-hunter",
+        "status": "published",
+        "data": {
+          "name": "Asset Hunter",
+          "index": "09",
+          "discipline": "Discovery engine · creative and technical reference",
+          "title": "A reference catalogue has to refuse to become an asset library.",
+          "summary": "Asset Hunter catalogues what can be made: creative and technical possibilities across games, interface, branding, motion, audio, 3D, shaders, code and architecture, each with representative examples, build notes, a prompt scaffold and a per-example rights statement. It is a public EmDash site on Cloudflare with a public repository.",
+          "why": "It keeps two things apart that are easy to conflate. Learning that a treatment exists is not permission to copy the asset that demonstrated it, so rights are recorded per example and reference-only material is never presented as cleared.",
+          "teaches": "A public reference product can publish its own evidence — repository, exact commit, catalogue size — and still state plainly what its rights records do not clear.",
+          "site_url": "https://assets.loftwah.com/",
+          "site_og_image": "https://assets.loftwah.com/og.png",
+          "site_og_title": "Asset Hunter — A field guide to what can be made",
+          "site_og_description": "A field guide to what can be made — distinct creative and technical possibilities across games, UI, branding, motion, audio, 3D, shaders, code and architecture, each with representative examples and their rights.",
+          "site_favicon": "https://assets.loftwah.com/favicon.svg",
+          "preview_alt": "The Asset Hunter share card: the catalogue title set on a dark field.",
+          "preview_caption": "Share card published by the Asset Hunter site",
+          "public_safe": true
+        }
       }
     ],
     "factory_snapshots": [
@@ -1505,6 +1527,19 @@
           "source_description": "The shareable factory SITREP supplied for the Woodhouse launch.",
           "scope": "Eight public-safe project summaries supplied for the Woodhouse launch.",
           "editorial_notes": "A dated operator-reviewed summary. It is not a live feed from private repositories.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-04",
+        "slug": "2026-10-04",
+        "status": "published",
+        "data": {
+          "title": "Factory snapshot · 4 October 2026",
+          "reviewed_at": "2026-10-04",
+          "source_description": "The public Asset Hunter repository and site, reviewed with the earlier shareable factory record.",
+          "scope": "Nine public-safe project summaries: the eight launch projects plus Asset Hunter, the first project added from a public repository rather than from a private readout.",
+          "editorial_notes": "A dated operator-reviewed summary, not a live feed. The eight launch projects keep their 28 September 2026 review dates; this snapshot adds one project and does not re-review the others.",
           "public_safe": true
         }
       }
@@ -1659,6 +1694,25 @@
           "proof_boundary": "The current visual direction is not represented as the intended finished experience.",
           "reviewed_at": "2026-09-28",
           "sort_order": 8,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-asset-hunter-2026-10-04",
+        "slug": "asset-hunter-2026-10-04",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-04",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-04",
+          "state": "Public and growing · review work still open",
+          "state_tone": "amber",
+          "current": "The public site serves a wall of 34 possibilities and reports the exact commit it was built from, 149836b4, which was the head of the public repository main branch on 4 October 2026. Fifty-three issues and one image-optimisation pull request are open there, and the recent commit history is dominated by corrections — to counts, to permission state, to search suggestions, to a deploy gate and to brand media going stale — rather than by new surface.",
+          "next_proof": "Close the open rights, abuse-review and release-evidence work before treating the catalogue as a dependable public record: rights correction and takedown, security and hostile-content review of the public catalogue, and production release evidence with a restore drill.",
+          "proof_boundary": "This is a dated observation of a public repository and a public site, not a live feed. It does not establish that any individual catalogue entry has cleared rights, and it says nothing about the state of the catalogue after 4 October 2026.",
+          "reviewed_at": "2026-10-04",
+          "sort_order": 9,
           "public_safe": true
         }
       }
@@ -1846,6 +1900,29 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "The current visual direction is not represented as the intended finished experience."
+        }
+      },
+      {
+        "id": "evidence-asset-hunter-2026-10-04",
+        "slug": "asset-hunter-review-2026-10-04",
+        "status": "published",
+        "data": {
+          "title": "Asset Hunter · the public origin names the commit it serves",
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-04",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-04",
+          "claim": "On 4 October 2026 the public Asset Hunter site reported commit 149836b4 as its build, and that commit was the head of the public repository main branch at the same time.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-04",
+          "reviewed_at": "2026-10-04",
+          "summary": "The site carries its own build identity in the page metadata, so the deployed version can be checked against the repository rather than inferred from a deploy message.",
+          "source_label": "The public repository loftwah/asset-hunter and the public site assets.loftwah.com",
+          "source_url": "https://github.com/loftwah/asset-hunter",
+          "revision": "149836b4ec9cec88d00bccb56fd54c6a6ac62b71",
+          "public_safe": true,
+          "proof_boundary": "One observation of one public origin on one day. A later commit, a rollback or a cached response could change what the site serves without changing this record."
         }
       }
     ],

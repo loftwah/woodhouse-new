@@ -9,14 +9,17 @@ vars: {
 source: "PROJECT SITE\nTitle · artwork · icon" {
   style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
-build: "WOODHOUSE BUILD\nRecords public details" {
+build: "WOODHOUSE BUILD\nReads site details\nUses saved details if offline" {
   style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
-html: "WOODHOUSE DOSSIER\nArtwork + source credit" {
+html: "WOODHOUSE PAGE\nShows the project artwork" {
   style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true
 }
-browser: "YOUR BROWSER\nShows project artwork" {
+browser: "YOUR BROWSER\nLoads the project artwork" {
   style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+}
+fallback: "LOCAL ART FALLBACK\nOnly if source art fails" {
+  style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
 }
 boundary: "PRIVATE DATA\nNever published" {
   style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
@@ -25,4 +28,5 @@ boundary: "PRIVATE DATA\nNever published" {
 source -> build {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
 build -> html {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
 html -> browser {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
+browser -> fallback {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 16}
 source -> boundary {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}

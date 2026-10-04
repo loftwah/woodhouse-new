@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../data/review-date";
+import { portfolioReadout } from "../data/portfolio";
 import ProjectRow from "../components/ProjectRow.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import { listProjectRecords } from "../content/repository";
@@ -12,15 +13,18 @@ if (result.error)
   });
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
-const reviewDate = projects[0]?.reviewDate ?? "Review date unavailable";
-const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
-const snapshotSource = projects[0]?.snapshotSource ?? "No public snapshot is available.";
+// The portfolio is reviewed project by project, so the readout reports the
+// newest review and says how many projects predate it. Reading one project's
+// date would present an older review as the current state of the whole floor.
+const readout = portfolioReadout(projects);
+const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
+const snapshotSource = readout.snapshotSource ?? "No public snapshot is available.";
 export const prerender = false;
 ---
 
 <BaseLayout
   title="The factory floor"
-  description="An operator-reviewed snapshot of eight software projects, their current work and the proof each one still needs."
+  description="An operator-reviewed snapshot of nine software projects, their current work and the proof each one still needs."
   path="/factory/"
   currentPath="/factory/"
   image="/og/factory.jpg"
@@ -42,10 +46,17 @@ export const prerender = false;
       <div class="page-intro__aside">
         <strong>Portfolio readout · {reviewDateLabel}</strong>
         {snapshotSource} Each state is a reviewed summary, not a live GitHub feed.
-        {projects[0]?.snapshotId && (
+        {readout.olderCount > 0 && (
           <>
             {" "}
-            <a href={`/snapshots/${projects[0].snapshotId}/`}>
+            {readout.olderCount} of {projects.length} projects were last reviewed on an earlier
+            date; every row states its own.
+          </>
+        )}
+        {readout.snapshotId && (
+          <>
+            {" "}
+            <a href={`/snapshots/${readout.snapshotId}/`}>
               Read the dated snapshot archive <span aria-hidden="true">↗</span>
             </a>
           </>
@@ -86,9 +97,10 @@ export const prerender = false;
         </div>
       </div>
       <p class="source-note">
-        <strong>Data policy:</strong> repository issues and pull requests are not exposed here
-        because the project repositories are private. The public record uses only the shareable
-        project readout provided for Woodhouse.
+        <strong>Data policy:</strong> most project repositories are private, so their issues and
+        pull requests are not exposed here. The public record uses the shareable project readout
+        provided for Woodhouse, plus the public repository and published site of any project whose
+        repository is public.
       </p>
     </div>
   </section>

@@ -12,7 +12,7 @@ Woodhouse is an evidence-led public observatory, engineering journal, project po
 - Agent Reception publishes a bounded, machine-readable summary without exposing private repository contents.
 - Architecture and doctrine explain the operating model.
 
-The repositories behind seven of the eight projects are private. Public copy comes from the shareable factory report supplied for this site. Woodhouse does not call a snapshot live telemetry, and does not publish private issue text or credentials.
+Most project repositories are private. Public copy comes from the shareable factory report supplied for this site, plus the public repository and published site of any project whose repository is public. Woodhouse does not call a snapshot live telemetry, and does not publish private issue text or credentials.
 
 ## Local work
 

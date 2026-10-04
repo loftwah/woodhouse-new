@@ -25,7 +25,7 @@ Both live D1 databases report Cloudflare region `OC` and read replication `disab
 
 ## Content model
 
-The validated seed is `seed/seed.json`. Its source-backed starter records are one dated factory snapshot, eight project identities, eight linked project states, eight evidence records, four edited dispatches and one public incident. The conversations collection is empty by design. Those values come from the reviewed public-safe source snapshot, not a live query.
+The validated seed is `seed/seed.json`. Its source-backed starter records are two dated factory snapshots, nine project identities, nine linked project states, nine evidence records, six edited dispatches and one public incident. The conversations collection is empty by design. Those values come from the reviewed public-safe source snapshot, not a live query.
 
 | Collection          | Role                                                                            | Required editorial controls                                                                  |
 | ------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |

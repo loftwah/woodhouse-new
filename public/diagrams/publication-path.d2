@@ -8,16 +8,18 @@ source: {
 
 build: {
   direction: down
-  woodhouse: "WOODHOUSE\nRecords public details" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
+  woodhouse: "WOODHOUSE\nReads site details" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
   private: "PRIVATE DATA\nNever published" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
   woodhouse -> private {style.stroke: "#FF746A"; style.stroke-dash: 7}
 }
 
 delivery: {
   direction: down
-  page: "WOODHOUSE DOSSIER\nProject artwork + credit" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
-  browser: "BROWSER\nShows the project artwork" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
+  page: "STATIC PAGE\nShows the project artwork" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
+  browser: "BROWSER\nLoads source artwork" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
+  fallback: "LOCAL FALLBACK\nIf source image fails" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
   page -> browser
+  browser -> fallback {style.stroke: "#FF746A"; style.stroke-dash: 7}
 }
 
 source.site -> build.woodhouse

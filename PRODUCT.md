@@ -14,7 +14,7 @@ Claims have a source and a review date. Implementation, qualification, productio
 
 ## First release
 
-The first release publishes the founding essay, eight project dossiers, engineering incidents, the operating doctrine, architecture and Agent Reception. It uses a dated, reviewed public snapshot because the project repositories are private. It does not claim to provide live project telemetry or expose private issue contents.
+The first release publishes the founding essay, project dossiers, engineering incidents, the operating doctrine, architecture and Agent Reception. It uses a dated, reviewed public snapshot because the project repositories are private. It does not claim to provide live project telemetry or expose private issue contents.
 
 EmDash owns editorial drafts, revisions, media and publication. New dispatches use the Woodhouse page layout and a required source reference and review date. The public-safe factory snapshot and live GitHub state remain outside EmDash; publishing a CMS entry does not make private repository data public.
 
