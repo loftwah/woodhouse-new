@@ -52,3 +52,5 @@ The remaining constraint on a first production deploy is not the content model. 
 See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.
 
 See [PLATFORM.md](PLATFORM.md) for what the Cloudflare platform offers this factory, what is actually in use, and the recorded decision on each capability that is not. Read it before proposing a Cloudflare service; it is the map that says which question is already answered.
+
+`lab/` holds executable experiments that stay outside the request and build paths: `lab/artifacts-lifecycle` proves the agent task-workspace lifecycle over ordinary Git, and `lab/evidence-replay` proves that one synthetic corpus replays into two independently checkpointed projections under duplicate, out-of-order, malformed, oversized, interrupted, lost-acknowledgement and expired-lease delivery. Both ran to a recorded defer decision in `lab/*/README.md`. Run them with `pnpm run lab:artifacts`, `pnpm run lab:evidence` and `pnpm run lab:test`. Nothing in `lab/` is imported by the site, and no lab artefact is published.
