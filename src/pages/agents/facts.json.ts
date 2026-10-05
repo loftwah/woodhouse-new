@@ -48,6 +48,7 @@ export const GET: APIRoute = async ({ cache }) => {
   const pirates = projectResult.projects.find((project) => project.slug === "pirates");
   const bubbles = projectResult.projects.find((project) => project.slug === "bubbles");
   const max = projectResult.projects.find((project) => project.slug === "max");
+  const assetHunter = projectResult.projects.find((project) => project.slug === "asset-hunter");
   const body = {
     name: "WOODHOUSE",
     description: "The Loftwah Software Factory: a public observatory and engineering journal.",
@@ -80,6 +81,21 @@ export const GET: APIRoute = async ({ cache }) => {
         reason: "No exact deployed build identity or production receipt is published here.",
         project: "bubbles",
         reviewed: bubbles?.reviewDate ?? readout.reviewDate
+      },
+      assetHunterExternalUse: {
+        answer: "no recorded external use",
+        reason: assetHunter?.proofBoundary ?? "No public Asset Hunter state is available.",
+        project: "asset-hunter",
+        reviewed: assetHunter?.reviewDate ?? readout.reviewDate
+      },
+      sharedAgentSafetyLayer: {
+        answer: "no shared implementation; checked and not adopted",
+        reason:
+          "The factory's interactive products share agent doctrine, not code. Browser contention, visual-evidence " +
+          "comparison, long-run reporting and deployment verification were reviewed on 5 October 2026 and resolve to " +
+          "different mechanisms with different failure modes. No product imports another. Nothing is being extracted.",
+        project: null,
+        reviewed: readout.reviewDate
       },
       maxPhysicalWalker: {
         answer: "not physically proven",

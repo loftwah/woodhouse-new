@@ -6,6 +6,7 @@ import {
   listPublicIncidents,
   listPublishedDispatches
 } from "../content/repository";
+import { portfolioReadout } from "../data/portfolio";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -28,7 +29,10 @@ export const GET: APIRoute = async ({ cache }) => {
     if (hint) cache.set(hint);
 
   const projects = projectResult.projects;
-  const reviewDate = projects[0]?.reviewDate ?? null;
+  // The newest review in the portfolio, not the first project's. This file is
+  // read by agents deciding how much to trust the record, so quoting the
+  // oldest project's date here understates how current part of it is.
+  const reviewDate = portfolioReadout(projects).reviewDate;
   const withPublicSite = projects.filter((project) => project.siteUrl).length;
   const url = (path: string) => `${siteOrigin}${path}`;
 

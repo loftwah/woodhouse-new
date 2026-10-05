@@ -49,6 +49,8 @@ EmDash's authenticated content MCP endpoint is `/_emdash/api/mcp`. Connect only 
 
 ## Refreshing the public snapshot
 
-The current portfolio snapshot is dated 28 September 2026. Update the `projects`, `factory_snapshots`, `project_statuses` and `evidence_records` in EmDash from a reviewed, public-safe report before changing review dates. Do not copy private issue or pull request bodies into public data.
+The newest portfolio snapshot is dated 5 October 2026; it re-reviewed Asset Hunter only, and the eight launch projects keep their 28 September 2026 review dates. A portfolio-level review is not a fresh review of each project, so a snapshot never re-dates projects whose own evidence was not re-read.
+
+Update the `projects`, `factory_snapshots`, `project_statuses` and `evidence_records` in EmDash from a reviewed, public-safe report before changing review dates. Do not copy private issue or pull request bodies into public data. Check any claim that a deployed origin can support against that origin rather than against a deploy message, and record a supplied analysis as a hypothesis to be tested rather than as a fact to be republished: `scripts/apply-portfolio-brain.py` is the worked example of that pass, and it is idempotent.
 
 `pnpm run social-cards` regenerates the page-specific raster previews from the shared artwork. It requires ImageMagick on the machine running it. Each dispatch has its own card under `public/og/dispatches/`, named for its slug; a dispatch without one falls back to the shared factory card.

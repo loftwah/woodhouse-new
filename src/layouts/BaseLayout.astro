@@ -9,6 +9,7 @@ import type { SeoContentInput } from "emdash/seo";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashHead } from "emdash/ui";
 import { getPublicMenu, listProjectRecords, listPublicSearchItems } from "../content/repository";
+import { portfolioReadout } from "../data/portfolio";
 import { formatReviewDate } from "../data/review-date";
 
 type Props = {
@@ -136,7 +137,13 @@ if (Astro.cache?.enabled) {
 const primaryLinks = primaryResult.menu?.items ?? [];
 const footerLinks = footerResult.menu?.items ?? [];
 const houseIndexLinks = houseIndexResult.menu?.items ?? [];
-const footerReviewDate = formatReviewDate(projectResult.projects[0]?.reviewDate ?? "") ?? undefined;
+// The newest review in the portfolio, not the first project's. Projects are
+// reviewed separately and sorted by dossier order, so `projects[0]` is Bubbles
+// and carries the launch date — printing it in the footer of every page claims
+// the whole site was last reviewed on 28 September, which stopped being true as
+// soon as a second project was re-reviewed.
+const footerReadout = portfolioReadout(projectResult.projects);
+const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? undefined;
 ---
 
 <!doctype html>
