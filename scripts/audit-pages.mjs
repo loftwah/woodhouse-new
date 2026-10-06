@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { scanPublicText } from "./public-privacy.mjs";
+import { isCloudflareHiddenContentLink } from "./page-link-policy.mjs";
 
 const args = process.argv.slice(2);
 if (args[0] === "--") args.shift();
@@ -194,6 +195,12 @@ function auditDocument(page, html) {
 
   for (const anchor of elements(html, "a")) {
     const href = anchor.attrs.get("href") ?? "";
+    try {
+      const url = new URL(href, `${origin}${page}`);
+      if (url.origin === origin && isCloudflareHiddenContentLink(anchor, url)) continue;
+    } catch {
+      // The navigation audit reports invalid URLs; retain accessibility checks.
+    }
     if (!anchor.attrs.has("href")) report(page, `anchor without href: ${anchor.raw.slice(0, 80)}`);
     if (anchor.attrs.get("tabindex") && Number(anchor.attrs.get("tabindex")) > 0)
       report(page, `positive tabindex on ${anchor.raw.slice(0, 80)}`);
@@ -300,6 +307,7 @@ for (const page of pages) {
       continue;
     }
     if (resolved.origin !== origin) continue;
+    if (isCloudflareHiddenContentLink(anchor, resolved)) continue;
     targets.add(resolved.pathname);
   }
   internalLinks.set(page, [...targets]);
