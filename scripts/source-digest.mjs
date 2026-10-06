@@ -8,6 +8,7 @@ const SOURCE_PATHS = [
   "emdash-env.d.ts",
   "package.json",
   "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
   "public",
   "scripts",
   "seed",

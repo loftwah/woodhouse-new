@@ -3,6 +3,7 @@
 import type { BuildIdentity } from "./data/build-identity.ts";
 
 declare global {
+  const __WOODHOUSE_READ_ONLY__: boolean;
   /**
    * Replaced at build time by the identity integration in astro.config.mjs. The
    * declared shape is a compile-time fallback only; a real build always

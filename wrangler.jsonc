@@ -62,7 +62,7 @@
       ],
       "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "woodhouse-emdash-media" }],
       "triggers": { "crons": ["* * * * *"] },
-      "vars": { "WOODHOUSE_ENVIRONMENT": "production" }
+      "vars": { "WOODHOUSE_ENVIRONMENT": "production", "WOODHOUSE_PUBLICATION_MODE": "read-only" }
     }
   }
 }

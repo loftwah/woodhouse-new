@@ -48,7 +48,6 @@ export const GET: APIRoute = async ({ cache }) => {
   const pirates = projectResult.projects.find((project) => project.slug === "pirates");
   const bubbles = projectResult.projects.find((project) => project.slug === "bubbles");
   const max = projectResult.projects.find((project) => project.slug === "max");
-  const assetHunter = projectResult.projects.find((project) => project.slug === "asset-hunter");
   const body = {
     name: "WOODHOUSE",
     description: "The Loftwah Software Factory: a public observatory and engineering journal.",
@@ -69,7 +68,7 @@ export const GET: APIRoute = async ({ cache }) => {
     knownAnswers: {
       piratesProceduralFork: {
         answer:
-          pirates?.state === "Gate B locked"
+          pirates?.state === "Gate B locked" || pirates?.state === "Source parity before expansion"
             ? "not approved"
             : "see current reviewed project state",
         reason: pirates?.proofBoundary ?? "No public Pirates state is available.",
@@ -83,10 +82,11 @@ export const GET: APIRoute = async ({ cache }) => {
         reviewed: bubbles?.reviewDate ?? readout.reviewDate
       },
       assetHunterExternalUse: {
-        answer: "no recorded external use",
-        reason: assetHunter?.proofBoundary ?? "No public Asset Hunter state is available.",
+        answer: "not remeasured in this review",
+        reason:
+          "The 5 October public record reported no recorded external use. The 7 October report does not provide a fresh usage measurement.",
         project: "asset-hunter",
-        reviewed: assetHunter?.reviewDate ?? readout.reviewDate
+        reviewed: "2026-10-05"
       },
       sharedAgentSafetyLayer: {
         answer: "no shared implementation; checked and not adopted",
@@ -95,7 +95,7 @@ export const GET: APIRoute = async ({ cache }) => {
           "comparison, long-run reporting and deployment verification were reviewed on 5 October 2026 and resolve to " +
           "different mechanisms with different failure modes. No product imports another. Nothing is being extracted.",
         project: null,
-        reviewed: readout.reviewDate
+        reviewed: "2026-10-05"
       },
       maxPhysicalWalker: {
         answer: "not physically proven",

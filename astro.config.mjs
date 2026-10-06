@@ -14,6 +14,10 @@ const siteOrigin =
     ? "https://woodhouse-loftwah-preview.loftwah.workers.dev"
     : "https://woodhouse.loftwah.com");
 
+const readOnlyPublication =
+  process.env.WOODHOUSE_PUBLICATION_MODE === "read-only" ||
+  process.env.CLOUDFLARE_ENV === "production";
+
 function resendEmail() {
   return {
     id: "woodhouse-resend-email",
@@ -99,6 +103,7 @@ export default defineConfig({
     react(),
     emdash({
       database: d1({ binding: "DB", session: "disabled" }),
+      migrations: { runtime: "check" },
       storage: r2({ binding: "MEDIA" }),
       // 300 s. Lowering it to the 60 s Workers KV floor was tried on 5 October 2026, on
       // the theory that a shorter read-model TTL would shorten the window in which
@@ -108,11 +113,15 @@ export default defineConfig({
       // TTL. It stays here because that is the last value measured as working, not
       // because it was shown to be better. See EMDASH.md, "How long an out-of-band
       // content write stays invisible".
-      objectCache: kvCache({ binding: "CACHE", defaultTtl: 300, keyPrefix: "woodhouse:emdash:" }),
+      objectCache: kvCache({
+        binding: "CACHE",
+        defaultTtl: 300,
+        keyPrefix: "woodhouse:emdash:2026-10-07:"
+      }),
       siteUrl: siteOrigin,
       sandboxed: [auditLog, editorialPolicy, enquiries],
       sandboxRunner: sandbox(),
-      toolbar: "client",
+      toolbar: readOnlyPublication ? false : "client",
       maxUploadSize: 10 * 1024 * 1024,
       plugins: [resendEmail()],
       updateCheck: { minimumReleaseAge: "48h" }
@@ -123,6 +132,7 @@ export default defineConfig({
     compressHTML: true
   },
   vite: {
+    define: { __WOODHOUSE_READ_ONLY__: JSON.stringify(readOnlyPublication) },
     build: {
       cssMinify: true
     }

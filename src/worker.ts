@@ -1,5 +1,11 @@
 import handler, { createScheduledHandler, PluginBridge } from "@emdash-cms/cloudflare/worker";
 
+import {
+  createPublicationScheduledHandler,
+  isReadOnlyPublication,
+  publicationRequestAllowed
+} from "./data/publication-policy";
+
 export { PluginBridge };
 
 /**
@@ -32,6 +38,16 @@ const worker = {
   ...handler,
   async fetch(...args: Parameters<NonNullable<typeof handler.fetch>>) {
     const [request, env, ctx] = args;
+    if (isReadOnlyPublication(env) && !publicationRequestAllowed(request)) {
+      return new Response("Not found.", {
+        status: 404,
+        headers: {
+          "Cache-Control": "private, no-store, max-age=0",
+          "X-Robots-Tag": "noindex, nofollow, noarchive",
+          "X-Content-Type-Options": "nosniff"
+        }
+      });
+    }
     const fetchHandler = handler.fetch;
     if (!fetchHandler) throw new Error("EmDash Worker fetch handler is unavailable.");
     const response = await fetchHandler.call(handler, request, env, ctx);
@@ -58,7 +74,7 @@ const worker = {
       headers
     });
   },
-  scheduled: createScheduledHandler()
+  scheduled: createPublicationScheduledHandler(createScheduledHandler())
 } satisfies typeof handler;
 
 export default worker;

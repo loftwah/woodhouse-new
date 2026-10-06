@@ -4,17 +4,9 @@ import { spawnSync } from "node:child_process";
 // must name the advisory, why the exposure is bounded here, and the condition
 // that retires it. Anything not listed fails this check, so a new advisory
 // still stops the release.
-const reviewed = {
-  "GHSA-ch52-4w7c-c8xp": {
-    package: "http-cache-semantics",
-    severity: "high",
-    reviewed: "2026-10-03",
-    reason:
-      "Astro depends on http-cache-semantics only in its build-time remote image fetcher (astro/dist/assets/build/remote.js). The deployed Worker bundle contains neither the module nor satisfiesWithoutRevalidation, so no request served to a visitor is parsed by this code. No patched release exists upstream; Astro pins ^4.2.0.",
-    retiredWhen:
-      "A patched http-cache-semantics is published and adopted by Astro, or Woodhouse starts serving remote images through Astro's image pipeline."
-  }
-};
+// The previously accepted http-cache-semantics advisory was retired on 7 October
+// 2026 after updating to the patched 4.3.0 release. No current exceptions.
+const reviewed = {};
 
 const audit = spawnSync("pnpm", ["audit", "--json"], {
   encoding: "utf8",

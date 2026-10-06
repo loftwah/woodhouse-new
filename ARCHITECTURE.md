@@ -1,6 +1,6 @@
 # Architecture
 
-Reviewed 3 October 2026.
+Reviewed 7 October 2026.
 
 ```text
 Public visitor / authenticated editor / authorised authoring agent
@@ -33,7 +33,7 @@ The public Agent Reception is a curated, read-only interface. It cannot call pri
 
 A local Astro integration stamps the build with the source fingerprint, the commit it was built from and whether that tree was clean. `/build.json` returns that identity under the factory shape `loftwah.build-identity/1`, and both deploy scripts fail unless the live origin reports the fingerprint they intended to ship. The Worker cannot learn its own Cloudflare version id, so it does not claim one; the private release receipt records the version.
 
-That shape is intended to be reusable, so any product in the factory could be checked by the same comparison. As reviewed on 5 October 2026 it had no adopters outside this repository: Bubbles, SHOALSHOT, Fighter and Asset Hunter each shipped their own mechanism, and Bubbles in particular cannot answer which build is live from its served origin. A protocol nobody has adopted is a claim about intent rather than a description of the fleet, so this document records the intention and the empty adoption count rather than the intention alone. Adopting it elsewhere is real work and is not claimed.
+Reviewed 7 October 2026: `loftwah.build-identity/1` is Woodhouse’s own release-identity shape. No other factory project has adopted it. Other projects publish their own provenance mechanisms, so this endpoint is not a shared fleet protocol. The verifier in this repository checks this site; no cross-repository integration is claimed.
 
 The same endpoint reports a `content` fingerprint over the published read model, because code and content reach production by different mechanisms and either can be current while the other is stale. It is a SHA-256 over each record's identifier and full data, so an edit to any published record changes it, and per-collection counts are reported alongside for human sanity-checking. The content read never gates the build identity: a content failure reports `available: false` rather than turning a working identity endpoint into an error. `pnpm run verify:build -- <origin>` reads either half and fails on a mismatch, a mislabelled digest or a missing endpoint.
 
@@ -47,7 +47,18 @@ Nothing is copied from another environment. Users, credentials, sessions, tokens
 
 On 4 October 2026 the reviewed model and published starter records were installed into production D1 this way, after the same run was rehearsed against preview. `pnpm run verify:content -- preview|production` now reports ready for both, with seven collections, nine relations and every published public-safe record present and linked. Production kept its own enrolled admin account, credentials and setup state throughout. The D1 Time Travel bookmark recorded before the write, the generated SQL and a private manifest are kept under ignored `.release/content-model/`.
 
-The remaining constraint on a first production deploy is not the content model. `pnpm run deploy` additionally requires `.release/production-ready.json`: the exact accepted preview Worker version, and one recorded operator observation per preview acceptance check, each pointing at a fresh owner-only artifact with a matching digest. Six of the seventeen checks carry evidence; the rest need an authenticated EmDash session, an inbox and a physical review. Those are the operator's to make, so production deploy remains correctly refused.
+## Public publication and editorial activation
+
+Reviewed 7 October 2026: the public journal was still serving its pre-CMS Worker because the original release gate coupled reader pages to all seventeen editorial acceptance checks. That gate protected real authoring, identity, delivery and recovery outcomes; those requirements still stand. It should not prevent publication of a reviewed read model when those workflows are inaccessible.
+
+`pnpm run deploy:publication -- preview|production` is the narrow reading-only release path. It rehearses the same source in the existing isolated preview, checks the published content and exact core migration set, builds with editor UI disabled, and sets `WOODHOUSE_PUBLICATION_MODE=read-only`. The Worker refuses every CMS endpoint, request mutation, authenticated preview and edit-mode request before invoking EmDash; scheduled work is also disabled, and the deployment manifest clears cron triggers. Contact uses the established public profiles and advertises no inactive form. There are no CMS-managed media files in this release; those endpoints stay unavailable too.
+
+The production path requires clean `main` matching `origin/main`, a fresh preview receipt, the matching active preview version at 100% traffic, a passing public page audit and a D1 Time Travel recovery point. Both environments must report the intended source fingerprint and pass the reading-only boundary probes and page audit after deployment. The private `.release/publication-{environment}.json` records the exact source, Worker, content identity and checks. This is public publication acceptance; it is not editorial acceptance or a completed restore drill.
+
+The full editorial deployment remains behind `scripts/deploy-production.mjs` and `.release/production-ready.json`. Passkey login, draft/revision/scheduling workflows, MCP authoring boundaries, enquiry delivery and backup/recovery still need their own observations before CMS authoring is enabled. No observation is recorded on MP’s behalf. Issue #10 retains the R2 restore drill. Restoring editorial mode requires the full acceptance receipt and an explicit configuration change; the public path cannot enable it.
+
+The 7 October seed-replayed report uses a fresh read-model cache prefix. This prevents the observed out-of-band content visibility failure from serving an older snapshot under the new templates; it does not claim to solve general CMS invalidation.
+
 
 ## See also
 
