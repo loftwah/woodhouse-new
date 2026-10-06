@@ -16,7 +16,8 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        __WOODHOUSE_READ_ONLY__: "readonly"
       }
     }
   }

@@ -10,7 +10,7 @@ import { listPublicContentGeneration } from "../content/repository";
 // compares the fingerprint here against the digest it intended to ship, which
 // is what turns "deployed" into "verified as this exact source".
 //
-// The shape is shared across the factory: `loftwah.build-identity/1`.
+// Woodhouse publishes its own shape: `loftwah.build-identity/1`.
 
 export type { BuildIdentity };
 

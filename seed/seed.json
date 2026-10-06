@@ -1392,10 +1392,10 @@
           "name": "Protocol 11",
           "index": "04",
           "discipline": "Game systems · responsive table play",
-          "title": "A mature game can still have an immature record of what is done.",
-          "summary": "Protocol 11 has mature game systems and a substantially recovered frontend, including better mobile, table and tablet composition.",
+          "title": "A card game becoming an authored world.",
+          "summary": "Protocol 11 brings card-table play, a twelve-stage House Circuit, distinct rooms and characters, and solo recovery into one deliberately authored game.",
           "why": "A tracker is part of the product's evidence chain. If a closed item still contradicts its own definition of done, the system must reconcile the record before treating it as progress.",
-          "teaches": "State needs a trustworthy source. A green label is not more authoritative than the evidence beneath it.",
+          "teaches": "A finished product needs play, visual judgement and exact release evidence to agree.",
           "site_url": "https://protocol11.loftwah.com/",
           "site_og_image": "https://protocol11.loftwah.com/og/protocol-11.jpg",
           "site_og_title": "Protocol 11 — The table changes every round",
@@ -1554,6 +1554,19 @@
           "source_description": "A portfolio review supplied for this review date, checked against public repository and deployed-origin evidence rather than taken on trust.",
           "scope": "Nine public-safe project summaries. Asset Hunter is re-reviewed from its public repository, its deployed origin and its own recorded backup evidence. The other eight keep their 28 September 2026 review dates: a portfolio-level review is not a fresh review of each project, and re-dating them would claim work that was not done.",
           "editorial_notes": "This snapshot exists because a supplied portfolio analysis disagreed with parts of the record, and the disagreements were checkable. Its commercial readings were not adopted; its engineering readings were, where a public origin or a repository could confirm them. Where the analysis and the evidence disagreed, the evidence is recorded as winning.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-07",
+        "slug": "2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Factory snapshot · 7 October 2026",
+          "reviewed_at": "2026-10-07",
+          "source_description": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "scope": "Nine project summaries refreshed from the supplied portfolio report. Historical snapshots and their review dates remain in the archive.",
+          "editorial_notes": "Protocol 11 leads this review. GPT 6.1 Sol is the model the operator reports using for its recent work. Commit deltas, private tracker details and test totals are omitted; no physical or commercial acceptance is inferred.",
           "public_safe": true
         }
       }
@@ -1745,6 +1758,177 @@
           "next_proof": "The next proof is not another mechanism. It is external: whether outside builders or agents complete a real hunt, use what they find and return for another. Until a rating, a rights report or a dispute exists, the tables that would record a person's judgement are empty.",
           "proof_boundary": "A dated observation of one public repository and one public origin on one day. It does not establish external demand, and the absence of recorded use is the finding rather than a gap in the record. It says nothing about the catalogue after 5 October 2026.",
           "reviewed_at": "2026-10-05",
+          "sort_order": 9,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-bubbles-2026-10-07",
+        "slug": "bubbles-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-07",
+          "state": "Mature · release proof to renew",
+          "state_tone": "amber",
+          "current": "Recent work resolves zoom, route and test-harness defects. The arcade product is close to its quality bar, but the reviewed source is newer than the latest exact production receipt in the report.",
+          "next_proof": "Renew exact production evidence and finish whole-product interaction, accessibility and visual acceptance.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-fighter-2026-10-07",
+        "slug": "fighter-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-07",
+          "state": "Functional · product convergence",
+          "state_tone": "amber",
+          "current": "Playing real battles led to changes in the Battle presentation model. Persistence and infrastructure work now carries stronger gates, and layout measurements protect observed player behaviour.",
+          "next_proof": "Finish whole-game and sharing journeys, show the current source running in production, and keep architecture changes tied to real failures.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 2,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-shoalshot-2026-10-07",
+        "slug": "shoalshot-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-07",
+          "state": "Production held at the proven release",
+          "state_tone": "amber",
+          "current": "A clean release qualification established a strong production build. Later first-catch Field Note work added specimen art, a note and a diary handoff, then exposed recovery and browser failures. The report says those newer changes have deliberately stayed out of production.",
+          "next_proof": "Resolve the first-discovery reveal and its exit paths; decide whether automatic fire should interrupt play; qualify the integrated result before release.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 3,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-protocol-11-2026-10-07",
+        "slug": "protocol-11-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-07",
+          "state": "Production verified in the report",
+          "state_tone": "green",
+          "current": "The twelve-stage House Circuit, solo undo and restart, stable theme geometry, distinct room and cast artwork, and new sound work have shipped. The supplied report records the reviewed head matching the active production release, with deployed asset hashes, readiness checks and live browser gameplay evidence.",
+          "next_proof": "Physical iPhone acceptance, sustained play, the final card language and whole-product visual judgement remain separate finish lines.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 4,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-max-2026-10-07",
+        "slug": "max-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-max",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "max",
+          "snapshot_key": "2026-10-07",
+          "state": "Software prototype · physical proof open",
+          "state_tone": "amber",
+          "current": "The software platform is substantial, but the report records no new delivery in this period. Finding the real walker, mounted hardware and voice behaviour remain physical questions.",
+          "next_proof": "Demonstrate FIND with a real walker and person, then complete provider and production rollout with measured operating assumptions.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 5,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-pirates-2026-10-07",
+        "slug": "pirates-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-07",
+          "state": "Source parity before expansion",
+          "state_tone": "red",
+          "current": "The source-backed reconstruction remains the governing boundary. This review records no new product movement; the procedural fork still depends on the parity gate.",
+          "next_proof": "Complete source-backed parity and reconcile stale operating instructions without weakening the reconstruction boundary.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 6,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-07",
+        "slug": "loftwahfm-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-07",
+          "state": "Listener built · delivery paused",
+          "state_tone": "quiet",
+          "current": "The listener platform has useful playback and publishing capability. The supplied report records no new movement in this review period; queue, Now Playing, archive discovery and release-page work remain open.",
+          "next_proof": "Resume the listening journey and business demonstration, separate preview media from production, and refresh release evidence.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-social-club-2026-10-07",
+        "slug": "social-club-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "social-club",
+          "snapshot_key": "2026-10-07",
+          "state": "Hospitality prototype · delivery paused",
+          "state_tone": "quiet",
+          "current": "The report records no new product movement. The hospitality product has an established software direction, with the remaining outcome waiting on product execution rather than a congested review queue.",
+          "next_proof": "Resume the core hospitality journey and obtain fresh product, operator and deployment evidence before making readiness claims.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
+          "sort_order": 8,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-asset-hunter-2026-10-07",
+        "slug": "asset-hunter-2026-10-07",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-07",
+          "state": "Live product · broader discovery",
+          "state_tone": "amber",
+          "current": "Local folders are now a first-class source alongside GitHub. Byte inspection, intent-first discovery, portable packs and backup-and-restore work have landed. The report records an exact production verification for an earlier release; newer source work is ahead of that receipt.",
+          "next_proof": "Prove the newer source in production, expand useful handlers and discovery, and observe outside builders completing real hunts.",
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
+          "reviewed_at": "2026-10-07",
           "sort_order": 9,
           "public_safe": true
         }
@@ -2002,6 +2186,213 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "Empty tables on 4 October 2026 do not establish that the product will never be used, that nobody has read it, or that nobody used it and left no row. They establish only that no one has rated, reported, disputed or requested exclusion. That is a statement about recorded behaviour, not about the world."
+        }
+      },
+      {
+        "id": "evidence-bubbles-2026-10-07",
+        "slug": "bubbles-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Bubbles · supplied portfolio review",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-07",
+          "claim": "Recent work resolves zoom, route and test-harness defects. The arcade product is close to its quality bar, but the reviewed source is newer than the latest exact production receipt in the report.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Renew exact production evidence and finish whole-product interaction, accessibility and visual acceptance.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-fighter-2026-10-07",
+        "slug": "fighter-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Fighter · supplied portfolio review",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-07",
+          "claim": "Playing real battles led to changes in the Battle presentation model. Persistence and infrastructure work now carries stronger gates, and layout measurements protect observed player behaviour.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Finish whole-game and sharing journeys, show the current source running in production, and keep architecture changes tied to real failures.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-2026-10-07",
+        "slug": "shoalshot-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · supplied portfolio review",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-07",
+          "claim": "A clean release qualification established a strong production build. Later first-catch Field Note work added specimen art, a note and a diary handoff, then exposed recovery and browser failures. The report says those newer changes have deliberately stayed out of production.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Resolve the first-discovery reveal and its exit paths; decide whether automatic fire should interrupt play; qualify the integrated result before release.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-protocol-11-2026-10-07",
+        "slug": "protocol-11-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Protocol 11 · supplied portfolio review",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-07",
+          "claim": "The twelve-stage House Circuit, solo undo and restart, stable theme geometry, distinct room and cast artwork, and new sound work have shipped. The supplied report records the reviewed head matching the active production release, with deployed asset hashes, readiness checks and live browser gameplay evidence.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Physical iPhone acceptance, sustained play, the final card language and whole-product visual judgement remain separate finish lines.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-max-2026-10-07",
+        "slug": "max-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "MAX · supplied portfolio review",
+          "project": "$ref:project-max",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "max",
+          "snapshot_key": "2026-10-07",
+          "claim": "The software platform is substantial, but the report records no new delivery in this period. Finding the real walker, mounted hardware and voice behaviour remain physical questions.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Demonstrate FIND with a real walker and person, then complete provider and production rollout with measured operating assumptions.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-pirates-2026-10-07",
+        "slug": "pirates-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Pirates · supplied portfolio review",
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-07",
+          "claim": "The source-backed reconstruction remains the governing boundary. This review records no new product movement; the procedural fork still depends on the parity gate.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Complete source-backed parity and reconcile stale operating instructions without weakening the reconstruction boundary.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-2026-10-07",
+        "slug": "loftwahfm-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · supplied portfolio review",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-07",
+          "claim": "The listener platform has useful playback and publishing capability. The supplied report records no new movement in this review period; queue, Now Playing, archive discovery and release-page work remain open.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Resume the listening journey and business demonstration, separate preview media from production, and refresh release evidence.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-social-club-2026-10-07",
+        "slug": "social-club-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Social Club · supplied portfolio review",
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "social-club",
+          "snapshot_key": "2026-10-07",
+          "claim": "The report records no new product movement. The hospitality product has an established software direction, with the remaining outcome waiting on product execution rather than a congested review queue.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Resume the core hospitality journey and obtain fresh product, operator and deployment evidence before making readiness claims.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-asset-hunter-2026-10-07",
+        "slug": "asset-hunter-report-2026-10-07",
+        "status": "published",
+        "data": {
+          "title": "Asset Hunter · supplied portfolio review",
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-07",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-07",
+          "claim": "Local folders are now a first-class source alongside GitHub. Byte inspection, intent-first discovery, portable packs and backup-and-restore work have landed. The report records an exact production verification for an earlier release; newer source work is ahead of that receipt.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-07",
+          "reviewed_at": "2026-10-07",
+          "summary": "Prove the newer source in production, expand useful handlers and discovery, and observe outside builders completing real hunts.",
+          "source_label": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "source_url": "",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
         }
       }
     ],
@@ -3880,6 +4271,202 @@
                     {
                       "_type": "span",
                       "text": "What would change it is cheap and unglamorous: outside builders and agents doing real hunts, and then saying what they used. That is the next proof. Another mechanism is not."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-playing-the-work",
+        "slug": "playing-the-work",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "The factory is learning to play its own work.",
+          "kind": "Portfolio report",
+          "deck": "Protocol 11 leads a new review of nine projects. The useful progress is in the game itself: a Journey, recovery, sound and art, backed by a reported production release. Elsewhere, a healthy live build can still be ahead of—or behind—the source.",
+          "review_date": "2026-10-07",
+          "source_reference": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
+          "lead": "The strongest change in this review is a card game that now has a coherent world around it. Protocol 11 has had the most recent work, with GPT 6.1 Sol used by the operator. Its production evidence is unusually complete; its physical acceptance is still a separate question.",
+          "lesson": "Play the integrated product, challenge a gate when its requirement has retired, and ask the deployed origin which build it serves. A green check can support a claim; it cannot choose the claim.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-bubbles",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot",
+            "$ref:project-protocol-11",
+            "$ref:project-max",
+            "$ref:project-pirates",
+            "$ref:project-loftwahfm",
+            "$ref:project-social-club",
+            "$ref:project-asset-hunter"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "protocol",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Protocol 11 takes the lead"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The House Circuit now gives the game a twelve-stage Journey with distinct mastery conditions and safe progress migration. Solo GO NUCLEAR has undo and restart, including the ability to roll back a bot reply. Room and cast artwork, stable theme geometry and refreshed sound make those systems feel part of the same game."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The supplied report records a settled production release matching the reviewed source, deployed asset hashes, readiness checks and live Chromium and WebKit gameplay checks. That is reported production verification, not a claim that Woodhouse has repeated the qualification. Physical iPhone play, sustained sessions and final art judgement still need their own evidence."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "releases",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A strong release can sit behind newer source"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "SHOALSHOT is the clearest example. Its proven production build is healthy. Later first-catch Field Note work exposed recovery and browser failures, and the newer source stayed unreleased. Holding production at the qualified version is useful release discipline. The remaining question is also a design question: should automatic fire interrupt the player with a blocking discovery reveal?"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Bubbles and Asset Hunter have newer source than the latest exact production receipt in the supplied report. Bubbles is resolving interaction and evidence debt. Asset Hunter has broadened from GitHub discovery to source-neutral ingestion, with a local folder, byte inspection and portable packs. Those are real implementation gains. They still need current release proof and outside use."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "portfolio",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The rest of the portfolio has different work ahead"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Fighter is turning observed battle failures into presentation changes and useful gates. LoftwahFM has a capable listener but a paused delivery lane. Pirates still needs source parity before expansion. MAX cannot turn software qualification into evidence that someone can find a real walker. Club needs renewed execution of its hospitality journey."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Each dossier now carries the 7 October report review, its source and the next proof. The older snapshots remain readable. Reviewing a supplied report is distinct from independently inspecting every repository or every live deployment."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "judgement",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Better judgement is the factory improvement"
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Across the report, the most encouraging behaviour is agents playing the products and finding defects that a ticket did not predict. A skipped ending, an unreachable catch, a battle that measures well but reads badly: the integrated experience supplies the requirement."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The response should stay small and concrete. Keep the always-on instructions short. Load detailed guidance when the work needs it. Adopt a tool at a real seam, give every process addition a failure it prevents, and retire a check when its original requirement no longer exists."
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Model choice belongs to this dated account of the work. GPT 6.1 Sol is what the operator reports using for the recent Protocol 11 work; it is not a permanent rule for the factory. The durable rule is to put capable judgement at the point where it changes the outcome."
                     }
                   ]
                 }

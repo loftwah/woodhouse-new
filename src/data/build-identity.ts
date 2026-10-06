@@ -1,4 +1,4 @@
-// The factory's shared production-identity shape, `loftwah.build-identity/1`.
+// Woodhouse's production-identity shape, `loftwah.build-identity/1`.
 //
 // This module is imported by the deployed Worker and by the build-time
 // integration, so it must stay free of runtime-specific imports. The

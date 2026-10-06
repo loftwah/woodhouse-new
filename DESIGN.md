@@ -1,5 +1,7 @@
 # Design system
 
+Reviewed 7 October 2026.
+
 ## Direction
 
 Woodhouse is an evidence-led public journal for a small software factory. Its world is a dark technical canvas with vivid, authored diagrams and the artwork each product publishes about itself. The result should feel like a confident engineering publication, not a dashboard or a generated portfolio template.
@@ -22,7 +24,8 @@ The site is dark by design on every device. Do not follow the operating-system a
 
 ## Composition
 
-- The homepage identifies the human operator and coding agents, then places the project D2 network in the first view. The work map and the release/evidence flow are distinct diagrams because they explain different things.
+- The homepage identifies the human operator and coding agents, then leads with the project that moved most in the current review. A dated portfolio report, a compact dossier register and recent dispatches form the reading path. The D2 work map and release/evidence flow follow as an explanation of the system; both remain available on phones.
+- The dossier register uses open rows separated by rules. Keep the project identity, labelled state and review date together; each row opens its Woodhouse dossier.
 - Project artwork is fetched from each project's own published page metadata and shown from the source image URL at its original 1200×630 aspect ratio. Titles, descriptions, favicons and links identify the source. Do not copy or recreate source-site OG artwork as Woodhouse art.
 - Source-page metadata is read during the Woodhouse build; the image itself stays at the source URL. A source-site update appears on the next Woodhouse build (and an image-file update at a stable source URL is served directly).
 - Credit product artwork to its project and Woodhouse-made illustrations to Woodhouse. Never present a Woodhouse illustration as product artwork.
@@ -32,14 +35,14 @@ The site is dark by design on every device. Do not follow the operating-system a
 ## Interaction and states
 
 - Keep page colours fixed from first paint. Dark mode has no transition and no toggle.
-- Source artwork links to its project site. Credit Woodhouse-made illustrations as Woodhouse artwork. Remove failed source icons cleanly.
+- Source artwork and its site caption link open the project site; story titles and dossier links open the Woodhouse record. Keep that distinction visible in the link wording. If source artwork fails, change both its image text and visible credit to identify the Woodhouse illustration. Remove failed source icons cleanly.
 - Diagram transcripts use native `<details>` and `<summary>`; do not render the control when there is no transcript.
 - The Woodhouse index is searchable from the keyboard with `⌘K` or `Ctrl+K`, and from the phone's House Index.
 - Motion is small and purposeful. Respect `prefers-reduced-motion`; do not animate every section into view.
 
 ## Responsive and accessibility rules
 
-- Design the narrow reading order deliberately. Keep source artwork at its original aspect ratio and show the phone-specific D2 SVG at phone widths.
+- Design the narrow reading order deliberately. On the homepage, place the lead artwork and its credit before the story text on phones. Stack register identity, state and review date within the same linked row. Keep source artwork at its original aspect ratio and show the phone-specific D2 SVG at phone widths.
 - Nothing depends on hover. Do not hide diagrams on phones; include a text transcript for detail and assistive technology.
 - Preserve readable contrast, visible focus, useful image text and clear link purpose. Keep the page free of horizontal overflow.
 

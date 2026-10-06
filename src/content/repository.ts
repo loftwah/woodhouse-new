@@ -559,7 +559,7 @@ export async function listPublicSearchItems() {
       },
       {
         title: "Project dossiers",
-        description: "Eight project dossiers from the Loftwah Software Factory.",
+        description: "Nine project dossiers from the Loftwah Software Factory.",
         href: "/projects/",
         section: "Projects"
       },
@@ -613,7 +613,7 @@ export async function listPublicSearchItems() {
       },
       {
         title: "Contact",
-        description: "Public contact routes and a private Woodhouse enquiry form.",
+        description: "Public contact routes for Woodhouse.",
         href: "/contact/",
         section: "Contact"
       }

@@ -9,9 +9,8 @@
 //   pnpm run verify:build -- https://woodhouse.loftwah.com
 //   pnpm run verify:build -- https://woodhouse.loftwah.com --expect sha256:…
 //
-// Any product in the factory that exposes `loftwah.build-identity/1` can be
-// checked with this, so the mechanism lives here once rather than in each
-// repository that needs it.
+// This verifier checks Woodhouse's `loftwah.build-identity/1` endpoint.
+// No other factory repository is integrated with this verifier.
 
 export const IDENTITY_PATH = "/build.json";
 

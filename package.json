@@ -50,7 +50,8 @@
     "social-cards": "python3 scripts/render-social-cards.py",
     "social-cards:record": "node scripts/social-cards.mjs",
     "social-cards:check": "node scripts/social-cards.mjs --check",
-    "diagrams": "bash scripts/render-diagrams.sh"
+    "diagrams": "bash scripts/render-diagrams.sh",
+    "deploy:publication": "node scripts/deploy-publication.mjs"
   },
   "emdash": {
     "seed": "seed/seed.json"

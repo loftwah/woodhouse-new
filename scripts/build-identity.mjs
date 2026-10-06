@@ -11,9 +11,8 @@
 import { computeSourceDigest } from "./source-digest.mjs";
 import { spawnSync } from "node:child_process";
 
-// The shape is the factory's shared production-identity primitive. Other
-// products in the factory are expected to expose the same field names so one
-// verifier can check any origin.
+// Woodhouse's release-identity shape. Reviewed 7 October 2026: it has no
+// adopters elsewhere in the factory and does not describe a fleet integration.
 export const BUILD_IDENTITY_SCHEMA = "loftwah.build-identity/1";
 
 export const BUILD_IDENTITY_GLOBAL = "__WOODHOUSE_BUILD_IDENTITY__";

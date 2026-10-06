@@ -3,6 +3,7 @@ import html
 import subprocess
 import tempfile
 import textwrap
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FONT_PATH = ROOT / "scripts/assets/BricolageGrotesque-Variable.ttf"
@@ -12,6 +13,7 @@ DEST = ROOT / "public" / "og"
 # because a card that names the wrong review date is a claim about work that
 # was not reviewed on that day.
 CARDS = {
+    "dispatches/playing-the-work": ("PORTFOLIO REPORT", "The factory is learning to play its own work.", "Protocol 11 leads the 7 October review.", "7 October 2026"),
     "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Nine projects. One human operator.", "28 September 2026"),
     "factory": ("THE FACTORY FLOOR", "Nine projects.", "Nine kinds of proof.", "4 October 2026"),
     "dean": ("THE HUMAN OPERATOR", "Dean Lofts.", "Systems that turn intent into shipped software.", "28 September 2026"),
@@ -71,7 +73,10 @@ def card_svg(label: str, title: str, subtitle: str, reviewed: str) -> str:
 
 def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
+    only = next((arg.split("=", 1)[1] for arg in sys.argv[1:] if arg.startswith("--only=")), None)
     for name, content in CARDS.items():
+        if only and name != only:
+            continue
         jpg_path = DEST / (name + ".jpg")
         jpg_path.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=DEST) as scratch:
