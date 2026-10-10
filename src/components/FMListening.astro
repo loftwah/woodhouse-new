@@ -19,8 +19,7 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
 
 {listening && embedUrl && (
   <section class="fm-listening" aria-label="Listen to LoftwahFM">
-    <p class="fm-listening__eyebrow">Music &amp; original radio · LoftwahFM</p>
-    <h2>Sound for the long session.</h2>
+    <h2>LoftwahFM. Sound for the long session.</h2>
     <p>{listening.summary}</p>
     <div class="fm-listening__actions">
       <a class="text-link" href={stationUrl}>
@@ -121,12 +120,6 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
     border-block: 1px solid var(--line);
     padding-block: 2rem;
     margin-block: 2rem;
-  }
-  .fm-listening__eyebrow {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
   }
   .fm-listening h2 {
     margin-block: 0.75rem 1rem;
