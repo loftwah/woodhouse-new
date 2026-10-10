@@ -4,14 +4,20 @@ import { formatReviewDate } from "../data/review-date";
 import { portfolioReadout } from "../data/portfolio";
 import ProjectNetwork from "../components/ProjectNetwork.astro";
 import { toJsonLd } from "../data/safe-json";
-import { listProjectRecords, listPublishedDispatches } from "../content/repository";
+import {
+  listProjectRecords,
+  listPublishedDispatches,
+  listPublicCapabilities
+} from "../content/repository";
 import { getSiteMetadata } from "../data/site-metadata";
+import FMListening from "../components/FMListening.astro";
 
-const [projectResult, dispatchResult] = await Promise.all([
+const [projectResult, dispatchResult, capabilityResult] = await Promise.all([
   listProjectRecords(),
-  listPublishedDispatches()
+  listPublishedDispatches(),
+  listPublicCapabilities()
 ]);
-if (projectResult.error || dispatchResult.error)
+if (projectResult.error || dispatchResult.error || capabilityResult.error)
   return new Response("Unable to load the public Woodhouse record.", {
     status: 503,
     headers: { "cache-control": "private, no-store" }
@@ -22,11 +28,17 @@ const recentNotes = dispatchResult.dispatches.filter((note) => note !== latestRe
 if (Astro.cache?.enabled) {
   for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(dispatchResult.cacheHint);
+  for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 }
 const readout = portfolioReadout(projects);
 const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
 const protocol = projects.find((project) => project.slug === "protocol-11");
 const protocolMetadata = protocol ? getSiteMetadata(protocol) : null;
+const fm = projects.find((project) => project.slug === "loftwahfm");
+const fmMetadata = fm ? getSiteMetadata(fm) : null;
+const fmCapability = capabilityResult.capabilities.find(
+  (capability) => capability.key === "loftwahfm-radio"
+);
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 export const prerender = false;
 ---
@@ -64,6 +76,11 @@ export const prerender = false;
         <a class="text-link" href="/factory/">
           Explore the factory <span aria-hidden="true">↗</span>
         </a>
+        {fmCapability?.listening && (
+          <a class="home-fm-jump" href="#loftwahfm-listening">
+            Listen to LoftwahFM <span aria-hidden="true">↓</span>
+          </a>
+        )}
       </div>
     </section>
     <div class="publication-dateline">
@@ -81,7 +98,7 @@ export const prerender = false;
             <a href="/projects/protocol-11/">A card game finding its character.</a>
           </h2>
           <p class="lead-story__deck">
-            Protocol 11 leads the latest review: a twelve-stage Journey, solo recovery, distinct
+            The 7 October review records Protocol 11’s twelve-stage Journey, solo recovery, distinct
             rooms and cast, and a reported production release that matches the work.
           </p>
           <p class="lead-story__boundary">
@@ -130,6 +147,33 @@ export const prerender = false;
             <a href={protocol.siteUrl}>
               View the project site <span aria-hidden="true">↗</span>
             </a>
+          </figcaption>
+        </figure>
+      </section>
+    )}
+
+    {fmCapability?.listening && fm && fmMetadata && (
+      <section
+        id="loftwahfm-listening"
+        class="home-fm"
+        aria-label="LoftwahFM listening and shared music"
+      >
+        <FMListening capability={fmCapability} />
+        <figure data-project-artwork>
+          <a href={fmCapability.listening.href} aria-label="Listen to LoftwahFM">
+            <img
+              src={fmMetadata.image}
+              width="1200"
+              height="630"
+              alt={fm.previewAlt ?? "Artwork from LoftwahFM."}
+              loading="lazy"
+              decoding="async"
+              data-fallback-src="/og/projects/loftwahfm.svg"
+              data-fallback-alt="Woodhouse illustration for LoftwahFM."
+            />
+          </a>
+          <figcaption>
+            <span data-artwork-status>Artwork from LoftwahFM</span>
           </figcaption>
         </figure>
       </section>
@@ -258,6 +302,39 @@ export const prerender = false;
 </BaseLayout>
 
 <style>
+  .home-fm-jump {
+    display: inline-block;
+    margin-top: 0.75rem;
+    margin-left: 1.25rem;
+  }
+  .home-fm {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: start;
+    gap: 3rem;
+    margin-block: 3rem;
+  }
+  .home-fm figure {
+    margin: 2rem 0;
+  }
+  .home-fm img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .home-fm figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+  }
+  @media (max-width: 760px) {
+    .home-fm {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .home-fm figure {
+      margin-top: 0;
+    }
+  }
   .publication {
     padding-top: clamp(2.5rem, 5vw, 4.5rem);
   }

@@ -504,6 +504,58 @@
                     "label": "Evidence key",
                     "type": "string",
                     "required": true
+                  },
+                  {
+                    "slug": "station_name",
+                    "label": "Station name",
+                    "type": "string",
+                    "required": false
+                  }
+                ]
+              }
+            },
+            {
+              "slug": "listen_url",
+              "label": "Public listening URL",
+              "type": "url",
+              "required": false
+            },
+            {
+              "slug": "embed_url",
+              "label": "Official player embed URL",
+              "type": "url",
+              "required": false
+            },
+            {
+              "slug": "listening_summary",
+              "label": "Listening introduction",
+              "type": "text",
+              "required": false
+            },
+            {
+              "slug": "shows_evidence_key",
+              "label": "Show publication evidence key",
+              "type": "string",
+              "required": false
+            },
+            {
+              "slug": "published_shows",
+              "label": "Reviewed published shows",
+              "type": "repeater",
+              "required": false,
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "title",
+                    "label": "Show title",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "url",
+                    "label": "Edition URL",
+                    "type": "url",
+                    "required": true
                   }
                 ]
               }
@@ -1662,7 +1714,7 @@
           "index": "07",
           "discipline": "Music platform · shared radio capability",
           "title": "One music catalogue. Independent games. Evidence for each.",
-          "summary": "LoftwahFM owns the music catalogue, radio generation, station programming and shared browser client. Its public Radio collection and music client are available; game adoption and editorial radio need their own proof. The broader venue business remains a separate roadmap.",
+          "summary": "LoftwahFM owns the music catalogue, radio generation, station programming and shared browser client. Listen to its music stations and first original shows, then follow the separate evidence for game adoption. The broader venue business remains a separate roadmap.",
           "why": "Games can reuse published music and a compatible client while retaining their own sound, settings, lifecycle and release gates. Music availability does not establish in-game adoption or demand for a venue product.",
           "teaches": "A shared capability earns its name through compatible releases and real consumers. Published upstream code and verified game use are different evidence.",
           "site_url": "https://fm.loftwah.com/",
@@ -2158,11 +2210,11 @@
           "snapshot": "$ref:snapshot-2026-10-10",
           "project_key": "loftwahfm",
           "snapshot_key": "2026-10-10",
-          "state": "Music client published · game adoption underway",
+          "state": "Music and original shows published \u00b7 game adoption underway",
           "state_tone": "active",
-          "current": "The public Radio collection, station catalogue and game profiles are available. The published @loftwahfm/radio-client 1.0.0 archive matches SHA-256 ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0. Profiles use manifest schema 1 / client major 1 and default to off, clean and speech-disabled. SHOALSHOT has merged client 1.0.0; Bubbles records active integration work. Fighter, Protocol 11 and Pirates remain planned in this review.",
-          "next_proof": "Each game must publish its installed client version, exact deployed revision and real in-game listening/lifecycle evidence before adoption is verified. Editorial generation, voice quality and approved public news editions remain unfinished upstream.",
-          "proof_boundary": "Public manifest and package checks establish upstream availability and compatibility. Reviewed SHOALSHOT source establishes implementation, with deployment and live game verification still unestablished here. No physical Safari, editorial readiness, commercial demand or venue-roadmap completion is claimed.",
+          "current": "The public Radio collection, station catalogue and game profiles are available. The published @loftwahfm/radio-client 1.0.0 archive matches SHA-256 ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0. Profiles use manifest schema 1 / client major 1 and default to off, clean and speech-disabled. SHOALSHOT has merged client 1.0.0; Protocol 11 has a source implementation in draft PR #207. Bubbles records active integration work. Fighter and Pirates remain planned in this review. Two dated original shows, Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits, are now published for replay.",
+          "next_proof": "Each game must publish its installed client version, exact deployed revision and real in-game listening/lifecycle evidence before adoption is verified. Upstream autonomous refresh and full format/acting qualification remain open.",
+          "proof_boundary": "Public manifest and package checks establish upstream availability and compatibility. Public edition pages establish publication of the first curated shows. Reviewed SHOALSHOT source establishes implementation, with deployment and live game verification still unestablished here. No physical Safari, human performance approval, commercial demand or venue-roadmap completion is claimed.",
           "reviewed_at": "2026-10-10",
           "sort_order": 7,
           "public_safe": true
@@ -2650,7 +2702,7 @@
           "source_url": "https://fm.loftwah.com/radio/v1/client/1.0.0/loftwahfm-radio-client-1.0.0.tgz",
           "revision": "@loftwahfm/radio-client@1.0.0; sha256:ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0",
           "public_safe": true,
-          "proof_boundary": "This is availability and compatibility evidence for upstream music. No game playback, physical-device or approved editorial edition is established."
+          "proof_boundary": "This record proves availability and compatibility of upstream music and the shared client. It does not establish game playback, physical-device acceptance or human performance approval. The separate original-show publication record covers the first curated editions."
         }
       },
       {
@@ -2789,6 +2841,52 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "Merged source proves implementation. It does not prove deployment, live listening, physical Safari behaviour or approved editorial radio. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-original-shows-2026-10-10",
+        "slug": "loftwahfm-original-shows-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM \u00b7 first original shows published",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-10",
+          "claim": "Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits are published dated original shows available for replay.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "Both public edition pages expose the named shows, their dated publication, music and synthetic presenter scenes. The official station widget was inspected and real media playback advanced after an explicit Play action.",
+          "source_label": "Public edition pages and authorised public-safe FM readiness update reviewed on 10 October 2026",
+          "source_url": "https://fm.loftwah.com/radio",
+          "revision": "editions caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf and 53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e",
+          "public_safe": true,
+          "proof_boundary": "Publication and browser media playback are established. Autonomous refresh, full format/acting qualification, human performance approval, physical-device acceptance and verified game adoption are separate gates."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-10",
+        "slug": "loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "Protocol 11 \u00b7 client implementation in draft review",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-10",
+          "claim": "Draft PR #207 contains an FM music implementation using the published client 1.0.0.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The reviewed package dependency pins the published client archive. The source imports that client and provides an independently owned music transport with Cartridge Club as its default station. The PR remains a draft, distinct from a merged or deployed release.",
+          "source_label": "Owning draft PR and exact source inspected on 10 October 2026; private source is not reproduced",
+          "source_url": "https://github.com/loftwah/protocol-11/pull/207",
+          "revision": "8b1c9ebece62bf38d15b816139ba51feb0e329e3",
+          "public_safe": true,
+          "proof_boundary": "Source implementation is established at the reviewed draft revision. Merge, deployment, live in-game verification and physical-device acceptance are not established. GitHub repository access may be required."
         }
       }
     ],
@@ -4889,10 +4987,10 @@
         "data": {
           "title": "Shared music, independent games.",
           "kind": "Portfolio report",
-          "deck": "LoftwahFM now publishes a reusable music client. The useful portfolio question is which games actually use it, and what evidence supports that answer.",
+          "deck": "Listen to LoftwahFM\u2019s music and original radio, then follow the evidence for its shared client and the games adopting it.",
           "review_date": "2026-10-10",
-          "source_reference": "Public FM player, station/game manifests and client archive inspected on 10 October 2026, alongside authorised canonical programme and consumer hand-offs. Private issue bodies and private source are not reproduced. This is a focused capability review; other dossiers retain their earlier dates.",
-          "lead": "The music capability has shipped upstream, and SHOALSHOT has merged the first reviewed client implementation. Game deployment and listening proof remain separate work.",
+          "source_reference": "Public FM player, station/game manifests and client archive inspected on 10 October 2026, alongside authorised canonical programme and consumer hand-offs. Private issue bodies and private source are not reproduced. This is a focused capability review; other dossiers retain their earlier dates. The public-safe FM readiness update and both public edition pages were reviewed later on the same day; published curated shows are distinct from autonomous refresh, human performance approval and in-game acceptance.",
+          "lead": "LoftwahFM\u2019s stations, first original shows and shared client are available. SHOALSHOT has merged the first reviewed client implementation, and Protocol 11 has a draft implementation. Game deployment and listening proof remain separate work.",
           "lesson": "Discover a compatible release, inspect the real consumer, and require its own deployed interaction evidence. A hand-off is a dependency to resolve, not proof of integration.",
           "public_safe": true,
           "projects": [
@@ -4946,7 +5044,7 @@
                     {
                       "_type": "span",
                       "_key": "s-2",
-                      "text": "The public Radio collection is a listening destination today. The larger venue business and unfinished editorial radio programme remain separate claims. A live music manifest does not prove a finished presenter, public news edition or commercial customer.",
+                      "text": "The public Radio collection now includes two dated original shows: Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits. Their synthetic presenter scenes and catalogue music are published for replay. Autonomous refresh and full format/acting qualification remain open; these shows do not establish commercial demand or verified use in a game.",
                       "marks": []
                     }
                   ]
@@ -4986,7 +5084,7 @@
               "stations_url": "https://fm.loftwah.com/api/radio/v1/stations",
               "profiles_url": "https://fm.loftwah.com/api/radio/v1/games",
               "evidence_key": "loftwahfm-radio-client-2026-10-10",
-              "boundary": "Music is available upstream. No first verified in-game adopter is established in this review. Editorial radio remains in development. False stage values mean evidence is not established here, not that future adoption is forbidden.",
+              "boundary": "Music and the first curated original shows are published upstream. Autonomous refresh and full format/acting qualification remain open. No first verified in-game adopter is established in this review. False stage values mean evidence is not established here.",
               "consumers": [
                 {
                   "project_key": "shoalshot",
@@ -5002,7 +5100,8 @@
                   "deployed_revision": "",
                   "release_evidence_key": "",
                   "interaction_evidence_key": "",
-                  "evidence_key": "loftwahfm-radio-shoalshot-client-1-0-0-implementation-2026-10-10"
+                  "evidence_key": "loftwahfm-radio-shoalshot-client-1-0-0-implementation-2026-10-10",
+                  "station_name": "Low Tide"
                 },
                 {
                   "project_key": "fighter",
@@ -5018,23 +5117,25 @@
                   "deployed_revision": "",
                   "release_evidence_key": "",
                   "interaction_evidence_key": "",
-                  "evidence_key": "fighter-radio-adoption-2026-10-10"
+                  "evidence_key": "fighter-radio-adoption-2026-10-10",
+                  "station_name": "Pressure System"
                 },
                 {
                   "project_key": "protocol-11",
                   "issue_url": "https://github.com/loftwah/protocol-11/issues/198",
                   "station_id": "cartridge-club",
-                  "scope": "Host-owned table audio",
+                  "scope": "Host-owned table audio; draft PR #207, merge pending",
                   "planned": true,
-                  "in_progress": false,
-                  "implemented": false,
+                  "in_progress": true,
+                  "implemented": true,
                   "deployed": false,
                   "verified": false,
-                  "installed_version": "",
+                  "installed_version": "1.0.0",
                   "deployed_revision": "",
                   "release_evidence_key": "",
                   "interaction_evidence_key": "",
-                  "evidence_key": "protocol-11-radio-adoption-2026-10-10"
+                  "evidence_key": "loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-10",
+                  "station_name": "Cartridge Club"
                 },
                 {
                   "project_key": "bubbles",
@@ -5050,7 +5151,8 @@
                   "deployed_revision": "",
                   "release_evidence_key": "",
                   "interaction_evidence_key": "",
-                  "evidence_key": "bubbles-radio-adoption-2026-10-10"
+                  "evidence_key": "bubbles-radio-adoption-2026-10-10",
+                  "station_name": "Soft Focus"
                 },
                 {
                   "project_key": "pirates",
@@ -5066,7 +5168,22 @@
                   "deployed_revision": "",
                   "release_evidence_key": "",
                   "interaction_evidence_key": "",
-                  "evidence_key": "pirates-radio-adoption-2026-10-10"
+                  "evidence_key": "pirates-radio-adoption-2026-10-10",
+                  "station_name": "Saltwater Static"
+                }
+              ],
+              "listen_url": "https://fm.loftwah.com/radio?station=night-signal",
+              "embed_url": "https://fm.loftwah.com/widget?station=night-signal",
+              "listening_summary": "Music for the long session. Listen to a LoftwahFM station here, or open an original show on FM. Playback starts when you press Play.",
+              "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
+              "published_shows": [
+                {
+                  "title": "Dead Air Department \u2014 Press Start",
+                  "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
+                },
+                {
+                  "title": "Smoko Circuit \u2014 Member Benefits",
+                  "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
                 }
               ]
             },
