@@ -24,14 +24,12 @@ export const GET: APIRoute = async ({ cache }) => {
   for (const hint of projectResult.cacheHints) cache.set(hint);
   cache.set(evidenceResult.cacheHint);
   for (const hint of capabilityResult.cacheHints) cache.set(hint);
-  const evidenceByProject = new Map<string, (typeof evidenceResult.evidence)[number]>();
-  // The query is newest first. Preserve the first review instead of overwriting
-  // it with the oldest historical record for the same project.
-  for (const item of evidenceResult.evidence)
-    if (!evidenceByProject.has(item.data.project_key))
-      evidenceByProject.set(item.data.project_key, item);
   const projects = projectResult.projects.map((project) => {
-    const evidence = evidenceByProject.get(project.slug);
+    // A newer radio-only review must not become proof for an older gameplay state.
+    const evidence = evidenceResult.evidence.find(
+      (item) =>
+        item.data.project_key === project.slug && item.data.snapshot_key === project.snapshotId
+    );
     return {
       slug: project.slug,
       name: project.name,
@@ -48,7 +46,9 @@ export const GET: APIRoute = async ({ cache }) => {
             href: `/evidence/${evidence.id}/`,
             kind: evidence.data.evidence_kind,
             state: evidence.data.evidence_state,
-            summary: evidence.data.summary
+            summary: evidence.data.summary,
+            reviewed: evidence.data.reviewed_at,
+            snapshot: evidence.data.snapshot_key
           }
         : null
     };
@@ -108,7 +108,7 @@ export const GET: APIRoute = async ({ cache }) => {
       sharedAgentSafetyLayer: {
         answer: "no shared implementation; checked and not adopted",
         reason:
-          "The factory's interactive products share agent doctrine, not code. Browser contention, visual-evidence " +
+          "These safety and release mechanisms share agent doctrine, not an adopted implementation. Browser contention, visual-evidence " +
           "comparison, long-run reporting and deployment verification were reviewed on 5 October 2026 and resolve to " +
           "different mechanisms with different failure modes. This dated finding concerns those safety and release mechanisms; shared music is reviewed separately in capabilities.",
         project: null,

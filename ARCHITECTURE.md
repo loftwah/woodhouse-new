@@ -59,7 +59,6 @@ The full editorial deployment remains behind `scripts/deploy-production.mjs` and
 
 The 7 October seed-replayed report uses a fresh read-model cache prefix. This prevents the observed out-of-band content visibility failure from serving an older snapshot under the new templates; it does not claim to solve general CMS invalidation.
 
-
 ## See also
 
 See [EMDASH.md](EMDASH.md) for the content model, plugin decisions, operational workflow, privacy boundary and dated validation state.
@@ -72,7 +71,7 @@ See [PLATFORM.md](PLATFORM.md) for what the Cloudflare platform offers this fact
 
 The observed gap was that FM's available music client and five planned game consumers were absent from the portfolio, while a dated safety-layer finding could be read as a permanent ban on all code reuse. A versioned `capability_review` block now lives in the existing EmDash dispatch collection. Its provider and consumers resolve to published public-safe project identities; its proof keys resolve to public-safe evidence records. No new collection, registry or service owns adoption.
 
-`listPublicCapabilities()` in `src/content/repository.ts` reads the latest complete published review for each capability. Human views and `/agents/facts.json` share that projection. Available upstream and actually installed versions are distinct. Planned, in-progress, implemented, deployed and verified fields are independent observations, with false meaning not established in this record. Implementation requires an installed version; deployment requires a revision and reviewed production evidence; verification also requires reviewed qualification evidence for that consumer. Contradictory or incomplete reviews are omitted, and the publication gate refuses missing or stale review data.
+`listPublicCapabilities()` in `src/content/repository.ts` reads the latest complete published review for each capability. Human views and `/agents/facts.json` share that projection. Available upstream and actually installed versions are distinct. Planned, in-progress, implemented, deployed and verified fields are independent observations, with false meaning not established in this record. Implementation requires the reviewed available client version and dedicated implementation evidence. Stage proof keys use `{capability_key}-{project_key}-client-{version with dots replaced by hyphens}-{implementation|release|interaction}-{date}`, so unrelated gameplay evidence cannot establish adoption. Deployment requires reviewed production evidence for the exact deployed revision; verification requires qualification evidence for that same revision. Every stage proof is dated no later than the capability review. A different client version needs a new compatibility review. Contradictory or incomplete reviews are omitted, and the publication gate refuses missing or stale review data.
 
 New games are discovered from current project identities, owning GitHub work and upstream profiles, then added to a reviewed block with evidence. Profiles alone do not establish adoption. Historical blocks and earlier project statuses stay dated; a capability-only review does not re-date unrelated gameplay proof. The programme and private documentation links may require GitHub access; no private bodies are copied. The public player, package and manifest endpoints remain directly discoverable.
 

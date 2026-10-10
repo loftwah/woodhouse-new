@@ -64,15 +64,32 @@ test("a verified checkbox is insufficient without installed, deployment and inte
   row.deployed = true;
   row.deployed_revision = "a".repeat(40);
   assert.equal(projectCapabilities(ds, projects, evidence).length, 0);
-  row.release_evidence_key = "release";
-  row.interaction_evidence_key = "interaction";
-  const proof = { public_safe: true, project_key: row.project_key, evidence_state: "reviewed" };
+  const prefix = `loftwahfm-radio-${row.project_key}-client-1-0-0-`;
+  row.evidence_key = prefix + "implementation-2026-10-10";
+  row.release_evidence_key = prefix + "release-2026-10-10";
+  row.interaction_evidence_key = prefix + "interaction-2026-10-10";
+  const proof = {
+    public_safe: true,
+    project_key: row.project_key,
+    evidence_state: "reviewed",
+    reviewed_at: "2026-10-10",
+    revision: row.deployed_revision
+  };
   const proofs = [
     ...evidence,
-    { id: "release", data: { ...proof, evidence_kind: "production verification" } },
-    { id: "interaction", data: { ...proof, evidence_kind: "qualification" } }
+    { id: row.evidence_key, data: { ...proof, evidence_kind: "implementation" } },
+    { id: row.release_evidence_key, data: { ...proof, evidence_kind: "production verification" } },
+    { id: row.interaction_evidence_key, data: { ...proof, evidence_kind: "qualification" } }
   ];
   assert.equal(projectCapabilities(ds, projects, proofs)[0]?.consumers[0]?.record.verified, true);
+  row.installed_version = "999.0.0";
+  assert.equal(projectCapabilities(ds, projects, proofs).length, 0);
+  row.installed_version = "1.0.0";
+  row.deployed_revision = "unrelated-revision";
+  assert.equal(projectCapabilities(ds, projects, proofs).length, 0);
+  row.deployed_revision = "a".repeat(40);
+  proofs.at(-1)!.data.revision = "older-unverified-revision";
+  assert.equal(projectCapabilities(ds, projects, proofs).length, 0);
 });
 
 test("future consumers come from published project identities, not a fixed game list", () => {

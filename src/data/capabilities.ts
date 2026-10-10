@@ -5,7 +5,8 @@ export type CapabilityReview = Extract<DispatchContentBlock, { _type: "capabilit
 type ProjectIdentity = { slug: string; name: string };
 type Evidence = {
   id: string;
-  data: Pick<EvidenceRecord, "public_safe" | "project_key" | "evidence_state" | "evidence_kind">;
+  data: Pick<EvidenceRecord, "public_safe" | "project_key" | "evidence_state" | "evidence_kind"> &
+    Partial<Pick<EvidenceRecord, "revision" | "reviewed_at">>;
 };
 type ReviewedDispatch = { slug: string; reviewDate: string; content: DispatchContentBlock[] };
 
@@ -77,17 +78,51 @@ export function projectCapabilities(
         const project = identities.get(row.project_key);
         if (!project || !safeUrl(row.issue_url) || !backed(row.evidence_key, project.slug))
           return [];
-        if (row.implemented && !row.installed_version) return [];
+        const prefix = `${block.capability_key}-${project.slug}-client-${block.available_version.replaceAll(".", "-")}-`;
+        const stageProof = (
+          key: string | null | undefined,
+          stage: string,
+          kind: string,
+          revision?: string | null
+        ) => {
+          const proof = key ? proofs.get(key) : undefined;
+          return (
+            !!key &&
+            key.startsWith(prefix + stage + "-") &&
+            backed(key, project.slug, kind) &&
+            !!proof &&
+            !!formatReviewDate(proof.data.reviewed_at ?? "") &&
+            proof.data.reviewed_at! <= block.reviewed_at &&
+            (!revision || proof.data.revision === revision)
+          );
+        };
+        if (
+          row.implemented &&
+          (row.installed_version !== block.available_version ||
+            !stageProof(row.evidence_key, "implementation", "implementation"))
+        )
+          return [];
         if (
           row.deployed &&
           (!row.implemented ||
             !row.deployed_revision ||
-            !backed(row.release_evidence_key, project.slug, "production verification"))
+            !stageProof(
+              row.release_evidence_key,
+              "release",
+              "production verification",
+              row.deployed_revision
+            ))
         )
           return [];
         if (
           row.verified &&
-          (!row.deployed || !backed(row.interaction_evidence_key, project.slug, "qualification"))
+          (!row.deployed ||
+            !stageProof(
+              row.interaction_evidence_key,
+              "interaction",
+              "qualification",
+              row.deployed_revision
+            ))
         )
           return [];
         return [{ project, record: row, evidenceHref: `/evidence/${row.evidence_key}/` }];

@@ -8,6 +8,7 @@ const consumers =
   projectKey && projectKey !== capability.provider.slug
     ? capability.consumers.filter((item) => item.project.slug === projectKey)
     : capability.consumers;
+const ConsumerContainer = compact && !projectKey ? "details" : "div";
 const stages = [
   ["planned", "Planned"],
   ["in_progress", "In progress"],
@@ -63,59 +64,62 @@ const stages = [
       </details>
     </>
   )}
-  <ul class="capability-record__consumers">
-    {consumers.map(({ project, record, evidenceHref }) => (
-      <li>
-        <h3>
-          <a href={`/projects/${project.slug}/`}>{project.name}</a>
-        </h3>
-        <p>
-          {record.scope}. Station: <code>{record.station_id}</code>.
-        </p>
-        {compact ? (
+  <ConsumerContainer>
+    {compact && !projectKey && <summary>See {consumers.length} consumer adoption records</summary>}
+    <ul class="capability-record__consumers">
+      {consumers.map(({ project, record, evidenceHref }) => (
+        <li>
+          <h3>
+            <a href={`/projects/${project.slug}/`}>{project.name}</a>
+          </h3>
           <p>
-            <strong>
-              {record.verified
-                ? "Verified in game"
-                : record.deployed
-                  ? "Deployed; in-game proof pending"
-                  : record.implemented
-                    ? "Implemented; deployment proof pending"
-                    : record.in_progress
-                      ? "In progress"
-                      : record.planned
-                        ? "Planned"
-                        : "Not established"}
-            </strong>
-            {" · "}
-            <a href={evidenceHref}>Adoption evidence</a>
-            {" · "}
-            <a href={record.issue_url}>Owning integration issue</a>
+            {record.scope}. Station: <code>{record.station_id}</code>.
           </p>
-        ) : (
-          <>
-            <dl class="capability-record__stages">
-              {stages.map(([key, label]) => (
-                <div>
-                  <dt>{label}</dt>
-                  <dd>{record[key] ? "Established" : "Not established"}</dd>
-                </div>
-              ))}
-            </dl>
+          {compact ? (
             <p>
-              <strong>Installed client:</strong> {record.installed_version || "Not established"}.{" "}
-              <strong>Deployed revision:</strong> {record.deployed_revision || "Not established"}.
-            </p>
-            <p>
+              <strong>
+                {record.verified
+                  ? "Verified in game"
+                  : record.deployed
+                    ? "Deployed; in-game proof pending"
+                    : record.implemented
+                      ? "Implemented; deployment proof pending"
+                      : record.in_progress
+                        ? "In progress"
+                        : record.planned
+                          ? "Planned"
+                          : "Not established"}
+              </strong>
+              {" · "}
               <a href={evidenceHref}>Adoption evidence</a>
               {" · "}
               <a href={record.issue_url}>Owning integration issue</a>
             </p>
-          </>
-        )}
-      </li>
-    ))}
-  </ul>
+          ) : (
+            <>
+              <dl class="capability-record__stages">
+                {stages.map(([key, label]) => (
+                  <div>
+                    <dt>{label}</dt>
+                    <dd>{record[key] ? "Established" : "Not established"}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p>
+                <strong>Installed client:</strong> {record.installed_version || "Not established"}.{" "}
+                <strong>Deployed revision:</strong> {record.deployed_revision || "Not established"}.
+              </p>
+              <p>
+                <a href={evidenceHref}>Adoption evidence</a>
+                {" · "}
+                <a href={record.issue_url}>Owning integration issue</a>
+              </p>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  </ConsumerContainer>
   <p class="source-note">{review.boundary}</p>
 </section>
 
