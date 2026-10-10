@@ -10,6 +10,37 @@ type Evidence = {
 };
 type ReviewedDispatch = { slug: string; reviewDate: string; content: DispatchContentBlock[] };
 
+/** Only FM's public player may be framed; optional malformed links fail closed. */
+function fmPlayerUrl(value: string | null | undefined, path: string, parameter: string) {
+  try {
+    const url = new URL(value ?? "");
+    const id = url.searchParams.get(parameter) ?? "";
+    return url.origin === "https://fm.loftwah.com" &&
+      !url.username &&
+      !url.password &&
+      url.pathname === path &&
+      !url.hash &&
+      [...url.searchParams].length === 1 &&
+      (parameter === "edition" ? /^[a-f0-9]{64}$/.test(id) : /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id))
+      ? url.href
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function fmListening(block: CapabilityReview, showsEvidenceHref: string | null) {
+  if (block.capability_key !== "loftwahfm-radio" || block.provider_key !== "loftwahfm") return null;
+  const href = fmPlayerUrl(block.listen_url, "/radio", "station");
+  const embed = fmPlayerUrl(block.embed_url, "/widget", "station");
+  if (!href || !embed || new URL(href).search !== new URL(embed).search) return null;
+  const shows = (showsEvidenceHref ? (block.published_shows ?? []) : []).flatMap((show) => {
+    const url = fmPlayerUrl(show.url, "/radio", "edition");
+    return url ? [{ title: show.title, href: url }] : [];
+  });
+  return { href, embed, summary: block.listening_summary, shows, showsEvidenceHref };
+}
+
 /** Project and evidence membership is checked here; a CMS checkbox alone cannot prove adoption. */
 export function projectCapabilities(
   dispatches: ReviewedDispatch[],
@@ -43,9 +74,11 @@ export function projectCapabilities(
       provider: ProjectIdentity;
       href: string;
       review: CapabilityReview;
+      listening: ReturnType<typeof fmListening>;
       consumers: Array<{
         project: ProjectIdentity;
         evidenceHref: string;
+        stationHref: string | null;
         record: NonNullable<CapabilityReview["consumers"]>[number];
       }>;
     }
@@ -125,7 +158,21 @@ export function projectCapabilities(
             ))
         )
           return [];
-        return [{ project, record: row, evidenceHref: `/evidence/${row.evidence_key}/` }];
+        return [
+          {
+            project,
+            record: row,
+            evidenceHref: `/evidence/${row.evidence_key}/`,
+            stationHref:
+              block.capability_key === "loftwahfm-radio" && block.provider_key === "loftwahfm"
+                ? fmPlayerUrl(
+                    `https://fm.loftwah.com/radio?station=${encodeURIComponent(row.station_id)}`,
+                    "/radio",
+                    "station"
+                  )
+                : null
+          }
+        ];
       });
       // Partial or impossible records are not a public adoption claim.
       if (consumers.length !== rows.length) continue;
@@ -136,6 +183,14 @@ export function projectCapabilities(
         provider,
         href: `/dispatches/${dispatch.slug}/`,
         review: block,
+        listening: fmListening(
+          block,
+          backed(block.shows_evidence_key, provider.slug, "production verification") &&
+            !!formatReviewDate(proofs.get(block.shows_evidence_key!)?.data.reviewed_at ?? "") &&
+            proofs.get(block.shows_evidence_key!)!.data.reviewed_at! <= block.reviewed_at
+            ? `/evidence/${block.shows_evidence_key}/`
+            : null
+        ),
         consumers
       });
     }

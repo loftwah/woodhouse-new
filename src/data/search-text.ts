@@ -38,6 +38,8 @@ const TEXT_KEYS = new Set([
   "boundary",
   "scope",
   "station_id",
+  "station_name",
+  "listening_summary",
   "package_name",
   "available_version",
   "installed_version",

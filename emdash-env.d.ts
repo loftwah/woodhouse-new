@@ -134,7 +134,12 @@ export interface DispatchContentCapabilityReviewV1Block {
   "profiles_url": string;
   "evidence_key": string;
   "boundary": string;
-  "consumers": { "project_key": string; "issue_url": string; "station_id": string; "scope": string; "planned": boolean; "in_progress": boolean; "implemented": boolean; "deployed": boolean; "verified": boolean; "installed_version"?: string | null; "deployed_revision"?: string | null; "release_evidence_key"?: string | null; "interaction_evidence_key"?: string | null; "evidence_key": string }[];
+  "consumers": { "project_key": string; "issue_url": string; "station_id": string; "scope": string; "planned": boolean; "in_progress": boolean; "implemented": boolean; "deployed": boolean; "verified": boolean; "installed_version"?: string | null; "deployed_revision"?: string | null; "release_evidence_key"?: string | null; "interaction_evidence_key"?: string | null; "evidence_key": string; "station_name"?: string | null }[];
+  "listen_url"?: string | null;
+  "embed_url"?: string | null;
+  "listening_summary"?: string | null;
+  "shows_evidence_key"?: string | null;
+  "published_shows"?: { "title": string; "url": string }[] | null;
 }
 
 export type DispatchContentCapabilityReviewBlock = DispatchContentCapabilityReviewV1Block;

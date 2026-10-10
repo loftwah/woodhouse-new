@@ -41,8 +41,12 @@ test("published capability keeps available upstream versions separate from insta
   );
   assert.ok(
     capability.consumers
-      .filter((c) => c.project.slug !== "shoalshot")
+      .filter((c) => !["shoalshot", "protocol-11"].includes(c.project.slug))
       .every((c) => !c.record.implemented && !c.record.installed_version)
+  );
+  assert.equal(
+    capability.consumers.find((c) => c.project.slug === "protocol-11")?.record.implemented,
+    true
   );
 });
 
@@ -134,4 +138,34 @@ test("unsafe URLs and a review dated after its dispatch are not public capabilit
   const ds2 = baseline();
   review(ds2).reviewed_at = "2099-01-01";
   assert.equal(projectCapabilities(ds2, projects, evidence).length, 0);
+});
+
+test("listening uses only the official FM player and preserves evidence when optional links are invalid", () => {
+  const [capability] = projectCapabilities(dispatches, projects, evidence);
+  assert.equal(capability!.listening?.embed, "https://fm.loftwah.com/widget?station=night-signal");
+  assert.equal(capability!.listening?.shows.length, 2);
+  assert.equal(
+    capability!.consumers[0]?.stationHref,
+    "https://fm.loftwah.com/radio?station=low-tide"
+  );
+  for (const unsafe of [
+    "https://unrelated.example/widget?station=night-signal",
+    "https://fm.loftwah.com@unrelated.example/widget?station=night-signal",
+    "https://fm.loftwah.com/widget?station=night-signal&autoplay=true",
+    "https://fm.loftwah.com/widget?station=another-station",
+    "javascript:alert(1)"
+  ]) {
+    const ds = baseline();
+    review(ds).embed_url = unsafe;
+    const [projected] = projectCapabilities(ds, projects, evidence);
+    assert.ok(projected);
+    assert.equal(projected.listening, null);
+    assert.equal(projected.consumers.length, 5);
+  }
+  const ds = baseline();
+  review(ds).published_shows![0]!.url =
+    "https://fm.loftwah.com/radio?edition=not-a-reviewed-edition";
+  assert.equal(projectCapabilities(ds, projects, evidence)[0]?.listening?.shows.length, 1);
+  review(ds).shows_evidence_key = "missing-publication-proof";
+  assert.equal(projectCapabilities(ds, projects, evidence)[0]?.listening?.shows.length, 0);
 });
