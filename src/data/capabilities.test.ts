@@ -29,15 +29,20 @@ test("published capability keeps available upstream versions separate from insta
   assert.ok(capability);
   assert.equal(capability.review.available_version, "1.0.0");
   assert.equal(capability.consumers.length, 5);
+  const shoalshot = capability.consumers.find((c) => c.project.slug === "shoalshot")!;
+  assert.equal(shoalshot.record.implemented, true);
+  assert.equal(shoalshot.record.installed_version, "1.0.0");
+  assert.equal(
+    capability.consumers.find((c) => c.project.slug === "bubbles")?.record.in_progress,
+    true
+  );
   assert.ok(
-    capability.consumers.every(
-      (c) =>
-        c.record.planned &&
-        !c.record.implemented &&
-        !c.record.deployed &&
-        !c.record.verified &&
-        !c.record.installed_version
-    )
+    capability.consumers.every((c) => c.record.planned && !c.record.deployed && !c.record.verified)
+  );
+  assert.ok(
+    capability.consumers
+      .filter((c) => c.project.slug !== "shoalshot")
+      .every((c) => !c.record.implemented && !c.record.installed_version)
   );
 });
 
@@ -98,6 +103,8 @@ test("future consumers come from published project identities, not a fixed game 
   block.consumers.push({
     ...block.consumers[0]!,
     project_key: "future-game",
+    implemented: false,
+    installed_version: "",
     evidence_key: "future-proof"
   });
   const proof = {
