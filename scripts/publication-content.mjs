@@ -31,6 +31,27 @@ export function assertPublicationContent(seed, identity, facts) {
     throw new Error(
       "Served content is unavailable or differs from the reviewed publication counts/date."
     );
+  // Capability ownership, compatible versions and consumer stages are CMS content.
+  // Matching counts can still hide stale or incorrectly promoted adoption.
+  const latestCapabilities = new Map();
+  for (const entry of published(seed, "dispatches")) {
+    for (const block of entry.data.content ?? []) {
+      if (block._type !== "capability_review") continue;
+      const previous = latestCapabilities.get(block.capability_key);
+      if (!previous || previous.reviewed_at < block.reviewed_at)
+        latestCapabilities.set(block.capability_key, block);
+    }
+  }
+  const expectedCapabilities = [...latestCapabilities.values()].sort((a, b) =>
+    a.capability_key.localeCompare(b.capability_key)
+  );
+  const actualCapabilities = (facts.capabilities ?? [])
+    .map((item) => item.review)
+    .sort((a, b) => a.capability_key.localeCompare(b.capability_key));
+  if (!isDeepStrictEqual(actualCapabilities, expectedCapabilities))
+    throw new Error(
+      "Served capability versions or adoption stages differ from the reviewed CMS publication."
+    );
   const expected = published(seed, "projects")
     .map((entry) => {
       const status = published(seed, "project_statuses")

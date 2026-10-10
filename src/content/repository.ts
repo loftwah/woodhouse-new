@@ -2,6 +2,8 @@ import { decodeSlug, getEmDashCollection, getEmDashEntry, getMenuWithCacheHint }
 import type { CacheHint, ContentEntry } from "emdash";
 import { contentGenerationDigest } from "../data/content-generation";
 import { byDispatchDate } from "../data/dispatch-dates";
+import type { CapabilityReview } from "../data/capabilities";
+import { projectCapabilities } from "../data/capabilities";
 import { searchTextFromBlocks } from "../data/search-text";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
@@ -707,4 +709,36 @@ export async function listPublicSearchItems() {
 export function asText<T extends object, K extends keyof T>(data: T, key: K): string {
   const value = data[key];
   return typeof value === "string" ? value : "";
+}
+
+/** Shared-capability reviews live in published EmDash dispatches, not a second registry. */
+export async function listPublicCapabilities(review?: CapabilityReview) {
+  const [projects, dispatches, evidence] = await Promise.all([
+    listProjectRecords(),
+    listPublishedDispatches(),
+    listPublicEvidence()
+  ]);
+  const error = projects.error ?? dispatches.error ?? evidence.error;
+  return {
+    capabilities: error
+      ? []
+      : projectCapabilities(
+          review
+            ? dispatches.dispatches.map((dispatch) => ({
+                ...dispatch,
+                content: dispatch.content.filter(
+                  (block) =>
+                    block._type === "capability_review" &&
+                    block.capability_key === review.capability_key &&
+                    block.reviewed_at === review.reviewed_at &&
+                    block._key === review._key
+                )
+              }))
+            : dispatches.dispatches,
+          projects.projects,
+          evidence.evidence
+        ),
+    error,
+    cacheHints: [...projects.cacheHints, dispatches.cacheHint, evidence.cacheHint]
+  };
 }

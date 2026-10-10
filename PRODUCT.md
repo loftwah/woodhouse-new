@@ -29,3 +29,9 @@ EmDash owns editorial drafts, revisions, media and publication. New dispatches u
 ## Acceptance
 
 A first-time visitor should understand the name, the factory, the role of agents and the human operator in one viewport. The next scroll should reveal a dated factory record. Project pages should explain why each project matters and what its state does not prove. Pages must be readable on a phone, keyboard-accessible and specific in their search and social metadata.
+
+## Portfolio coordination — reviewed 10 October 2026
+
+Woodhouse owns discovery, reviewed project relationships and evidence about shared capabilities. Each spoke owns its product, identity, source, audio lifecycle and release gates; GitHub remains the canonical work tracker. LoftwahFM owns music/radio generation, programming and its versioned client. Woodhouse links that capability and its consumers without running radio, polling games or centralising their releases.
+
+Technical and commercial intelligence should change a concrete decision: compatibility, product quality, audience, positioning or a cheap demand test. Supplied reports and plausible pitches are hypotheses until source-checked; implementation and deployment do not establish demand. Private reports remain private unless explicitly reviewed for publication. Existing issues #16 and #17 own further intelligence and commercial work.

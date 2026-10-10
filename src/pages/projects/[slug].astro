@@ -1,4 +1,6 @@
 ---
+import CapabilityRecord from "../../components/CapabilityRecord.astro";
+import { listPublicCapabilities } from "../../content/repository";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
@@ -45,6 +47,13 @@ const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const placeholder = `/og/projects/${project.slug}.svg`;
 const socialPreview = "/og/project-dossier-preview.jpg";
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+const capabilityResult = await listPublicCapabilities();
+if (capabilityResult.error)
+  return new Response("Unable to load public capability evidence.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 ---
 
 <BaseLayout
@@ -199,6 +208,15 @@ const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
         <p class="callout__title">The next useful proof</p>
         <p {...statusEntry?.edit.next_proof}>{project.remaining}</p>
       </div>
+      {capabilityResult.capabilities
+        .filter(
+          (c) =>
+            c.provider.slug === project.slug ||
+            c.consumers.some((row) => row.project.slug === project.slug)
+        )
+        .map((capability) => (
+          <CapabilityRecord capability={capability} compact={true} projectKey={project.slug} />
+        ))}
       <h2>What this record does not claim</h2>
       <p {...statusEntry?.edit.proof_boundary}>{project.proofBoundary}</p>
       <p>
