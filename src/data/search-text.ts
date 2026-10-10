@@ -33,7 +33,15 @@ const TEXT_KEYS = new Set([
   "lesson",
   "content",
   "details",
-  "note"
+  "note",
+  "ownership",
+  "boundary",
+  "scope",
+  "station_id",
+  "package_name",
+  "available_version",
+  "installed_version",
+  "contract_version"
 ]);
 
 /** Keys that are structural or machine values and must never reach the index. */
