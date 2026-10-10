@@ -76,6 +76,11 @@ export const prerender = false;
         <a class="text-link" href="/factory/">
           Explore the factory <span aria-hidden="true">↗</span>
         </a>
+        {fmCapability?.listening && (
+          <a class="home-fm-jump" href="#loftwahfm-listening">
+            Listen to LoftwahFM <span aria-hidden="true">↓</span>
+          </a>
+        )}
       </div>
     </section>
     <div class="publication-dateline">
@@ -148,7 +153,11 @@ export const prerender = false;
     )}
 
     {fmCapability?.listening && fm && fmMetadata && (
-      <section class="home-fm" aria-label="LoftwahFM listening and shared music">
+      <section
+        id="loftwahfm-listening"
+        class="home-fm"
+        aria-label="LoftwahFM listening and shared music"
+      >
         <FMListening capability={fmCapability} />
         <figure data-project-artwork>
           <a href={fmCapability.listening.href} aria-label="Listen to LoftwahFM">
@@ -293,6 +302,11 @@ export const prerender = false;
 </BaseLayout>
 
 <style>
+  .home-fm-jump {
+    display: inline-block;
+    margin-top: 0.75rem;
+    margin-left: 1.25rem;
+  }
   .home-fm {
     display: grid;
     grid-template-columns: 1.15fr 1fr;

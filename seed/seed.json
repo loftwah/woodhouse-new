@@ -5124,7 +5124,7 @@
                   "project_key": "protocol-11",
                   "issue_url": "https://github.com/loftwah/protocol-11/issues/198",
                   "station_id": "cartridge-club",
-                  "scope": "Host-owned table audio",
+                  "scope": "Host-owned table audio; draft PR #207, merge pending",
                   "planned": true,
                   "in_progress": true,
                   "implemented": true,

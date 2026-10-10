@@ -32,6 +32,6 @@ A first-time visitor should understand the name, the factory, the role of agents
 
 ## Portfolio coordination — reviewed 10 October 2026
 
-Woodhouse owns discovery, reviewed project relationships and evidence about shared capabilities. Each spoke owns its product, identity, source, audio lifecycle and release gates; GitHub remains the canonical work tracker. LoftwahFM owns music/radio generation, programming and its versioned client. Woodhouse links that capability and its consumers without running radio, polling games or centralising their releases.
+Woodhouse owns discovery, reviewed project relationships and evidence about shared capabilities. Each spoke owns its product, identity, source, audio lifecycle and release gates; GitHub remains the canonical work tracker. LoftwahFM owns music/radio generation, programming and its versioned client. Woodhouse makes that capability listenable through FM's official player and links its consumers without operating a radio service, polling games or centralising their releases.
 
 Technical and commercial intelligence should change a concrete decision: compatibility, product quality, audience, positioning or a cheap demand test. Supplied reports and plausible pitches are hypotheses until source-checked; implementation and deployment do not establish demand. Private reports remain private unless explicitly reviewed for publication. Existing issues #16 and #17 own further intelligence and commercial work.
