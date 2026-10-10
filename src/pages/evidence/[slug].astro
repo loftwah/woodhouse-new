@@ -30,6 +30,14 @@ if (projectResult?.error)
 if (Astro.cache?.enabled)
   for (const hint of projectResult?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
 const title = asText(item.data, "title");
+const sourceHref = (() => {
+  try {
+    const url = new URL(asText(item.data, "source_url"));
+    return url.protocol === "https:" && !url.username && !url.password ? url.href : null;
+  } catch {
+    return null;
+  }
+})();
 ---
 
 <BaseLayout
@@ -70,6 +78,12 @@ const title = asText(item.data, "title");
         {asText(item.data, "source_label") ||
           "No external source link is published with this record."}
       </p>
+      {sourceHref && (
+        <p>
+          <a href={sourceHref}>Inspect the source record</a>. GitHub access may be required for
+          repository links.
+        </p>
+      )}
       <h2>Where the proof stops</h2>
       <p>{asText(item.data, "proof_boundary")}</p>
       {projectResult?.project && (
@@ -86,8 +100,8 @@ const title = asText(item.data, "title");
       <div class="margin-note">
         <span class="margin-note__label">Evidence boundary</span>
         <p>
-          This reviewed public observation does not imply implementation, merge, qualification,
-          production verification, owner acceptance or physical proof.
+          This record establishes only the claim and evidence described here. Other delivery stages,
+          human acceptance and physical proof require their own observations.
         </p>
       </div>
     </section>

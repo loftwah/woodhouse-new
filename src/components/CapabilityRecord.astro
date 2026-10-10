@@ -1,0 +1,165 @@
+---
+import type { PublicCapability } from "../data/capabilities";
+import { formatReviewDate } from "../data/review-date";
+type Props = { capability: PublicCapability; compact?: boolean; projectKey?: string };
+const { capability, compact = false, projectKey } = Astro.props;
+const review = capability.review;
+const consumers =
+  projectKey && projectKey !== capability.provider.slug
+    ? capability.consumers.filter((item) => item.project.slug === projectKey)
+    : capability.consumers;
+const ConsumerContainer = compact && !projectKey ? "details" : "div";
+const stages = [
+  ["planned", "Planned"],
+  ["in_progress", "In progress"],
+  ["implemented", "Implemented"],
+  ["deployed", "Deployed"],
+  ["verified", "Verified in game"]
+] as const;
+---
+
+<section
+  class:list={["capability-record", { "capability-record--compact": compact }]}
+  aria-label={review.title}
+>
+  <h2>{review.title}</h2>
+  <p class="article-meta">Reviewed {formatReviewDate(review.reviewed_at)}</p>
+  <p>{review.ownership}</p>
+  <p>
+    <a href={`/projects/${capability.provider.slug}/`}>{capability.provider.name} dossier</a>
+    {" · "}
+    <a href={capability.href}>Capability review</a>
+    {" · "}
+    <a href={`/evidence/${review.evidence_key}/`}>Upstream evidence</a>
+  </p>
+  <p>
+    <strong>Available upstream:</strong>{" "}
+    <code>
+      {review.package_name}@{review.available_version}
+    </code>
+    . {review.contract_version}.
+  </p>
+  {!compact && (
+    <>
+      <p>
+        <a href={review.package_url}>Download the versioned client</a>
+        {" · "}
+        <a href={review.stations_url}>Station manifests</a>
+        {" · "}
+        <a href={review.profiles_url}>Game profiles</a>
+      </p>
+      <p>
+        <a href={review.programme_url}>Canonical FM programme</a>
+        {" · "}
+        <a href={review.documentation_url}>Integration contract and examples</a>
+        <small class="capability-record__access">
+          GitHub access may be required. These links lead to the owning work.
+        </small>
+      </p>
+      <details>
+        <summary>Published client integrity</summary>
+        <p class="capability-record__digest">
+          <code>SHA-256 {review.package_sha256}</code>
+        </p>
+      </details>
+    </>
+  )}
+  <ConsumerContainer>
+    {compact && !projectKey && <summary>See {consumers.length} consumer adoption records</summary>}
+    <ul class="capability-record__consumers">
+      {consumers.map(({ project, record, evidenceHref }) => (
+        <li>
+          <h3>
+            <a href={`/projects/${project.slug}/`}>{project.name}</a>
+          </h3>
+          <p>
+            {record.scope}. Station: <code>{record.station_id}</code>.
+          </p>
+          {compact ? (
+            <p>
+              <strong>
+                {record.verified
+                  ? "Verified in game"
+                  : record.deployed
+                    ? "Deployed; in-game proof pending"
+                    : record.implemented
+                      ? "Implemented; deployment proof pending"
+                      : record.in_progress
+                        ? "In progress"
+                        : record.planned
+                          ? "Planned"
+                          : "Not established"}
+              </strong>
+              {" · "}
+              <a href={evidenceHref}>Adoption evidence</a>
+              {" · "}
+              <a href={record.issue_url}>Owning integration issue</a>
+            </p>
+          ) : (
+            <>
+              <dl class="capability-record__stages">
+                {stages.map(([key, label]) => (
+                  <div>
+                    <dt>{label}</dt>
+                    <dd>{record[key] ? "Established" : "Not established"}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p>
+                <strong>Installed client:</strong> {record.installed_version || "Not established"}.{" "}
+                <strong>Deployed revision:</strong> {record.deployed_revision || "Not established"}.
+              </p>
+              <p>
+                <a href={evidenceHref}>Adoption evidence</a>
+                {" · "}
+                <a href={record.issue_url}>Owning integration issue</a>
+              </p>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  </ConsumerContainer>
+  <p class="source-note">{review.boundary}</p>
+</section>
+
+<style>
+  .capability-record {
+    margin-block: 2.5rem;
+    max-width: 75ch;
+  }
+  .capability-record p {
+    overflow-wrap: anywhere;
+  }
+  .capability-record__consumers {
+    list-style: none;
+    padding: 0;
+    margin-block: 2rem;
+  }
+  .capability-record__consumers > li {
+    border-top: 1px solid var(--line);
+    padding-block: 1.5rem;
+  }
+  .capability-record__consumers h3 {
+    margin: 0 0 0.75rem;
+  }
+  .capability-record__stages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1rem;
+    margin-block: 1rem;
+  }
+  .capability-record__stages dt {
+    font-weight: 700;
+  }
+  .capability-record__stages dd {
+    margin: 0.25rem 0 0;
+  }
+  .capability-record__access {
+    display: block;
+    margin-top: 0.5rem;
+  }
+  .capability-record__digest {
+    overflow-wrap: anywhere;
+  }
+</style>

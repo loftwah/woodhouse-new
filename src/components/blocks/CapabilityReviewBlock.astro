@@ -1,0 +1,14 @@
+---
+import CapabilityRecord from "../CapabilityRecord.astro";
+import { listPublicCapabilities } from "../../content/repository";
+const { value } = Astro.props;
+const result = await listPublicCapabilities(value);
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+const capability = result.capabilities[0];
+---
+
+{capability ? (
+  <CapabilityRecord capability={capability} />
+) : (
+  <p class="source-note">No complete public capability evidence is available for this review.</p>
+)}

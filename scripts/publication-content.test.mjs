@@ -89,3 +89,26 @@ test("preview receipt rejects malformed, future and expired timestamps", () => {
   ])
     assert.equal(previewReceiptIsFresh({ deployedAt }, now), false);
 });
+
+test("publication refuses stale adoption even when collection counts and dates match", () => {
+  const withCapability = structuredClone(seed);
+  const review = {
+    _type: "capability_review",
+    capability_key: "radio",
+    reviewed_at: "2026-10-07",
+    available_version: "1.0.0",
+    consumers: [
+      { project_key: "game", planned: true, implemented: false, deployed: false, verified: false }
+    ]
+  };
+  withCapability.content.dispatches = [
+    { status: "published", data: { public_safe: true, content: [review] } }
+  ];
+  const build = structuredClone(identity);
+  build.content.counts.dispatches = 1;
+  const served = { ...facts, capabilities: [{ review }] };
+  assert.doesNotThrow(() => assertPublicationContent(withCapability, build, served));
+  const stale = structuredClone(served);
+  stale.capabilities[0].review.consumers[0].verified = true;
+  assert.throws(() => assertPublicationContent(withCapability, build, stale), /adoption stages/);
+});

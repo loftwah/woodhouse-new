@@ -1,4 +1,6 @@
 ---
+import CapabilityRecord from "../components/CapabilityRecord.astro";
+import { listPublicCapabilities } from "../content/repository";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../data/review-date";
 import { portfolioReadout } from "../data/portfolio";
@@ -20,6 +22,13 @@ const readout = portfolioReadout(projects);
 const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
 const snapshotSource = readout.snapshotSource ?? "No public snapshot is available.";
 export const prerender = false;
+const capabilityResult = await listPublicCapabilities();
+if (capabilityResult.error)
+  return new Response("Unable to load public capability evidence.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 ---
 
 <BaseLayout
@@ -64,6 +73,19 @@ export const prerender = false;
       </div>
     </div>
   </section>
+  {capabilityResult.capabilities.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <p class="body-copy">
+          Woodhouse connects independent products through reviewed evidence. Each project owns its
+          identity, gameplay and releases.
+        </p>
+        {capabilityResult.capabilities.map((capability) => (
+          <CapabilityRecord capability={capability} compact={true} />
+        ))}
+      </div>
+    </section>
+  )}
   <section class="section paper-section">
     <div class="container">
       <div class="section-heading">
@@ -71,8 +93,9 @@ export const prerender = false;
           <h2>Where attention is going.</h2>
         </div>
         <p>
-          Protocol 11 leads the 7 October review. Bubbles is converging on product quality; other
-          projects need release qualification, outside use, source parity or physical proof.
+          The 10 October capability review adds shared music discovery. Protocol 11 leads the
+          earlier 7 October product review. Bubbles is converging on product quality; other projects
+          need release qualification, outside use, source parity or physical proof.
         </p>
       </div>
       <p class="body-copy">This is the operating model, not live telemetry.</p>

@@ -309,6 +309,208 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "capability_review",
+      "label": "Reviewed shared capability",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "capability_key",
+              "label": "Capability key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "provider_key",
+              "label": "Provider key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "ownership",
+              "label": "Ownership",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "reviewed_at",
+              "label": "Reviewed at",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "package_name",
+              "label": "Package name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "available_version",
+              "label": "Available version",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "contract_version",
+              "label": "Contract version",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "package_url",
+              "label": "Package url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "package_sha256",
+              "label": "Package sha256",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "programme_url",
+              "label": "Programme url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "documentation_url",
+              "label": "Documentation url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "stations_url",
+              "label": "Stations url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "profiles_url",
+              "label": "Profiles url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "evidence_key",
+              "label": "Evidence key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "boundary",
+              "label": "Boundary",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "consumers",
+              "label": "Consumers",
+              "type": "repeater",
+              "required": true,
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "project_key",
+                    "label": "Project key",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "issue_url",
+                    "label": "Issue url",
+                    "type": "url",
+                    "required": true
+                  },
+                  {
+                    "slug": "station_id",
+                    "label": "Station id",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "scope",
+                    "label": "Scope",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "planned",
+                    "label": "Planned",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "in_progress",
+                    "label": "In progress",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "implemented",
+                    "label": "Implemented",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "deployed",
+                    "label": "Deployed",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "verified",
+                    "label": "Verified",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "installed_version",
+                    "label": "Installed version",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "deployed_revision",
+                    "label": "Deployed revision",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "release_evidence_key",
+                    "label": "Release evidence key",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "interaction_evidence_key",
+                    "label": "Interaction evidence key",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "evidence_key",
+                    "label": "Evidence key",
+                    "type": "string",
+                    "required": true
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "collections": [
@@ -833,7 +1035,8 @@
               "diagram_plate",
               "image_plate",
               "evidence_link",
-              "project_reference"
+              "project_reference",
+              "capability_review"
             ],
             "maxItems": 100
           }
@@ -1457,11 +1660,11 @@
         "data": {
           "name": "LoftwahFM",
           "index": "07",
-          "discipline": "Music platform · listener and venue product",
-          "title": "A mature listener product and an unfinished venue business can both be true.",
-          "summary": "LoftwahFM is already a substantial working music product. The larger business-music roadmap adds a second, broader product with venue reliability, control and operations still to build.",
-          "why": "One percentage would hide the distinction between the listener experience that exists and the more ambitious venue product that remains.",
-          "teaches": "A project can be useful today and still have a much larger unfinished ambition.",
+          "discipline": "Music platform · shared radio capability",
+          "title": "One music catalogue. Independent games. Evidence for each.",
+          "summary": "LoftwahFM owns the music catalogue, radio generation, station programming and shared browser client. Its public Radio collection and music client are available; game adoption and editorial radio need their own proof. The broader venue business remains a separate roadmap.",
+          "why": "Games can reuse published music and a compatible client while retaining their own sound, settings, lifecycle and release gates. Music availability does not establish in-game adoption or demand for a venue product.",
+          "teaches": "A shared capability earns its name through compatible releases and real consumers. Published upstream code and verified game use are different evidence.",
           "site_url": "https://fm.loftwah.com/",
           "site_og_image": "https://fm.loftwah.com/heroimage-og.jpg",
           "site_og_title": "LoftwahFM | Music, branded radio, and streams",
@@ -1567,6 +1770,19 @@
           "source_description": "The project portfolio report supplied by the operator on 7 October 2026, edited for public publication. Repository and production observations are reported by that source; this publication did not independently rerun the other projects.",
           "scope": "Nine project summaries refreshed from the supplied portfolio report. Historical snapshots and their review dates remain in the archive.",
           "editorial_notes": "Protocol 11 leads this review. GPT 6.1 Sol is the model the operator reports using for its recent work. Commit deltas, private tracker details and test totals are omitted; no physical or commercial acceptance is inferred.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-10",
+        "slug": "2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "Factory capability review · 10 October 2026",
+          "reviewed_at": "2026-10-10",
+          "source_description": "A focused review of the public LoftwahFM station and game manifests, published client archive and authorised game adoption hand-offs on 10 October 2026. Private source was inspected for adoption; its bodies are not reproduced.",
+          "scope": "LoftwahFM shared music capability and five reviewed game consumers. Other project delivery summaries retain their own earlier review dates.",
+          "editorial_notes": "Published upstream music, game implementation, exact deployed adoption and in-game verification remain separate claims. No first verified game adopter is established by this review. Editorial radio and the venue roadmap remain separate unfinished work.",
           "public_safe": true
         }
       }
@@ -1930,6 +2146,25 @@
           "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use.",
           "reviewed_at": "2026-10-07",
           "sort_order": 9,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-10",
+        "slug": "loftwahfm-2026-10-10",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-10",
+          "state": "Music client published · game adoption underway",
+          "state_tone": "active",
+          "current": "The public Radio collection, station catalogue and game profiles are available. The published @loftwahfm/radio-client 1.0.0 archive matches SHA-256 ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0. Profiles use manifest schema 1 / client major 1 and default to off, clean and speech-disabled. SHOALSHOT has merged client 1.0.0; Bubbles records active integration work. Fighter, Protocol 11 and Pirates remain planned in this review.",
+          "next_proof": "Each game must publish its installed client version, exact deployed revision and real in-game listening/lifecycle evidence before adoption is verified. Editorial generation, voice quality and approved public news editions remain unfinished upstream.",
+          "proof_boundary": "Public manifest and package checks establish upstream availability and compatibility. Reviewed SHOALSHOT source establishes implementation, with deployment and live game verification still unestablished here. No physical Safari, editorial readiness, commercial demand or venue-roadmap completion is claimed.",
+          "reviewed_at": "2026-10-10",
+          "sort_order": 7,
           "public_safe": true
         }
       }
@@ -2393,6 +2628,167 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "A dated summary of the operator-supplied 7 October report. Reported release evidence is distinct from a fresh Woodhouse inspection, physical-device acceptance and demonstrated external use."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-client-2026-10-10",
+        "slug": "loftwahfm-radio-client-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · published music capability",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-10",
+          "claim": "Client 1.0.0 and schema 1 music manifests are publicly available.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The client archive was fetched and its package name, version and SHA-256 checked. Public station and game profile endpoints returned schema 1; profiles require client major 1, with music off and speech disabled by default.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://fm.loftwah.com/radio/v1/client/1.0.0/loftwahfm-radio-client-1.0.0.tgz",
+          "revision": "@loftwahfm/radio-client@1.0.0; sha256:ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0",
+          "public_safe": true,
+          "proof_boundary": "This is availability and compatibility evidence for upstream music. No game playback, physical-device or approved editorial edition is established."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-radio-adoption-2026-10-10",
+        "slug": "shoalshot-radio-adoption-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · initial FM hand-off observation",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-10",
+          "claim": "The first 10 October review found planned adoption. Later implementation evidence supersedes this initial observation.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "At the initial source audit, the package/lockfile and source tree showed no FM client implementation. A later review on the same date confirmed the merged client; the capability record now links that separate implementation proof.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/605",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Planned work is not implementation, deployment or verified in-game listening. Absence at an audited main revision does not describe unreviewed branches or future work. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-fighter-radio-adoption-2026-10-10",
+        "slug": "fighter-radio-adoption-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "fighter · FM adoption planned",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-10",
+          "claim": "An implementation hand-off exists; FM client adoption is not established by this review.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The canonical integration work is linked below. The audited package/lockfile and source tree showed no FM client implementation. Host-owned combat audio. Client 1.0.0 is the upstream candidate, not an installed game dependency.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://github.com/loftwah/fighter/issues/319",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Planned work is not implementation, deployment or verified in-game listening. Absence at an audited main revision does not describe unreviewed branches or future work. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-protocol-11-radio-adoption-2026-10-10",
+        "slug": "protocol-11-radio-adoption-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "protocol-11 · FM adoption planned",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-10",
+          "claim": "An implementation hand-off exists; FM client adoption is not established by this review.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The canonical integration work is linked below. The audited package/lockfile and source tree showed no FM client implementation. Host-owned table audio. Client 1.0.0 is the upstream candidate, not an installed game dependency.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://github.com/loftwah/protocol-11/issues/198",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Planned work is not implementation, deployment or verified in-game listening. Absence at an audited main revision does not describe unreviewed branches or future work. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-bubbles-radio-adoption-2026-10-10",
+        "slug": "bubbles-radio-adoption-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "Bubbles · FM adoption in progress",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-10",
+          "claim": "An active integration lane is recorded; implemented main and production adoption are not established here.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The owning issue records an active audio integration lane using client 1.0.0. The audited main package/lockfile and source tree still showed no FM client implementation. Branch activity establishes work in progress, not merged or deployed adoption.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://github.com/loftwah/bubbles/issues/1322",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Planned work is not implementation, deployment or verified in-game listening. Absence at an audited main revision does not describe unreviewed branches or future work. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-pirates-radio-adoption-2026-10-10",
+        "slug": "pirates-radio-adoption-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "pirates · FM adoption planned",
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-10",
+          "claim": "An implementation hand-off exists; FM client adoption is not established by this review.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The canonical integration work is linked below. The audited package/lockfile and source tree showed no FM client implementation. Optional Enhanced mode only; Original offline parity unchanged. Client 1.0.0 is the upstream candidate, not an installed game dependency.",
+          "source_label": "Reviewed public capability and authorised adoption record",
+          "source_url": "https://github.com/loftwah/pirates/issues/451",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Planned work is not implementation, deployment or verified in-game listening. Absence at an audited main revision does not describe unreviewed branches or future work. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-shoalshot-client-1-0-0-implementation-2026-10-10",
+        "slug": "loftwahfm-radio-shoalshot-client-1-0-0-implementation-2026-10-10",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · FM client implementation",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-10",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-10",
+          "claim": "SHOALSHOT has merged music client 1.0.0; production adoption is not established here.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-10",
+          "summary": "The merged integration, package declaration and lockfile were inspected. They pin the published client 1.0.0 archive through the existing game audio owner. Deployment and exact live in-game interaction still require their own evidence.",
+          "source_label": "Reviewed implementation and authorised adoption record",
+          "source_url": "https://github.com/loftwah/shoalshot/pull/608",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Merged source proves implementation. It does not prove deployment, live listening, physical Safari behaviour or approved editorial radio. GitHub repository access may be required."
         }
       }
     ],
@@ -3984,7 +4380,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The second is the opposite finding. No project imports anything from any other. There is no shared package, no workspace link, no common dependency. Each project is self-contained, and that is not an accident of scheduling — it is what the different failure modes require."
+                      "text": "In the safety and release mechanisms inspected on 5 October 2026, no shared code dependency was found. Each mechanism answered a different failure. This dated finding does not rule out reuse in another subsystem; the 10 October music capability review records LoftwahFM separately."
                     }
                   ]
                 }
@@ -4467,6 +4863,257 @@
                     {
                       "_type": "span",
                       "text": "Model choice belongs to this dated account of the work. GPT 6.1 Sol is what the operator reports using for the recent Protocol 11 work; it is not a permanent rule for the factory. The durable rule is to put capable judgement at the point where it changes the outcome."
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-shared-music-independent-games",
+        "slug": "shared-music-independent-games",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "Shared music, independent games.",
+          "kind": "Portfolio report",
+          "deck": "LoftwahFM now publishes a reusable music client. The useful portfolio question is which games actually use it, and what evidence supports that answer.",
+          "review_date": "2026-10-10",
+          "source_reference": "Public FM player, station/game manifests and client archive inspected on 10 October 2026, alongside authorised canonical programme and consumer hand-offs. Private issue bodies and private source are not reproduced. This is a focused capability review; other dossiers retain their earlier dates.",
+          "lead": "The music capability has shipped upstream, and SHOALSHOT has merged the first reviewed client implementation. Game deployment and listening proof remain separate work.",
+          "lesson": "Discover a compatible release, inspect the real consumer, and require its own deployed interaction evidence. A hand-off is a dependency to resolve, not proof of integration.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm",
+            "$ref:project-shoalshot",
+            "$ref:project-fighter",
+            "$ref:project-protocol-11",
+            "$ref:project-bubbles",
+            "$ref:project-pirates"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "ownership",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "ownership-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "A useful hub knows who owns the work.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "ownership-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Woodhouse connects independent products through reviewed dossiers and evidence. LoftwahFM supplies music and station programming; the games keep control of their own player experience. A shared sound source does not require a shared game engine, visual identity or release service.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "ownership-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "The public Radio collection is a listening destination today. The larger venue business and unfinished editorial radio programme remain separate claims. A live music manifest does not prove a finished presenter, public news edition or commercial customer.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "ownership-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-3",
+                      "text": "A final source check found SHOALSHOT had merged client 1.0.0 while this review was being prepared. Bubbles also records an active integration lane. The review now distinguishes those observations from the three remaining planned consumers, without promoting implementation or branch work into a production claim.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "capability_review",
+              "_key": "fm-music-review",
+              "_version": 1,
+              "capability_key": "loftwahfm-radio",
+              "provider_key": "loftwahfm",
+              "title": "Shared music. Separate game acceptance.",
+              "ownership": "LoftwahFM owns catalogue, radio generation, programming, audio publication and client releases. Each game owns playback transport, preferences, gameplay cues, mobile lifecycle and deployment. Woodhouse publishes reviewed relationships and evidence.",
+              "reviewed_at": "2026-10-10",
+              "package_name": "@loftwahfm/radio-client",
+              "available_version": "1.0.0",
+              "contract_version": "manifest schema 1 / client major 1",
+              "package_url": "https://fm.loftwah.com/radio/v1/client/1.0.0/loftwahfm-radio-client-1.0.0.tgz",
+              "package_sha256": "ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0",
+              "programme_url": "https://github.com/loftwah/loftwahfm/issues/213",
+              "documentation_url": "https://github.com/loftwah/loftwahfm/blob/a3a30fe92531ccc84bb8e7e1cf6c50b6b533bf40/docs/radio-game-integration.md",
+              "stations_url": "https://fm.loftwah.com/api/radio/v1/stations",
+              "profiles_url": "https://fm.loftwah.com/api/radio/v1/games",
+              "evidence_key": "loftwahfm-radio-client-2026-10-10",
+              "boundary": "Music is available upstream. No first verified in-game adopter is established in this review. Editorial radio remains in development. False stage values mean evidence is not established here, not that future adoption is forbidden.",
+              "consumers": [
+                {
+                  "project_key": "shoalshot",
+                  "issue_url": "https://github.com/loftwah/shoalshot/issues/605",
+                  "station_id": "low-tide",
+                  "scope": "Host-owned game audio",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": true,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "1.0.0",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "loftwahfm-radio-shoalshot-client-1-0-0-implementation-2026-10-10"
+                },
+                {
+                  "project_key": "fighter",
+                  "issue_url": "https://github.com/loftwah/fighter/issues/319",
+                  "station_id": "pressure-system",
+                  "scope": "Host-owned combat audio",
+                  "planned": true,
+                  "in_progress": false,
+                  "implemented": false,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "fighter-radio-adoption-2026-10-10"
+                },
+                {
+                  "project_key": "protocol-11",
+                  "issue_url": "https://github.com/loftwah/protocol-11/issues/198",
+                  "station_id": "cartridge-club",
+                  "scope": "Host-owned table audio",
+                  "planned": true,
+                  "in_progress": false,
+                  "implemented": false,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "protocol-11-radio-adoption-2026-10-10"
+                },
+                {
+                  "project_key": "bubbles",
+                  "issue_url": "https://github.com/loftwah/bubbles/issues/1322",
+                  "station_id": "soft-focus",
+                  "scope": "Host-owned puzzle audio",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": false,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "bubbles-radio-adoption-2026-10-10"
+                },
+                {
+                  "project_key": "pirates",
+                  "issue_url": "https://github.com/loftwah/pirates/issues/451",
+                  "station_id": "saltwater-static",
+                  "scope": "Optional Enhanced mode only; Original offline parity unchanged",
+                  "planned": true,
+                  "in_progress": false,
+                  "implemented": false,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "pirates-radio-adoption-2026-10-10"
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "next-decision",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "next-decision-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "What changes the next decision",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-decision-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "An agent can follow the upstream contract and its own game issue, select a compatible client, then record the installed version, deployment and listening evidence. New consumers enter through reviewed project identities and a capability review; no fixed five-game registry determines who may join.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-decision-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "Technical intelligence is useful when it changes a concrete compatibility or quality decision. Product intelligence is useful when it identifies an audience and a cheap demand test. Supplied reports remain hypotheses until checked against sources; a plausible pitch does not establish demand. Those investigations belong in their existing work, rather than another generator or recurring orchestration service.",
+                      "marks": []
                     }
                   ]
                 }

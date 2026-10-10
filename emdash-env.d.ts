@@ -114,7 +114,32 @@ export interface DispatchContentProjectReferenceV1Block {
 
 export type DispatchContentProjectReferenceBlock = DispatchContentProjectReferenceV1Block;
 
-export type DispatchContentBlock = DispatchContentProseBlock | DispatchContentPullQuoteBlock | DispatchContentCalloutBlock | DispatchContentTechnicalPlateBlock | DispatchContentDiagramPlateBlock | DispatchContentImagePlateBlock | DispatchContentEvidenceLinkBlock | DispatchContentProjectReferenceBlock;
+export interface DispatchContentCapabilityReviewV1Block {
+  _type: "capability_review";
+  _version: 1;
+  _key: string;
+  "capability_key": string;
+  "provider_key": string;
+  "title": string;
+  "ownership": string;
+  "reviewed_at": string;
+  "package_name": string;
+  "available_version": string;
+  "contract_version": string;
+  "package_url": string;
+  "package_sha256": string;
+  "programme_url": string;
+  "documentation_url": string;
+  "stations_url": string;
+  "profiles_url": string;
+  "evidence_key": string;
+  "boundary": string;
+  "consumers": { "project_key": string; "issue_url": string; "station_id": string; "scope": string; "planned": boolean; "in_progress": boolean; "implemented": boolean; "deployed": boolean; "verified": boolean; "installed_version"?: string | null; "deployed_revision"?: string | null; "release_evidence_key"?: string | null; "interaction_evidence_key"?: string | null; "evidence_key": string }[];
+}
+
+export type DispatchContentCapabilityReviewBlock = DispatchContentCapabilityReviewV1Block;
+
+export type DispatchContentBlock = DispatchContentProseBlock | DispatchContentPullQuoteBlock | DispatchContentCalloutBlock | DispatchContentTechnicalPlateBlock | DispatchContentDiagramPlateBlock | DispatchContentImagePlateBlock | DispatchContentEvidenceLinkBlock | DispatchContentProjectReferenceBlock | DispatchContentCapabilityReviewBlock;
 
 export interface Dispatch {
   id: string;

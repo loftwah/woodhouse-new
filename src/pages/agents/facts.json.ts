@@ -1,16 +1,21 @@
 import type { APIRoute } from "astro";
-import { listProjectRecords, listPublicEvidence } from "../../content/repository";
+import {
+  listProjectRecords,
+  listPublicEvidence,
+  listPublicCapabilities
+} from "../../content/repository";
 import { portfolioReadout } from "../../data/portfolio";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
 
 export const GET: APIRoute = async ({ cache }) => {
-  const [projectResult, evidenceResult] = await Promise.all([
+  const [projectResult, evidenceResult, capabilityResult] = await Promise.all([
     listProjectRecords(),
-    listPublicEvidence()
+    listPublicEvidence(),
+    listPublicCapabilities()
   ]);
-  if (projectResult.error || evidenceResult.error) {
+  if (projectResult.error || evidenceResult.error || capabilityResult.error) {
     return new Response("Unable to load the current public facts.", {
       status: 503,
       headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "private, no-store" }
@@ -18,11 +23,13 @@ export const GET: APIRoute = async ({ cache }) => {
   }
   for (const hint of projectResult.cacheHints) cache.set(hint);
   cache.set(evidenceResult.cacheHint);
-  const evidenceByProject = new Map(
-    evidenceResult.evidence.map((item) => [String(item.data.project_key), item])
-  );
+  for (const hint of capabilityResult.cacheHints) cache.set(hint);
   const projects = projectResult.projects.map((project) => {
-    const evidence = evidenceByProject.get(project.slug);
+    // A newer radio-only review must not become proof for an older gameplay state.
+    const evidence = evidenceResult.evidence.find(
+      (item) =>
+        item.data.project_key === project.slug && item.data.snapshot_key === project.snapshotId
+    );
     return {
       slug: project.slug,
       name: project.name,
@@ -39,7 +46,9 @@ export const GET: APIRoute = async ({ cache }) => {
             href: `/evidence/${evidence.id}/`,
             kind: evidence.data.evidence_kind,
             state: evidence.data.evidence_state,
-            summary: evidence.data.summary
+            summary: evidence.data.summary,
+            reviewed: evidence.data.reviewed_at,
+            snapshot: evidence.data.snapshot_key
           }
         : null
     };
@@ -65,6 +74,14 @@ export const GET: APIRoute = async ({ cache }) => {
       "A project whose repository is public is summarised from that repository and its published site.",
     projectCount: projects.length,
     projects,
+    portfolioRole: {
+      hub: "Woodhouse publishes portfolio discovery, relationships and reviewed evidence.",
+      spokes: "Each project owns its product, identity and release gates.",
+      workAuthority: "GitHub remains canonical for issues and pull requests.",
+      futureConsumers:
+        "Discover published project identities and upstream game profiles; add a reviewed capability record after checking the owning work and source. A profile alone is not adoption."
+    },
+    capabilities: capabilityResult.capabilities,
     knownAnswers: {
       piratesProceduralFork: {
         answer:
@@ -91,9 +108,9 @@ export const GET: APIRoute = async ({ cache }) => {
       sharedAgentSafetyLayer: {
         answer: "no shared implementation; checked and not adopted",
         reason:
-          "The factory's interactive products share agent doctrine, not code. Browser contention, visual-evidence " +
+          "These safety and release mechanisms share agent doctrine, not an adopted implementation. Browser contention, visual-evidence " +
           "comparison, long-run reporting and deployment verification were reviewed on 5 October 2026 and resolve to " +
-          "different mechanisms with different failure modes. No product imports another. Nothing is being extracted.",
+          "different mechanisms with different failure modes. This dated finding concerns those safety and release mechanisms; shared music is reviewed separately in capabilities.",
         project: null,
         reviewed: "2026-10-05"
       },

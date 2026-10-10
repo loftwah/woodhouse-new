@@ -73,3 +73,29 @@ test("a deeply nested body stops rather than recursing without bound", () => {
   for (let index = 0; index < 200; index++) deep = { content: [deep] };
   assert.equal(typeof searchTextFromBlocks([deep]), "string");
 });
+
+test("capability prose and reader-visible client/station identifiers are searchable without proof keys or URLs", () => {
+  const text = searchTextFromBlocks([
+    {
+      _type: "capability_review",
+      ownership: "FM owns programming",
+      package_name: "@loftwahfm/radio-client",
+      available_version: "1.0.0",
+      contract_version: "schema 1",
+      consumers: [
+        {
+          scope: "Optional enhanced music",
+          station_id: "low-tide",
+          evidence_key: "private-proof-key",
+          issue_url: "https://example.com/private"
+        }
+      ],
+      package_sha256: "not-searchable-digest"
+    }
+  ]);
+  assert.match(text, /FM owns programming/);
+  assert.match(text, /@loftwahfm\/radio-client/);
+  assert.match(text, /low-tide/);
+  assert.match(text, /Optional enhanced music/);
+  assert.doesNotMatch(text, /private-proof-key|example.com|not-searchable-digest/);
+});
