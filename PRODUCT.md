@@ -16,7 +16,7 @@ Claims have a source and a review date. Implementation, qualification, productio
 
 The first release publishes the founding essay, project dossiers, engineering incidents, the operating doctrine, architecture and Agent Reception. It uses a dated, reviewed public snapshot because the project repositories are private. It does not claim to provide live project telemetry or expose private issue contents.
 
-EmDash owns editorial drafts, revisions, media and publication. New dispatches use the Woodhouse page layout and a required source reference and review date. The public-safe factory snapshot and live GitHub state remain outside EmDash; publishing a CMS entry does not make private repository data public.
+EmDash owns editorial drafts, revisions, media and publication, including the reviewed public-safe snapshots, statuses and evidence used by the site. New dispatches use the Woodhouse page layout and a required source reference and review date. GitHub remains authoritative for repository, issue and pull-request state; publishing a CMS entry does not make private repository data public.
 
 ## Explicitly out of scope for this release
 
@@ -35,3 +35,5 @@ A first-time visitor should understand the name, the factory, the role of agents
 Woodhouse owns discovery, reviewed project relationships and evidence about shared capabilities. Each spoke owns its product, identity, source, audio lifecycle and release gates; GitHub remains the canonical work tracker. LoftwahFM owns music/radio generation, programming and its versioned client. Woodhouse makes that capability listenable through FM's official player and links its consumers without operating a radio service, polling games or centralising their releases.
 
 Technical and commercial intelligence should change a concrete decision: compatibility, product quality, audience, positioning or a cheap demand test. Supplied reports and plausible pitches are hypotheses until source-checked; implementation and deployment do not establish demand. Private reports remain private unless explicitly reviewed for publication. Existing issues #16 and #17 own further intelligence and commercial work.
+
+Reviewed 11 October 2026: MP can paste portfolio information and notes without writing an implementation brief. Woodhouse must reconcile the meaningful facts, make justified changes within its existing authority, and carry a changed public portfolio through the established publication path. A research summary alone does not complete an actionable refresh. #18 owns the site/adoption outcome; exact blocked steps and no-change decisions must be stated without stopping independent executable work. The concise operating rule lives in AGENTS.md.
