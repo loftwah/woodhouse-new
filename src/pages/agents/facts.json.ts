@@ -87,10 +87,7 @@ export const GET: APIRoute = async ({ cache }) => {
     capabilities: capabilityResult.capabilities,
     knownAnswers: {
       piratesProceduralFork: {
-        answer:
-          pirates?.state === "Gate B locked" || pirates?.state === "Source parity before expansion"
-            ? "not approved"
-            : "see current reviewed project state",
+        answer: "not approved",
         reason: pirates?.proofBoundary ?? "No public Pirates state is available.",
         project: "pirates",
         reviewed: pirates?.reviewDate ?? readout.reviewDate
