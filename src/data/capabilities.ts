@@ -105,13 +105,45 @@ export function projectCapabilities(
         ].every(safeUrl)
       )
         continue;
+      // A newer available client does not invalidate a reviewed supported pin.
+      // V1 records keep their original single-version contract.
+      const supported = block._version === 2 ? block.supported_clients : [];
+      if (
+        block._version === 2 &&
+        (!supported.length ||
+          new Set(supported.map((client) => client.version)).size !== supported.length ||
+          !supported.every((client) => {
+            const proof = proofs.get(client.evidence_key);
+            return (
+              /^\d+\.\d+\.\d+$/.test(client.version) &&
+              safeUrl(client.package_url) &&
+              /^[a-f0-9]{64}$/.test(client.package_sha256) &&
+              backed(client.evidence_key, provider.slug, "production verification") &&
+              !!formatReviewDate(proof?.data.reviewed_at ?? "") &&
+              proof!.data.reviewed_at! <= block.reviewed_at
+            );
+          }) ||
+          !supported.some(
+            (client) =>
+              client.version === block.available_version &&
+              client.package_url === block.package_url &&
+              client.package_sha256 === block.package_sha256 &&
+              client.evidence_key === block.evidence_key
+          ))
+      )
+        continue;
       const rows = block.consumers ?? [];
       if (new Set(rows.map((row) => row.project_key)).size !== rows.length) continue;
       const consumers = rows.flatMap((row) => {
         const project = identities.get(row.project_key);
         if (!project || !safeUrl(row.issue_url) || !backed(row.evidence_key, project.slug))
           return [];
-        const prefix = `${block.capability_key}-${project.slug}-client-${block.available_version.replaceAll(".", "-")}-`;
+        const installed = row.installed_version ?? "";
+        const compatible =
+          block._version === 2
+            ? supported.some((client) => client.version === installed)
+            : installed === block.available_version;
+        const prefix = `${block.capability_key}-${project.slug}-client-${installed.replaceAll(".", "-")}-`;
         const stageProof = (
           key: string | null | undefined,
           stage: string,
@@ -131,8 +163,7 @@ export function projectCapabilities(
         };
         if (
           row.implemented &&
-          (row.installed_version !== block.available_version ||
-            !stageProof(row.evidence_key, "implementation", "implementation"))
+          (!compatible || !stageProof(row.evidence_key, "implementation", "implementation"))
         )
           return [];
         if (
