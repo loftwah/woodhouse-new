@@ -116,6 +116,9 @@ export function projectCapabilities(
             const proof = proofs.get(client.evidence_key);
             return (
               /^\d+\.\d+\.\d+$/.test(client.version) &&
+              client.evidence_key.startsWith(
+                `${block.capability_key}-client-${client.version.replaceAll(".", "-")}-supported-`
+              ) &&
               safeUrl(client.package_url) &&
               /^[a-f0-9]{64}$/.test(client.package_sha256) &&
               backed(client.evidence_key, provider.slug, "production verification") &&

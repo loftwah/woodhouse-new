@@ -211,6 +211,8 @@ test("a mixed-version review fails closed on unsupported pins and unverifiable c
     "private-proof",
     "future-proof",
     "wrong-provider",
+    "swapped-support-proof",
+    "unrelated-support-proof",
     "wrong-stage-version",
     "wrong-release"
   ]) {
@@ -228,6 +230,10 @@ test("a mixed-version review fails closed on unsupported pins and unverifiable c
     if (fault === "private-proof") proof.data.public_safe = false;
     if (fault === "future-proof") proof.data.reviewed_at = "2026-10-12";
     if (fault === "wrong-provider") proof.data.project_key = "fighter";
+    if (fault === "swapped-support-proof")
+      support.evidence_key = block.supported_clients[2]!.evidence_key;
+    if (fault === "unrelated-support-proof")
+      support.evidence_key = "loftwahfm-games-radio-analytics-2026-10-11";
     if (fault === "wrong-stage-version")
       block.consumers[0]!.evidence_key = block.consumers[0]!.evidence_key.replace("1-2-0", "1-0-0");
     if (fault === "wrong-release") block.consumers[0]!.deployed_revision = "different";
