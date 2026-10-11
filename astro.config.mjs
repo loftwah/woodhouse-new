@@ -116,7 +116,7 @@ export default defineConfig({
       objectCache: kvCache({
         binding: "CACHE",
         defaultTtl: 300,
-        keyPrefix: "woodhouse:emdash:2026-10-10-fm-listening:"
+        keyPrefix: "woodhouse:emdash:2026-10-11-portfolio-refresh:"
       }),
       siteUrl: siteOrigin,
       sandboxed: [auditLog, editorialPolicy, enquiries],

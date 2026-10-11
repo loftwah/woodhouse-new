@@ -56,6 +56,9 @@ export const GET: APIRoute = async ({ cache }) => {
   const readout = portfolioReadout(projectResult.projects);
   const pirates = projectResult.projects.find((project) => project.slug === "pirates");
   const bubbles = projectResult.projects.find((project) => project.slug === "bubbles");
+  const bubblesAdoption = capabilityResult.capabilities
+    .find((capability) => capability.key === "loftwahfm-radio")
+    ?.consumers.find((consumer) => consumer.project.slug === "bubbles");
   const max = projectResult.projects.find((project) => project.slug === "max");
   const body = {
     name: "WOODHOUSE",
@@ -84,17 +87,19 @@ export const GET: APIRoute = async ({ cache }) => {
     capabilities: capabilityResult.capabilities,
     knownAnswers: {
       piratesProceduralFork: {
-        answer:
-          pirates?.state === "Gate B locked" || pirates?.state === "Source parity before expansion"
-            ? "not approved"
-            : "see current reviewed project state",
+        answer: "not approved",
         reason: pirates?.proofBoundary ?? "No public Pirates state is available.",
         project: "pirates",
         reviewed: pirates?.reviewDate ?? readout.reviewDate
       },
       bubblesExactProductionBuild: {
-        answer: "not established by this public snapshot",
-        reason: "No exact deployed build identity or production receipt is published here.",
+        answer: bubblesAdoption?.record.deployed
+          ? "exact radio release recorded; owner-preview limits remain"
+          : "not established by this public snapshot",
+        reason: bubblesAdoption?.record.deployed
+          ? bubblesAdoption.record.scope
+          : "No exact deployed build identity or production receipt is published here.",
+        revision: bubblesAdoption?.record.deployed_revision || null,
         project: "bubbles",
         reviewed: bubbles?.reviewDate ?? readout.reviewDate
       },

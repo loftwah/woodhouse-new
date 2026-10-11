@@ -11,12 +11,16 @@ const projects = seed.content.projects.map((e: { slug: string; data: { name: str
 const evidence = seed.content.evidence_records.map(
   (e: { slug: string; data: Record<string, unknown> }) => ({ ...e, id: e.slug })
 );
-const dispatches = seed.content.dispatches.map(
+const allDispatches = seed.content.dispatches.map(
   (e: { slug: string; data: { review_date: string; content: CapabilityReview[] } }) => ({
     slug: e.slug,
     reviewDate: e.data.review_date,
     content: e.data.content
   })
+);
+// Preserve the earlier single-version review as a historical fixture.
+const dispatches = allDispatches.filter((d: { content: CapabilityReview[] }) =>
+  d.content.some((b) => b._type === "capability_review" && b._version === 1)
 );
 const baseline = () => structuredClone(dispatches);
 const review = (ds: typeof dispatches): CapabilityReview =>
@@ -168,4 +172,71 @@ test("listening uses only the official FM player and preserves evidence when opt
   assert.equal(projectCapabilities(ds, projects, evidence)[0]?.listening?.shows.length, 1);
   review(ds).shows_evidence_key = "missing-publication-proof";
   assert.equal(projectCapabilities(ds, projects, evidence)[0]?.listening?.shows.length, 0);
+});
+
+test("current review accepts explicitly supported mixed pins and exact deployed browser receipts", () => {
+  const [capability] = projectCapabilities(allDispatches, projects, evidence);
+  assert.equal(capability?.review.reviewed_at, "2026-10-11");
+  assert.equal(capability?.review.available_version, "1.2.0");
+  const pins = Object.fromEntries(
+    capability!.consumers.map((c) => [c.project.slug, c.record.installed_version])
+  );
+  assert.deepEqual(pins, {
+    shoalshot: "1.2.0",
+    fighter: "1.1.0",
+    "protocol-11": "1.0.0",
+    bubbles: "1.0.0",
+    pirates: ""
+  });
+  assert.ok(
+    capability!.consumers
+      .filter((c) => c.project.slug !== "pirates")
+      .every((c) => c.record.implemented && c.record.deployed && c.record.verified)
+  );
+  assert.equal(
+    capability!.consumers.find((c) => c.project.slug === "pirates")!.record.implemented,
+    false
+  );
+});
+
+test("a mixed-version review fails closed on unsupported pins and unverifiable compatibility", () => {
+  const current = allDispatches.filter((d: { content: CapabilityReview[] }) =>
+    d.content.some((b) => b._type === "capability_review" && b._version === 2)
+  );
+  for (const fault of [
+    "unsupported",
+    "duplicate",
+    "wrong-hash",
+    "missing-proof",
+    "private-proof",
+    "future-proof",
+    "wrong-provider",
+    "swapped-support-proof",
+    "unrelated-support-proof",
+    "wrong-stage-version",
+    "wrong-release"
+  ]) {
+    const ds = structuredClone(current);
+    const block = review(ds);
+    assert.equal(block._version, 2);
+    if (block._version !== 2) throw new Error("Expected current schema");
+    const proofs = structuredClone(evidence);
+    const support = block.supported_clients[0]!;
+    const proof = proofs.find((e: { id: string }) => e.id === support.evidence_key);
+    if (fault === "unsupported") block.consumers[1]!.installed_version = "1.9.0";
+    if (fault === "duplicate") block.supported_clients.push({ ...support });
+    if (fault === "wrong-hash") block.package_sha256 = "a".repeat(64);
+    if (fault === "missing-proof") support.evidence_key = "missing";
+    if (fault === "private-proof") proof.data.public_safe = false;
+    if (fault === "future-proof") proof.data.reviewed_at = "2026-10-12";
+    if (fault === "wrong-provider") proof.data.project_key = "fighter";
+    if (fault === "swapped-support-proof")
+      support.evidence_key = block.supported_clients[2]!.evidence_key;
+    if (fault === "unrelated-support-proof")
+      support.evidence_key = "loftwahfm-games-radio-analytics-2026-10-11";
+    if (fault === "wrong-stage-version")
+      block.consumers[0]!.evidence_key = block.consumers[0]!.evidence_key.replace("1-2-0", "1-0-0");
+    if (fault === "wrong-release") block.consumers[0]!.deployed_revision = "different";
+    assert.equal(projectCapabilities(ds, projects, proofs).length, 0, fault);
+  }
 });

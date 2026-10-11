@@ -142,7 +142,36 @@ export interface DispatchContentCapabilityReviewV1Block {
   "published_shows"?: { "title": string; "url": string }[] | null;
 }
 
-export type DispatchContentCapabilityReviewBlock = DispatchContentCapabilityReviewV1Block;
+export interface DispatchContentCapabilityReviewV2Block {
+  _type: "capability_review";
+  _version: 2;
+  _key: string;
+  "capability_key": string;
+  "provider_key": string;
+  "title": string;
+  "ownership": string;
+  "reviewed_at": string;
+  "package_name": string;
+  "available_version": string;
+  "contract_version": string;
+  "package_url": string;
+  "package_sha256": string;
+  "programme_url": string;
+  "documentation_url": string;
+  "stations_url": string;
+  "profiles_url": string;
+  "evidence_key": string;
+  "boundary": string;
+  "consumers": { "project_key": string; "issue_url": string; "station_id": string; "scope": string; "planned": boolean; "in_progress": boolean; "implemented": boolean; "deployed": boolean; "verified": boolean; "installed_version"?: string | null; "deployed_revision"?: string | null; "release_evidence_key"?: string | null; "interaction_evidence_key"?: string | null; "evidence_key": string; "station_name"?: string | null }[];
+  "listen_url"?: string | null;
+  "embed_url"?: string | null;
+  "listening_summary"?: string | null;
+  "shows_evidence_key"?: string | null;
+  "published_shows"?: { "title": string; "url": string }[] | null;
+  "supported_clients": { "version": string; "package_url": string; "package_sha256": string; "evidence_key": string }[];
+}
+
+export type DispatchContentCapabilityReviewBlock = DispatchContentCapabilityReviewV1Block | DispatchContentCapabilityReviewV2Block;
 
 export type DispatchContentBlock = DispatchContentProseBlock | DispatchContentPullQuoteBlock | DispatchContentCalloutBlock | DispatchContentTechnicalPlateBlock | DispatchContentDiagramPlateBlock | DispatchContentImagePlateBlock | DispatchContentEvidenceLinkBlock | DispatchContentProjectReferenceBlock | DispatchContentCapabilityReviewBlock;
 

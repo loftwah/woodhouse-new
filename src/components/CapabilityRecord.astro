@@ -15,7 +15,7 @@ const stages = [
   ["in_progress", "In progress"],
   ["implemented", "Implemented"],
   ["deployed", "Deployed"],
-  ["verified", "Verified in game"]
+  ["verified", "Browser evidence reviewed"]
 ] as const;
 ---
 
@@ -43,6 +43,18 @@ const stages = [
       </code>
       . {review.contract_version}.
     </p>
+    {review._version === 2 && (
+      <p>
+        <strong>Reviewed supported pins:</strong>{" "}
+        {review.supported_clients.map((client, index) => (
+          <>
+            {index > 0 && " · "}
+            <a href={`/evidence/${client.evidence_key}/`}>{client.version}</a>
+          </>
+        ))}
+        . Each game’s installed version is recorded below.
+      </p>
+    )}
     {!compact && (
       <>
         <p>
@@ -78,7 +90,7 @@ const stages = [
             <a href={`/projects/${project.slug}/`}>{project.name}</a>
           </h3>
           <p>
-            {record.scope}. Station:{" "}
+            {record.scope.replace(/[.\s]+$/, "")}. Station:{" "}
             {stationHref ? (
               <a href={stationHref}>Listen to {record.station_name || record.station_id}</a>
             ) : (
@@ -90,7 +102,7 @@ const stages = [
             <p>
               <strong>
                 {record.verified
-                  ? "Verified in game"
+                  ? "Browser evidence reviewed"
                   : record.deployed
                     ? "Deployed; in-game proof pending"
                     : record.implemented

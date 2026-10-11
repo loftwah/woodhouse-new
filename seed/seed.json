@@ -313,7 +313,7 @@
     {
       "slug": "capability_review",
       "label": "Reviewed shared capability",
-      "currentVersion": 1,
+      "currentVersion": 2,
       "versions": [
         {
           "version": 1,
@@ -555,6 +555,287 @@
                     "slug": "url",
                     "label": "Edition URL",
                     "type": "url",
+                    "required": true
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "version": 2,
+          "fields": [
+            {
+              "slug": "capability_key",
+              "label": "Capability key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "provider_key",
+              "label": "Provider key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "ownership",
+              "label": "Ownership",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "reviewed_at",
+              "label": "Reviewed at",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "package_name",
+              "label": "Package name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "available_version",
+              "label": "Available version",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "contract_version",
+              "label": "Contract version",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "package_url",
+              "label": "Package url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "package_sha256",
+              "label": "Package sha256",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "programme_url",
+              "label": "Programme url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "documentation_url",
+              "label": "Documentation url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "stations_url",
+              "label": "Stations url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "profiles_url",
+              "label": "Profiles url",
+              "type": "url",
+              "required": true
+            },
+            {
+              "slug": "evidence_key",
+              "label": "Evidence key",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "boundary",
+              "label": "Boundary",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "consumers",
+              "label": "Consumers",
+              "type": "repeater",
+              "required": true,
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "project_key",
+                    "label": "Project key",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "issue_url",
+                    "label": "Issue url",
+                    "type": "url",
+                    "required": true
+                  },
+                  {
+                    "slug": "station_id",
+                    "label": "Station id",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "scope",
+                    "label": "Scope",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "planned",
+                    "label": "Planned",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "in_progress",
+                    "label": "In progress",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "implemented",
+                    "label": "Implemented",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "deployed",
+                    "label": "Deployed",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "verified",
+                    "label": "Verified",
+                    "type": "boolean",
+                    "required": true
+                  },
+                  {
+                    "slug": "installed_version",
+                    "label": "Installed version",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "deployed_revision",
+                    "label": "Deployed revision",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "release_evidence_key",
+                    "label": "Release evidence key",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "interaction_evidence_key",
+                    "label": "Interaction evidence key",
+                    "type": "string",
+                    "required": false
+                  },
+                  {
+                    "slug": "evidence_key",
+                    "label": "Evidence key",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "station_name",
+                    "label": "Station name",
+                    "type": "string",
+                    "required": false
+                  }
+                ]
+              }
+            },
+            {
+              "slug": "listen_url",
+              "label": "Public listening URL",
+              "type": "url",
+              "required": false
+            },
+            {
+              "slug": "embed_url",
+              "label": "Official player embed URL",
+              "type": "url",
+              "required": false
+            },
+            {
+              "slug": "listening_summary",
+              "label": "Listening introduction",
+              "type": "text",
+              "required": false
+            },
+            {
+              "slug": "shows_evidence_key",
+              "label": "Show publication evidence key",
+              "type": "string",
+              "required": false
+            },
+            {
+              "slug": "published_shows",
+              "label": "Reviewed published shows",
+              "type": "repeater",
+              "required": false,
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "title",
+                    "label": "Show title",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "url",
+                    "label": "Edition URL",
+                    "type": "url",
+                    "required": true
+                  }
+                ]
+              }
+            },
+            {
+              "slug": "supported_clients",
+              "label": "Reviewed supported clients",
+              "type": "repeater",
+              "required": true,
+              "validation": {
+                "subFields": [
+                  {
+                    "slug": "version",
+                    "label": "Version",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "package_url",
+                    "label": "Immutable package URL",
+                    "type": "url",
+                    "required": true
+                  },
+                  {
+                    "slug": "package_sha256",
+                    "label": "Package SHA-256",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "slug": "evidence_key",
+                    "label": "Provider compatibility evidence",
+                    "type": "string",
                     "required": true
                   }
                 ]
@@ -1837,6 +2118,19 @@
           "editorial_notes": "Published upstream music, game implementation, exact deployed adoption and in-game verification remain separate claims. No first verified game adopter is established by this review. Editorial radio and the venue roadmap remain separate unfinished work.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-11",
+        "slug": "2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "Connected portfolio review · 11 October 2026",
+          "reviewed_at": "2026-10-11",
+          "source_description": "Canonical GitHub issues, comments, merged changes, installed packages and dated release/interaction receipts reviewed on 11 October 2026. Authorised public summaries are derived from private source; private bodies are not reproduced.",
+          "scope": "LoftwahFM and five game consumers, including shared audio, player quality, installation, promotional imagery and rewards. Other dossiers retain their own earlier review dates.",
+          "editorial_notes": "Recognises four deployed radio integrations with reviewed browser evidence. This source review did not independently replay their deployments. Physical devices, human listening and remaining game-specific release gates stay with their owners. Published clients, installed clients, exact deployments and interaction evidence remain separate.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -2217,6 +2511,120 @@
           "proof_boundary": "Public manifest and package checks establish upstream availability and compatibility. Public edition pages establish publication of the first curated shows. Reviewed SHOALSHOT source establishes implementation, with deployment and live game verification still unestablished here. No physical Safari, human performance approval, commercial demand or venue-roadmap completion is claimed.",
           "reviewed_at": "2026-10-10",
           "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-11",
+        "slug": "loftwahfm-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "state": "Shared radio live · catalogue and mix expanding",
+          "state_tone": "amber",
+          "current": "Client 1.2.0, compatible pinned 1.0.0/1.1.0 releases, six music stations, two curated presenter shows and game-linked discovery/aggregate analytics are delivered. Four game integrations have exact deployed browser receipts. LoftwahFM owns the catalogue and programming; each game retains its own audio and identity.",
+          "next_proof": "Publish game soundtrack albums with artwork, provenance and duplicate handling; finish inclusive station discovery and All Stations/My Mix; develop repeatable topical and evergreen programming with editorial, spending and fallback controls.",
+          "proof_boundary": "Reviewed source and dated releases, without fresh Woodhouse playback. Analytics availability does not establish listeners or demand. Curated shows are distinct from autonomous production and full human acting/listening acceptance.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-bubbles-2026-10-11",
+        "slug": "bubbles-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-11",
+          "state": "FM music delivered · owner-preview limits",
+          "state_tone": "amber",
+          "current": "A stable, recoverable music dock exposes FM music, Original and Off, with saved controls and quiet reload. Presenter shows are discoverable through FM links while native editorial playback remains held. Installed client 1.0.0. The guarded owner-preview release and actual-media Chromium/mobile WebKit journeys cover puzzle play, responsive controls, overlays, minimising, recovery and persistence.",
+          "next_proof": "Finish native editorial admission and formal qualification; validate physical phone listening. Make installation discoverable and improve product-specific artwork and earned rewards.",
+          "proof_boundary": "Owner-preview browser evidence does not complete formal qualification or physical iPhone/human listening. Native editorial remains held and shared continuous shuffle depends on FM #244. Woodhouse reviewed the owning receipts; it did not repeat live play.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-fighter-2026-10-11",
+        "slug": "fighter-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-11",
+          "state": "Native radio delivered · combat identity retained",
+          "state_tone": "amber",
+          "current": "Menu, Settings and Library expose music and both shows. The game audio manager retains authored Battle, Results and Cinema priority, independent effects and opt-in speech; forkable branded versions retain their own presentation. Installed client 1.1.0. Exact release receipts and desktop/mobile Chromium/WebKit journeys cover native controls, station rotation, quiet reload and authored gameplay priority. Its host-owned shuffle includes the eight current stations.",
+          "next_proof": "Observe physical phone listening and gameplay balance; retain forkable brand configuration. Improve installation discovery, promotional art and satisfying rewards.",
+          "proof_boundary": "Human listening and physical iPhone remain unobserved. Its current station shuffle does not establish the future shared My Mix contract; optional client 1.2 telemetry is not installed. Woodhouse reviewed the owning receipts; it did not repeat live play.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 2,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-shoalshot-2026-10-11",
+        "slug": "shoalshot-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-11",
+          "state": "Native radio deployed · fishing audio preserved",
+          "state_tone": "amber",
+          "current": "Home and Pause offer six music stations and two presenter shows through the existing audio owner. Manual Shuffle, saved preferences, independent effects and local fallback preserve the fishing atmosphere. Installed client 1.2.0. Exact production identity and Chromium/WebKit native journeys cover all stations, both shows, playback, shooting, controls and save/reload. One context and streamed media bound resource use.",
+          "next_proof": "Resolve narrow dock-label composition and observe physical phone/listening quality. Improve installation discovery, artwork and rewards without weakening fishing feedback.",
+          "proof_boundary": "Physical iPhone and human listening remain open; narrow 320px dock labels need further composition work. Manual Shuffle is delivered; continuous shared My Mix is not. Woodhouse reviewed the owning receipts; it did not repeat live play.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 3,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-protocol-11-2026-10-11",
+        "slug": "protocol-11-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-11",
+          "state": "Playable with radio · interaction repair needed",
+          "state_tone": "red",
+          "current": "The Jukebox combines the original soundtrack, six FM music stations and two shows under one stream owner. Explicit Play, saved controls, bounded refresh and original fallback preserve table feedback. Installed client 1.0.0. The exact Jukebox release and live browser journeys cover native playback, source controls, seeking, preferences, reload and boundary handling. Card interaction quality is assessed separately.",
+          "next_proof": "Stabilise the hand through consecutive plays; make legal layoff targets and Flaming feedback clear without geometry shifts; expose all groups in the desktop viewport. Then verify mobile play, installation discovery, artwork and rewards.",
+          "proof_boundary": "Physical iPhone and human audible acceptance remain open. Stable hand ordering, legal targets, Flaming feedback and desktop table visibility remain unresolved player-facing work. Woodhouse reviewed the owning receipts; it did not repeat live play.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 4,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-pirates-2026-10-11",
+        "slug": "pirates-2026-10-11",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-11",
+          "state": "Offline parity first · radio planned",
+          "state_tone": "amber",
+          "current": "The optional Enhanced-mode radio issue is represented, but no current adapter or deployed radio adoption is established. Original remains the default offline experience. Source-parity work and project-specific presentation remain the product foundation.",
+          "next_proof": "Implement optional streaming only when it preserves offline Original, deterministic saves and local audio; retain the existing parity and release gates. Evaluate soundtrack provenance and prelaunch artwork honestly.",
+          "proof_boundary": "Source/issue review only; no production origin, implemented adapter, human acceptance or licence transfer is established.",
+          "reviewed_at": "2026-10-11",
+          "sort_order": 6,
           "public_safe": true
         }
       }
@@ -2887,6 +3295,443 @@
           "revision": "8b1c9ebece62bf38d15b816139ba51feb0e329e3",
           "public_safe": true,
           "proof_boundary": "Source implementation is established at the reviewed draft revision. Merge, deployment, live in-game verification and physical-device acceptance are not established. GitHub repository access may be required."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-client-1-0-0-supported-2026-10-11",
+        "slug": "loftwahfm-radio-client-1-0-0-supported-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · supported client 1.0.0",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "claim": "Published client 1.0.0 remains supported under manifest schema 1 / client major 1.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The owning release records immutable archive integrity and compatible host audio ownership. Client 1.1 adds optional programme/part selection; 1.2 adds optional game analytics. Existing supported pins need no forced upgrade for ordinary music and whole-show playback.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/loftwahfm/releases/tag/radio-client-v1.2.0",
+          "revision": "22445efdea492a26c5c8cf42431251884a08c076",
+          "public_safe": true,
+          "proof_boundary": "Explicitly reviewed releases only; this does not infer compatibility for every future 1.x version or imply that older consumers have installed newer optional APIs."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-client-1-1-0-supported-2026-10-11",
+        "slug": "loftwahfm-radio-client-1-1-0-supported-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · supported client 1.1.0",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "claim": "Published client 1.1.0 remains supported under manifest schema 1 / client major 1.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The owning release records immutable archive integrity and compatible host audio ownership. Client 1.1 adds optional programme/part selection; 1.2 adds optional game analytics. Existing supported pins need no forced upgrade for ordinary music and whole-show playback.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/loftwahfm/releases/tag/radio-client-v1.2.0",
+          "revision": "22445efdea492a26c5c8cf42431251884a08c076",
+          "public_safe": true,
+          "proof_boundary": "Explicitly reviewed releases only; this does not infer compatibility for every future 1.x version or imply that older consumers have installed newer optional APIs."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-client-1-2-0-supported-2026-10-11",
+        "slug": "loftwahfm-radio-client-1-2-0-supported-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · supported client 1.2.0",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "claim": "Published client 1.2.0 remains supported under manifest schema 1 / client major 1.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The owning release records immutable archive integrity and compatible host audio ownership. Client 1.1 adds optional programme/part selection; 1.2 adds optional game analytics. Existing supported pins need no forced upgrade for ordinary music and whole-show playback.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/loftwahfm/releases/tag/radio-client-v1.2.0",
+          "revision": "22445efdea492a26c5c8cf42431251884a08c076",
+          "public_safe": true,
+          "proof_boundary": "Explicitly reviewed releases only; this does not infer compatibility for every future 1.x version or imply that older consumers have installed newer optional APIs."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-games-radio-analytics-2026-10-11",
+        "slug": "loftwahfm-games-radio-analytics-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "LoftwahFM · games and radio discovery delivered",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "claim": "Game-linked radio discovery and aggregate analytics shipped with client 1.2.0.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Merged PR #245 records the exact FM release, game catalogue links and aggregate measures that separate visits, playback starts, audible progress and referrals. Test traffic is excluded and games remain unranked while real observations are insufficient.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/loftwahfm/issues/239#issuecomment-6095126003",
+          "revision": "22445efdea492a26c5c8cf42431251884a08c076",
+          "public_safe": true,
+          "proof_boundary": "Analytics capability is delivered; meaningful listener behaviour, demand, commercial value and telemetry adoption in every game are not established."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-shoalshot-client-1-2-0-implementation-2026-10-11",
+        "slug": "loftwahfm-radio-shoalshot-client-1-2-0-implementation-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "shoalshot · installed radio client 1.2.0",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-11",
+          "claim": "The reviewed game source installs client 1.2.0 through its existing audio owner.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Home and Pause offer six music stations and two presenter shows through the existing audio owner. Manual Shuffle, saved preferences, independent effects and local fallback preserve the fishing atmosphere.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/605#issuecomment-6103924901",
+          "revision": "365fcf0ad1a52337dab137ea4079eba24f8037f8",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human listening remain open; narrow 320px dock labels need further composition work. Manual Shuffle is delivered; continuous shared My Mix is not."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-shoalshot-client-1-2-0-release-2026-10-11",
+        "slug": "loftwahfm-radio-shoalshot-client-1-2-0-release-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "shoalshot · exact radio deployment",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning release records the deployed game revision.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-11",
+          "reviewed_at": "2026-10-11",
+          "summary": "Home and Pause offer six music stations and two presenter shows through the existing audio owner. Manual Shuffle, saved preferences, independent effects and local fallback preserve the fishing atmosphere.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/605#issuecomment-6103924901",
+          "revision": "365fcf0ad1a52337dab137ea4079eba24f8037f8",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human listening remain open; narrow 320px dock labels need further composition work. Manual Shuffle is delivered; continuous shared My Mix is not."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-shoalshot-client-1-2-0-interaction-2026-10-11",
+        "slug": "loftwahfm-radio-shoalshot-client-1-2-0-interaction-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "shoalshot · browser radio interaction evidence",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning browser receipts exercise radio inside the deployed game.",
+          "evidence_kind": "qualification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-11",
+          "reviewed_at": "2026-10-11",
+          "summary": "Exact production identity and Chromium/WebKit native journeys cover all stations, both shows, playback, shooting, controls and save/reload. One context and streamed media bound resource use.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/605#issuecomment-6103924901",
+          "revision": "365fcf0ad1a52337dab137ea4079eba24f8037f8",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human listening remain open; narrow 320px dock labels need further composition work. Manual Shuffle is delivered; continuous shared My Mix is not."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-fighter-client-1-1-0-implementation-2026-10-11",
+        "slug": "loftwahfm-radio-fighter-client-1-1-0-implementation-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "fighter · installed radio client 1.1.0",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-11",
+          "claim": "The reviewed game source installs client 1.1.0 through its existing audio owner.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Menu, Settings and Library expose music and both shows. The game audio manager retains authored Battle, Results and Cinema priority, independent effects and opt-in speech; forkable branded versions retain their own presentation.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/fighter/issues/319#issuecomment-6096922270",
+          "revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
+          "public_safe": true,
+          "proof_boundary": "Human listening and physical iPhone remain unobserved. Its current station shuffle does not establish the future shared My Mix contract; optional client 1.2 telemetry is not installed."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-fighter-client-1-1-0-release-2026-10-11",
+        "slug": "loftwahfm-radio-fighter-client-1-1-0-release-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "fighter · exact radio deployment",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning release records the deployed game revision.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Menu, Settings and Library expose music and both shows. The game audio manager retains authored Battle, Results and Cinema priority, independent effects and opt-in speech; forkable branded versions retain their own presentation.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/fighter/issues/319#issuecomment-6096922270",
+          "revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
+          "public_safe": true,
+          "proof_boundary": "Human listening and physical iPhone remain unobserved. Its current station shuffle does not establish the future shared My Mix contract; optional client 1.2 telemetry is not installed."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-fighter-client-1-1-0-interaction-2026-10-11",
+        "slug": "loftwahfm-radio-fighter-client-1-1-0-interaction-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "fighter · browser radio interaction evidence",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning browser receipts exercise radio inside the deployed game.",
+          "evidence_kind": "qualification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Exact release receipts and desktop/mobile Chromium/WebKit journeys cover native controls, station rotation, quiet reload and authored gameplay priority. Its host-owned shuffle includes the eight current stations.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/fighter/issues/319#issuecomment-6096922270",
+          "revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
+          "public_safe": true,
+          "proof_boundary": "Human listening and physical iPhone remain unobserved. Its current station shuffle does not establish the future shared My Mix contract; optional client 1.2 telemetry is not installed."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-11",
+        "slug": "loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "protocol-11 · installed radio client 1.0.0",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-11",
+          "claim": "The reviewed game source installs client 1.0.0 through its existing audio owner.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The Jukebox combines the original soundtrack, six FM music stations and two shows under one stream owner. Explicit Play, saved controls, bounded refresh and original fallback preserve table feedback.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/protocol-11/issues/198#issuecomment-6095499663",
+          "revision": "1e62c435451a95bd64403d1a72c6b7c931fc379c",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human audible acceptance remain open. Stable hand ordering, legal targets, Flaming feedback and desktop table visibility remain unresolved player-facing work."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-protocol-11-client-1-0-0-release-2026-10-11",
+        "slug": "loftwahfm-radio-protocol-11-client-1-0-0-release-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "protocol-11 · exact radio deployment",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning release records the deployed game revision.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The Jukebox combines the original soundtrack, six FM music stations and two shows under one stream owner. Explicit Play, saved controls, bounded refresh and original fallback preserve table feedback.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/protocol-11/issues/198#issuecomment-6095499663",
+          "revision": "1e62c435451a95bd64403d1a72c6b7c931fc379c",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human audible acceptance remain open. Stable hand ordering, legal targets, Flaming feedback and desktop table visibility remain unresolved player-facing work."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-protocol-11-client-1-0-0-interaction-2026-10-11",
+        "slug": "loftwahfm-radio-protocol-11-client-1-0-0-interaction-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "protocol-11 · browser radio interaction evidence",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning browser receipts exercise radio inside the deployed game.",
+          "evidence_kind": "qualification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The exact Jukebox release and live browser journeys cover native playback, source controls, seeking, preferences, reload and boundary handling. Card interaction quality is assessed separately.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/protocol-11/issues/198#issuecomment-6095499663",
+          "revision": "1e62c435451a95bd64403d1a72c6b7c931fc379c",
+          "public_safe": true,
+          "proof_boundary": "Physical iPhone and human audible acceptance remain open. Stable hand ordering, legal targets, Flaming feedback and desktop table visibility remain unresolved player-facing work."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-bubbles-client-1-0-0-implementation-2026-10-11",
+        "slug": "loftwahfm-radio-bubbles-client-1-0-0-implementation-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "bubbles · installed radio client 1.0.0",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-11",
+          "claim": "The reviewed game source installs client 1.0.0 through its existing audio owner.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "A stable, recoverable music dock exposes FM music, Original and Off, with saved controls and quiet reload. Presenter shows are discoverable through FM links while native editorial playback remains held.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/bubbles/issues/1322#issuecomment-6096364381",
+          "revision": "d892ba75d4804558eb8df2deba38b59e6a962868",
+          "public_safe": true,
+          "proof_boundary": "Owner-preview browser evidence does not complete formal qualification or physical iPhone/human listening. Native editorial remains held and shared continuous shuffle depends on FM #244."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-bubbles-client-1-0-0-release-2026-10-11",
+        "slug": "loftwahfm-radio-bubbles-client-1-0-0-release-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "bubbles · exact radio deployment",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning release records the deployed game revision.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "A stable, recoverable music dock exposes FM music, Original and Off, with saved controls and quiet reload. Presenter shows are discoverable through FM links while native editorial playback remains held.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/bubbles/issues/1322#issuecomment-6096364381",
+          "revision": "d892ba75d4804558eb8df2deba38b59e6a962868",
+          "public_safe": true,
+          "proof_boundary": "Owner-preview browser evidence does not complete formal qualification or physical iPhone/human listening. Native editorial remains held and shared continuous shuffle depends on FM #244."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-radio-bubbles-client-1-0-0-interaction-2026-10-11",
+        "slug": "loftwahfm-radio-bubbles-client-1-0-0-interaction-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "bubbles · browser radio interaction evidence",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-11",
+          "claim": "The owning browser receipts exercise radio inside the deployed game.",
+          "evidence_kind": "qualification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The guarded owner-preview release and actual-media Chromium/mobile WebKit journeys cover puzzle play, responsive controls, overlays, minimising, recovery and persistence.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/bubbles/issues/1322#issuecomment-6096364381",
+          "revision": "d892ba75d4804558eb8df2deba38b59e6a962868",
+          "public_safe": true,
+          "proof_boundary": "Owner-preview browser evidence does not complete formal qualification or physical iPhone/human listening. Native editorial remains held and shared continuous shuffle depends on FM #244."
+        }
+      },
+      {
+        "id": "evidence-pirates-radio-adoption-2026-10-11",
+        "slug": "pirates-radio-adoption-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "Pirates · optional radio remains planned",
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-11",
+          "claim": "No implemented radio adapter or production adoption is established in this review.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "Current source and the owning issue retain optional Enhanced-mode streaming. Original remains the default offline experience with no FM dependency; an active adapter and hosted deployment were not established.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/pirates/issues/451",
+          "revision": "12cd0b45a94e97d524ae5be8e1f32ddfc5957577",
+          "public_safe": true,
+          "proof_boundary": "Planning is distinct from implementation. Offline Original parity, save determinism and asset rights remain local gates."
+        }
+      },
+      {
+        "id": "evidence-protocol-11-player-quality-2026-10-11",
+        "slug": "protocol-11-player-quality-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "Protocol 11 · interaction quality remains open",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-11",
+          "claim": "Current player reports still identify unstable hand order, unclear legal targets and obstructed desktop groups.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The latest reports and source review keep #215, #216 and #218 open: card removal/staging can affect ordering, laid-down groups need clear destinations and desktop inner scrolling can hide play. Previous compact-layout repairs do not resolve these newer observations.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/protocol-11/issues/215#issuecomment-6096638075",
+          "revision": "1e62c435451a95bd64403d1a72c6b7c931fc379c",
+          "public_safe": true,
+          "proof_boundary": "Playability and a verified audio release do not establish a polished card interaction model. This review is source/report evidence, not an independent live reproduction."
+        }
+      },
+      {
+        "id": "evidence-portfolio-discovery-rewards-2026-10-11",
+        "slug": "portfolio-discovery-rewards-2026-10-11",
+        "status": "published",
+        "data": {
+          "title": "Portfolio · discovery and reward work remains open",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-11",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-11",
+          "claim": "Installation discovery, promotional artwork and reward improvements remain tracked product work.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-10",
+          "reviewed_at": "2026-10-11",
+          "summary": "The owning game installation issues, Woodhouse #19 with its project artwork issues, and the holographic/achievement issues remain open without reviewed completion receipts. The reset calls for persuasive product-specific artwork and useful rewards, rather than a uniform visual template.",
+          "source_label": "Canonical source and owning release receipts reviewed on 11 October 2026; GitHub access may be required",
+          "source_url": "https://github.com/loftwah/woodhouse-new/issues/19",
+          "revision": "",
+          "public_safe": true,
+          "proof_boundary": "Existing installability and metadata are not proof of a discoverable install experience, improved promotional artwork or delivered rewards. No demand or conversion metrics are claimed."
         }
       }
     ],
@@ -5230,6 +6075,530 @@
                       "_type": "span",
                       "_key": "s-2",
                       "text": "Technical intelligence is useful when it changes a concrete compatibility or quality decision. Product intelligence is useful when it identifies an audience and a cheap demand test. Supplied reports remain hypotheses until checked against sources; a plausible pitch does not establish demand. Those investigations belong in their existing work, rather than another generator or recurring orchestration service.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-connected-products-observable-progress",
+        "slug": "connected-products-observable-progress",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "Connected products. Observable progress.",
+          "kind": "Portfolio report",
+          "deck": "Radio is reaching the games. The next gains are better play, easier discovery and music worth returning to.",
+          "review_date": "2026-10-11",
+          "source_reference": "Reviewed canonical issues, comments, merged implementations, installed package versions and exact release/browser receipts on 11 October 2026. This is an authorised public summary; private source and conversations are not reproduced. Owning receipts are distinguished from a fresh Woodhouse live replay. Other projects retain their earlier review dates.",
+          "lead": "LoftwahFM now reaches Bubbles, Fighter, SHOALSHOT and Protocol 11 through their native audio systems. Their dated browser receipts establish real delivery, with game-specific acceptance still open. Pirates remains planned. The opportunity is to make these independent products easier to discover and better to use.",
+          "lesson": "Shared capabilities compound the value of earlier work when each product keeps its identity and the finished player experience earns the claim.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm",
+            "$ref:project-shoalshot",
+            "$ref:project-fighter",
+            "$ref:project-protocol-11",
+            "$ref:project-bubbles",
+            "$ref:project-pirates"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "ecosystem",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "ecosystem-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "Music that travels without flattening the games.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "ecosystem-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "The shared client, station catalogue and first two original presenter shows have moved beyond planning. Bubbles has a stable puzzle-game music dock; Fighter preserves authored combat and cinema priority; SHOALSHOT streams through its existing fishing-game audio owner; Protocol 11 builds on its Jukebox and original soundtrack. Each integration keeps its own controls and release responsibility.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "ecosystem-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "The latest available client is 1.2.0. Supported 1.0.0 and 1.1.0 pins remain valid. Availability, installation, deployment and browser interaction are recorded separately below, with exact source revisions and explicit limits. Bubbles remains an owner-preview release with native editorial held; emulated browsers do not prove physical iPhone behaviour or human listening quality.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "capability_review",
+              "_key": "fm-connected-review",
+              "_version": 2,
+              "capability_key": "loftwahfm-radio",
+              "provider_key": "loftwahfm",
+              "title": "Radio across independent games.",
+              "ownership": "LoftwahFM owns catalogue, radio generation, programming, audio publication and client releases. Each game owns playback transport, preferences, gameplay cues, mobile lifecycle and deployment. Woodhouse publishes reviewed relationships and evidence.",
+              "reviewed_at": "2026-10-11",
+              "package_name": "@loftwahfm/radio-client",
+              "available_version": "1.2.0",
+              "contract_version": "manifest schema 1 / client major 1",
+              "package_url": "https://fm.loftwah.com/radio/v1/client/1.2.0/loftwahfm-radio-client-1.2.0.tgz",
+              "package_sha256": "786dd53d3edddc1f382f67f86b7a5ec9dc60e5aba55960eca048d8a0d3414792",
+              "programme_url": "https://github.com/loftwah/loftwahfm/issues/213",
+              "documentation_url": "https://github.com/loftwah/loftwahfm/blob/22445efdea492a26c5c8cf42431251884a08c076/docs/radio-game-integration.md",
+              "stations_url": "https://fm.loftwah.com/api/radio/v1/stations",
+              "profiles_url": "https://fm.loftwah.com/api/radio/v1/games",
+              "evidence_key": "loftwahfm-radio-client-1-2-0-supported-2026-10-11",
+              "boundary": "Four games have reviewed exact release and browser interaction receipts. This Woodhouse review inspected their source and evidence; it did not repeat live play. Physical iPhone and human listening remain separate, Bubbles retains owner-preview qualification limits, and Pirates is planned. Continuous All Stations/My Mix, original soundtrack releases and autonomous editorial production remain open.",
+              "consumers": [
+                {
+                  "project_key": "shoalshot",
+                  "issue_url": "https://github.com/loftwah/shoalshot/issues/605",
+                  "station_id": "low-tide",
+                  "scope": "Home and Pause offer six music stations and two presenter shows through the existing audio owner. Manual Shuffle, saved preferences, independent effects and local fallback preserve the fishing atmosphere. Physical iPhone and human listening remain open; narrow 320px dock labels need further composition work. Manual Shuffle is delivered; continuous shared My Mix is not.",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": true,
+                  "deployed": true,
+                  "verified": true,
+                  "installed_version": "1.2.0",
+                  "deployed_revision": "365fcf0ad1a52337dab137ea4079eba24f8037f8",
+                  "release_evidence_key": "loftwahfm-radio-shoalshot-client-1-2-0-release-2026-10-11",
+                  "interaction_evidence_key": "loftwahfm-radio-shoalshot-client-1-2-0-interaction-2026-10-11",
+                  "evidence_key": "loftwahfm-radio-shoalshot-client-1-2-0-implementation-2026-10-11",
+                  "station_name": "Low Tide"
+                },
+                {
+                  "project_key": "fighter",
+                  "issue_url": "https://github.com/loftwah/fighter/issues/319",
+                  "station_id": "pressure-system",
+                  "scope": "Menu, Settings and Library expose music and both shows. The game audio manager retains authored Battle, Results and Cinema priority, independent effects and opt-in speech; forkable branded versions retain their own presentation. Human listening and physical iPhone remain unobserved. Its current station shuffle does not establish the future shared My Mix contract; optional client 1.2 telemetry is not installed.",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": true,
+                  "deployed": true,
+                  "verified": true,
+                  "installed_version": "1.1.0",
+                  "deployed_revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
+                  "release_evidence_key": "loftwahfm-radio-fighter-client-1-1-0-release-2026-10-11",
+                  "interaction_evidence_key": "loftwahfm-radio-fighter-client-1-1-0-interaction-2026-10-11",
+                  "evidence_key": "loftwahfm-radio-fighter-client-1-1-0-implementation-2026-10-11",
+                  "station_name": "Pressure System"
+                },
+                {
+                  "project_key": "protocol-11",
+                  "issue_url": "https://github.com/loftwah/protocol-11/issues/198",
+                  "station_id": "cartridge-club",
+                  "scope": "The Jukebox combines the original soundtrack, six FM music stations and two shows under one stream owner. Explicit Play, saved controls, bounded refresh and original fallback preserve table feedback. Physical iPhone and human audible acceptance remain open. Stable hand ordering, legal targets, Flaming feedback and desktop table visibility remain unresolved player-facing work.",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": true,
+                  "deployed": true,
+                  "verified": true,
+                  "installed_version": "1.0.0",
+                  "deployed_revision": "1e62c435451a95bd64403d1a72c6b7c931fc379c",
+                  "release_evidence_key": "loftwahfm-radio-protocol-11-client-1-0-0-release-2026-10-11",
+                  "interaction_evidence_key": "loftwahfm-radio-protocol-11-client-1-0-0-interaction-2026-10-11",
+                  "evidence_key": "loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-11",
+                  "station_name": "Cartridge Club"
+                },
+                {
+                  "project_key": "bubbles",
+                  "issue_url": "https://github.com/loftwah/bubbles/issues/1322",
+                  "station_id": "soft-focus",
+                  "scope": "A stable, recoverable music dock exposes FM music, Original and Off, with saved controls and quiet reload. Presenter shows are discoverable through FM links while native editorial playback remains held. Owner-preview browser evidence does not complete formal qualification or physical iPhone/human listening. Native editorial remains held and shared continuous shuffle depends on FM #244.",
+                  "planned": true,
+                  "in_progress": true,
+                  "implemented": true,
+                  "deployed": true,
+                  "verified": true,
+                  "installed_version": "1.0.0",
+                  "deployed_revision": "d892ba75d4804558eb8df2deba38b59e6a962868",
+                  "release_evidence_key": "loftwahfm-radio-bubbles-client-1-0-0-release-2026-10-11",
+                  "interaction_evidence_key": "loftwahfm-radio-bubbles-client-1-0-0-interaction-2026-10-11",
+                  "evidence_key": "loftwahfm-radio-bubbles-client-1-0-0-implementation-2026-10-11",
+                  "station_name": "Soft Focus"
+                },
+                {
+                  "project_key": "pirates",
+                  "issue_url": "https://github.com/loftwah/pirates/issues/451",
+                  "station_id": "saltwater-static",
+                  "scope": "Optional Enhanced radio remains planned. Original stays the default offline game; no adapter or hosted adoption is established.",
+                  "planned": true,
+                  "in_progress": false,
+                  "implemented": false,
+                  "deployed": false,
+                  "verified": false,
+                  "installed_version": "",
+                  "deployed_revision": "",
+                  "release_evidence_key": "",
+                  "interaction_evidence_key": "",
+                  "evidence_key": "pirates-radio-adoption-2026-10-11",
+                  "station_name": "Saltwater Static"
+                }
+              ],
+              "listen_url": "https://fm.loftwah.com/radio?station=night-signal",
+              "embed_url": "https://fm.loftwah.com/widget?station=night-signal",
+              "listening_summary": "Music and original radio for the long session. Listen here, open a presenter show, or discover the games using LoftwahFM. Press Play to start.",
+              "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
+              "published_shows": [
+                {
+                  "title": "Dead Air Department — Press Start",
+                  "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
+                },
+                {
+                  "title": "Smoko Circuit — Member Benefits",
+                  "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
+                }
+              ],
+              "supported_clients": [
+                {
+                  "version": "1.0.0",
+                  "package_url": "https://fm.loftwah.com/radio/v1/client/1.0.0/loftwahfm-radio-client-1.0.0.tgz",
+                  "package_sha256": "ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0",
+                  "evidence_key": "loftwahfm-radio-client-1-0-0-supported-2026-10-11"
+                },
+                {
+                  "version": "1.1.0",
+                  "package_url": "https://fm.loftwah.com/radio/v1/client/1.1.0/loftwahfm-radio-client-1.1.0.tgz",
+                  "package_sha256": "06228ca48ede1b0cc8a47fd3935853fa439522224f8befd4e0d90d371f34cc78",
+                  "evidence_key": "loftwahfm-radio-client-1-1-0-supported-2026-10-11"
+                },
+                {
+                  "version": "1.2.0",
+                  "package_url": "https://fm.loftwah.com/radio/v1/client/1.2.0/loftwahfm-radio-client-1.2.0.tgz",
+                  "package_sha256": "786dd53d3edddc1f382f67f86b7a5ec9dc60e5aba55960eca048d8a0d3414792",
+                  "evidence_key": "loftwahfm-radio-client-1-2-0-supported-2026-10-11"
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "catalogue",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "catalogue-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "Let the music lead people back to the games.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "catalogue-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Game-linked radio discovery and aggregate analytics have shipped. Visits, playback starts, audible progress and referrals answer different questions; the existence of that instrumentation does not prove an audience or justify a ranking. SHOALSHOT installs the new telemetry-capable client, while other consumers retain earlier supported versions.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "catalogue-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "Publishing original game soundtracks as proper albums remains open in FM #243. Existing recordings can use the established catalogue workflow, with game-specific covers, source provenance, shared-track associations and clearly labelled alternate versions. New content should help listeners discover the game that produced it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "catalogue-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-3",
+                      "text": "Inclusive station discovery and continuous All Stations/My Mix remain open in #242 and #244. Fighter’s current station shuffle and SHOALSHOT’s manual Shuffle are real features; neither completes a shared, automatically refreshed mix of music and speech.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "analytics-proof",
+              "_version": 1,
+              "evidence_key": "loftwahfm-games-radio-analytics-2026-10-11",
+              "label": "Game discovery and analytics evidence",
+              "context": "Delivered capability, without invented listening or demand results."
+            },
+            {
+              "_type": "prose",
+              "_key": "programming",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "programming-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "Give people a reason to keep listening.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "programming-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Dead Air Department and Smoko Circuit are published curated shows. Their technical release is distinct from a repeatable autonomous production operation and from human judgement of acting, comedy and pacing. Topical satire, evergreen material and recurring characters should coexist, with correction, expiry, provenance, spending and fallback handled by the owning programme.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "programming-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "The next useful evidence is material people choose to hear again. Producing more audio, adding another provider or collecting playback events does not by itself establish entertainment value.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "play",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "play-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "A playable game still has to feel good.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "play-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Protocol 11’s progress is substantial, including its playable Journey and native radio. Current player reports still identify automatic hand reordering and shifting targets, unclear layoff destinations, insufficient Flaming feedback and desktop scrolling that hides laid-down groups. The latest issues #215, #216 and #218 remain open; earlier layout repairs do not justify calling them resolved.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "play-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "Interaction should support a predictable consecutive play, clear legal destinations and stable geometry on desktop and phone. Inspecting those root behaviours matters more than preserving an immature implementation or adding another cosmetic highlight.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "player-proof",
+              "_version": 1,
+              "evidence_key": "protocol-11-player-quality-2026-10-11",
+              "label": "Current Protocol 11 player-quality evidence",
+              "context": "Successful radio delivery is separate from card-play correctness."
+            },
+            {
+              "_type": "prose",
+              "_key": "discovery",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "discovery-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "Make the first impression and the return visit count.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "discovery-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "The four phone games have installation-discovery work tracked. A useful install action, platform guidance and recognition of installed or dismissed state are the outcome; a PWA manifest alone does not help someone find it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "discovery-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "Woodhouse #19 coordinates the promotional-image reset. Each game needs imagery that makes its own experience appealing. Strong earlier poster or card-night concepts can be improved with correct branding; identical templates and technically valid metadata are insufficient creative proof.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "discovery-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-3",
+                      "text": "Achievement, holographic and unlock work remains tracked across the games. Rewards should make an earned moment satisfying in the game’s own visual language, with meaningful earning conditions. This review found no completion receipts for the installation, artwork or reward programmes.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "discovery-proof",
+              "_version": 1,
+              "evidence_key": "portfolio-discovery-rewards-2026-10-11",
+              "label": "Discovery, artwork and rewards review",
+              "context": "Existing owners remain authoritative; no parallel backlog was created."
+            },
+            {
+              "_type": "prose",
+              "_key": "next",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "next-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "The factory’s job is to turn this into better products.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Woodhouse now represents the shared radio relationship using the existing dossiers, dated statuses, capability review and evidence. Historical reviews remain dated, and unrelated projects are not given a fresh delivery claim. The same records serve readers and agent facts.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "The useful next moves sit with their existing owners: Protocol 11 interaction correctness; FM soundtrack publishing, station mixing and entertaining programming; then discoverable installation, persuasive artwork and satisfying rewards. Reuse should make each product stronger while preserving independent identity, offline behaviour and release gates.",
                       "marks": []
                     }
                   ]
