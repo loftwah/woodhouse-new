@@ -2678,6 +2678,25 @@
           "sort_order": 2,
           "public_safe": true
         }
+      },
+      {
+        "id": "status-shoalshot-2026-10-12",
+        "slug": "shoalshot-2026-10-12",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-12",
+          "state": "Finished dives ready to share",
+          "state_tone": "active",
+          "current": "Finished dives now export a locally generated 1200 × 630 PNG and copyable caption with a stable play link. The card carries the actual mode, rules and game version, with local/unverified result provenance. Native file sharing is offered where supported; Save PNG remains available. The existing game-owned radio integration remains in place.",
+          "next_proof": "Observe sharing on a physical iPhone and continue genuine eligible listening and human listening checks.",
+          "proof_boundary": "Woodhouse reviewed the owning Chromium/WebKit download receipts and confirmed the active production revision and source tag. It did not repeat a completed dive. Results are local and unverified, with no public result permalink or uploaded-score service. Physical iPhone OS sharing and human listening remain separate.",
+          "reviewed_at": "2026-10-12",
+          "sort_order": 3,
+          "public_safe": true
+        }
       }
     ],
     "evidence_records": [
@@ -3829,6 +3848,29 @@
           "revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
           "public_safe": true,
           "proof_boundary": "Reviewed direction only. No second game, commercial licence, customer adoption or independently released variant is established."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-native-result-sharing-2026-10-12",
+        "slug": "shoalshot-native-result-sharing-2026-10-12",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · finished-dive sharing",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-12",
+          "claim": "Finished dives can be shared as a local 1200 × 630 PNG with a caption and stable play link.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-12",
+          "reviewed_at": "2026-10-12",
+          "summary": "Play a dive, open Pause, choose End Dive, then use Share result on the Dive Summary. Save a 1200 × 630 PNG, copy its caption or use your device’s share options when supported. The card includes the actual mode, rules and game version.",
+          "source_label": "Owning release and browser receipts reviewed; active production revision and immutable source tag independently checked. GitHub access may be required.",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/632#issuecomment-6117707221",
+          "revision": "7f3e89cd69fe7c003a34ca11989b7d3b32fd510e",
+          "public_safe": true,
+          "proof_boundary": "The result is local and unverified. The card is made inside the game; no public result permalink, uploaded score, account or square/portrait result format is provided. Owning Chromium/WebKit receipts establish downloads and navigation; physical iPhone/native OS sharing remains pending. No listening adoption or popularity is inferred."
         }
       }
     ],
@@ -7160,6 +7202,27 @@
                       "_type": "span",
                       "_key": "s-2",
                       "text": "The portfolio’s promotional-art quality programme also remains open. This editorial update does not certify new artwork, audience demand or a commercial-ready service. Better discovery should lead people to an experience worth keeping, not imply that every remaining gate is complete.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "finished-dive-sharing",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "dive-share-update",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "dive-share-text",
+                      "text": "Update, 12 October 2026: SHOALSHOT now lets players share a finished dive as a locally generated 1200 × 630 PNG and copyable caption. The card keeps the mode, rules, game version and local/unverified provenance visible. The reviewed production release and browser downloads establish that this sharing path shipped; they do not establish an online verified score, physical-device sharing acceptance or listening adoption.",
                       "marks": []
                     }
                   ]
