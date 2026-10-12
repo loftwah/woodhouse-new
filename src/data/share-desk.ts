@@ -55,6 +55,16 @@ export function imageKind(bytes: Uint8Array, declared: string) {
   if (declared === "image/jpeg" && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255)
     return { mime: declared, extension: "jpg" };
   if (
+    declared === "image/webp" &&
+    bytes.length >= 20 &&
+    String.fromCharCode(...bytes.slice(0, 4)) === "RIFF" &&
+    String.fromCharCode(...bytes.slice(8, 12)) === "WEBP" &&
+    new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(4, true) + 8 ===
+      bytes.length &&
+    ["VP8 ", "VP8L", "VP8X"].includes(String.fromCharCode(...bytes.slice(12, 16)))
+  )
+    return { mime: declared, extension: "webp" };
+  if (
     declared === "image/svg+xml" &&
     /<svg(?:\s|>)/i.test(new TextDecoder().decode(bytes.slice(0, 1024)))
   )
@@ -72,7 +82,7 @@ export async function loadShareImage(source: string, fetcher: typeof fetch = fet
     const mime = response.headers.get("content-type")?.split(";")[0] ?? "";
     if (
       !response.ok ||
-      !["image/png", "image/jpeg", "image/svg+xml"].includes(mime) ||
+      !["image/png", "image/jpeg", "image/webp", "image/svg+xml"].includes(mime) ||
       Number(response.headers.get("content-length")) > maxBytes
     ) {
       await response.body?.cancel();

@@ -92,13 +92,17 @@ const smallAssets = [
         {
           name: "SHOALSHOT wordmark",
           download: "/api/share-image?project=shoalshot&asset=wordmark",
-          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark.svg",
+          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark-20261012.webp",
+          width: 1998,
+          height: 424,
           credit: "A Loftwah Game"
         },
         {
           name: "SHOALSHOT emblem",
           download: "/api/share-image?project=shoalshot&asset=emblem",
-          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg",
+          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem-20261012.webp",
+          width: 1161,
+          height: 1161,
           credit: "A Loftwah Game"
         }
       ]
@@ -123,7 +127,7 @@ const smallAssets = [
         <a href="#projects">Projects</a>
         <a href="#radio">Radio cards</a>
         <a href="#stories">Factory & stories</a>
-        <a href="#assets">SVG assets</a>
+        <a href="#assets">Logos & SVGs</a>
         <a href="#social">Socials</a>
       </nav>
     </header>
@@ -315,7 +319,7 @@ const smallAssets = [
     </section>
     <section id="assets" aria-labelledby="assets-title">
       <div class="section-heading">
-        <h2 id="assets-title">SVG assets</h2>
+        <h2 id="assets-title">Logos & SVGs</h2>
       </div>
       <div class="gallery small-assets">
         {smallAssets.map((item) => (
@@ -323,14 +327,14 @@ const smallAssets = [
             <a
               class="image-link svg-preview"
               href={item.image}
-              aria-label={`View ${item.name} SVG`}
+              aria-label={`View ${item.name} full size`}
             >
               <img src={item.image} alt={item.name} loading="lazy" />
             </a>
             <figcaption>
               <div class="asset-title">
                 <h3>{item.name}</h3>
-                <span>SVG</span>
+                <span>{"width" in item ? `${item.width} × ${item.height} WebP` : "SVG"}</span>
               </div>
               <p class="credit">{item.credit}</p>
             </figcaption>
@@ -339,7 +343,7 @@ const smallAssets = [
               image={
                 "download" in item && typeof item.download === "string" ? item.download : item.image
               }
-              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.svg`}
+              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
               link="https://woodhouse.loftwah.com/share/"
             />
           </figure>
