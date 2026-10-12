@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GameMedia from "../components/GameMedia.astro";
+import GalleryPagination from "../components/GalleryPagination.astro";
 import ShareActions from "../components/ShareActions.astro";
 import {
   getPublicMenu,
@@ -13,6 +14,13 @@ import { getSiteMetadata } from "../data/site-metadata";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
 import { compositeIsPublic, cardFormats, type CardFormat } from "../data/activity-sharing";
+import {
+  galleryTypes,
+  galleryURL,
+  galleryMedia,
+  galleryPage,
+  type GalleryType
+} from "../data/share-browser";
 export const prerender = false;
 const [result, footer, listening, dispatches, evidence] = await Promise.all([
   listProjectRecords(),
@@ -28,8 +36,21 @@ if (result.error)
   });
 const projects = orderShareProjects(result.projects);
 const requested = Astro.url.searchParams.get("project");
-const selected = projects.find((project) => project.slug === requested);
-if (requested && !selected)
+const requestedType = Astro.url.searchParams.get("type") ?? "images";
+if (!galleryTypes.some(([key]) => key === requestedType))
+  return new Response("Gallery view not found.", {
+    status: 404,
+    headers: { "cache-control": "no-store" }
+  });
+const globalTypes = ["radio", "factory", "logos", "social"];
+const view = (
+  requested && globalTypes.includes(requestedType) ? "images" : requestedType
+) as GalleryType;
+const requestedPage = Number(Astro.url.searchParams.get("page") ?? 1);
+Astro.response.headers.set("cache-control", "private, no-store");
+const requestedProject = projects.find((project) => project.slug === requested);
+const selected = requestedProject;
+if (requested && !requestedProject)
   return new Response("Project not found.", {
     status: 404,
     headers: { "cache-control": "no-store" }
@@ -109,318 +130,395 @@ const smallAssets = [
       ]
     : [])
 ];
+const media = galleryMedia(
+  projects.map((p) => p.slug),
+  selected?.slug,
+  view
+);
+const cardProjects = selected ? [selected] : projects;
+const factoryItems = [
+  ...houseImages.map((item) => ({ id: item.name })),
+  ...stories.map((story) => ({ id: story.slug }))
+];
+const collection =
+  view === "cards"
+    ? galleryPage(cardProjects, requestedPage)
+    : view === "factory"
+      ? galleryPage(factoryItems, requestedPage)
+      : view === "logos"
+        ? galleryPage(smallAssets, requestedPage)
+        : galleryPage(media, requestedPage);
+const visibleMedia = galleryPage(media, requestedPage).items;
+const visibleProjects = galleryPage(cardProjects, requestedPage).items;
+const visibleFactoryIds = new Set(
+  galleryPage(factoryItems, requestedPage).items.map((item) => item.id)
+);
+const viewLabel = galleryTypes.find(([key]) => key === view)![1];
+const pagePath = galleryURL(selected?.slug, view, collection.page);
+const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.project === p.slug));
 ---
 
 <BaseLayout
-  title={selected ? `${selected.name} · Share gallery` : "Share gallery"}
+  title={`${selected?.name ?? "All projects"} · ${viewLabel}${collection.page > 1 ? ` · Page ${collection.page}` : ""} · Share gallery`}
   description="Game screenshots, playable promo clips, result cards, character art and social artwork. Download an image or copy a ready post directly from the gallery."
-  path={selected ? `/share/?project=${selected.slug}` : "/share/"}
+  path={pagePath}
   currentPath="/share/"
   image={selected ? getSiteMetadata(selected).image : "/og/woodhouse.jpg"}
 >
   <div class="container share-gallery">
     <header class="gallery-intro">
       <div>
-        <h1>Share the work.</h1>
+        <h1>{selected?.name ?? "Share the work."}</h1>
         <p>Screenshots, clips and artwork. Copy or download.</p>
       </div>
-      <nav aria-label="Gallery sections">
-        {projects
-          .filter((p) => gameMedia.some((asset) => asset.project === p.slug))
-          .map((p) => (
-            <a href={`#media-${p.slug}`}>{p.name}</a>
-          ))}
-        <a href="#projects">Link cards</a>
-        <a href="#radio">Radio cards</a>
-        <a href="#stories">Factory & stories</a>
-        <a href="#assets">Logos & SVGs</a>
-        <a href="#game-art">Game art & covers</a>
-        <a href="#social">Socials</a>
-      </nav>
     </header>
-    {projects
-      .filter((project) =>
-        gameMedia.some((asset) => asset.project === project.slug && asset.category === "gameplay")
-      )
-      .map((project) => (
-        <section id={`media-${project.slug}`} aria-label={`${project.name} share media`}>
-          <div class="section-heading">
-            <h2>{project.name}</h2>
-            <a href={`/share/${project.slug}/gameplay-images.zip`} download>
-              Download images
-            </a>
-            <a href={project.siteUrl}> {project.slug === "loftwahfm" ? "Listen" : "Play"}</a>
-          </div>
-          <div class="gallery media-gallery">
-            {gameMedia
-              .filter((asset) => asset.project === project.slug && asset.category === "gameplay")
-              .map((asset, index) => (
-                <GameMedia
-                  asset={asset}
-                  destination={
-                    project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`
-                  }
-                  eager={project.slug === "fighter" && index < 3}
-                />
+    <div class="gallery-controls">
+      <form method="get" action="/share/" class="mobile-filters" data-gallery-filters>
+        <label>
+          Project
+          <select name="project">
+            <option value="">All projects</option>
+            {kitProjects.map((p) => (
+              <option value={p.slug} selected={selected?.slug === p.slug}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Asset type
+          <select name="type">
+            {galleryTypes
+              .filter(([key]) => !selected || !globalTypes.includes(key))
+              .map(([key, label]) => (
+                <option value={key} selected={view === key}>
+                  {label}
+                </option>
               ))}
-          </div>
-        </section>
-      ))}
-    <section aria-labelledby="link-cards-title">
-      <div class="section-heading">
-        <h2 id="link-cards-title">Link cards</h2>
-      </div>
-      <section id="projects" aria-label="Project images" class="gallery">
-        {projects.map((project, index) => {
-          const metadata = getSiteMetadata(project);
-          const destination =
-            project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
-          return (
-            <figure id={`project-${project.slug}`}>
+          </select>
+        </label>
+        <button type="submit" data-filter-submit>
+          Show assets
+        </button>
+      </form>
+      <nav aria-label="Projects" class="project-choices">
+        <a href={galleryURL(undefined, view)} aria-current={!selected ? "page" : undefined}>
+          All projects
+        </a>
+        {kitProjects.map((project) => (
+          <a
+            href={galleryURL(
+              project.slug,
+              ["radio", "factory", "logos", "social"].includes(view) ? "images" : view
+            )}
+            aria-current={selected?.slug === project.slug ? "page" : undefined}
+          >
+            {project.name}
+          </a>
+        ))}
+      </nav>
+      <nav aria-label="Asset types" class="type-choices">
+        {galleryTypes.map(([key, label]) => (
+          <a
+            href={galleryURL(
+              ["radio", "factory", "logos", "social"].includes(key) ? undefined : selected?.slug,
+              key
+            )}
+            aria-current={view === key ? "page" : undefined}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+    </div>
+    {collection.pages > 1 && (
+      <GalleryPagination
+        project={selected?.slug}
+        type={view}
+        page={collection.page}
+        pages={collection.pages}
+      />
+    )}
+    {["images", "clips", "artwork"].includes(view) && (
+      <section aria-label={`${selected?.name ?? "All projects"} ${viewLabel}`}>
+        {selected && (
+          <div class="section-heading">
+            {selected && view !== "clips" && collection.total > 0 && (
               <a
-                class="image-link"
-                href={metadata.image}
-                aria-label={`View ${project.name} image full size`}
+                href={`/share/${selected.slug}/${view === "artwork" ? "art" : "gameplay"}-images.zip`}
+                download={`${selected.slug}-${view}.zip`}
               >
-                <img
-                  src={metadata.image}
-                  width="1200"
-                  height="630"
-                  alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
-                  loading={index < 3 ? "eager" : "lazy"}
-                  data-gallery-image
-                />
+                Download image pack
               </a>
-              <figcaption>
-                <div class="asset-title">
-                  <h2>{project.name}</h2>
-                  <span data-image-size>Original image</span>
-                </div>
-                <p class="credit">
-                  {project.previewImage
-                    ? `Artwork from ${project.name}`
-                    : "Illustration by Woodhouse"}
-                </p>
-              </figcaption>
-              <ShareActions
-                caption={projectCaption(project)}
-                image={
-                  project.previewImage ? `/api/share-image?project=${project.slug}` : metadata.image
-                }
-                filename={`${project.slug}-social.jpg`}
-                link={destination}
-              />
-              <div class="asset-links">
-                <a href={destination}>
-                  {["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
-                    ? "Play"
-                    : project.slug === "loftwahfm"
-                      ? "Listen"
-                      : "Open project"}
-                </a>
-                <a href={`/share/?project=${project.slug}#project-${project.slug}`}>
-                  Link to this kit
-                </a>
-                {project.slug === "shoalshot" && nativeSharing && (
-                  <a href={destination}>Play & share a dive</a>
-                )}
-              </div>
-            </figure>
-          );
-        })}
+            )}
+            {selected && (
+              <a href={selected.siteUrl}>{selected.slug === "loftwahfm" ? "Listen" : "Play"}</a>
+            )}
+          </div>
+        )}
+        <p class="result-count">
+          {collection.total
+            ? `${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${viewLabel}`
+            : `No ${viewLabel.toLowerCase()} in this collection.`}
+        </p>
+        <div class:list={["gallery", { "art-gallery": view === "artwork" }]}>
+          {visibleMedia.map((asset, index) => (
+            <GameMedia
+              asset={asset}
+              destination={projects.find((p) => p.slug === asset.project)?.siteUrl ?? "/share/"}
+              eager={index < 3}
+            />
+          ))}
+        </div>
       </section>
-    </section>
-    <section id="radio" aria-labelledby="radio-title">
-      <div class="section-heading">
-        <h2 id="radio-title">Games × Radio</h2>
-        <a href="/activity/">Scores & listening</a>
-      </div>
-      {radio ? (
-        <div class="gallery radio-gallery">
-          {(Object.keys(cardFormats) as CardFormat[]).map((format) => (
+    )}
+    {view === "cards" && (
+      <section aria-labelledby="link-cards-title">
+        <div class="section-heading">
+          <h2 id="link-cards-title">Link cards</h2>
+        </div>
+        <section id="projects" aria-label="Project images" class="gallery">
+          {visibleProjects.map((project, index) => {
+            const metadata = getSiteMetadata(project);
+            const destination =
+              project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
+            return (
+              <figure id={`project-${project.slug}`}>
+                <a
+                  class="image-link"
+                  href={metadata.image}
+                  aria-label={`View ${project.name} image full size`}
+                >
+                  <img
+                    src={metadata.image}
+                    width="1200"
+                    height="630"
+                    alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+                    loading={index < 3 ? "eager" : "lazy"}
+                    data-gallery-image
+                  />
+                </a>
+                <figcaption>
+                  <div class="asset-title">
+                    <h2>{project.name}</h2>
+                    <span data-image-size>Original image</span>
+                  </div>
+                  <p class="credit">
+                    {project.previewImage
+                      ? `Artwork from ${project.name}`
+                      : "Illustration by Woodhouse"}
+                  </p>
+                </figcaption>
+                <ShareActions
+                  caption={projectCaption(project)}
+                  image={
+                    project.previewImage
+                      ? `/api/share-image?project=${project.slug}`
+                      : metadata.image
+                  }
+                  filename={`${project.slug}-social.jpg`}
+                  link={destination}
+                />
+                <div class="asset-links">
+                  <a href={destination}>
+                    {["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
+                      ? "Play"
+                      : project.slug === "loftwahfm"
+                        ? "Listen"
+                        : "Open project"}
+                  </a>
+                  <a href={galleryURL(project.slug)}>Link to this kit</a>
+                  {project.slug === "shoalshot" && nativeSharing && (
+                    <a href={destination}>Play & share a dive</a>
+                  )}
+                </div>
+              </figure>
+            );
+          })}
+        </section>
+      </section>
+    )}
+    {view === "radio" && (
+      <section id="radio" aria-labelledby="radio-title">
+        <div class="section-heading">
+          <h2 id="radio-title">Games × Radio</h2>
+          <a href="/activity/">Scores & listening</a>
+        </div>
+        {radio ? (
+          <div class="gallery radio-gallery">
+            {(Object.keys(cardFormats) as CardFormat[]).map((format) => (
+              <figure>
+                <a
+                  class="image-link radio-preview"
+                  href={radioImage(format)}
+                  aria-label={`View ${format} radio card full size`}
+                >
+                  <img
+                    src={radioImage(format)}
+                    width={cardFormats[format].width}
+                    height={cardFormats[format].height}
+                    alt={`Games × Radio ${format} artwork and dated listening snapshot from LoftwahFM`}
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div class="asset-title">
+                    <h3>{format[0]!.toUpperCase() + format.slice(1)}</h3>
+                    <span>
+                      {cardFormats[format].width} × {cardFormats[format].height} PNG
+                    </span>
+                  </div>
+                  <p class="credit">Official game artwork · LoftwahFM composition</p>
+                </figcaption>
+                <ShareActions
+                  caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
+                  image={radioImage(format, true)}
+                  filename={`loftwahfm-games-${format}.png`}
+                  link={`https://woodhouse.loftwah.com/activity/?snapshot=${radio.snapshot}`}
+                />
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <p>Radio cards are unavailable right now.</p>
+        )}
+        {radio && (
+          <p class="credit">
+            Snapshot {radio.asOf.slice(0, 16).replace("T", " ")} UTC · Listening, not project
+            popularity.
+          </p>
+        )}
+      </section>
+    )}
+    {view === "factory" && (
+      <section id="stories" aria-labelledby="stories-title">
+        <div class="section-heading">
+          <h2 id="stories-title">Factory & stories</h2>
+        </div>
+        <div class="gallery">
+          {houseImages
+            .filter((item) => visibleFactoryIds.has(item.name))
+            .map((item) => (
+              <figure>
+                <a
+                  class="image-link"
+                  href={item.image}
+                  aria-label={`View ${item.name} artwork full size`}
+                >
+                  <img
+                    src={item.image}
+                    width="1200"
+                    height="630"
+                    alt={`${item.name} artwork by Woodhouse`}
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div class="asset-title">
+                    <h3>{item.name}</h3>
+                    <span>1200 × 630 JPG</span>
+                  </div>
+                  <p class="credit">Woodhouse</p>
+                </figcaption>
+                <ShareActions
+                  caption={item.caption}
+                  image={item.image}
+                  filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
+                  link={`https://woodhouse.loftwah.com${item.link}`}
+                />
+                <a class="story-link" href={item.link}>
+                  Read the story
+                </a>
+              </figure>
+            ))}
+          {stories
+            .filter((story) => visibleFactoryIds.has(story.slug))
+            .map((story) => (
+              <figure>
+                <a
+                  class="image-link"
+                  href={dispatchSocialCard(story.slug)}
+                  aria-label={`View ${story.title} artwork full size`}
+                >
+                  <img
+                    src={dispatchSocialCard(story.slug)}
+                    width="1200"
+                    height="630"
+                    alt={`Woodhouse artwork for ${story.title}`}
+                    loading="lazy"
+                  />
+                </a>
+                <figcaption>
+                  <div class="asset-title">
+                    <h3>{story.title}</h3>
+                    <span>1200 × 630 JPG</span>
+                  </div>
+                  <p class="credit">Woodhouse</p>
+                </figcaption>
+                <ShareActions
+                  caption={shareCaption(
+                    story.title,
+                    story.deck,
+                    `https://woodhouse.loftwah.com/dispatches/${story.slug}/`
+                  )}
+                  image={dispatchSocialCard(story.slug)}
+                  filename={`${story.slug}.jpg`}
+                  link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
+                />
+                <a class="story-link" href={`/dispatches/${story.slug}/`}>
+                  Read the story
+                </a>
+              </figure>
+            ))}
+        </div>
+      </section>
+    )}
+    {view === "logos" && (
+      <section id="assets" aria-labelledby="assets-title">
+        <div class="section-heading">
+          <h2 id="assets-title">Logos & SVGs</h2>
+        </div>
+        <div class="gallery small-assets">
+          {smallAssets.map((item) => (
             <figure>
               <a
-                class="image-link radio-preview"
-                href={radioImage(format)}
-                aria-label={`View ${format} radio card full size`}
+                class="image-link svg-preview"
+                href={item.image}
+                aria-label={`View ${item.name} full size`}
               >
-                <img
-                  src={radioImage(format)}
-                  width={cardFormats[format].width}
-                  height={cardFormats[format].height}
-                  alt={`Games × Radio ${format} artwork and dated listening snapshot from LoftwahFM`}
-                  loading="lazy"
-                />
+                <img src={item.image} alt={item.name} loading="lazy" />
               </a>
               <figcaption>
                 <div class="asset-title">
-                  <h3>{format[0]!.toUpperCase() + format.slice(1)}</h3>
-                  <span>
-                    {cardFormats[format].width} × {cardFormats[format].height} PNG
-                  </span>
+                  <h3>{item.name}</h3>
+                  <span>{"width" in item ? `${item.width} × ${item.height} WebP` : "SVG"}</span>
                 </div>
-                <p class="credit">Official game artwork · LoftwahFM composition</p>
+                <p class="credit">{item.credit}</p>
               </figcaption>
               <ShareActions
-                caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
-                image={radioImage(format, true)}
-                filename={`loftwahfm-games-${format}.png`}
-                link={`https://woodhouse.loftwah.com/activity/?snapshot=${radio.snapshot}`}
+                caption={`${item.name} · ${item.credit}\nhttps://woodhouse.loftwah.com/share/`}
+                image={
+                  "download" in item && typeof item.download === "string"
+                    ? item.download
+                    : item.image
+                }
+                filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
+                link="https://woodhouse.loftwah.com/share/"
               />
             </figure>
           ))}
         </div>
-      ) : (
-        <p>Radio cards are unavailable right now.</p>
-      )}
-      {radio && (
-        <p class="credit">
-          Snapshot {radio.asOf.slice(0, 16).replace("T", " ")} UTC · Listening, not project
-          popularity.
-        </p>
-      )}
-    </section>
-    <section id="stories" aria-labelledby="stories-title">
-      <div class="section-heading">
-        <h2 id="stories-title">Factory & stories</h2>
-      </div>
-      <div class="gallery">
-        {houseImages.map((item) => (
-          <figure>
-            <a
-              class="image-link"
-              href={item.image}
-              aria-label={`View ${item.name} artwork full size`}
-            >
-              <img
-                src={item.image}
-                width="1200"
-                height="630"
-                alt={`${item.name} artwork by Woodhouse`}
-                loading="lazy"
-              />
-            </a>
-            <figcaption>
-              <div class="asset-title">
-                <h3>{item.name}</h3>
-                <span>1200 × 630 JPG</span>
-              </div>
-              <p class="credit">Woodhouse</p>
-            </figcaption>
-            <ShareActions
-              caption={item.caption}
-              image={item.image}
-              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
-              link={`https://woodhouse.loftwah.com${item.link}`}
-            />
-            <a class="story-link" href={item.link}>
-              Read the story
-            </a>
-          </figure>
-        ))}
-        {stories.map((story) => (
-          <figure>
-            <a
-              class="image-link"
-              href={dispatchSocialCard(story.slug)}
-              aria-label={`View ${story.title} artwork full size`}
-            >
-              <img
-                src={dispatchSocialCard(story.slug)}
-                width="1200"
-                height="630"
-                alt={`Woodhouse artwork for ${story.title}`}
-                loading="lazy"
-              />
-            </a>
-            <figcaption>
-              <div class="asset-title">
-                <h3>{story.title}</h3>
-                <span>1200 × 630 JPG</span>
-              </div>
-              <p class="credit">Woodhouse</p>
-            </figcaption>
-            <ShareActions
-              caption={shareCaption(
-                story.title,
-                story.deck,
-                `https://woodhouse.loftwah.com/dispatches/${story.slug}/`
-              )}
-              image={dispatchSocialCard(story.slug)}
-              filename={`${story.slug}.jpg`}
-              link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
-            />
-            <a class="story-link" href={`/dispatches/${story.slug}/`}>
-              Read the story
-            </a>
-          </figure>
-        ))}
-      </div>
-    </section>
-    <section id="assets" aria-labelledby="assets-title">
-      <div class="section-heading">
-        <h2 id="assets-title">Logos & SVGs</h2>
-      </div>
-      <div class="gallery small-assets">
-        {smallAssets.map((item) => (
-          <figure>
-            <a
-              class="image-link svg-preview"
-              href={item.image}
-              aria-label={`View ${item.name} full size`}
-            >
-              <img src={item.image} alt={item.name} loading="lazy" />
-            </a>
-            <figcaption>
-              <div class="asset-title">
-                <h3>{item.name}</h3>
-                <span>{"width" in item ? `${item.width} × ${item.height} WebP` : "SVG"}</span>
-              </div>
-              <p class="credit">{item.credit}</p>
-            </figcaption>
-            <ShareActions
-              caption={`${item.name} · ${item.credit}\nhttps://woodhouse.loftwah.com/share/`}
-              image={
-                "download" in item && typeof item.download === "string" ? item.download : item.image
-              }
-              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
-              link="https://woodhouse.loftwah.com/share/"
-            />
-          </figure>
-        ))}
-      </div>
-    </section>
-    <section id="game-art" aria-labelledby="game-art-title">
-      <div class="section-heading">
-        <h2 id="game-art-title">Game art & album covers</h2>
-      </div>
-      {projects
-        .filter((project) =>
-          gameMedia.some((asset) => asset.project === project.slug && asset.category === "art")
-        )
-        .map((project) => (
-          <section id={`art-${project.slug}`} aria-label={`${project.name} artwork`}>
-            <div class="section-heading">
-              <h3>{project.name}</h3>
-              <a href={`/share/${project.slug}/art-images.zip`} download>
-                Download artwork
-              </a>
-            </div>
-            <div class="gallery art-gallery">
-              {gameMedia
-                .filter((asset) => asset.project === project.slug && asset.category === "art")
-                .map((asset) => (
-                  <GameMedia
-                    asset={asset}
-                    destination={
-                      project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`
-                    }
-                  />
-                ))}
-            </div>
-          </section>
-        ))}
-    </section>
+      </section>
+    )}
+    {collection.pages > 1 && (
+      <GalleryPagination
+        project={selected?.slug}
+        type={view}
+        page={collection.page}
+        pages={collection.pages}
+        end
+      />
+    )}
     <section id="social" class="social-links" aria-label="Official social profiles">
       <h2>Post it.</h2>
       <nav>
@@ -432,6 +530,12 @@ const smallAssets = [
   </div>
 </BaseLayout>
 <script>
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-gallery-filters]")) {
+    const button = form.querySelector<HTMLButtonElement>("[data-filter-submit]");
+    if (button) button.hidden = true;
+    form.addEventListener("change", () => form.requestSubmit());
+  }
+
   for (const image of document.querySelectorAll<HTMLImageElement>("[data-gallery-image]")) {
     const label = image.closest("figure")?.querySelector("[data-image-size]");
     const describe = () => {
@@ -456,6 +560,31 @@ const smallAssets = [
     align-items: end;
     gap: 1rem;
     margin-bottom: 2rem;
+  }
+  .mobile-filters {
+    display: none;
+  }
+  .gallery-controls {
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .project-choices,
+  .type-choices {
+    gap: 0 1rem;
+  }
+  .project-choices a[aria-current],
+  .type-choices a[aria-current] {
+    color: var(--acid);
+    font-weight: 700;
+    text-decoration-thickness: 2px;
+  }
+  .type-choices {
+    padding-bottom: 0.5rem;
+  }
+  .result-count {
+    color: var(--muted);
+    margin: -0.75rem 0 1.5rem;
+    font-size: 0.875rem;
   }
   .gallery-intro h1 {
     font-family: var(--display);
@@ -582,7 +711,7 @@ const smallAssets = [
     gap: 2rem;
   }
   .art-gallery {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .section-heading h3 {
     font-family: var(--display);
@@ -594,10 +723,43 @@ const smallAssets = [
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .art-gallery {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (max-width: 600px) {
+    .gallery-controls > nav {
+      display: none;
+    }
+    .mobile-filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+    .mobile-filters label {
+      display: grid;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      min-width: 0;
+    }
+    .mobile-filters select {
+      width: 100%;
+      min-height: 44px;
+      background: var(--surface);
+      color: var(--paper);
+      border: 1px solid var(--line);
+      padding: 0.5rem;
+      font: inherit;
+      font-size: 0.8rem;
+    }
+    .mobile-filters button {
+      min-height: 44px;
+      background: var(--acid);
+      color: var(--ink);
+      border: 0;
+    }
+
     .gallery-intro nav {
       gap: 0 0.75rem;
     }

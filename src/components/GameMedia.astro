@@ -49,7 +49,7 @@ const { asset, destination, eager = false } = Astro.props;
   )}
   <figcaption>
     <div class="asset-title">
-      <h3>{asset.title}</h3>
+      <h2>{asset.title}</h2>
       <span>
         {asset.width} × {asset.height} ·{" "}
         {asset.kind === "video"
@@ -115,7 +115,7 @@ const { asset, destination, eager = false } = Astro.props;
     justify-content: space-between;
     gap: 0.25rem 0.75rem;
   }
-  h3 {
+  h2 {
     font-family: var(--display);
     font-size: 1.25rem;
     letter-spacing: -0.025em;
@@ -123,7 +123,7 @@ const { asset, destination, eager = false } = Astro.props;
     margin: 0;
     overflow-wrap: anywhere;
   }
-  .art-figure h3 {
+  .art-figure h2 {
     font-size: 1.05rem;
   }
   .asset-title span,
