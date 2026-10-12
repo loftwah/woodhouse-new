@@ -265,7 +265,13 @@ let searchIndexChecked = false;
 async function canonicalOf(pathname) {
   if (canonicals.has(pathname)) return canonicals.get(pathname);
   const response = await request(`${origin}${pathname}`);
-  if (response.status !== 200) {
+  if (
+    response.status !== 200 ||
+    !/^text\/html\b/i.test(response.headers.get("content-type") ?? "")
+  ) {
+    // Downloads have no page canonical. Release their streams without buffering
+    // films and image packs as HTML during a publication audit.
+    await response.body?.cancel();
     canonicals.set(pathname, null);
     return null;
   }
@@ -280,6 +286,7 @@ for (const page of pages) {
   const response = await request(`${origin}${page}`);
   if (response.status !== 200) {
     report(page, `returned HTTP ${response.status}`);
+    await response.body?.cancel();
     continue;
   }
   const html = await response.text();
@@ -345,6 +352,7 @@ for (const [page, targets] of internalLinks) {
     const response = await request(`${origin}${target}`);
     if (response.status >= 400)
       report(page, `links to ${target}, which returned HTTP ${response.status}`);
+    await response.body?.cancel();
   }
 }
 
@@ -368,6 +376,7 @@ for (const [image, page] of socialImages) {
   socialImageStatus.set(image, response.status);
   if (response.status !== 200) report(page, `og:image ${image} returned HTTP ${response.status}`);
   else if (!/^image\//.test(type)) report(page, `og:image ${image} served ${type || "no type"}`);
+  await response.body?.cancel();
 }
 
 console.log(

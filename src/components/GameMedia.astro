@@ -1,0 +1,149 @@
+---
+import ShareActions from "./ShareActions.astro";
+import type { gameMedia } from "../data/share-desk";
+type Props = { asset: (typeof gameMedia)[number]; destination: string; eager?: boolean };
+const { asset, destination, eager = false } = Astro.props;
+---
+
+<figure id={asset.id} class:list={["media-figure", { "art-figure": asset.category === "art" }]}>
+  {asset.kind === "video" ? (
+    <video
+      class:list={["media-preview", { "wide-media": asset.width / asset.height > 1.3 }]}
+      controls
+      playsinline
+      preload="none"
+      poster={asset.poster}
+      width={asset.width}
+      height={asset.height}
+      aria-label={asset.title}
+    >
+      <source src={asset.file} type="video/mp4" />
+      <track
+        kind="captions"
+        src={asset.file.replace(/\.mp4$/, ".vtt")}
+        srclang="en"
+        label="Sound captions"
+      />
+      <a href={asset.file}>Download {asset.title}</a>
+    </video>
+  ) : (
+    <a
+      class:list={[
+        "media-preview",
+        {
+          "on-light": asset.id === "fm-logo-black",
+          "wide-media": asset.category === "gameplay" && asset.width / asset.height > 1.3
+        }
+      ]}
+      href={asset.file}
+      aria-label={`View ${asset.title} full size`}
+    >
+      <img
+        src={asset.file}
+        width={asset.width}
+        height={asset.height}
+        alt={asset.alt}
+        loading={eager ? "eager" : "lazy"}
+      />
+    </a>
+  )}
+  <figcaption>
+    <div class="asset-title">
+      <h3>{asset.title}</h3>
+      <span>
+        {asset.width} × {asset.height} ·{" "}
+        {asset.kind === "video"
+          ? `${asset.duration}s MP4`
+          : asset.file.split(".").pop()?.toUpperCase()}
+      </span>
+    </div>
+    <p class="credit">
+      {asset.note} · {asset.credit}
+    </p>
+  </figcaption>
+  <ShareActions
+    caption={asset.caption}
+    image={asset.file}
+    filename={asset.file.split("/").pop() ?? "share-media"}
+    link={asset.link ?? destination}
+    mediaType={asset.kind}
+  />
+  {asset.link && (
+    <a class="listen-link" href={asset.link}>
+      Listen to this album
+    </a>
+  )}
+</figure>
+<style>
+  .media-figure {
+    margin: 0;
+    min-width: 0;
+    scroll-margin-top: 1.5rem;
+  }
+  .media-preview {
+    display: block;
+    width: 100%;
+    height: 300px;
+    background: var(--surface);
+    object-fit: contain;
+    overflow: hidden;
+  }
+  .wide-media {
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .media-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+  .on-light {
+    background: #f4f0e7;
+  }
+  .art-figure .media-preview {
+    height: 200px;
+  }
+  figcaption {
+    padding-top: 0.85rem;
+  }
+  .asset-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+  }
+  h3 {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .art-figure h3 {
+    font-size: 1.05rem;
+  }
+  .asset-title span,
+  .credit {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .credit {
+    margin: 0.35rem 0 0.8rem;
+  }
+  .listen-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+    text-underline-offset: 0.3em;
+  }
+  @media (max-width: 600px) {
+    .art-figure .media-preview {
+      height: 150px;
+    }
+  }
+</style>

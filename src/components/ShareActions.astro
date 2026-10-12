@@ -1,11 +1,31 @@
 ---
-type Props = { caption: string; image: string; filename?: string; link: string; label?: string };
-const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy post" } = Astro.props;
+type Props = {
+  caption: string;
+  image: string;
+  filename?: string;
+  link: string;
+  label?: string;
+  mediaType?: "image" | "video";
+};
+const {
+  caption,
+  image,
+  filename = "loftwah-social.jpg",
+  link,
+  label = "Copy post",
+  mediaType = "image"
+} = Astro.props;
 ---
 
-<div data-share-actions data-image={image} data-filename={filename} data-link={link}>
+<div
+  data-share-actions
+  data-image={image}
+  data-media-type={mediaType}
+  data-filename={filename}
+  data-link={link}
+>
   <div class="actions">
-    <a class="download" href={image} download>
+    <a class="download" href={image} download={filename}>
       Download
     </a>
     <button type="button" data-copy-image hidden>
@@ -62,7 +82,12 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
         }
       });
     }
-    if (copyImage && navigator.clipboard?.write && typeof ClipboardItem !== "undefined") {
+    if (
+      root.dataset.mediaType !== "video" &&
+      copyImage &&
+      navigator.clipboard?.write &&
+      typeof ClipboardItem !== "undefined"
+    ) {
       const png = async () => {
         let blob = await load();
         if (blob.type === "image/png") return blob;
@@ -134,17 +159,25 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
       });
     }
     if (
+      root.dataset.mediaType !== "video" &&
       share &&
       navigator.share &&
       navigator.canShare &&
       typeof IntersectionObserver !== "undefined"
     ) {
       let prepared: File | undefined;
+      let visible = false;
       const observer = new IntersectionObserver((entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
-        observer.disconnect();
+        visible = entries.some((entry) => entry.isIntersecting);
+        if (!visible) {
+          prepared = undefined;
+          original = undefined;
+          share.hidden = true;
+          return;
+        }
         load()
           .then((blob) => {
+            if (!visible) return;
             const extension = blob.type.includes("png")
               ? "png"
               : blob.type.includes("svg")
