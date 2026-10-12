@@ -86,7 +86,8 @@ export default defineConfig({
   cache: { provider: cacheCloudflare() },
   routeRules: {
     "/": { maxAge: 60, swr: 60, tags: ["woodhouse-public"] },
-    "/share/": { maxAge: 60, swr: 60, tags: ["woodhouse-share"] },
+    // Gallery views vary by project, format and page; the path-only route cache
+    // must not serve one selection for another. CMS queries keep their own cache.
     "/activity/": { maxAge: 300, swr: 60, tags: ["woodhouse-activity"] },
     "/api/activity.json": { maxAge: 300, swr: 60, tags: ["woodhouse-activity"] },
     "/factory/": { maxAge: 60, swr: 60, tags: ["woodhouse-factory"] },

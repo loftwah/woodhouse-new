@@ -53,3 +53,6 @@ Reviewed 12 October 2026: the SHOALSHOT gallery kit follows its later generated-
 
 
 Reviewed 12 October 2026: MP rejected an OG-only interpretation of the gallery. Actual gameplay screenshots, finished promotional films and social variants, native result-card examples, character/game artwork and public album covers belong here alongside link previews. Current interfaces lead; archival footage remains visibly dated. Media previews and original downloads are immediately available, images have clipboard/caption actions, clips have native playback and downloads, and image packs remove file-by-file hunting. Private captures and unfinished or rejected creative candidates are excluded; no project-specific account is invented.
+
+
+Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after the assets were collected. The share gallery must now browse by project and asset type, with six previews per page and native previous/next links at both ends. The overview shows the priority projects together. This replaces the earlier requirement to render every asset in one page; all approved assets remain reachable, directly copyable and downloadable, with no reading prerequisite or mandatory setup.
