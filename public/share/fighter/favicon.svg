@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="LOFTWAH FIGHTER">
+  <title>LOFTWAH FIGHTER</title>
+  <!--
+    Charge-Strip identity: a 3-slot 3v3 Charge Strip where each
+    Character slot is a solid brand colour (cream / acid yellow /
+    tomato), with the middle slot charged in acid yellow. The
+    brand's indigo board fills the gaps. Hard registration
+    ticks mark the centre commit so the mark reads as a
+    combat decision at 16px without depending on letterforms.
+  -->
+  <rect width="64" height="64" fill="#111f46" />
+  <!-- left Character slot: cream "your side" plate -->
+  <rect x="6" y="14" width="14" height="36" fill="#f7f0dd" />
+  <!-- middle Character slot: acid yellow "charged" -->
+  <rect x="25" y="14" width="14" height="36" fill="#f2d742" />
+  <!-- right Character slot: tomato "opponent" plate -->
+  <rect x="44" y="14" width="14" height="36" fill="#ef4d39" />
+  <!-- centre commit notches: hard registration ticks -->
+  <rect x="30" y="6" width="4" height="4" fill="#ef4d39" />
+  <rect x="30" y="54" width="4" height="4" fill="#ef4d39" />
+</svg>
