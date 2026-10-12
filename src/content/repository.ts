@@ -554,6 +554,13 @@ export async function listPublicSearchItems() {
   const pages: PublicSearchItem[] = [
     ...[
       {
+        title: "Share desk",
+        description:
+          "Project images, ready-to-post captions, radio formats and official social profiles.",
+        href: "/share/",
+        section: "Sharing"
+      },
+      {
         title: "The factory floor",
         description: "Current reviewed project snapshot and next proof.",
         href: "/factory/",

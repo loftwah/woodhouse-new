@@ -86,6 +86,7 @@ export default defineConfig({
   cache: { provider: cacheCloudflare() },
   routeRules: {
     "/": { maxAge: 60, swr: 60, tags: ["woodhouse-public"] },
+    "/share/": { maxAge: 60, swr: 60, tags: ["woodhouse-share"] },
     "/activity/": { maxAge: 300, swr: 60, tags: ["woodhouse-activity"] },
     "/api/activity.json": { maxAge: 300, swr: 60, tags: ["woodhouse-activity"] },
     "/factory/": { maxAge: 60, swr: 60, tags: ["woodhouse-factory"] },
