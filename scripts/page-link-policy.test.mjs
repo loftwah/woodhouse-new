@@ -1,6 +1,22 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isCloudflareHiddenContentLink } from "./page-link-policy.mjs";
+import { isCloudflareHiddenContentLink, socialImageURL } from "./page-link-policy.mjs";
+
+test("social image audits retain the HTML-escaped game and snapshot query", () => {
+  const url = socialImageURL(
+    "/api/activity-card.png?snapshot=1791774000&amp;game=fighter",
+    "https://example.com/activity/"
+  );
+  assert.equal(
+    url.pathname + url.search,
+    "/api/activity-card.png?snapshot=1791774000&game=fighter"
+  );
+  assert.equal(url.searchParams.get("game"), "fighter");
+  assert.equal(
+    socialImageURL("/og/woodhouse.jpg", "https://example.com/").pathname,
+    "/og/woodhouse.jpg"
+  );
+});
 
 const injected = {
   attrs: new Map([

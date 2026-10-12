@@ -15,6 +15,7 @@ export const GET: APIRoute = async ({ cache }) => {
     );
   }
   for (const hint of projects.cacheHints) cache.set(hint);
+  cache.set({ lastModified: new Date(report.asOf) });
   const publicIds = new Set(projects.projects.map((p) => p.slug));
   return Response.json({
     available: true,

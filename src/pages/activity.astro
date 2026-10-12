@@ -1,6 +1,14 @@
 ---
 /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- A labelled overflow region needs keyboard scroll access. */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ActivitySharing from "../components/ActivitySharing.astro";
+import {
+  activityLink,
+  cardPath,
+  compositeIsPublic,
+  parseSnapshot,
+  sharingGames
+} from "../data/activity-sharing";
 import { listProjectRecords } from "../content/repository";
 import {
   activitySource,
@@ -9,7 +17,16 @@ import {
   projectListeningReport
 } from "../data/activity";
 export const prerender = false;
-const [result, report] = await Promise.all([listProjectRecords(), loadListeningReport()]);
+const requestedSnapshot = parseSnapshot(Astro.url.searchParams.get("snapshot"));
+if (requestedSnapshot === null)
+  return new Response("Invalid snapshot.", {
+    status: 400,
+    headers: { "cache-control": "no-store" }
+  });
+const [result, report] = await Promise.all([
+  listProjectRecords(),
+  loadListeningReport(fetch, requestedSnapshot)
+]);
 if (result.error)
   return new Response("Unable to load public project identities.", {
     status: 503,
@@ -19,18 +36,36 @@ if (!report) Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
   if (!report) {
     Astro.cache.set(false);
-  } else for (const hint of result.cacheHints) Astro.cache.set(hint);
+  } else {
+    for (const hint of result.cacheHints) Astro.cache.set(hint);
+    Astro.cache.set({ lastModified: new Date(report.asOf) });
+  }
 }
 const identities = new Map(result.projects.map((p) => [p.slug, p]));
-const games = report ? projectListeningReport(report, new Set(identities.keys())).games : [];
+const projected = report ? projectListeningReport(report, new Set(identities.keys())) : null;
+const games = projected?.games ?? [];
 const bubbles = identities.get("bubbles");
 const hasListening = games.some((g) => g.seconds > 0);
+const requestedGame = Astro.url.searchParams.get("game") ?? "";
+const composite = compositeIsPublic(new Set(identities.keys()));
+const fallback = composite ? "" : (sharingGames.find((id) => identities.has(id)) ?? "");
+const selected =
+  sharingGames.some((id) => id === requestedGame) && identities.has(requestedGame)
+    ? requestedGame
+    : fallback;
+const canShare = !!report && (composite || !!selected);
+const metadataPath =
+  report && (requestedSnapshot !== undefined || selected)
+    ? activityLink(selected, report.snapshot).replace("https://woodhouse.loftwah.com", "")
+    : "/activity/";
 ---
 
 <BaseLayout
   title="Scores & listening"
   description="Find public Bubbles leaderboards and follow reported game listening across LoftwahFM. Real sources, clear coverage, shareable links."
-  path="/activity/"
+  path={metadataPath}
+  currentPath="/activity/"
+  image={canShare && report ? cardPath(selected, report.snapshot) : "/og/woodhouse.jpg"}
 >
   <div class="container activity">
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -38,17 +73,27 @@ const hasListening = games.some((g) => g.seconds > 0);
       <span>/</span>
       <span>Scores & listening</span>
     </nav>
-    <header class="activity-intro">
-      <h1 class="page-title">
-        Play for a place.
-        <br />
-        <em>Listen for a while.</em>
-      </h1>
-      <p>
-        Find a board worth playing for. Follow the music that travels between our games. Every
-        result belongs to its own rules and source.
-      </p>
-    </header>
+    <div class:list={["activity-intro", { "with-image": canShare }]}>
+      <header>
+        <h1 class="page-title">
+          Play for a place.
+          <br />
+          <em>Listen for a while.</em>
+        </h1>
+        <p>
+          Find a board worth playing for. Follow the music that travels between our games. Every
+          result belongs to its own rules and source.
+        </p>
+      </header>
+      {canShare && projected && (
+        <ActivitySharing
+          report={projected}
+          projects={result.projects}
+          selected={selected}
+          composite={composite}
+        />
+      )}
+    </div>
     {bubbles?.siteUrl && (
       <section class="competition" aria-labelledby="boards-title">
         <div>
@@ -216,6 +261,16 @@ const hasListening = games.some((g) => g.seconds > 0);
   .activity-intro {
     padding-block: 1.5rem 3rem;
   }
+  .with-image {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 2rem 3rem;
+    align-items: start;
+  }
+  .with-image .page-title {
+    font-size: clamp(2.5rem, 4.3vw, 4.5rem);
+    margin-top: 0;
+  }
   .activity-intro p {
     max-width: 47rem;
     font-size: 1.2rem;
@@ -281,6 +336,10 @@ const hasListening = games.some((g) => g.seconds > 0);
     flex-wrap: wrap;
     align-items: baseline;
   }
+  .section-heading > a {
+    min-height: 44px;
+    align-items: center;
+  }
   .coverage {
     color: var(--muted);
     font-size: 0.875rem;
@@ -341,6 +400,9 @@ const hasListening = games.some((g) => g.seconds > 0);
     padding-top: 2.5rem;
   }
   @media (max-width: 700px) {
+    .with-image {
+      grid-template-columns: 1fr;
+    }
     .competition {
       grid-template-columns: 1fr;
       gap: 1.25rem;

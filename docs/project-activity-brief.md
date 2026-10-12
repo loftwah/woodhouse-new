@@ -36,3 +36,30 @@ Return evidence in the existing GitHub owning issue: exact deployed commit/Worke
 Reuse existing Workers and D1 for authoritative application data; Analytics Engine for aggregate product telemetry where already configured; Web Analytics for private site acquisition/performance. Turnstile can protect submission/sign-in friction but cannot prove a game result. Durable Objects become relevant only for an observed real-time coordination need. There is no need to provision a new resource for this hub. Every new service still requires current platform, budget and account review.
 
 Official sources reviewed: [Web Analytics](https://developers.cloudflare.com/web-analytics/about/), [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [Analytics Engine pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/), [Turnstile server validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/). Limits and pricing must be rechecked before introducing a new service.
+
+
+## Priority shopping list — reviewed 12 October 2026
+
+MP prioritised Fighter, SHOALSHOT, Protocol 11, Bubbles and LoftwahFM and explicitly authorised direct follow-ups in their existing chats. MP should not relay prompts or assemble share images. This list extends the existing brief; project issues remain authoritative.
+
+| Project | First useful native outcome | Reporting to reuse or complete |
+| --- | --- | --- |
+| Fighter | Finished-fight image, caption and play/result link; label local result provenance | Existing battle start/terminal outcome records, deliberate rematches, truthful FM attribution |
+| SHOALSHOT | Dive Summary/run image with actual mode and result; keep local-first recovery | Verify existing FM instrumentation versus actual receipts; admitted run start/finish/replay events |
+| Protocol 11 | Completed-game/result image with actual rules and result, after current gameplay release | Root-owned FM attribution, meaningful game starts/finishes/rematches where admitted |
+| Bubbles | Native personal-best/result sharing with board-specific context; preserve House/personal/verified distinctions | Finish already-started #1322 attribution; reuse native profiles, boards and read budgets |
+| LoftwahFM | Three authored Games × Radio formats, native download/share and snapshot metadata | Existing listening, trends, prior periods, station/track contribution and referral aggregates |
+
+Request this small public-safe packet in the existing owning issue: current play/result/board URLs; deployed source/Worker evidence; native share-image URL, pixel dimensions, file type, caption and stable snapshot/result link; canonical artwork/logo source and public-use credit/rights; result mode/rules/version, units, sort/ties and local-versus-server verification; metric event triggers, UTC window, coverage start, update cadence, test exclusion and sampling/bot/dedup limitations. Public reads must expose only explicitly public aliases and aggregates, never raw histories, emails or private IDs. A local personal-result card needs no central account or public event upload. Public submission remains an optional native decision.
+
+The useful engagement questions are: did a real play start, did it reach a terminal outcome, and did the player deliberately play again? A share-sheet opening, image download or clipboard success is not proof of a posted share or acquired player. A rematch can reuse a new-game event when the existing ledger already captures it; do not create redundant counters. Rates/trends need valid denominators and comparable coverage.
+
+### Share experience and dimensions
+
+- Landscape **1200 × 630** is the supported initial FM image. Square **1200 × 1200** and portrait **1080 × 1920** are requested additions; publish them only after the provider's exact release and image bytes are verified.
+- Each format is an authored composition with readable type and declared safe areas. Preserve canonical product art/aspect and public credit. No automatic centre-crop, screenshot of controls, fake player podium or private account details.
+- Default to a finished result or dated report with **Download image**, device **Share image** when supported, and **Copy caption + link**. Prepare a bounded image before invoking file sharing so the click retains user activation. Cancellation is silent. Keep native download/link fallback and signed-out play.
+- Woodhouse presents the priority game's or composite FM image in its first viewport, exposes dimensions and source time, and keeps the listening ledger and native boards below. It relays the current fixed publisher PNG solely for same-origin download/file sharing; it does not render, transform or store the artwork. Historical links follow FM's retained-snapshot window.
+- Woodhouse can add richer comparison/station/track discovery only after the safe source fields and denominators are reviewed. Scores from different games are never one competitive ranking. Accounts and score validation stay native.
+
+Official sharing behavior reviewed: [Web Share](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share) and [file-sharing support detection](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/canShare). File sharing varies by browser/device; browser automation cannot prove a recipient published an image.
