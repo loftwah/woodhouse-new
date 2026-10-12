@@ -5,10 +5,12 @@ export const prerender = false;
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const slug = url.searchParams.get("project") ?? "";
+  const asset = url.searchParams.get("asset") ?? "social";
   if (
+    !["social", "wordmark", "emblem"].includes(asset) ||
     !/^[a-z0-9-]{1,64}$/.test(slug) ||
     (url.searchParams.get("audit")?.length ?? 0) > 128 ||
-    [...url.searchParams.keys()].some((key) => !["project", "audit"].includes(key))
+    [...url.searchParams.keys()].some((key) => !["project", "audit", "asset"].includes(key))
   )
     return new Response("Invalid image request.", {
       status: 400,
@@ -21,12 +23,18 @@ export const GET: APIRoute = async ({ url, cache }) => {
       headers: { "cache-control": "no-store" }
     });
   const project = result.projects.find((p) => p.slug === slug);
-  if (!project?.previewImage)
+  const source =
+    asset === "social"
+      ? project?.previewImage
+      : project?.slug === "shoalshot"
+        ? `https://shoalshot.loftwah.com/ui/brand/shoalshot-${asset}.svg`
+        : undefined;
+  if (!source)
     return new Response("Image not found.", {
       status: 404,
       headers: { "cache-control": "no-store" }
     });
-  const image = await loadShareImage(project.previewImage);
+  const image = await loadShareImage(source);
   if (!image)
     return new Response("Image unavailable. Open the original project image.", {
       status: 503,
@@ -35,7 +43,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
   return new Response(image.bytes.buffer as ArrayBuffer, {
     headers: {
       "content-type": image.mime,
-      "content-disposition": `attachment; filename="${slug}-social.${image.extension}"`,
+      "content-disposition": `attachment; filename="${slug}-${asset}.${image.extension}"`,
       "cache-control": "public, max-age=300",
       "x-content-type-options": "nosniff",
       "content-security-policy": "default-src 'none'; sandbox"

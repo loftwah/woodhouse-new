@@ -25,21 +25,32 @@ export function activityLink(game: string, snapshot: number) {
   if (game) params.set("game", game);
   return `https://woodhouse.loftwah.com/activity/?${params}`;
 }
-export function cardIsPng(bytes: Uint8Array) {
+export const cardFormats = {
+  landscape: { width: 1200, height: 630 },
+  square: { width: 1200, height: 1200 },
+  portrait: { width: 1080, height: 1920 }
+} as const;
+export type CardFormat = keyof typeof cardFormats;
+export function cardIsPng(bytes: Uint8Array, format: CardFormat = "landscape") {
   if (bytes.length < 24 || bytes.length > 1024 * 1024) return false;
   const signature = [137, 80, 78, 71, 13, 10, 26, 10];
   if (!signature.every((byte, i) => bytes[i] === byte)) return false;
   if (String.fromCharCode(...bytes.slice(12, 16)) !== "IHDR") return false;
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-  return view.getUint32(16) === 1200 && view.getUint32(20) === 630;
+  return (
+    view.getUint32(16) === cardFormats[format].width &&
+    view.getUint32(20) === cardFormats[format].height
+  );
 }
 export async function loadActivityCard(
   game: string,
   snapshot: number,
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
+  format: CardFormat = "landscape"
 ) {
   const url = new URL("https://fm.loftwah.com/api/analytics/games-card.png");
   url.searchParams.set("days", "30");
+  if (format !== "landscape") url.searchParams.set("format", format);
   url.searchParams.set("snapshot", String(snapshot));
   if (game) url.searchParams.set("game", game);
   try {
@@ -72,7 +83,7 @@ export async function loadActivityCard(
       bytes.set(chunk, offset);
       offset += chunk.length;
     }
-    return cardIsPng(bytes) ? bytes : null;
+    return cardIsPng(bytes, format) ? bytes : null;
   } catch {
     return null;
   }
