@@ -3,7 +3,7 @@
   "name": "woodhouse-loftwah-preview",
   "main": "./src/worker.ts",
   "compatibility_date": "2026-09-28",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "placement": { "mode": "smart" },
   "workers_dev": true,
   "worker_loaders": [{ "binding": "LOADER" }],

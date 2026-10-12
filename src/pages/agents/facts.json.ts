@@ -132,6 +132,13 @@ export const GET: APIRoute = async ({ cache }) => {
       linkedIn: "https://www.linkedin.com/in/deanlofts/",
       page: `${siteOrigin}/contact/`
     },
+    activity: {
+      page: `${siteOrigin}/activity/`,
+      aggregates: `${siteOrigin}/api/activity.json`,
+      metric: "reported audible seconds and playback starts over 30 days",
+      boundary:
+        "Aggregate reporting does not establish unique humans, game popularity or reviewed release state. Native boards and identities stay project-owned."
+    },
     permissions: {
       read: "public curated facts",
       write: false,

@@ -560,6 +560,12 @@ export async function listPublicSearchItems() {
         section: "Factory"
       },
       {
+        title: "Scores & listening",
+        description: "Public competition links and reported game radio listening.",
+        href: "/activity/",
+        section: "Activity"
+      },
+      {
         title: "Project dossiers",
         description: "Nine project dossiers from the Loftwah Software Factory.",
         href: "/projects/",
