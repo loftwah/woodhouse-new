@@ -1,5 +1,5 @@
 import type { WoodhouseProject } from "../content/repository";
-export const sharePriorities = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
+const sharePriorities = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
 export function orderShareProjects(projects: WoodhouseProject[]) {
   return [...projects].sort((a, b) => {
     const rank = (id: string) => {
@@ -9,16 +9,20 @@ export function orderShareProjects(projects: WoodhouseProject[]) {
     return rank(a.slug) - rank(b.slug) || a.index.localeCompare(b.index);
   });
 }
-export function projectCaption(project: WoodhouseProject) {
-  const link = project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
-  const lead = `${project.name}, from Loftwah.`;
-  const description = project.siteOgDescription ?? project.summary;
+export function shareCaption(lead: string, description: string, link: string) {
   const budget = Math.max(0, 280 - lead.length - link.length - 4);
   const copy =
     description.length > budget
       ? description.slice(0, budget - 1).replace(/\s+\S*$/, "") + "…"
       : description;
   return `${lead}\n${copy}\n${link}`;
+}
+export function projectCaption(project: WoodhouseProject) {
+  return shareCaption(
+    `${project.name}, from Loftwah.`,
+    project.siteOgDescription ?? project.summary,
+    project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`
+  );
 }
 // Only the currently reviewed public image publishers, never a caller-provided URL.
 const imageHosts = new Set([

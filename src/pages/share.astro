@@ -9,9 +9,9 @@ import {
 } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
 import { getSiteMetadata } from "../data/site-metadata";
-import { orderShareProjects, projectCaption, sharePriorities } from "../data/share-desk";
+import { orderShareProjects, projectCaption, shareCaption } from "../data/share-desk";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
-import { compositeIsPublic } from "../data/activity-sharing";
+import { compositeIsPublic, cardFormats, type CardFormat } from "../data/activity-sharing";
 export const prerender = false;
 const [result, footer, listening, dispatches, evidence] = await Promise.all([
   listProjectRecords(),
@@ -21,263 +21,266 @@ const [result, footer, listening, dispatches, evidence] = await Promise.all([
   listPublicEvidence()
 ]);
 if (result.error)
-  return new Response("Share resources are unavailable.", {
+  return new Response("Share images are unavailable.", {
     status: 503,
     headers: { "cache-control": "no-store" }
   });
 const projects = orderShareProjects(result.projects);
 const requested = Astro.url.searchParams.get("project");
-const project = projects.find((p) => p.slug === requested) ?? (requested ? undefined : projects[0]);
-if (!project)
+const selected = projects.find((project) => project.slug === requested);
+if (requested && !selected)
   return new Response("Project not found.", {
     status: 404,
     headers: { "cache-control": "no-store" }
   });
-if (!listening) Astro.response.headers.set("cache-control", "private, no-store");
+if (!listening || dispatches.error || evidence.error)
+  Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
   for (const hint of result.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(footer.cacheHint);
   Astro.cache.set(dispatches.cacheHint);
   Astro.cache.set(evidence.cacheHint);
   if (listening) Astro.cache.set({ lastModified: new Date(listening.asOf) });
-  else Astro.cache.set(false);
 }
-// A reviewed public release record, rather than a pending project hand-off.
-const nativeSharing =
-  project.slug === "shoalshot" && !evidence.error
-    ? evidence.evidence.find(
-        (entry) =>
-          entry.id === "shoalshot-native-result-sharing-2026-10-12" &&
-          entry.data.project_key === project.slug &&
-          entry.data.evidence_kind === "production verification" &&
-          entry.data.evidence_state === "reviewed"
-      )
-    : undefined;
-const metadata = getSiteMetadata(project);
-const destination = project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
-const download = project.previewImage ? `/api/share-image?project=${project.slug}` : metadata.image;
-const caption = projectCaption(project);
-const priority = projects.filter((p) => sharePriorities.includes(p.slug));
-const portfolioPost = `Games, music and a software factory. Made by Loftwah.\n${priority.map((p) => `${p.name}: ${p.siteUrl ?? `https://woodhouse.loftwah.com/projects/${p.slug}/`}`).join("\n")}\nMore from the factory: https://woodhouse.loftwah.com/share/`;
-const profiles = (footer.menu?.items ?? []).filter((item) => item.url.startsWith("https://"));
+const publicIds = new Set(projects.map((project) => project.slug));
 const radio =
-  listening && compositeIsPublic(new Set(projects.map((p) => p.slug)))
-    ? projectListeningReport(listening, new Set(projects.map((p) => p.slug)))
-    : null;
-const radioURL = (format: string, download = false) =>
-  `https://fm.loftwah.com/api/analytics/games-card.png?days=30&snapshot=${radio?.snapshot}&format=${format}${download ? "&download=1" : ""}`;
-const storyCards = dispatches.dispatches.filter((story) =>
+  listening && compositeIsPublic(publicIds) ? projectListeningReport(listening, publicIds) : null;
+const radioImage = (format: CardFormat, download = false) =>
+  `/api/activity-card.png?snapshot=${radio?.snapshot}&format=${format}${download ? "&download=1" : ""}`;
+const nativeSharing =
+  !evidence.error &&
+  evidence.evidence.find(
+    (entry) =>
+      entry.id === "shoalshot-native-result-sharing-2026-10-12" &&
+      entry.data.project_key === "shoalshot" &&
+      entry.data.evidence_kind === "production verification" &&
+      entry.data.evidence_state === "reviewed"
+  );
+const profiles = (footer.menu?.items ?? []).filter((item) => item.url.startsWith("https://"));
+const stories = dispatches.dispatches.filter((story) =>
   dispatchSocialCard(story.slug).startsWith("/og/dispatches/")
 );
 const houseImages = [
-  { name: "Woodhouse", image: "/og/woodhouse.jpg", link: "/" },
-  { name: "The factory", image: "/og/factory.jpg", link: "/factory/" },
-  { name: "Dean Lofts", image: "/og/dean.jpg", link: "/dean/" }
+  {
+    name: "Woodhouse",
+    image: "/og/woodhouse.jpg",
+    link: "/",
+    caption:
+      "Games, music and a software factory. Fighter, SHOALSHOT, Protocol 11, Bubbles and LoftwahFM — made by Loftwah.\nhttps://woodhouse.loftwah.com/share/"
+  },
+  {
+    name: "The factory",
+    image: "/og/factory.jpg",
+    link: "/factory/",
+    caption: "Nine projects. One software factory.\nhttps://woodhouse.loftwah.com/factory/"
+  },
+  {
+    name: "Dean Lofts",
+    image: "/og/dean.jpg",
+    link: "/dean/",
+    caption:
+      "Meet the human behind the Loftwah software factory.\nhttps://woodhouse.loftwah.com/dean/"
+  }
+];
+const smallAssets = [
+  { name: "Project network", image: "/images/diagrams/project-network.svg", credit: "Woodhouse" },
+  { name: "Release path", image: "/images/diagrams/release-path.svg", credit: "Woodhouse" },
+  { name: "Evidence ladder", image: "/images/diagrams/evidence-ladder.svg", credit: "Woodhouse" },
+  { name: "Woodhouse mark", image: "/favicon.svg", credit: "Woodhouse" },
+  ...(publicIds.has("shoalshot")
+    ? [
+        {
+          name: "SHOALSHOT wordmark",
+          download: "/api/share-image?project=shoalshot&asset=wordmark",
+          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark.svg",
+          credit: "A Loftwah Game"
+        },
+        {
+          name: "SHOALSHOT emblem",
+          download: "/api/share-image?project=shoalshot&asset=emblem",
+          image: "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg",
+          credit: "A Loftwah Game"
+        }
+      ]
+    : [])
 ];
 ---
 
 <BaseLayout
-  title="Share desk"
-  description="Ready-to-share project images, posts, radio cards and official social links. The Loftwah portfolio in one place."
-  path={requested ? `/share/?project=${project.slug}` : "/share/"}
+  title={selected ? `${selected.name} · Share gallery` : "Share gallery"}
+  description="Finished project images, radio cards and story artwork. Download an image or copy a ready post directly from the gallery."
+  path={selected ? `/share/?project=${selected.slug}` : "/share/"}
   currentPath="/share/"
-  image={metadata.image}
-  imageAlt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+  image={selected ? getSiteMetadata(selected).image : "/og/woodhouse.jpg"}
 >
-  <div class="container share-desk">
-    <header class="desk-intro">
-      <h1 class="page-title">
-        Made here.
-        <br />
-        <em>Share anywhere.</em>
-      </h1>
+  <div class="container share-gallery">
+    <header class="gallery-intro">
       <div>
-        <p>
-          Grab a project image and a ready-to-post caption. Games, radio and the factory, all in one
-          place.
-        </p>
-        <nav aria-label="Share resources">
-          <a href="#radio">Radio cards</a>
-          <a href="#factory">Factory artwork</a>
-          <a href="#social">Social accounts</a>
-        </nav>
+        <h1>Share the work.</h1>
+        <p>Pick an image. Copy it, download it, post it.</p>
       </div>
+      <nav aria-label="Gallery sections">
+        <a href="#projects">Projects</a>
+        <a href="#radio">Radio cards</a>
+        <a href="#stories">Factory & stories</a>
+        <a href="#assets">SVG assets</a>
+        <a href="#social">Socials</a>
+      </nav>
     </header>
-    <section class="project-share" aria-labelledby="project-title">
-      <div class="project-art">
-        <form action="/share/" method="get">
-          <label for="share-project">Choose a project</label>
-          <div class="choose">
-            <select id="share-project" name="project">
-              {projects.map((p) => (
-                <option value={p.slug} selected={p.slug === project.slug}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-            <button type="submit">Show resources</button>
-          </div>
-        </form>
-        <a href={metadata.image} aria-label={`Open ${project.name} image at full size`}>
-          <img
-            src={metadata.image}
-            width="1200"
-            height="630"
-            alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
-            fetchpriority="high"
-            data-share-preview
-          />
-        </a>
-        <p class="credit">
-          <span data-image-size>Original image</span> ·{" "}
-          {project.previewImage ? `Published by ${project.name}` : "Illustration by Woodhouse"}
-        </p>
-      </div>
-      <div class="project-post">
-        <h2 id="project-title">{project.name}</h2>
-        <ShareActions
-          caption={caption}
-          image={download}
-          filename={`${project.slug}-social.jpg`}
-          link={destination}
-        />
-        <p>{metadata.description}</p>
-        <div class="project-links">
-          <a href={destination}>
-            {project.siteUrl
-              ? project.slug === "loftwahfm"
-                ? "Listen to LoftwahFM"
-                : ["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
-                  ? `Play ${project.name}`
-                  : `Open ${project.name}`
-              : "Read the project"}
-          </a>
-          <a href={metadata.image}>Original image</a>
-          {project.siteFavicon && <a href={project.siteFavicon}>Site icon</a>}
-          {project.slug === "shoalshot" && (
-            <>
-              <a href="https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark.svg">
-                Wordmark SVG
-              </a>
-              <a href="https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg">Emblem SVG</a>
-            </>
-          )}
-          <a href={`/projects/${project.slug}/`}>Project story</a>
-          <a href={`/share/?project=${project.slug}`}>Link to this kit</a>
-        </div>
-        {nativeSharing && (
-          <aside class="native-sharing" aria-labelledby="native-sharing-title">
-            <h3 id="native-sharing-title">Share a finished dive.</h3>
-            <p>{nativeSharing.data.summary}</p>
-            <p class="project-links">
-              <a href={destination}>Open SHOALSHOT to share a dive</a>
-              <a href={`/evidence/${nativeSharing.id}/`}>Read the sharing record</a>
-            </p>
-            <p class="note">Made inside the game · Local, unverified result · Landscape PNG</p>
-          </aside>
-        )}
-        <p class="note">
-          Promotional artwork, credited to its publisher. Keep the credit when sharing. Project
-          record reviewed <time datetime={project.reviewDate}>{project.reviewDate}</time>.
-        </p>
-      </div>
-    </section>
-    <section id="radio" class="radio-resources" aria-labelledby="radio-title">
-      <div>
-        <h2 id="radio-title">The next round has a soundtrack.</h2>
-        <p>
-          Games × Radio, designed by LoftwahFM. Three finished compositions; choose the shape you
-          want.
-        </p>
-        {radio ? (
-          <>
-            <div class="format-links">
-              <a href={radioURL("landscape", true)}>
-                Download landscape <span>1200 × 630 PNG</span>
-              </a>
-              <a href={radioURL("square", true)}>
-                Download square <span>1200 × 1200 PNG</span>
-              </a>
-              <a href={radioURL("portrait", true)}>
-                Download portrait <span>1080 × 1920 PNG</span>
-              </a>
-            </div>
+    <section id="projects" aria-label="Project images" class="gallery">
+      {projects.map((project, index) => {
+        const metadata = getSiteMetadata(project);
+        const destination =
+          project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
+        return (
+          <figure id={`project-${project.slug}`}>
+            <a
+              class="image-link"
+              href={metadata.image}
+              aria-label={`View ${project.name} image full size`}
+            >
+              <img
+                src={metadata.image}
+                width="1200"
+                height="630"
+                alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+                loading={index < 3 ? "eager" : "lazy"}
+                data-gallery-image
+              />
+            </a>
+            <figcaption>
+              <div class="asset-title">
+                <h2>{project.name}</h2>
+                <span data-image-size>Original image</span>
+              </div>
+              <p class="credit">
+                {project.previewImage
+                  ? `Artwork from ${project.name}`
+                  : "Illustration by Woodhouse"}
+              </p>
+            </figcaption>
             <ShareActions
-              caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
-              link="https://woodhouse.loftwah.com/share/"
-              label="Copy radio post"
+              caption={projectCaption(project)}
+              image={
+                project.previewImage ? `/api/share-image?project=${project.slug}` : metadata.image
+              }
+              filename={`${project.slug}-social.jpg`}
+              link={destination}
             />
-            <p class="note">
-              Snapshot{" "}
-              <time datetime={radio.asOf}>{radio.asOf.slice(0, 16).replace("T", " ")} UTC</time>.
-              Reported listening is separate from project popularity.
-            </p>
-          </>
-        ) : (
-          <p>
-            Radio snapshot cards are unavailable right now. Project images and posts above are ready
-            to use.
-          </p>
-        )}
-        <p class="project-links">
-          <a href="/activity/">Scores & listening</a>
-          <a href="https://fm.loftwah.com/analytics/?source=games&days=30">FM sharing options</a>
-        </p>
+            <div class="asset-links">
+              <a href={destination}>
+                {["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
+                  ? "Play"
+                  : project.slug === "loftwahfm"
+                    ? "Listen"
+                    : "Open project"}
+              </a>
+              <a href={`/share/?project=${project.slug}#project-${project.slug}`}>
+                Link to this kit
+              </a>
+              {project.slug === "shoalshot" && nativeSharing && (
+                <a href={destination}>Play & share a dive</a>
+              )}
+            </div>
+          </figure>
+        );
+      })}
+    </section>
+    <section id="radio" aria-labelledby="radio-title">
+      <div class="section-heading">
+        <h2 id="radio-title">Games × Radio</h2>
+        <a href="/activity/">Scores & listening</a>
       </div>
+      {radio ? (
+        <div class="gallery radio-gallery">
+          {(Object.keys(cardFormats) as CardFormat[]).map((format) => (
+            <figure>
+              <a
+                class="image-link radio-preview"
+                href={radioImage(format)}
+                aria-label={`View ${format} radio card full size`}
+              >
+                <img
+                  src={radioImage(format)}
+                  width={cardFormats[format].width}
+                  height={cardFormats[format].height}
+                  alt={`Games × Radio ${format} artwork and dated listening snapshot from LoftwahFM`}
+                  loading="lazy"
+                />
+              </a>
+              <figcaption>
+                <div class="asset-title">
+                  <h3>{format[0]!.toUpperCase() + format.slice(1)}</h3>
+                  <span>
+                    {cardFormats[format].width} × {cardFormats[format].height} PNG
+                  </span>
+                </div>
+                <p class="credit">Official game artwork · LoftwahFM composition</p>
+              </figcaption>
+              <ShareActions
+                caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
+                image={radioImage(format, true)}
+                filename={`loftwahfm-games-${format}.png`}
+                link={`https://woodhouse.loftwah.com/activity/?snapshot=${radio.snapshot}`}
+              />
+            </figure>
+          ))}
+        </div>
+      ) : (
+        <p>Radio cards are unavailable right now.</p>
+      )}
       {radio && (
-        <a href={radioURL("landscape")} aria-label="Open Games × Radio image at full size">
-          <img
-            src={radioURL("landscape")}
-            width="1200"
-            height="630"
-            alt="Games × Radio artwork from LoftwahFM with the four priority games and its dated listening snapshot"
-            loading="lazy"
-          />
-          <p class="credit">Official game artwork · Composition by LoftwahFM</p>
-        </a>
+        <p class="credit">
+          Snapshot {radio.asOf.slice(0, 16).replace("T", " ")} UTC · Listening, not project
+          popularity.
+        </p>
       )}
     </section>
-    <section id="factory" aria-labelledby="factory-title">
+    <section id="stories" aria-labelledby="stories-title">
       <div class="section-heading">
-        <h2 id="factory-title">Share the whole factory.</h2>
-        <p>The portfolio post, Woodhouse artwork and the story behind it.</p>
+        <h2 id="stories-title">Factory & stories</h2>
       </div>
-      <ShareActions
-        caption={portfolioPost}
-        image="/og/woodhouse.jpg"
-        filename="woodhouse-portfolio.jpg"
-        link="https://woodhouse.loftwah.com/share/"
-        label="Copy portfolio post"
-      />
-      <div class="house-images">
+      <div class="gallery">
         {houseImages.map((item) => (
           <figure>
-            <a href={item.image}>
+            <a
+              class="image-link"
+              href={item.image}
+              aria-label={`View ${item.name} artwork full size`}
+            >
               <img
                 src={item.image}
                 width="1200"
                 height="630"
-                alt={`${item.name} portfolio artwork by Woodhouse`}
+                alt={`${item.name} artwork by Woodhouse`}
                 loading="lazy"
               />
             </a>
             <figcaption>
-              <strong>{item.name}</strong>
-              <div>
-                <a href={item.image} download>
-                  Download image
-                </a>
-                <a href={item.link}>Read the story</a>
+              <div class="asset-title">
+                <h3>{item.name}</h3>
+                <span>1200 × 630 JPG</span>
               </div>
+              <p class="credit">Woodhouse</p>
             </figcaption>
+            <ShareActions
+              caption={item.caption}
+              image={item.image}
+              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
+              link={`https://woodhouse.loftwah.com${item.link}`}
+            />
+            <a class="story-link" href={item.link}>
+              Read the story
+            </a>
           </figure>
         ))}
-      </div>
-      <details class="diagrams">
-        <summary>Story cards and ready posts</summary>
-        <div class="house-images">
-          {storyCards.map((story) => (
-            <article>
+        {stories.map((story) => (
+          <figure>
+            <a
+              class="image-link"
+              href={dispatchSocialCard(story.slug)}
+              aria-label={`View ${story.title} artwork full size`}
+            >
               <img
                 src={dispatchSocialCard(story.slug)}
                 width="1200"
@@ -285,270 +288,247 @@ const houseImages = [
                 alt={`Woodhouse artwork for ${story.title}`}
                 loading="lazy"
               />
-              <h3>{story.title}</h3>
-              <ShareActions
-                caption={`${story.title}\n${story.deck}\nhttps://woodhouse.loftwah.com/dispatches/${story.slug}/`}
-                image={dispatchSocialCard(story.slug)}
-                filename={`${story.slug}.jpg`}
-                link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
-              />
-              <a href={`/dispatches/${story.slug}/`}>Read the story</a>
-            </article>
-          ))}
-        </div>
-        <p class="note">1200 × 630 JPG · Artwork and writing by Woodhouse.</p>
-      </details>
-      <details class="diagrams">
-        <summary>Factory diagrams and smaller assets</summary>
-        <div class="project-links">
-          <a href="/images/diagrams/project-network.svg" download>
-            Project network SVG
-          </a>
-          <a href="/images/diagrams/release-path.svg" download>
-            Release path SVG
-          </a>
-          <a href="/images/diagrams/evidence-ladder.svg" download>
-            Evidence ladder SVG
-          </a>
-          <a href="/favicon.svg" download>
-            Woodhouse mark SVG
-          </a>
-        </div>
-        <p class="note">Diagrams and mark by Woodhouse. SVGs keep their resolution when scaled.</p>
-      </details>
+            </a>
+            <figcaption>
+              <div class="asset-title">
+                <h3>{story.title}</h3>
+                <span>1200 × 630 JPG</span>
+              </div>
+              <p class="credit">Woodhouse</p>
+            </figcaption>
+            <ShareActions
+              caption={shareCaption(
+                story.title,
+                story.deck,
+                `https://woodhouse.loftwah.com/dispatches/${story.slug}/`
+              )}
+              image={dispatchSocialCard(story.slug)}
+              filename={`${story.slug}.jpg`}
+              link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
+            />
+            <a class="story-link" href={`/dispatches/${story.slug}/`}>
+              Read the story
+            </a>
+          </figure>
+        ))}
+      </div>
     </section>
-    <section id="social" aria-labelledby="social-title" class="social-resources">
-      <h2 id="social-title">The places to post.</h2>
-      <p>
-        Your images and copy are ready above. Open an official profile when you’re ready to post.
-      </p>
-      <nav aria-label="Official Loftwah social profiles">
+    <section id="assets" aria-labelledby="assets-title">
+      <div class="section-heading">
+        <h2 id="assets-title">SVG assets</h2>
+      </div>
+      <div class="gallery small-assets">
+        {smallAssets.map((item) => (
+          <figure>
+            <a
+              class="image-link svg-preview"
+              href={item.image}
+              aria-label={`View ${item.name} SVG`}
+            >
+              <img src={item.image} alt={item.name} loading="lazy" />
+            </a>
+            <figcaption>
+              <div class="asset-title">
+                <h3>{item.name}</h3>
+                <span>SVG</span>
+              </div>
+              <p class="credit">{item.credit}</p>
+            </figcaption>
+            <ShareActions
+              caption={`${item.name} · ${item.credit}\nhttps://woodhouse.loftwah.com/share/`}
+              image={
+                "download" in item && typeof item.download === "string" ? item.download : item.image
+              }
+              filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.svg`}
+              link="https://woodhouse.loftwah.com/share/"
+            />
+          </figure>
+        ))}
+      </div>
+    </section>
+    <section id="social" class="social-links" aria-label="Official social profiles">
+      <h2>Post it.</h2>
+      <nav>
         {profiles.map((item) => (
           <a href={item.url}>{item.label}</a>
         ))}
       </nav>
-      <p class="note">Downloads and copy buttons prepare your post. Publishing stays with you.</p>
     </section>
   </div>
 </BaseLayout>
 <script>
-  const image = document.querySelector<HTMLImageElement>("[data-share-preview]");
-  const size = document.querySelector<HTMLElement>("[data-image-size]");
-  const describe = () => {
-    if (image?.naturalWidth && size)
-      size.textContent = `${image.naturalWidth} × ${image.naturalHeight}`;
-  };
-  if (image?.complete) describe();
-  else image?.addEventListener("load", describe, { once: true });
-  image?.addEventListener("error", () => {
-    if (size) size.textContent = "Preview unavailable · use Original image";
-  });
+  for (const image of document.querySelectorAll<HTMLImageElement>("[data-gallery-image]")) {
+    const label = image.closest("figure")?.querySelector("[data-image-size]");
+    const describe = () => {
+      if (label && image.naturalWidth)
+        label.textContent = `${image.naturalWidth} × ${image.naturalHeight}`;
+    };
+    if (image.complete) describe();
+    else image.addEventListener("load", describe, { once: true });
+    image.addEventListener("error", () => {
+      if (label) label.textContent = "Open original image";
+    });
+  }
 </script>
 <style>
-  .share-desk {
-    padding-block: 3rem 5rem;
+  .share-gallery {
+    padding-block: 2.5rem 4rem;
   }
-  .desk-intro {
-    display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: 3rem;
-    align-items: end;
-    margin-bottom: 2.5rem;
-  }
-  .desk-intro h1 {
-    font-size: clamp(2.7rem, 5.6vw, 5rem);
-    margin: 0;
-  }
-  .desk-intro p {
-    max-width: 46ch;
-    margin: 0 0 1rem;
-    font-size: 1.125rem;
-  }
-  nav,
-  .project-links {
+  .gallery-intro {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.4rem;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .gallery-intro h1 {
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 4.5vw, 4rem);
+    letter-spacing: -0.035em;
+    line-height: 1;
+    margin: 0 0 0.75rem;
+  }
+  .gallery-intro p {
+    margin: 0;
+    color: var(--muted);
+  }
+  nav,
+  .asset-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
   }
   nav a,
-  .project-links a,
-  figcaption a {
+  .asset-links a,
+  .story-link,
+  .section-heading > a {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
+    font-size: 0.875rem;
     text-underline-offset: 0.3em;
   }
-  .project-share {
+  .gallery {
     display: grid;
-    grid-template-columns: 1.15fr 1fr;
-    gap: 3rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 1.5rem;
   }
-  form label {
-    display: block;
-    font-size: 0.875rem;
-    margin-bottom: 0.45rem;
-  }
-  .choose {
-    display: flex;
-    gap: 0.65rem;
-    margin-bottom: 1rem;
-  }
-  select,
-  button {
-    min-height: 44px;
-    border: 1px solid var(--line);
-    padding: 0.55rem 0.8rem;
-    font: inherit;
-    color: var(--paper);
-    background: var(--surface);
-  }
-  select {
-    flex: 1;
+  figure {
+    margin: 0;
     min-width: 0;
+    scroll-margin-top: 1.5rem;
   }
-  button {
-    cursor: pointer;
+  .image-link {
+    display: block;
+    background: var(--surface);
   }
   img {
     display: block;
     width: 100%;
     height: auto;
   }
-  .credit,
-  .note {
-    font-size: 0.875rem;
+  figcaption {
+    padding-top: 0.85rem;
+  }
+  .asset-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+  }
+  .asset-title h2,
+  .asset-title h3 {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    margin: 0;
+  }
+  .asset-title span,
+  .credit {
     color: var(--muted);
-    line-height: 1.6;
+    font-size: 0.8rem;
   }
   .credit {
-    margin: 0.6rem 0 0;
+    margin: 0.35rem 0 0.8rem;
   }
-  h2 {
-    font-family: var(--display);
-    font-size: clamp(1.7rem, 2.7vw, 2.5rem);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    margin: 0 0 1rem;
-  }
-  .native-sharing {
-    border-top: 1px solid var(--line);
-    margin-top: 1.25rem;
-    padding-top: 1.25rem;
-  }
-  .native-sharing h3 {
-    font-family: var(--display);
-    font-size: 1.4rem;
-    margin: 0 0 0.65rem;
-  }
-  .native-sharing > p {
-    margin: 0.65rem 0;
-  }
-  .project-post {
-    padding-top: 2.1rem;
-    min-width: 0;
-  }
-  .project-post > p:first-of-type {
-    max-width: 48ch;
-    margin: 0 0 1.25rem;
-  }
-  .project-links {
-    margin: 1rem 0;
+  .asset-links {
+    gap: 0.25rem 1rem;
   }
   section + section {
     border-top: 1px solid var(--line);
-    padding-top: 2.5rem;
     margin-top: 2.5rem;
-    scroll-margin-top: 2rem;
-  }
-  .radio-resources {
-    display: grid;
-    grid-template-columns: 1fr 1.15fr;
-    gap: 3rem;
-  }
-  .radio-resources > a {
-    align-self: center;
-    text-decoration: none;
-  }
-  .format-links {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem 0;
-  }
-  .format-links a {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-    min-height: 48px;
-    border-bottom: 1px solid var(--line);
-    text-decoration: none;
-  }
-  .format-links span {
-    font-size: 0.875rem;
-    color: var(--muted);
+    padding-top: 2rem;
+    scroll-margin-top: 1rem;
   }
   .section-heading {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: baseline;
-    gap: 2rem;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
   }
-  .house-images {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-  figure {
+  .section-heading h2,
+  .social-links h2 {
+    font-family: var(--display);
+    font-size: 2rem;
+    letter-spacing: -0.03em;
     margin: 0;
   }
-  figcaption {
-    margin-top: 0.65rem;
+  .radio-preview {
+    aspect-ratio: 1;
+    display: block;
+    overflow: hidden;
   }
-  figcaption div {
+  .radio-preview img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+  .svg-preview {
+    height: 220px;
+    display: block;
+    overflow: hidden;
+    padding: 1rem;
+  }
+  .svg-preview img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+  }
+  .social-links {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .diagrams summary {
-    min-height: 44px;
-    padding: 0.6rem 0;
-    cursor: pointer;
-  }
-  .social-resources nav {
+    align-items: center;
     gap: 2rem;
   }
-  @media (max-width: 760px) {
-    .share-desk {
-      padding-top: 2rem;
+  @media (max-width: 1100px) {
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .desk-intro,
-    .project-share,
-    .radio-resources {
+  }
+  @media (max-width: 600px) {
+    .gallery {
       grid-template-columns: 1fr;
-      gap: 1.4rem;
+      gap: 1.5rem;
     }
-    .desk-intro {
+    .share-gallery {
+      padding-top: 1.5rem;
+    }
+    .gallery-intro {
       margin-bottom: 1.5rem;
     }
-    .desk-intro p {
-      font-size: 1rem;
+    .radio-preview {
+      aspect-ratio: auto;
+      height: 320px;
     }
-    .desk-intro nav {
-      gap: 0.25rem 1rem;
-    }
-    .project-post {
-      padding: 0;
-    }
-    .house-images {
-      grid-template-columns: 1fr;
-    }
-    .section-heading {
-      display: block;
-    }
-    .format-links a {
+    .social-links {
       flex-wrap: wrap;
-      gap: 0.3rem 0.7rem;
+      gap: 0.75rem;
     }
   }
 </style>

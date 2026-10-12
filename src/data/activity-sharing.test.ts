@@ -95,3 +95,25 @@ test("relay bounds both declared and streamed image bytes", async () => {
     null
   );
 });
+
+test("reviewed radio formats validate their own dimensions and retain the requested snapshot", async () => {
+  for (const [format, width, height] of [
+    ["square", 1200, 1200],
+    ["portrait", 1080, 1920]
+  ] as const) {
+    let requested = "";
+    const result = await loadActivityCard(
+      "",
+      snapshot,
+      async (input) => {
+        requested = String(input);
+        return new Response(png(width, height), { headers: { "content-type": "image/png" } });
+      },
+      format
+    );
+    assert.ok(result);
+    assert.equal(new URL(requested).searchParams.get("format"), format);
+    assert.equal(new URL(requested).searchParams.get("snapshot"), String(snapshot));
+    assert.equal(cardIsPng(png(), format), false);
+  }
+});

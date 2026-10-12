@@ -1,34 +1,27 @@
 ---
-type Props = { caption: string; image?: string; filename?: string; link: string; label?: string };
+type Props = { caption: string; image: string; filename?: string; link: string; label?: string };
 const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy post" } = Astro.props;
 ---
 
-<div
-  data-share-actions
-  data-caption={caption}
-  data-image={image}
-  data-filename={filename}
-  data-link={link}
->
+<div data-share-actions data-image={image} data-filename={filename} data-link={link}>
   <div class="actions">
-    {image && (
-      <a class="download" href={image} download>
-        Download image
-      </a>
-    )}
+    <a class="download" href={image} download>
+      Download
+    </a>
+    <button type="button" data-copy-image hidden>
+      Copy image
+    </button>
     <button type="button" data-copy hidden>
       {label}
     </button>
-    {image && (
-      <button type="button" data-device-share hidden>
-        Share image
-      </button>
-    )}
+    <button type="button" data-device-share hidden>
+      Share
+    </button>
   </div>
   <p role="status" data-status></p>
   <details>
-    <summary>Read or edit the post</summary>
-    <textarea aria-label="Ready-to-share post" rows="5">{caption}</textarea>
+    <summary>Caption</summary>
+    <textarea aria-label="Ready-to-share post" rows="4">{caption}</textarea>
   </details>
 </div>
 <script>
@@ -36,64 +29,152 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
     const status = root.querySelector<HTMLElement>("[data-status]");
     const text = root.querySelector<HTMLTextAreaElement>("textarea");
     const copy = root.querySelector<HTMLButtonElement>("[data-copy]");
+    const copyImage = root.querySelector<HTMLButtonElement>("[data-copy-image]");
     const share = root.querySelector<HTMLButtonElement>("[data-device-share]");
     const say = (message: string) => {
       if (status) status.textContent = message;
     };
-    if (copy && navigator.clipboard) {
+    let original: Promise<Blob> | undefined;
+    const load = () =>
+      (original ??= fetch(root.dataset.image!, { signal: AbortSignal.timeout(15000) })
+        .then(async (response) => {
+          if (!response.ok) throw new Error("Image unavailable");
+          const blob = await response.blob();
+          if (!blob.size || blob.size > 6 * 1024 * 1024 || !blob.type.startsWith("image/"))
+            throw new Error("Unsupported image");
+          return blob;
+        })
+        .catch((error) => {
+          original = undefined;
+          throw error;
+        }));
+    if (copy && navigator.clipboard?.writeText) {
       copy.hidden = false;
       copy.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(text?.value ?? root.dataset.caption ?? "");
-          say("Post copied. Ready to paste.");
+          await navigator.clipboard.writeText(text?.value ?? "");
+          say("Post copied.");
         } catch {
           const details = root.querySelector("details");
           if (details) details.open = true;
           text?.select();
-          say("Select and copy the post below.");
+          say("Select and copy the caption.");
         }
       });
     }
-    let prepared: File | undefined;
-    if (share && root.dataset.image && navigator.share && navigator.canShare) {
-      share.hidden = false;
-      share.disabled = true;
-      share.textContent = "Preparing image…";
-      fetch(root.dataset.image, { signal: AbortSignal.timeout(15000) })
-        .then(async (response) => {
-          if (!response.ok) throw new Error("unavailable");
-          const blob = await response.blob();
-          if (blob.size > 6 * 1024 * 1024) throw new Error("too large");
-          const extension = blob.type.includes("png")
-            ? "png"
-            : blob.type.includes("svg")
-              ? "svg"
-              : "jpg";
-          prepared = new File([blob], root.dataset.filename!.replace(/\.[^.]+$/, `.${extension}`), {
-            type: blob.type
-          });
-          if (!navigator.canShare({ files: [prepared] })) throw new Error("unsupported");
-          share.disabled = false;
-          share.textContent = "Share image";
-        })
-        .catch(() => {
-          share.hidden = true;
-        });
+    if (copyImage && navigator.clipboard?.write && typeof ClipboardItem !== "undefined") {
+      const png = async () => {
+        let blob = await load();
+        if (blob.type === "image/png") return blob;
+        if (blob.type.startsWith("image/svg+xml")) {
+          const document = new DOMParser().parseFromString(await blob.text(), "image/svg+xml");
+          const svg = document.documentElement;
+          const viewBox = (svg.getAttribute("viewBox") ?? "")
+            .trim()
+            .split(/[\s,]+/)
+            .map(Number);
+          const width = viewBox.length === 4 ? viewBox[2]! : Number(svg.getAttribute("width"));
+          const height = viewBox.length === 4 ? viewBox[3]! : Number(svg.getAttribute("height"));
+          if (
+            svg.localName !== "svg" ||
+            !Number.isFinite(width) ||
+            !Number.isFinite(height) ||
+            width <= 0 ||
+            height <= 0 ||
+            width * height > 16 * 1024 * 1024
+          )
+            throw new Error("Unsupported SVG dimensions");
+          // Preserve the source viewBox's resolution for diagrams with responsive sizing.
+          svg.setAttribute("width", String(width));
+          svg.setAttribute("height", String(height));
+          blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml" });
+        }
+        const objectURL = URL.createObjectURL(blob);
+        try {
+          const image = new Image();
+          image.src = objectURL;
+          await image.decode();
+          if (!image.naturalWidth || image.naturalWidth * image.naturalHeight > 16 * 1024 * 1024)
+            throw new Error("Image too large");
+          const canvas = document.createElement("canvas");
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          const context = canvas.getContext("2d");
+          if (!context) throw new Error("Image unavailable");
+          context.drawImage(image, 0, 0);
+          return await new Promise<Blob>((resolve, reject) =>
+            canvas.toBlob(
+              (result) => (result ? resolve(result) : reject(new Error("Image unavailable"))),
+              "image/png"
+            )
+          );
+        } finally {
+          URL.revokeObjectURL(objectURL);
+        }
+      };
+      copyImage.hidden = false;
+      copyImage.addEventListener("click", async () => {
+        copyImage.disabled = true;
+        try {
+          // Start the clipboard handoff during the click, retaining WebKit activation.
+          const imagePromise = png();
+          imagePromise.catch(() => {});
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": imagePromise })]);
+          const copied = await imagePromise;
+          const size = new DataView(await copied.slice(16, 24).arrayBuffer());
+          const width = size.getUint32(0),
+            height = size.getUint32(4);
+          root.dataset.copiedDimensions = `${width}x${height}`;
+          say(`Image copied · ${width} × ${height}. Paste it into your post.`);
+        } catch {
+          say("Image copy unavailable here. Use Download.");
+        } finally {
+          copyImage.disabled = false;
+        }
+      });
+    }
+    if (
+      share &&
+      navigator.share &&
+      navigator.canShare &&
+      typeof IntersectionObserver !== "undefined"
+    ) {
+      let prepared: File | undefined;
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        load()
+          .then((blob) => {
+            const extension = blob.type.includes("png")
+              ? "png"
+              : blob.type.includes("svg")
+                ? "svg"
+                : "jpg";
+            prepared = new File(
+              [blob],
+              root.dataset.filename!.replace(/\.[^.]+$/, `.${extension}`),
+              { type: blob.type }
+            );
+            if (navigator.canShare({ files: [prepared] })) share.hidden = false;
+          })
+          .catch(() => {});
+      });
+      observer.observe(root);
       share.addEventListener("click", async () => {
         if (!prepared) return;
         try {
           await navigator.share({
             files: [prepared],
-            text: text?.value ?? root.dataset.caption ?? "",
+            text: text?.value ?? "",
             url: root.dataset.link ?? "https://woodhouse.loftwah.com/share/"
           });
-          say("Image handed to your device’s share options.");
+          say("Handed to your device’s share options.");
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
             say("");
             return;
           }
-          say("Use Download image and Copy post here.");
+          say("Use Download or Copy image.");
         }
       });
     }
@@ -103,7 +184,7 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
   .actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.65rem;
+    gap: 0.45rem;
   }
   .actions a,
   .actions button {
@@ -111,12 +192,12 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 0.55rem 0.85rem;
+    padding: 0.5rem 0.7rem;
     border: 1px solid var(--line);
     font: inherit;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--paper);
-    background: var(--surface);
+    background: transparent;
     text-decoration: none;
     cursor: pointer;
   }
@@ -135,19 +216,20 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
   }
   [role="status"] {
     margin: 0.4rem 0;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
   }
   summary {
     min-height: 44px;
     padding: 0.5rem 0;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
+    color: var(--muted);
   }
   textarea {
     width: 100%;
     resize: vertical;
-    min-height: 8rem;
-    padding: 0.8rem;
+    min-height: 7rem;
+    padding: 0.75rem;
     font: inherit;
     background: var(--surface);
     color: var(--paper);
