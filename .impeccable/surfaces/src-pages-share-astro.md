@@ -36,3 +36,11 @@ Keep existing artwork, source credits, public links and dated claims together. D
 ## Review evidence
 
 The final surface review on 12 October 2026 returned SHIP with no open material finding. The reviewed desktop pairing and 390 × 844 phone composition are recorded in `.release/share-desk-20261012/desktop-final.png` and `phone-final.png`; reviewed artwork loaded successfully. This records built-surface evidence. Deployment identity, live-hostname verification and physical device/share-destination acceptance remain separate evidence.
+
+## SHOALSHOT native result guide — reviewed 12 October 2026
+
+When SHOALSHOT is selected, the guide appears below the existing project links only when the known `shoalshot-native-result-sharing-2026-10-12` record is published, public-safe, reviewed and classified as production verification. An unavailable evidence query or missing eligible record leaves the guide absent. The guide preserves the established ink/lime journal, Bricolage heading, open rule and wrapping native links.
+
+The instruction follows the game’s actual route: Pause → End Dive → Dive Summary → Share result. The game makes a local landscape 1200 × 630 PNG and copyable caption carrying the actual mode, rules and game version; supported devices can offer native sharing, with Save PNG available. The guide links to opening SHOALSHOT and to its dated Woodhouse sharing record. Its visible provenance reads “Made inside the game · Local, unverified result · Landscape PNG”. It makes no claim of a public result permalink, uploaded score or additional result formats.
+
+The independent finish review on 12 October 2026 returned SHIP with no open findings. The 1440px desktop and 390px phone screenshots are `.release/shoalshot-native-sharing-20261012/desktop.png` and `.release/shoalshot-native-sharing-20261012/phone.png`; neither reviewed layout overflowed horizontally. These are built-surface receipts. Reviewed game source and production receipts do not establish a Woodhouse deployment; Woodhouse live identity and physical-device share acceptance remain separate gates.

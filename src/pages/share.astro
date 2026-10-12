@@ -1,18 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ShareActions from "../components/ShareActions.astro";
-import { getPublicMenu, listProjectRecords, listPublishedDispatches } from "../content/repository";
+import {
+  getPublicMenu,
+  listProjectRecords,
+  listPublishedDispatches,
+  listPublicEvidence
+} from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
 import { getSiteMetadata } from "../data/site-metadata";
 import { orderShareProjects, projectCaption, sharePriorities } from "../data/share-desk";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
 import { compositeIsPublic } from "../data/activity-sharing";
 export const prerender = false;
-const [result, footer, listening, dispatches] = await Promise.all([
+const [result, footer, listening, dispatches, evidence] = await Promise.all([
   listProjectRecords(),
   getPublicMenu("footer"),
   loadListeningReport(),
-  listPublishedDispatches()
+  listPublishedDispatches(),
+  listPublicEvidence()
 ]);
 if (result.error)
   return new Response("Share resources are unavailable.", {
@@ -32,9 +38,21 @@ if (Astro.cache?.enabled) {
   for (const hint of result.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(footer.cacheHint);
   Astro.cache.set(dispatches.cacheHint);
+  Astro.cache.set(evidence.cacheHint);
   if (listening) Astro.cache.set({ lastModified: new Date(listening.asOf) });
   else Astro.cache.set(false);
 }
+// A reviewed public release record, rather than a pending project hand-off.
+const nativeSharing =
+  project.slug === "shoalshot" && !evidence.error
+    ? evidence.evidence.find(
+        (entry) =>
+          entry.id === "shoalshot-native-result-sharing-2026-10-12" &&
+          entry.data.project_key === project.slug &&
+          entry.data.evidence_kind === "production verification" &&
+          entry.data.evidence_state === "reviewed"
+      )
+    : undefined;
 const metadata = getSiteMetadata(project);
 const destination = project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
 const download = project.previewImage ? `/api/share-image?project=${project.slug}` : metadata.image;
@@ -147,6 +165,17 @@ const houseImages = [
           <a href={`/projects/${project.slug}/`}>Project story</a>
           <a href={`/share/?project=${project.slug}`}>Link to this kit</a>
         </div>
+        {nativeSharing && (
+          <aside class="native-sharing" aria-labelledby="native-sharing-title">
+            <h3 id="native-sharing-title">Share a finished dive.</h3>
+            <p>{nativeSharing.data.summary}</p>
+            <p class="project-links">
+              <a href={destination}>Open SHOALSHOT to share a dive</a>
+              <a href={`/evidence/${nativeSharing.id}/`}>Read the sharing record</a>
+            </p>
+            <p class="note">Made inside the game · Local, unverified result · Landscape PNG</p>
+          </aside>
+        )}
         <p class="note">
           Promotional artwork, credited to its publisher. Keep the credit when sharing. Project
           record reviewed <time datetime={project.reviewDate}>{project.reviewDate}</time>.
@@ -400,6 +429,19 @@ const houseImages = [
     line-height: 1.15;
     letter-spacing: -0.03em;
     margin: 0 0 1rem;
+  }
+  .native-sharing {
+    border-top: 1px solid var(--line);
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+  }
+  .native-sharing h3 {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    margin: 0 0 0.65rem;
+  }
+  .native-sharing > p {
+    margin: 0.65rem 0;
   }
   .project-post {
     padding-top: 2.1rem;
