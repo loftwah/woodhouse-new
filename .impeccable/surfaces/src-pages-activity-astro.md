@@ -1,0 +1,14 @@
+---
+version: 1
+slug: "src-pages-activity-astro"
+primary_target: "src/pages/activity.astro"
+related_targets: []
+---
+
+Scope: /activity/ and its read-only aggregate API, public project readers and players. Inherit Woodhouse's dark editorial typography, open rules and native links. Read mode: discover where to compete, compare aggregate radio listening only, follow source and dated coverage. Primary action: open Bubbles boards or Games × Radio.
+Direction: an open match programme: lead with the playable competitive surface, then a compact listening ledger and measurement notes. Seven grounded structures considered: programme, public league table, listening report, project directory, evidence timeline, compare-by-project, open match programme with a feature followed by ledger. Build the seventh. No fake podium when data is empty. Current FM aggregate feed has no game activity; Bubbles public top endpoint is live but mirroring would hit its per-IP budget, so link native boards.
+Memorable moment: Play for a place / Listen for a while, two useful real routes with a legible attributed listening ledger. Public identities remain project-owned; no central signup. Preserve private CMS/GitHub boundaries, unknown values distinct from zero, and provider failure as an unavailable state. Native server-rendered HTML, phone-first reading order, clear keyboard controls, no motion needed.
+
+Direction contract: THESIS — native competition alongside measured listening; OWN-WORLD — existing dark Woodhouse publication, locally hosted Bricolage display face, open rules and restrained lime; STORY — play at Bubbles, read the listening ledger, inspect source/limits; FIRST VIEWPORT — large invitation with a native board action; FORM — open match programme, concept seed 8590e968, assigned grounded candidate 7. No generated comp: this surface inherits the established journal composition and source artwork policy; no visual-world replacement or new asset.
+
+Built ground truth — reviewed 12 October 2026 from source: the two-line Bricolage invitation uses the incumbent ink ground and lime emphasis, followed by a ruled competition feature, listening ledger and measurement notes. The feature stacks below 700px; controls retain 44px minimum height. Bubbles opens its public Global boards, with a separate dossier link. Both outgoing actions use inline SVG arrows. The native table has a caption, scoped headers, tabular figures and a labelled keyboard-scrollable region; games without audible listening remain unranked. Source dates, stale coverage, aggregate links and provider-unavailable copy keep the measurement boundary visible. Sharing retains a native page link and adds clipboard copying with a status message when supported. These are local surface choices; the established global design system remains unchanged.

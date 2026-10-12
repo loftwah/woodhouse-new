@@ -185,3 +185,8 @@ Private implementation detail, credentials, audit findings and project instructi
 ## Reviewing this document
 
 Reviewed on the date at the top. Re-check every row before relying on it for a decision, and re-check the whole document when any of the eight announcements changes state — a beta reaching general availability, a roadmap item shipping, or a waitlist opening.
+## Public activity — reviewed 12 October 2026
+
+Observed need: MP asks for shareable cross-project activity and suitable public leaderboards. Decision: reuse LoftwahFM’s existing public aggregate API and Bubbles’ native boards, surfaced by Woodhouse’s current Worker. No new resources, paid commitment, central account platform or event collector. Web Analytics supports private traffic/performance review; application engagement and verified scores require product-owned instrumentation and validation. Analytics Engine supports aggregates and D1 supports relational identity/results; neither creates a consumer login or validates browser scores automatically. Turnstile provides submission/sign-in abuse friction, with mandatory server validation, not anti-cheat proof.
+
+Sources rechecked: [Web Analytics](https://developers.cloudflare.com/web-analytics/about/), [Analytics Engine pricing](https://developers.cloudflare.com/analytics/analytics-engine/pricing/), [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/), [Turnstile validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/). Re-check when a spoke needs a new binding/provider, paid capacity or real-time coordination. #18 owns Woodhouse discovery; consumer gates remain local. This does not reopen the deferred platform evaluations above.

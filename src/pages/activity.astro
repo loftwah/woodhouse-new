@@ -1,0 +1,360 @@
+---
+/* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- A labelled overflow region needs keyboard scroll access. */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { listProjectRecords } from "../content/repository";
+import {
+  activitySource,
+  loadListeningReport,
+  listeningDuration,
+  projectListeningReport
+} from "../data/activity";
+export const prerender = false;
+const [result, report] = await Promise.all([listProjectRecords(), loadListeningReport()]);
+if (result.error)
+  return new Response("Unable to load public project identities.", {
+    status: 503,
+    headers: { "cache-control": "no-store" }
+  });
+if (!report) Astro.response.headers.set("cache-control", "private, no-store");
+if (Astro.cache?.enabled) {
+  if (!report) {
+    Astro.cache.set(false);
+  } else for (const hint of result.cacheHints) Astro.cache.set(hint);
+}
+const identities = new Map(result.projects.map((p) => [p.slug, p]));
+const games = report ? projectListeningReport(report, new Set(identities.keys())).games : [];
+const bubbles = identities.get("bubbles");
+const hasListening = games.some((g) => g.seconds > 0);
+---
+
+<BaseLayout
+  title="Scores & listening"
+  description="Find public Bubbles leaderboards and follow reported game listening across LoftwahFM. Real sources, clear coverage, shareable links."
+  path="/activity/"
+>
+  <div class="container activity">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">WOODHOUSE</a>
+      <span>/</span>
+      <span>Scores & listening</span>
+    </nav>
+    <header class="activity-intro">
+      <h1 class="page-title">
+        Play for a place.
+        <br />
+        <em>Listen for a while.</em>
+      </h1>
+      <p>
+        Find a board worth playing for. Follow the music that travels between our games. Every
+        result belongs to its own rules and source.
+      </p>
+    </header>
+    {bubbles?.siteUrl && (
+      <section class="competition" aria-labelledby="boards-title">
+        <div>
+          <h2 id="boards-title">Bubbles. Bring your best.</h2>
+          <p>
+            Open the public boards, choose a game and see where your next run could land. Browse
+            first; publish a score through Bubbles’ own profile controls.
+          </p>
+          <p class="actions">
+            <a class="text-link" href={new URL("/leaderboards?scope=global", bubbles.siteUrl).href}>
+              Open Bubbles leaderboards{" "}
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M4 12 12 4M4 4h8v8"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <a href="/projects/bubbles/">Read the Bubbles dossier</a>
+          </p>
+        </div>
+        <div class="board-note">
+          <strong>One game. One set of rules.</strong>
+          <p>
+            Scores and public names stay on the game’s own board. Local play remains available
+            without a shared Woodhouse account.
+          </p>
+        </div>
+      </section>
+    )}
+    <section class="listening" aria-labelledby="listening-title">
+      <div class="section-heading">
+        <h2 id="listening-title">Games × Radio</h2>
+        <a class="text-link" href="https://fm.loftwah.com/analytics/?source=games&days=30">
+          Open the listening report{" "}
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path
+              d="M4 12 12 4M4 4h8v8"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+      <p>
+        Reported audible listening inside games over the last 30 days. Listening starts count
+        playback events; they do not count distinct people.
+      </p>
+      {report ? (
+        <>
+          <p class="coverage">
+            {report.from} to {report.to} · Collection began {report.collectionStarted}.<br />
+            Source updated{" "}
+            <time datetime={report.asOf}>
+              {new Date(report.asOf).toLocaleString("en-AU", { timeZone: "UTC" })} UTC
+            </time>
+            . {report.stale && <strong>Source is more than a day old.</strong>}
+          </p>
+          {!hasListening && (
+            <p class="empty-state">
+              The first listening table is still taking shape.
+              <br />
+              <span>
+                No game has reported audible listening in this window yet. Games stay unranked until
+                it arrives.
+              </span>
+            </p>
+          )}
+          <div
+            class="listening-ledger"
+            role="region"
+            aria-label="Game listening table"
+            tabindex="0"
+          >
+            <table>
+              <caption class="ledger-caption">30-day game listening from LoftwahFM</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Place</th>
+                  <th scope="col">Game</th>
+                  <th scope="col">Listening</th>
+                  <th scope="col">Starts</th>
+                </tr>
+              </thead>
+              <tbody>
+                {games.map((g) => (
+                  <tr>
+                    <td>{g.rank ?? "—"}</td>
+                    <th scope="row">
+                      <a href={`/projects/${g.id}/`}>{identities.get(g.id)!.name}</a>
+                      {g.rank === null && <small>Awaiting listening</small>}
+                    </th>
+                    <td>{g.seconds > 0 ? listeningDuration(g.seconds) : "—"}</td>
+                    <td>{g.starts.toLocaleString("en-AU")}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : (
+        <p class="empty-state">
+          The listening source is unavailable.
+          <br />
+          <span>
+            Open Games × Radio for the latest source report. Missing data does not mean zero
+            listening.
+          </span>
+        </p>
+      )}
+      <p class="source-links">
+        <a href={activitySource}>FM aggregate source</a>
+        <a href="/api/activity.json">Woodhouse public data</a>
+      </p>
+    </section>
+    <section class="measurement" aria-labelledby="measurement-title">
+      <h2 id="measurement-title">What these results tell you.</h2>
+      <p>
+        Listening measures reported playback, not game popularity, unique players or verified human
+        listeners. Coverage starts with each game’s instrumentation; an unranked row can mean
+        missing reporting. The source excludes designated test traffic. Automated or incorrectly
+        attributed events remain a measurement limitation.
+      </p>
+      <p>
+        Public scores are a different kind of result. Follow the native board for its rules, score
+        validation and profile choices. Reviewed implementation and release evidence remain in the{" "}
+        <a href="/factory/">factory record</a>.
+      </p>
+      <p class="actions">
+        <a class="text-link" href="/activity/">
+          Share Scores & listening
+        </a>
+        <button type="button" data-share-activity hidden>
+          Copy page link
+        </button>
+        <span data-share-status role="status"></span>
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-share-activity]");
+  const status = document.querySelector<HTMLElement>("[data-share-status]");
+  if (button && status && navigator.clipboard) {
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText("https://woodhouse.loftwah.com/activity/");
+        status.textContent = "Link copied.";
+      } catch {
+        status.textContent = "Use the Share Scores & listening link to copy the address.";
+      }
+    });
+  }
+</script>
+<style>
+  .activity {
+    padding-block: 2rem 5rem;
+  }
+  .activity-intro {
+    padding-block: 1.5rem 3rem;
+  }
+  .activity-intro p {
+    max-width: 47rem;
+    font-size: 1.2rem;
+  }
+  .competition {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    border-block: 1px solid var(--line);
+    padding-block: 2.5rem;
+  }
+  .competition h2,
+  .listening h2,
+  .measurement h2 {
+    font-size: clamp(1.7rem, 3vw, 2.6rem);
+    margin: 0 0 1rem;
+  }
+  .competition p,
+  .listening p,
+  .measurement p {
+    max-width: 70ch;
+  }
+  .board-note {
+    align-self: end;
+    color: var(--muted);
+  }
+  .board-note strong {
+    color: var(--paper);
+  }
+  .actions,
+  .source-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    margin-block: 1.5rem 0;
+  }
+  .actions a,
+  .source-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .text-link svg {
+    color: var(--acid);
+  }
+  .actions button {
+    color: var(--paper);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font: inherit;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+  .listening {
+    padding-block: 3rem;
+  }
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .coverage {
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.8;
+  }
+  .empty-state {
+    font-size: 1.4rem;
+    padding-block: 1.5rem;
+    color: var(--paper);
+  }
+  .empty-state span {
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .listening-ledger {
+    overflow-x: auto;
+  }
+  .ledger-caption {
+    text-align: left;
+    margin-bottom: 1rem;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+  th,
+  td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+  }
+  th:nth-child(2) {
+    text-align: left;
+  }
+  thead th {
+    color: var(--muted);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+  tbody th {
+    font-weight: 600;
+  }
+  tbody th a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+  }
+  small {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .measurement {
+    border-top: 1px solid var(--line);
+    padding-top: 2.5rem;
+  }
+  @media (max-width: 700px) {
+    .competition {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .activity-intro {
+      padding-block: 1.5rem 2rem;
+    }
+    th,
+    td {
+      padding: 0.75rem 0.35rem;
+      font-size: 0.875rem;
+    }
+    small {
+      font-size: 0.75rem;
+    }
+  }
+</style>
