@@ -1885,9 +1885,9 @@
           "index": "02",
           "discipline": "Game systems · authored journeys",
           "title": "The game is real. The quality bar is deliberately unreasonable.",
-          "summary": "Fighter includes Story, Tournament, Battle, Arcade, Survival, Daily Challenges and progression. The remaining work is a whole-game review against the A+ bar.",
-          "why": "A large feature set can hide weak moments. Fighter is a proving ground for the difference between a technically complete game and one that feels authored from first run through the result.",
-          "teaches": "Passing geometry checks does not settle visual hierarchy, role, motion or whether a screen feels right in context.",
+          "summary": "Fighter is a collectible squad battler with authored characters, combat, progression and several play modes. It is also the first product behind a possible family of distinct games using proven gameplay and supported content seams; a configurable boundary and independently releasable variants remain unproven.",
+          "why": "Players need a satisfying game now. Future creators could benefit from a foundation that lets characters, world, Story, artwork and audio vary without weakening combat or accessibility. One independent variation must demonstrate that promise before a platform or licensing offer earns its place.",
+          "teaches": "Prove one concrete variation before extracting a reusable product boundary. A product ambition is not a demonstrated white-label release.",
           "site_url": "https://fighter.loftwah.com/",
           "site_og_image": "https://fighter.loftwah.com/assets/generated/promotional/loftwah-fighter-v3-social-2026-08.png",
           "site_og_title": "LOFTWAH FIGHTER · Pick Your Fight",
@@ -2037,11 +2037,11 @@
         "data": {
           "name": "Asset Hunter",
           "index": "09",
-          "discipline": "Discovery engine · creative and technical reference",
-          "title": "A discovery engine has to be willing to report that nobody is using it.",
-          "summary": "Asset Hunter is a discovery engine, not a catalogue. A separate crawl-and-inspect engine reads licences from the bytes it downloads, groups material into distinct possibilities across games, interface, branding, motion, audio, 3D, shaders, code and architecture, and publishes them into a public EmDash site on Cloudflare through a contract rather than by touching the CMS directly. Each possibility carries representative examples, build notes, a prompt scaffold and a per-example rights statement. The repository is public, the site is public, and the product verifies its own deployment: it names the commit it was built from, and its restore drill reports honestly when the data it protects is empty.",
-          "why": "It keeps two things apart that are easy to conflate. Learning that a treatment exists is not permission to copy the asset that demonstrated it, so rights are recorded per example and reference-only material is never presented as cleared. It keeps a third apart: an engine that can find, classify and publish is implementation, and shipping it is release, and neither one is demand. Its own backup records that nobody has yet rated, reported, disputed or objected to anything it found.",
-          "teaches": "A public product can publish its own evidence and its own negative evidence. This one names the exact commit it serves, and its restore drill exits non-zero because the tables that would hold a stranger's judgement have never held a row.",
+          "discipline": "Asset discovery · rights-aware delivery",
+          "title": "Discovery becomes useful when the pack reaches another builder.",
+          "summary": "Asset Hunter discovers creative and technical possibilities, inspects source bytes and records rights per example. Its portable-pack implementation can deliver permitted files with provenance, attribution and a reproducible archive, while keeping reference-only material as records. The next proof is another builder using a pack in a real project.",
+          "why": "A builder needs to know what can be used, where it came from and which credits must travel with it. A browsable, self-verifying pack can reduce that handoff work. Successful packaging alone does not establish that a recipient saved effort or wants to return.",
+          "teaches": "A deliverable is stronger evidence than a catalogue entry. Independent use is stronger evidence than a successful export.",
           "site_url": "https://assets.loftwah.com/",
           "site_og_image": "https://assets.loftwah.com/og.png",
           "site_og_title": "Asset Hunter — A field guide to what can be made",
@@ -2129,6 +2129,19 @@
           "source_description": "Canonical GitHub issues, comments, merged changes, installed packages and dated release/interaction receipts reviewed on 11 October 2026. Authorised public summaries are derived from private source; private bodies are not reproduced.",
           "scope": "LoftwahFM and five game consumers, including shared audio, player quality, installation, promotional imagery and rewards. Other dossiers retain their own earlier review dates.",
           "editorial_notes": "Recognises four deployed radio integrations with reviewed browser evidence. This source review did not independently replay their deployments. Physical devices, human listening and remaining game-specific release gates stay with their owners. Published clients, installed clients, exact deployments and interaction evidence remain separate.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-12",
+        "slug": "2026-10-12",
+        "status": "published",
+        "data": {
+          "title": "Reuse and real use · 12 October 2026",
+          "reviewed_at": "2026-10-12",
+          "source_description": "Portfolio intelligence supplied by MP, checked against current product contracts, packaging source, canonical work and public radio artifacts on 12 October 2026. Public-safe derived conclusions only.",
+          "scope": "Asset Hunter portable packs and Fighter product direction are newly reviewed. App Composer remains a public plan under an execution hold. Radio adoption retains the separate 11 October review and its exact version-bound evidence; unrelated dossiers retain their own dates.",
+          "editorial_notes": "The report changes the Asset Hunter and Fighter dossiers and the public discovery story. No commit-volume, confidence, demand, revenue or fresh game-deployment claims are adopted. The proposed Games × Radio experiment is preparation, not a measured result.",
           "public_safe": true
         }
       }
@@ -2625,6 +2638,44 @@
           "proof_boundary": "Source/issue review only; no production origin, implemented adapter, human acceptance or licence transfer is established.",
           "reviewed_at": "2026-10-11",
           "sort_order": 6,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-asset-hunter-2026-10-12",
+        "slug": "asset-hunter-2026-10-12",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-12",
+          "state": "Portable packs implemented · independent use unproven",
+          "state_tone": "amber",
+          "current": "The reviewed pack builder checks redistribution rights before fetching payloads, carries recorded provenance and attribution, verifies manifested bytes and produces reproducible ZIPs. Review-required and reference-only resources remain records without redistributed payloads. Local-folder ingestion supports discovery beyond GitHub.",
+          "next_proof": "Have a recipient consume one pack in a real project, then repeat with an unfamiliar builder. Observe successful use, missing context and effort saved before choosing a commercial offer or expanding the catalogue.",
+          "proof_boundary": "Source and the owning delivery receipt were reviewed on 12 October 2026. Woodhouse did not generate a new pack, repeat the deployment or observe an independent recipient. Rights apply per resource and intended use; the pack is not a blanket licence or legal guarantee.",
+          "reviewed_at": "2026-10-12",
+          "sort_order": 9,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-fighter-2026-10-12",
+        "slug": "fighter-2026-10-12",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-12",
+          "state": "Playable battler · distinct-game foundation proposed",
+          "state_tone": "amber",
+          "current": "Fighter remains the default collectible squad battler. Its current product contract proposes distinct games varying identity, characters, world, Story, artwork and audio around proven gameplay. It explicitly says a configurable product boundary and independently releasable games have not yet been proved. Radio delivery retains the separate 11 October release and browser review.",
+          "next_proof": "Keep improving the playable game. When its roadmap admits the work, prove one genuinely independent variation through supported configuration and content seams, and record the core changes it needs. Physical phone listening and gameplay balance remain separate acceptance.",
+          "proof_boundary": "The 12 October review establishes product direction, not a working white-label platform or a new game deployment. Existing radio evidence remains dated 11 October, on installed client 1.1.0; telemetry-capable 1.2.0 adoption, physical iPhone and human listening are not newly established.",
+          "reviewed_at": "2026-10-12",
+          "sort_order": 2,
           "public_safe": true
         }
       }
@@ -3732,6 +3783,52 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "Existing installability and metadata are not proof of a discoverable install experience, improved promotional artwork or delivered rewards. No demand or conversion metrics are claimed."
+        }
+      },
+      {
+        "id": "evidence-asset-hunter-portable-packs-2026-10-12",
+        "slug": "asset-hunter-portable-packs-2026-10-12",
+        "status": "published",
+        "data": {
+          "title": "Asset Hunter · portable delivery with rights and provenance",
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-12",
+          "claim": "The implemented pack path delivers payloads only when recorded rights permit redistribution, includes required attribution and provenance, verifies files against a manifest and builds reproducible archives.",
+          "evidence_kind": "source evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-12",
+          "reviewed_at": "2026-10-12",
+          "summary": "The packaging source, architecture contract and owning completed delivery record agree. Reference-only and review-required material remains records rather than asset bytes.",
+          "source_label": "Current source and owning delivery record, reviewed for a public-safe summary",
+          "source_url": "",
+          "revision": "b39fa2a5bd7f821829304464cbdc703f6f3d616c",
+          "public_safe": true,
+          "proof_boundary": "Source review and an owning receipt; no new Woodhouse pack run, external-consumer observation, independent rights opinion or current production-browser proof."
+        }
+      },
+      {
+        "id": "evidence-fighter-distinct-game-direction-2026-10-12",
+        "slug": "fighter-distinct-game-direction-2026-10-12",
+        "status": "published",
+        "data": {
+          "title": "Fighter · product-line ambition with an explicit proof boundary",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-12",
+          "claim": "Fighter proposes distinct games around proven gameplay and supported content differences. Its product contract explicitly keeps configurable product boundaries and independently releasable games unproven.",
+          "evidence_kind": "source evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-12",
+          "reviewed_at": "2026-10-12",
+          "summary": "The useful next test is one concrete independent variation, once admitted by the game roadmap. A new generator platform or licensing offer is not justified by the contract alone.",
+          "source_label": "Current source and owning delivery record, reviewed for a public-safe summary",
+          "source_url": "",
+          "revision": "e38445ba83b27bc9ce7a86db9f4ac8af70593fa2",
+          "public_safe": true,
+          "proof_boundary": "Reviewed direction only. No second game, commercial licence, customer adoption or independently released variant is established."
         }
       }
     ],
@@ -6279,11 +6376,11 @@
               "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
               "published_shows": [
                 {
-                  "title": "Dead Air Department — Press Start",
+                  "title": "Dead Air Department \u2014 Press Start",
                   "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
                 },
                 {
-                  "title": "Smoko Circuit — Member Benefits",
+                  "title": "Smoko Circuit \u2014 Member Benefits",
                   "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
                 }
               ],
@@ -6605,6 +6702,481 @@
                 }
               ]
             }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-reuse-earns-its-place",
+        "slug": "reuse-earns-its-place",
+        "status": "published",
+        "data": {
+          "title": "Reuse earns its place.",
+          "kind": "Portfolio report",
+          "deck": "Radio already connects independent games. Asset Hunter can package what it finds. The next useful test is whether someone chooses to listen, play or build with the result.",
+          "review_date": "2026-10-12",
+          "source_reference": "Portfolio Brain intelligence supplied for 12 October 2026, reconciled with current source, product contracts, owning records and the public radio 1.2.0 integrity manifest. Game adoption uses the separate 11 October Woodhouse review; this publication does not claim a fresh playthrough of those games.",
+          "lead": "The factory has two useful things to put in somebody else’s hands: music inside games, and assets with the evidence needed to use them. Neither needs a larger platform before it can be tested.",
+          "lesson": "Choose one real experience, make it easy to try, and observe what another person does with it.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm",
+            "$ref:project-asset-hunter",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "earned",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "earned-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "The shared capability is already audible.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "earned-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "LoftwahFM publishes music stations, original presenter shows and a versioned radio client. Four games have separately reviewed implementations, deployments and scoped browser receipts. Each game keeps its own audio owner, controls and release gates. Pirates remains planned. Physical-device behaviour and human listening quality still need their own acceptance.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "earned-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "This is a stronger reason to reuse something than similar terminology across repositories. The earlier proposal for one common browser-and-evidence framework failed the implementation comparison. Those projects solved different failures; the lessons survived without a shared package.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "radio-listen",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "radio-listen",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/radio"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s",
+                      "text": "Listen to LoftwahFM Radio",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "radio-review",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "radio-review",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/dispatches/connected-products-observable-progress/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s",
+                      "text": "Read the dated game-adoption and installed-version review",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "pack",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "pack-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "Give the next builder something usable.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "pack-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Asset Hunter now has an implemented portable-pack path. Permitted files travel with their provenance and attribution; reference-only and review-required material stays as records. The archive can be reproduced and the recipient can verify its contents.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "pack-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "That gives developers and coding agents a concrete proposition: less repeated investigation between finding a useful resource and using it. The cheap next test is one recipient using one pack in a real project, followed by an unfamiliar builder. Record what worked, what needed explanation and whether the handoff saved effort. A successful export is not yet that result.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "pack-proof",
+              "_version": 1,
+              "evidence_key": "asset-hunter-portable-packs-2026-10-12",
+              "label": "Portable-pack implementation review",
+              "context": "Rights-aware delivery is implemented; independent recipient value remains unproven."
+            },
+            {
+              "_type": "project_reference",
+              "_key": "asset-dossier",
+              "_version": 1,
+              "project_key": "asset-hunter",
+              "label": "Explore Asset Hunter"
+            },
+            {
+              "_type": "prose",
+              "_key": "experiment",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "experiment-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "One game. One station. One reason to return.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "experiment-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "A bounded Games × Radio trial is the most useful next distribution test. SHOALSHOT is the preparation candidate because the existing 11 October review records a telemetry-capable 1.2.0 client alongside its native radio controls. Before sharing a measured trial, recheck the exact live build and truthful audible-progress forwarding; an installed package alone cannot certify measurement.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "experiment-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "Invite an unfamiliar player to try a short fishing session, deliberately choose Low Tide and follow the visible LoftwahFM link if the music interests them. A voluntary return or referral tells us something different from a page visit. This trial has not been run.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "experiment-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-3",
+                      "text": "Compare confirmed audible starts, accumulated audible time and deliberate referrals within the same window and documented coverage. Earlier game-client versions are supported, but do not automatically supply the new attribution. Privacy exclusions and missing instrumentation mean an absent count cannot be read as an absent audience. These are reported listening signals, not unique people or independently audited reach.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "experiment-4",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-4",
+                      "text": "The public invitation can be simple: Read the tide. Place the shot. Choose Low Tide for the session, then follow the music to LoftwahFM. The games and radio remain useful as free experiences; no payment offer is needed to learn whether somebody enjoys them.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "try-shoalshot",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "try-shoalshot",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://shoalshot.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s",
+                      "text": "Try SHOALSHOT",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "try-low-tide",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "try-low-tide",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/radio?station=low-tide"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s",
+                      "text": "Hear Low Tide on LoftwahFM",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "direction",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "direction-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "A good future direction still needs its first proof.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "direction-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Fighter’s product contract gives the battler another possible audience: creators of distinct games around a proven core. The proposed differences include characters, world, Story, artwork and audio. A configurable product boundary and independently releasable variants remain unproved. Keep making Fighter a better game, then prove one independent variation when its roadmap admits it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "direction-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "App Composer is a separate public plan for independently maintained mini-apps that interact while retaining their own identities and update paths. Its Get Ready journey begins before a person has an app idea. The owning epic keeps implementation on hold. It earns no shipped-product status from planning, and this review does not activate it.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "fighter-proof",
+              "_version": 1,
+              "evidence_key": "fighter-distinct-game-direction-2026-10-12",
+              "label": "Fighter product-direction review",
+              "context": "A possible product line, with the unproved boundary stated explicitly."
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-plan",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "composer-plan",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://github.com/loftwah/app-composer/issues/1"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s",
+                      "text": "Read App Composer’s public plan and execution hold",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "quality",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "quality-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-0",
+                      "text": "The product has to earn the second visit.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "quality-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-1",
+                      "text": "Protocol 11’s desktop-table visibility and legal-target/Flaming feedback remain open player-experience work. SHOALSHOT’s cross-tab save-integrity issue remains open too. Those risks matter to trust and repeat play; automated qualification cannot replace a newcomer’s experience.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "quality-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s-2",
+                      "text": "The portfolio’s promotional-art quality programme also remains open. This editorial update does not certify new artwork, audience demand or a commercial-ready service. Better discovery should lead people to an experience worth keeping, not imply that every remaining gate is complete.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "qualification"
           ]
         }
       }
