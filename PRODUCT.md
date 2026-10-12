@@ -41,3 +41,6 @@ Reviewed 11 October 2026: MP can paste portfolio information and notes without w
 ## Public activity — reviewed 12 October 2026
 
 MP authorised shareable analytics and suitable leaderboards. `/activity/` extends the journal with a separate public aggregate listening view and links to native Bubbles boards. The reviewed portfolio remains dated evidence, not telemetry. Listening is reported audible seconds and playback starts over 30 days; neither is a unique person or game popularity. Missing, stale and partial coverage must stay visible; no synthetic public podium. Accounts, score verification and raw events remain with each project. Woodhouse adds no identity service or collector. #18 owns this discovery surface; consumer work stays with existing spoke issues.
+
+
+Reviewed 12 October 2026: MP prioritises the four further-along games and LoftwahFM. Sharing must supply a finished image, caption and dated/result link without manual cropping or score transcription. The hub features the supported publisher snapshot image with native download and progressive file sharing; it does not become a game-result validator or shared account system. The existing project brief owns the shopping list; native results and richer reporting remain each project's work.

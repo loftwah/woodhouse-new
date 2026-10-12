@@ -1,0 +1,249 @@
+---
+import type { ListeningReport } from "../data/activity";
+import { activityLink, cardPath, sharingGames } from "../data/activity-sharing";
+type Props = {
+  report: ListeningReport;
+  projects: { slug: string; name: string }[];
+  selected: string;
+  composite: boolean;
+};
+const { report, projects, selected, composite } = Astro.props;
+const choices = sharingGames.flatMap((id) => projects.filter((p) => p.slug === id));
+const name = selected
+  ? (choices.find((p) => p.slug === selected)?.name ?? "Games × Radio")
+  : "Games × Radio";
+const image = cardPath(selected, report.snapshot);
+const link = activityLink(selected, report.snapshot);
+const row = report.games.find((game) => game.id === selected);
+const seconds = selected
+  ? (row?.seconds ?? 0)
+  : report.games.reduce((sum, game) => sum + game.seconds, 0);
+const caption = !selected
+  ? `Games × Radio. The next round has a soundtrack. A 30-day listening snapshot from LoftwahFM, ${report.from} to ${report.to}.`
+  : seconds > 0
+    ? `${name}: ${seconds.toLocaleString("en-AU")} seconds of reported game listening, ${report.from} to ${report.to}. From LoftwahFM.`
+    : `${name}. The next round has a soundtrack. Game listening is awaiting reported data, ${report.from} to ${report.to}. From LoftwahFM.`;
+---
+
+<section
+  class="sharing"
+  aria-labelledby="sharing-title"
+  data-activity-sharing
+  data-image={image}
+  data-link={link}
+  data-caption={caption}
+  data-filename={`${selected || "games-radio"}-${report.snapshot}-1200x630.png`}
+>
+  <h2 id="sharing-title">Take the next round with you.</h2>
+  <form action="/activity/" method="get" class="selection">
+    <label for="share-game">Choose your image</label>
+    <select id="share-game" name="game">
+      {composite && (
+        <option value="" selected={!selected}>
+          Games × Radio
+        </option>
+      )}
+      {choices.map((project) => (
+        <option value={project.slug} selected={project.slug === selected}>
+          {project.name}
+        </option>
+      ))}
+    </select>
+    <input type="hidden" name="snapshot" value={report.snapshot} />
+    <button type="submit">Show image</button>
+  </form>
+  <a class="image-link" href={image} aria-label={`Open ${name} image at full size`}>
+    <img
+      src={image}
+      width="1200"
+      height="630"
+      alt={`${name}, a 30-day game listening snapshot designed by LoftwahFM`}
+      fetchpriority="high"
+    />
+  </a>
+  <p class="image-credit">
+    1200 × 630 PNG · Artwork and design by{" "}
+    <a href="https://fm.loftwah.com/analytics/?source=games&days=30">LoftwahFM</a>
+    <br />
+    Snapshot <time datetime={report.asOf}>{report.asOf.slice(0, 16).replace("T", " ")} UTC</time>
+  </p>
+  <p class="share-actions">
+    <a class="download" href={cardPath(selected, report.snapshot, true)} download>
+      Download image
+    </a>
+    <button type="button" data-share-image hidden>
+      Share image
+    </button>
+    <button type="button" data-copy-caption hidden>
+      Copy caption + link
+    </button>
+  </p>
+  <p class="share-status" role="status" data-image-status></p>
+  <details>
+    <summary>Caption and snapshot link</summary>
+    <p>{caption}</p>
+    <a href={link}>{link}</a>
+  </details>
+</section>
+<script>
+  const root = document.querySelector<HTMLElement>("[data-activity-sharing]");
+  if (root) {
+    const share = root.querySelector<HTMLButtonElement>("[data-share-image]");
+    const copy = root.querySelector<HTMLButtonElement>("[data-copy-caption]");
+    const status = root.querySelector<HTMLElement>("[data-image-status]");
+    let prepared: File | undefined;
+    const update = (text: string) => {
+      if (status) status.textContent = text;
+    };
+    if (copy && navigator.clipboard) {
+      copy.hidden = false;
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(`${root.dataset.caption}\n${root.dataset.link}`);
+          update("Caption and snapshot link copied.");
+        } catch {
+          update("Open Caption and snapshot link below to copy them.");
+        }
+      });
+    }
+    if (share && navigator.share && navigator.canShare) {
+      share.hidden = false;
+      share.disabled = true;
+      share.textContent = "Preparing image…";
+      // Prepare before the click so the device share retains user activation.
+      fetch(root.dataset.image!, { signal: AbortSignal.timeout(15000) })
+        .then(async (response) => {
+          if (!response.ok) throw new Error("unavailable");
+          prepared = new File([await response.blob()], root.dataset.filename!, {
+            type: "image/png"
+          });
+          if (!navigator.canShare({ files: [prepared] })) throw new Error("unsupported");
+          share.disabled = false;
+          share.textContent = "Share image";
+        })
+        .catch(() => {
+          share.hidden = true;
+          update("Use Download image to save the PNG.");
+        });
+      share.addEventListener("click", async () => {
+        if (!prepared) return;
+        try {
+          await navigator.share({
+            files: [prepared],
+            title: "Games × Radio",
+            text: root.dataset.caption ?? "Games × Radio",
+            url: root.dataset.link ?? "https://woodhouse.loftwah.com/activity/"
+          });
+          update("Image handed to your device’s share options.");
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") {
+            update("");
+            return;
+          }
+          update("Sharing is unavailable here. Use Download image, then Copy caption + link.");
+        }
+      });
+    }
+    const image = root.querySelector<HTMLImageElement>("img");
+    image?.addEventListener("error", () => {
+      image.hidden = true;
+      update("The image is unavailable. Open the listening report for the latest source.");
+    });
+  }
+</script>
+<style>
+  .sharing {
+    min-width: 0;
+  }
+  h2 {
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    margin: 0 0 1rem;
+  }
+  .selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  label {
+    width: 100%;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  select,
+  button,
+  .download {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    font: inherit;
+    color: var(--paper);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  select {
+    flex: 1;
+    min-width: 0;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+  button[hidden] {
+    display: none;
+  }
+  .image-link {
+    display: block;
+  }
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .image-credit {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 0.6rem 0 1rem;
+  }
+  .share-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+  .download {
+    display: inline-flex;
+    align-items: center;
+    color: var(--ink);
+    background: var(--acid);
+    border-color: var(--acid);
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .share-status {
+    font-size: 0.875rem;
+    margin: 0.5rem 0;
+  }
+  details {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+  summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 0.5rem 0;
+  }
+  details p {
+    margin: 0.5rem 0;
+  }
+  @media (max-width: 700px) {
+    .share-actions button {
+      flex: 1;
+    }
+  }
+</style>

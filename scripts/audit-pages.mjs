@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { scanPublicText } from "./public-privacy.mjs";
-import { isCloudflareHiddenContentLink } from "./page-link-policy.mjs";
+import { isCloudflareHiddenContentLink, socialImageURL } from "./page-link-policy.mjs";
 
 const args = process.argv.slice(2);
 if (args[0] === "--") args.shift();
@@ -153,7 +153,7 @@ function auditDocument(page, html) {
   if (socialImage) {
     let resolved;
     try {
-      resolved = new URL(socialImage, `${origin}${page}`);
+      resolved = socialImageURL(socialImage, `${origin}${page}`);
     } catch {
       report(page, `og:image is not a usable URL: ${socialImage}`);
     }
@@ -161,9 +161,11 @@ function auditDocument(page, html) {
       for (const property of ["og:image:width", "og:image:height"])
         if (!new RegExp(`<meta[^>]+property="${property}"[^>]+content="\\d+"`, "i").test(html))
           report(page, `social image without ${property}`);
-      if (!socialImages.has(resolved.pathname)) {
-        socialImages.set(resolved.pathname, page);
-        socialImageStatus.set(resolved.pathname, undefined);
+      const identity = resolved.pathname + resolved.search;
+      if (!socialImages.has(identity)) {
+        // Snapshot/game query fields are image identity, not disposable tracking.
+        socialImages.set(identity, page);
+        socialImageStatus.set(identity, undefined);
       }
     }
   }

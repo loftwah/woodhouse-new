@@ -2,6 +2,11 @@
 // It is platform markup, not reader navigation. Do not hide visible CDN links
 // or ordinary hidden application links from the public link audit.
 // https://developers.cloudflare.com/fundamentals/reference/cdn-cgi-endpoint/
+export function socialImageURL(attribute, base) {
+  const decoded = attribute.replace(/&(?:amp|#38|#x26);/gi, "&");
+  return new URL(decoded, base);
+}
+
 export function isCloudflareHiddenContentLink(anchor, url) {
   const style = anchor.attrs.get("style") ?? "";
   return (

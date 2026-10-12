@@ -1,8 +1,10 @@
 /** Public aggregate projection only. Never forward upstream identities or raw events. */
 export const activitySource = "https://fm.loftwah.com/api/analytics/games?days=30";
-const gameIds = new Set(["bubbles", "protocol-11", "fighter", "shoalshot", "pirates"]);
+export const activityGameIds = ["bubbles", "protocol-11", "fighter", "shoalshot", "pirates"];
+const gameIds = new Set(activityGameIds);
 type GameListening = { id: string; seconds: number; starts: number; rank: number | null };
 export type ListeningReport = {
+  snapshot: number;
   asOf: string;
   from: string;
   to: string;
@@ -52,6 +54,7 @@ export function parseListeningReport(raw: unknown, now = Date.now()): ListeningR
     games.push({ id: row.id, seconds: row.seconds, starts: row.starts, rank: null });
   }
   return {
+    snapshot: Math.floor(Date.parse(raw.asOf) / 3600000) * 3600,
     asOf: raw.asOf,
     from: raw.from,
     to: raw.to,
@@ -79,10 +82,13 @@ export function projectListeningReport(
   return { ...report, games };
 }
 export async function loadListeningReport(
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
+  snapshot?: number
 ): Promise<ListeningReport | null> {
   try {
-    const response = await fetcher(activitySource, {
+    const url = new URL(activitySource);
+    if (snapshot !== undefined) url.searchParams.set("snapshot", String(snapshot));
+    const response = await fetcher(url.href, {
       signal: AbortSignal.timeout(4000),
       redirect: "manual"
     });
