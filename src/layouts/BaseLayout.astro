@@ -17,6 +17,7 @@ type Props = {
   description: string;
   path: string;
   image?: string;
+  imageAlt?: string;
   imageWidth?: number;
   imageHeight?: number;
   fallbackImage?: string | undefined;
@@ -38,6 +39,7 @@ const {
   description,
   path,
   image = "/og/woodhouse.jpg",
+  imageAlt: suppliedImageAlt,
   imageWidth = 1200,
   imageHeight = 630,
   fallbackImage,
@@ -77,7 +79,8 @@ const fullTitle = contentSeo?.title || templateTitle;
 const pageDescription = contentSeo?.description || description;
 const canonical = contentSeo?.canonical ?? new URL(path, siteUrl).toString();
 const imageUrl = new URL(contentSeo?.ogImage ?? image, siteUrl).toString();
-const imageAlt = title + " social preview for Woodhouse and the Loftwah Software Factory";
+const imageAlt =
+  suppliedImageAlt ?? title + " social preview for Woodhouse and the Loftwah Software Factory";
 const socialTitle = ogTitle ?? contentSeo?.ogTitle ?? fullTitle;
 const socialDescription = contentSeo?.ogDescription ?? pageDescription;
 const structuredSiteName = path === "/" || type === "article" ? siteTitle : undefined;
@@ -128,7 +131,11 @@ const [primaryResult, footerResult, houseIndexResult, searchResult, projectResul
     listPublicSearchItems(),
     listProjectRecords()
   ]);
-if (Astro.cache?.enabled) {
+// Keep a route's explicit failure/private policy through layout data reads.
+// Applying any hint after set(false) would re-enable Astro's cache provider.
+if (privateView || /private|no-store/i.test(Astro.response.headers.get("cache-control") ?? "")) {
+  Astro.cache?.set(false);
+} else if (Astro.cache?.enabled) {
   for (const result of [primaryResult, footerResult, houseIndexResult])
     Astro.cache.set(result.cacheHint);
   for (const hint of searchResult.cacheHints) Astro.cache.set(hint);

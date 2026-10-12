@@ -17,6 +17,7 @@ if (!/^https?:\/\//.test(origin))
 const alwaysChecked = [
   "/",
   "/factory/",
+  "/share/",
   "/projects/",
   "/dispatches/",
   "/incidents/",
@@ -303,14 +304,14 @@ for (const page of pages) {
       continue;
     let resolved;
     try {
-      resolved = new URL(href, `${origin}${page}`);
+      resolved = socialImageURL(href, `${origin}${page}`);
     } catch {
       report(page, `unresolvable link ${href}`);
       continue;
     }
     if (resolved.origin !== origin) continue;
     if (isCloudflareHiddenContentLink(anchor, resolved)) continue;
-    targets.add(resolved.pathname);
+    targets.add(resolved.pathname + resolved.search);
   }
   internalLinks.set(page, [...targets]);
 
@@ -337,6 +338,7 @@ for (const page of pages) {
 }
 
 const linkedFrom = new Set([...internalLinks.values()].flat());
+const linkedPaths = new Set([...linkedFrom].map((link) => new URL(link, origin).pathname));
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
     if (pages.includes(target)) continue;
@@ -346,7 +348,7 @@ for (const [page, targets] of internalLinks) {
   }
 }
 
-const orphans = pages.filter((page) => page !== "/" && !linkedFrom.has(page));
+const orphans = pages.filter((page) => page !== "/" && !linkedPaths.has(page));
 for (const orphan of orphans) report(orphan, "is listed for discovery but no page links to it");
 
 // An internal link must point at the page's own canonical URL. A record id
@@ -355,7 +357,7 @@ for (const orphan of orphans) report(orphan, "is listed for discovery but no pag
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
     const canonical = await canonicalOf(target);
-    if (canonical && canonical !== target.replace(/\/$/, ""))
+    if (canonical && canonical !== new URL(target, origin).pathname.replace(/\/$/, ""))
       report(page, `links to ${target}, whose canonical URL is ${canonical}`);
   }
 }

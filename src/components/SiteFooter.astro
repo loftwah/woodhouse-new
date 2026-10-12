@@ -26,6 +26,7 @@ const { links = [], reviewDateLabel } = Astro.props;
       The Loftwah Software Factory{reviewDateLabel ? ` · Reviewed ${reviewDateLabel}` : ""}
     </span>
     <nav aria-label="Footer navigation">
+      <a href="/share/">Share desk</a>
       {links.map((link) => (
         <a
           href={link.url}

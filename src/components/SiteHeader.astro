@@ -20,6 +20,11 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
     </div>
     <div class="site-header__tools">
       <nav class="desktop-nav" aria-label="Main navigation">
+        {!links.some((link) => link.url === "/share/") && (
+          <a href="/share/" aria-current={currentPath === "/share/" ? "page" : undefined}>
+            Share
+          </a>
+        )}
         {links.map((link) => (
           <a
             href={link.url}
@@ -50,6 +55,11 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
           >
             Search Woodhouse <kbd>⌘ K</kbd>
           </button>
+          {!links.some((link) => link.url === "/share/") && (
+            <a href="/share/" aria-current={currentPath === "/share/" ? "page" : undefined}>
+              Share desk
+            </a>
+          )}
           {links.map((link) => (
             <a
               href={link.url}

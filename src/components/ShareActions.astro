@@ -1,0 +1,156 @@
+---
+type Props = { caption: string; image?: string; filename?: string; link: string; label?: string };
+const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy post" } = Astro.props;
+---
+
+<div
+  data-share-actions
+  data-caption={caption}
+  data-image={image}
+  data-filename={filename}
+  data-link={link}
+>
+  <div class="actions">
+    {image && (
+      <a class="download" href={image} download>
+        Download image
+      </a>
+    )}
+    <button type="button" data-copy hidden>
+      {label}
+    </button>
+    {image && (
+      <button type="button" data-device-share hidden>
+        Share image
+      </button>
+    )}
+  </div>
+  <p role="status" data-status></p>
+  <details>
+    <summary>Read or edit the post</summary>
+    <textarea aria-label="Ready-to-share post" rows="5">{caption}</textarea>
+  </details>
+</div>
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-share-actions]")) {
+    const status = root.querySelector<HTMLElement>("[data-status]");
+    const text = root.querySelector<HTMLTextAreaElement>("textarea");
+    const copy = root.querySelector<HTMLButtonElement>("[data-copy]");
+    const share = root.querySelector<HTMLButtonElement>("[data-device-share]");
+    const say = (message: string) => {
+      if (status) status.textContent = message;
+    };
+    if (copy && navigator.clipboard) {
+      copy.hidden = false;
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(text?.value ?? root.dataset.caption ?? "");
+          say("Post copied. Ready to paste.");
+        } catch {
+          const details = root.querySelector("details");
+          if (details) details.open = true;
+          text?.select();
+          say("Select and copy the post below.");
+        }
+      });
+    }
+    let prepared: File | undefined;
+    if (share && root.dataset.image && navigator.share && navigator.canShare) {
+      share.hidden = false;
+      share.disabled = true;
+      share.textContent = "Preparing image…";
+      fetch(root.dataset.image, { signal: AbortSignal.timeout(15000) })
+        .then(async (response) => {
+          if (!response.ok) throw new Error("unavailable");
+          const blob = await response.blob();
+          if (blob.size > 6 * 1024 * 1024) throw new Error("too large");
+          const extension = blob.type.includes("png")
+            ? "png"
+            : blob.type.includes("svg")
+              ? "svg"
+              : "jpg";
+          prepared = new File([blob], root.dataset.filename!.replace(/\.[^.]+$/, `.${extension}`), {
+            type: blob.type
+          });
+          if (!navigator.canShare({ files: [prepared] })) throw new Error("unsupported");
+          share.disabled = false;
+          share.textContent = "Share image";
+        })
+        .catch(() => {
+          share.hidden = true;
+        });
+      share.addEventListener("click", async () => {
+        if (!prepared) return;
+        try {
+          await navigator.share({
+            files: [prepared],
+            text: text?.value ?? root.dataset.caption ?? "",
+            url: root.dataset.link ?? "https://woodhouse.loftwah.com/share/"
+          });
+          say("Image handed to your device’s share options.");
+        } catch (error) {
+          if (error instanceof Error && error.name === "AbortError") {
+            say("");
+            return;
+          }
+          say("Use Download image and Copy post here.");
+        }
+      });
+    }
+  }
+</script>
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+  .actions a,
+  .actions button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid var(--line);
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--paper);
+    background: var(--surface);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .actions [hidden] {
+    display: none;
+  }
+  .actions button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .actions .download {
+    background: var(--acid);
+    color: var(--ink);
+    border-color: var(--acid);
+    font-weight: 650;
+  }
+  [role="status"] {
+    margin: 0.4rem 0;
+    font-size: 0.875rem;
+  }
+  summary {
+    min-height: 44px;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    font-size: 0.875rem;
+  }
+  textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 8rem;
+    padding: 0.8rem;
+    font: inherit;
+    background: var(--surface);
+    color: var(--paper);
+    border: 1px solid var(--line);
+  }
+</style>

@@ -1,0 +1,512 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ShareActions from "../components/ShareActions.astro";
+import { getPublicMenu, listProjectRecords, listPublishedDispatches } from "../content/repository";
+import { dispatchSocialCard } from "../data/social-cards";
+import { getSiteMetadata } from "../data/site-metadata";
+import { orderShareProjects, projectCaption, sharePriorities } from "../data/share-desk";
+import { loadListeningReport, projectListeningReport } from "../data/activity";
+import { compositeIsPublic } from "../data/activity-sharing";
+export const prerender = false;
+const [result, footer, listening, dispatches] = await Promise.all([
+  listProjectRecords(),
+  getPublicMenu("footer"),
+  loadListeningReport(),
+  listPublishedDispatches()
+]);
+if (result.error)
+  return new Response("Share resources are unavailable.", {
+    status: 503,
+    headers: { "cache-control": "no-store" }
+  });
+const projects = orderShareProjects(result.projects);
+const requested = Astro.url.searchParams.get("project");
+const project = projects.find((p) => p.slug === requested) ?? (requested ? undefined : projects[0]);
+if (!project)
+  return new Response("Project not found.", {
+    status: 404,
+    headers: { "cache-control": "no-store" }
+  });
+if (!listening) Astro.response.headers.set("cache-control", "private, no-store");
+if (Astro.cache?.enabled) {
+  for (const hint of result.cacheHints) Astro.cache.set(hint);
+  Astro.cache.set(footer.cacheHint);
+  Astro.cache.set(dispatches.cacheHint);
+  if (listening) Astro.cache.set({ lastModified: new Date(listening.asOf) });
+  else Astro.cache.set(false);
+}
+const metadata = getSiteMetadata(project);
+const destination = project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
+const download = project.previewImage ? `/api/share-image?project=${project.slug}` : metadata.image;
+const caption = projectCaption(project);
+const priority = projects.filter((p) => sharePriorities.includes(p.slug));
+const portfolioPost = `Games, music and a software factory. Made by Loftwah.\n${priority.map((p) => `${p.name}: ${p.siteUrl ?? `https://woodhouse.loftwah.com/projects/${p.slug}/`}`).join("\n")}\nMore from the factory: https://woodhouse.loftwah.com/share/`;
+const profiles = (footer.menu?.items ?? []).filter((item) => item.url.startsWith("https://"));
+const radio =
+  listening && compositeIsPublic(new Set(projects.map((p) => p.slug)))
+    ? projectListeningReport(listening, new Set(projects.map((p) => p.slug)))
+    : null;
+const radioURL = (format: string, download = false) =>
+  `https://fm.loftwah.com/api/analytics/games-card.png?days=30&snapshot=${radio?.snapshot}&format=${format}${download ? "&download=1" : ""}`;
+const storyCards = dispatches.dispatches.filter((story) =>
+  dispatchSocialCard(story.slug).startsWith("/og/dispatches/")
+);
+const houseImages = [
+  { name: "Woodhouse", image: "/og/woodhouse.jpg", link: "/" },
+  { name: "The factory", image: "/og/factory.jpg", link: "/factory/" },
+  { name: "Dean Lofts", image: "/og/dean.jpg", link: "/dean/" }
+];
+---
+
+<BaseLayout
+  title="Share desk"
+  description="Ready-to-share project images, posts, radio cards and official social links. The Loftwah portfolio in one place."
+  path={requested ? `/share/?project=${project.slug}` : "/share/"}
+  currentPath="/share/"
+  image={metadata.image}
+  imageAlt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+>
+  <div class="container share-desk">
+    <header class="desk-intro">
+      <h1 class="page-title">
+        Made here.
+        <br />
+        <em>Share anywhere.</em>
+      </h1>
+      <div>
+        <p>
+          Grab a project image and a ready-to-post caption. Games, radio and the factory, all in one
+          place.
+        </p>
+        <nav aria-label="Share resources">
+          <a href="#radio">Radio cards</a>
+          <a href="#factory">Factory artwork</a>
+          <a href="#social">Social accounts</a>
+        </nav>
+      </div>
+    </header>
+    <section class="project-share" aria-labelledby="project-title">
+      <div class="project-art">
+        <form action="/share/" method="get">
+          <label for="share-project">Choose a project</label>
+          <div class="choose">
+            <select id="share-project" name="project">
+              {projects.map((p) => (
+                <option value={p.slug} selected={p.slug === project.slug}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <button type="submit">Show resources</button>
+          </div>
+        </form>
+        <a href={metadata.image} aria-label={`Open ${project.name} image at full size`}>
+          <img
+            src={metadata.image}
+            width="1200"
+            height="630"
+            alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+            fetchpriority="high"
+            data-share-preview
+          />
+        </a>
+        <p class="credit">
+          <span data-image-size>Original image</span> ·{" "}
+          {project.previewImage ? `Published by ${project.name}` : "Illustration by Woodhouse"}
+        </p>
+      </div>
+      <div class="project-post">
+        <h2 id="project-title">{project.name}</h2>
+        <ShareActions
+          caption={caption}
+          image={download}
+          filename={`${project.slug}-social.jpg`}
+          link={destination}
+        />
+        <p>{metadata.description}</p>
+        <div class="project-links">
+          <a href={destination}>
+            {project.siteUrl
+              ? project.slug === "loftwahfm"
+                ? "Listen to LoftwahFM"
+                : ["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
+                  ? `Play ${project.name}`
+                  : `Open ${project.name}`
+              : "Read the project"}
+          </a>
+          <a href={metadata.image}>Original image</a>
+          {project.siteFavicon && <a href={project.siteFavicon}>Site icon</a>}
+          {project.slug === "shoalshot" && (
+            <>
+              <a href="https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark.svg">
+                Wordmark SVG
+              </a>
+              <a href="https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg">Emblem SVG</a>
+            </>
+          )}
+          <a href={`/projects/${project.slug}/`}>Project story</a>
+          <a href={`/share/?project=${project.slug}`}>Link to this kit</a>
+        </div>
+        <p class="note">
+          Promotional artwork, credited to its publisher. Keep the credit when sharing. Project
+          record reviewed <time datetime={project.reviewDate}>{project.reviewDate}</time>.
+        </p>
+      </div>
+    </section>
+    <section id="radio" class="radio-resources" aria-labelledby="radio-title">
+      <div>
+        <h2 id="radio-title">The next round has a soundtrack.</h2>
+        <p>
+          Games × Radio, designed by LoftwahFM. Three finished compositions; choose the shape you
+          want.
+        </p>
+        {radio ? (
+          <>
+            <div class="format-links">
+              <a href={radioURL("landscape", true)}>
+                Download landscape <span>1200 × 630 PNG</span>
+              </a>
+              <a href={radioURL("square", true)}>
+                Download square <span>1200 × 1200 PNG</span>
+              </a>
+              <a href={radioURL("portrait", true)}>
+                Download portrait <span>1080 × 1920 PNG</span>
+              </a>
+            </div>
+            <ShareActions
+              caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
+              link="https://woodhouse.loftwah.com/share/"
+              label="Copy radio post"
+            />
+            <p class="note">
+              Snapshot{" "}
+              <time datetime={radio.asOf}>{radio.asOf.slice(0, 16).replace("T", " ")} UTC</time>.
+              Reported listening is separate from project popularity.
+            </p>
+          </>
+        ) : (
+          <p>
+            Radio snapshot cards are unavailable right now. Project images and posts above are ready
+            to use.
+          </p>
+        )}
+        <p class="project-links">
+          <a href="/activity/">Scores & listening</a>
+          <a href="https://fm.loftwah.com/analytics/?source=games&days=30">FM sharing options</a>
+        </p>
+      </div>
+      {radio && (
+        <a href={radioURL("landscape")} aria-label="Open Games × Radio image at full size">
+          <img
+            src={radioURL("landscape")}
+            width="1200"
+            height="630"
+            alt="Games × Radio artwork from LoftwahFM with the four priority games and its dated listening snapshot"
+            loading="lazy"
+          />
+          <p class="credit">Official game artwork · Composition by LoftwahFM</p>
+        </a>
+      )}
+    </section>
+    <section id="factory" aria-labelledby="factory-title">
+      <div class="section-heading">
+        <h2 id="factory-title">Share the whole factory.</h2>
+        <p>The portfolio post, Woodhouse artwork and the story behind it.</p>
+      </div>
+      <ShareActions
+        caption={portfolioPost}
+        image="/og/woodhouse.jpg"
+        filename="woodhouse-portfolio.jpg"
+        link="https://woodhouse.loftwah.com/share/"
+        label="Copy portfolio post"
+      />
+      <div class="house-images">
+        {houseImages.map((item) => (
+          <figure>
+            <a href={item.image}>
+              <img
+                src={item.image}
+                width="1200"
+                height="630"
+                alt={`${item.name} portfolio artwork by Woodhouse`}
+                loading="lazy"
+              />
+            </a>
+            <figcaption>
+              <strong>{item.name}</strong>
+              <div>
+                <a href={item.image} download>
+                  Download image
+                </a>
+                <a href={item.link}>Read the story</a>
+              </div>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <details class="diagrams">
+        <summary>Story cards and ready posts</summary>
+        <div class="house-images">
+          {storyCards.map((story) => (
+            <article>
+              <img
+                src={dispatchSocialCard(story.slug)}
+                width="1200"
+                height="630"
+                alt={`Woodhouse artwork for ${story.title}`}
+                loading="lazy"
+              />
+              <h3>{story.title}</h3>
+              <ShareActions
+                caption={`${story.title}\n${story.deck}\nhttps://woodhouse.loftwah.com/dispatches/${story.slug}/`}
+                image={dispatchSocialCard(story.slug)}
+                filename={`${story.slug}.jpg`}
+                link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
+              />
+              <a href={`/dispatches/${story.slug}/`}>Read the story</a>
+            </article>
+          ))}
+        </div>
+        <p class="note">1200 × 630 JPG · Artwork and writing by Woodhouse.</p>
+      </details>
+      <details class="diagrams">
+        <summary>Factory diagrams and smaller assets</summary>
+        <div class="project-links">
+          <a href="/images/diagrams/project-network.svg" download>
+            Project network SVG
+          </a>
+          <a href="/images/diagrams/release-path.svg" download>
+            Release path SVG
+          </a>
+          <a href="/images/diagrams/evidence-ladder.svg" download>
+            Evidence ladder SVG
+          </a>
+          <a href="/favicon.svg" download>
+            Woodhouse mark SVG
+          </a>
+        </div>
+        <p class="note">Diagrams and mark by Woodhouse. SVGs keep their resolution when scaled.</p>
+      </details>
+    </section>
+    <section id="social" aria-labelledby="social-title" class="social-resources">
+      <h2 id="social-title">The places to post.</h2>
+      <p>
+        Your images and copy are ready above. Open an official profile when you’re ready to post.
+      </p>
+      <nav aria-label="Official Loftwah social profiles">
+        {profiles.map((item) => (
+          <a href={item.url}>{item.label}</a>
+        ))}
+      </nav>
+      <p class="note">Downloads and copy buttons prepare your post. Publishing stays with you.</p>
+    </section>
+  </div>
+</BaseLayout>
+<script>
+  const image = document.querySelector<HTMLImageElement>("[data-share-preview]");
+  const size = document.querySelector<HTMLElement>("[data-image-size]");
+  const describe = () => {
+    if (image?.naturalWidth && size)
+      size.textContent = `${image.naturalWidth} × ${image.naturalHeight}`;
+  };
+  if (image?.complete) describe();
+  else image?.addEventListener("load", describe, { once: true });
+  image?.addEventListener("error", () => {
+    if (size) size.textContent = "Preview unavailable · use Original image";
+  });
+</script>
+<style>
+  .share-desk {
+    padding-block: 3rem 5rem;
+  }
+  .desk-intro {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 3rem;
+    align-items: end;
+    margin-bottom: 2.5rem;
+  }
+  .desk-intro h1 {
+    font-size: clamp(2.7rem, 5.6vw, 5rem);
+    margin: 0;
+  }
+  .desk-intro p {
+    max-width: 46ch;
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+  }
+  nav,
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+  }
+  nav a,
+  .project-links a,
+  figcaption a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 0.3em;
+  }
+  .project-share {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 3rem;
+  }
+  form label {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.45rem;
+  }
+  .choose {
+    display: flex;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+  }
+  select,
+  button {
+    min-height: 44px;
+    border: 1px solid var(--line);
+    padding: 0.55rem 0.8rem;
+    font: inherit;
+    color: var(--paper);
+    background: var(--surface);
+  }
+  select {
+    flex: 1;
+    min-width: 0;
+  }
+  button {
+    cursor: pointer;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .credit,
+  .note {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .credit {
+    margin: 0.6rem 0 0;
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 2.7vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin: 0 0 1rem;
+  }
+  .project-post {
+    padding-top: 2.1rem;
+    min-width: 0;
+  }
+  .project-post > p:first-of-type {
+    max-width: 48ch;
+    margin: 0 0 1.25rem;
+  }
+  .project-links {
+    margin: 1rem 0;
+  }
+  section + section {
+    border-top: 1px solid var(--line);
+    padding-top: 2.5rem;
+    margin-top: 2.5rem;
+    scroll-margin-top: 2rem;
+  }
+  .radio-resources {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 3rem;
+  }
+  .radio-resources > a {
+    align-self: center;
+    text-decoration: none;
+  }
+  .format-links {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0;
+  }
+  .format-links a {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    min-height: 48px;
+    border-bottom: 1px solid var(--line);
+    text-decoration: none;
+  }
+  .format-links span {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+  }
+  .house-images {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  figure {
+    margin: 0;
+  }
+  figcaption {
+    margin-top: 0.65rem;
+  }
+  figcaption div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .diagrams summary {
+    min-height: 44px;
+    padding: 0.6rem 0;
+    cursor: pointer;
+  }
+  .social-resources nav {
+    gap: 2rem;
+  }
+  @media (max-width: 760px) {
+    .share-desk {
+      padding-top: 2rem;
+    }
+    .desk-intro,
+    .project-share,
+    .radio-resources {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+    }
+    .desk-intro {
+      margin-bottom: 1.5rem;
+    }
+    .desk-intro p {
+      font-size: 1rem;
+    }
+    .desk-intro nav {
+      gap: 0.25rem 1rem;
+    }
+    .project-post {
+      padding: 0;
+    }
+    .house-images {
+      grid-template-columns: 1fr;
+    }
+    .section-heading {
+      display: block;
+    }
+    .format-links a {
+      flex-wrap: wrap;
+      gap: 0.3rem 0.7rem;
+    }
+  }
+</style>

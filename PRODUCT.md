@@ -44,3 +44,5 @@ MP authorised shareable analytics and suitable leaderboards. `/activity/` extend
 
 
 Reviewed 12 October 2026: MP prioritises the four further-along games and LoftwahFM. Sharing must supply a finished image, caption and dated/result link without manual cropping or score transcription. The hub features the supported publisher snapshot image with native download and progressive file sharing; it does not become a game-result validator or shared account system. The existing project brief owns the shopping list; native results and richer reporting remain each project's work.
+
+Reviewed 12 October 2026: `/share/` is the public share desk. The observed failure is requiring MP to hunt across sites for existing promotional assets and captions. Priority projects lead; every published project has an image/post resource where available. Original downloads, editable ready posts, public play/story links, FM's authored formats, factory artwork and published social accounts belong together here. Native download/copy prepares a post; it never posts on MP's behalf. Global navigation, phone index, search and the activity page make the desk discoverable.
