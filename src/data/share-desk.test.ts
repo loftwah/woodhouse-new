@@ -85,6 +85,24 @@ test("download transfer bounds cancel both declared and streamed oversized bodie
     null
   );
 });
+test("transparent WebP originals keep their format and reject mislabeled or truncated containers", async () => {
+  // A lossless, transparent 1px image encoded by Pillow, rather than a synthetic header.
+  const webp = new Uint8Array(
+    Buffer.from("UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==", "base64")
+  );
+  const result = await loadShareImage(
+    "https://shoalshot.loftwah.com/ui/brand/shoalshot-wordmark-20261012.webp",
+    async () => new Response(webp, { headers: { "content-type": "image/webp" } })
+  );
+  assert.equal(result?.extension, "webp");
+  assert.equal(result?.mime, "image/webp");
+  assert.deepEqual(result?.bytes, webp);
+  assert.equal(imageKind(webp, "image/jpeg"), null);
+  assert.equal(imageKind(webp.slice(0, -1), "image/webp"), null);
+  const otherRiff = webp.slice();
+  otherRiff.set(new TextEncoder().encode("WAVE"), 8);
+  assert.equal(imageKind(otherRiff, "image/webp"), null);
+});
 test("ready posts fit 280 characters and keep the canonical public destination", () => {
   const project = {
     name: "Fighter",

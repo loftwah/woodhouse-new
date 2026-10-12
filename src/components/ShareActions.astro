@@ -149,7 +149,9 @@ const { caption, image, filename = "loftwah-social.jpg", link, label = "Copy pos
               ? "png"
               : blob.type.includes("svg")
                 ? "svg"
-                : "jpg";
+                : blob.type.includes("webp")
+                  ? "webp"
+                  : "jpg";
             prepared = new File(
               [blob],
               root.dataset.filename!.replace(/\.[^.]+$/, `.${extension}`),

@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
     asset === "social"
       ? project?.previewImage
       : project?.slug === "shoalshot"
-        ? `https://shoalshot.loftwah.com/ui/brand/shoalshot-${asset}.svg`
+        ? `https://shoalshot.loftwah.com/ui/brand/shoalshot-${asset}-20261012.webp`
         : undefined;
   if (!source)
     return new Response("Image not found.", {

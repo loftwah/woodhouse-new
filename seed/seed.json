@@ -1911,11 +1911,11 @@
           "why": "The remaining question is whether the experience holds up through the full game on real devices, and whether the production claim matches the exact version tested.",
           "teaches": "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
           "site_url": "https://shoalshot.loftwah.com/",
-          "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v2.jpg",
+          "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v4.jpg",
           "site_og_title": "Shoalshot — Read the tide. Place the shot.",
           "site_og_description": "A tactile browser arcade game of visible risk, careful aim and one-more-shot momentum. Play the Tide Pool vertical slice.",
-          "site_favicon": "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem.svg",
-          "preview_alt": "Promotional artwork on the SHOALSHOT site: a fishing-game scene viewed from above.",
+          "site_favicon": "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem-20261012.webp",
+          "preview_alt": "SHOALSHOT Home screen with its layered Sunstruck Shelf aquarium and Dive action",
           "preview_caption": "Promotional image from the SHOALSHOT site",
           "public_safe": true
         }
@@ -2690,9 +2690,9 @@
           "snapshot_key": "2026-10-12",
           "state": "Finished dives ready to share",
           "state_tone": "active",
-          "current": "Finished dives now export a locally generated 1200 × 630 PNG and copyable caption with a stable play link. The card carries the actual mode, rules and game version, with local/unverified result provenance. Native file sharing is offered where supported; Save PNG remains available. The existing game-owned radio integration remains in place.",
+          "current": "Finished dives export a locally generated 1200 × 630 PNG and copyable caption with a stable play link. The later 12 October artwork repair replaces the earlier SVG branding with generated wordmark and emblem artwork. The result card now uses a reef-backed paper composition with actual local results; game versions and hashes are omitted from the card and caption. Native file sharing is offered where supported; Save PNG remains available. The earlier finished-dive release remains separately recorded, and the game-owned radio integration is unchanged.",
           "next_proof": "Observe sharing on a physical iPhone and continue genuine eligible listening and human listening checks.",
-          "proof_boundary": "Woodhouse reviewed the owning Chromium/WebKit download receipts and confirmed the active production revision and source tag. It did not repeat a completed dive. Results are local and unverified, with no public result permalink or uploaded-score service. Physical iPhone OS sharing and human listening remain separate.",
+          "proof_boundary": "The earlier finished-dive release and later brand repair have separate reviewed source receipts. Woodhouse checked the merged repair revision, active production Worker and byte identity of the public artwork. Owning Chromium/WebKit receipts cover PNG download, caption and navigation; Woodhouse has not repeated a finished dive. Results remain local and unverified, without a public result permalink or uploaded-score service. Physical iPhone/native OS sharing and human listening remain separate.",
           "reviewed_at": "2026-10-12",
           "sort_order": 3,
           "public_safe": true
@@ -3871,6 +3871,29 @@
           "revision": "7f3e89cd69fe7c003a34ca11989b7d3b32fd510e",
           "public_safe": true,
           "proof_boundary": "The result is local and unverified. The card is made inside the game; no public result permalink, uploaded score, account or square/portrait result format is provided. Owning Chromium/WebKit receipts establish downloads and navigation; physical iPhone/native OS sharing remains pending. No listening adoption or popularity is inferred."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-brand-sharing-2026-10-12",
+        "slug": "shoalshot-brand-sharing-2026-10-12",
+        "status": "published",
+        "data": {
+          "title": "SHOALSHOT · generated artwork and sharing repair",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-12",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-12",
+          "claim": "SHOALSHOT publishes new generated wordmark, emblem and social artwork, and finished-dive cards omit technical version and hash labels.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-12",
+          "reviewed_at": "2026-10-12",
+          "summary": "The readable Share result control opens a reef-backed paper result card. The canonical social preview is 1200 × 630; the transparent wordmark is 1998 × 424 and emblem 1161 × 1161. Public originals are available from the project with A Loftwah Game credit.",
+          "source_label": "Merged repair and owning live browser receipts reviewed; active Worker and public source-asset identity independently checked. GitHub access may be required.",
+          "source_url": "https://github.com/loftwah/shoalshot/issues/228#issuecomment-6118554259",
+          "revision": "b2570528f87b1c830ee68582766847f294cf157f",
+          "public_safe": true,
+          "proof_boundary": "This is a presentation and local-sharing repair. It does not establish a public result permalink, uploaded score, new listening attribution or physical iPhone/native OS share-sheet acceptance. The original native-sharing evidence remains separately dated and versioned."
         }
       }
     ],
