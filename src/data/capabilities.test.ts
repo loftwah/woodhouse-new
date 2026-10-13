@@ -176,16 +176,16 @@ test("listening uses only the official FM player and preserves evidence when opt
 
 test("current review accepts explicitly supported mixed pins and exact deployed browser receipts", () => {
   const [capability] = projectCapabilities(allDispatches, projects, evidence);
-  assert.equal(capability?.review.reviewed_at, "2026-10-11");
+  assert.equal(capability?.review.reviewed_at, "2026-10-13");
   assert.equal(capability?.review.available_version, "1.2.0");
   const pins = Object.fromEntries(
     capability!.consumers.map((c) => [c.project.slug, c.record.installed_version])
   );
   assert.deepEqual(pins, {
     shoalshot: "1.2.0",
-    fighter: "1.1.0",
+    fighter: "1.2.0",
     "protocol-11": "1.0.0",
-    bubbles: "1.0.0",
+    bubbles: "1.2.0",
     pirates: ""
   });
   assert.ok(
@@ -201,7 +201,9 @@ test("current review accepts explicitly supported mixed pins and exact deployed 
 
 test("a mixed-version review fails closed on unsupported pins and unverifiable compatibility", () => {
   const current = allDispatches.filter((d: { content: CapabilityReview[] }) =>
-    d.content.some((b) => b._type === "capability_review" && b._version === 2)
+    d.content.some(
+      (b) => b._type === "capability_review" && b._version === 2 && b.reviewed_at === "2026-10-13"
+    )
   );
   for (const fault of [
     "unsupported",
@@ -228,7 +230,7 @@ test("a mixed-version review fails closed on unsupported pins and unverifiable c
     if (fault === "wrong-hash") block.package_sha256 = "a".repeat(64);
     if (fault === "missing-proof") support.evidence_key = "missing";
     if (fault === "private-proof") proof.data.public_safe = false;
-    if (fault === "future-proof") proof.data.reviewed_at = "2026-10-12";
+    if (fault === "future-proof") proof.data.reviewed_at = "2026-10-14";
     if (fault === "wrong-provider") proof.data.project_key = "fighter";
     if (fault === "swapped-support-proof")
       support.evidence_key = block.supported_clients[2]!.evidence_key;
