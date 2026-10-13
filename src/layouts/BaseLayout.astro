@@ -202,7 +202,8 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
             const status = image
               .closest("[data-project-artwork]")
               ?.querySelector("[data-artwork-status]");
-            if (status) status.textContent = "ILLUSTRATION BY WOODHOUSE";
+            if (status)
+              status.textContent = image.dataset.fallbackCredit ?? "ILLUSTRATION BY WOODHOUSE";
           }
           if (image.hasAttribute("data-source-favicon")) image.hidden = true;
         },

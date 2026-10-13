@@ -1,11 +1,12 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
-import { getSiteMetadata } from "../data/site-metadata";
+import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
 const { project, compact = false, headingLevel = "h3" } = Astro.props;
 const Heading = headingLevel;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
-const placeholder = `/og/projects/${project.slug}.svg`;
+const fallback = getArtworkFallback(project);
+const placeholder = fallback.image;
 ---
 
 <article class={"project-row" + (compact ? " project-row--compact" : "")}>
@@ -26,14 +27,15 @@ const placeholder = `/og/projects/${project.slug}.svg`;
           loading="lazy"
           decoding="async"
           data-fallback-src={placeholder}
-          data-fallback-alt={`Woodhouse illustration for ${project.name}.`}
+          data-fallback-alt={fallback.alt}
+          data-fallback-credit={fallback.credit}
         />
       </a>
     ) : (
       <div class="project-row__image project-row__image--placeholder">
         <img
           src={placeholder}
-          alt={`Woodhouse illustration for ${project.name}.`}
+          alt={fallback.alt}
           width="1200"
           height="630"
           loading="lazy"

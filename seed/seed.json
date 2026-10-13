@@ -2051,6 +2051,28 @@
           "preview_caption": "Share card published by the Asset Hunter site",
           "public_safe": true
         }
+      },
+      {
+        "id": "project-app-composer",
+        "slug": "app-composer",
+        "status": "published",
+        "data": {
+          "name": "App Composer",
+          "index": "10",
+          "discipline": "Development tools · agent-operated setup",
+          "title": "Before an idea, make the environment work.",
+          "summary": "App Composer prepares a development environment, configures apps through portable specifications and connects independently maintained mini-apps. Its operator release includes a reusable Get Ready engine, a first-setup guide and a live photo-to-showcase composition. Full fresh-user provisioning remains unfinished.",
+          "why": "Getting started often requires a person to join accounts, tools and DNS before they can make anything. The useful outcome is an agent that prepares and verifies that environment, explains the few human steps and proves a real deployment before asking for an app idea.",
+          "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
+          "site_url": "https://composer.loftwah.com/",
+          "site_og_image": "https://composer.loftwah.com/brand/share-ai-v1.jpg",
+          "site_og_title": "Build with apps you own. · App Composer",
+          "site_og_description": "Get your environment ready, choose useful mini-apps, and let your coding agent build software you own. Configure independent apps and connect their data.",
+          "site_favicon": "https://composer.loftwah.com/brand/mark.svg",
+          "preview_alt": "App Composer’s original orange and charcoal frames, composed together on an ivory field.",
+          "preview_caption": "Original generated artwork published by App Composer",
+          "public_safe": true
+        }
       }
     ],
     "factory_snapshots": [
@@ -2153,7 +2175,7 @@
           "title": "Play it. Finish it. Share it. · 13 October 2026",
           "reviewed_at": "2026-10-13",
           "source_description": "Portfolio intelligence supplied by MP, reconciled with canonical project source, owning release and interaction receipts, and public origins on 13 October 2026. Public-safe derived conclusions only.",
-          "scope": "Fighter, SHOALSHOT, Bubbles, Protocol 11 and LoftwahFM have new dated status records. Other projects keep their prior review dates. Radio versions and evidence stages are reviewed separately from gameplay quality and audience measurement.",
+          "scope": "Fighter, SHOALSHOT, Bubbles, Protocol 11 and LoftwahFM have new dated status records. Other projects keep their prior review dates. Radio versions and evidence stages are reviewed separately from gameplay quality and audience measurement. App Composer is added from its public repository, exact deployed release and browser proof; historical project reviews remain dated.",
           "editorial_notes": "The morning report predates the later Protocol 11 delivery. New result-sharing paths are delivered, with local/unverified or anonymous text boundaries. No commit counts, confidence scores, private account details, complete campaign, physical-device or demand claims are adopted.",
           "public_safe": true
         }
@@ -2803,6 +2825,25 @@
           "proof_boundary": "Woodhouse reviewed source and the owning receipts; it did not repeat game playback. Physical phone, human listening and native OS sharing remain separate acceptance. The public aggregate was re-read on 13 October and marked partial coverage. It contained no reported audible game starts or seconds in that window; that does not mean nobody plays. Adapter visits, active gameplay, unique people and willingness to pay are different measures.",
           "reviewed_at": "2026-10-13",
           "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-13",
+        "slug": "app-composer-2026-10-13",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-13",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-13",
+          "state": "Operator release live; fresh-user setup still open",
+          "state_tone": "amber",
+          "current": "A deployed Astro/EmDash product connects independent Guestbook and Showcase apps through real approved-photo data and privacy revocation. Get Ready runs independently of Composer or Woodhouse, verifies actual tools/accounts/HTTPS and supports private recovery. A browser-exported Hello specification changed the independent reference and was verified live. The first-time guide, illustrated app library and Lucide controls are deployed. Owner administration is protected and public signup/build execution is closed.",
+          "next_proof": "Complete and observe a fresh nontechnical user preparing their own authorised tools, GitHub account, domain and customer app. Finish first-account/domain/fork bootstrap before exposing a hosted Get Ready API or MCP. Preserve the portable-state security and provider-continuation acceptance gates.",
+          "proof_boundary": "Production source and browser receipts establish the existing operator experience, independent composition and supported Mac/reference path. They do not prove general customer provisioning, physical devices, installed Cloudflare-extension acceptance, market demand or production identity/memory security. Portable AI State uses fictional data only. Woodhouse orchestrates work without becoming a customer runtime dependency.",
+          "reviewed_at": "2026-10-13",
+          "sort_order": 10,
           "public_safe": true
         }
       }
@@ -4278,6 +4319,29 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "A dated aggregate read, not a gameplay counter or a unique-person measure. No synthetic activity, demand or absence-of-players conclusion follows."
+        }
+      },
+      {
+        "id": "evidence-app-composer-operator-2026-10-13",
+        "slug": "app-composer-operator-2026-10-13",
+        "status": "published",
+        "data": {
+          "title": "App Composer · verified operator release",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-13",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-13",
+          "claim": "Composer serves the exact merged release with independent composition, supported Get Ready/Hello Init and a nontechnical setup guide.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "verified",
+          "occurred_at": "2026-10-13",
+          "reviewed_at": "2026-10-13",
+          "summary": "Composer PR #59 is deployed at source 355062445c7cb0d0656f7c560bdcad708198dc83, Worker 8d0dfd67-a862-4572-b739-e8dd99af53cf. Guarded verification checks the root, mounted source pins and anonymous admin boundary. Hello PR #3 released source 32b42a75ee81fc2949c5421e6c45152ffd1baa9d, Worker 14026ecd-c1ee-4e11-9bfa-4275d1e278bd; its changed greeting was observed over HTTPS. Public release evidence records the separate remaining gates.",
+          "source_label": "App Composer public release evidence and canonical GitHub #11",
+          "source_url": "https://composer.loftwah.com/release",
+          "revision": "355062445c7cb0d0656f7c560bdcad708198dc83",
+          "public_safe": true,
+          "proof_boundary": "Existing operator credentials/account/domain, supported reference and browser evidence only. Fresh-user provisioning, physical devices and independent portable-state security/provider recovery remain unproven."
         }
       }
     ],
