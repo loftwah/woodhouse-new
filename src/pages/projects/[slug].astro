@@ -6,7 +6,7 @@ import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
 import { listProjectRecords, getProjectRecord } from "../../content/repository";
-import { getSiteMetadata } from "../../data/site-metadata";
+import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
 
@@ -44,7 +44,8 @@ const nextProjects = allProjects.projects.filter((item) => item.slug !== project
 const reviewDateLabel = formatReviewDate(project?.reviewDate) ?? "Review date unavailable";
 const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
-const placeholder = `/og/projects/${project.slug}.svg`;
+const artworkFallback = getArtworkFallback(project);
+const placeholder = artworkFallback.image;
 const socialPreview = "/og/project-dossier-preview.jpg";
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const capabilityResult = await listPublicCapabilities();
@@ -132,12 +133,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       alt={
         siteMeta
           ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
-          : `Woodhouse illustration for ${project.name}.`
+          : artworkFallback.alt
       }
       loading="eager"
       decoding="async"
       data-fallback-src={siteMeta ? placeholder : undefined}
-      data-fallback-alt={siteMeta ? `Woodhouse illustration for ${project.name}.` : undefined}
+      data-fallback-alt={siteMeta ? artworkFallback.alt : undefined}
+      data-fallback-credit={siteMeta ? artworkFallback.credit : undefined}
     />
     <figcaption>
       <span>
