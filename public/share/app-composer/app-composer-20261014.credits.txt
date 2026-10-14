@@ -1,0 +1,15 @@
+App Composer — From setup to software.
+15-second product film, reviewed and approved for publication 14 October 2026.
+
+Actual App Composer public interface, with fictional Studio Cedar demonstration data.
+Original AI-generated paper assembly art; native App Composer mark and Space Grotesk typography.
+Music: Pixel Box Theory by Loftwah, Cartridge Funk; excerpt 10.836–25.836 seconds.
+https://fm.loftwah.com/album/cartridge-funk/
+Sound effects: Mixkit, SFX Free License.
+https://mixkit.co/license/#sfxFree
+Motion recipes adapted from video-shotcraft, Apache-2.0.
+https://github.com/Vincentwei1021/video-shotcraft
+Revision 13c74a707786872a18e3317e48c5c94011027620.
+Modified native branding, timing, framing and capture composition; omitted overview return and neon/glows.
+
+The film shows setup and authoring handoffs. It does not show an executed application build or deployment.

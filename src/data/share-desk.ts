@@ -139,6 +139,26 @@ type ShareMedia = {
 };
 export const gameMedia: ShareMedia[] = [
   {
+    id: "app-composer-studio-film-20261014",
+    project: "app-composer",
+    title: "App Composer \u00b7 From setup to software",
+    file: "/share/app-composer/app-composer-20261014.mp4",
+    kind: "video",
+    width: 1920,
+    height: 1080,
+    alt: "App Composer studio film showing environment preparation, editable content fields, a conditional form and the specification handoff to an agent.",
+    credit: "App Composer \u00b7 Music: Pixel Box Theory by Loftwah",
+    note: "14 October 2026 \u00b7 actual interface with fictional example data",
+    caption:
+      "From setup to software. Build with your agent. Keep the source.\nApp Composer: an agent-operated application studio for Cloudflare and EmDash.\nMusic: Pixel Box Theory by Loftwah.\nhttps://composer.loftwah.com/",
+    category: "gameplay",
+    poster: "/share/app-composer/app-composer-20261014.jpg",
+    duration: 15,
+    sha256: "d7a8d4325ea7be6bfb847e94b2eb3323922e6463635e1f5555ea87dc79be4e0e",
+    bytes: 3916856,
+    reviewedAt: "2026-10-14"
+  },
+  {
     id: "fighter-battle-1920x1080",
     project: "fighter",
     title: "Battle: Viking vs Grim Reaper",
