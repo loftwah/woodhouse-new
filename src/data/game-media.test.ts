@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFileSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { gameMedia, imageKind } from "./share-desk.ts";
+import { formatReviewDate } from "./review-date.ts";
 test("reviewed gallery media resolves to intact public files within delivery limits", () => {
   const ids = new Set<string>();
   for (const asset of gameMedia) {
@@ -10,9 +11,9 @@ test("reviewed gallery media resolves to intact public files within delivery lim
     ids.add(asset.id);
     assert.match(
       asset.file,
-      /^\/share\/(fighter|shoalshot|protocol-11|bubbles|loftwahfm)\/[a-zA-Z0-9/_.-]+$/
+      /^\/share\/(fighter|shoalshot|protocol-11|bubbles|loftwahfm|app-composer)\/[a-zA-Z0-9/_.-]+$/
     );
-    assert.equal(asset.reviewedAt, "2026-10-12");
+    assert.ok(formatReviewDate(asset.reviewedAt), `${asset.id} needs a valid review date`);
     assert.ok(asset.width > 0 && asset.height > 0);
     assert.ok(asset.caption.includes("https://"));
     assert.ok(!asset.caption.includes("/Users/") && !asset.alt.includes("/Users/"));

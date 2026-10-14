@@ -5,6 +5,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
+import GameMedia from "../../components/GameMedia.astro";
+import { gameMedia } from "../../data/share-desk";
 import { listProjectRecords, getProjectRecord } from "../../content/repository";
 import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
 import { formatReviewDate } from "../../data/review-date";
@@ -46,6 +48,9 @@ const snapshotSource = project?.snapshotSource ?? "No public snapshot is availab
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const artworkFallback = getArtworkFallback(project);
 const placeholder = artworkFallback.image;
+const studioFilm = gameMedia.find(
+  (asset) => asset.project === project.slug && asset.id === "app-composer-studio-film-20261014"
+);
 const socialPreview = "/og/project-dossier-preview.jpg";
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const capabilityResult = await listPublicCapabilities();
@@ -120,51 +125,66 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       </dl>
     </div>
   </section>
-  <figure
-    class="container dossier-preview"
-    aria-label={`Source artwork for ${project.name}`}
-    data-project-artwork
-    {...projectEntry?.edit.site_og_image}
-  >
-    <img
-      src={siteMeta?.image ?? placeholder}
-      width="1200"
-      height="630"
-      alt={
-        siteMeta
-          ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
-          : artworkFallback.alt
-      }
-      loading="eager"
-      decoding="async"
-      data-fallback-src={siteMeta ? placeholder : undefined}
-      data-fallback-alt={siteMeta ? artworkFallback.alt : undefined}
-      data-fallback-credit={siteMeta ? artworkFallback.credit : undefined}
-    />
-    <figcaption>
-      <span>
-        <strong data-artwork-status>
-          {siteMeta ? "LAST REVIEWED PROJECT-SITE DETAILS" : "WOODHOUSE ILLUSTRATION"}
-        </strong>
-        {siteMeta ? (
-          <>
-            <span class="dossier-preview__title">{siteMeta.title}</span>
-            <span class="dossier-preview__description">{siteMeta.description}</span>
-            <span class="dossier-preview__caption">
-              {project.previewCaption ?? "Artwork displayed directly from the project site."}
-            </span>
-          </>
-        ) : (
-          <span class="dossier-preview__description">Made for this dossier.</span>
+  {studioFilm ? (
+    <section class="container dossier-film" aria-label={`${project.name} product film`}>
+      <GameMedia asset={studioFilm} destination={project.siteUrl ?? `/projects/${project.slug}/`} />
+      <p class="film-links">
+        {project.siteUrl && (
+          <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
+            Visit {project.name} <span aria-hidden="true">↗</span>
+          </a>
         )}
-      </span>
-      {project.siteUrl && (
-        <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
-          Visit {project.name} <span aria-hidden="true">↗</span>
-        </a>
-      )}
-    </figcaption>
-  </figure>
+        <a href="/share/?project=app-composer&type=clips">More sharing options</a>
+        <a href={studioFilm.file.replace(/\.mp4$/, ".credits.txt")}>Film credits</a>
+      </p>
+    </section>
+  ) : (
+    <figure
+      class="container dossier-preview"
+      aria-label={`Source artwork for ${project.name}`}
+      data-project-artwork
+      {...projectEntry?.edit.site_og_image}
+    >
+      <img
+        src={siteMeta?.image ?? placeholder}
+        width="1200"
+        height="630"
+        alt={
+          siteMeta
+            ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
+            : artworkFallback.alt
+        }
+        loading="eager"
+        decoding="async"
+        data-fallback-src={siteMeta ? placeholder : undefined}
+        data-fallback-alt={siteMeta ? artworkFallback.alt : undefined}
+        data-fallback-credit={siteMeta ? artworkFallback.credit : undefined}
+      />
+      <figcaption>
+        <span>
+          <strong data-artwork-status>
+            {siteMeta ? "LAST REVIEWED PROJECT-SITE DETAILS" : "WOODHOUSE ILLUSTRATION"}
+          </strong>
+          {siteMeta ? (
+            <>
+              <span class="dossier-preview__title">{siteMeta.title}</span>
+              <span class="dossier-preview__description">{siteMeta.description}</span>
+              <span class="dossier-preview__caption">
+                {project.previewCaption ?? "Artwork displayed directly from the project site."}
+              </span>
+            </>
+          ) : (
+            <span class="dossier-preview__description">Made for this dossier.</span>
+          )}
+        </span>
+        {project.siteUrl && (
+          <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
+            Visit {project.name} <span aria-hidden="true">↗</span>
+          </a>
+        )}
+      </figcaption>
+    </figure>
+  )}
   {project.slug === "pirates" && (
     <section class="container project-visual" aria-label="Pirates reconstruction path">
       <D2Diagram
@@ -290,6 +310,21 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
 </BaseLayout>
 
 <style>
+  .dossier-film {
+    margin-bottom: clamp(3rem, 6vw, 6rem);
+  }
+  .film-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.875rem;
+  }
+  .film-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 0.3em;
+  }
   .dossier-grid > .prose {
     min-width: 0;
     overflow-wrap: anywhere;

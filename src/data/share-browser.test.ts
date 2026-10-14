@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { gameMedia } from "./share-desk.ts";
 import { galleryMedia, galleryPage, galleryURL } from "./share-browser.ts";
-const projects = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
+const projects = [...new Set(gameMedia.map((asset) => asset.project))];
+const priorityProjects = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
 
 test("bounded gallery pages keep all reviewed media reachable exactly once", () => {
   const found: string[] = [];
@@ -20,10 +21,10 @@ test("bounded gallery pages keep all reviewed media reachable exactly once", () 
 });
 
 test("overview presents all five projects before repeating a project", () => {
-  const page = galleryPage(galleryMedia(projects, undefined, "images"));
+  const page = galleryPage(galleryMedia(priorityProjects, undefined, "images"));
   assert.deepEqual(
     page.items.slice(0, 5).map((asset) => asset.project),
-    projects
+    priorityProjects
   );
 });
 
