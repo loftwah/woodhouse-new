@@ -697,7 +697,7 @@ const dataPayload = {
               <h2>Is the app delivering value?</h2>
               <p>
                 {guestReceipts
-                  ? "Received guest postcards describe saved pending contributions, awaiting moderation. Optional reporting can miss submissions; their count does not establish approval, publication, unique people or a conversion rate."
+                  ? "Received guest postcards count contributions accepted as pending for moderation. This is an admission count, not the current queue size. Optional reporting can miss submissions; it does not establish approval, publication, unique people or a conversion rate."
                   : "This snapshot does not report guest postcard receipts. Opens and mixed actions cannot establish that someone successfully submitted a postcard."}
               </p>
               {guestReceipts?.value === null && (

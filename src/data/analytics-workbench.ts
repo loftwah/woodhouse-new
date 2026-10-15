@@ -84,7 +84,7 @@ export const measureChoices = [
     key: "guest_postcards_received",
     label: "Guest postcards received",
     meaning:
-      "New guest postcards recorded after Guestbook saves them as pending. They await moderation. Optional reporting can miss submissions; receipts do not establish approval, publication or unique people."
+      "New guest postcards recorded after Guestbook accepts them as pending for moderation. This counts admissions, not the current queue size. Optional reporting can miss submissions; receipts do not establish approval, publication or unique people."
   },
   {
     key: "inspection_completed",
