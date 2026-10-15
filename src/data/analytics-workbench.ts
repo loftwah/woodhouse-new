@@ -129,6 +129,7 @@ const gameMeasures: MeasureKey[] = [
   "returning_browsers"
 ];
 type ProductView = {
+  family: "game" | "app" | "audience" | "listening";
   label: string;
   defaultMeasure: MeasureKey;
   keys: MeasureKey[];
@@ -136,6 +137,7 @@ type ProductView = {
   description: string;
 };
 const gameView: ProductView = {
+  family: "game",
   label: "Play & engagement",
   defaultMeasure: "game_starts",
   keys: gameMeasures,
@@ -145,6 +147,7 @@ const gameView: ProductView = {
 };
 const productViews: Record<AnalyticsProject, ProductView> = {
   "app-composer": {
+    family: "app",
     label: "App usage & useful outcomes",
     defaultMeasure: "app_opens",
     keys: ["app_opens", "photo_opens", "inspection_completed", "actions"],
@@ -153,6 +156,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
       "Inspect bounded mini-app opens, Guestbook contribution views and completed Link Check inspections. Understand which useful outcomes are measured and which remain unknown."
   },
   woodhouse: {
+    family: "audience",
     label: "Audience & project discovery",
     defaultMeasure: "visits",
     keys: ["visits", "engaged_sessions", "project_opens", "browsers", "returning_browsers"],
@@ -161,6 +165,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
       "Explore Woodhouse visits, engaged sessions and deliberate project discovery, with dated charts and explicit audience measurement limits."
   },
   loftwahfm: {
+    family: "listening",
     label: "Audible listening",
     defaultMeasure: "listening_seconds",
     keys: [
@@ -193,6 +198,15 @@ export function resolveMeasure(project: AnalyticsProject | null, requested?: str
     choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
     choices[0]!
   );
+}
+export function measureForProjectSwitch(
+  from: AnalyticsProject | null,
+  to: AnalyticsProject | null,
+  current: string
+) {
+  const previous = productView(from),
+    next = productView(to);
+  return resolveMeasure(to, previous && next && previous.family !== next.family ? null : current);
 }
 export function reportMetric(
   project: AnalyticsProject,

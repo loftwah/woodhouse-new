@@ -7,7 +7,8 @@ import {
   measuresFor,
   resolveMeasure,
   productView,
-  reportMetric
+  reportMetric,
+  measureForProjectSwitch
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric } from "./portfolio-analytics.ts";
 import { reportSvg } from "./portfolio-card.ts";
@@ -56,6 +57,19 @@ test("product defaults remain meaningful even while their source is unavailable"
   assert.equal(resolveMeasure("fighter", "replays").key, "game_replays");
   assert.equal(resolveMeasure("shoalshot", "game_replays").key, "game_replays");
   assert.equal(resolveMeasure("loftwahfm", "game_listening_seconds").key, "game_listening_seconds");
+});
+test("project switches reset across product families and retain comparable game drilldowns", () => {
+  assert.equal(measureForProjectSwitch("woodhouse", "fighter", "visits").key, "game_starts");
+  assert.equal(
+    measureForProjectSwitch("fighter", "bubbles", "active_seconds").key,
+    "active_seconds"
+  );
+  assert.equal(
+    measureForProjectSwitch("app-composer", "loftwahfm", "app_opens").key,
+    "listening_seconds"
+  );
+  assert.equal(measureForProjectSwitch(null, "fighter", "game_replays").key, "game_replays");
+  assert.equal(measureForProjectSwitch("app-composer", null, "photo_opens").key, "photo_opens");
 });
 test("source key compatibility does not mix site attention with active gameplay", () => {
   const time = { ...metric, key: "active_seconds", value: 60 };

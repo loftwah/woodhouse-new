@@ -29,7 +29,8 @@ import {
   measuresFor,
   resolveMeasure,
   productView,
-  reportMetric
+  reportMetric,
+  measureForProjectSwitch
 } from "../data/analytics-workbench";
 export const prerender = false;
 Astro.cache.set(false);
@@ -178,7 +179,12 @@ function pageLink(
   } else q.set("days", String(window.days));
   const project = changes.project === undefined ? selected : changes.project;
   if (project) q.set("project", project);
-  q.set("measure", resolveMeasure(project ?? null, changes.measure ?? measure.key).key);
+  q.set(
+    "measure",
+    changes.project !== undefined
+      ? measureForProjectSwitch(selected, project ?? null, changes.measure ?? measure.key).key
+      : resolveMeasure(project ?? null, changes.measure ?? measure.key).key
+  );
   if (qaOff) q.set("analytics", "off");
   return `/activity/?${q}`;
 }
