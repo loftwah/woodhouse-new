@@ -36,6 +36,25 @@ export type PortfolioReport = {
   createdAt: string;
   days: number;
   projects: { project: AnalyticsProject; report: ProjectAnalytics | null }[];
+  analysis?: PortfolioAnalysis;
+};
+export type PortfolioAnalysis = {
+  schema: "woodhouse.weekly-analysis/1";
+  findings: {
+    project: AnalyticsProject;
+    metric: string;
+    label: string;
+    unit: Metric["unit"];
+    from: string;
+    to: string;
+    previous: number;
+    value: number;
+    changePercent: number;
+    newBest: boolean;
+    comparedWeeks: number;
+    source: ProjectAnalytics["source"];
+    nextAction: string;
+  }[];
 };
 const analyticsSources: Record<AnalyticsProject, string> = {
   woodhouse: "https://woodhouse.loftwah.com/api/portfolio-analytics?project=woodhouse",
@@ -273,7 +292,7 @@ export function weeklyRecord(
     weeks.push({ from, to, value: rows.reduce((sum, d) => sum + d.value, 0) });
   }
   const latest = weeks[0];
-  if (!latest || weeks.length < 2 || latest.value === 0) return null;
+  if (!latest || weeks.length < 2) return null;
   const previous = weeks[1]!;
   // Missing recent days must not silently turn an older week into "last week"
   // or compare nonadjacent windows as the immediately preceding period.
@@ -292,4 +311,66 @@ export function weeklyRecord(
         : null,
     comparedWeeks: weeks.length
   };
+}
+
+/** Scheduled snapshots and readers use the same conservative, versioned analysis. */
+export function analysePortfolio(
+  projects: PortfolioReport["projects"],
+  now = Date.now()
+): PortfolioAnalysis {
+  const findings: PortfolioAnalysis["findings"] = [];
+  for (const { project, report } of projects) {
+    if (!report || report.coverage.quality !== "exact") continue;
+    const candidates: PortfolioAnalysis["findings"] = [];
+    for (const metric of report.metrics) {
+      if (
+        ![
+          "game_starts",
+          "game_completions",
+          "active_seconds",
+          "app_opens",
+          "actions",
+          "listening_seconds",
+          "listening_starts",
+          "visits",
+          "project_opens"
+        ].includes(metric.key)
+      )
+        continue;
+      const week = weeklyRecord(metric, report.coverage, now);
+      if (
+        !week ||
+        week.comparison === null ||
+        Math.abs(week.value - week.previous) / week.previous < 0.25
+      )
+        continue;
+      // Avoid turning a handful of events or seconds into an operational alert.
+      const minimumBaseline = metric.unit === "seconds" ? 600 : 20;
+      const minimumChange = metric.unit === "seconds" ? 300 : 10;
+      if (week.previous < minimumBaseline || Math.abs(week.value - week.previous) < minimumChange)
+        continue;
+      candidates.push({
+        project,
+        metric: metric.key,
+        label: metric.label,
+        unit: metric.unit,
+        from: week.from,
+        to: week.to,
+        previous: week.previous,
+        value: week.value,
+        changePercent: week.comparison,
+        newBest: week.newBest,
+        comparedWeeks: week.comparedWeeks,
+        source: report.source,
+        nextAction:
+          week.comparison < 0
+            ? "Check collection health and releases in these weeks before attributing the fall to audience behaviour."
+            : "Inspect the corresponding product activity and releases before attributing the increase to a particular change."
+      });
+    }
+    // One substantial finding per project, prioritising the largest relative movement.
+    candidates.sort((a, b) => Math.abs(b.changePercent) - Math.abs(a.changePercent));
+    if (candidates[0]) findings.push(candidates[0]);
+  }
+  return { schema: "woodhouse.weekly-analysis/1", findings };
 }
