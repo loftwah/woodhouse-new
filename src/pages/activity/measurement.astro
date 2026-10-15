@@ -66,11 +66,12 @@ export const prerender = false;
     <h2>What stays private</h2>
     <p>
       These three sources create a random tab-session identifier. It expires after 30 minutes of
-      inactivity and does not identify a returning browser. We store a one-way hash, event IDs and
-      timestamps with a 90-day retention window to deduplicate reports. Expired records are removed
-      during collection or the hourly reporting refresh. A short-lived hash of the IP address limits
-      request volume; the address itself is never stored. No email, account ID, save, precise
-      location, page URL or raw referrer is collected by this collector.
+      inactivity. Without the separate optional choice below, it does not identify a returning
+      browser. We store a one-way hash, event IDs and timestamps with a 90-day retention window to
+      deduplicate reports. Expired records are removed during collection or the hourly reporting
+      refresh. A short-lived hash of the IP address limits request volume; the address itself is
+      never stored. No email, account ID, save, precise location, page URL or raw referrer is
+      collected by this collector.
     </p>
     <p>
       Daily totals and saved public reports contain aggregate numbers and may be kept indefinitely.
@@ -95,6 +96,30 @@ export const prerender = false;
       <code>?analytics=off</code> option; Bubbles provides an explicit opt-in in its settings. There
       is no shared account or cross-project browser identity.
     </p>
+    <h2>Optional: recognise a returning Woodhouse browser</h2>
+    <p>
+      Off by default. You can allow Woodhouse to remember a random identifier on this browser for up
+      to 90 days. This adds visits to the reporting-browser count and recognises an earlier,
+      different tab session, even on the same day. It does not identify a person, link devices, join
+      products or measure cohort retention. Anonymous reporting works without this choice.
+    </p>
+    <p>
+      The identifier stays on this origin; the collector stores only a project-scoped one-way hash
+      with private visit associations for 90 days. Daily charts and period totals count distinct
+      retained identifiers separately. Rotating or clearing storage and expired history hide
+      returns. Revoking this choice stops future browser associations and attempts to remove the
+      local token; it does not erase previously accepted private associations or saved aggregate
+      reports.
+    </p>
+    <p>
+      <button type="button" data-browser-return-choice aria-pressed="false">
+        Allow optional Woodhouse browser-return measurement
+      </button>{" "}
+      <span role="status" data-browser-return-status></span>
+    </p>
+    <noscript>
+      <p>JavaScript is required to change browser measurement choices.</p>
+    </noscript>
     <p>
       <a href="/activity/">Return to the public reports</a>
     </p>
@@ -122,7 +147,20 @@ export const prerender = false;
     const off = label();
     if (off === null) return;
     // Revocation takes effect before persistence, including browsers that reject writes.
-    if (!off) window.dispatchEvent(new Event("woodhouse:analytics-disable"));
+    if (!off) {
+      window.dispatchEvent(new Event("woodhouse:analytics-disable"));
+      // Independent cleanup attempts: one rejected storage operation cannot skip the others.
+      try {
+        localStorage.setItem("woodhouse:analytics-browser-consent", "0");
+      } catch {
+        /* Revoked in memory. */
+      }
+      try {
+        localStorage.removeItem("woodhouse:analytics-browser-token");
+      } catch {
+        /* Revoked in memory. */
+      }
+    }
     try {
       localStorage.setItem("woodhouse:analytics-opt-out", off ? "0" : "1");
       location.reload();
@@ -131,6 +169,104 @@ export const prerender = false;
         status.textContent = off
           ? "Reporting remains off. This browser could not save the new choice."
           : "Reporting is off on this page. This browser could not save the choice for future pages. Use ?analytics=off in the address or try again.";
+    }
+  });
+  const returnButton = document.querySelector<HTMLButtonElement>("[data-browser-return-choice]");
+  const returnStatus = document.querySelector<HTMLElement>("[data-browser-return-status]");
+  let returnRevoked = false;
+  const excluded = () =>
+    location.hostname !== "woodhouse.loftwah.com" ||
+    location.search.includes("_preview") ||
+    navigator.webdriver ||
+    navigator.doNotTrack === "1" ||
+    (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl ||
+    new URLSearchParams(location.search).has("qa") ||
+    new URLSearchParams(location.search).get("analytics") === "off";
+  const returnState = () => {
+    try {
+      const on =
+        !returnRevoked &&
+        !excluded() &&
+        localStorage.getItem("woodhouse:analytics-opt-out") !== "1" &&
+        localStorage.getItem("woodhouse:analytics-browser-consent") === "1";
+      if (returnButton) {
+        returnButton.textContent = on
+          ? "Turn off optional browser-return measurement"
+          : "Allow optional Woodhouse browser-return measurement";
+        returnButton.setAttribute("aria-pressed", String(on));
+      }
+      return on;
+    } catch {
+      if (returnStatus)
+        returnStatus.textContent =
+          "Browser storage is unavailable. Optional browser-return measurement is off.";
+      return false;
+    }
+  };
+  returnState();
+  window.addEventListener("woodhouse:browser-returns-storage-failed", () => {
+    returnRevoked = true;
+    returnState();
+    if (returnStatus)
+      returnStatus.textContent =
+        "Optional browser-return measurement is off on this page because the identifier could not be saved. Anonymous reporting can continue.";
+  });
+  window.addEventListener("woodhouse:analytics-disable", () => {
+    returnRevoked = true;
+    returnState();
+  });
+  // The collector runs earlier than this page script; retrieve any initial persistence failure.
+  window.dispatchEvent(new Event("woodhouse:browser-returns-status"));
+  returnButton?.addEventListener("click", () => {
+    if (returnState()) {
+      returnRevoked = true;
+      window.dispatchEvent(new Event("woodhouse:browser-returns-disable"));
+      let saved = true;
+      try {
+        localStorage.setItem("woodhouse:analytics-browser-consent", "0");
+      } catch {
+        saved = false;
+      }
+      try {
+        localStorage.removeItem("woodhouse:analytics-browser-token");
+      } catch {
+        saved = false;
+      }
+      returnState();
+      if (returnStatus)
+        returnStatus.textContent = saved
+          ? "Optional browser-return measurement is off. Anonymous reporting can continue."
+          : "Optional browser-return measurement is off on this page. This browser could not save every change; future pages may still remember the old choice. Turn off all reporting or use ?analytics=off.";
+      return;
+    }
+    try {
+      if (excluded() || localStorage.getItem("woodhouse:analytics-opt-out") === "1") {
+        if (returnStatus)
+          returnStatus.textContent =
+            "Optional browser-return measurement remains off while reporting is disabled or a privacy signal excludes this visit.";
+        return;
+      }
+      localStorage.setItem("woodhouse:analytics-browser-consent", "1");
+      if (localStorage.getItem("woodhouse:analytics-browser-consent") !== "1")
+        throw new Error("Choice was not saved");
+      location.reload();
+    } catch {
+      returnRevoked = true;
+      window.dispatchEvent(new Event("woodhouse:browser-returns-disable"));
+      try {
+        localStorage.setItem("woodhouse:analytics-browser-consent", "0");
+      } catch {
+        /* Revoked in memory. */
+      }
+      try {
+        localStorage.removeItem("woodhouse:analytics-browser-token");
+      } catch {
+        /* Revoked in memory. */
+      }
+      returnState();
+      if (returnStatus)
+        returnStatus.textContent =
+          "Optional browser-return measurement remains off. This browser could not save the choice.";
     }
   });
 </script>

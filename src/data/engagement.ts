@@ -35,6 +35,7 @@ export type EngagementEvent = {
   seconds: number;
   mode: string;
   target: string;
+  browserToken?: string;
 };
 function parseEngagement(raw: unknown): EngagementEvent | null {
   if (
@@ -58,9 +59,15 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
           "event",
           "seconds",
           "mode",
-          "target"
+          "target",
+          "browserToken"
         ].includes(k)
     )
+  )
+    return null;
+  if (
+    raw.browserToken !== undefined &&
+    (typeof raw.browserToken !== "string" || !uuid.test(raw.browserToken))
   )
     return null;
   const mode =
@@ -105,7 +112,8 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
     event: raw.event,
     seconds,
     mode,
-    target
+    target,
+    ...(typeof raw.browserToken === "string" ? { browserToken: raw.browserToken } : {})
   };
 }
 async function hash(value: string) {
@@ -200,6 +208,9 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
   const eventId = await hash(
     `${event.project}:${["visit", "engaged"].includes(event.event) ? `${event.sessionId}:${event.event}` : event.eventId}`
   );
+  const browser = event.browserToken
+    ? await hash(`woodhouse.browser-return/1:${event.project}:${event.browserToken.toLowerCase()}`)
+    : null;
   await db.batch([
     db
       .prepare(
@@ -225,6 +236,20 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
         event.seconds,
         timestamp
       ),
+    ...(browser && event.event === "visit"
+      ? [
+          db
+            .prepare(
+              "INSERT OR IGNORE INTO wh_analytics_browser_visits(project,session_hash,browser_hash,day,received_at) SELECT ?,?,?,?,? WHERE EXISTS(SELECT 1 FROM wh_analytics_events WHERE project=? AND event_id=? AND kind='visit')"
+            )
+            .bind(event.project, session, browser, day, timestamp, event.project, eventId),
+          db
+            .prepare(
+              "INSERT OR IGNORE INTO wh_analytics_browser_coverage(project,started_at) VALUES(?,?)"
+            )
+            .bind(event.project, timestamp)
+        ]
+      : []),
     ...(event.target
       ? [
           db
@@ -242,6 +267,9 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
             )
         ]
       : []),
+    db
+      .prepare("DELETE FROM wh_analytics_browser_visits WHERE received_at<?")
+      .bind(timestamp - 90 * 86400),
     db.prepare("DELETE FROM wh_analytics_events WHERE received_at<?").bind(timestamp - 90 * 86400),
     db.prepare("DELETE FROM wh_analytics_sessions WHERE last_at<?").bind(timestamp - 90 * 86400),
     db.prepare("DELETE FROM wh_analytics_limits WHERE expires_at<?").bind(timestamp - 86400)
@@ -344,20 +372,89 @@ export async function localAnalytics(
         daily
       };
     });
+  // Only Woodhouse's reviewed client currently offers consent. Collector acceptance alone
+  // must never advertise that Protocol 11 or SHOALSHOT adopted browser measurement.
+  const browserStart =
+    project === "woodhouse"
+      ? await db
+          .prepare("SELECT started_at FROM wh_analytics_browser_coverage WHERE project=?")
+          .bind(project)
+          .first<{ started_at: number }>()
+      : null;
+  const retainedFrom = new Date(now - 90 * 86400000).toISOString().slice(0, 10);
+  const browserStartDay = browserStart
+    ? new Date(browserStart.started_at * 1000).toISOString().slice(0, 10)
+    : null;
+  // A UTC day intersecting expired raw history cannot support an exact period distinct.
+  const available =
+    browserStartDay !== null && period.to >= browserStartDay && period.from > retainedFrom;
+  const browserDaily = available
+    ? await db
+        .prepare(
+          `
+    SELECT v.day, COUNT(DISTINCT v.browser_hash) AS browsers,
+      COUNT(DISTINCT CASE WHEN EXISTS (
+        SELECT 1 FROM wh_analytics_browser_visits p WHERE p.project=v.project
+          AND p.browser_hash=v.browser_hash AND p.sequence<v.sequence AND p.received_at>=?
+      ) THEN v.browser_hash END) AS returning_browsers
+    FROM wh_analytics_browser_visits v WHERE v.project=? AND v.day>=? AND v.day<=? AND v.received_at>=?
+    GROUP BY v.day ORDER BY v.day`
+        )
+        .bind(
+          Math.floor(now / 1000) - 90 * 86400,
+          project,
+          period.from,
+          period.to,
+          Math.floor(now / 1000) - 90 * 86400
+        )
+        .all<{ day: string; browsers: number; returning_browsers: number }>()
+    : null;
+  const browserTotals = available
+    ? await db
+        .prepare(
+          `
+    SELECT COUNT(DISTINCT v.browser_hash) AS browsers,
+      COUNT(DISTINCT CASE WHEN EXISTS (
+        SELECT 1 FROM wh_analytics_browser_visits p WHERE p.project=v.project
+          AND p.browser_hash=v.browser_hash AND p.sequence<v.sequence AND p.received_at>=?
+      ) THEN v.browser_hash END) AS returning_browsers
+    FROM wh_analytics_browser_visits v WHERE v.project=? AND v.day>=? AND v.day<=? AND v.received_at>=?`
+        )
+        .bind(
+          Math.floor(now / 1000) - 90 * 86400,
+          project,
+          period.from,
+          period.to,
+          Math.floor(now / 1000) - 90 * 86400
+        )
+        .first<{ browsers: number; returning_browsers: number }>()
+    : null;
   for (const [key, label] of [
-    ["browsers", "Distinct browsers"],
+    ["browsers", "Reporting browsers"],
     ["returning_browsers", "Returning browsers"]
-  ])
+  ] as const) {
+    const daily: Metric["daily"] = [];
+    if (available && browserStartDay)
+      for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
+        const date = new Date(t).toISOString().slice(0, 10);
+        if (date < browserStartDay) continue;
+        daily.push({ date, value: browserDaily?.results.find((r) => r.day === date)?.[key] ?? 0 });
+      }
     metrics.push({
-      key: key!,
-      label: label!,
+      key,
+      label,
       unit: "count",
-      value: null,
-      quality: "unavailable",
+      value: browserTotals?.[key] ?? null,
+      quality: browserTotals ? "partial" : "unavailable",
       definition:
-        "Not measured: this source stores no persistent browser identity. Tab sessions cannot establish returning browsers.",
-      daily: []
+        project !== "woodhouse"
+          ? "Not measured: this product has not enabled optional browser-return measurement. Tab sessions cannot establish returns."
+          : key === "browsers"
+            ? "Distinct optionally consenting, project-scoped browser tokens with accepted visits in the selected UTC window. Period DISTINCT, not a sum of daily browser counts. Tokens rotate after 90 days; resets, multiple devices and privacy choices prevent interpreting these as people."
+            : "Distinct optionally consenting browser tokens with a visit in this UTC window and an earlier different accepted tab session in retained 90-day history, including same-day returns. Period DISTINCT, not a sum of daily returns. This is not cohort retention; expired earlier visits and token rotation hide returns.",
+      daily
     });
+  }
   return {
     schema: analyticsSchema,
     project,
@@ -372,7 +469,17 @@ export async function localAnalytics(
       limitations: [
         "Exact accepted event counters, not unique humans or anti-cheat proof. Blocking, opt-out, offline play and automated traffic affect coverage.",
         "DNT, GPC, designated QA and preview traffic are excluded. Production browser measurements start with this release; no historical backfill.",
-        "Current UTC day and collection-start day may be partial. Browser returns, cross-device retention and acquisition sources are not measured."
+        "Current UTC day and collection-start day may be partial. Cross-device retention, cohort retention and acquisition sources are not measured.",
+        ...(project === "woodhouse"
+          ? [
+              browserStart
+                ? `Optional browser measurement first accepted a consenting visit at ${new Date(browserStart.started_at * 1000).toISOString()}. Earlier browser history is unavailable.`
+                : "Optional browser measurement has not yet received a consenting visit; browser counts are unavailable.",
+              "Browser measures cover opt-in visits only and remain partial. Private project-scoped visit associations expire after 90 days; a window intersecting expired history is unavailable. Browser totals use retained period DISTINCT counts, never daily sums."
+            ]
+          : [
+              "Browser returns are unavailable until this product releases its own optional consent client."
+            ])
       ]
     },
     metrics,
