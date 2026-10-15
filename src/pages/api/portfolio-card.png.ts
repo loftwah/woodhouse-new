@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
     measure = url.searchParams.get("measure");
   if (
     !id ||
-    (measure !== null && !measureChoices.some((m) => m.key === measure)) ||
+    (measure !== null && measure !== "replays" && !measureChoices.some((m) => m.key === measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
       (k) => !["format", "report", "project", "download", "audit", "measure"].includes(k)

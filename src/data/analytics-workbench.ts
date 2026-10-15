@@ -1,4 +1,9 @@
-import { type Metric, type ProjectAnalytics, type ReportingWindow } from "./portfolio-analytics.ts";
+import {
+  type AnalyticsProject,
+  type Metric,
+  type ProjectAnalytics,
+  type ReportingWindow
+} from "./portfolio-analytics.ts";
 export const projectColours: Record<string, string> = {
   fighter: "#ff887e",
   bubbles: "#79d8ff",
@@ -40,7 +45,7 @@ export const measureChoices = [
       "Sessions meeting a source-defined attention threshold. Check each source definition; thresholds and collection coverage can differ."
   },
   {
-    key: "replays",
+    key: "game_replays",
     label: "Replays",
     meaning:
       "A subsequent gameplay launch linked to an earlier terminal result where the product can establish that sequence."
@@ -61,13 +66,25 @@ export const measureChoices = [
     key: "app_opens",
     label: "Mini-app opens",
     meaning:
-      "Observed mini-app opens. App Composer bounds its public counter; these are neither unique users nor completed outcomes."
+      "Recorded mini-app home-page loads. Reloads and bots can count. Counters have daily caps; an open does not establish a unique user or a completed task."
   },
   {
     key: "actions",
-    label: "Mini-app actions",
+    label: "Mixed app actions",
     meaning:
-      "Product-defined actions reported by mini-apps. An action counter alone does not establish a conversion or a successful creator outcome."
+      "Adds Guestbook contribution-page opens and completed Link Check inspections. These represent different tasks; their sum is not a conversion rate or a count of successful creators."
+  },
+  {
+    key: "photo_opens",
+    label: "Guestbook contribution opens",
+    meaning:
+      "Successful public Guestbook contribution-page HTML requests. Repeated opens may count. These are not image downloads, submissions, publications or unique people."
+  },
+  {
+    key: "inspection_completed",
+    label: "Completed Link Checks",
+    meaning:
+      "Link Check inspections reported by the owning app after completion. Repeated jobs may count; these are not unique users, outbound clicks or deployment checks."
   },
   {
     key: "listening_seconds",
@@ -82,12 +99,126 @@ export const measureChoices = [
       "Playback receipts with confirmed audible progression. Repeated plays count again. No unique listener identity is collected."
   },
   {
+    key: "game_listening_seconds",
+    label: "Game-attributed listening",
+    meaning:
+      "Accepted audible music time carrying the source’s game attribution. This remains listening time; it does not establish active gameplay or a distinct player."
+  },
+  {
+    key: "game_listening_starts",
+    label: "Game-attributed listening starts",
+    meaning:
+      "Confirmed listening starts carrying the source’s game attribution. Repeated plays count again; this does not count game launches or unique players."
+  },
+  {
     key: "project_opens",
     label: "Project discovery",
     meaning:
       "Recorded outbound project-open actions from Woodhouse. A click shows discovery intent; it does not establish downstream use or acquisition."
   }
 ] as const;
+type MeasureKey = (typeof measureChoices)[number]["key"];
+const gameMeasures: MeasureKey[] = [
+  "game_starts",
+  "game_completions",
+  "active_seconds",
+  "game_replays",
+  "visits",
+  "engaged_sessions",
+  "browsers",
+  "returning_browsers"
+];
+type ProductView = {
+  family: "game" | "app" | "audience" | "listening";
+  label: string;
+  defaultMeasure: MeasureKey;
+  keys: MeasureKey[];
+  headlines: MeasureKey[];
+  description: string;
+};
+const gameView: ProductView = {
+  family: "game",
+  label: "Play & engagement",
+  defaultMeasure: "game_starts",
+  keys: gameMeasures,
+  headlines: ["game_starts", "game_completions", "active_seconds"],
+  description:
+    "Explore recorded gameplay starts, completions, active play and return signals, with source-specific coverage and explicit measurement limits."
+};
+const productViews: Record<AnalyticsProject, ProductView> = {
+  "app-composer": {
+    family: "app",
+    label: "App usage & useful outcomes",
+    defaultMeasure: "app_opens",
+    keys: ["app_opens", "photo_opens", "inspection_completed", "actions"],
+    headlines: ["app_opens", "photo_opens", "inspection_completed"],
+    description:
+      "Inspect bounded mini-app opens, Guestbook contribution views and completed Link Check inspections. Understand which useful outcomes are measured and which remain unknown."
+  },
+  woodhouse: {
+    family: "audience",
+    label: "Audience & project discovery",
+    defaultMeasure: "visits",
+    keys: ["visits", "engaged_sessions", "project_opens", "browsers", "returning_browsers"],
+    headlines: ["visits", "engaged_sessions", "project_opens"],
+    description:
+      "Explore Woodhouse visits, engaged sessions and deliberate project discovery, with dated charts and explicit audience measurement limits."
+  },
+  loftwahfm: {
+    family: "listening",
+    label: "Audible listening",
+    defaultMeasure: "listening_seconds",
+    keys: [
+      "listening_seconds",
+      "listening_starts",
+      "game_listening_seconds",
+      "game_listening_starts"
+    ],
+    headlines: ["listening_seconds", "listening_starts"],
+    description:
+      "Explore accepted audible listening and playback starts, with dated charts, source coverage and clear listening definitions."
+  },
+  fighter: gameView,
+  bubbles: gameView,
+  "protocol-11": gameView,
+  shoalshot: gameView
+};
+export function productView(project: AnalyticsProject | null) {
+  return project ? productViews[project] : null;
+}
+export function measuresFor(project: AnalyticsProject | null) {
+  const keys = productView(project)?.keys;
+  return keys ? keys.map((key) => measureChoices.find((m) => m.key === key)!) : [...measureChoices];
+}
+export function resolveMeasure(project: AnalyticsProject | null, requested?: string | null) {
+  const choices = measuresFor(project);
+  const canonical = requested === "replays" ? "game_replays" : requested;
+  return (
+    choices.find((m) => m.key === canonical) ??
+    choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
+    choices[0]!
+  );
+}
+export function measureForProjectSwitch(
+  from: AnalyticsProject | null,
+  to: AnalyticsProject | null,
+  current: string
+) {
+  const previous = productView(from),
+    next = productView(to);
+  return resolveMeasure(to, previous && next && previous.family !== next.family ? null : current);
+}
+export function reportMetric(
+  project: AnalyticsProject,
+  metrics: Metric[] | undefined,
+  key: string
+) {
+  // Woodhouse's active_seconds describe site attention, not active gameplay.
+  // A shared source key alone does not establish the same product meaning.
+  return measuresFor(project).some((m) => m.key === key)
+    ? metrics?.find((m) => m.key === key)
+    : undefined;
+}
 export function dateDays(period: ReportingWindow) {
   return Array.from({ length: period.days }, (_, i) =>
     new Date(Date.parse(period.from) + i * 86400000).toISOString().slice(0, 10)
@@ -146,13 +277,16 @@ export function svgPlot(
     1,
     ...series.flatMap((s) => s.values.filter((x): x is number => x !== null))
   );
-  const yMax = Math.max(1, Math.ceil(max / 5) * 5),
+  const magnitude = 10 ** Math.floor(Math.log10(max / 4));
+  const multiple = [1, 2, 2.5, 5, 10].find((value) => value >= max / 4 / magnitude)!;
+  const step = Math.max(1, Math.ceil(multiple * magnitude));
+  const yMax = Math.ceil(max / step) * step,
     x = (i: number) => left + (period.days === 1 ? plotW / 2 : (i / (period.days - 1)) * plotW),
     y = (v: number) => top + plotH - (v / yMax) * plotH;
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Daily activity chart; exact values are in the chart data table"><g font-family="system-ui,sans-serif" font-size="12" fill="#a9b8d0">`;
-  for (let i = 0; i <= 4; i++) {
-    const yy = top + (plotH * i) / 4;
-    svg += `<path d="M${left} ${yy}H${width - right}" stroke="#263349"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end">${Math.round(yMax * (1 - i / 4)).toLocaleString("en-AU")}</text>`;
+  for (let value = yMax; value >= 0; value -= step) {
+    const yy = y(value);
+    svg += `<path d="M${left} ${yy}H${width - right}" stroke="#263349"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end">${value.toLocaleString("en-AU")}</text>`;
   }
   const dates = dateDays(period);
   const tickIndices = [...new Set([0, Math.floor((period.days - 1) / 2), period.days - 1])];

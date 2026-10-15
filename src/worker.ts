@@ -30,7 +30,7 @@ function wantsPrivateCaching(request: Request, url: URL) {
     request.headers.get("cookie") ?? ""
   );
   return (
-    request.method !== "GET" ||
+    (request.method !== "GET" && request.method !== "HEAD") ||
     url.pathname.startsWith("/_emdash/") ||
     url.searchParams.has("_preview") ||
     editMode

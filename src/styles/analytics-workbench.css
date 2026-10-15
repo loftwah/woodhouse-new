@@ -145,6 +145,11 @@
   line-height: 1.15;
   margin: 0 0 0.35rem;
 }
+.product-view-label {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
 .workbench-heading p {
   color: var(--muted);
   font-size: 0.8rem;
@@ -306,6 +311,8 @@
   padding: 0.5rem 0 1rem;
 }
 .metric-strip > div {
+  display: grid;
+  grid-template-rows: 1fr auto auto;
   min-width: 120px;
   flex: 1;
   border-right: 1px solid #26364c;
@@ -317,7 +324,7 @@
 .metric-strip dt {
   font-size: 0.72rem;
   color: var(--copy);
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .metric-strip dt .source-dot {
   margin-right: 0.3rem;

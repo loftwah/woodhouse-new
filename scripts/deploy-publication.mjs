@@ -172,7 +172,9 @@ const analyticsSchemaObjects = [
   "wh_analytics_daily",
   "wh_analytics_limits",
   "wh_analytics_reports",
-  "wh_analytics_rollup"
+  "wh_analytics_rollup",
+  "wh_analytics_browser_visits",
+  "wh_analytics_browser_coverage"
 ];
 const analyticsSchema = json(
   run("pnpm", [
