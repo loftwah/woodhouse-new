@@ -2060,8 +2060,8 @@
           "name": "App Composer",
           "index": "10",
           "discipline": "Development tools · agent-operated setup",
-          "title": "Before an idea, make the environment work.",
-          "summary": "App Composer prepares a development environment, configures apps through portable specifications and connects independently maintained mini-apps. Its operator release includes a reusable Get Ready engine, a first-setup guide and a live photo-to-showcase composition. Full fresh-user provisioning remains unfinished.",
+          "title": "A creator home, built from apps you own.",
+          "summary": "App Composer prepares an authorised environment and connects independently maintained mini-apps. Loftwah’s live reference stack brings Linkarooie profile cards, moderated guest postcards and a native owner studio together. The platform remains reusable; full fresh-user provisioning and the wider creator dashboard remain unfinished.",
           "why": "Getting started often requires a person to join accounts, tools and DNS before they can make anything. The useful outcome is an agent that prepares and verifies that environment, explains the few human steps and proves a real deployment before asking for an app idea.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
@@ -2177,6 +2177,19 @@
           "source_description": "Portfolio intelligence supplied by MP, reconciled with canonical project source, owning release and interaction receipts, and public origins on 13 October 2026. Public-safe derived conclusions only.",
           "scope": "Fighter, SHOALSHOT, Bubbles, Protocol 11 and LoftwahFM have new dated status records. Other projects keep their prior review dates. Radio versions and evidence stages are reviewed separately from gameplay quality and audience measurement. App Composer is added from its public repository, exact deployed release and browser proof; historical project reviews remain dated.",
           "editorial_notes": "The morning report predates the later Protocol 11 delivery. New result-sharing paths are delivered, with local/unverified or anonymous text boundaries. No commit counts, confidence scores, private account details, complete campaign, physical-device or demand claims are adopted.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-16",
+        "slug": "2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Built to be used · 16 October 2026",
+          "reviewed_at": "2026-10-16",
+          "source_description": "MP-supplied portfolio and creator-stack information, checked against current product source, owning release receipts and public production pages and aggregate endpoints on 16 October 2026. Public-safe derived conclusions only.",
+          "scope": "New status and evidence for App Composer, Fighter, Bubbles, Protocol 11, SHOALSHOT and LoftwahFM. The other projects retain their earlier review dates. Existing radio-client adoption evidence keeps its own dates and versions.",
+          "editorial_notes": "The published creator profile and guest contribution path supersede the earlier reference-stack proposal. Product activity, app access and audible listening retain separate units. No private profile catalogue, raw report, account details, audience totals or unqualified candidate is published.",
           "public_safe": true
         }
       }
@@ -2552,9 +2565,9 @@
           "snapshot": "$ref:snapshot-2026-10-10",
           "project_key": "loftwahfm",
           "snapshot_key": "2026-10-10",
-          "state": "Music and original shows published \u00b7 game adoption underway",
+          "state": "Music and original shows published · game adoption underway",
           "state_tone": "active",
-          "current": "The public Radio collection, station catalogue and game profiles are available. The published @loftwahfm/radio-client 1.0.0 archive matches SHA-256 ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0. Profiles use manifest schema 1 / client major 1 and default to off, clean and speech-disabled. SHOALSHOT has merged client 1.0.0; Protocol 11 has a source implementation in draft PR #207. Bubbles records active integration work. Fighter and Pirates remain planned in this review. Two dated original shows, Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits, are now published for replay.",
+          "current": "The public Radio collection, station catalogue and game profiles are available. The published @loftwahfm/radio-client 1.0.0 archive matches SHA-256 ab3ea200fab88d46e6e06b5fa5c42456c058b4d49f3031f42659ac88157b8eb0. Profiles use manifest schema 1 / client major 1 and default to off, clean and speech-disabled. SHOALSHOT has merged client 1.0.0; Protocol 11 has a source implementation in draft PR #207. Bubbles records active integration work. Fighter and Pirates remain planned in this review. Two dated original shows, Dead Air Department — Press Start and Smoko Circuit — Member Benefits, are now published for replay.",
           "next_proof": "Each game must publish its installed client version, exact deployed revision and real in-game listening/lifecycle evidence before adoption is verified. Upstream autonomous refresh and full format/acting qualification remain open.",
           "proof_boundary": "Public manifest and package checks establish upstream availability and compatibility. Public edition pages establish publication of the first curated shows. Reviewed SHOALSHOT source establishes implementation, with deployment and live game verification still unestablished here. No physical Safari, human performance approval, commercial demand or venue-roadmap completion is claimed.",
           "reviewed_at": "2026-10-10",
@@ -2844,6 +2857,120 @@
           "proof_boundary": "Production source and browser receipts establish the existing operator experience, independent composition and supported Mac/reference path. They do not prove general customer provisioning, physical devices, installed Cloudflare-extension acceptance, market demand or production identity/memory security. Portable AI State uses fictional data only. Woodhouse orchestrates work without becoming a customer runtime dependency.",
           "reviewed_at": "2026-10-13",
           "sort_order": 10,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-16",
+        "slug": "app-composer-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-16",
+          "state": "A creator stack you can visit",
+          "state_tone": "active",
+          "current": "Linkarooie now presents Loftwah’s public profile, curated cards and a pinned App Composer milestone. The same independently owned app runs on its own hostname and inside Composer. Guestbook offers a separate guest contribution path that admits pending postcards for owner moderation. Native EmDash administration and the coordinated Linkarooie identity are released. Public app reporting distinguishes opens, contribution-page views, completed Link Checks and newly received pending postcards.",
+          "next_proof": "Complete the remaining native owner Publish/Hide and Remove-confirm observations, then prove the wider creator workflow and fresh-user setup. Rich profile tags and settings file import/export remain draft work. Grouped discovery, richer media, private creator analytics and the complete dashboard remain open.",
+          "proof_boundary": "Release receipts and public-page checks establish the current reference stack. API publication and public visual checks do not complete native owner interaction, independent customer onboarding, physical devices or commercial demand. Opens can include reloads and bots; pending receipts are neither approvals nor published entries. Unrecorded receipts remain unavailable.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 10,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-fighter-2026-10-16",
+        "slug": "fighter-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-16",
+          "state": "Fight activity and optional browser returns are live",
+          "state_tone": "active",
+          "current": "Fighter’s source-owned aggregate report now separates fight starts, terminal results and observed active gameplay from tab visits. A deliberate same-tab Quick Fight replay has its own definition. Settings offers returning-browser recognition as a separate choice, off by default; the reviewed release includes immediate revocation when persistent storage fails. Custom UTC windows and collection boundaries are visible in Woodhouse.",
+          "next_proof": "Use comparable post-collection history to see whether players finish fights and deliberately launch another. Keep improving whole-game presentation and observe physical phone play, audio balance and native sharing.",
+          "proof_boundary": "Exact production and scoped browser receipts were reviewed; Woodhouse did not repeat a game playthrough. Opted-in browsers are not people or cohort retention. Earlier unmarked QA history remains visible but is excluded from clean growth/record comparisons. Independently releasable game variants remain proposed.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 2,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-bubbles-2026-10-16",
+        "slug": "bubbles-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-16",
+          "state": "Opt-in gameplay reporting with clear collection limits",
+          "state_tone": "amber",
+          "current": "Bubbles now publishes opt-in starts, completed games, observed active play and returning opted-in browser measures from its own API. Revoking consent suppresses reporting immediately, including when browser storage cannot be changed. Native custom UTC windows preserve missing and expired history. The static game and API have separate exact deployment receipts.",
+          "next_proof": "Fix the tracked lower-star Puzzle award mismatch and finish held product/qualification work. Read the new collection as a partial opted-in population; observe physical sharing and listening separately.",
+          "proof_boundary": "The current release is owner-preview delivery with scoped desktop/phone browser evidence, not full formal qualification or physical-device acceptance. The original API deployment smoke saw an older version during propagation; later exact live verification established the new version without rewriting that failure. Pre-collection history stays unavailable. Existing Classic exports remain local unverified results.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-protocol-11-2026-10-16",
+        "slug": "protocol-11-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-16",
+          "state": "Four-seat tables, clearer play and anonymous activity",
+          "state_tone": "active",
+          "current": "Protocol 11 now deliberately supports two to four players total. Released Journey, bot, history and sharing work is joined by hand sorting, clearer remote-state instructions and readable desktop drop refusals. Its anonymous tab-based gameplay reporting is included in the current production source; QA traffic is excluded. The latest release receipt verifies the deployed assets and scoped real-domain browser cases.",
+          "next_proof": "Finish qualification of the held phone-hand clearance candidate through the game’s own resource and release gates. Observe physical table/phone play, Journey pacing and native sharing. Check real eligible collection independently of the excluded QA runs.",
+          "proof_boundary": "Reviewed production source is 65fe18c5. The phone-hand clearance candidate remains draft and undeployed. The latest scoped browser matrix is not an uninterrupted full-suite or physical acceptance result. Anonymous tab reports do not identify returning people. Existing radio-client and one-round-film evidence retain their earlier boundaries.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 4,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-shoalshot-2026-10-16",
+        "slug": "shoalshot-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-16",
+          "state": "Regular-dive reporting implemented; release still held",
+          "state_tone": "amber",
+          "current": "The existing live game retains its finished-dive image/caption export and native LoftwahFM controls. New source adds anonymous regular-dive visits, starts, terminal summaries, repeat play and observed active seconds through Woodhouse’s collector. Practice/Zen, historical recovery and privacy-denied activity are excluded. The accompanying Settings geometry evidence has been refreshed against the actual disclosure.",
+          "next_proof": "Qualify the combined exact source through the existing game release path, then verify its live identity and eligible collection. Physical phone play, listening and result sharing remain separate observations.",
+          "proof_boundary": "The analytics implementation and refreshed geometry evidence are merged source, not a qualified or deployed analytics release. The earlier failed release remains failed. Woodhouse’s available aggregate endpoint does not prove that the game client is live or that real players were measured; no historical gameplay is invented.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 3,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-16",
+        "slug": "loftwahfm-2026-10-16",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-16",
+          "state": "Source-owned listening reports with comparable windows",
+          "state_tone": "active",
+          "current": "LoftwahFM’s exact deployed release supplies custom inclusive UTC listening windows from its existing aggregate store. It reports starts and audible progression separately from gameplay and from its sampled analytics pipeline. Marked production checks are excluded; collection, retained history and a dated comparison boundary travel with the report. Woodhouse keeps radio listening in its own view.",
+          "next_proof": "Wait for comparable complete listening periods before making growth or record claims. Keep improving continuous My Mix and unattended editorial production, with human listening and physical sharing observed independently.",
+          "proof_boundary": "A source-owned listening receipt is neither a unique listener nor a game start. Older unmarked verification cannot be separated or subtracted, so pre-boundary history cannot establish clean growth. The broader React Doctor check still fails on unchanged baseline findings; the owning sanctioned release checks and live verification passed separately.",
+          "reviewed_at": "2026-10-16",
+          "sort_order": 7,
           "public_safe": true
         }
       }
@@ -3475,12 +3602,12 @@
         "slug": "loftwahfm-original-shows-2026-10-10",
         "status": "published",
         "data": {
-          "title": "LoftwahFM \u00b7 first original shows published",
+          "title": "LoftwahFM · first original shows published",
           "project": "$ref:project-loftwahfm",
           "snapshot": "$ref:snapshot-2026-10-10",
           "project_key": "loftwahfm",
           "snapshot_key": "2026-10-10",
-          "claim": "Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits are published dated original shows available for replay.",
+          "claim": "Dead Air Department — Press Start and Smoko Circuit — Member Benefits are published dated original shows available for replay.",
           "evidence_kind": "production verification",
           "evidence_state": "reviewed",
           "occurred_at": "2026-10-10",
@@ -3498,7 +3625,7 @@
         "slug": "loftwahfm-radio-protocol-11-client-1-0-0-implementation-2026-10-10",
         "status": "published",
         "data": {
-          "title": "Protocol 11 \u00b7 client implementation in draft review",
+          "title": "Protocol 11 · client implementation in draft review",
           "project": "$ref:project-protocol-11",
           "snapshot": "$ref:snapshot-2026-10-10",
           "project_key": "protocol-11",
@@ -4342,6 +4469,144 @@
           "revision": "355062445c7cb0d0656f7c560bdcad708198dc83",
           "public_safe": true,
           "proof_boundary": "Existing operator credentials/account/domain, supported reference and browser evidence only. Fresh-user provisioning, physical devices and independent portable-state security/provider recovery remain unproven."
+        }
+      },
+      {
+        "id": "evidence-app-composer-usage-2026-10-16",
+        "slug": "app-composer-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Creator profile and moderated guest path released",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-16",
+          "claim": "Public Linkarooie pages and the owning exact-source receipts establish the live reference creator stack, a pinned milestone and pending-only guest contribution boundaries.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. Composer and independently deployed Linkarooie identities agree with the owning release record. Native owner Publish/Hide and Remove-confirm interaction remain partial; API curation and public visual checks are separate evidence.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://composer.loftwah.com/release",
+          "revision": "be34558931b193ac932170d880d3ccd4bd800dea",
+          "public_safe": true,
+          "proof_boundary": "Composer and independently deployed Linkarooie identities agree with the owning release record. Native owner Publish/Hide and Remove-confirm interaction remain partial; API curation and public visual checks are separate evidence."
+        }
+      },
+      {
+        "id": "evidence-fighter-usage-2026-10-16",
+        "slug": "fighter-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Source-owned fight reporting and optional returns released",
+          "project": "$ref:project-fighter",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "fighter",
+          "snapshot_key": "2026-10-16",
+          "claim": "The reviewed release adds tab engagement, deliberately linked Quick Fight replays, optional returning-browser measurement and bounded historical windows.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. Owning release and live public adapter checked. Browser identities are opt-in and partial. Historical QA exposure prevents clean pre-boundary growth comparisons; no new game playthrough or physical observation was performed here.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://fighter.loftwah.com/api/portfolio-analytics?days=7",
+          "revision": "ec914d67570d902231b691c61fe17b975e3a69f0",
+          "public_safe": true,
+          "proof_boundary": "Owning release and live public adapter checked. Browser identities are opt-in and partial. Historical QA exposure prevents clean pre-boundary growth comparisons; no new game playthrough or physical observation was performed here."
+        }
+      },
+      {
+        "id": "evidence-bubbles-usage-2026-10-16",
+        "slug": "bubbles-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Opt-in reporting and consent revocation released",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-16",
+          "claim": "The game and API deployment receipts plus the current public adapter establish opt-in reporting, custom UTC windows and fail-closed consent revocation.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. The receipt-only main merge is separate from the deployed runtime revision. Later exact verification followed an initial propagation-related smoke failure. Owner-preview and scoped browser proof do not complete formal qualification or physical acceptance.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://api.bubbles.loftwah.com/api/portfolio-analytics?days=7",
+          "revision": "ac8cb4c5136fc52c3170f07fce6f3bc4669f9a5c",
+          "public_safe": true,
+          "proof_boundary": "The receipt-only main merge is separate from the deployed runtime revision. Later exact verification followed an initial propagation-related smoke failure. Owner-preview and scoped browser proof do not complete formal qualification or physical acceptance."
+        }
+      },
+      {
+        "id": "evidence-protocol-11-usage-2026-10-16",
+        "slug": "protocol-11-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Current table release and anonymous measurement source",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-16",
+          "claim": "The current released source contains anonymous gameplay measurement and the deliberate two-to-four-player rule. Its latest production receipt includes readable desktop drop refusals and exact asset verification.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. Owning source and release receipt reviewed. Synthetic production QA sent no engagement events; that exclusion is not evidence of real audience collection. The later phone clearance draft has not shipped.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://protocol11.loftwah.com/",
+          "revision": "65fe18c575119b1308d668f1f024465429fcfa67",
+          "public_safe": true,
+          "proof_boundary": "Owning source and release receipt reviewed. Synthetic production QA sent no engagement events; that exclusion is not evidence of real audience collection. The later phone clearance draft has not shipped."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-usage-2026-10-16",
+        "slug": "shoalshot-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Regular-dive measurement awaits release qualification",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-16",
+          "claim": "Anonymous regular-dive measurement is merged, followed by refreshed Settings geometry evidence. The combined source still needs independent exact-source release qualification and live proof.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. The linked site is the existing public game, not proof it runs the new measurement source. The failed earlier analytics qualification is retained. No production analytics adoption or real-user total is claimed.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://shoalshot.loftwah.com/",
+          "revision": "0faa3107ea16e4574ef24e496aaa80e07ae825f8",
+          "public_safe": true,
+          "proof_boundary": "The linked site is the existing public game, not proof it runs the new measurement source. The failed earlier analytics qualification is retained. No production analytics adoption or real-user total is claimed."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-usage-2026-10-16",
+        "slug": "loftwahfm-usage-2026-10-16",
+        "status": "published",
+        "data": {
+          "title": "Native UTC listening windows released",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-16",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-16",
+          "claim": "The source-owned adapter supplies bounded UTC windows, explicit missing history and a comparison boundary after marked production-verification exclusion began.",
+          "evidence_kind": "production evidence",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-16",
+          "reviewed_at": "2026-10-16",
+          "summary": "Reviewed current canonical source and owning release evidence against the public destination on 16 October 2026. Live aggregate source and owning release checked. Audible receipts are separate from gameplay, sampled analytics and unique listeners. The broader unchanged React Doctor baseline failure remains distinct from the passing sanctioned release.",
+          "source_label": "Current product source, owning release record and public destination",
+          "source_url": "https://fm.loftwah.com/api/portfolio-analytics?days=7",
+          "revision": "43e5f291fb7d32107e0cbd72ac32175f77f470b6",
+          "public_safe": true,
+          "proof_boundary": "Live aggregate source and owning release checked. Audible receipts are separate from gameplay, sampled analytics and unique listeners. The broader unchanged React Doctor baseline failure remains distinct from the passing sanctioned release."
         }
       }
     ],
@@ -6442,10 +6707,10 @@
         "data": {
           "title": "Shared music, independent games.",
           "kind": "Portfolio report",
-          "deck": "Listen to LoftwahFM\u2019s music and original radio, then follow the evidence for its shared client and the games adopting it.",
+          "deck": "Listen to LoftwahFM’s music and original radio, then follow the evidence for its shared client and the games adopting it.",
           "review_date": "2026-10-10",
           "source_reference": "Public FM player, station/game manifests and client archive inspected on 10 October 2026, alongside authorised canonical programme and consumer hand-offs. Private issue bodies and private source are not reproduced. This is a focused capability review; other dossiers retain their earlier dates. The public-safe FM readiness update and both public edition pages were reviewed later on the same day; published curated shows are distinct from autonomous refresh, human performance approval and in-game acceptance.",
-          "lead": "LoftwahFM\u2019s stations, first original shows and shared client are available. SHOALSHOT has merged the first reviewed client implementation, and Protocol 11 has a draft implementation. Game deployment and listening proof remain separate work.",
+          "lead": "LoftwahFM’s stations, first original shows and shared client are available. SHOALSHOT has merged the first reviewed client implementation, and Protocol 11 has a draft implementation. Game deployment and listening proof remain separate work.",
           "lesson": "Discover a compatible release, inspect the real consumer, and require its own deployed interaction evidence. A hand-off is a dependency to resolve, not proof of integration.",
           "public_safe": true,
           "projects": [
@@ -6499,7 +6764,7 @@
                     {
                       "_type": "span",
                       "_key": "s-2",
-                      "text": "The public Radio collection now includes two dated original shows: Dead Air Department \u2014 Press Start and Smoko Circuit \u2014 Member Benefits. Their synthetic presenter scenes and catalogue music are published for replay. Autonomous refresh and full format/acting qualification remain open; these shows do not establish commercial demand or verified use in a game.",
+                      "text": "The public Radio collection now includes two dated original shows: Dead Air Department — Press Start and Smoko Circuit — Member Benefits. Their synthetic presenter scenes and catalogue music are published for replay. Autonomous refresh and full format/acting qualification remain open; these shows do not establish commercial demand or verified use in a game.",
                       "marks": []
                     }
                   ]
@@ -6633,11 +6898,11 @@
               "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
               "published_shows": [
                 {
-                  "title": "Dead Air Department \u2014 Press Start",
+                  "title": "Dead Air Department — Press Start",
                   "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
                 },
                 {
-                  "title": "Smoko Circuit \u2014 Member Benefits",
+                  "title": "Smoko Circuit — Member Benefits",
                   "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
                 }
               ]
@@ -6889,11 +7154,11 @@
               "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
               "published_shows": [
                 {
-                  "title": "Dead Air Department \u2014 Press Start",
+                  "title": "Dead Air Department — Press Start",
                   "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
                 },
                 {
-                  "title": "Smoko Circuit \u2014 Member Benefits",
+                  "title": "Smoko Circuit — Member Benefits",
                   "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
                 }
               ],
@@ -8248,11 +8513,11 @@
               "shows_evidence_key": "loftwahfm-original-shows-2026-10-10",
               "published_shows": [
                 {
-                  "title": "Dead Air Department \u2014 Press Start",
+                  "title": "Dead Air Department — Press Start",
                   "url": "https://fm.loftwah.com/radio?edition=caf4d63b2a0a83c38aecf74dd933f8bcf37770cfea1f38a3a99acabd568e71bf"
                 },
                 {
-                  "title": "Smoko Circuit \u2014 Member Benefits",
+                  "title": "Smoko Circuit — Member Benefits",
                   "url": "https://fm.loftwah.com/radio?edition=53afe5da9e8f2742ab7df0c88bae043f918614abaa96f60294b5e3ed21e3ed5e"
                 }
               ],
@@ -8274,6 +8539,623 @@
                   "package_url": "https://fm.loftwah.com/radio/v1/client/1.2.0/loftwahfm-radio-client-1.2.0.tgz",
                   "package_sha256": "786dd53d3edddc1f382f67f86b7a5ec9dc60e5aba55960eca048d8a0d3414792",
                   "evidence_key": "loftwahfm-radio-client-1-2-0-supported-2026-10-11"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-built-to-be-used",
+        "slug": "built-to-be-used",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "Built to be used.",
+          "kind": "Portfolio report",
+          "deck": "A real creator home, clearer four-seat card play, and activity reports that ask what happens after a release. Each product keeps its own meaning and its own next proof.",
+          "review_date": "2026-10-16",
+          "source_reference": "MP-supplied portfolio and creator-stack notes reconciled with current canonical product source, dated owning release and browser receipts, public creator pages and source-owned aggregate endpoints on 16 October 2026. Public-safe derived conclusions; no private report, profile inventory or account material is reproduced.",
+          "lead": "The factory has more to show than a deployment: a creator home to visit, a postcard to leave, games to play and listening to inspect.",
+          "lesson": "Publish something useful, make it easy to try, then measure the action it actually supports.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-app-composer",
+            "$ref:project-fighter",
+            "$ref:project-bubbles",
+            "$ref:project-protocol-11",
+            "$ref:project-shoalshot",
+            "$ref:project-loftwahfm"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "creator",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A home for the things I make.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Loftwah’s Linkarooie profile now brings curated links and a pinned App Composer milestone into a creator home. Guestbook sits beside it: a visitor can contribute a pending postcard, while approval and private records stay with the owner. These are independently owned apps, also composed together in App Composer.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The useful demonstration is a real personal stack built from reusable parts. App Composer keeps its own product identity; another creator should eventually be able to follow the same path. The published reference is one working example, with fresh-user setup and the complete private creator dashboard still unfinished.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/showcase/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Visit Loftwah’s Linkarooie",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/guestbook/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open Loftwah’s guestbook",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/app-composer/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Explore App Composer",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "measurement",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What happens after the deploy?",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A release tells us what is available. The next question is what somebody does with it: starts a fight, finishes a table, listens to the radio or sends a postcard. Woodhouse now lets a reader inspect those different signals, choose dates and take away a frozen report with an image, caption and permalink.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The chart keeps each product’s meaning. Games start with game starts; App Composer starts with app opens; radio reports audible listening. Adding them into one engagement score would erase what was actually measured.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/activity/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Explore the activity workbench",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/activity/?project=app-composer"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "See the app activity view",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "games",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Play, finish, choose another.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Fighter’s report separates fight launches, terminal results and active gameplay. Its replay signal is deliberately narrow: another Quick Fight after an earlier same-tab terminal fight. Optional browser recognition is off by default. Bubbles reports an opted-in population and now handles consent revocation even when browser storage cannot be changed.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Those signals can help answer practical questions about a game’s flow. They do not identify people, prove cohort retention or establish commercial demand. Earlier QA exposure and fresh collection dates limit which periods can fairly be compared.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/fighter/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read Fighter’s current record",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/bubbles/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read Bubbles’ current record",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "table",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A smaller table, clearer play.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Protocol 11 now deliberately seats two to four players total. Hand sorting, Journey and bot changes, remote-state guidance and readable desktop drop refusals improve the released table. Anonymous gameplay reporting is present in the current production source; excluded QA runs establish no real audience activity.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A later phone-hand clearance change remains a draft awaiting qualification. It belongs on the next-proof list, not in a description of the live game.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://protocol11.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Play Protocol 11",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/protocol-11/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read the table’s evidence",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "dive",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The dive counter has to earn its release.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "SHOALSHOT’s source can now report anonymous regular-dive starts, terminal summaries, repeat play and active seconds. Practice and Zen stay outside that definition. Updated Settings geometry evidence describes the actual measurement disclosure.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That work has not cleared the game’s combined release gate. The existing game and finished-dive sharing remain available, but a healthy Woodhouse endpoint cannot prove the new game client is deployed. The source implementation and the live product keep separate labels.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/shoalshot/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the current SHOALSHOT dossier",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "radio",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Listening has its own clock.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "LoftwahFM reports accepted audible progression and listening starts from its source-owned aggregate store. Selected UTC windows, retained history and the start of comparable coverage travel with the figures. Radio listening stays separate from active game time.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Older unmarked production checks cannot be identified and subtracted after the fact. That history stays visible with its limitation; complete comparable periods must accumulate before it can support a clean growth claim.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/radio"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Listen to LoftwahFM",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/activity/listening/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Inspect the listening view",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "next",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The next useful test is small.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "For the creator stack, the cheap next check is whether a new visitor can find a game or music and understand the guest contribution boundary. For the games, inspect comparable post-collection starts, finishes and deliberate replay signals before changing a journey. These are validation questions, not findings about an audience.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "No promotion campaign, paid service or new product identity is required for that check. The held phone build, native owner interactions, physical play, human listening and broader creator workflow each retain their own next proof. Pirates, MAX, Club and Asset Hunter keep their earlier dated records.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/share/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Browse the share gallery",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/activity/measurement/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read measurement definitions and choices",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
                 }
               ]
             }

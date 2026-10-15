@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#080d19"/>
+<path d="M48 70H1152M48 548H1152" stroke="#34425e"/>
+<text x="48" y="48" font-family="Bricolage Grotesque" font-size="24" font-weight="700" fill="#e9ff49">WOODHOUSE</text>
+<text x="1152" y="48" text-anchor="end" font-family="Bricolage Grotesque" font-size="19" fill="#bac6da">16 October 2026</text>
+<text x="44" y="198" font-family="Bricolage Grotesque" font-size="110" font-weight="800" fill="#f4f7fd">Built to be used.</text>
+<text x="48" y="258" font-family="Bricolage Grotesque" font-size="28" fill="#bac6da">A creator home. A game to play. A reason to return.</text>
+<path d="M48 328H1152" stroke="#34425e"/>
+<path d="M405 352V510M793 352V510" stroke="#34425e"/>
+<text x="48" y="400" font-family="Bricolage Grotesque" font-size="46" font-weight="700" fill="#e9ff49">Make it yours.</text>
+<text x="437" y="400" font-family="Bricolage Grotesque" font-size="46" font-weight="700" fill="#79d8ff">Play a round.</text>
+<text x="825" y="400" font-family="Bricolage Grotesque" font-size="46" font-weight="700" fill="#ff746a">Press play.</text>
+<text x="48" y="450" font-family="Bricolage Grotesque" font-size="23" fill="#bac6da">Linkarooie + Guestbook</text>
+<text x="437" y="450" font-family="Bricolage Grotesque" font-size="23" fill="#bac6da">Starts, finishes, replays</text>
+<text x="825" y="450" font-family="Bricolage Grotesque" font-size="23" fill="#bac6da">Audible listening</text>
+<text x="48" y="492" font-family="Bricolage Grotesque" font-size="19" fill="#f4f7fd">Independently owned apps</text>
+<text x="437" y="492" font-family="Bricolage Grotesque" font-size="19" fill="#f4f7fd">Each game keeps its meaning</text>
+<text x="825" y="492" font-family="Bricolage Grotesque" font-size="19" fill="#f4f7fd">Its own clock and coverage</text>
+<text x="48" y="594" font-family="Bricolage Grotesque" font-size="21" fill="#bac6da">THE LOFTWAH SOFTWARE FACTORY</text>
+<text x="1152" y="594" text-anchor="end" font-family="Bricolage Grotesque" font-size="21" fill="#e9ff49">woodhouse.loftwah.com</text>
+</svg>
