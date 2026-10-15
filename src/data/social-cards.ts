@@ -11,6 +11,7 @@
  */
 const DISPATCH_SOCIAL_CARDS: readonly string[] = [
   "a-gate-for-what-the-source-proves",
+  "built-to-be-used",
   "eight-finish-lines",
   "i-didnt-mean-to-build-a-software-factory",
   "nine-projects-and-the-first-one-you-can-check",
