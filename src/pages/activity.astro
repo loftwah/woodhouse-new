@@ -441,6 +441,24 @@ const stale = !!report && Date.now() - Date.parse(report.createdAt) > 86400000;
         );
       })}
     </section>
+    {report?.analysis && report.analysis.findings.length > 0 && (
+      <section class="measurement-note" aria-labelledby="weekly-findings-heading">
+        <h2 id="weekly-findings-heading">What changed last week.</h2>
+        {report.analysis.findings.map((finding) => (
+          <p>
+            <strong>
+              {names.get(finding.project)} · {finding.label}
+            </strong>
+            : {formatMetric({ value: finding.value, unit: finding.unit })} against{" "}
+            {formatMetric({ value: finding.previous, unit: finding.unit })} in the preceding week (
+            {finding.changePercent > 0 ? "+" : ""}
+            {finding.changePercent}%). {finding.from}–{finding.to} · complete UTC weeks.{" "}
+            {finding.nextAction}
+          </p>
+        ))}
+        <p>These are changes in reported activity. No cause has been established.</p>
+      </section>
+    )}
     <section class="measurement-note">
       <h2>Attention has more than one shape.</h2>
       <p>

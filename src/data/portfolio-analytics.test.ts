@@ -7,11 +7,13 @@ import { readFileSync } from "node:fs";
 import { collectEngagement, localAnalytics } from "./engagement.ts";
 import {
   parseProjectAnalytics,
+  analysePortfolio,
   weeklyRecord,
   analyticsSchema,
-  type Metric
+  type Metric,
+  type ProjectAnalytics
 } from "./portfolio-analytics.ts";
-import { readPortfolioReport, createPortfolioReport } from "./portfolio-reports.ts";
+import { readPortfolioReport, createPortfolioReport, projectReport } from "./portfolio-reports.ts";
 import { reportSvg, reportFormats } from "./portfolio-card.ts";
 function database() {
   const sqlite = new DatabaseSync(":memory:");
@@ -206,13 +208,104 @@ test("records require two full exact equivalent weeks, never current or missing 
     null
   );
 });
+test("weekly analysis catches a genuine fall to zero without inventing causes or small-number alerts", () => {
+  const daily = [];
+  for (let t = Date.parse("2026-09-21"); t <= Date.parse("2026-10-15"); t += 86400000) {
+    const date = new Date(t).toISOString().slice(0, 10);
+    daily.push({ date, value: date >= "2026-10-05" && date <= "2026-10-11" ? 0 : 10 });
+  }
+  const data: ProjectAnalytics = {
+    schema: analyticsSchema,
+    project: "fighter",
+    generatedAt: new Date(now).toISOString(),
+    timezone: "UTC",
+    period: { from: "2026-09-16", to: "2026-10-15", days: 30, complete: false },
+    coverage: {
+      startedAt: "2026-09-20",
+      through: new Date(now).toISOString(),
+      quality: "exact",
+      limitations: []
+    },
+    metrics: [
+      {
+        key: "game_starts",
+        label: "Fight starts",
+        unit: "count",
+        value: 180,
+        quality: "exact",
+        definition: "Received starts",
+        daily
+      }
+    ],
+    source: {
+      endpoint: "https://fighter.loftwah.com/api/portfolio-analytics",
+      revision: "a".repeat(40)
+    }
+  };
+  const projects = [{ project: "fighter" as const, report: data }];
+  const analysis = analysePortfolio(projects, now);
+  assert.equal(analysis.findings.length, 1);
+  assert.equal(analysis.findings[0]?.changePercent, -100);
+  assert.equal(analysis.findings[0]?.value, 0);
+  assert.equal(analysis.findings[0]?.previous, 70);
+  assert.equal(analysis.findings[0]?.newBest, false);
+  assert.match(analysis.findings[0]!.nextAction, /Check collection health/);
+  const sampled = structuredClone(projects);
+  sampled[0]!.report.metrics[0]!.quality = "sampled";
+  assert.deepEqual(analysePortfolio(sampled, now).findings, []);
+  const missing = structuredClone(projects);
+  missing[0]!.report.metrics[0]!.daily = daily.filter((d) => d.date !== "2026-10-05");
+  assert.deepEqual(analysePortfolio(missing, now).findings, []);
+  const small = structuredClone(projects);
+  small[0]!.report.metrics[0]!.daily = daily.map((d) => ({ ...d, value: d.value ? 1 : 0 }));
+  assert.deepEqual(analysePortfolio(small, now).findings, []);
+  for (const [previous, latest, expected] of [
+    [201, 251, 0],
+    [201, 151, 0],
+    [200, 250, 1],
+    [200, 150, 1]
+  ]) {
+    const boundary = structuredClone(projects);
+    boundary[0]!.report.metrics[0]!.daily = daily.map((d) => ({
+      ...d,
+      value: d.date === "2026-09-28" ? previous! : d.date === "2026-10-05" ? latest! : 0
+    }));
+    assert.equal(analysePortfolio(boundary, now).findings.length, expected);
+  }
+  const view = projectReport(
+    {
+      schema: "woodhouse.portfolio-report/1",
+      id: "a".repeat(24),
+      createdAt: new Date(now).toISOString(),
+      days: 30,
+      projects,
+      analysis
+    },
+    null,
+    new Set(["woodhouse"])
+  );
+  assert.deepEqual(view.projects, []);
+  assert.deepEqual(view.analysis?.findings, []);
+});
 test("saved report stays immutable after new ingestion and emits three true image sizes", async () => {
-  const { db } = database();
+  const { db, sqlite } = database();
   await collectEngagement(request(payload()), db, now);
   const report = await createPortfolioReport(db, 7, new Set(["shoalshot"]), fetch, now);
   await collectEngagement(request(payload()), db, now + 1000);
   const frozen = await readPortfolioReport(db, report.id);
   assert.equal(frozen?.projects[0]?.report?.metrics.find((m) => m.key === "game_starts")?.value, 1);
+  assert.deepEqual(frozen?.analysis, { schema: "woodhouse.weekly-analysis/1", findings: [] });
+  sqlite
+    .prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?")
+    .run(
+      JSON.stringify({
+        ...report,
+        privateUserId: "private-marker",
+        analysis: { schema: "woodhouse.weekly-analysis/1", findings: [{ label: "private-marker" }] }
+      }),
+      report.id
+    );
+  assert(!JSON.stringify(await readPortfolioReport(db, report.id)).includes("private-marker"));
   for (const format of Object.keys(reportFormats) as (keyof typeof reportFormats)[]) {
     const svg = reportSvg(report, new Map([["shoalshot", "SHOALSHOT"]]), format);
     assert(svg.includes(`width="${reportFormats[format].width}"`));

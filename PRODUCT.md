@@ -59,6 +59,8 @@ Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after
 
 ## Portfolio analytics — reviewed 15 October 2026
 
+The hourly aggregate snapshots also run `woodhouse.weekly-analysis/1`. This first analysis reports substantial movement between the latest two complete adjacent UTC weeks, with exact coverage, a 25% threshold and minimum baseline/change volumes. A fall to zero remains visible. Findings explain what to investigate; they never assert a release caused a change. No finding is evidence of stability when history is insufficient. Acquisition, cross-visit retention for tab-only sources and automated release/error correlation remain programme work under #34.
+
 MP's #34 mission extends activity to Woodhouse, App Composer, Fighter, SHOALSHOT, Protocol 11, LoftwahFM and Bubbles. Woodhouse owns public reporting and coordination; products retain their own gameplay, saves, identities and release gates. The earlier no-collector scope is superseded only for the bounded anonymous event sink needed by this site and the static game integrations. Existing project-owned D1 reports are reused. No new SaaS, account service, database or paid commitment.
 
 `/activity/` reports 7/30/90-day product windows, explicit collection coverage and unavailable metrics. Radio remains separate at `/activity/listening/`. A saved report freezes aggregate figures for its permalink, caption and three PNG compositions. Exact received events do not establish unique people; returning audiences remain unavailable for tab-only sources. Complete-week records require exact daily history and comparable complete periods, and never manufacture history. Physical iPhone sharing still needs MP's hardware observation.

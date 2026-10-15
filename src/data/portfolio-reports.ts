@@ -2,6 +2,7 @@ import {
   analyticsProjects,
   loadProjectAnalytics,
   parseProjectAnalytics,
+  analysePortfolio,
   type AnalyticsProject,
   type PortfolioReport
 } from "./portfolio-analytics.ts";
@@ -26,7 +27,7 @@ export async function readPortfolioReport(
       !Array.isArray(report.projects)
     )
       return null;
-    return {
+    const safe = {
       ...report,
       projects: report.projects
         .filter((r) => analyticsProjects.includes(r.project))
@@ -36,6 +37,17 @@ export async function readPortfolioReport(
             ? parseProjectAnalytics(r.report, r.project, report.days, Date.parse(report.createdAt))
             : null
         }))
+    };
+    // Stored analysis is never trusted as public prose or an additional data source.
+    return {
+      schema: safe.schema,
+      id: safe.id,
+      createdAt: safe.createdAt,
+      days: safe.days,
+      projects: safe.projects,
+      ...(report.analysis?.schema === "woodhouse.weekly-analysis/1"
+        ? { analysis: analysePortfolio(safe.projects, Date.parse(safe.createdAt)) }
+        : {})
     };
   } catch {
     return null;
@@ -87,7 +99,8 @@ export async function createPortfolioReport(
     id,
     createdAt,
     days,
-    projects
+    projects,
+    analysis: analysePortfolio(projects, now)
   };
   await db
     .prepare("INSERT OR IGNORE INTO wh_analytics_reports(id,created_at,days,body) VALUES(?,?,?,?)")
@@ -100,11 +113,15 @@ export function projectReport(
   project: AnalyticsProject | null,
   publicIds: Set<string>
 ) {
+  const projects = report.projects.filter(
+    (p) => publicIds.has(p.project) && (!project || p.project === project)
+  );
   return {
     ...report,
-    projects: report.projects.filter(
-      (p) => publicIds.has(p.project) && (!project || p.project === project)
-    )
+    projects,
+    ...(report.analysis
+      ? { analysis: analysePortfolio(projects, Date.parse(report.createdAt)) }
+      : {})
   };
 }
 export function reportLink(id: string, project?: string | null) {
