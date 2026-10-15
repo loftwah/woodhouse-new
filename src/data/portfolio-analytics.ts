@@ -320,7 +320,9 @@ export function analysePortfolio(
 ): PortfolioAnalysis {
   const findings: PortfolioAnalysis["findings"] = [];
   for (const { project, report } of projects) {
-    if (!report || report.coverage.quality !== "exact") continue;
+    // Partial project coverage may describe unavailable browser metrics while a
+    // particular durable counter still has exact, complete daily history.
+    if (!report || !["exact", "partial"].includes(report.coverage.quality)) continue;
     const candidates: PortfolioAnalysis["findings"] = [];
     for (const metric of report.metrics) {
       if (

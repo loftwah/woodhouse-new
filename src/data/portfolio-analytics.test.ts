@@ -250,6 +250,9 @@ test("weekly analysis catches a genuine fall to zero without inventing causes or
   assert.equal(analysis.findings[0]?.previous, 70);
   assert.equal(analysis.findings[0]?.newBest, false);
   assert.match(analysis.findings[0]!.nextAction, /Check collection health/);
+  const partial = structuredClone(projects);
+  partial[0]!.report.coverage.quality = "partial";
+  assert.equal(analysePortfolio(partial, now).findings.length, 1);
   const sampled = structuredClone(projects);
   sampled[0]!.report.metrics[0]!.quality = "sampled";
   assert.deepEqual(analysePortfolio(sampled, now).findings, []);
@@ -295,16 +298,14 @@ test("saved report stays immutable after new ingestion and emits three true imag
   const frozen = await readPortfolioReport(db, report.id);
   assert.equal(frozen?.projects[0]?.report?.metrics.find((m) => m.key === "game_starts")?.value, 1);
   assert.deepEqual(frozen?.analysis, { schema: "woodhouse.weekly-analysis/1", findings: [] });
-  sqlite
-    .prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?")
-    .run(
-      JSON.stringify({
-        ...report,
-        privateUserId: "private-marker",
-        analysis: { schema: "woodhouse.weekly-analysis/1", findings: [{ label: "private-marker" }] }
-      }),
-      report.id
-    );
+  sqlite.prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?").run(
+    JSON.stringify({
+      ...report,
+      privateUserId: "private-marker",
+      analysis: { schema: "woodhouse.weekly-analysis/1", findings: [{ label: "private-marker" }] }
+    }),
+    report.id
+  );
   assert(!JSON.stringify(await readPortfolioReport(db, report.id)).includes("private-marker"));
   for (const format of Object.keys(reportFormats) as (keyof typeof reportFormats)[]) {
     const svg = reportSvg(report, new Map([["shoalshot", "SHOALSHOT"]]), format);
