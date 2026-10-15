@@ -47,6 +47,8 @@ export function reportSvg(
   }));
   const qualifier = (row: (typeof rows)[number]) => {
     if (!row.metric || row.metric.value === null) return "Not measured";
+    if (row.metric.key === "guest_postcards_received" && row.metric.quality === "partial")
+      return "Partial coverage";
     if (row.metric.quality === "bounded" || row.report?.coverage.quality === "bounded")
       return "Bounded count";
     if (row.metric.quality === "sampled" || row.report?.coverage.quality === "sampled")

@@ -102,6 +102,9 @@ const allRows = analyticsProjects
     colour: projectColours[project]!
   }));
 const rows = allRows.filter((r) => !selected || r.project === selected);
+const guestReceipts = allRows
+  .find((r) => r.project === "app-composer")
+  ?.data?.metrics.find((m) => m.key === "guest_postcards_received");
 const groups = [
   {
     label: "Gameplay",
@@ -111,7 +114,16 @@ const groups = [
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
   },
-  { label: "App usage", keys: ["app_opens", "photo_opens", "inspection_completed", "actions"] },
+  {
+    label: "App usage",
+    keys: [
+      "app_opens",
+      "guest_postcards_received",
+      "photo_opens",
+      "inspection_completed",
+      "actions"
+    ]
+  },
   {
     label: "Listening",
     keys: [
@@ -684,9 +696,19 @@ const dataPayload = {
             <section>
               <h2>Is the app delivering value?</h2>
               <p>
-                We do not yet measure creator activation, committed Guestbook submissions,
-                successful publications or outbound Linkarooie interactions in this public report.
-                Opens and mixed action totals cannot establish those outcomes.
+                {guestReceipts
+                  ? "Received guest postcards describe saved pending contributions, awaiting moderation. Optional reporting can miss submissions; their count does not establish approval, publication, unique people or a conversion rate."
+                  : "This snapshot does not report guest postcard receipts. Opens and mixed actions cannot establish that someone successfully submitted a postcard."}
+              </p>
+              {guestReceipts?.value === null && (
+                <p>
+                  No retained receipt measurement is available for these dates. History before the
+                  first retained observation is unknown; receipt counts expire after 35 days.
+                </p>
+              )}
+              <p>
+                Creator activation, successful publications and outbound Linkarooie interactions
+                remain unmeasured in this public report.
               </p>
               <p>
                 Repeat use, task completion rates and value over time need app-specific outcome
@@ -704,7 +726,7 @@ const dataPayload = {
                 <dt>Usage</dt>
                 <dd>
                   {selected === "app-composer"
-                    ? "Bounded app-open and action counters. These do not establish users, creator adoption or successful submissions."
+                    ? "Bounded access and task counters. Guest postcard receipts, where reported, are pending contributions; these signals do not establish users, creator activation or successful publication."
                     : `${available}/${rows.length} sources provide some activity. Reports are not verified people.`}
                 </dd>
               </div>

@@ -39,7 +39,7 @@ test("switching from games to apps selects app usage and keeps typed outcomes di
   assert.equal(resolveMeasure("app-composer", "inspection_completed").key, "inspection_completed");
   assert.deepEqual(
     measuresFor("app-composer").map((m) => m.key),
-    ["app_opens", "photo_opens", "inspection_completed", "actions"]
+    ["app_opens", "guest_postcards_received", "photo_opens", "inspection_completed", "actions"]
   );
   assert.match(resolveMeasure("app-composer", "actions").meaning, /different tasks/);
   assert.match(
@@ -47,6 +47,44 @@ test("switching from games to apps selects app usage and keeps typed outcomes di
     /not image downloads, submissions/
   );
   assert.doesNotMatch(productView("app-composer")!.description, /gameplay|players/);
+  assert.equal(
+    resolveMeasure("app-composer", "guest_postcards_received").key,
+    "guest_postcards_received"
+  );
+  assert.match(resolveMeasure("app-composer", "guest_postcards_received").meaning, /pending/);
+  assert.equal(resolveMeasure("fighter", "guest_postcards_received").key, "game_starts");
+});
+test("guest receipts retain unknown history and their partial first observation despite bounded source coverage", () => {
+  const data = {
+    ...source,
+    coverage: { ...source.coverage, through: "2026-10-17T12:00:00.000Z", quality: "bounded" }
+  } as ProjectAnalytics;
+  const receipts: Metric = {
+    ...metric,
+    key: "guest_postcards_received",
+    quality: "partial",
+    value: 2,
+    daily: [
+      { date: "2026-10-15", value: 2 },
+      { date: "2026-10-16", value: 0 },
+      { date: "2026-10-17", value: 0 }
+    ]
+  };
+  assert.deepEqual(dailyPoints(receipts, period), [null, 2, 0]);
+  assert.equal(dailyStatus(data, receipts, "2026-10-14"), "missing");
+  assert.equal(dailyStatus(data, receipts, "2026-10-15"), "partial");
+  assert.equal(dailyStatus(data, receipts, "2026-10-16"), "bounded");
+  assert.equal(dailyStatus(data, receipts, "2026-10-17"), "partial");
+  const later = {
+    ...receipts,
+    quality: "bounded" as const,
+    value: 0,
+    daily: receipts.daily.slice(1)
+  };
+  assert.equal(dailyStatus(data, later, "2026-10-16"), "bounded");
+  const unknown = { ...receipts, value: null, quality: "unavailable" as const, daily: [] };
+  assert.deepEqual(dailyPoints(unknown, period), [null, null, null]);
+  assert.equal(dailyStatus(data, unknown, "2026-10-16"), "missing");
 });
 test("product defaults remain meaningful even while their source is unavailable", () => {
   assert.equal(resolveMeasure("loftwahfm", "game_starts").key, "listening_seconds");
@@ -120,6 +158,38 @@ test("app report exports select useful app measures and retain their distinct fr
     assert(inspection.includes(">2</text>"));
     assert(!inspection.includes(">20</text>"));
     assert(inspection.includes("Bounded count"));
+    const oldReceipts = reportSvg(report, new Map(), format, "guest_postcards_received");
+    assert(oldReceipts.includes("Guest postcards received"));
+    assert(oldReceipts.includes("Not measured"));
+    const received = reportSvg(
+      {
+        ...report,
+        projects: [
+          {
+            project: "app-composer",
+            report: {
+              ...app,
+              metrics: [
+                ...app.metrics,
+                {
+                  ...metric,
+                  key: "guest_postcards_received",
+                  quality: "partial",
+                  value: 7,
+                  daily: [{ date: "2026-10-16", value: 7 }]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      new Map(),
+      format,
+      "guest_postcards_received"
+    );
+    assert(received.includes("measure=guest_postcards_received"));
+    assert(received.includes(">7</text>"));
+    assert(received.includes("Partial coverage"));
   }
 });
 test("chart preserves missing days as gaps, real zeroes, and source comparability boundaries", () => {
