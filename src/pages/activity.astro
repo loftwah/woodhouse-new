@@ -231,7 +231,49 @@ const dataPayload = {
       <header class="workbench-heading">
         <div>
           <h1>{title}</h1>
-          <p>Recorded activity. Evidence in context.</p>
+        </div>
+        <div class="date-toolbar">
+          <nav aria-label="Reporting period">
+            {[7, 30, 90].map((n) => (
+              <a
+                href={pageLink({ days: n })}
+                aria-current={
+                  !frozen && !Astro.url.searchParams.has("from") && window.days === n
+                    ? "page"
+                    : undefined
+                }
+              >
+                {n}d
+              </a>
+            ))}
+          </nav>
+          <form method="get" action="/activity/" class="custom-dates" data-date-form>
+            {selected && <input type="hidden" name="project" value={selected} />}
+            <input type="hidden" name="measure" value={measure.key} />
+            {qaOff && <input type="hidden" name="analytics" value="off" />}
+            <label>
+              From{" "}
+              <input
+                type="date"
+                name="from"
+                value={window.from}
+                max={new Date(now).toISOString().slice(0, 10)}
+                required
+              />
+            </label>
+            <label>
+              To{" "}
+              <input
+                type="date"
+                name="to"
+                value={window.to}
+                max={new Date(now).toISOString().slice(0, 10)}
+                required
+              />
+            </label>
+            <button type="submit">Apply dates</button>
+            <span>UTC · max 90 days</span>
+          </form>
         </div>
         <a class="share-jump" href="#share-report">
           Share report{" "}
@@ -251,49 +293,6 @@ const dataPayload = {
           Showing the last 30 days while you correct the range.
         </p>
       )}
-      <div class="date-toolbar">
-        <nav aria-label="Reporting period">
-          {[7, 30, 90].map((n) => (
-            <a
-              href={pageLink({ days: n })}
-              aria-current={
-                !frozen && !Astro.url.searchParams.has("from") && window.days === n
-                  ? "page"
-                  : undefined
-              }
-            >
-              {n}d
-            </a>
-          ))}
-        </nav>
-        <form method="get" action="/activity/" class="custom-dates" data-date-form>
-          {selected && <input type="hidden" name="project" value={selected} />}
-          <input type="hidden" name="measure" value={measure.key} />
-          {qaOff && <input type="hidden" name="analytics" value="off" />}
-          <label>
-            From{" "}
-            <input
-              type="date"
-              name="from"
-              value={window.from}
-              max={new Date(now).toISOString().slice(0, 10)}
-              required
-            />
-          </label>
-          <label>
-            To{" "}
-            <input
-              type="date"
-              name="to"
-              value={window.to}
-              max={new Date(now).toISOString().slice(0, 10)}
-              required
-            />
-          </label>
-          <button type="submit">Apply dates</button>
-          <span>UTC · max 90 days</span>
-        </form>
-      </div>
       <div class="snapshot-line">
         <span>
           {dateLabel(window.from)} – {dateLabel(window.to)} · {window.days}{" "}
@@ -421,22 +420,22 @@ const dataPayload = {
                 Reset zoom
               </button>
             </div>
-            <div class="day-inspector" data-day-inspector hidden>
-              <label>
-                Inspect UTC day{" "}
-                <input
-                  type="range"
-                  min="0"
-                  max={window.days - 1}
-                  value={window.days - 1}
-                  aria-label="Inspect UTC day"
-                  data-inspect-day
-                />
-              </label>
-              <output data-day-output aria-live="polite"></output>
-            </div>
             <details class="chart-data">
               <summary>Chart data & export</summary>
+              <div class="day-inspector" data-day-inspector hidden>
+                <label>
+                  Inspect UTC day{" "}
+                  <input
+                    type="range"
+                    min="0"
+                    max={window.days - 1}
+                    value={window.days - 1}
+                    aria-label="Inspect UTC day"
+                    data-inspect-day
+                  />
+                </label>
+                <output data-day-output aria-live="polite"></output>
+              </div>
               <p>
                 These are daily values for {measure.label.toLowerCase()}. A dash means unavailable.
                 Daily distinct-browser counts must not be added to estimate period-level people.

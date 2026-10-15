@@ -1076,3 +1076,40 @@
 .project-rail {
   min-width: 0;
 }
+.workbench-heading {
+  flex-wrap: wrap;
+  padding-block: 1rem;
+}
+.workbench-heading h1 {
+  font-size: clamp(1.7rem, 2.2vw, 2rem);
+  margin: 0;
+}
+.workbench-heading > .date-toolbar {
+  padding: 0;
+  border: 0;
+  flex: 1;
+  min-width: 0;
+  justify-content: flex-end;
+}
+.chart-data .day-inspector {
+  padding: 0.5rem 0 1rem;
+  border-top: 0;
+}
+@media (max-width: 1300px) {
+  .workbench-heading > .date-toolbar {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-between;
+  }
+  .workbench-heading .share-jump {
+    margin-left: auto;
+  }
+}
+@media (max-width: 720px) {
+  .workbench-heading > .date-toolbar {
+    margin-top: 0.5rem;
+  }
+  .workbench-heading h1 {
+    font-size: 1.7rem;
+  }
+}
