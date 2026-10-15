@@ -208,9 +208,14 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
   const eventId = await hash(
     `${event.project}:${["visit", "engaged"].includes(event.event) ? `${event.sessionId}:${event.event}` : event.eventId}`
   );
-  const browser = event.browserToken
-    ? await hash(`woodhouse.browser-return/1:${event.project}:${event.browserToken.toLowerCase()}`)
-    : null;
+  // Optional wire compatibility must not create identity history before a product's
+  // reviewed consent client is enabled. Other products still count anonymously.
+  const browser =
+    event.project === "woodhouse" && event.browserToken
+      ? await hash(
+          `woodhouse.browser-return/1:${event.project}:${event.browserToken.toLowerCase()}`
+        )
+      : null;
   await db.batch([
     db
       .prepare(

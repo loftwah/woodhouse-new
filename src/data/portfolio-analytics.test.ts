@@ -498,17 +498,6 @@ test("optional browser associations are project-scoped hashes, deduplicate sessi
   assert(!JSON.stringify(privateRows).includes(browserToken));
   assert(!JSON.stringify(privateRows).includes(session));
   assert(!JSON.stringify(report).includes(privateRows[0]!.browser_hash as string));
-  await collectEngagement(request(payload("visit", { browserToken })), db, now);
-  const gameHash = sqlite
-    .prepare("SELECT browser_hash FROM wh_analytics_browser_visits WHERE project='shoalshot'")
-    .get()!.browser_hash;
-  assert.notEqual(gameHash, privateRows[0]!.browser_hash);
-  assert.equal(
-    (await localAnalytics(db, "shoalshot", 7, now)).metrics.find((m) => m.key === "browsers")
-      ?.value,
-    null,
-    "Collector compatibility does not establish game client adoption"
-  );
   assert(parseProjectAnalytics(report, "woodhouse", 7, now + 3000));
 });
 test("browser totals use period DISTINCT and earlier retained sessions beyond the selected window", async () => {
@@ -618,4 +607,41 @@ test("forward browser tables are idempotent and leave existing schema/rollups in
     before
   );
   assert.equal(sqlite.prepare("SELECT version FROM core_migrations").get()!.version, "existing");
+});
+
+test("unsupported game browser tokens remain anonymous and cannot establish pre-adoption identity history", async () => {
+  const { db, sqlite } = database();
+  for (const [project, mode, origin] of [
+    ["shoalshot", "dive", "https://shoalshot.loftwah.com"],
+    ["protocol-11", "classic", "https://protocol11.loftwah.com"]
+  ] as const) {
+    assert.equal(
+      (
+        await collectEngagement(
+          request(payload("visit", { project, mode, browserToken }), { origin }),
+          db,
+          now
+        )
+      ).status,
+      204
+    );
+    const report = await localAnalytics(db, project, 7, now);
+    assert.equal(
+      report.metrics.find((m) => m.key === "visits")?.value,
+      1,
+      "Compatible optional fields do not block anonymous event counting"
+    );
+    for (const key of ["browsers", "returning_browsers"]) {
+      const metric = report.metrics.find((m) => m.key === key)!;
+      assert.equal(metric.value, null);
+      assert.equal(metric.quality, "unavailable");
+      assert.deepEqual(metric.daily, []);
+    }
+  }
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_visits").get()!.n, 0);
+  assert.equal(
+    sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_coverage").get()!.n,
+    0,
+    "Future adoption must start with its own real consent boundary"
+  );
 });
