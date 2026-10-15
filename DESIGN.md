@@ -46,6 +46,17 @@ The site is dark by design on every device. Do not follow the operating-system a
 - Nothing depends on hover. Do not hide diagrams on phones; include a text transcript for detail and assistive technology.
 - Preserve readable contrast, visible focus, useful image text and clear link purpose. Keep the page free of horizontal overflow.
 
+## Portfolio analytics boundary — reviewed 16 October 2026
+
+`/activity/` is an operational research workbench within the established Woodhouse world. Its compact Bricolage heading, ink surfaces, cyan selection, acid share action, tabular figures and one-pixel seams inherit the site identity. The 190px project rail, dominant single-measure chart and adjacent interpretation column belong to this surface; they do not prescribe the journal, dossiers or share gallery. The approved composition and built-world detail live in `.impeccable/surfaces/src-pages-activity-astro.md`.
+
+- Keep project, inclusive UTC dates and measure selection close to the chart. The four measure families organise a native selector; one chart carries one measure and unit. Source colour identifies a named project, while text identifies measurement quality. A missing observation stays a gap; a reported zero stays zero.
+- Keep the native Custom dates disclosure closed initially. On phones the project rail scrolls horizontally, the toolbar wraps and interpretation follows the chart. Show the selected measure's meaning before the plot without burying the plot beneath expanded forms or export tools.
+- The locally bundled ECharts SVG chart adds crosshair inspection, line/bar choice, zoom and named series toggles. Preserve the server SVG and permanent daily values/coverage table; keep keyboard day inspection and CSV export together in the native Chart data & export disclosure. Respect reduced motion and retain visible keyboard focus.
+- Put daily coverage, definitions, provenance and novice/business interpretation beside the measurement story. Frozen landscape, square and portrait PNGs carry the actual chart, adjacent source-quality labels, UTC context and a retrieval link on the report's serving origin. Compositions are authored exports of the same snapshot, not decorative chart illustrations. Runtime charts and controls need no generated raster assets.
+
+This design records inspectable activity and its limits. It supplies no visual shorthand for unique people, proven adoption, cohort retention, revenue or investment readiness. Preview, visual review, production verification and physical-device sharing remain separate evidence states.
+
 ## Review
 
 1. Can a new visitor tell who runs the factory, what agents do and how many products it spans?
