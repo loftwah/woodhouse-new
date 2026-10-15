@@ -129,6 +129,16 @@ test("privacy, QA, invalid origin and malformed payloads never increment", async
     (await collectEngagement(request(payload("active_time", { seconds: 31 })), db, now)).status,
     400
   );
+  assert.equal(
+    (await collectEngagement(request(payload("visit", { mode: "private@example.test" })), db, now))
+      .status,
+    400
+  );
+  for (const project of ["constructor", "__proto__", "toString"])
+    assert.equal(
+      (await collectEngagement(request({ ...payload(), project }), db, now)).status,
+      400
+    );
   assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_events").get()?.n, 0);
   assert.equal((await localAnalytics(db, "shoalshot", 7, now)).coverage.startedAt, null);
 });

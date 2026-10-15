@@ -41,7 +41,7 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
     !isObject(raw) ||
     raw.schema !== "woodhouse.engagement/1" ||
     typeof raw.project !== "string" ||
-    !origins[raw.project] ||
+    !Object.hasOwn(origins, raw.project) ||
     typeof raw.eventId !== "string" ||
     !uuid.test(raw.eventId) ||
     typeof raw.sessionId !== "string" ||
@@ -72,7 +72,9 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
           ? "site"
           : "";
   if (
-    (raw.event !== "visit" && !modes[raw.project]?.includes(mode)) ||
+    (raw.event === "visit"
+      ? mode !== "visit" && !modes[raw.project]?.includes(mode)
+      : !modes[raw.project]?.includes(mode)) ||
     (raw.project === "woodhouse" && raw.event.startsWith("game_")) ||
     (raw.project !== "woodhouse" && raw.event === "project_open")
   )
