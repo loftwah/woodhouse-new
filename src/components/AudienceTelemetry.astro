@@ -1,0 +1,146 @@
+---
+import type { WoodhouseProject } from "../content/repository";
+const { projects } = Astro.props as { projects: WoodhouseProject[] };
+const destinations = projects
+  .filter((p) => p.siteUrl)
+  .map((p) => ({ slug: p.slug, origin: new URL(p.siteUrl!).origin }));
+---
+
+<script
+  type="application/json"
+  id="audience-destinations"
+  set:html={JSON.stringify(destinations).replace(/</g, "\\u003c")}
+/>
+<script>
+  (() => {
+    if (
+      location.hostname !== "woodhouse.loftwah.com" ||
+      location.search.includes("_preview") ||
+      navigator.webdriver ||
+      navigator.doNotTrack === "1" ||
+      (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl ||
+      new URLSearchParams(location.search).has("qa") ||
+      new URLSearchParams(location.search).get("analytics") === "off"
+    )
+      return;
+    try {
+      if (localStorage.getItem("woodhouse:analytics-opt-out") === "1") return;
+    } catch {
+      return;
+    }
+    let sessionId: string;
+    let lastActivity = Date.now();
+    try {
+      const saved = JSON.parse(
+        sessionStorage.getItem("woodhouse:engagement-session") ?? "null"
+      ) as { id: string; at: number } | null;
+      if (saved && Date.now() - saved.at < 1800000) lastActivity = saved.at;
+      sessionId = saved && Date.now() - saved.at < 1800000 ? saved.id : crypto.randomUUID();
+      sessionStorage.setItem(
+        "woodhouse:engagement-session",
+        JSON.stringify({ id: sessionId, at: Date.now() })
+      );
+    } catch {
+      return;
+    }
+    const send = (event: string, extra: Record<string, string | number> = {}) => {
+      try {
+        if (localStorage.getItem("woodhouse:analytics-opt-out") === "1") return;
+      } catch {
+        return;
+      }
+      void fetch("/api/engagement", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          schema: "woodhouse.engagement/1",
+          project: "woodhouse",
+          eventId: crypto.randomUUID(),
+          sessionId,
+          event,
+          mode: "site",
+          ...extra
+        }),
+        keepalive: true,
+        credentials: "omit"
+      }).catch(() => {});
+    };
+    send("visit");
+    let previous = performance.now(),
+      lastInput = -Infinity,
+      active = 0,
+      pending = 0,
+      engaged = false;
+    const input = (event: Event) => {
+      if (event.isTrusted) {
+        if (Date.now() - lastActivity >= 1800000) {
+          flush();
+          sessionId = crypto.randomUUID();
+          active = 0;
+          pending = 0;
+          engaged = false;
+          send("visit");
+        }
+        lastActivity = Date.now();
+        lastInput = performance.now();
+        try {
+          sessionStorage.setItem(
+            "woodhouse:engagement-session",
+            JSON.stringify({ id: sessionId, at: Date.now() })
+          );
+        } catch {
+          /* Storage is optional. */
+        }
+      }
+    };
+    for (const type of ["pointerdown", "keydown", "wheel", "touchstart"])
+      window.addEventListener(type, input, { passive: true });
+    const flush = () => {
+      const seconds = Math.min(30, Math.floor(pending));
+      if (seconds > 0) {
+        send("active_time", { seconds });
+        pending -= seconds;
+      }
+    };
+    const timer = window.setInterval(() => {
+      const now = performance.now(),
+        delta = Math.min(1, Math.max(0, (now - previous) / 1000));
+      previous = now;
+      if (document.visibilityState !== "visible" || !document.hasFocus() || now - lastInput > 30000)
+        return;
+      active += delta;
+      pending += delta;
+      if (active >= 10 && !engaged) {
+        engaged = true;
+        send("engaged");
+      }
+      if (pending >= 15) flush();
+    }, 1000);
+    document.addEventListener("visibilitychange", () => {
+      previous = performance.now();
+      if (document.visibilityState !== "visible") flush();
+    });
+    window.addEventListener(
+      "pagehide",
+      () => {
+        clearInterval(timer);
+        flush();
+      },
+      { once: true }
+    );
+    const destinations = JSON.parse(
+      document.querySelector("#audience-destinations")?.textContent ?? "[]"
+    ) as { slug: string; origin: string }[];
+    document.addEventListener("click", (event) => {
+      if (!event.isTrusted) return;
+      const anchor = event.target instanceof Element ? event.target.closest("a") : null;
+      if (!anchor) return;
+      try {
+        const target = destinations.find((p) => p.origin === new URL(anchor.href).origin);
+        if (target) send("project_open", { target: target.slug });
+      } catch {
+        /* Non-URL links are not project discoveries. */
+      }
+    });
+  })();
+</script>

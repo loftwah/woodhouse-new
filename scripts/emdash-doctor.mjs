@@ -36,18 +36,24 @@ try {
   // EmDash 1.0.1 recognises only `scheduled: createScheduledHandler(`. The
   // publication wrapper is real maintenance wiring with a read-only guard,
   // which that textual detector cannot recognise. Verify this exact wiring
-  // and the wrapper's executable behavior rather than deleting the guard.
+  // and the wrappers' executable behavior rather than deleting the guard.
   const handler = checks.find((check) => check.name === "scheduler handler");
   const worker = await readFile(join(root, "src/worker.ts"), "utf8");
   if (
     handler?.status === "fail" &&
     handler.message ===
       'Cron Trigger is configured, but ./src/worker.ts does not export EmDash scheduled() maintenance — replace its Worker export with: export { default, PluginBridge } from "@emdash-cms/cloudflare/worker";' &&
-    worker.includes("scheduled: createPublicationScheduledHandler(createScheduledHandler())")
+    worker.includes("scheduled: createAnalyticsScheduledHandler(") &&
+    worker.includes("createPublicationScheduledHandler(createScheduledHandler())")
   ) {
     const policyTests = spawnSync(
       process.execPath,
-      ["--experimental-strip-types", "--test", "src/data/publication-policy.test.ts"],
+      [
+        "--experimental-strip-types",
+        "--test",
+        "src/data/publication-policy.test.ts",
+        "src/data/portfolio-analytics.test.ts"
+      ],
       { cwd: root, encoding: "utf8" }
     );
     if (policyTests.status !== 0) throw new Error("Publication scheduler behavior failed.");

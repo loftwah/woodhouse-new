@@ -135,7 +135,14 @@ export const GET: APIRoute = async ({ cache }) => {
     activity: {
       page: `${siteOrigin}/activity/`,
       aggregates: `${siteOrigin}/api/activity.json`,
-      metric: "reported audible seconds and playback starts over 30 days",
+      listeningPage: `${siteOrigin}/activity/listening/`,
+      reports: `${siteOrigin}/api/portfolio-report.json?report=<snapshot-id>`,
+      measurementChoices: `${siteOrigin}/activity/measurement/`,
+      contract: "woodhouse.portfolio-analytics/1",
+      periods: [7, 30, 90],
+      reviewedAt: "2026-10-15",
+      metric:
+        "Source-defined gameplay, application actions and listening. See each dated snapshot for coverage and unavailable metrics.",
       boundary:
         "Aggregate reporting does not establish unique humans, game popularity or reviewed release state. Native boards and identities stay project-owned."
     },
