@@ -6,7 +6,8 @@ import {
   svgPlot,
   measuresFor,
   resolveMeasure,
-  productView
+  productView,
+  reportMetric
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric } from "./portfolio-analytics.ts";
 import { reportSvg } from "./portfolio-card.ts";
@@ -52,6 +53,19 @@ test("product defaults remain meaningful even while their source is unavailable"
   assert.equal(resolveMeasure("fighter", "app_opens").key, "game_starts");
   assert.equal(resolveMeasure(null, "photo_opens").key, "photo_opens");
   assert.equal(resolveMeasure(null).key, "game_starts");
+  assert.equal(resolveMeasure("fighter", "replays").key, "game_replays");
+  assert.equal(resolveMeasure("shoalshot", "game_replays").key, "game_replays");
+  assert.equal(resolveMeasure("loftwahfm", "game_listening_seconds").key, "game_listening_seconds");
+});
+test("source key compatibility does not mix site attention with active gameplay", () => {
+  const time = { ...metric, key: "active_seconds", value: 60 };
+  assert.equal(reportMetric("woodhouse", [time], "active_seconds"), undefined);
+  assert.equal(reportMetric("fighter", [time], "active_seconds"), time);
+  const replay = { ...metric, key: "game_replays", value: 2 };
+  assert.equal(
+    reportMetric("protocol-11", [replay], resolveMeasure("protocol-11", "replays").key),
+    replay
+  );
 });
 test("app report exports select useful app measures and retain their distinct frozen counts", () => {
   const app = {

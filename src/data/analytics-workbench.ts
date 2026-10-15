@@ -45,7 +45,7 @@ export const measureChoices = [
       "Sessions meeting a source-defined attention threshold. Check each source definition; thresholds and collection coverage can differ."
   },
   {
-    key: "replays",
+    key: "game_replays",
     label: "Replays",
     meaning:
       "A subsequent gameplay launch linked to an earlier terminal result where the product can establish that sequence."
@@ -99,6 +99,18 @@ export const measureChoices = [
       "Playback receipts with confirmed audible progression. Repeated plays count again. No unique listener identity is collected."
   },
   {
+    key: "game_listening_seconds",
+    label: "Game-attributed listening",
+    meaning:
+      "Accepted audible music time carrying the source’s game attribution. This remains listening time; it does not establish active gameplay or a distinct player."
+  },
+  {
+    key: "game_listening_starts",
+    label: "Game-attributed listening starts",
+    meaning:
+      "Confirmed listening starts carrying the source’s game attribution. Repeated plays count again; this does not count game launches or unique players."
+  },
+  {
     key: "project_opens",
     label: "Project discovery",
     meaning:
@@ -110,7 +122,7 @@ const gameMeasures: MeasureKey[] = [
   "game_starts",
   "game_completions",
   "active_seconds",
-  "replays",
+  "game_replays",
   "visits",
   "engaged_sessions",
   "browsers",
@@ -151,7 +163,12 @@ const productViews: Record<AnalyticsProject, ProductView> = {
   loftwahfm: {
     label: "Audible listening",
     defaultMeasure: "listening_seconds",
-    keys: ["listening_seconds", "listening_starts"],
+    keys: [
+      "listening_seconds",
+      "listening_starts",
+      "game_listening_seconds",
+      "game_listening_starts"
+    ],
     headlines: ["listening_seconds", "listening_starts"],
     description:
       "Explore accepted audible listening and playback starts, with dated charts, source coverage and clear listening definitions."
@@ -170,11 +187,23 @@ export function measuresFor(project: AnalyticsProject | null) {
 }
 export function resolveMeasure(project: AnalyticsProject | null, requested?: string | null) {
   const choices = measuresFor(project);
+  const canonical = requested === "replays" ? "game_replays" : requested;
   return (
-    choices.find((m) => m.key === requested) ??
+    choices.find((m) => m.key === canonical) ??
     choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
     choices[0]!
   );
+}
+export function reportMetric(
+  project: AnalyticsProject,
+  metrics: Metric[] | undefined,
+  key: string
+) {
+  // Woodhouse's active_seconds describe site attention, not active gameplay.
+  // A shared source key alone does not establish the same product meaning.
+  return measuresFor(project).some((m) => m.key === key)
+    ? metrics?.find((m) => m.key === key)
+    : undefined;
 }
 export function dateDays(period: ReportingWindow) {
   return Array.from({ length: period.days }, (_, i) =>

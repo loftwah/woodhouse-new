@@ -4,6 +4,7 @@ import {
   dailyStatus,
   dateDays,
   resolveMeasure,
+  reportMetric,
   projectColours,
   svgPlot
 } from "./analytics-workbench.ts";
@@ -41,7 +42,7 @@ export function reportSvg(
   const rows = report.projects.map((row) => ({
     ...row,
     name: names.get(row.project) ?? row.project,
-    metric: row.report?.metrics.find((m) => m.key === measure.key),
+    metric: reportMetric(row.project, row.report?.metrics, measure.key),
     colour: projectColours[row.project] ?? "#b4c0d2"
   }));
   const qualifier = (row: (typeof rows)[number]) => {

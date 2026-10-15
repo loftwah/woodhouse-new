@@ -28,7 +28,8 @@ import {
   svgPlot,
   measuresFor,
   resolveMeasure,
-  productView
+  productView,
+  reportMetric
 } from "../data/analytics-workbench";
 export const prerender = false;
 Astro.cache.set(false);
@@ -101,13 +102,24 @@ const allRows = analyticsProjects
   }));
 const rows = allRows.filter((r) => !selected || r.project === selected);
 const groups = [
-  { label: "Gameplay", keys: ["game_starts", "game_completions", "active_seconds", "replays"] },
+  {
+    label: "Gameplay",
+    keys: ["game_starts", "game_completions", "active_seconds", "game_replays"]
+  },
   {
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
   },
   { label: "App usage", keys: ["app_opens", "photo_opens", "inspection_completed", "actions"] },
-  { label: "Listening", keys: ["listening_seconds", "listening_starts"] }
+  {
+    label: "Listening",
+    keys: [
+      "listening_seconds",
+      "listening_starts",
+      "game_listening_seconds",
+      "game_listening_starts"
+    ]
+  }
 ]
   .map((group) => ({
     ...group,
@@ -116,7 +128,7 @@ const groups = [
   .filter((group) => group.keys.length);
 const metricRows = rows.map((r) => ({
   ...r,
-  metric: r.data?.metrics.find((m) => m.key === measure.key)
+  metric: reportMetric(r.project, r.data?.metrics, measure.key)
 }));
 const headlines =
   selected && view
