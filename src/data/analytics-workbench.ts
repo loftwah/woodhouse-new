@@ -55,7 +55,7 @@ export const measureChoices = [
     key: "returning_browsers",
     label: "Returning browsers",
     meaning:
-      "Consenting browser identifiers seen before the selected window within the source’s retained history. This is not cohort retention."
+      "Distinct consenting browser identifiers observed in this window with an earlier different tab session in retained history. Same-day returns may count. This is not cohort retention."
   },
   {
     key: "app_opens",
