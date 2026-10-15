@@ -155,7 +155,6 @@ const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
 const unit = chartRows[0]?.metric?.unit ?? (measure.key.endsWith("_seconds") ? "seconds" : "count");
 const days = dateDays(window);
 const available = rows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
-const allAvailable = allRows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
 const cleanDays = metricRows.map(
   (r) => days.filter((day) => dailyStatus(r.data, r.metric, day) === "clean").length
 );
@@ -698,8 +697,9 @@ const dataPayload = {
               <div>
                 <dt>Usage</dt>
                 <dd>
-                  {allAvailable}/{allRows.length} sources provide some activity. Reports are not
-                  verified people.
+                  {selected === "app-composer"
+                    ? "Bounded app-open and action counters. These do not establish users, creator adoption or successful submissions."
+                    : `${available}/${rows.length} sources provide some activity. Reports are not verified people.`}
                 </dd>
               </div>
               <div>
