@@ -92,9 +92,18 @@ const rows = allRows.filter((r) => !selected || r.project === selected);
 const possible = measureChoices.filter((m) =>
   rows.some((r) => r.data?.metrics.some((v) => v.key === m.key))
 );
+const groups = [
+  { label: "Gameplay", keys: ["game_starts", "game_completions", "active_seconds", "replays"] },
+  {
+    label: "Visits & returns",
+    keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
+  },
+  { label: "Mini-apps", keys: ["app_opens", "actions"] },
+  { label: "Listening", keys: ["listening_seconds", "listening_starts"] }
+];
 const requestedMeasure = Astro.url.searchParams.get("measure");
 const measure =
-  (requestedMeasure ? possible.find((m) => m.key === requestedMeasure) : null) ??
+  (requestedMeasure ? measureChoices.find((m) => m.key === requestedMeasure) : null) ??
   possible.find((m) =>
     rows.some((r) => r.data?.metrics.some((v) => v.key === m.key && v.value !== null))
   ) ??
@@ -117,7 +126,7 @@ const chartSeries = chartRows.map((r) => ({
   statuses: daysForStatus(r.data, r.metric)
 }));
 const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
-const unit = chartRows[0]?.metric?.unit ?? "count";
+const unit = chartRows[0]?.metric?.unit ?? (measure.key.endsWith("_seconds") ? "seconds" : "count");
 const days = dateDays(window);
 const available = rows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
 const allAvailable = allRows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
@@ -305,12 +314,12 @@ const dataPayload = {
       <div class="analysis-layout">
         <div class="chart-column">
           <nav class="measure-navigation" aria-label="Choose a measure">
-            {(possible.length ? possible : measureChoices.slice(0, 3)).map((m) => (
+            {groups.map((group) => (
               <a
-                href={pageLink({ measure: m.key })}
-                aria-current={measure.key === m.key ? "page" : undefined}
+                href={pageLink({ measure: group.keys[0]! })}
+                aria-current={group.keys.includes(measure.key) ? "page" : undefined}
               >
-                {m.label}
+                {group.label}
               </a>
             ))}
           </nav>
@@ -323,6 +332,28 @@ const dataPayload = {
                   unavailable
                 </p>
               </div>
+              <form class="measure-picker" method="get" action="/activity/">
+                {[...new URL(pageLink(), Astro.url.origin).searchParams.entries()]
+                  .filter(([key]) => key !== "measure")
+                  .map(([key, value]) => (
+                    <input type="hidden" name={key} value={value} />
+                  ))}
+                <label for="measure-picker">Measure</label>
+                <select id="measure-picker" name="measure">
+                  {groups.map((group) => (
+                    <optgroup label={group.label}>
+                      {measureChoices
+                        .filter((m) => group.keys.includes(m.key))
+                        .map((m) => (
+                          <option value={m.key} selected={m.key === measure.key}>
+                            {m.label}
+                          </option>
+                        ))}
+                    </optgroup>
+                  ))}
+                </select>
+                <button type="submit">Show</button>
+              </form>
               <div class="chart-type" data-chart-controls hidden>
                 <button type="button" data-chart-type="line" aria-pressed="true">
                   Line

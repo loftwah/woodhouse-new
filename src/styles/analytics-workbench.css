@@ -1025,3 +1025,50 @@
     color: var(--muted);
   }
 }
+.chart-heading {
+  flex-wrap: wrap;
+}
+.measure-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+.measure-picker label {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.measure-picker select {
+  max-width: 175px;
+  min-height: 44px;
+  padding: 0.4rem;
+  border: 1px solid #35435a;
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--paper);
+  font-size: 0.75rem;
+}
+.measure-picker button {
+  font-size: 0.75rem;
+}
+.measure-navigation {
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+@media (max-width: 720px) {
+  .measure-picker {
+    margin-left: 0;
+    order: 3;
+    width: 100%;
+  }
+  .measure-picker select {
+    flex: 1;
+    max-width: none;
+  }
+  .chart-type {
+    margin-left: auto;
+  }
+  .measure-navigation a {
+    font-size: 0.72rem;
+  }
+}
