@@ -306,9 +306,10 @@ export async function localAnalytics(
   db: D1Database,
   project: AnalyticsProject,
   days: number,
-  now = Date.now()
+  now = Date.now(),
+  requestedWindow?: ProjectAnalytics["period"]
 ): Promise<ProjectAnalytics> {
-  const period = periodFor(days, now);
+  const period = requestedWindow ?? periodFor(days, now);
   const generatedAt = new Date(now).toISOString();
   const first = await db
     .prepare("SELECT MIN(day) AS day FROM wh_analytics_daily WHERE project=?")
@@ -338,8 +339,8 @@ export async function localAnalytics(
         }
       return {
         ...d,
-        value: started ? daily.reduce((s, r) => s + r.value, 0) : null,
-        quality: started ? "exact" : "unavailable",
+        value: daily.length ? daily.reduce((s, r) => s + r.value, 0) : null,
+        quality: daily.length ? "exact" : "unavailable",
         daily
       };
     });
@@ -365,8 +366,9 @@ export async function localAnalytics(
     period,
     coverage: {
       startedAt: started ? `${started}T00:00:00.000Z` : null,
+      comparableFrom: started ? `${started}T00:00:00.000Z` : null,
       through: generatedAt,
-      quality: started ? "partial" : "unavailable",
+      quality: metrics.some((m) => m.value !== null) ? "partial" : "unavailable",
       limitations: [
         "Exact accepted event counters, not unique humans or anti-cheat proof. Blocking, opt-out, offline play and automated traffic affect coverage.",
         "DNT, GPC, designated QA and preview traffic are excluded. Production browser measurements start with this release; no historical backfill.",

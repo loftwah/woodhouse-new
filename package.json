@@ -62,6 +62,7 @@
     "@emdash-cms/cloudflare": "^1.0.1",
     "@emdash-cms/plugin-audit-log": "^0.2.3",
     "@resvg/resvg-wasm": "^2.6.2",
+    "echarts": "6.1.0",
     "effect": "^3.22.2",
     "emdash": "^1.0.1",
     "react": "^19.3.0",

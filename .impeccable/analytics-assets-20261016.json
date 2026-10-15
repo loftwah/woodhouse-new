@@ -1,0 +1,70 @@
+{
+  "review_date": "2026-10-16",
+  "surface": "src/pages/activity.astro",
+  "approved_reference": ".impeccable/mocks/analytics-workbench-20261016-a.png",
+  "approval_sidecar": ".impeccable/mocks/analytics-workbench-20261016-a.png.json",
+  "review_scope": "Independent visual-role inventory of the full approved comp, checked against PRODUCT.md, DESIGN.md and the surface brief. Accepted statuses describe media classification, not implementation acceptance.",
+  "produce": [],
+  "direct": [],
+  "semantic": [
+    {
+      "id": "workbench-frame-and-navigation",
+      "implementation": "Use the existing semantic site header and nav, text Woodhouse identity, main and aside landmarks. CSS owns the ink ground, compact Bricolage heading, flat navy surfaces and one-pixel seams. Preserve a narrow project rail, broad dominant plot and integrated context column on desktop; stack the workspace deliberately on phones. Compose with no raster assets.",
+      "notes": "The reference has no image-native background, material, photograph or illustration. Do not extract its subtle tonal variation as a texture. Unsupported account avatar, settings and documentation destinations are reference chrome, not requested product functions.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "project-rail-and-outline-icons",
+      "implementation": "Render project names as real links with aria-current, small CSS source-colour dots and a thin active indicator. Use native horizontal overflow on phones. Calendar, chart, download, share and information glyphs use inline SVG or an existing icon system with semantic labels on their controls; CSS owns size, colour and focus treatment. Compose with no raster assets.",
+      "notes": "All visible marks are simple UI geometry. Neither the invented W avatar nor project dots justify generated logos or raster cutouts. Do not copy comp pixels into an icon sprite.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "date-and-measure-controls",
+      "implementation": "Use a labelled GET form, native date inputs, real preset links or buttons and a source-appropriate measure selector. CSS creates compact operational spacing and modest corners. Keep controls readable and touchable when the toolbar wraps; use visible focus and native keyboard behavior. Compose with no raster assets.",
+      "notes": "The selected dates and active states must come from current query/report state. Comp labels are design reference, not available-feature evidence.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "measured-metric-strip",
+      "implementation": "Render source-specific aggregate totals and quality labels in semantic definition lists with tabular figures, short separators and clearly attached units. Wrap or stack at phone widths. CSS owns typography, rules and spacing; no baked numbers or generated text images.",
+      "notes": "Preserve the compact visual role above the chart while reading every value from measured reports. Avoid a combined people, engagement or popularity number. Legacy and bounded qualifiers stay adjacent to their totals.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "dominant-daily-plot",
+      "implementation": "Use locally bundled modular ECharts with the SVG renderer for exact daily line/bar series, axes, crosshair, tooltip and zoom brush. Semantic buttons own line/bar and series controls; a server SVG and inspectable HTML table provide fallback. CSS sizes the chart as the dominant work area, reflows the legend and preserves readable axes on phones. Respect reduced motion. Compose with no raster assets.",
+      "notes": "The comp's smooth full-history traces and mixed-source tooltip are illustrative. Plot only compatible units and actual measured daily data, keep unknown values as gaps and distinguish a reported zero. Replacing invented traces with sparse truthful history is a required fidelity deviation. No generated graph art or screenshot crop may substitute for chart geometry.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "seven-source-coverage-grid",
+      "implementation": "Render a precise SVG daily grid with one row per source and a matching semantic HTML table. Use actual inclusive UTC dates, labelled collection states and a readable legend; CSS controls row spacing, rules and responsive containment. Maintain unknown, zero, legacy, bounded, clean and partial distinctions. Compose with no raster assets.",
+      "notes": "The comp calls its grid an activity heatmap and colours cells by invented intensity. Preserve the shallow aligned grid composition but use exact source coverage rather than inventing hourly or intensity data. Colour alone cannot carry collection quality.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "interpretation-and-source-register",
+      "implementation": "Use semantic headings, prose, lists, definition lists, ruled tables and native details for metric definitions, source endpoints, UTC report dates and limitations. CSS preserves the compact right reading column and open bottom register; stack them in reading order on phones. Compose with no raster assets.",
+      "notes": "No graphical business-readiness score is present or needed. The comp's encouraging traction wording is not evidence and must not be transcribed. Current source facts determine meaning and investment-evidence gaps.",
+      "qa_status": "accepted"
+    },
+    {
+      "id": "frozen-report-sharing",
+      "implementation": "Use an acid semantic button or summary opening native report options, links for original downloads, clipboard caption control and supported native file sharing. Keep controls in HTML. Generate the three shareable PNG compositions deterministically from the same frozen aggregate figures, dates and exact SVG geometry; never use the approved mock or generated chart imagery as export content.",
+      "notes": "The PNG files are report outputs, not runtime design ingredients or image-generation work. Preserve report permalink identity and missing/legacy/bounded annotations across caption and images. A completed browser flow does not establish physical iPhone sharing.",
+      "qa_status": "accepted"
+    }
+  ],
+  "material_findings": [
+    "No image-native region was omitted from the declared empty runtime raster inventory. The approved comp consists entirely of semantic content, controls and precise scalable geometry.",
+    "Fidelity should preserve the graph-led three-zone composition and compact hierarchy while replacing illustrative traces, activity-intensity cells and optimistic interpretation with measured reports and explicit limitations."
+  ],
+  "execution_order": [],
+  "blockers": [],
+  "assumptions": [
+    "The approved comp remains a private design study and is not shipped as page media or a factual report.",
+    "The parent owns implementation, real-data verification, responsive interaction checks and final visual acceptance.",
+    "No image generation, cropping, conversion or new production image files are necessary."
+  ]
+}

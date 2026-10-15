@@ -3,8 +3,11 @@ import {
   loadProjectAnalytics,
   parseProjectAnalytics,
   analysePortfolio,
+  periodFor,
+  windowForDates,
   type AnalyticsProject,
-  type PortfolioReport
+  type PortfolioReport,
+  type ReportingWindow
 } from "./portfolio-analytics.ts";
 import { localAnalytics } from "./engagement.ts";
 const reportIdPattern = /^[a-f0-9]{24}$/;
@@ -23,10 +26,19 @@ export async function readPortfolioReport(
     if (
       report.schema !== "woodhouse.portfolio-report/1" ||
       report.id !== id ||
-      ![7, 30, 90].includes(report.days) ||
+      !Number.isInteger(report.days) ||
+      report.days < 1 ||
+      report.days > 90 ||
       !Array.isArray(report.projects)
     )
       return null;
+    const savedAt = Date.parse(report.createdAt);
+    const period = report.period
+      ? windowForDates(report.period.from, report.period.to, savedAt)
+      : [7, 30, 90].includes(report.days)
+        ? periodFor(report.days, savedAt)
+        : null;
+    if (!period || period.days !== report.days) return null;
     const safe = {
       ...report,
       projects: report.projects
@@ -34,7 +46,7 @@ export async function readPortfolioReport(
         .map((r) => ({
           project: r.project,
           report: r.report
-            ? parseProjectAnalytics(r.report, r.project, report.days, Date.parse(report.createdAt))
+            ? parseProjectAnalytics(r.report, r.project, report.days, savedAt, period)
             : null
         }))
     };
@@ -44,6 +56,7 @@ export async function readPortfolioReport(
       id: safe.id,
       createdAt: safe.createdAt,
       days: safe.days,
+      period,
       projects: safe.projects,
       ...(report.analysis?.schema === "woodhouse.weekly-analysis/1"
         ? { analysis: analysePortfolio(safe.projects, Date.parse(safe.createdAt)) }
@@ -58,13 +71,21 @@ export async function createPortfolioReport(
   days: number,
   publicIds: Set<string>,
   fetcher: typeof fetch = fetch,
-  now = Date.now()
+  now = Date.now(),
+  requestedWindow?: ReportingWindow
 ): Promise<PortfolioReport> {
+  const period = requestedWindow ?? periodFor(days, now);
   const recent = await db
     .prepare(
-      "SELECT id FROM wh_analytics_reports WHERE days=? AND created_at>=? ORDER BY created_at DESC LIMIT 1"
+      "SELECT id FROM wh_analytics_reports WHERE days=? AND created_at>=? AND json_extract(body,'$.period.from')=? AND json_extract(body,'$.period.to')=? AND json_extract(body,'$.period.complete')=? ORDER BY created_at DESC LIMIT 1"
     )
-    .bind(days, new Date(now - 300000).toISOString())
+    .bind(
+      days,
+      new Date(now - 300000).toISOString(),
+      period.from,
+      period.to,
+      Number(period.complete)
+    )
     .first<{ id: string }>();
   if (recent) {
     const report = await readPortfolioReport(db, recent.id);
@@ -77,8 +98,8 @@ export async function createPortfolioReport(
         let report = null;
         try {
           report = ["woodhouse", "shoalshot", "protocol-11"].includes(project)
-            ? await localAnalytics(db, project, days, now)
-            : await loadProjectAnalytics(project, days, fetcher);
+            ? await localAnalytics(db, project, days, now, period)
+            : await loadProjectAnalytics(project, days, fetcher, requestedWindow);
         } catch {
           /* Missing storage/source is unavailable, never zero. */
         }
@@ -88,7 +109,7 @@ export async function createPortfolioReport(
   const createdAt = new Date(now).toISOString();
   const digest = await crypto.subtle.digest(
     "SHA-256",
-    new TextEncoder().encode(JSON.stringify({ createdAt, days, projects }))
+    new TextEncoder().encode(JSON.stringify({ createdAt, days, period, projects }))
   );
   const id = Array.from(new Uint8Array(digest))
     .map((v) => v.toString(16).padStart(2, "0"))
@@ -99,6 +120,7 @@ export async function createPortfolioReport(
     id,
     createdAt,
     days,
+    period,
     projects,
     analysis: analysePortfolio(projects, now)
   };

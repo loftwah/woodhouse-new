@@ -33,6 +33,7 @@ type Props = {
   ogTitle?: string;
   robots?: string;
   noindex?: boolean;
+  analyticsWorkbench?: boolean;
 };
 
 const {
@@ -213,6 +214,13 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
     </script>
   </head>
   <body>
+    {Astro.props.analyticsWorkbench && (
+      <Fragment
+        set:html={
+          "<!-- THESIS: Explore measured product activity in a chart-centred workbench; refuse a ledger masquerading as insight. OWN-WORLD: Woodhouse ink navy, porcelain, acid actions, cyan/coral data; Bricolage headings, precise native controls and one-pixel seams. STORY: Choose dates and a measure, inspect daily evidence, understand coverage and missing business proof, share a frozen report. FIRST VIEWPORT: Narrow project rail, compact heading/date toolbar, source totals, dominant chart with zoom, right interpretation column; share action in context. FORM: Analytical research workbench, grounded candidate 6, surface seed 626f0487. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->"
+        }
+      />
+    )}
     {currentPath === "/share/" && (
       <Fragment set:html="<!-- THESIS: browse shareable game media in bounded collections, with original files beside each preview. OWN-WORLD: canonical game pixels on Woodhouse ink; Bricolage headings, open figures and lime downloads. STORY: choose a project and asset type, preview six resources, then copy, download or move to the next page. FIRST VIEWPORT: compact project and type navigation, then a mixed game-image row on desktop or one preview on phone. FORM: the established open gallery, with native URL views and six-item pagination; seed established-share-gallery. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->" />
     )}

@@ -10,6 +10,7 @@ import {
   analysePortfolio,
   weeklyRecord,
   analyticsSchema,
+  parseReportingWindow,
   type Metric,
   type ProjectAnalytics
 } from "./portfolio-analytics.ts";
@@ -164,6 +165,10 @@ test("source parser rejects future, duplicate days and identifiers, projects onl
     ),
     null
   );
+  const impossibleQuality = structuredClone(report);
+  impossibleQuality.metrics[0]!.quality = "unavailable";
+  impossibleQuality.metrics[0]!.value = 1;
+  assert.equal(parseProjectAnalytics(impossibleQuality, "shoalshot", 7, now), null);
   const clean = parseProjectAnalytics(
     { ...report, privateUserId: "hidden", rawEvents: ["hidden"] },
     "shoalshot",
@@ -191,6 +196,7 @@ test("records require two full exact equivalent weeks, never current or missing 
   };
   const coverage = {
     startedAt: "2026-09-14T12:00:00Z",
+    comparableFrom: "2026-09-14T12:00:00Z",
     through: "2026-10-15T12:00:00Z",
     quality: "exact" as const,
     limitations: []
@@ -203,6 +209,8 @@ test("records require two full exact equivalent weeks, never current or missing 
   );
   assert.equal(weeklyRecord({ ...metric, quality: "bounded" }, coverage, now), null);
   assert.equal(weeklyRecord({ ...metric, key: "browsers" }, coverage, now), null);
+  assert.equal(weeklyRecord(metric, { ...coverage, comparableFrom: null }, now), null);
+  assert.equal(weeklyRecord(metric, { ...coverage, comparableFrom: "2026-10-15" }, now), null);
   assert.equal(
     weeklyRecord({ ...metric, daily: daily.filter((d) => d.date >= "2026-10-05") }, coverage, now),
     null
@@ -222,6 +230,7 @@ test("weekly analysis catches a genuine fall to zero without inventing causes or
     period: { from: "2026-09-16", to: "2026-10-15", days: 30, complete: false },
     coverage: {
       startedAt: "2026-09-20",
+      comparableFrom: "2026-09-20",
       through: new Date(now).toISOString(),
       quality: "exact",
       limitations: []
@@ -289,6 +298,43 @@ test("weekly analysis catches a genuine fall to zero without inventing causes or
   );
   assert.deepEqual(view.projects, []);
   assert.deepEqual(view.analysis?.findings, []);
+});
+test("custom UTC windows validate real dates and keep separate same-length snapshots", async () => {
+  for (const query of [
+    "from=2026-02-29&to=2026-03-02",
+    "from=2026-10-16&to=2026-10-16",
+    "from=2026-10-02",
+    "from=2026-10-03&to=2026-10-02",
+    "days=7&from=2026-10-01&to=2026-10-02",
+    "from=2026-10-01&from=2026-10-02&to=2026-10-03",
+    "from=2026-01-01&to=2026-10-01"
+  ])
+    assert.equal(parseReportingWindow(new URLSearchParams(query), now), null);
+  const one = parseReportingWindow(new URLSearchParams("from=2026-10-01&to=2026-10-01"), now)!;
+  const two = parseReportingWindow(new URLSearchParams("from=2026-10-03&to=2026-10-03"), now)!;
+  assert.equal(one.complete, true);
+  const emptyDb = database().db;
+  const emptyFirst = await createPortfolioReport(emptyDb, 1, new Set(), fetch, now, one);
+  const emptySecond = await createPortfolioReport(emptyDb, 1, new Set(), fetch, now, two);
+  assert.notEqual(
+    emptyFirst.id,
+    emptySecond.id,
+    "Missing sources must not collide across same-length windows at the same instant"
+  );
+  assert.equal((await readPortfolioReport(emptyDb, emptySecond.id))?.period?.from, two.from);
+  const { db } = database();
+  await collectEngagement(request(payload()), db, Date.parse("2026-10-01T12:00:00Z"));
+  await collectEngagement(request(payload()), db, Date.parse("2026-10-03T12:00:00Z"));
+  const first = await createPortfolioReport(db, 1, new Set(["shoalshot"]), fetch, now, one);
+  const second = await createPortfolioReport(db, 1, new Set(["shoalshot"]), fetch, now + 100, two);
+  assert.notEqual(first.id, second.id);
+  assert.equal((await readPortfolioReport(db, first.id))?.period?.from, "2026-10-01");
+  assert.equal((await readPortfolioReport(db, second.id))?.period?.from, "2026-10-03");
+  assert.equal(first.projects[0]?.report?.metrics.find((m) => m.key === "game_starts")?.value, 1);
+  const before = parseReportingWindow(new URLSearchParams("from=2026-09-01&to=2026-09-02"), now)!;
+  const unavailable = await localAnalytics(db, "shoalshot", before.days, now, before);
+  assert(unavailable.metrics.every((m) => m.value === null));
+  assert(parseProjectAnalytics(unavailable, "shoalshot", before.days, now, before));
 });
 test("saved report stays immutable after new ingestion and emits three true image sizes", async () => {
   const { db, sqlite } = database();
@@ -371,4 +417,41 @@ test("hourly analytics never enables CMS maintenance in read-only publication", 
   assert.equal(analytics, 1);
   await scheduled({ cron: "* * * * *" }, { WOODHOUSE_ENVIRONMENT: "preview", DB: {} });
   assert.equal(editorial, 1);
+});
+
+test("shared charts attach source quality to totals and retain an environment-owned retrieval address", async () => {
+  const { db } = database();
+  await collectEngagement(request(payload()), db, now);
+  const report = await createPortfolioReport(db, 7, new Set(["shoalshot"]), fetch, now);
+  const source = report.projects[0]!.report!;
+  source.coverage.startedAt = "2026-10-01T00:00:00.000Z";
+  source.coverage.comparableFrom = "2026-10-14T12:00:00.000Z";
+  const metric = source.metrics.find((m) => m.key === "game_starts")!;
+  metric.daily = [{ date: "2026-10-10", value: 1 }];
+  for (const format of ["landscape", "square"] as const) {
+    const svg = reportSvg(
+      report,
+      new Map([["shoalshot", "SHOALSHOT"]]),
+      format,
+      "game_starts",
+      "https://preview.example"
+    );
+    assert(svg.includes("Legacy/test risk"));
+    assert(svg.includes(`preview.example/activity/?report=${report.id}`));
+    assert(svg.includes("measure=game_starts"));
+    assert(svg.includes("project=shoalshot"));
+    metric.quality = "bounded";
+    assert(reportSvg(report, new Map(), format, "game_starts").includes("Bounded count"));
+    metric.quality = "exact";
+    const originalQuality = source.coverage.quality;
+    for (const [quality, label] of [
+      ["bounded", "Bounded count"],
+      ["sampled", "Sampled estimate"],
+      ["unavailable", "Coverage unavailable"]
+    ] as const) {
+      source.coverage.quality = quality;
+      assert(reportSvg(report, new Map(), format, "game_starts").includes(`>${label}</text>`));
+    }
+    source.coverage.quality = originalQuality;
+  }
 });
