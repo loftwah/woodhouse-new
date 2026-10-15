@@ -362,7 +362,7 @@
   display: none;
 }
 .interactive-plot.has-no-data {
-  height: 150px;
+  height: 1.4rem;
 }
 .chart-empty {
   padding: 1.4rem 1rem 0;

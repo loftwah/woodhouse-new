@@ -81,6 +81,12 @@ export const measureChoices = [
       "Successful public Guestbook contribution-page HTML requests. Repeated opens may count. These are not image downloads, submissions, publications or unique people."
   },
   {
+    key: "guest_postcards_received",
+    label: "Guest postcards received",
+    meaning:
+      "New guest postcards recorded after Guestbook accepts them as pending for moderation. This counts admissions, not the current queue size. Optional reporting can miss submissions; receipts do not establish approval, publication or unique people."
+  },
+  {
     key: "inspection_completed",
     label: "Completed Link Checks",
     meaning:
@@ -150,10 +156,16 @@ const productViews: Record<AnalyticsProject, ProductView> = {
     family: "app",
     label: "App usage & useful outcomes",
     defaultMeasure: "app_opens",
-    keys: ["app_opens", "photo_opens", "inspection_completed", "actions"],
-    headlines: ["app_opens", "photo_opens", "inspection_completed"],
+    keys: [
+      "app_opens",
+      "guest_postcards_received",
+      "photo_opens",
+      "inspection_completed",
+      "actions"
+    ],
+    headlines: ["app_opens", "guest_postcards_received", "inspection_completed"],
     description:
-      "Inspect bounded mini-app opens, Guestbook contribution views and completed Link Check inspections. Understand which useful outcomes are measured and which remain unknown."
+      "Inspect mini-app opens, pending guest postcard receipts, contribution views and completed Link Checks, with source coverage and clear limits on what each outcome means."
   },
   woodhouse: {
     family: "audience",
@@ -232,6 +244,17 @@ export function dailyStatus(
   const point = metric?.daily.find((d) => d.date === day);
   if (!report || !metric || metric.value === null || metric.quality === "unavailable" || !point)
     return "missing";
+  if (
+    metric.key === "guest_postcards_received" &&
+    (metric.quality === "partial" || metric.quality === "bounded")
+  ) {
+    // This source emits points only from the first retained receipt. Partial
+    // quality means that first observed day is included, not an enablement date.
+    return (metric.quality === "partial" && day === metric.daily[0]?.date) ||
+      day >= report.coverage.through.slice(0, 10)
+      ? "partial"
+      : "bounded";
+  }
   if (metric.quality === "bounded" || report.coverage.quality === "bounded") return "bounded";
   if (metric.quality === "sampled" || report.coverage.quality === "sampled") return "sampled";
   if (report.coverage.quality === "unavailable") return "missing";

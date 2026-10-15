@@ -47,6 +47,8 @@ export function reportSvg(
   }));
   const qualifier = (row: (typeof rows)[number]) => {
     if (!row.metric || row.metric.value === null) return "Not measured";
+    if (row.metric.key === "guest_postcards_received" && row.metric.quality === "partial")
+      return "Partial coverage";
     if (row.metric.quality === "bounded" || row.report?.coverage.quality === "bounded")
       return "Bounded count";
     if (row.metric.quality === "sampled" || row.report?.coverage.quality === "sampled")
@@ -88,7 +90,7 @@ export function reportSvg(
   svg += text(
     pad,
     landscape ? 157 : 191,
-    `${period.from} — ${period.to} · UTC · ${period.days} days`,
+    `${period.from} — ${period.to} · UTC · ${period.days} ${period.days === 1 ? "day" : "days"}`,
     landscape ? 20 : 25,
     "#a9b8d0"
   );
