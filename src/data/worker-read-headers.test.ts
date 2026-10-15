@@ -49,7 +49,10 @@ function worker(originHeaders: Record<string, string>) {
     fetch(request: Request, env: object, ctx: object): Promise<Response>;
   };
 }
-const environment = { WOODHOUSE_PUBLICATION_MODE: "read-only" };
+const environment = {
+  WOODHOUSE_ENVIRONMENT: "production",
+  WOODHOUSE_PUBLICATION_MODE: "read-only"
+};
 test("public GET and HEAD preserve the same indexability and explicit route cache policy", async () => {
   for (const [path, type, cache] of [
     ["/activity/", "text/html", "private, no-store"],
@@ -92,5 +95,25 @@ test("HEAD keeps upstream preview noindex and cannot bypass editorial or mutatio
     assert.equal(response.status, 404);
     assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
     assert.match(response.headers.get("cache-control")!, /no-store/);
+  }
+});
+
+test("preview environment excludes GET and HEAD reads without relying on layout headers", async () => {
+  for (const [path, type, cache] of [
+    ["/activity/", "text/html", "private, no-store"],
+    ["/api/portfolio-card.png?report=test", "image/png", "public, max-age=300"],
+    ["/api/portfolio-report.json?report=test", "application/json", "public, max-age=300"]
+  ] as const) {
+    const wrapped = worker({ "content-type": type, "cache-control": cache });
+    for (const method of ["GET", "HEAD"]) {
+      const response = await wrapped.fetch(
+        new Request("https://woodhouse-loftwah-preview.loftwah.workers.dev" + path, { method }),
+        { WOODHOUSE_ENVIRONMENT: "preview", WOODHOUSE_PUBLICATION_MODE: "read-only" },
+        {}
+      );
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
+      assert.equal(response.headers.get("cache-control"), cache);
+    }
   }
 });

@@ -71,6 +71,16 @@ const worker = {
     headers.set("X-Frame-Options", "SAMEORIGIN");
     headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     headers.set("Permissions-Policy", "camera=(), geolocation=(), microphone=()");
+    // Preview indexing is a deployment boundary, including HEAD and routes
+    // that never render BaseLayout. Do not infer it from a compiled site URL.
+    if (
+      typeof env === "object" &&
+      env !== null &&
+      "WOODHOUSE_ENVIRONMENT" in env &&
+      env.WOODHOUSE_ENVIRONMENT === "preview"
+    ) {
+      headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    }
     if (wantsPrivateCaching(request, url)) {
       headers.set("Cache-Control", "private, no-store, max-age=0");
       headers.set("Pragma", "no-cache");
