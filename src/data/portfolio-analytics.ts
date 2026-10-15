@@ -11,6 +11,7 @@ export const analyticsProjects = [
 ] as const;
 export type AnalyticsProject = (typeof analyticsProjects)[number];
 type Quality = "exact" | "sampled" | "bounded" | "partial" | "unavailable";
+export type ReportingWindow = { from: string; to: string; days: number; complete: boolean };
 export type Metric = {
   key: string;
   label: string;
@@ -25,8 +26,14 @@ export type ProjectAnalytics = {
   project: AnalyticsProject;
   generatedAt: string;
   timezone: "UTC";
-  period: { from: string; to: string; days: number; complete: boolean };
-  coverage: { startedAt: string | null; through: string; quality: Quality; limitations: string[] };
+  period: ReportingWindow;
+  coverage: {
+    startedAt: string | null;
+    comparableFrom?: string | null;
+    through: string;
+    quality: Quality;
+    limitations: string[];
+  };
   metrics: Metric[];
   source: { endpoint: string; revision: string | null };
 };
@@ -35,6 +42,7 @@ export type PortfolioReport = {
   id: string;
   createdAt: string;
   days: number;
+  period?: ReportingWindow;
   projects: { project: AnalyticsProject; report: ProjectAnalytics | null }[];
   analysis?: PortfolioAnalysis;
 };
@@ -104,11 +112,36 @@ export function periodFor(days: number, now = Date.now()) {
     complete: false
   };
 }
+/** Calendar dates are UTC; closed windows do not imply complete source coverage. */
+export function windowForDates(
+  from: unknown,
+  to: unknown,
+  now = Date.now()
+): ReportingWindow | null {
+  if (!isoDay(from) || !isoDay(to) || from > to || to > new Date(now).toISOString().slice(0, 10))
+    return null;
+  const days = (Date.parse(to) - Date.parse(from)) / 86400000 + 1;
+  return days >= 1 && days <= 90
+    ? { from, to, days, complete: to < new Date(now).toISOString().slice(0, 10) }
+    : null;
+}
+export function parseReportingWindow(
+  query: URLSearchParams,
+  now = Date.now(),
+  defaultDays = 7
+): ReportingWindow | null {
+  if (["days", "from", "to"].some((key) => query.getAll(key).length > 1)) return null;
+  if (query.has("from") || query.has("to"))
+    return query.has("days") ? null : windowForDates(query.get("from"), query.get("to"), now);
+  const days = query.has("days") ? parseDays(query.get("days")) : defaultDays;
+  return days && [7, 30, 90].includes(days) ? periodFor(days, now) : null;
+}
 export function parseProjectAnalytics(
   raw: unknown,
   project: AnalyticsProject,
   days: number,
-  now = Date.now()
+  now = Date.now(),
+  expectedWindow = periodFor(days, now)
 ): ProjectAnalytics | null {
   if (
     !isObject(raw) ||
@@ -119,13 +152,13 @@ export function parseProjectAnalytics(
     Date.parse(raw.generatedAt) > now + 300000 ||
     !isObject(raw.period) ||
     raw.period.days !== days ||
-    raw.period.from !== periodFor(days, now).from ||
-    raw.period.to !== periodFor(days, now).to ||
+    raw.period.from !== expectedWindow.from ||
+    raw.period.to !== expectedWindow.to ||
     !isoDay(raw.period.from) ||
     !isoDay(raw.period.to) ||
     Date.parse(raw.period.to) - Date.parse(raw.period.from) !== (days - 1) * 86400000 ||
     raw.period.to > new Date(now).toISOString().slice(0, 10) ||
-    typeof raw.period.complete !== "boolean" ||
+    raw.period.complete !== expectedWindow.complete ||
     !isObject(raw.coverage) ||
     !(
       raw.coverage.startedAt === null ||
@@ -136,6 +169,12 @@ export function parseProjectAnalytics(
     (typeof raw.coverage.startedAt === "string" &&
       Date.parse(raw.coverage.startedAt) > now + 300000) ||
     Date.parse(raw.coverage.through) > now + 300000 ||
+    !(
+      raw.coverage.comparableFrom === undefined ||
+      raw.coverage.comparableFrom === null ||
+      ((isoTime(raw.coverage.comparableFrom) || isoDay(raw.coverage.comparableFrom)) &&
+        Date.parse(raw.coverage.comparableFrom) <= now + 300000)
+    ) ||
     !qualities.has(raw.coverage.quality) ||
     !Array.isArray(raw.coverage.limitations) ||
     raw.coverage.limitations.length > 16 ||
@@ -158,7 +197,7 @@ export function parseProjectAnalytics(
       !qualities.has(m.quality) ||
       !Array.isArray(m.daily) ||
       m.daily.length > days ||
-      (m.value === null && m.quality !== "unavailable")
+      (m.value === null) !== (m.quality === "unavailable")
     )
       return null;
     const daily: Metric["daily"] = [];
@@ -193,6 +232,8 @@ export function parseProjectAnalytics(
     period: { from: raw.period.from, to: raw.period.to, days, complete: raw.period.complete },
     coverage: {
       startedAt: raw.coverage.startedAt,
+      comparableFrom:
+        typeof raw.coverage.comparableFrom === "string" ? raw.coverage.comparableFrom : null,
       through: raw.coverage.through,
       quality: raw.coverage.quality as Quality,
       limitations: [...raw.coverage.limitations] as string[]
@@ -243,17 +284,23 @@ async function boundedJson(response: Response, limit = 192 * 1024): Promise<unkn
 export async function loadProjectAnalytics(
   project: AnalyticsProject,
   days: number,
-  fetcher: typeof fetch = fetch
+  fetcher: typeof fetch = fetch,
+  requestedWindow?: ReportingWindow
 ) {
   try {
     const url = new URL(analyticsSources[project]);
-    url.searchParams.set("days", String(days));
+    if (requestedWindow) {
+      url.searchParams.set("from", requestedWindow.from);
+      url.searchParams.set("to", requestedWindow.to);
+    } else url.searchParams.set("days", String(days));
     return parseProjectAnalytics(
       await boundedJson(
         await fetcher(url, { redirect: "manual", signal: AbortSignal.timeout(5000) })
       ),
       project,
-      days
+      days,
+      Date.now(),
+      requestedWindow
     );
   } catch {
     return null;
@@ -276,6 +323,7 @@ export function weeklyRecord(
   if (
     metric.quality !== "exact" ||
     !coverage.startedAt ||
+    !coverage.comparableFrom ||
     ["browsers", "returning_browsers", "engaged_sessions"].includes(metric.key)
   )
     return null;
@@ -286,7 +334,11 @@ export function weeklyRecord(
   for (let offset = 7; offset <= 84; offset += 7) {
     const from = new Date(currentMonday.valueOf() - offset * 86400000).toISOString().slice(0, 10);
     const to = new Date(Date.parse(from) + 6 * 86400000).toISOString().slice(0, 10);
-    if (from <= coverage.startedAt.slice(0, 10) || to >= coverage.through.slice(0, 10)) continue;
+    if (
+      from <= [coverage.startedAt, coverage.comparableFrom].sort().at(-1)!.slice(0, 10) ||
+      to >= coverage.through.slice(0, 10)
+    )
+      continue;
     const rows = metric.daily.filter((d) => d.date >= from && d.date <= to);
     if (rows.length !== 7) continue;
     weeks.push({ from, to, value: rows.reduce((sum, d) => sum + d.value, 0) });

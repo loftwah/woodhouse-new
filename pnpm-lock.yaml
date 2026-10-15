@@ -185,6 +185,9 @@ importers:
       '@resvg/resvg-wasm':
         specifier: ^2.6.2
         version: 2.6.2
+      echarts:
+        specifier: 6.1.0
+        version: 6.1.0
       effect:
         specifier: ^3.22.2
         version: 3.22.2

@@ -5,20 +5,23 @@ import wasm from "../../assets/resvg.wasm";
 import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
+import { measureChoices } from "../../data/analytics-workbench";
 import type { AnalyticsProject } from "../../data/portfolio-analytics";
 export const prerender = false;
 let initialized: Promise<void> | undefined;
-let font: Promise<Uint8Array> | undefined;
+let fonts: Promise<Uint8Array[]> | undefined;
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const format = url.searchParams.get("format") ?? "landscape",
     id = url.searchParams.get("report"),
-    selected = url.searchParams.get("project");
+    selected = url.searchParams.get("project"),
+    measure = url.searchParams.get("measure");
   if (
     !id ||
+    (measure !== null && !measureChoices.some((m) => m.key === measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
-      (k) => !["format", "report", "project", "download", "audit"].includes(k)
+      (k) => !["format", "report", "project", "download", "audit", "measure"].includes(k)
     )
   )
     return new Response("Invalid report image.", {
@@ -45,25 +48,29 @@ export const GET: APIRoute = async ({ url, cache }) => {
     if (!report.projects.length) return new Response("Report unavailable.", { status: 404 });
     initialized ??= initWasm(wasm);
     await initialized;
-    font ??= fetch(new URL("/fonts/bricolage-grotesque-report.ttf", url.origin), {
-      redirect: "manual",
-      signal: AbortSignal.timeout(4000)
-    })
-      .then(async (r) => {
-        if (!r.ok) throw Error("font unavailable");
-        return new Uint8Array(await r.arrayBuffer());
+    fonts ??= Promise.all(
+      [400, 700].map(async (weight) => {
+        const response = await fetch(new URL(`/fonts/bricolage-report-${weight}.ttf`, url.origin), {
+          redirect: "manual",
+          signal: AbortSignal.timeout(4000)
+        });
+        if (!response.ok) throw Error("font unavailable");
+        return new Uint8Array(await response.arrayBuffer());
       })
-      .catch((error) => {
-        font = undefined;
-        throw error;
-      });
+    ).catch((error) => {
+      fonts = undefined;
+      throw error;
+    });
     const names = new Map([
       ...[...identities.projects.map((p) => [p.slug, p.name] as const)],
       ["woodhouse", "Woodhouse"]
     ]);
-    const renderer = new Resvg(reportSvg(report, names, format as ReportFormat), {
-      font: { fontBuffers: [await font], defaultFontFamily: "Bricolage Grotesque" }
-    });
+    const renderer = new Resvg(
+      reportSvg(report, names, format as ReportFormat, measure ?? undefined),
+      {
+        font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
+      }
+    );
     const rendered = renderer.render();
     const bytes = new Uint8Array(rendered.asPng());
     rendered.free();

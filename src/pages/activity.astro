@@ -1,16 +1,16 @@
 ---
-import { getArtworkFallback } from "../data/site-metadata";
+/* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- Labelled overflow regions require keyboard scrolling. */
 import BaseLayout from "../layouts/BaseLayout.astro";
+import "../styles/analytics-workbench.css";
 import { env } from "cloudflare:workers";
 import type { D1Database } from "@cloudflare/workers-types";
 import { listProjectRecords } from "../content/repository";
 import {
   analyticsProjects,
-  parseDays,
+  parseReportingWindow,
+  periodFor,
   formatMetric,
-  weeklyRecord,
   type AnalyticsProject,
-  type Metric,
   type PortfolioReport
 } from "../data/portfolio-analytics";
 import {
@@ -19,471 +19,708 @@ import {
   projectReport,
   reportLink
 } from "../data/portfolio-reports";
+import {
+  measureChoices,
+  projectColours,
+  dateDays,
+  dailyPoints,
+  dailyStatus,
+  qualityText,
+  svgPlot
+} from "../data/analytics-workbench";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.url.searchParams.has("snapshot"))
   return Astro.redirect(`/activity/listening/${Astro.url.search}`, 302);
-const days = parseDays(Astro.url.searchParams.get("days"));
+const now = Date.now();
+const requestedWindow = parseReportingWindow(Astro.url.searchParams, now, 30);
+const period = requestedWindow ?? periodFor(30, now);
+const invalidWindow = !requestedWindow;
+if (invalidWindow) Astro.response.status = 400;
 const requested = Astro.url.searchParams.get("project");
-if (days === null || (requested && !analyticsProjects.includes(requested as AnalyticsProject)))
-  return new Response("Invalid reporting period or project.", { status: 400 });
-const result = await listProjectRecords();
-if (result.error)
+if (requested && !analyticsProjects.includes(requested as AnalyticsProject))
+  return new Response("Project unavailable.", { status: 404 });
+const identities = await listProjectRecords();
+if (identities.error)
   return new Response("Public project identities are unavailable.", {
     status: 503,
     headers: { "cache-control": "no-store" }
   });
-const publicIds = new Set(["woodhouse", ...result.projects.map((p) => p.slug)]);
+const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
 const selected = requested && publicIds.has(requested) ? (requested as AnalyticsProject) : null;
 if (requested && !selected) return new Response("Project unavailable.", { status: 404 });
-const db = (env as unknown as { DB: D1Database }).DB;
+const names = new Map([
+  ...identities.projects.map((p) => [p.slug, p.name] as const),
+  ["woodhouse", "Woodhouse"]
+]);
+const frozen = Astro.url.searchParams.has("report");
 let snapshot: PortfolioReport | null = null;
 try {
-  snapshot = Astro.url.searchParams.has("report")
-    ? await readPortfolioReport(db, Astro.url.searchParams.get("report")!)
-    : await createPortfolioReport(db, days, publicIds);
+  snapshot = frozen
+    ? await readPortfolioReport(
+        (env as unknown as { DB: D1Database }).DB,
+        Astro.url.searchParams.get("report")!
+      )
+    : await createPortfolioReport(
+        (env as unknown as { DB: D1Database }).DB,
+        period.days,
+        publicIds,
+        fetch,
+        now,
+        Astro.url.searchParams.has("from") ? period : undefined
+      );
 } catch {
-  /* Source unavailable remains an explicit reader state. */
+  /* Sources remain explicitly unavailable. */
 }
-if (Astro.url.searchParams.has("report") && !snapshot)
-  return new Response("This report is unavailable.", {
+if (frozen && !snapshot)
+  return new Response("This saved report is unavailable.", {
     status: 404,
     headers: { "cache-control": "no-store" }
   });
 const report = snapshot ? projectReport(snapshot, selected, publicIds) : null;
-const reportDays = report?.days ?? days;
-const rows = analyticsProjects
-  .filter((p) => publicIds.has(p) && (!selected || p === selected))
+const window = report?.period ?? period;
+const allRows = analyticsProjects
+  .filter((p) => publicIds.has(p))
   .map((project) => ({
     project,
-    identity: result.projects.find((p) => p.slug === project),
-    data: report?.projects.find((p) => p.project === project)?.report ?? null
+    name: names.get(project) ?? project,
+    data: snapshot?.projects.find((p) => p.project === project)?.report ?? null,
+    colour: projectColours[project]!
   }));
-rows.sort(
-  (a, b) =>
-    Number(!!b.data?.metrics.some((m) => m.value !== null)) -
-    Number(!!a.data?.metrics.some((m) => m.value !== null))
+const rows = allRows.filter((r) => !selected || r.project === selected);
+const possible = measureChoices.filter((m) =>
+  rows.some((r) => r.data?.metrics.some((v) => v.key === m.key))
 );
-const highlights = rows
-  .flatMap((r) => {
-    const keys = selected
-      ? ["game_starts", "game_completions", "app_opens", "actions", "listening_seconds", "visits"]
-      : ["game_starts", "app_opens", "listening_seconds"];
-    const metric = keys.flatMap(
-      (k) => r.data?.metrics.filter((m) => m.key === k && m.value !== null) ?? []
-    )[0];
-    return metric ? [{ name: r.identity?.name ?? "Woodhouse", metric }] : [];
-  })
-  .slice(0, 2);
-const names = new Map(rows.map((r) => [r.project, r.identity?.name ?? "Woodhouse"]));
-const title = selected ? `${names.get(selected)} · Activity` : "Portfolio activity";
-const link = report
-  ? reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)
-  : `${Astro.url.origin}/activity/`;
-const image = report
-  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}`
-  : "/og/woodhouse.jpg";
-const available = rows.filter((r) => r.data && r.data.metrics.some((m) => m.value !== null)).length;
-const featuredKeys = [
-  "game_starts",
-  "game_completions",
-  "active_seconds",
-  "returning_browsers",
-  "browsers",
-  "engaged_sessions",
-  "app_opens",
-  "actions",
-  "listening_seconds",
-  "listening_starts",
-  "visits",
-  "project_opens"
-];
-function featured(metrics: Metric[]) {
-  return [...metrics]
-    .sort((a, b) => featuredKeys.indexOf(a.key) - featuredKeys.indexOf(b.key))
-    .filter((m) => featuredKeys.includes(m.key))
-    .slice(0, 6);
+const requestedMeasure = Astro.url.searchParams.get("measure");
+const measure =
+  (requestedMeasure ? possible.find((m) => m.key === requestedMeasure) : null) ??
+  possible.find((m) =>
+    rows.some((r) => r.data?.metrics.some((v) => v.key === m.key && v.value !== null))
+  ) ??
+  measureChoices[0];
+const metricRows = rows.map((r) => ({
+  ...r,
+  metric: r.data?.metrics.find((m) => m.key === measure.key)
+}));
+const chartRows = metricRows.filter((r) => r.metric);
+function daysForStatus(
+  data: (typeof metricRows)[number]["data"],
+  metric: (typeof metricRows)[number]["metric"]
+) {
+  return dateDays(window).map((day) => dailyStatus(data, metric, day));
 }
+const chartSeries = chartRows.map((r) => ({
+  name: r.name,
+  colour: r.colour,
+  values: dailyPoints(r.metric, window),
+  statuses: daysForStatus(r.data, r.metric)
+}));
+const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
+const unit = chartRows[0]?.metric?.unit ?? "count";
+const days = dateDays(window);
+const available = rows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
+const allAvailable = allRows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
+const cleanDays = metricRows.map(
+  (r) => days.filter((day) => dailyStatus(r.data, r.metric, day) === "clean").length
+);
+const longestClean = Math.max(0, ...cleanDays);
+const qaOff = Astro.url.searchParams.get("analytics") === "off";
+function pageLink(
+  changes: { project?: string | null; measure?: string; days?: number; latest?: boolean } = {}
+) {
+  const q = new URLSearchParams();
+  if (frozen && snapshot && !changes.latest && changes.days === undefined)
+    q.set("report", snapshot.id);
+  else if (changes.days !== undefined) q.set("days", String(changes.days));
+  else if (Astro.url.searchParams.has("from") || frozen) {
+    q.set("from", window.from);
+    q.set("to", window.to);
+  } else q.set("days", String(window.days));
+  const project = changes.project === undefined ? selected : changes.project;
+  if (project) q.set("project", project);
+  q.set("measure", changes.measure ?? measure.key);
+  if (qaOff) q.set("analytics", "off");
+  return `/activity/?${q}`;
+}
+const title = selected ? `${names.get(selected)} analytics` : "Portfolio analytics";
+const link = report
+  ? `${reportLink(report.id, selected)}&measure=${measure.key}`
+  : `https://woodhouse.loftwah.com/activity/`;
+const image = report
+  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}&measure=${measure.key}`
+  : "/og/woodhouse.jpg";
+const dateLabel = (date: string) =>
+  new Date(date).toLocaleDateString("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 const caption = report
-  ? `${selected ? names.get(selected) : "The Loftwah portfolio"} · ${report.days}-day report\n${rows
-      .flatMap((r) => {
-        const values = featured(r.data?.metrics ?? [])
-          .filter((m) => m.value !== null)
-          .slice(0, 2)
-          .map((m) => `${formatMetric(m)} ${m.label.toLowerCase()}`);
-        return values.length ? [`${r.identity?.name ?? "Woodhouse"}: ${values.join(" · ")}`] : [];
-      })
-      .join("\n")}\nUTC window includes a partial current day. Coverage varies by project.\n${link}`
+  ? `${title} · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)\n${metricRows
+      .filter((r) => r.metric?.value !== null && r.metric)
+      .map(
+        (r) =>
+          `${r.name}: ${formatMetric(r.metric!)} ${measure.label.toLowerCase()} · ${qualityText(r.metric)}`
+      )
+      .join(
+        "\n"
+      )}\nReported activity, not unique people. ${window.complete ? "Closed calendar window; source coverage varies." : "Current UTC day is partial."} Legacy/test and coverage limitations apply; see report.\n${link}`
   : "";
-const stale = !!report && Date.now() - Date.parse(report.createdAt) > 86400000;
+const dataPayload = {
+  period: window,
+  measure: measure.label,
+  unit,
+  series: chartSeries,
+  createdAt: report?.createdAt ?? null
+};
 ---
 
 <BaseLayout
   title={title}
-  description="Real play, useful actions and measured listening across the Loftwah portfolio. Explore dated public reports with clear coverage and images ready to share."
-  path={
-    report && Astro.url.searchParams.has("report")
-      ? link.replace(Astro.url.origin, "")
-      : `/activity/${selected ? `?project=${selected}` : ""}`
-  }
+  description="Explore recorded gameplay, mini-app actions and audible listening. Interactive charts, custom UTC dates and clear source coverage across the Loftwah portfolio."
+  path={frozen ? link.replace("https://woodhouse.loftwah.com", "") : "/activity/"}
   currentPath="/activity/"
   image={image}
-  imageAlt={`${title}: ${reportDays}-day dated analytics report`}
+  imageAlt={`${title}: dated ${measure.label.toLowerCase()} report`}
+  analyticsWorkbench
 >
-  <div class="container observatory">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Woodhouse</a>
-      <span>/</span>
-      <a href="/activity/">Activity</a>
-      {selected && (
-        <>
-          <span>/</span>
-          <span>{names.get(selected)}</span>
-        </>
-      )}
-    </nav>
-    <header class="activity-header">
-      <h1>
-        {selected ? (
-          names.get(selected)
-        ) : (
-          <>
-            The work.
-            <br />
-            <em>The response.</em>
-          </>
-        )}
-      </h1>
-      <div class="activity-intro">
-        {highlights.length > 0 && (
-          <dl class="headline-readings">
-            {highlights.map((h) => (
-              <div>
-                <dt>
-                  {h.name} · {h.metric.label}
-                </dt>
-                <dd>{formatMetric(h.metric)}</dd>
-                <small>
-                  {h.metric.quality === "bounded" ? "Bounded count" : "Reported"} · {reportDays}{" "}
-                  days
-                </small>
-              </div>
-            ))}
-          </dl>
-        )}
-        <p>
-          {selected
-            ? "A closer look at the play, actions and attention this project receives."
-            : "Seven projects. Real play, useful actions and time well spent. Follow the numbers back to what people actually do."}
-        </p>
-        <a href="/activity/listening/">Games × Radio listening report</a>
-        <span aria-hidden="true"> · </span>
-        <a href="/share/">Share desk</a>
-      </div>
-    </header>
-    <div class="report-toolbar">
-      <nav aria-label="Reporting period">
-        {[7, 30, 90].map((n) => (
+  <div class="analytics-workbench">
+    <aside class="project-rail" aria-label="Choose a project">
+      <nav aria-label="Analytics projects">
+        <a href={pageLink({ project: null })} aria-current={!selected ? "page" : undefined}>
+          <span class="rail-all" aria-hidden="true"></span>All projects{" "}
+          <small>{allRows.length}</small>
+        </a>
+        {allRows.map((r) => (
           <a
-            aria-current={n === reportDays ? "page" : undefined}
-            href={`/activity/?days=${n}${selected ? `&project=${selected}` : ""}`}
+            href={pageLink({ project: r.project })}
+            aria-current={selected === r.project ? "page" : undefined}
           >
-            {n} days
+            <span class="source-dot" style={`--source:${r.colour}`} aria-hidden="true"></span>
+            {r.name}
+            <span
+              class:list={[
+                "rail-state",
+                { "is-connected": r.data?.metrics.some((m) => m.value !== null) }
+              ]}
+              aria-label={
+                r.data?.metrics.some((m) => m.value !== null) ? "Reporting" : "Unavailable"
+              }
+            ></span>
           </a>
         ))}
       </nav>
-      <p>
-        {report ? (
-          <>
-            <time datetime={report.createdAt}>
-              {new Date(report.createdAt).toLocaleString("en-AU", {
-                timeZone: "UTC",
-                dateStyle: "medium",
-                timeStyle: "short"
-              })}{" "}
-              UTC
-            </time>
-            <span>
-              {available} of {rows.length} projects reporting
-            </span>
-          </>
-        ) : (
-          "Reporting is temporarily unavailable"
-        )}
-      </p>
-    </div>
-    {Astro.url.searchParams.has("report") && (
-      <p class="pinned-note">
-        Saved report · These figures belong to this snapshot. {stale && "This is an older report."}{" "}
-        <a href={`/activity/?days=${reportDays}${selected ? `&project=${selected}` : ""}`}>
-          See the latest
-        </a>
-      </p>
-    )}
-    {report && (
-      <section class="report-share" aria-label="Share this report">
+      <div class="rail-foot">
+        <a href="/activity/measurement/">Measurement & privacy</a>
+        <a href="/activity/listening/">Games × Radio</a>
+        <a href="/projects/">Explore the projects</a>
+      </div>
+    </aside>
+    <div class="workbench-body">
+      <header class="workbench-heading">
         <div>
-          <h2>Your numbers. Ready to post.</h2>
-          <p>Save an image or copy a caption with this report’s permanent link.</p>
+          <h1>{title}</h1>
+          <p>Recorded activity. Evidence in context.</p>
         </div>
-        <div class="share-actions">
-          <a class="image-download" href={`${image}&download=1`} download>
-            Download image
-          </a>
-          <button data-report-share type="button" hidden>
-            Share image
-          </button>
-          <button data-report-copy type="button">
-            Copy caption + link
-          </button>
-          <a href={link}>Report permalink</a>
-          <span data-report-status role="status"></span>
-        </div>
-        <details class="report-preview">
-          <summary>Preview report & choose a shape</summary>
-          <nav aria-label="Image format">
-            {["landscape", "square", "portrait"].map((shape) => (
-              <a href={`${image}&format=${shape}&download=1`} download>
-                {shape[0]!.toUpperCase() + shape.slice(1)} image
+        <a class="share-jump" href="#share-report">
+          Share report{" "}
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <path
+              d="M10 13V2m0 0L6 6m4-4 4 4M4 10v7h12v-7"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+          </svg>
+        </a>
+      </header>
+      {invalidWindow && (
+        <p class="workbench-alert" role="alert">
+          Choose real UTC dates in order, ending no later than today, with a maximum 90-day window.
+          Showing the last 30 days while you correct the range.
+        </p>
+      )}
+      <div class="date-toolbar">
+        <nav aria-label="Reporting period">
+          {[7, 30, 90].map((n) => (
+            <a
+              href={pageLink({ days: n })}
+              aria-current={
+                !frozen && !Astro.url.searchParams.has("from") && window.days === n
+                  ? "page"
+                  : undefined
+              }
+            >
+              {n}d
+            </a>
+          ))}
+        </nav>
+        <form method="get" action="/activity/" class="custom-dates" data-date-form>
+          {selected && <input type="hidden" name="project" value={selected} />}
+          <input type="hidden" name="measure" value={measure.key} />
+          {qaOff && <input type="hidden" name="analytics" value="off" />}
+          <label>
+            From{" "}
+            <input
+              type="date"
+              name="from"
+              value={window.from}
+              max={new Date(now).toISOString().slice(0, 10)}
+              required
+            />
+          </label>
+          <label>
+            To{" "}
+            <input
+              type="date"
+              name="to"
+              value={window.to}
+              max={new Date(now).toISOString().slice(0, 10)}
+              required
+            />
+          </label>
+          <button type="submit">Apply dates</button>
+          <span>UTC · max 90 days</span>
+        </form>
+      </div>
+      <div class="snapshot-line">
+        <span>
+          {dateLabel(window.from)} – {dateLabel(window.to)} · {window.days}{" "}
+          {window.days === 1 ? "day" : "days"} ·{" "}
+          {window.complete ? "Closed calendar dates" : "Today is partial"}
+        </span>
+        <span>
+          {available}/{rows.length} sources reporting {frozen ? "· Saved snapshot" : ""}
+        </span>
+      </div>
+      {frozen && (
+        <p class="saved-report">
+          This report is frozen at {report?.createdAt.replace("T", " ").slice(0, 16)} UTC.{" "}
+          <a href={pageLink({ latest: true })}>Refresh these dates</a> ·{" "}
+          <a href={pageLink({ days: 30 })}>Latest 30 days</a>
+        </p>
+      )}
+      <div class="analysis-layout">
+        <div class="chart-column">
+          <nav class="measure-navigation" aria-label="Choose a measure">
+            {(possible.length ? possible : measureChoices.slice(0, 3)).map((m) => (
+              <a
+                href={pageLink({ measure: m.key })}
+                aria-current={measure.key === m.key ? "page" : undefined}
+              >
+                {m.label}
               </a>
             ))}
           </nav>
-          <img
-            src={image}
-            width="1200"
-            height="630"
-            alt={`${title} report showing the same figures and coverage as this page`}
-            loading="lazy"
-          />
-        </details>
-      </section>
-    )}
-    <section class="project-ledger" aria-labelledby="projects-heading">
-      <div class="ledger-heading">
-        <h2 id="projects-heading">{selected ? "The latest window" : "Across the portfolio"}</h2>
-        <p>{reportDays} days · UTC · Current day is partial</p>
-      </div>
-      {rows.map(({ project, identity, data }) => {
-        const metrics = featured(data?.metrics ?? []);
-        const trend = data?.metrics.find(
-          (m) =>
-            m.daily.length > 1 && m.value !== null && m.value > 0 && featuredKeys.includes(m.key)
-        );
-        const maximum = trend ? Math.max(...trend.daily.map((d) => d.value), 1) : 1;
-        const record =
-          trend && data
-            ? weeklyRecord(
-                trend,
-                data.coverage,
-                Date.parse(report?.createdAt ?? new Date().toISOString())
-              )
-            : null;
-        return (
-          <article class="project-row" id={project}>
-            <div class="project-identity" data-project-artwork>
-              {identity?.previewImage && (
-                <a href={identity.siteUrl} aria-label={`Open the ${identity.name} site`}>
-                  <img
-                    src={identity.previewImage}
-                    data-fallback-src={getArtworkFallback(identity).image}
-                    data-fallback-alt={getArtworkFallback(identity).alt}
-                    data-fallback-credit={getArtworkFallback(identity).credit}
-                    width="1200"
-                    height="630"
-                    alt=""
-                    loading="lazy"
-                  />
-                </a>
-              )}
+          <section class="main-chart" aria-labelledby="trend-heading">
+            <div class="chart-heading">
               <div>
-                <h3>
-                  <a href={`/activity/?project=${project}&days=${reportDays}`}>
-                    {identity?.name ?? "Woodhouse"}
-                  </a>
-                </h3>
-                {identity?.previewImage && (
-                  <small class="artwork-credit" data-artwork-status>
-                    Artwork from {identity.name}
-                  </small>
-                )}
+                <h2 id="trend-heading">{measure.label}</h2>
                 <p>
-                  {project === "loftwahfm"
-                    ? "Music & radio"
-                    : project === "app-composer"
-                      ? "Mini-apps"
-                      : project === "woodhouse"
-                        ? "Portfolio & publishing"
-                        : "Gameplay"}
+                  {unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · gaps mean
+                  unavailable
                 </p>
               </div>
+              <div class="chart-type" data-chart-controls hidden>
+                <button type="button" data-chart-type="line" aria-pressed="true">
+                  Line
+                </button>
+                <button type="button" data-chart-type="bar" aria-pressed="false">
+                  Bars
+                </button>
+              </div>
             </div>
-            <div class="project-measurements">
-              {metrics.length ? (
-                <dl class="metrics">
-                  {metrics.map((m) => (
-                    <div>
-                      <dt>{m.label}</dt>
-                      <dd>{formatMetric(m)}</dd>
-                      <small>
-                        {m.value === null
-                          ? "Not measured"
-                          : m.quality === "bounded"
-                            ? "Bounded count"
-                            : m.quality === "sampled"
-                              ? "Estimated"
-                              : "Reported"}
-                      </small>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <div class="awaiting">
-                  <strong>Awaiting a connected source</strong>
-                  <p>This project’s measurements are unavailable in this snapshot.</p>
-                </div>
-              )}
-              {trend && (
-                <details class="trend">
-                  <summary>
-                    {trend.label} by day
-                    <span>
-                      {trend.daily[0]?.date} — {trend.daily.at(-1)?.date}
-                    </span>
-                  </summary>
-                  <div class="bar-chart" aria-hidden="true">
-                    {trend.daily.map((d) => (
+            <p class="mobile-measure-reading">{measure.meaning}</p>
+            <dl class="metric-strip">
+              {metricRows
+                .filter((r) => r.metric)
+                .map((r) => (
+                  <div>
+                    <dt>
                       <span
-                        style={`--bar:${Math.max(0, (d.value / maximum) * 100)}%`}
-                        title={`${d.date}: ${d.value}`}
+                        class="source-dot"
+                        style={`--source:${r.colour}`}
+                        aria-hidden="true"
                       ></span>
-                    ))}
+                      {r.name}
+                    </dt>
+                    <dd>{formatMetric(r.metric!)}</dd>
+                    <small>
+                      {qualityText(r.metric)}
+                      {r.data &&
+                      (!r.data.coverage.comparableFrom ||
+                        window.from <= r.data.coverage.comparableFrom.slice(0, 10)) &&
+                      r.metric?.value !== null
+                        ? " · legacy in range"
+                        : ""}
+                    </small>
                   </div>
-                  <table>
-                    <caption>
-                      {trend.label} · daily reported {trend.unit}
-                    </caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">UTC date</th>
-                        <th scope="col">{trend.label}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {trend.daily.map((d) => (
-                        <tr>
-                          <th scope="row">{d.date}</th>
-                          <td>{d.value.toLocaleString("en-AU")}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </details>
-              )}
-              {record && (
-                <p class="record">
-                  {record.newBest ? (
-                    <strong>New best in this report’s history</strong>
-                  ) : (
-                    <strong>Last complete week</strong>
-                  )}{" "}
-                  {record.value.toLocaleString("en-AU")} {trend?.label.toLowerCase()} ·{" "}
-                  {record.from}–{record.to}
-                  {record.comparison !== null &&
-                    ` · ${record.comparison > 0 ? "+" : ""}${record.comparison}% against the preceding week`}
-                  . Compared with {record.comparedWeeks - 1} complete weeks.
+                ))}
+            </dl>
+            {!hasDaily && (
+              <div class="chart-empty">
+                <strong>No daily measurements for this selection</strong>
+                <p>
+                  Choose another measure, project or date range. An unavailable source does not mean
+                  nobody used the product.
                 </p>
-              )}
-              <p class="project-coverage">
-                {data?.coverage.startedAt ? (
-                  <>
-                    Collection from {data.coverage.startedAt.slice(0, 10)} · {data.period.from}–
-                    {data.period.to}
-                    {Date.now() - Date.parse(data.generatedAt) > 86400000 &&
-                      " · Source is more than a day old"}
-                  </>
-                ) : (
-                  "Collection coverage has not been established."
-                )}
+              </div>
+            )}
+            <div
+              class:list={["interactive-plot", { "has-no-data": !hasDaily }]}
+              data-activity-chart
+              aria-label={`${measure.label} daily chart`}
+            >
+              <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />
+            </div>
+            <div class="chart-legend">
+              {chartRows.map((r) => (
+                <button type="button" data-series-toggle={r.name} aria-pressed="true" disabled>
+                  <i style={`--source:${r.colour}`} aria-hidden="true"></i>
+                  {r.name}
+                </button>
+              ))}
+            </div>
+            <div class="chart-instructions">
+              <p data-chart-help>
+                {hasDaily
+                  ? "Inspect a date to see source values. The data table below works without interactive charts."
+                  : "No line is drawn for missing data."}
               </p>
-              <details class="metric-definitions">
-                <summary>Sources & metric definitions</summary>
-                {data ? (
-                  <>
-                    <p>
-                      <a href={data.source.endpoint}>Public source</a> · Updated{" "}
-                      <time datetime={data.generatedAt}>{data.generatedAt}</time>
-                    </p>
-                    {data.coverage.limitations.map((text) => (
-                      <p>{text}</p>
+              <button type="button" data-reset-zoom hidden>
+                Reset zoom
+              </button>
+            </div>
+            <div class="day-inspector" data-day-inspector hidden>
+              <label>
+                Inspect UTC day{" "}
+                <input
+                  type="range"
+                  min="0"
+                  max={window.days - 1}
+                  value={window.days - 1}
+                  aria-label="Inspect UTC day"
+                  data-inspect-day
+                />
+              </label>
+              <output data-day-output aria-live="polite"></output>
+            </div>
+            <details class="chart-data">
+              <summary>Chart data & export</summary>
+              <p>
+                These are daily values for {measure.label.toLowerCase()}. A dash means unavailable.
+                Daily distinct-browser counts must not be added to estimate period-level people.
+              </p>
+              <button type="button" data-csv-download hidden>
+                Download chart CSV
+              </button>
+              <div class="table-scroll" tabindex="0" role="region" aria-label="Daily chart values">
+                <table>
+                  <caption>
+                    {measure.label}· UTC dates ·{unit}
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      {metricRows.map((r) => (
+                        <th scope="col">{r.name}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {days.map((d, i) => (
+                      <tr>
+                        <th scope="row">{d}</th>
+                        {metricRows.map((r) => (
+                          <td>
+                            {dailyPoints(r.metric, window)[i]?.toLocaleString("en-AU") ?? "—"}
+                            <small class="cell-coverage">{dailyStatus(r.data, r.metric, d)}</small>
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                    <dl>
-                      {data.metrics.map((m) => (
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <section class="coverage-calendar" aria-labelledby="coverage-heading">
+            <div class="section-title">
+              <div>
+                <h2 id="coverage-heading">Can we compare these dates?</h2>
+                <p>Coverage for the selected measure. Colour describes evidence, not popularity.</p>
+              </div>
+            </div>
+            <div class="coverage-legend">
+              <span>
+                <i class="clean"></i>Comparable full day
+              </span>
+              <span>
+                <i class="partial"></i>Partial day
+              </span>
+              <span>
+                <i class="legacy"></i>Legacy / test risk
+              </span>
+              <span>
+                <i class="bounded"></i>Bounded / sampled
+              </span>
+              <span>
+                <i class="missing"></i>Not measured
+              </span>
+            </div>
+            <div
+              class="calendar-scroll"
+              tabindex="0"
+              role="region"
+              aria-label="Daily source coverage"
+            >
+              <div class="coverage-grid" style={`--days:${window.days}`}>
+                <span></span>
+                <div class="calendar-dates">
+                  <span>{dateLabel(window.from)}</span>
+                  <span>{dateLabel(window.to)}</span>
+                </div>
+                {metricRows.map((r) => (
+                  <>
+                    <a href={pageLink({ project: r.project })}>{r.name}</a>
+                    <div class="calendar-cells">
+                      {days.map((day) => (
+                        <span
+                          class={dailyStatus(r.data, r.metric, day)}
+                          title={`${r.name} · ${day}: ${dailyStatus(r.data, r.metric, day)}${r.metric?.daily.find((d) => d.date === day) ? ` · ${r.metric.daily.find((d) => d.date === day)!.value} ${unit}` : ""}`}
+                        ></span>
+                      ))}
+                    </div>
+                  </>
+                ))}
+              </div>
+            </div>
+            <p class="coverage-caption">
+              {longestClean > 0
+                ? `The longest available comparable history in this selection is ${longestClean} complete daily observations.`
+                : "No clean full-day comparison is available for this measure in this snapshot."}{" "}
+              First collection days and today remain partial. Legacy activity may include tests that
+              cannot be separated.
+            </p>
+          </section>
+          <section class="source-register" aria-labelledby="sources-heading">
+            <h2 id="sources-heading">Follow the numbers to their source</h2>
+            <p>Every measure has a definition, a collection boundary and blind spots.</p>
+            {rows.map((r) => (
+              <details id={`source-${r.project}`}>
+                <summary>
+                  <span>
+                    <i class="source-dot" style={`--source:${r.colour}`} aria-hidden="true"></i>
+                    {r.name}
+                  </span>
+                  <span>
+                    {r.data
+                      ? `${r.data.metrics.filter((m) => m.value !== null).length} measures available`
+                      : "Source unavailable"}
+                  </span>
+                </summary>
+                {r.data ? (
+                  <div class="source-detail">
+                    <p>
+                      <a href={r.data.source.endpoint}>Live aggregate endpoint</a> · generated{" "}
+                      <time datetime={r.data.generatedAt}>{r.data.generatedAt}</time>
+                    </p>
+                    <dl class="source-dates">
+                      <div>
+                        <dt>Collection began</dt>
+                        <dd>{r.data.coverage.startedAt ?? "Not established"}</dd>
+                      </div>
+                      <div>
+                        <dt>Comparable history from</dt>
+                        <dd>{r.data.coverage.comparableFrom ?? "Not established"}</dd>
+                      </div>
+                      <div>
+                        <dt>Source revision</dt>
+                        <dd>{r.data.source.revision ?? "Not supplied"}</dd>
+                      </div>
+                    </dl>
+                    <ul>
+                      {r.data.coverage.limitations.map((text) => (
+                        <li>{text}</li>
+                      ))}
+                    </ul>
+                    <dl class="definition-list">
+                      {r.data.metrics.map((m) => (
                         <div>
                           <dt>
-                            {m.label}
-                            {m.value === null ? " · unavailable" : ""}
+                            {m.label} <strong>{formatMetric(m)}</strong>
+                            <small>{qualityText(m)}</small>
                           </dt>
                           <dd>{m.definition}</dd>
                         </div>
                       ))}
                     </dl>
-                  </>
+                  </div>
                 ) : (
                   <p>
-                    The source has not supplied a valid report. Missing measurements do not mean
-                    zero use.
+                    This source did not supply a valid report for these dates. It may be
+                    disconnected, not yet released, out of retained history or temporarily
+                    unavailable. We cannot infer zero activity.
                   </p>
                 )}
               </details>
-            </div>
-          </article>
-        );
-      })}
-    </section>
-    {report?.analysis && report.analysis.findings.length > 0 && (
-      <section class="measurement-note" aria-labelledby="weekly-findings-heading">
-        <h2 id="weekly-findings-heading">What changed last week.</h2>
-        {report.analysis.findings.map((finding) => (
-          <p>
-            <strong>
-              {names.get(finding.project)} · {finding.label}
-            </strong>
-            : {formatMetric({ value: finding.value, unit: finding.unit })} against{" "}
-            {formatMetric({ value: finding.previous, unit: finding.unit })} in the preceding week (
-            {finding.changePercent > 0 ? "+" : ""}
-            {finding.changePercent}%). {finding.from}–{finding.to} · complete UTC weeks.{" "}
-            {finding.nextAction}
-          </p>
-        ))}
-        <p>These are changes in reported activity. No cause has been established.</p>
-      </section>
-    )}
-    <section class="measurement-note">
-      <h2>Attention has more than one shape.</h2>
-      <p>
-        A visit is not a player. An app open is not a completed action. Music time is not gameplay
-        time. Each project reports the actions it can actually observe, with its own coverage and
-        counting rules.
-      </p>
-      <p>
-        Browser events describe reported activity, not verified people or competitive scores.
-        Offline play, privacy choices and blocked requests affect collection. Returning audiences
-        and retention stay unavailable until a source can measure them defensibly. Records require
-        comparable complete UTC weeks; short or partial history earns no badge.
-      </p>
-      {report && (
+            ))}
+          </section>
+        </div>
+        <aside class="interpretation" aria-label="Read this report">
+          <section>
+            <h2>What am I looking at?</h2>
+            <p>{measure.meaning}</p>
+            <p class="context-muted">
+              The chart uses one measure and one unit at a time. Each coloured line belongs to a
+              project; the source totals cover the selected window.
+            </p>
+          </section>
+          <section>
+            <h2>What does it tell us?</h2>
+            <p>
+              {hasDaily
+                ? "We can see when recorded activity occurred and inspect how it is distributed across the selected dates."
+                : "This selection cannot currently establish a pattern of use."}
+            </p>
+            <p>
+              {report?.analysis?.findings.length
+                ? "Comparable full-week movements are listed below. They describe recorded activity; their causes are unknown."
+                : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
+            </p>
+            {report?.analysis?.findings.map((f) => (
+              <p>
+                <strong>
+                  {names.get(f.project)} · {f.label}: {f.changePercent > 0 ? "+" : ""}
+                  {f.changePercent}%
+                </strong>{" "}
+                in the complete week {f.from}–{f.to}. {f.nextAction}
+              </p>
+            ))}
+          </section>
+          <section class="investor-readout">
+            <h2>If you’re assessing the business</h2>
+            <p>
+              <strong>Early product instrumentation, with material evidence gaps.</strong>
+            </p>
+            <dl>
+              <div>
+                <dt>Usage</dt>
+                <dd>
+                  {allAvailable}/{allRows.length} sources provide some activity. Reports are not
+                  verified people.
+                </dd>
+              </div>
+              <div>
+                <dt>Retention</dt>
+                <dd>
+                  No portfolio cohort-retention evidence. Returning browsers, where available, are a
+                  narrower signal.
+                </dd>
+              </div>
+              <div>
+                <dt>Commercial proof</dt>
+                <dd>
+                  Revenue, paying customers, acquisition cost and customer value are not measured
+                  here.
+                </dd>
+              </div>
+            </dl>
+            <p>
+              Use this to ask better product questions. It cannot establish product–market fit,
+              market demand or an investment case.
+            </p>
+            <a href="/projects/">Read the product dossiers</a>
+          </section>
+          <section id="share-report">
+            <h2>Take the evidence with you</h2>
+            <p>
+              A dated snapshot, with the same measures and coverage. Refreshing a saved link never
+              changes its figures.
+            </p>
+            {report ? (
+              <details class="share-panel" data-share-panel>
+                <summary>
+                  Share report{" "}
+                  <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+                    <path
+                      d="M10 13V2m0 0L6 6m4-4 4 4M4 10v7h12v-7"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                </summary>
+                <div class="share-actions">
+                  <a href={`${image}&download=1`} download>
+                    Download landscape PNG
+                  </a>
+                  <a href={`${image}&format=square&download=1`} download>
+                    Download square PNG
+                  </a>
+                  <a href={`${image}&format=portrait&download=1`} download>
+                    Download portrait PNG
+                  </a>
+                  <button data-report-share type="button" hidden>
+                    Share image
+                  </button>
+                  <button data-report-copy type="button">
+                    Copy caption + link
+                  </button>
+                  <a href={link}>Open frozen permalink</a>
+                  <a href={`/api/portfolio-report.json?report=${report.id}`}>
+                    Download public JSON
+                  </a>
+                  <p data-report-status role="status"></p>
+                </div>
+              </details>
+            ) : (
+              <p>Sharing is unavailable until a source report can be saved.</p>
+            )}
+          </section>
+          <section class="report-provenance">
+            <h2>Report details</h2>
+            <dl>
+              <div>
+                <dt>Snapshot</dt>
+                <dd>{report?.id ?? "Unavailable"}</dd>
+              </div>
+              <div>
+                <dt>Captured</dt>
+                <dd>{report?.createdAt.replace("T", " ").slice(0, 19) ?? "Unavailable"} UTC</dd>
+              </div>
+              <div>
+                <dt>Dates</dt>
+                <dd>
+                  {window.from} – {window.to}
+                </dd>
+              </div>
+              <div>
+                <dt>Time zone</dt>
+                <dd>UTC; dates may differ from your local day</dd>
+              </div>
+            </dl>
+            <a href="/activity/measurement/">Tracking, retention & privacy choices</a>
+          </section>
+        </aside>
+      </div>
+      <footer class="workbench-close">
         <p>
-          <a href={`/api/portfolio-report.json?report=${report.id}`}>
-            Read this snapshot’s public data
-          </a>
+          Activity is a signal. Understanding comes from the product, the people using it and the
+          limits of the measurement.
         </p>
-      )}
-      <p>
-        <a href="/activity/measurement/">Measurement & privacy choices</a>
-      </p>
-    </section>
+        <a href="/activity/measurement/">Read how this is measured</a>
+        <a href="/activity/listening/">Explore Games × Radio</a>
+      </footer>
+    </div>
   </div>
+  <script
+    type="application/json"
+    id="activity-chart-data"
+    set:html={JSON.stringify(dataPayload).replace(/</g, "\\u003c")}
+  />
   <script
     type="application/json"
     id="report-sharing"
@@ -491,442 +728,5 @@ const stale = !!report && Date.now() - Date.parse(report.createdAt) > 86400000;
   />
 </BaseLayout>
 <script>
-  const payload = document.querySelector<HTMLScriptElement>("#report-sharing");
-  if (payload) {
-    const { image, caption } = JSON.parse(payload.textContent ?? "{}");
-    const status = document.querySelector<HTMLElement>("[data-report-status]");
-    document.querySelector("[data-report-copy]")?.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(caption);
-        if (status) status.textContent = "Caption and report link copied.";
-      } catch {
-        if (status)
-          status.textContent = "Copy unavailable. Open the report permalink to share its address.";
-      }
-    });
-    const button = document.querySelector<HTMLButtonElement>("[data-report-share]");
-    let file: File | null = null;
-    if (button && navigator.canShare && navigator.share) {
-      fetch(image)
-        .then(async (response) => {
-          if (!response.ok) return;
-          file = new File([await response.blob()], "woodhouse-report.png", { type: "image/png" });
-          if (navigator.canShare({ files: [file] })) button.hidden = false;
-        })
-        .catch(() => {});
-      button.addEventListener("click", async () => {
-        if (!file) return;
-        try {
-          await navigator.share({ files: [file], text: caption });
-        } catch (error) {
-          if (error instanceof Error && error.name !== "AbortError" && status)
-            status.textContent = "Image sharing unavailable. Use Download image.";
-        }
-      });
-    }
-  }
+  import "../scripts/analytics-workbench";
 </script>
-<style>
-  .observatory {
-    padding-block: 2rem 5rem;
-  }
-  .activity-header {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 3rem;
-    align-items: end;
-    padding-block: 2rem 3rem;
-  }
-  .activity-header h1 {
-    font-size: clamp(3.3rem, 6.7vw, 6rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
-    margin: 0;
-    text-wrap: balance;
-  }
-  .activity-header h1 em {
-    font-style: normal;
-    color: var(--acid);
-  }
-  .headline-readings {
-    display: flex;
-    gap: 2rem;
-    margin: 0 0 1.25rem;
-  }
-  .headline-readings dt {
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .headline-readings dd {
-    font-family: var(--display);
-    font-size: 3rem;
-    line-height: 1.1;
-    margin: 0.25rem 0;
-  }
-  .headline-readings small {
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
-  .artwork-credit {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--muted);
-    margin: 0.3rem 0;
-  }
-  .activity-intro {
-    max-width: 44ch;
-  }
-  .activity-intro p {
-    font-size: 1.22rem;
-    margin-top: 0;
-  }
-  .activity-intro a {
-    font-size: 0.93rem;
-  }
-  .report-toolbar {
-    border-block: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding-block: 1rem;
-    align-items: center;
-  }
-  .report-toolbar nav {
-    display: flex;
-    gap: 0.5rem;
-  }
-  .report-toolbar nav a {
-    min-height: 44px;
-    padding: 0.55rem 0.9rem;
-    text-decoration: none;
-    border: 1px solid transparent;
-  }
-  .report-toolbar [aria-current="page"] {
-    background: var(--acid);
-    color: var(--ink);
-    font-weight: 700;
-  }
-  .report-toolbar p {
-    font-size: 0.86rem;
-    margin: 0;
-    text-align: right;
-    color: var(--muted);
-  }
-  .report-toolbar p span {
-    display: block;
-  }
-  .pinned-note {
-    padding: 1rem;
-    background: var(--ink-raised);
-  }
-  .report-share {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem 3rem;
-    padding-block: 2rem;
-    border-bottom: 1px solid var(--line);
-  }
-  .report-share h2 {
-    font-size: 1.5rem;
-    margin: 0 0 0.5rem;
-  }
-  .report-share p {
-    color: var(--muted);
-    margin: 0;
-    max-width: 43ch;
-  }
-  .share-actions {
-    display: flex;
-    gap: 0.6rem 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .share-actions a,
-  .share-actions button {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 0;
-    font-size: 0.94rem;
-  }
-  .share-actions .image-download {
-    background: var(--acid);
-    color: var(--ink);
-    padding: 0.6rem 1rem;
-    font-weight: 700;
-    text-decoration: none;
-  }
-  .share-actions button {
-    background: transparent;
-    color: var(--paper);
-    border: 0;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  .share-actions span {
-    width: 100%;
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-  .report-preview {
-    grid-column: 1/-1;
-    max-width: 50rem;
-  }
-  .report-preview summary,
-  .trend summary,
-  .metric-definitions summary {
-    cursor: pointer;
-    padding-block: 0.75rem;
-    min-height: 44px;
-  }
-  .report-preview nav {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    padding-block: 1rem;
-  }
-  .report-preview nav a {
-    min-height: 44px;
-  }
-  .report-preview img {
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--line);
-  }
-  .ledger-heading {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: baseline;
-    padding-block: 3rem 1rem;
-  }
-  .ledger-heading h2 {
-    font-size: 2rem;
-    margin: 0;
-  }
-  .ledger-heading p {
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin: 0;
-  }
-  .project-row {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    gap: 2.5rem;
-    padding-block: 2rem;
-    border-top: 1px solid var(--line);
-  }
-  .project-identity img {
-    width: 100%;
-    height: auto;
-    display: block;
-    aspect-ratio: 1200/630;
-    object-fit: cover;
-  }
-  .project-identity h3 {
-    font-size: 1.45rem;
-    margin: 1rem 0 0.2rem;
-  }
-  .project-identity h3 a {
-    text-decoration: none;
-  }
-  .project-identity p {
-    color: var(--muted);
-    margin: 0;
-    font-size: 0.9rem;
-  }
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-    margin: 0 0 1.2rem;
-  }
-  .metrics dt {
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-  .metrics dd {
-    font-family: "Bricolage Grotesque", sans-serif;
-    font-size: 2.25rem;
-    line-height: 1.2;
-    margin: 0.4rem 0;
-    font-variant-numeric: tabular-nums;
-  }
-  .metrics small {
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-  .awaiting {
-    padding-block: 0.5rem 1rem;
-  }
-  .awaiting strong {
-    font-size: 1.3rem;
-  }
-  .awaiting p {
-    color: var(--muted);
-    margin: 0.4rem 0;
-  }
-  .project-coverage {
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin: 0.8rem 0;
-  }
-  .metric-definitions {
-    font-size: 0.87rem;
-    color: var(--muted);
-  }
-  .metric-definitions p {
-    overflow-wrap: anywhere;
-    max-width: 70ch;
-  }
-  .metric-definitions dl div {
-    padding-block: 0.5rem;
-  }
-  .metric-definitions dt {
-    color: var(--paper);
-    font-weight: 600;
-  }
-  .metric-definitions dd {
-    margin: 0.3rem 0;
-    max-width: 70ch;
-  }
-  .trend {
-    font-size: 0.9rem;
-  }
-  .trend summary span {
-    color: var(--muted);
-    font-size: 0.8rem;
-    margin-left: 1rem;
-  }
-  .bar-chart {
-    display: flex;
-    height: 115px;
-    gap: 3px;
-    align-items: end;
-    border-bottom: 1px solid var(--line);
-    padding-top: 1rem;
-  }
-  .bar-chart span {
-    flex: 1;
-    background: var(--acid);
-    height: var(--bar);
-    min-height: 0;
-  }
-  .trend table {
-    margin-top: 1rem;
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.85rem;
-  }
-  .trend caption {
-    text-align: left;
-    color: var(--muted);
-    padding-block: 0.5rem;
-  }
-  .trend th,
-  .trend td {
-    text-align: left;
-    padding: 0.4rem;
-    border-bottom: 1px solid var(--line);
-  }
-  .record {
-    font-size: 0.9rem;
-    color: var(--muted);
-    max-width: 65ch;
-  }
-  .record strong {
-    color: var(--acid);
-    display: block;
-  }
-  .measurement-note {
-    border-top: 1px solid var(--line);
-    padding-top: 2.5rem;
-    margin-top: 1rem;
-    max-width: 74ch;
-  }
-  .measurement-note h2 {
-    font-size: 2rem;
-  }
-  .measurement-note p {
-    color: var(--muted);
-  }
-  @media (max-width: 900px) {
-    .project-row {
-      grid-template-columns: 170px 1fr;
-      gap: 1.5rem;
-    }
-    .metrics {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .metrics dd {
-      font-size: 2rem;
-    }
-  }
-  @media (max-width: 600px) {
-    .activity-header {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-      padding-block: 1.5rem 2rem;
-    }
-    .activity-header h1 {
-      font-size: 3.5rem;
-    }
-    .activity-intro p {
-      font-size: 1.08rem;
-    }
-    .report-toolbar {
-      align-items: start;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .report-toolbar p {
-      text-align: left;
-    }
-    .report-toolbar p span {
-      display: inline;
-      margin-left: 1rem;
-    }
-    .report-share {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    .ledger-heading {
-      display: block;
-      padding-top: 2rem;
-    }
-    .ledger-heading h2 {
-      margin-bottom: 0.6rem;
-    }
-    .project-row {
-      grid-template-columns: 1fr;
-      gap: 1.4rem;
-      padding-block: 1.5rem;
-    }
-    .project-identity {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-    }
-    .project-identity > a {
-      width: 115px;
-      flex-shrink: 0;
-    }
-    .project-identity h3 {
-      font-size: 1.35rem;
-      margin: 0 0 0.2rem;
-    }
-    .metrics {
-      gap: 1rem 1.5rem;
-    }
-    .metrics dd {
-      font-size: 2.4rem;
-    }
-    .trend summary span {
-      display: block;
-      margin: 0.2rem 0 0 1rem;
-    }
-    .measurement-note h2 {
-      font-size: 1.8rem;
-    }
-  }
-</style>
