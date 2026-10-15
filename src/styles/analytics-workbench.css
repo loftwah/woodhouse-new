@@ -1113,3 +1113,41 @@
     font-size: 1.7rem;
   }
 }
+.custom-range summary {
+  min-height: 44px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #35435a;
+  border-radius: 5px;
+  background: var(--surface);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.custom-range[open] {
+  flex-basis: 100%;
+}
+.custom-range[open] .custom-dates {
+  padding-top: 0.75rem;
+}
+.workbench-heading > .date-toolbar:has(.custom-range[open]) {
+  flex-wrap: wrap;
+}
+@media (max-width: 720px) {
+  .date-toolbar nav {
+    width: auto;
+  }
+  .custom-range {
+    margin-left: auto;
+  }
+  .custom-range[open] {
+    margin-left: 0;
+  }
+  .custom-range summary {
+    font-size: 0.8rem;
+  }
+  .workbench-heading > .date-toolbar {
+    align-items: center;
+  }
+  .custom-dates > span {
+    width: 100%;
+  }
+}

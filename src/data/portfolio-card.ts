@@ -1,9 +1,10 @@
 import { formatMetric, periodFor, type PortfolioReport } from "./portfolio-analytics.ts";
 import {
   dailyPoints,
+  dailyStatus,
+  dateDays,
   measureChoices,
   projectColours,
-  qualityText,
   svgPlot
 } from "./analytics-workbench.ts";
 export const reportFormats = {
@@ -22,7 +23,8 @@ export function reportSvg(
   report: PortfolioReport,
   names: Map<string, string>,
   format: ReportFormat = "landscape",
-  requestedMeasure?: string
+  requestedMeasure?: string,
+  origin = "https://woodhouse.loftwah.com"
 ) {
   const { width: w, height: h } = reportFormats[format];
   const landscape = format === "landscape",
@@ -46,6 +48,25 @@ export function reportSvg(
     metric: row.report?.metrics.find((m) => m.key === measure.key),
     colour: projectColours[row.project] ?? "#b4c0d2"
   }));
+  const qualifier = (row: (typeof rows)[number]) => {
+    if (!row.metric || row.metric.value === null) return "Not measured";
+    if (row.metric.quality === "bounded") return "Bounded count";
+    if (row.metric.quality === "sampled") return "Sampled estimate";
+    if (dateDays(period).some((day) => dailyStatus(row.report, row.metric, day) === "legacy"))
+      return "Legacy/test risk";
+    if (
+      row.metric.quality === "partial" ||
+      row.metric.daily.length < period.days ||
+      dateDays(period).some((day) => dailyStatus(row.report, row.metric, day) === "partial")
+    )
+      return "Partial coverage";
+    return "Reported activity";
+  };
+  const retrieval = new URL("/activity/", origin);
+  retrieval.searchParams.set("report", report.id);
+  retrieval.searchParams.set("measure", measure.key);
+  if (rows.length === 1) retrieval.searchParams.set("project", rows[0]!.project);
+  const retrievalLabel = retrieval.href.replace(/^https?:\/\//, "");
   const series = rows
     .filter((r) => r.metric)
     .map((r) => ({ name: r.name, colour: r.colour, values: dailyPoints(r.metric, period) }));
@@ -71,8 +92,8 @@ export function reportSvg(
     landscape ? 20 : 25,
     "#a9b8d0"
   );
-  const chartY = landscape ? 250 : portrait ? 300 : 250,
-    chartH = landscape ? 240 : portrait ? 570 : 400;
+  const chartY = landscape ? 273 : portrait ? 300 : 250,
+    chartH = landscape ? 217 : portrait ? 570 : 400;
   if (report.projects.length === 1 && !landscape)
     svg += text(pad, landscape ? 204 : 237, measure.label, landscape ? 22 : 28, "#79d8ff", 500);
   if (landscape) {
@@ -95,7 +116,8 @@ export function reportSvg(
           rows.length > 5 ? 28 : 35,
           r.colour,
           700
-        );
+        ) +
+        text(x, 259, qualifier(r), 13, "#a9b8d0");
     });
   }
   const plot = svgPlot(series, period, w - pad * 2, chartH)
@@ -127,6 +149,7 @@ export function reportSvg(
         line(y) +
         `<circle cx="${pad + 5}" cy="${y + 27}" r="5" fill="${r.colour}"/>` +
         text(pad + 22, y + (portrait ? 36 : 32), r.name, portrait ? 28 : 24, "#f4f7fd", 500) +
+        (!portrait ? text(440, y + 32, qualifier(r), 17, "#a9b8d0") : "") +
         text(
           w - pad - (portrait ? 220 : 190),
           y + (portrait ? 36 : 32),
@@ -135,14 +158,7 @@ export function reportSvg(
           r.colour,
           700
         );
-      if (portrait)
-        svg += text(
-          pad + 22,
-          y + 77,
-          `${qualityText(r.metric)}${r.metric?.value !== null && r.metric && (!r.report?.coverage.comparableFrom || period.from <= r.report.coverage.comparableFrom.slice(0, 10)) ? " · legacy/test risk in range" : ""}`,
-          21,
-          "#a9b8d0"
-        );
+      if (portrait) svg += text(pad + 22, y + 77, qualifier(r), 21, "#a9b8d0");
     });
   }
   const foot = landscape ? 528 : portrait ? 1770 : 1070;
@@ -165,11 +181,17 @@ export function reportSvg(
   svg += text(
     pad,
     foot + 78,
-    "Read the dated report for source definitions and comparable history.",
-    landscape ? 17 : 22,
+    retrievalLabel,
+    Math.min(landscape ? 17 : 20, (w - pad * 2) / (retrievalLabel.length * 0.56)),
     "#a9b8d0"
   );
   if (!landscape)
-    svg += text(pad, h - 28, `woodhouse.loftwah.com · snapshot ${report.id}`, 18, "#b4c0d2");
+    svg += text(
+      pad,
+      h - 28,
+      `Captured ${report.createdAt.slice(0, 19).replace("T", " ")} UTC · snapshot ${report.id}`,
+      18,
+      "#b4c0d2"
+    );
   return svg + "</g></svg>";
 }

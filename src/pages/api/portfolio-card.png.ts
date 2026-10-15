@@ -66,7 +66,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
       ["woodhouse", "Woodhouse"]
     ]);
     const renderer = new Resvg(
-      reportSvg(report, names, format as ReportFormat, measure ?? undefined),
+      reportSvg(report, names, format as ReportFormat, measure ?? undefined, url.origin),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
       }

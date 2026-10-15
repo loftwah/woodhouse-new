@@ -154,7 +154,7 @@ function pageLink(
 }
 const title = selected ? `${names.get(selected)} analytics` : "Portfolio analytics";
 const link = report
-  ? `${reportLink(report.id, selected)}&measure=${measure.key}`
+  ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}`
   : `https://woodhouse.loftwah.com/activity/`;
 const image = report
   ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}&measure=${measure.key}`
@@ -189,7 +189,7 @@ const dataPayload = {
 <BaseLayout
   title={title}
   description="Explore recorded gameplay, mini-app actions and audible listening. Interactive charts, custom UTC dates and clear source coverage across the Loftwah portfolio."
-  path={frozen ? link.replace("https://woodhouse.loftwah.com", "") : "/activity/"}
+  path={frozen ? link.replace(Astro.url.origin, "") : "/activity/"}
   currentPath="/activity/"
   image={image}
   imageAlt={`${title}: dated ${measure.label.toLowerCase()} report`}
@@ -247,33 +247,36 @@ const dataPayload = {
               </a>
             ))}
           </nav>
-          <form method="get" action="/activity/" class="custom-dates" data-date-form>
-            {selected && <input type="hidden" name="project" value={selected} />}
-            <input type="hidden" name="measure" value={measure.key} />
-            {qaOff && <input type="hidden" name="analytics" value="off" />}
-            <label>
-              From{" "}
-              <input
-                type="date"
-                name="from"
-                value={window.from}
-                max={new Date(now).toISOString().slice(0, 10)}
-                required
-              />
-            </label>
-            <label>
-              To{" "}
-              <input
-                type="date"
-                name="to"
-                value={window.to}
-                max={new Date(now).toISOString().slice(0, 10)}
-                required
-              />
-            </label>
-            <button type="submit">Apply dates</button>
-            <span>UTC · max 90 days</span>
-          </form>
+          <details class="custom-range">
+            <summary>Custom dates</summary>
+            <form method="get" action="/activity/" class="custom-dates" data-date-form>
+              {selected && <input type="hidden" name="project" value={selected} />}
+              <input type="hidden" name="measure" value={measure.key} />
+              {qaOff && <input type="hidden" name="analytics" value="off" />}
+              <label>
+                From{" "}
+                <input
+                  type="date"
+                  name="from"
+                  value={window.from}
+                  max={new Date(now).toISOString().slice(0, 10)}
+                  required
+                />
+              </label>
+              <label>
+                To{" "}
+                <input
+                  type="date"
+                  name="to"
+                  value={window.to}
+                  max={new Date(now).toISOString().slice(0, 10)}
+                  required
+                />
+              </label>
+              <button type="submit">Apply dates</button>
+              <span>UTC · max 90 days</span>
+            </form>
+          </details>
         </div>
         <a class="share-jump" href="#share-report">
           Share report{" "}

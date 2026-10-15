@@ -418,3 +418,30 @@ test("hourly analytics never enables CMS maintenance in read-only publication", 
   await scheduled({ cron: "* * * * *" }, { WOODHOUSE_ENVIRONMENT: "preview", DB: {} });
   assert.equal(editorial, 1);
 });
+
+test("shared charts attach source quality to totals and retain an environment-owned retrieval address", async () => {
+  const { db } = database();
+  await collectEngagement(request(payload()), db, now);
+  const report = await createPortfolioReport(db, 7, new Set(["shoalshot"]), fetch, now);
+  const source = report.projects[0]!.report!;
+  source.coverage.startedAt = "2026-10-01T00:00:00.000Z";
+  source.coverage.comparableFrom = "2026-10-14T12:00:00.000Z";
+  const metric = source.metrics.find((m) => m.key === "game_starts")!;
+  metric.daily = [{ date: "2026-10-10", value: 1 }];
+  for (const format of ["landscape", "square"] as const) {
+    const svg = reportSvg(
+      report,
+      new Map([["shoalshot", "SHOALSHOT"]]),
+      format,
+      "game_starts",
+      "https://preview.example"
+    );
+    assert(svg.includes("Legacy/test risk"));
+    assert(svg.includes(`preview.example/activity/?report=${report.id}`));
+    assert(svg.includes("measure=game_starts"));
+    assert(svg.includes("project=shoalshot"));
+    metric.quality = "bounded";
+    assert(reportSvg(report, new Map(), format, "game_starts").includes("Bounded count"));
+    metric.quality = "exact";
+  }
+});
