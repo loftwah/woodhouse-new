@@ -458,7 +458,7 @@ const dataPayload = {
               data-activity-chart
               aria-label={`${measure.label} daily chart`}
             >
-              <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />
+              {hasDaily && <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />}
             </div>
             <div class="chart-legend">
               {chartRows.map((r) => (
