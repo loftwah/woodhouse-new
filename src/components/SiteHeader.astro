@@ -20,6 +20,11 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
     </div>
     <div class="site-header__tools">
       <nav class="desktop-nav" aria-label="Main navigation">
+        {!links.some((link) => link.url === "/activity/") && (
+          <a href="/activity/" aria-current={currentPath === "/activity/" ? "page" : undefined}>
+            Activity
+          </a>
+        )}
         {!links.some((link) => link.url === "/share/") && (
           <a href="/share/" aria-current={currentPath === "/share/" ? "page" : undefined}>
             Share
@@ -58,6 +63,11 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
           {!links.some((link) => link.url === "/share/") && (
             <a href="/share/" aria-current={currentPath === "/share/" ? "page" : undefined}>
               Share desk
+            </a>
+          )}
+          {!links.some((link) => link.url === "/activity/") && (
+            <a href="/activity/" aria-current={currentPath === "/activity/" ? "page" : undefined}>
+              Portfolio activity
             </a>
           )}
           {links.map((link) => (

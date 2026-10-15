@@ -6,6 +6,9 @@ import {
   publicationRequestAllowed
 } from "./data/publication-policy";
 
+import { createAnalyticsScheduledHandler } from "./data/analytics-schedule";
+import { collectEngagement } from "./data/engagement";
+
 export { PluginBridge };
 
 /**
@@ -38,6 +41,17 @@ const worker = {
   ...handler,
   async fetch(...args: Parameters<NonNullable<typeof handler.fetch>>) {
     const [request, env, ctx] = args;
+    // A fixed analytics ingress is independent of CMS authoring. Everything else
+    // still passes the unchanged read-only publication boundary.
+    if (new URL(request.url).pathname === "/api/engagement") {
+      if (new URL(request.url).hostname !== "woodhouse.loftwah.com")
+        return new Response(null, { status: 404, headers: { "cache-control": "no-store" } });
+      try {
+        return await collectEngagement(request, (env as unknown as { DB: D1Database }).DB);
+      } catch {
+        return new Response(null, { status: 503, headers: { "cache-control": "no-store" } });
+      }
+    }
     if (isReadOnlyPublication(env) && !publicationRequestAllowed(request)) {
       return new Response("Not found.", {
         status: 404,
@@ -74,7 +88,9 @@ const worker = {
       headers
     });
   },
-  scheduled: createPublicationScheduledHandler(createScheduledHandler())
+  scheduled: createAnalyticsScheduledHandler(
+    createPublicationScheduledHandler(createScheduledHandler())
+  )
 } satisfies typeof handler;
 
 export default worker;

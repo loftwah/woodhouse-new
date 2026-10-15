@@ -163,6 +163,37 @@ if (environment === "production") {
   run("pnpm", ["run", "audit:pages", "--", targets.preview.origin], { stdio: "inherit" });
   run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
 }
+// The observed failure would be a healthy CMS release with a missing analytics
+// schema, silently disabling engagement. These are application tables, never
+// entries in EmDash's core migration ledger. Mutation is a separate reviewed step.
+const analyticsSchemaObjects = [
+  "wh_analytics_events",
+  "wh_analytics_sessions",
+  "wh_analytics_daily",
+  "wh_analytics_limits",
+  "wh_analytics_reports",
+  "wh_analytics_rollup"
+];
+const analyticsSchema = json(
+  run("pnpm", [
+    "exec",
+    "wrangler",
+    "d1",
+    "execute",
+    target.database,
+    "--env",
+    environment,
+    "--remote",
+    "--json",
+    "--command",
+    `SELECT name FROM sqlite_master WHERE name IN (${analyticsSchemaObjects.map((name) => "'" + name + "'").join(",")})`
+  ])
+);
+const actualSchema = new Set(
+  analyticsSchema.flatMap((result) => result.results ?? []).map((row) => row.name)
+);
+if (analyticsSchemaObjects.some((name) => !actualSchema.has(name)))
+  throw new Error("Reviewed portfolio analytics schema must be applied before publication.");
 run("pnpm", ["run", "verify:content", "--", environment], { stdio: "inherit" });
 run("pnpm", ["run", environment === "production" ? "build" : "build:preview"], {
   stdio: "inherit"
@@ -210,7 +241,8 @@ if (
   throw new Error("Publication manifest does not match the configured environment.");
 config.vars.WOODHOUSE_PUBLICATION_MODE = "read-only";
 // An unaccepted scheduler must not run, even when the runtime handler would refuse it.
-config.triggers = { crons: [] };
+// Analytics-only schedule never invokes CMS maintenance or authoring.
+config.triggers = { crons: environment === "production" ? ["17 * * * *"] : [] };
 await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
 const deployment = run("pnpm", [
   "exec",

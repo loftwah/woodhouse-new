@@ -7,6 +7,7 @@ const SOURCE_PATHS = [
   "astro.config.mjs",
   "emdash-env.d.ts",
   "package.json",
+  "migrations",
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
   "public",

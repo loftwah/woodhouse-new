@@ -1,0 +1,114 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+export const prerender = false;
+---
+
+<BaseLayout
+  title="Measurement choices"
+  description="What Woodhouse measures, what stays private and how to turn off anonymous activity reporting."
+  path="/activity/measurement/"
+  currentPath="/activity/"
+>
+  <article class="container measurement-page">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/activity/">Activity</a>
+      <span>/</span>
+      <span>Measurement choices</span>
+    </nav>
+    <h1 class="page-title">A count. Not a profile.</h1>
+    <p>
+      Reviewed 15 October 2026. Woodhouse receives anonymous tab-session events from this site,
+      Protocol 11 and SHOALSHOT. Other projects publish their own aggregate reports and keep their
+      own privacy choices.
+    </p>
+    <h2>What is counted</h2>
+    <p>
+      Visits, active sessions, deliberate project-link clicks and reported gameplay starts,
+      finishes, replays and active seconds. Active time requires a visible, focused, unpaused
+      product with recent input. Music listening is reported separately by LoftwahFM.
+    </p>
+    <h2>What stays private</h2>
+    <p>
+      These three sources create a random tab-session identifier. It expires after 30 minutes of
+      inactivity and does not identify a returning browser. We store a one-way hash, event IDs and
+      timestamps with a 90-day retention window to deduplicate reports. Expired records are removed
+      during collection or the hourly reporting refresh. A short-lived hash of the IP address limits
+      request volume; the address itself is never stored. No email, account ID, save, precise
+      location, page URL or raw referrer is collected by this collector.
+    </p>
+    <p>
+      Daily totals and saved public reports contain aggregate numbers and may be kept indefinitely.
+      Raw sessions and events never appear in public reports. Counts describe accepted reports, not
+      verified humans. Offline play, network failures, browser blocking and privacy choices can
+      cause undercounting.
+    </p>
+    <h2>Your choice</h2>
+    <p>
+      Do Not Track, Global Privacy Control, preview and designated test traffic are excluded. Add{" "}
+      <code>?analytics=off</code> to a page address to disable this measurement for that visit.
+      Anonymous play and saved progress work independently of reporting.
+    </p>
+    <p>
+      <button type="button" data-analytics-choice>
+        Turn off Woodhouse reporting on this browser
+      </button>{" "}
+      <span role="status" data-analytics-status></span>
+    </p>
+    <p>
+      This browser setting applies to Woodhouse. Protocol 11 and SHOALSHOT honour their own{" "}
+      <code>?analytics=off</code> option; Bubbles provides an explicit opt-in in its settings. There
+      is no shared account or cross-project browser identity.
+    </p>
+    <p>
+      <a href="/activity/">Return to the public reports</a>
+    </p>
+  </article>
+</BaseLayout>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("[data-analytics-choice]");
+  const status = document.querySelector<HTMLElement>("[data-analytics-status]");
+  const label = () => {
+    try {
+      const off = localStorage.getItem("woodhouse:analytics-opt-out") === "1";
+      if (button)
+        button.textContent = off
+          ? "Turn on anonymous Woodhouse reporting"
+          : "Turn off Woodhouse reporting on this browser";
+      return off;
+    } catch {
+      if (status)
+        status.textContent = "Browser storage is unavailable. Use ?analytics=off in the address.";
+      return null;
+    }
+  };
+  label();
+  button?.addEventListener("click", () => {
+    const off = label();
+    if (off === null) return;
+    try {
+      localStorage.setItem("woodhouse:analytics-opt-out", off ? "0" : "1");
+      location.reload();
+    } catch {
+      if (status)
+        status.textContent = "Could not save this choice. Use ?analytics=off in the address.";
+    }
+  });
+</script>
+<style>
+  .measurement-page {
+    max-width: 76ch;
+    padding-block: 2rem 5rem;
+  }
+  .measurement-page h2 {
+    margin-top: 2.5rem;
+  }
+  .measurement-page button {
+    padding: 0.8rem 1rem;
+    background: var(--acid);
+    color: var(--ink);
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+    min-height: 44px;
+  }
+</style>

@@ -56,3 +56,9 @@ Reviewed 12 October 2026: MP rejected an OG-only interpretation of the gallery. 
 
 
 Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after the assets were collected. The share gallery must now browse by project and asset type, with six previews per page and native previous/next links at both ends. The overview shows the priority projects together. This replaces the earlier requirement to render every asset in one page; all approved assets remain reachable, directly copyable and downloadable, with no reading prerequisite or mandatory setup.
+
+## Portfolio analytics — reviewed 15 October 2026
+
+MP's #34 mission extends activity to Woodhouse, App Composer, Fighter, SHOALSHOT, Protocol 11, LoftwahFM and Bubbles. Woodhouse owns public reporting and coordination; products retain their own gameplay, saves, identities and release gates. The earlier no-collector scope is superseded only for the bounded anonymous event sink needed by this site and the static game integrations. Existing project-owned D1 reports are reused. No new SaaS, account service, database or paid commitment.
+
+`/activity/` reports 7/30/90-day product windows, explicit collection coverage and unavailable metrics. Radio remains separate at `/activity/listening/`. A saved report freezes aggregate figures for its permalink, caption and three PNG compositions. Exact received events do not establish unique people; returning audiences remain unavailable for tab-only sources. Complete-week records require exact daily history and comparable complete periods, and never manufacture history. Physical iPhone sharing still needs MP's hardware observation.

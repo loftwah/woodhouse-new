@@ -1,425 +1,914 @@
 ---
-/* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- A labelled overflow region needs keyboard scroll access. */
+import { getArtworkFallback } from "../data/site-metadata";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ActivitySharing from "../components/ActivitySharing.astro";
-import {
-  activityLink,
-  cardPath,
-  compositeIsPublic,
-  parseSnapshot,
-  sharingGames
-} from "../data/activity-sharing";
+import { env } from "cloudflare:workers";
+import type { D1Database } from "@cloudflare/workers-types";
 import { listProjectRecords } from "../content/repository";
 import {
-  activitySource,
-  loadListeningReport,
-  listeningDuration,
-  projectListeningReport
-} from "../data/activity";
+  analyticsProjects,
+  parseDays,
+  formatMetric,
+  weeklyRecord,
+  type AnalyticsProject,
+  type Metric,
+  type PortfolioReport
+} from "../data/portfolio-analytics";
+import {
+  createPortfolioReport,
+  readPortfolioReport,
+  projectReport,
+  reportLink
+} from "../data/portfolio-reports";
 export const prerender = false;
-const requestedSnapshot = parseSnapshot(Astro.url.searchParams.get("snapshot"));
-if (requestedSnapshot === null)
-  return new Response("Invalid snapshot.", {
-    status: 400,
-    headers: { "cache-control": "no-store" }
-  });
-const [result, report] = await Promise.all([
-  listProjectRecords(),
-  loadListeningReport(fetch, requestedSnapshot)
-]);
+Astro.cache.set(false);
+Astro.response.headers.set("cache-control", "private, no-store");
+if (Astro.url.searchParams.has("snapshot"))
+  return Astro.redirect(`/activity/listening/${Astro.url.search}`, 302);
+const days = parseDays(Astro.url.searchParams.get("days"));
+const requested = Astro.url.searchParams.get("project");
+if (days === null || (requested && !analyticsProjects.includes(requested as AnalyticsProject)))
+  return new Response("Invalid reporting period or project.", { status: 400 });
+const result = await listProjectRecords();
 if (result.error)
-  return new Response("Unable to load public project identities.", {
+  return new Response("Public project identities are unavailable.", {
     status: 503,
     headers: { "cache-control": "no-store" }
   });
-if (!report) Astro.response.headers.set("cache-control", "private, no-store");
-if (Astro.cache?.enabled) {
-  if (!report) {
-    Astro.cache.set(false);
-  } else {
-    for (const hint of result.cacheHints) Astro.cache.set(hint);
-    Astro.cache.set({ lastModified: new Date(report.asOf) });
-  }
+const publicIds = new Set(["woodhouse", ...result.projects.map((p) => p.slug)]);
+const selected = requested && publicIds.has(requested) ? (requested as AnalyticsProject) : null;
+if (requested && !selected) return new Response("Project unavailable.", { status: 404 });
+const db = (env as unknown as { DB: D1Database }).DB;
+let snapshot: PortfolioReport | null = null;
+try {
+  snapshot = Astro.url.searchParams.has("report")
+    ? await readPortfolioReport(db, Astro.url.searchParams.get("report")!)
+    : await createPortfolioReport(db, days, publicIds);
+} catch {
+  /* Source unavailable remains an explicit reader state. */
 }
-const identities = new Map(result.projects.map((p) => [p.slug, p]));
-const projected = report ? projectListeningReport(report, new Set(identities.keys())) : null;
-const games = projected?.games ?? [];
-const bubbles = identities.get("bubbles");
-const hasListening = games.some((g) => g.seconds > 0);
-const requestedGame = Astro.url.searchParams.get("game") ?? "";
-const composite = compositeIsPublic(new Set(identities.keys()));
-const fallback = composite ? "" : (sharingGames.find((id) => identities.has(id)) ?? "");
-const selected =
-  sharingGames.some((id) => id === requestedGame) && identities.has(requestedGame)
-    ? requestedGame
-    : fallback;
-const canShare = !!report && (composite || !!selected);
-const metadataPath =
-  report && (requestedSnapshot !== undefined || selected)
-    ? activityLink(selected, report.snapshot).replace("https://woodhouse.loftwah.com", "")
-    : "/activity/";
+if (Astro.url.searchParams.has("report") && !snapshot)
+  return new Response("This report is unavailable.", {
+    status: 404,
+    headers: { "cache-control": "no-store" }
+  });
+const report = snapshot ? projectReport(snapshot, selected, publicIds) : null;
+const reportDays = report?.days ?? days;
+const rows = analyticsProjects
+  .filter((p) => publicIds.has(p) && (!selected || p === selected))
+  .map((project) => ({
+    project,
+    identity: result.projects.find((p) => p.slug === project),
+    data: report?.projects.find((p) => p.project === project)?.report ?? null
+  }));
+rows.sort(
+  (a, b) =>
+    Number(!!b.data?.metrics.some((m) => m.value !== null)) -
+    Number(!!a.data?.metrics.some((m) => m.value !== null))
+);
+const highlights = rows
+  .flatMap((r) => {
+    const keys = selected
+      ? ["game_starts", "game_completions", "app_opens", "actions", "listening_seconds", "visits"]
+      : ["game_starts", "app_opens", "listening_seconds"];
+    const metric = keys.flatMap(
+      (k) => r.data?.metrics.filter((m) => m.key === k && m.value !== null) ?? []
+    )[0];
+    return metric ? [{ name: r.identity?.name ?? "Woodhouse", metric }] : [];
+  })
+  .slice(0, 2);
+const names = new Map(rows.map((r) => [r.project, r.identity?.name ?? "Woodhouse"]));
+const title = selected ? `${names.get(selected)} · Activity` : "Portfolio activity";
+const link = report
+  ? reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)
+  : `${Astro.url.origin}/activity/`;
+const image = report
+  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}`
+  : "/og/woodhouse.jpg";
+const available = rows.filter((r) => r.data && r.data.metrics.some((m) => m.value !== null)).length;
+const featuredKeys = [
+  "game_starts",
+  "game_completions",
+  "active_seconds",
+  "returning_browsers",
+  "browsers",
+  "engaged_sessions",
+  "app_opens",
+  "actions",
+  "listening_seconds",
+  "listening_starts",
+  "visits",
+  "project_opens"
+];
+function featured(metrics: Metric[]) {
+  return [...metrics]
+    .sort((a, b) => featuredKeys.indexOf(a.key) - featuredKeys.indexOf(b.key))
+    .filter((m) => featuredKeys.includes(m.key))
+    .slice(0, 6);
+}
+const caption = report
+  ? `${selected ? names.get(selected) : "The Loftwah portfolio"} · ${report.days}-day report\n${rows
+      .flatMap((r) => {
+        const values = featured(r.data?.metrics ?? [])
+          .filter((m) => m.value !== null)
+          .slice(0, 2)
+          .map((m) => `${formatMetric(m)} ${m.label.toLowerCase()}`);
+        return values.length ? [`${r.identity?.name ?? "Woodhouse"}: ${values.join(" · ")}`] : [];
+      })
+      .join("\n")}\nUTC window includes a partial current day. Coverage varies by project.\n${link}`
+  : "";
+const stale = !!report && Date.now() - Date.parse(report.createdAt) > 86400000;
 ---
 
 <BaseLayout
-  title="Scores & listening"
-  description="Find public Bubbles leaderboards and follow reported game listening across LoftwahFM. Real sources, clear coverage, shareable links."
-  path={metadataPath}
+  title={title}
+  description="Real play, useful actions and measured listening across the Loftwah portfolio. Explore dated public reports with clear coverage and images ready to share."
+  path={
+    report && Astro.url.searchParams.has("report")
+      ? link.replace(Astro.url.origin, "")
+      : `/activity/${selected ? `?project=${selected}` : ""}`
+  }
   currentPath="/activity/"
-  image={canShare && report ? cardPath(selected, report.snapshot) : "/og/woodhouse.jpg"}
+  image={image}
+  imageAlt={`${title}: ${reportDays}-day dated analytics report`}
 >
-  <div class="container activity">
-    <p class="share-desk-link">
-      <a href="/share/">Share desk: project images, captions and social links</a>
-    </p>
+  <div class="container observatory">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">WOODHOUSE</a>
+      <a href="/">Woodhouse</a>
       <span>/</span>
-      <span>Scores & listening</span>
-    </nav>
-    <div class:list={["activity-intro", { "with-image": canShare }]}>
-      <header>
-        <h1 class="page-title">
-          Play for a place.
-          <br />
-          <em>Listen for a while.</em>
-        </h1>
-        <p>
-          Find a board worth playing for. Follow the music that travels between our games. Every
-          result belongs to its own rules and source.
-        </p>
-      </header>
-      {canShare && projected && (
-        <ActivitySharing
-          report={projected}
-          projects={result.projects}
-          selected={selected}
-          composite={composite}
-        />
+      <a href="/activity/">Activity</a>
+      {selected && (
+        <>
+          <span>/</span>
+          <span>{names.get(selected)}</span>
+        </>
       )}
+    </nav>
+    <header class="activity-header">
+      <h1>
+        {selected ? (
+          names.get(selected)
+        ) : (
+          <>
+            The work.
+            <br />
+            <em>The response.</em>
+          </>
+        )}
+      </h1>
+      <div class="activity-intro">
+        {highlights.length > 0 && (
+          <dl class="headline-readings">
+            {highlights.map((h) => (
+              <div>
+                <dt>
+                  {h.name} · {h.metric.label}
+                </dt>
+                <dd>{formatMetric(h.metric)}</dd>
+                <small>
+                  {h.metric.quality === "bounded" ? "Bounded count" : "Reported"} · {reportDays}{" "}
+                  days
+                </small>
+              </div>
+            ))}
+          </dl>
+        )}
+        <p>
+          {selected
+            ? "A closer look at the play, actions and attention this project receives."
+            : "Seven projects. Real play, useful actions and time well spent. Follow the numbers back to what people actually do."}
+        </p>
+        <a href="/activity/listening/">Games × Radio listening report</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/share/">Share desk</a>
+      </div>
+    </header>
+    <div class="report-toolbar">
+      <nav aria-label="Reporting period">
+        {[7, 30, 90].map((n) => (
+          <a
+            aria-current={n === reportDays ? "page" : undefined}
+            href={`/activity/?days=${n}${selected ? `&project=${selected}` : ""}`}
+          >
+            {n} days
+          </a>
+        ))}
+      </nav>
+      <p>
+        {report ? (
+          <>
+            <time datetime={report.createdAt}>
+              {new Date(report.createdAt).toLocaleString("en-AU", {
+                timeZone: "UTC",
+                dateStyle: "medium",
+                timeStyle: "short"
+              })}{" "}
+              UTC
+            </time>
+            <span>
+              {available} of {rows.length} projects reporting
+            </span>
+          </>
+        ) : (
+          "Reporting is temporarily unavailable"
+        )}
+      </p>
     </div>
-    {bubbles?.siteUrl && (
-      <section class="competition" aria-labelledby="boards-title">
+    {Astro.url.searchParams.has("report") && (
+      <p class="pinned-note">
+        Saved report · These figures belong to this snapshot. {stale && "This is an older report."}{" "}
+        <a href={`/activity/?days=${reportDays}${selected ? `&project=${selected}` : ""}`}>
+          See the latest
+        </a>
+      </p>
+    )}
+    {report && (
+      <section class="report-share" aria-label="Share this report">
         <div>
-          <h2 id="boards-title">Bubbles. Bring your best.</h2>
-          <p>
-            Open the public boards, choose a game and see where your next run could land. Browse
-            first; publish a score through Bubbles’ own profile controls.
-          </p>
-          <p class="actions">
-            <a class="text-link" href={new URL("/leaderboards?scope=global", bubbles.siteUrl).href}>
-              Open Bubbles leaderboards{" "}
-              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M4 12 12 4M4 4h8v8"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </a>
-            <a href="/projects/bubbles/">Read the Bubbles dossier</a>
-          </p>
+          <h2>Your numbers. Ready to post.</h2>
+          <p>Save an image or copy a caption with this report’s permanent link.</p>
         </div>
-        <div class="board-note">
-          <strong>One game. One set of rules.</strong>
-          <p>
-            Scores and public names stay on the game’s own board. Local play remains available
-            without a shared Woodhouse account.
-          </p>
+        <div class="share-actions">
+          <a class="image-download" href={`${image}&download=1`} download>
+            Download image
+          </a>
+          <button data-report-share type="button" hidden>
+            Share image
+          </button>
+          <button data-report-copy type="button">
+            Copy caption + link
+          </button>
+          <a href={link}>Report permalink</a>
+          <span data-report-status role="status"></span>
         </div>
+        <details class="report-preview">
+          <summary>Preview report & choose a shape</summary>
+          <nav aria-label="Image format">
+            {["landscape", "square", "portrait"].map((shape) => (
+              <a href={`${image}&format=${shape}&download=1`} download>
+                {shape[0]!.toUpperCase() + shape.slice(1)} image
+              </a>
+            ))}
+          </nav>
+          <img
+            src={image}
+            width="1200"
+            height="630"
+            alt={`${title} report showing the same figures and coverage as this page`}
+            loading="lazy"
+          />
+        </details>
       </section>
     )}
-    <section class="listening" aria-labelledby="listening-title">
-      <div class="section-heading">
-        <h2 id="listening-title">Games × Radio</h2>
-        <a class="text-link" href="https://fm.loftwah.com/analytics/?source=games&days=30">
-          Open the listening report{" "}
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path
-              d="M4 12 12 4M4 4h8v8"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
+    <section class="project-ledger" aria-labelledby="projects-heading">
+      <div class="ledger-heading">
+        <h2 id="projects-heading">{selected ? "The latest window" : "Across the portfolio"}</h2>
+        <p>{reportDays} days · UTC · Current day is partial</p>
       </div>
+      {rows.map(({ project, identity, data }) => {
+        const metrics = featured(data?.metrics ?? []);
+        const trend = data?.metrics.find(
+          (m) =>
+            m.daily.length > 1 && m.value !== null && m.value > 0 && featuredKeys.includes(m.key)
+        );
+        const maximum = trend ? Math.max(...trend.daily.map((d) => d.value), 1) : 1;
+        const record =
+          trend && data
+            ? weeklyRecord(
+                trend,
+                data.coverage,
+                Date.parse(report?.createdAt ?? new Date().toISOString())
+              )
+            : null;
+        return (
+          <article class="project-row" id={project}>
+            <div class="project-identity" data-project-artwork>
+              {identity?.previewImage && (
+                <a href={identity.siteUrl} aria-label={`Open the ${identity.name} site`}>
+                  <img
+                    src={identity.previewImage}
+                    data-fallback-src={getArtworkFallback(identity).image}
+                    data-fallback-alt={getArtworkFallback(identity).alt}
+                    data-fallback-credit={getArtworkFallback(identity).credit}
+                    width="1200"
+                    height="630"
+                    alt=""
+                    loading="lazy"
+                  />
+                </a>
+              )}
+              <div>
+                <h3>
+                  <a href={`/activity/?project=${project}&days=${reportDays}`}>
+                    {identity?.name ?? "Woodhouse"}
+                  </a>
+                </h3>
+                {identity?.previewImage && (
+                  <small class="artwork-credit" data-artwork-status>
+                    Artwork from {identity.name}
+                  </small>
+                )}
+                <p>
+                  {project === "loftwahfm"
+                    ? "Music & radio"
+                    : project === "app-composer"
+                      ? "Mini-apps"
+                      : project === "woodhouse"
+                        ? "Portfolio & publishing"
+                        : "Gameplay"}
+                </p>
+              </div>
+            </div>
+            <div class="project-measurements">
+              {metrics.length ? (
+                <dl class="metrics">
+                  {metrics.map((m) => (
+                    <div>
+                      <dt>{m.label}</dt>
+                      <dd>{formatMetric(m)}</dd>
+                      <small>
+                        {m.value === null
+                          ? "Not measured"
+                          : m.quality === "bounded"
+                            ? "Bounded count"
+                            : m.quality === "sampled"
+                              ? "Estimated"
+                              : "Reported"}
+                      </small>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <div class="awaiting">
+                  <strong>Awaiting a connected source</strong>
+                  <p>This project’s measurements are unavailable in this snapshot.</p>
+                </div>
+              )}
+              {trend && (
+                <details class="trend">
+                  <summary>
+                    {trend.label} by day
+                    <span>
+                      {trend.daily[0]?.date} — {trend.daily.at(-1)?.date}
+                    </span>
+                  </summary>
+                  <div class="bar-chart" aria-hidden="true">
+                    {trend.daily.map((d) => (
+                      <span
+                        style={`--bar:${Math.max(0, (d.value / maximum) * 100)}%`}
+                        title={`${d.date}: ${d.value}`}
+                      ></span>
+                    ))}
+                  </div>
+                  <table>
+                    <caption>
+                      {trend.label} · daily reported {trend.unit}
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">UTC date</th>
+                        <th scope="col">{trend.label}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {trend.daily.map((d) => (
+                        <tr>
+                          <th scope="row">{d.date}</th>
+                          <td>{d.value.toLocaleString("en-AU")}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </details>
+              )}
+              {record && (
+                <p class="record">
+                  {record.newBest ? (
+                    <strong>New best in this report’s history</strong>
+                  ) : (
+                    <strong>Last complete week</strong>
+                  )}{" "}
+                  {record.value.toLocaleString("en-AU")} {trend?.label.toLowerCase()} ·{" "}
+                  {record.from}–{record.to}
+                  {record.comparison !== null &&
+                    ` · ${record.comparison > 0 ? "+" : ""}${record.comparison}% against the preceding week`}
+                  . Compared with {record.comparedWeeks - 1} complete weeks.
+                </p>
+              )}
+              <p class="project-coverage">
+                {data?.coverage.startedAt ? (
+                  <>
+                    Collection from {data.coverage.startedAt.slice(0, 10)} · {data.period.from}–
+                    {data.period.to}
+                    {Date.now() - Date.parse(data.generatedAt) > 86400000 &&
+                      " · Source is more than a day old"}
+                  </>
+                ) : (
+                  "Collection coverage has not been established."
+                )}
+              </p>
+              <details class="metric-definitions">
+                <summary>Sources & metric definitions</summary>
+                {data ? (
+                  <>
+                    <p>
+                      <a href={data.source.endpoint}>Public source</a> · Updated{" "}
+                      <time datetime={data.generatedAt}>{data.generatedAt}</time>
+                    </p>
+                    {data.coverage.limitations.map((text) => (
+                      <p>{text}</p>
+                    ))}
+                    <dl>
+                      {data.metrics.map((m) => (
+                        <div>
+                          <dt>
+                            {m.label}
+                            {m.value === null ? " · unavailable" : ""}
+                          </dt>
+                          <dd>{m.definition}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </>
+                ) : (
+                  <p>
+                    The source has not supplied a valid report. Missing measurements do not mean
+                    zero use.
+                  </p>
+                )}
+              </details>
+            </div>
+          </article>
+        );
+      })}
+    </section>
+    <section class="measurement-note">
+      <h2>Attention has more than one shape.</h2>
       <p>
-        Reported audible listening inside games over the last 30 days. Listening starts count
-        playback events; they do not count distinct people.
+        A visit is not a player. An app open is not a completed action. Music time is not gameplay
+        time. Each project reports the actions it can actually observe, with its own coverage and
+        counting rules.
       </p>
-      {report ? (
-        <>
-          <p class="coverage">
-            {report.from} to {report.to} · Collection began {report.collectionStarted}.<br />
-            Source updated{" "}
-            <time datetime={report.asOf}>
-              {new Date(report.asOf).toLocaleString("en-AU", { timeZone: "UTC" })} UTC
-            </time>
-            . {report.stale && <strong>Source is more than a day old.</strong>}
-          </p>
-          {!hasListening && (
-            <p class="empty-state">
-              The first listening table is still taking shape.
-              <br />
-              <span>
-                No game has reported audible listening in this window yet. Games stay unranked until
-                it arrives.
-              </span>
-            </p>
-          )}
-          <div
-            class="listening-ledger"
-            role="region"
-            aria-label="Game listening table"
-            tabindex="0"
-          >
-            <table>
-              <caption class="ledger-caption">30-day game listening from LoftwahFM</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Place</th>
-                  <th scope="col">Game</th>
-                  <th scope="col">Listening</th>
-                  <th scope="col">Starts</th>
-                </tr>
-              </thead>
-              <tbody>
-                {games.map((g) => (
-                  <tr>
-                    <td>{g.rank ?? "—"}</td>
-                    <th scope="row">
-                      <a href={`/projects/${g.id}/`}>{identities.get(g.id)!.name}</a>
-                      {g.rank === null && <small>Awaiting listening</small>}
-                    </th>
-                    <td>{g.seconds > 0 ? listeningDuration(g.seconds) : "—"}</td>
-                    <td>{g.starts.toLocaleString("en-AU")}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : (
-        <p class="empty-state">
-          The listening source is unavailable.
-          <br />
-          <span>
-            Open Games × Radio for the latest source report. Missing data does not mean zero
-            listening.
-          </span>
+      <p>
+        Browser events describe reported activity, not verified people or competitive scores.
+        Offline play, privacy choices and blocked requests affect collection. Returning audiences
+        and retention stay unavailable until a source can measure them defensibly. Records require
+        comparable complete UTC weeks; short or partial history earns no badge.
+      </p>
+      {report && (
+        <p>
+          <a href={`/api/portfolio-report.json?report=${report.id}`}>
+            Read this snapshot’s public data
+          </a>
         </p>
       )}
-      <p class="source-links">
-        <a href={activitySource}>FM aggregate source</a>
-        <a href="/api/activity.json">Woodhouse public data</a>
-      </p>
-    </section>
-    <section class="measurement" aria-labelledby="measurement-title">
-      <h2 id="measurement-title">What these results tell you.</h2>
       <p>
-        Listening measures reported playback, not game popularity, unique players or verified human
-        listeners. Coverage starts with each game’s instrumentation; an unranked row can mean
-        missing reporting. The source excludes designated test traffic. Automated or incorrectly
-        attributed events remain a measurement limitation.
-      </p>
-      <p>
-        Public scores are a different kind of result. Follow the native board for its rules, score
-        validation and profile choices. Reviewed implementation and release evidence remain in the{" "}
-        <a href="/factory/">factory record</a>.
-      </p>
-      <p class="actions">
-        <a class="text-link" href="/activity/">
-          Share Scores & listening
-        </a>
-        <button type="button" data-share-activity hidden>
-          Copy page link
-        </button>
-        <span data-share-status role="status"></span>
+        <a href="/activity/measurement/">Measurement & privacy choices</a>
       </p>
     </section>
   </div>
+  <script
+    type="application/json"
+    id="report-sharing"
+    set:html={JSON.stringify({ image, caption }).replace(/</g, "\\u003c")}
+  />
 </BaseLayout>
 <script>
-  const button = document.querySelector<HTMLButtonElement>("[data-share-activity]");
-  const status = document.querySelector<HTMLElement>("[data-share-status]");
-  if (button && status && navigator.clipboard) {
-    button.hidden = false;
-    button.addEventListener("click", async () => {
+  const payload = document.querySelector<HTMLScriptElement>("#report-sharing");
+  if (payload) {
+    const { image, caption } = JSON.parse(payload.textContent ?? "{}");
+    const status = document.querySelector<HTMLElement>("[data-report-status]");
+    document.querySelector("[data-report-copy]")?.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText("https://woodhouse.loftwah.com/activity/");
-        status.textContent = "Link copied.";
+        await navigator.clipboard.writeText(caption);
+        if (status) status.textContent = "Caption and report link copied.";
       } catch {
-        status.textContent = "Use the Share Scores & listening link to copy the address.";
+        if (status)
+          status.textContent = "Copy unavailable. Open the report permalink to share its address.";
       }
     });
+    const button = document.querySelector<HTMLButtonElement>("[data-report-share]");
+    let file: File | null = null;
+    if (button && navigator.canShare && navigator.share) {
+      fetch(image)
+        .then(async (response) => {
+          if (!response.ok) return;
+          file = new File([await response.blob()], "woodhouse-report.png", { type: "image/png" });
+          if (navigator.canShare({ files: [file] })) button.hidden = false;
+        })
+        .catch(() => {});
+      button.addEventListener("click", async () => {
+        if (!file) return;
+        try {
+          await navigator.share({ files: [file], text: caption });
+        } catch (error) {
+          if (error instanceof Error && error.name !== "AbortError" && status)
+            status.textContent = "Image sharing unavailable. Use Download image.";
+        }
+      });
+    }
   }
 </script>
 <style>
-  .activity {
+  .observatory {
     padding-block: 2rem 5rem;
   }
-  .activity-intro {
-    padding-block: 1.5rem 3rem;
-  }
-  .with-image {
+  .activity-header {
     display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 2rem 3rem;
-    align-items: start;
-  }
-  .with-image .page-title {
-    font-size: clamp(2.5rem, 4.3vw, 4.5rem);
-    margin-top: 0;
-  }
-  .activity-intro p {
-    max-width: 47rem;
-    font-size: 1.2rem;
-  }
-  .competition {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     gap: 3rem;
-    border-block: 1px solid var(--line);
-    padding-block: 2.5rem;
+    align-items: end;
+    padding-block: 2rem 3rem;
   }
-  .competition h2,
-  .listening h2,
-  .measurement h2 {
-    font-size: clamp(1.7rem, 3vw, 2.6rem);
-    margin: 0 0 1rem;
+  .activity-header h1 {
+    font-size: clamp(3.3rem, 6.7vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin: 0;
+    text-wrap: balance;
   }
-  .competition p,
-  .listening p,
-  .measurement p {
-    max-width: 70ch;
-  }
-  .board-note {
-    align-self: end;
-    color: var(--muted);
-  }
-  .board-note strong {
-    color: var(--paper);
-  }
-  .actions,
-  .source-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem 2rem;
-    align-items: center;
-    margin-block: 1.5rem 0;
-  }
-  .actions a,
-  .source-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
-  .text-link svg {
+  .activity-header h1 em {
+    font-style: normal;
     color: var(--acid);
   }
-  .actions button {
-    color: var(--paper);
-    background: var(--surface);
-    border: 1px solid var(--line);
-    font: inherit;
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
+  .headline-readings {
+    display: flex;
+    gap: 2rem;
+    margin: 0 0 1.25rem;
   }
-  .listening {
-    padding-block: 3rem;
+  .headline-readings dt {
+    font-size: 0.85rem;
+    color: var(--muted);
   }
-  .section-heading {
+  .headline-readings dd {
+    font-family: var(--display);
+    font-size: 3rem;
+    line-height: 1.1;
+    margin: 0.25rem 0;
+  }
+  .headline-readings small {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  .artwork-credit {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin: 0.3rem 0;
+  }
+  .activity-intro {
+    max-width: 44ch;
+  }
+  .activity-intro p {
+    font-size: 1.22rem;
+    margin-top: 0;
+  }
+  .activity-intro a {
+    font-size: 0.93rem;
+  }
+  .report-toolbar {
+    border-block: 1px solid var(--line);
     display: flex;
     justify-content: space-between;
-    gap: 1rem 2rem;
-    flex-wrap: wrap;
-    align-items: baseline;
-  }
-  .section-heading > a {
-    min-height: 44px;
+    gap: 1.5rem;
+    padding-block: 1rem;
     align-items: center;
   }
-  .coverage {
-    color: var(--muted);
-    font-size: 0.875rem;
-    line-height: 1.8;
+  .report-toolbar nav {
+    display: flex;
+    gap: 0.5rem;
   }
-  .empty-state {
-    font-size: 1.4rem;
-    padding-block: 1.5rem;
+  .report-toolbar nav a {
+    min-height: 44px;
+    padding: 0.55rem 0.9rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+  }
+  .report-toolbar [aria-current="page"] {
+    background: var(--acid);
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .report-toolbar p {
+    font-size: 0.86rem;
+    margin: 0;
+    text-align: right;
+    color: var(--muted);
+  }
+  .report-toolbar p span {
+    display: block;
+  }
+  .pinned-note {
+    padding: 1rem;
+    background: var(--ink-raised);
+  }
+  .report-share {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 3rem;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .report-share h2 {
+    font-size: 1.5rem;
+    margin: 0 0 0.5rem;
+  }
+  .report-share p {
+    color: var(--muted);
+    margin: 0;
+    max-width: 43ch;
+  }
+  .share-actions {
+    display: flex;
+    gap: 0.6rem 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .share-actions a,
+  .share-actions button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.94rem;
+  }
+  .share-actions .image-download {
+    background: var(--acid);
+    color: var(--ink);
+    padding: 0.6rem 1rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .share-actions button {
+    background: transparent;
     color: var(--paper);
+    border: 0;
+    text-decoration: underline;
+    cursor: pointer;
   }
-  .empty-state span {
-    font-size: 1rem;
-    color: var(--muted);
-  }
-  .listening-ledger {
-    overflow-x: auto;
-  }
-  .ledger-caption {
-    text-align: left;
-    margin-bottom: 1rem;
-    color: var(--muted);
-    font-size: 0.875rem;
-  }
-  table {
-    border-collapse: collapse;
+  .share-actions span {
     width: 100%;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .report-preview {
+    grid-column: 1/-1;
+    max-width: 50rem;
+  }
+  .report-preview summary,
+  .trend summary,
+  .metric-definitions summary {
+    cursor: pointer;
+    padding-block: 0.75rem;
+    min-height: 44px;
+  }
+  .report-preview nav {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-block: 1rem;
+  }
+  .report-preview nav a {
+    min-height: 44px;
+  }
+  .report-preview img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+  }
+  .ledger-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 3rem 1rem;
+  }
+  .ledger-heading h2 {
+    font-size: 2rem;
+    margin: 0;
+  }
+  .ledger-heading p {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0;
+  }
+  .project-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 2.5rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .project-identity img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1200/630;
+    object-fit: cover;
+  }
+  .project-identity h3 {
+    font-size: 1.45rem;
+    margin: 1rem 0 0.2rem;
+  }
+  .project-identity h3 a {
+    text-decoration: none;
+  }
+  .project-identity p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 0 0 1.2rem;
+  }
+  .metrics dt {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .metrics dd {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 2.25rem;
+    line-height: 1.2;
+    margin: 0.4rem 0;
     font-variant-numeric: tabular-nums;
   }
-  th,
-  td {
-    padding: 1rem 0.75rem;
-    border-bottom: 1px solid var(--line);
-    text-align: right;
-  }
-  th:nth-child(2) {
-    text-align: left;
-  }
-  thead th {
+  .metrics small {
+    font-size: 0.78rem;
     color: var(--muted);
-    font-size: 0.875rem;
-    font-weight: 400;
   }
-  tbody th {
+  .awaiting {
+    padding-block: 0.5rem 1rem;
+  }
+  .awaiting strong {
+    font-size: 1.3rem;
+  }
+  .awaiting p {
+    color: var(--muted);
+    margin: 0.4rem 0;
+  }
+  .project-coverage {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0.8rem 0;
+  }
+  .metric-definitions {
+    font-size: 0.87rem;
+    color: var(--muted);
+  }
+  .metric-definitions p {
+    overflow-wrap: anywhere;
+    max-width: 70ch;
+  }
+  .metric-definitions dl div {
+    padding-block: 0.5rem;
+  }
+  .metric-definitions dt {
+    color: var(--paper);
     font-weight: 600;
   }
-  tbody th a {
-    display: inline-flex;
-    min-height: 44px;
-    align-items: center;
+  .metric-definitions dd {
+    margin: 0.3rem 0;
+    max-width: 70ch;
   }
-  small {
-    display: block;
+  .trend {
+    font-size: 0.9rem;
+  }
+  .trend summary span {
     color: var(--muted);
-    font-weight: 400;
+    font-size: 0.8rem;
+    margin-left: 1rem;
   }
-  .measurement {
+  .bar-chart {
+    display: flex;
+    height: 115px;
+    gap: 3px;
+    align-items: end;
+    border-bottom: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  .bar-chart span {
+    flex: 1;
+    background: var(--acid);
+    height: var(--bar);
+    min-height: 0;
+  }
+  .trend table {
+    margin-top: 1rem;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.85rem;
+  }
+  .trend caption {
+    text-align: left;
+    color: var(--muted);
+    padding-block: 0.5rem;
+  }
+  .trend th,
+  .trend td {
+    text-align: left;
+    padding: 0.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .record {
+    font-size: 0.9rem;
+    color: var(--muted);
+    max-width: 65ch;
+  }
+  .record strong {
+    color: var(--acid);
+    display: block;
+  }
+  .measurement-note {
     border-top: 1px solid var(--line);
     padding-top: 2.5rem;
+    margin-top: 1rem;
+    max-width: 74ch;
   }
-  @media (max-width: 700px) {
-    .with-image {
-      grid-template-columns: 1fr;
+  .measurement-note h2 {
+    font-size: 2rem;
+  }
+  .measurement-note p {
+    color: var(--muted);
+  }
+  @media (max-width: 900px) {
+    .project-row {
+      grid-template-columns: 170px 1fr;
+      gap: 1.5rem;
     }
-    .competition {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
+    .metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .activity-intro {
+    .metrics dd {
+      font-size: 2rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .activity-header {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
       padding-block: 1.5rem 2rem;
     }
-    th,
-    td {
-      padding: 0.75rem 0.35rem;
-      font-size: 0.875rem;
+    .activity-header h1 {
+      font-size: 3.5rem;
     }
-    small {
-      font-size: 0.75rem;
+    .activity-intro p {
+      font-size: 1.08rem;
+    }
+    .report-toolbar {
+      align-items: start;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .report-toolbar p {
+      text-align: left;
+    }
+    .report-toolbar p span {
+      display: inline;
+      margin-left: 1rem;
+    }
+    .report-share {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .ledger-heading {
+      display: block;
+      padding-top: 2rem;
+    }
+    .ledger-heading h2 {
+      margin-bottom: 0.6rem;
+    }
+    .project-row {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+      padding-block: 1.5rem;
+    }
+    .project-identity {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .project-identity > a {
+      width: 115px;
+      flex-shrink: 0;
+    }
+    .project-identity h3 {
+      font-size: 1.35rem;
+      margin: 0 0 0.2rem;
+    }
+    .metrics {
+      gap: 1rem 1.5rem;
+    }
+    .metrics dd {
+      font-size: 2.4rem;
+    }
+    .trend summary span {
+      display: block;
+      margin: 0.2rem 0 0 1rem;
+    }
+    .measurement-note h2 {
+      font-size: 1.8rem;
     }
   }
 </style>
