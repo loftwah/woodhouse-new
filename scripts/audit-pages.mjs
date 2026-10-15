@@ -290,7 +290,10 @@ for (const page of pages) {
     continue;
   }
   const html = await response.text();
-  await canonicalOf(page);
+  // This document is already in hand. A second GET adds latency and can even
+  // audit a different response from the one whose links and privacy we inspect.
+  const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
+  canonicals.set(page, canonical ? new URL(canonical).pathname.replace(/\/$/, "") : null);
   const privacy = scanPublicText(html, { privateValues });
   if (privacy.length) report(page, `privacy scan found ${privacy.join(", ")}`);
   auditDocument(page, html);
@@ -346,13 +349,19 @@ for (const page of pages) {
 
 const linkedFrom = new Set([...internalLinks.values()].flat());
 const linkedPaths = new Set([...linkedFrom].map((link) => new URL(link, origin).pathname));
+// Keep one status per exact destination while retaining a finding for every
+// linking page. Shared navigation and downloads otherwise repeat the same GET.
+const targetStatuses = new Map();
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
     if (pages.includes(target)) continue;
-    const response = await request(`${origin}${target}`);
-    if (response.status >= 400)
-      report(page, `links to ${target}, which returned HTTP ${response.status}`);
-    await response.body?.cancel();
+    if (!targetStatuses.has(target)) {
+      const response = await request(`${origin}${target}`);
+      targetStatuses.set(target, response.status);
+      await response.body?.cancel();
+    }
+    const status = targetStatuses.get(target);
+    if (status >= 400) report(page, `links to ${target}, which returned HTTP ${status}`);
   }
 }
 
