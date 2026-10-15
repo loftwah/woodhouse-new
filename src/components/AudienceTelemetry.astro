@@ -44,16 +44,94 @@ const destinations = projects
       return;
     }
     let disabled = false;
+    let browserReturnsDisabled = false;
+    const tokenKey = "woodhouse:analytics-browser-token";
+    const consentKey = "woodhouse:analytics-browser-consent";
+    const clearToken = () => {
+      try {
+        localStorage.removeItem(tokenKey);
+      } catch {
+        /* In-memory revocation is already effective. */
+      }
+    };
+    const excluded = () =>
+      location.hostname !== "woodhouse.loftwah.com" ||
+      location.search.includes("_preview") ||
+      navigator.webdriver ||
+      navigator.doNotTrack === "1" ||
+      (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl ||
+      new URLSearchParams(location.search).has("qa") ||
+      new URLSearchParams(location.search).get("analytics") === "off";
     window.addEventListener("woodhouse:analytics-disable", () => {
       disabled = true;
+      browserReturnsDisabled = true;
+      clearToken();
+    });
+    window.addEventListener("woodhouse:browser-returns-disable", () => {
+      browserReturnsDisabled = true;
+      clearToken();
+    });
+    window.addEventListener("storage", (event: StorageEvent) => {
+      if ((event.key === consentKey && event.newValue !== "1") || event.key === null) {
+        browserReturnsDisabled = true;
+        clearToken();
+      }
+      if (event.key === "woodhouse:analytics-opt-out" && event.newValue === "1") {
+        disabled = true;
+        browserReturnsDisabled = true;
+        clearToken();
+      }
+    });
+    const browserToken = () => {
+      if (browserReturnsDisabled || disabled || excluded()) return undefined;
+      try {
+        if (
+          localStorage.getItem(consentKey) !== "1" ||
+          localStorage.getItem("woodhouse:analytics-opt-out") === "1"
+        )
+          return undefined;
+        const raw = localStorage.getItem(tokenKey);
+        let saved: { id: string; at: number } | null = null;
+        try {
+          saved = JSON.parse(raw ?? "null");
+        } catch {
+          /* Replace malformed storage only after explicit consent. */
+        }
+        if (
+          saved &&
+          typeof saved.id === "string" &&
+          /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(saved.id) &&
+          Number.isSafeInteger(saved.at) &&
+          saved.at <= Date.now() &&
+          Date.now() - saved.at < 90 * 86400000
+        )
+          return saved.id;
+        const token = { id: crypto.randomUUID(), at: Date.now() };
+        const encoded = JSON.stringify(token);
+        localStorage.setItem(tokenKey, encoded);
+        // No persistent token may leave this page unless its exact value was saved.
+        if (localStorage.getItem(tokenKey) !== encoded) throw new Error("Token was not saved");
+        return token.id;
+      } catch {
+        browserReturnsDisabled = true;
+        clearToken();
+        window.dispatchEvent(new Event("woodhouse:browser-returns-storage-failed"));
+        return undefined;
+      }
+    };
+    window.addEventListener("woodhouse:browser-returns-status", () => {
+      if (browserReturnsDisabled)
+        window.dispatchEvent(new Event("woodhouse:browser-returns-storage-failed"));
     });
     const send = (event: string, extra: Record<string, string | number> = {}) => {
-      if (disabled) return;
+      // This runs again when pending active time flushes; no queued payload retains a token.
+      if (disabled || excluded()) return;
       try {
         if (localStorage.getItem("woodhouse:analytics-opt-out") === "1") return;
       } catch {
         return;
       }
+      const token = browserToken();
       void fetch("/api/engagement", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -64,6 +142,7 @@ const destinations = projects
           sessionId,
           event,
           mode: "site",
+          ...(token ? { browserToken: token } : {}),
           ...extra
         }),
         keepalive: true,

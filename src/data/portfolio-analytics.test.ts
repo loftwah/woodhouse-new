@@ -19,6 +19,7 @@ import { reportSvg, reportFormats } from "./portfolio-card.ts";
 function database() {
   const sqlite = new DatabaseSync(":memory:");
   sqlite.exec(readFileSync("migrations/0001-portfolio-analytics.sql", "utf8"));
+  sqlite.exec(readFileSync("migrations/0002-analytics-browser-returns.sql", "utf8"));
   const db = {
     prepare(sql: string) {
       let values: unknown[] = [];
@@ -454,4 +455,193 @@ test("shared charts attach source quality to totals and retain an environment-ow
     }
     source.coverage.quality = originalQuality;
   }
+});
+
+const browserToken = "aabbccdd-1122-4333-8444-aabbccddeeff";
+function woodhouseVisit(extra = {}) {
+  return payload("visit", { project: "woodhouse", mode: "site", browserToken, ...extra });
+}
+const woodhouseHeaders = { origin: "https://woodhouse.loftwah.com" };
+test("optional browser associations are project-scoped hashes, deduplicate sessions and preserve anonymous counts", async () => {
+  const { db, sqlite } = database();
+  const visit = woodhouseVisit();
+  await collectEngagement(request(visit, woodhouseHeaders), db, now);
+  await collectEngagement(
+    request({ ...visit, eventId: crypto.randomUUID() }, woodhouseHeaders),
+    db,
+    now + 1000
+  );
+  await collectEngagement(
+    request(woodhouseVisit({ browserToken: crypto.randomUUID() }), woodhouseHeaders),
+    db,
+    now + 2000
+  );
+  let report = await localAnalytics(db, "woodhouse", 7, now + 2000);
+  assert.equal(report.metrics.find((m) => m.key === "browsers")?.value, 1);
+  assert.equal(report.metrics.find((m) => m.key === "returning_browsers")?.value, 0);
+  assert.equal(report.metrics.find((m) => m.key === "visits")?.value, 1);
+  await collectEngagement(
+    request(woodhouseVisit({ sessionId: crypto.randomUUID() }), woodhouseHeaders),
+    db,
+    now + 3000
+  );
+  report = await localAnalytics(db, "woodhouse", 7, now + 3000);
+  assert.equal(report.metrics.find((m) => m.key === "browsers")?.value, 1);
+  assert.equal(
+    report.metrics.find((m) => m.key === "returning_browsers")?.value,
+    1,
+    "A same-day different session is a return"
+  );
+  assert.equal(report.metrics.find((m) => m.key === "visits")?.value, 2);
+  const privateRows = sqlite.prepare("SELECT * FROM wh_analytics_browser_visits").all();
+  assert.equal(privateRows.length, 2);
+  assert(!JSON.stringify(privateRows).includes(browserToken));
+  assert(!JSON.stringify(privateRows).includes(session));
+  assert(!JSON.stringify(report).includes(privateRows[0]!.browser_hash as string));
+  assert(parseProjectAnalytics(report, "woodhouse", 7, now + 3000));
+});
+test("browser totals use period DISTINCT and earlier retained sessions beyond the selected window", async () => {
+  const { db } = database();
+  for (const date of ["2026-10-01", "2026-10-03", "2026-10-04"])
+    await collectEngagement(
+      request(woodhouseVisit({ sessionId: crypto.randomUUID() }), woodhouseHeaders),
+      db,
+      Date.parse(`${date}T12:00:00Z`)
+    );
+  const period = parseReportingWindow(new URLSearchParams("from=2026-10-03&to=2026-10-04"), now)!;
+  const report = await localAnalytics(db, "woodhouse", 2, now, period);
+  for (const key of ["browsers", "returning_browsers"]) {
+    const metric = report.metrics.find((m) => m.key === key)!;
+    assert.equal(metric.value, 1);
+    assert.deepEqual(metric.daily, [
+      { date: "2026-10-03", value: 1 },
+      { date: "2026-10-04", value: 1 }
+    ]);
+    assert.equal(
+      metric.quality,
+      "partial",
+      "Opt-in coverage never implies every visitor was measured"
+    );
+  }
+  const before = parseReportingWindow(new URLSearchParams("from=2026-09-01&to=2026-09-02"), now)!;
+  const missing = await localAnalytics(db, "woodhouse", 2, now, before);
+  assert(
+    missing.metrics
+      .filter((m) => /browsers/.test(m.key))
+      .every((m) => m.value === null && m.daily.length === 0)
+  );
+});
+test("browser raw expiry removes identities without fabricating expired distinct history or deleting event totals", async () => {
+  const { db, sqlite } = database();
+  await collectEngagement(request(woodhouseVisit(), woodhouseHeaders), db, now);
+  const later = now + 91 * 86400000;
+  const anonymous = woodhouseVisit({ sessionId: crypto.randomUUID() });
+  delete (anonymous as { browserToken?: string }).browserToken;
+  await collectEngagement(request(anonymous, woodhouseHeaders), db, later);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_visits").get()!.n, 0);
+  assert.equal(
+    sqlite.prepare("SELECT SUM(value) AS n FROM wh_analytics_daily WHERE metric='visit'").get()!.n,
+    2
+  );
+  const oldPeriod = parseReportingWindow(
+    new URLSearchParams("from=2026-10-15&to=2026-10-15"),
+    later
+  )!;
+  const expired = await localAnalytics(db, "woodhouse", 1, later, oldPeriod);
+  assert(expired.metrics.filter((m) => /browsers/.test(m.key)).every((m) => m.value === null));
+  assert.equal(expired.metrics.find((m) => m.key === "visits")?.value, 1);
+  assert.equal(
+    (await localAnalytics(db, "woodhouse", 7, later)).metrics.find(
+      (m) => m.key === "returning_browsers"
+    )?.value,
+    0
+  );
+});
+test("invalid optional tokens and excluded requests never create browser identities", async () => {
+  const { db, sqlite } = database();
+  for (const token of ["", "email@example.test", "00000000-0000-0000-0000-000000000000", 123, null])
+    assert.equal(
+      (
+        await collectEngagement(
+          request(woodhouseVisit({ browserToken: token }), woodhouseHeaders),
+          db,
+          now
+        )
+      ).status,
+      400
+    );
+  for (const h of [
+    { dnt: "1" },
+    { "sec-gpc": "1" },
+    { "x-analytics-test": "1" },
+    { "user-agent": "HeadlessChrome" }
+  ])
+    assert.equal(
+      (await collectEngagement(request(woodhouseVisit(), { ...woodhouseHeaders, ...h }), db, now))
+        .status,
+      204
+    );
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_visits").get()!.n, 0);
+  assert.equal(
+    sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_coverage").get()!.n,
+    0
+  );
+  assert.equal(
+    (await localAnalytics(db, "woodhouse", 7, now)).metrics.find((m) => m.key === "browsers")
+      ?.value,
+    null
+  );
+});
+
+test("forward browser tables are idempotent and leave existing schema/rollups intact", () => {
+  const { sqlite } = database();
+  sqlite.exec(
+    "CREATE TABLE core_migrations (version TEXT); INSERT INTO core_migrations VALUES ('existing');"
+  );
+  const before = sqlite
+    .prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_rollup'")
+    .get();
+  sqlite.exec(readFileSync("migrations/0002-analytics-browser-returns.sql", "utf8"));
+  assert.deepEqual(
+    sqlite.prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_rollup'").get(),
+    before
+  );
+  assert.equal(sqlite.prepare("SELECT version FROM core_migrations").get()!.version, "existing");
+});
+
+test("unsupported game browser tokens remain anonymous and cannot establish pre-adoption identity history", async () => {
+  const { db, sqlite } = database();
+  for (const [project, mode, origin] of [
+    ["shoalshot", "dive", "https://shoalshot.loftwah.com"],
+    ["protocol-11", "classic", "https://protocol11.loftwah.com"]
+  ] as const) {
+    assert.equal(
+      (
+        await collectEngagement(
+          request(payload("visit", { project, mode, browserToken }), { origin }),
+          db,
+          now
+        )
+      ).status,
+      204
+    );
+    const report = await localAnalytics(db, project, 7, now);
+    assert.equal(
+      report.metrics.find((m) => m.key === "visits")?.value,
+      1,
+      "Compatible optional fields do not block anonymous event counting"
+    );
+    for (const key of ["browsers", "returning_browsers"]) {
+      const metric = report.metrics.find((m) => m.key === key)!;
+      assert.equal(metric.value, null);
+      assert.equal(metric.quality, "unavailable");
+      assert.deepEqual(metric.daily, []);
+    }
+  }
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_visits").get()!.n, 0);
+  assert.equal(
+    sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_browser_coverage").get()!.n,
+    0,
+    "Future adoption must start with its own real consent boundary"
+  );
 });

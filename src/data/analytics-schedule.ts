@@ -5,6 +5,7 @@ export const analyticsCron = "17 * * * *";
 async function refreshPortfolioReports(db: D1Database, fetcher: typeof fetch = fetch) {
   const cutoff = Math.floor(Date.now() / 1000) - 90 * 86400;
   await db.batch([
+    db.prepare("DELETE FROM wh_analytics_browser_visits WHERE received_at<?").bind(cutoff),
     db.prepare("DELETE FROM wh_analytics_events WHERE received_at<?").bind(cutoff),
     db.prepare("DELETE FROM wh_analytics_sessions WHERE last_at<?").bind(cutoff),
     db

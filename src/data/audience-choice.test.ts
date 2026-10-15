@@ -57,7 +57,9 @@ test("actual browser scripts revoke collection before a failed opt-out storage w
             }
           : selector === "[data-analytics-choice]"
             ? button
-            : status,
+            : selector === "[data-analytics-status]"
+              ? status
+              : null,
       addEventListener: (name: string, fn: (event: unknown) => void) => listeners.set(name, fn)
     }
   };
