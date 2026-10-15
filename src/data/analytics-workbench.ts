@@ -263,13 +263,16 @@ export function svgPlot(
     1,
     ...series.flatMap((s) => s.values.filter((x): x is number => x !== null))
   );
-  const yMax = Math.max(1, Math.ceil(max / 5) * 5),
+  const magnitude = 10 ** Math.floor(Math.log10(max / 4));
+  const multiple = [1, 2, 2.5, 5, 10].find((value) => value >= max / 4 / magnitude)!;
+  const step = Math.max(1, Math.ceil(multiple * magnitude));
+  const yMax = Math.ceil(max / step) * step,
     x = (i: number) => left + (period.days === 1 ? plotW / 2 : (i / (period.days - 1)) * plotW),
     y = (v: number) => top + plotH - (v / yMax) * plotH;
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Daily activity chart; exact values are in the chart data table"><g font-family="system-ui,sans-serif" font-size="12" fill="#a9b8d0">`;
-  for (let i = 0; i <= 4; i++) {
-    const yy = top + (plotH * i) / 4;
-    svg += `<path d="M${left} ${yy}H${width - right}" stroke="#263349"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end">${Math.round(yMax * (1 - i / 4)).toLocaleString("en-AU")}</text>`;
+  for (let value = yMax; value >= 0; value -= step) {
+    const yy = y(value);
+    svg += `<path d="M${left} ${yy}H${width - right}" stroke="#263349"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end">${value.toLocaleString("en-AU")}</text>`;
   }
   const dates = dateDays(period);
   const tickIndices = [...new Set([0, Math.floor((period.days - 1) / 2), period.days - 1])];

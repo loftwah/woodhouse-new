@@ -67,6 +67,11 @@ test("source key compatibility does not mix site attention with active gameplay"
     replay
   );
 });
+test("small-count export axes label the actual integer tick values", () => {
+  const svg = svgPlot([{ name: "Inspections", colour: "#7fa2ff", values: [1, 3, 0] }], period);
+  const labels = [...svg.matchAll(/text-anchor="end">([^<]+)<\/text>/g)].map((m) => Number(m[1]));
+  assert.deepEqual(labels, [3, 2, 1, 0]);
+});
 test("app report exports select useful app measures and retain their distinct frozen counts", () => {
   const app = {
     ...source,
