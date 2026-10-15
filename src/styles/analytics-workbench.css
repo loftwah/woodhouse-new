@@ -145,6 +145,11 @@
   line-height: 1.15;
   margin: 0 0 0.35rem;
 }
+.product-view-label {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
 .workbench-heading p {
   color: var(--muted);
   font-size: 0.8rem;

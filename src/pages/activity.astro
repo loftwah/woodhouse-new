@@ -20,13 +20,15 @@ import {
   reportLink
 } from "../data/portfolio-reports";
 import {
-  measureChoices,
   projectColours,
   dateDays,
   dailyPoints,
   dailyStatus,
   qualityText,
-  svgPlot
+  svgPlot,
+  measuresFor,
+  resolveMeasure,
+  productView
 } from "../data/analytics-workbench";
 export const prerender = false;
 Astro.cache.set(false);
@@ -50,6 +52,15 @@ if (identities.error)
 const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
 const selected = requested && publicIds.has(requested) ? (requested as AnalyticsProject) : null;
 if (requested && !selected) return new Response("Project unavailable.", { status: 404 });
+const view = productView(selected);
+const choices = measuresFor(selected);
+const requestedMeasure = Astro.url.searchParams.get("measure");
+const measure = resolveMeasure(selected, requestedMeasure);
+if (requestedMeasure && requestedMeasure !== measure.key) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.set("measure", measure.key);
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
 const names = new Map([
   ...identities.projects.map((p) => [p.slug, p.name] as const),
   ["woodhouse", "Woodhouse"]
@@ -89,29 +100,32 @@ const allRows = analyticsProjects
     colour: projectColours[project]!
   }));
 const rows = allRows.filter((r) => !selected || r.project === selected);
-const possible = measureChoices.filter((m) =>
-  rows.some((r) => r.data?.metrics.some((v) => v.key === m.key))
-);
 const groups = [
   { label: "Gameplay", keys: ["game_starts", "game_completions", "active_seconds", "replays"] },
   {
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
   },
-  { label: "Mini-apps", keys: ["app_opens", "actions"] },
+  { label: "App usage", keys: ["app_opens", "photo_opens", "inspection_completed", "actions"] },
   { label: "Listening", keys: ["listening_seconds", "listening_starts"] }
-];
-const requestedMeasure = Astro.url.searchParams.get("measure");
-const measure =
-  (requestedMeasure ? measureChoices.find((m) => m.key === requestedMeasure) : null) ??
-  possible.find((m) =>
-    rows.some((r) => r.data?.metrics.some((v) => v.key === m.key && v.value !== null))
-  ) ??
-  measureChoices[0];
+]
+  .map((group) => ({
+    ...group,
+    keys: group.keys.filter((key) => choices.some((m) => m.key === key))
+  }))
+  .filter((group) => group.keys.length);
 const metricRows = rows.map((r) => ({
   ...r,
   metric: r.data?.metrics.find((m) => m.key === measure.key)
 }));
+const headlines =
+  selected && view
+    ? [...new Set([...view.headlines, measure.key])].map((key) => ({
+        ...rows[0]!,
+        name: choices.find((m) => m.key === key)!.label,
+        metric: rows[0]?.data?.metrics.find((m) => m.key === key)
+      }))
+    : metricRows;
 const chartRows = metricRows.filter((r) => r.metric);
 function daysForStatus(
   data: (typeof metricRows)[number]["data"],
@@ -136,7 +150,12 @@ const cleanDays = metricRows.map(
 const longestClean = Math.max(0, ...cleanDays);
 const qaOff = Astro.url.searchParams.get("analytics") === "off";
 function pageLink(
-  changes: { project?: string | null; measure?: string; days?: number; latest?: boolean } = {}
+  changes: {
+    project?: AnalyticsProject | null;
+    measure?: string;
+    days?: number;
+    latest?: boolean;
+  } = {}
 ) {
   const q = new URLSearchParams();
   if (frozen && snapshot && !changes.latest && changes.days === undefined)
@@ -148,7 +167,7 @@ function pageLink(
   } else q.set("days", String(window.days));
   const project = changes.project === undefined ? selected : changes.project;
   if (project) q.set("project", project);
-  q.set("measure", changes.measure ?? measure.key);
+  q.set("measure", resolveMeasure(project ?? null, changes.measure ?? measure.key).key);
   if (qaOff) q.set("analytics", "off");
   return `/activity/?${q}`;
 }
@@ -188,7 +207,10 @@ const dataPayload = {
 
 <BaseLayout
   title={title}
-  description="Explore recorded gameplay, mini-app actions and audible listening. Interactive charts, custom UTC dates and clear source coverage across the Loftwah portfolio."
+  description={
+    view?.description ??
+    "Explore recorded gameplay, mini-app actions and audible listening. Interactive charts, custom UTC dates and clear source coverage across the Loftwah portfolio."
+  }
   path={frozen ? link.replace(Astro.url.origin, "") : "/activity/"}
   currentPath="/activity/"
   image={image}
@@ -231,6 +253,7 @@ const dataPayload = {
       <header class="workbench-heading">
         <div>
           <h1>{title}</h1>
+          {view && <p class="product-view-label">{view.label}</p>}
         </div>
         <div class="date-toolbar">
           <nav aria-label="Reporting period">
@@ -316,7 +339,10 @@ const dataPayload = {
       <div class="analysis-layout">
         <div class="chart-column">
           <nav class="measure-navigation" aria-label="Choose a measure">
-            {groups.map((group) => (
+            {(groups.length === 1
+              ? choices.map((m) => ({ label: m.label, keys: [m.key] }))
+              : groups
+            ).map((group) => (
               <a
                 href={pageLink({ measure: group.keys[0]! })}
                 aria-current={group.keys.includes(measure.key) ? "page" : undefined}
@@ -344,7 +370,7 @@ const dataPayload = {
                 <select id="measure-picker" name="measure">
                   {groups.map((group) => (
                     <optgroup label={group.label}>
-                      {measureChoices
+                      {choices
                         .filter((m) => group.keys.includes(m.key))
                         .map((m) => (
                           <option value={m.key} selected={m.key === measure.key}>
@@ -367,8 +393,8 @@ const dataPayload = {
             </div>
             <p class="mobile-measure-reading">{measure.meaning}</p>
             <dl class="metric-strip">
-              {metricRows
-                .filter((r) => r.metric)
+              {headlines
+                .filter((r) => selected || r.metric)
                 .map((r) => (
                   <div>
                     <dt>
@@ -379,7 +405,7 @@ const dataPayload = {
                       ></span>
                       {r.name}
                     </dt>
-                    <dd>{formatMetric(r.metric!)}</dd>
+                    <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
                     <small>
                       {qualityText(r.metric)}
                       {days.some((day) => dailyStatus(r.data, r.metric, day) === "legacy")
@@ -610,6 +636,13 @@ const dataPayload = {
           </section>
           <section>
             <h2>What does it tell us?</h2>
+            {selected === "app-composer" && (
+              <p>
+                App opens show recorded access. Guestbook contribution opens show content being
+                viewed. Completed Link Checks show a specific job finishing. These are different
+                stages of value, measured separately—not a shared conversion funnel.
+              </p>
+            )}
             <p>
               {hasDaily
                 ? "We can see when recorded activity occurred and inspect how it is distributed across the selected dates."
@@ -630,6 +663,20 @@ const dataPayload = {
               </p>
             ))}
           </section>
+          {selected === "app-composer" && (
+            <section>
+              <h2>Is the app delivering value?</h2>
+              <p>
+                We do not yet measure creator activation, committed Guestbook submissions,
+                successful publications or outbound Linkarooie interactions in this public report.
+                Opens and mixed action totals cannot establish those outcomes.
+              </p>
+              <p>
+                Repeat use, task completion rates and value over time need app-specific outcome
+                definitions and matched observation. Dividing these totals would invent a rate.
+              </p>
+            </section>
+          )}
           <section class="investor-readout">
             <h2>If you’re assessing the business</h2>
             <p>

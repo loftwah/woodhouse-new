@@ -1,4 +1,9 @@
-import { type Metric, type ProjectAnalytics, type ReportingWindow } from "./portfolio-analytics.ts";
+import {
+  type AnalyticsProject,
+  type Metric,
+  type ProjectAnalytics,
+  type ReportingWindow
+} from "./portfolio-analytics.ts";
 export const projectColours: Record<string, string> = {
   fighter: "#ff887e",
   bubbles: "#79d8ff",
@@ -61,13 +66,25 @@ export const measureChoices = [
     key: "app_opens",
     label: "Mini-app opens",
     meaning:
-      "Observed mini-app opens. App Composer bounds its public counter; these are neither unique users nor completed outcomes."
+      "Recorded mini-app home-page loads. Reloads and bots can count. Counters have daily caps; an open does not establish a unique user or a completed task."
   },
   {
     key: "actions",
-    label: "Mini-app actions",
+    label: "Mixed app actions",
     meaning:
-      "Product-defined actions reported by mini-apps. An action counter alone does not establish a conversion or a successful creator outcome."
+      "Adds Guestbook contribution-page opens and completed Link Check inspections. These represent different tasks; their sum is not a conversion rate or a count of successful creators."
+  },
+  {
+    key: "photo_opens",
+    label: "Guestbook contribution opens",
+    meaning:
+      "Successful public Guestbook contribution-page HTML requests. Repeated opens may count. These are not image downloads, submissions, publications or unique people."
+  },
+  {
+    key: "inspection_completed",
+    label: "Completed Link Checks",
+    meaning:
+      "Link Check inspections reported by the owning app after completion. Repeated jobs may count; these are not unique users, outbound clicks or deployment checks."
   },
   {
     key: "listening_seconds",
@@ -88,6 +105,77 @@ export const measureChoices = [
       "Recorded outbound project-open actions from Woodhouse. A click shows discovery intent; it does not establish downstream use or acquisition."
   }
 ] as const;
+type MeasureKey = (typeof measureChoices)[number]["key"];
+const gameMeasures: MeasureKey[] = [
+  "game_starts",
+  "game_completions",
+  "active_seconds",
+  "replays",
+  "visits",
+  "engaged_sessions",
+  "browsers",
+  "returning_browsers"
+];
+type ProductView = {
+  label: string;
+  defaultMeasure: MeasureKey;
+  keys: MeasureKey[];
+  headlines: MeasureKey[];
+  description: string;
+};
+const gameView: ProductView = {
+  label: "Play & engagement",
+  defaultMeasure: "game_starts",
+  keys: gameMeasures,
+  headlines: ["game_starts", "game_completions", "active_seconds"],
+  description:
+    "Explore recorded gameplay starts, completions, active play and return signals, with source-specific coverage and explicit measurement limits."
+};
+const productViews: Record<AnalyticsProject, ProductView> = {
+  "app-composer": {
+    label: "App usage & useful outcomes",
+    defaultMeasure: "app_opens",
+    keys: ["app_opens", "photo_opens", "inspection_completed", "actions"],
+    headlines: ["app_opens", "photo_opens", "inspection_completed"],
+    description:
+      "Inspect bounded mini-app opens, Guestbook contribution views and completed Link Check inspections. Understand which useful outcomes are measured and which remain unknown."
+  },
+  woodhouse: {
+    label: "Audience & project discovery",
+    defaultMeasure: "visits",
+    keys: ["visits", "engaged_sessions", "project_opens", "browsers", "returning_browsers"],
+    headlines: ["visits", "engaged_sessions", "project_opens"],
+    description:
+      "Explore Woodhouse visits, engaged sessions and deliberate project discovery, with dated charts and explicit audience measurement limits."
+  },
+  loftwahfm: {
+    label: "Audible listening",
+    defaultMeasure: "listening_seconds",
+    keys: ["listening_seconds", "listening_starts"],
+    headlines: ["listening_seconds", "listening_starts"],
+    description:
+      "Explore accepted audible listening and playback starts, with dated charts, source coverage and clear listening definitions."
+  },
+  fighter: gameView,
+  bubbles: gameView,
+  "protocol-11": gameView,
+  shoalshot: gameView
+};
+export function productView(project: AnalyticsProject | null) {
+  return project ? productViews[project] : null;
+}
+export function measuresFor(project: AnalyticsProject | null) {
+  const keys = productView(project)?.keys;
+  return keys ? keys.map((key) => measureChoices.find((m) => m.key === key)!) : [...measureChoices];
+}
+export function resolveMeasure(project: AnalyticsProject | null, requested?: string | null) {
+  const choices = measuresFor(project);
+  return (
+    choices.find((m) => m.key === requested) ??
+    choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
+    choices[0]!
+  );
+}
 export function dateDays(period: ReportingWindow) {
   return Array.from({ length: period.days }, (_, i) =>
     new Date(Date.parse(period.from) + i * 86400000).toISOString().slice(0, 10)

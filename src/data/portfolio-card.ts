@@ -3,7 +3,7 @@ import {
   dailyPoints,
   dailyStatus,
   dateDays,
-  measureChoices,
+  resolveMeasure,
   projectColours,
   svgPlot
 } from "./analytics-workbench.ts";
@@ -34,14 +34,10 @@ export function reportSvg(
     report.period ??
     report.projects.find((p) => p.report)?.report?.period ??
     periodFor(report.days, Date.parse(report.createdAt));
-  const measure =
-    measureChoices.find((m) => m.key === requestedMeasure) ??
-    measureChoices.find((m) =>
-      report.projects.some((p) =>
-        p.report?.metrics.some((v) => v.key === m.key && v.value !== null)
-      )
-    ) ??
-    measureChoices[0];
+  const measure = resolveMeasure(
+    report.projects.length === 1 ? report.projects[0]!.project : null,
+    requestedMeasure
+  );
   const rows = report.projects.map((row) => ({
     ...row,
     name: names.get(row.project) ?? row.project,
