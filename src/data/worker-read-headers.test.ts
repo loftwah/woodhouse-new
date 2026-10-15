@@ -54,7 +54,7 @@ test("public GET and HEAD preserve the same indexability and explicit route cach
   for (const [path, type, cache] of [
     ["/activity/", "text/html", "private, no-store"],
     ["/api/portfolio-card.png?report=test", "image/png", "public, max-age=300"]
-  ]) {
+  ] as const) {
     const wrapped = worker({ "content-type": type!, "cache-control": cache! });
     for (const method of ["GET", "HEAD"]) {
       const response = await wrapped.fetch(
@@ -83,7 +83,7 @@ test("HEAD keeps upstream preview noindex and cannot bypass editorial or mutatio
     ["/?_preview=secret", "HEAD"],
     ["/_emdash/admin", "HEAD"],
     ["/", "POST"]
-  ]) {
+  ] as const) {
     const response = await wrapped.fetch(
       new Request("https://woodhouse.loftwah.com" + path, { method }),
       environment,
