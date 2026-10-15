@@ -27,6 +27,14 @@ test("chart preserves missing days as gaps, real zeroes, and source comparabilit
   assert.equal(dailyStatus(source, metric, "2026-10-14"), "legacy");
   assert.equal(dailyStatus(source, metric, "2026-10-15"), "missing");
   assert.equal(dailyStatus(source, metric, "2026-10-16"), "partial");
+  assert.equal(
+    dailyStatus(
+      { ...source, coverage: { ...source.coverage, comparableFrom: "2026-10-16T11:00:00.000Z" } },
+      metric,
+      "2026-10-16"
+    ),
+    "partial"
+  );
   const full = { ...metric, daily: [{ date: "2026-10-15", value: 0 }] };
   assert.equal(dailyStatus(source, full, "2026-10-15"), "clean");
   assert.equal(

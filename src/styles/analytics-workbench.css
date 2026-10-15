@@ -784,7 +784,7 @@
 }
 @media (max-width: 1000px) {
   .analytics-workbench {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .project-rail {
     border: 0;
@@ -872,7 +872,7 @@
     display: block;
   }
   .analysis-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .chart-column {
     padding: 0 0.7rem 1.5rem;
@@ -936,7 +936,7 @@
     border-top: 1px solid var(--line);
     padding: 0 1rem;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .interpretation section {
     padding: 1.25rem 0;
@@ -963,11 +963,11 @@
     font-size: 0.65rem;
   }
   .source-dates {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.3rem;
   }
   .definition-list > div {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.3rem;
   }
   .definition-list dt strong {
@@ -1071,4 +1071,8 @@
   .measure-navigation a {
     font-size: 0.72rem;
   }
+}
+
+.project-rail {
+  min-width: 0;
 }

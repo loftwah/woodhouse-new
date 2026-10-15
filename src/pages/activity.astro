@@ -196,7 +196,7 @@ const dataPayload = {
   analyticsWorkbench
 >
   <div class="analytics-workbench">
-    <aside class="project-rail" aria-label="Choose a project">
+    <div class="project-rail">
       <nav aria-label="Analytics projects">
         <a href={pageLink({ project: null })} aria-current={!selected ? "page" : undefined}>
           <span class="rail-all" aria-hidden="true"></span>All projects{" "}
@@ -226,7 +226,7 @@ const dataPayload = {
         <a href="/activity/listening/">Games × Radio</a>
         <a href="/projects/">Explore the projects</a>
       </div>
-    </aside>
+    </div>
     <div class="workbench-body">
       <header class="workbench-heading">
         <div>
@@ -380,10 +380,7 @@ const dataPayload = {
                     <dd>{formatMetric(r.metric!)}</dd>
                     <small>
                       {qualityText(r.metric)}
-                      {r.data &&
-                      (!r.data.coverage.comparableFrom ||
-                        window.from <= r.data.coverage.comparableFrom.slice(0, 10)) &&
-                      r.metric?.value !== null
+                      {days.some((day) => dailyStatus(r.data, r.metric, day) === "legacy")
                         ? " · legacy in range"
                         : ""}
                     </small>
@@ -600,7 +597,7 @@ const dataPayload = {
             ))}
           </section>
         </div>
-        <aside class="interpretation" aria-label="Read this report">
+        <section class="interpretation" aria-label="Read this report">
           <section>
             <h2>What am I looking at?</h2>
             <p>{measure.meaning}</p>
@@ -735,7 +732,7 @@ const dataPayload = {
             </dl>
             <a href="/activity/measurement/">Tracking, retention & privacy choices</a>
           </section>
-        </aside>
+        </section>
       </div>
       <footer class="workbench-close">
         <p>

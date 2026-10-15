@@ -105,13 +105,13 @@ export function dailyStatus(
   if (metric.quality === "sampled" || report.coverage.quality === "sampled") return "sampled";
   if (report.coverage.quality === "unavailable") return "missing";
   if (metric.quality === "partial") return "partial";
-  if (!report.coverage.comparableFrom || day <= report.coverage.comparableFrom.slice(0, 10))
-    return "legacy";
   if (
     day <= (report.coverage.startedAt ?? report.coverage.through).slice(0, 10) ||
     day >= report.coverage.through.slice(0, 10)
   )
     return "partial";
+  if (!report.coverage.comparableFrom || day <= report.coverage.comparableFrom.slice(0, 10))
+    return "legacy";
   return "clean";
 }
 export function dailyPoints(metric: Metric | undefined, period: ReportingWindow) {
