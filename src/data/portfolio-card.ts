@@ -90,7 +90,7 @@ export function reportSvg(
   svg += text(
     pad,
     landscape ? 157 : 191,
-    `${period.from} — ${period.to} · UTC · ${period.days} days`,
+    `${period.from} — ${period.to} · UTC · ${period.days} ${period.days === 1 ? "day" : "days"}`,
     landscape ? 20 : 25,
     "#a9b8d0"
   );
