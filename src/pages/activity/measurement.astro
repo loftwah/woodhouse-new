@@ -85,12 +85,16 @@ export const prerender = false;
   button?.addEventListener("click", () => {
     const off = label();
     if (off === null) return;
+    // Revocation takes effect before persistence, including browsers that reject writes.
+    if (!off) window.dispatchEvent(new Event("woodhouse:analytics-disable"));
     try {
       localStorage.setItem("woodhouse:analytics-opt-out", off ? "0" : "1");
       location.reload();
     } catch {
       if (status)
-        status.textContent = "Could not save this choice. Use ?analytics=off in the address.";
+        status.textContent = off
+          ? "Reporting remains off. This browser could not save the new choice."
+          : "Reporting is off on this page. This browser could not save the choice for future pages. Use ?analytics=off in the address or try again.";
     }
   });
 </script>
