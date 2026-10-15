@@ -50,8 +50,11 @@ export function reportSvg(
   }));
   const qualifier = (row: (typeof rows)[number]) => {
     if (!row.metric || row.metric.value === null) return "Not measured";
-    if (row.metric.quality === "bounded") return "Bounded count";
-    if (row.metric.quality === "sampled") return "Sampled estimate";
+    if (row.metric.quality === "bounded" || row.report?.coverage.quality === "bounded")
+      return "Bounded count";
+    if (row.metric.quality === "sampled" || row.report?.coverage.quality === "sampled")
+      return "Sampled estimate";
+    if (row.report?.coverage.quality === "unavailable") return "Coverage unavailable";
     if (dateDays(period).some((day) => dailyStatus(row.report, row.metric, day) === "legacy"))
       return "Legacy/test risk";
     if (

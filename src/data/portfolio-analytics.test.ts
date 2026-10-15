@@ -443,5 +443,15 @@ test("shared charts attach source quality to totals and retain an environment-ow
     metric.quality = "bounded";
     assert(reportSvg(report, new Map(), format, "game_starts").includes("Bounded count"));
     metric.quality = "exact";
+    const originalQuality = source.coverage.quality;
+    for (const [quality, label] of [
+      ["bounded", "Bounded count"],
+      ["sampled", "Sampled estimate"],
+      ["unavailable", "Coverage unavailable"]
+    ] as const) {
+      source.coverage.quality = quality;
+      assert(reportSvg(report, new Map(), format, "game_starts").includes(`>${label}</text>`));
+    }
+    source.coverage.quality = originalQuality;
   }
 });
