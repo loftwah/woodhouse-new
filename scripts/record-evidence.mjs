@@ -2,6 +2,12 @@ import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { computeSourceDigest } from "./source-digest.mjs";
+import {
+  acceptanceEvidenceProblems,
+  previewIdentity,
+  requiredPreviewChecks
+} from "./acceptance-evidence.mjs";
 
 // Records one human acceptance observation in the private production receipt.
 // It does not decide whether a check passed: the operator supplies an
@@ -10,25 +16,7 @@ import path from "node:path";
 // to hand-edit a digest or file mode.
 
 const PRODUCTION_HOSTNAME = "woodhouse.loftwah.com";
-const requiredChecks = [
-  "publicRouteMatrix",
-  "privacyScan",
-  "desktopAndMobile",
-  "ownerPasskeyLogin",
-  "editorDraftRevisionPreviewSchedulePublish",
-  "searchRssSitemapUpdates",
-  "mediaUploadAndRender",
-  "publicDraftIsolation",
-  "menuEditing",
-  "agentMcpSchemaReadAndDraftReadback",
-  "agentMcpRoleBoundary",
-  "evidenceSnapshotHistory",
-  "conversationPrivacyPolicy",
-  "enquiryDelivery",
-  "backupRecoveryDrill",
-  "automaticBackupRetention",
-  "scheduledPublishCron"
-];
+const requiredChecks = requiredPreviewChecks;
 
 const argv = process.argv.slice(2).filter((value) => value !== "--");
 const flags = new Map();
@@ -105,6 +93,21 @@ const parsed = Date.parse(observedAt);
 if (!Number.isFinite(parsed) || parsed > Date.now() + 60_000)
   fail("the observation timestamp must be a valid date that is not in the future.");
 
+let deployment;
+try {
+  const deploymentPath = path.resolve(root, ".release/preview-deployment.json");
+  const details = await lstat(deploymentPath);
+  if (!details.isFile() || (details.mode & 0o077) !== 0) throw new Error("not private");
+  deployment = JSON.parse(await readFile(deploymentPath, "utf8"));
+  previewIdentity(deployment);
+  if (deployment.environment !== "preview" || deployment.worker !== "woodhouse-loftwah-preview")
+    throw new Error("wrong environment");
+} catch {
+  fail("a private preview-deployment.json from pnpm run deploy:preview is required.");
+}
+if (deployment.sourceDigest !== (await computeSourceDigest(root)))
+  fail("source differs from the deployed preview; deploy and exercise the current revision first.");
+
 const receiptPath = path.resolve(root, ".release/production-ready.json");
 let receipt;
 try {
@@ -118,7 +121,7 @@ try {
     );
   receipt = {
     operatorConfirmed: PRODUCTION_HOSTNAME,
-    preview: { url: "", sourceDigest: "", workerVersion: "", checks: {} },
+    preview: { ...previewIdentity(deployment), checks: {} },
     production: {
       contentModelMigrated: false,
       starterContentVerified: false,
@@ -127,17 +130,30 @@ try {
   };
 }
 
-const preview = receipt.preview ?? (receipt.preview = { checks: {} });
+const preview = receipt.preview;
+try {
+  const identity = previewIdentity(preview);
+  if (Object.keys(identity).some((key) => identity[key] !== deployment[key]))
+    throw new Error("mismatch");
+} catch {
+  fail(
+    "the acceptance receipt must identify the current preview deployment before recording checks."
+  );
+}
 const checks = preview.checks ?? (preview.checks = {});
 if (checks[check] && !flags.has("replace"))
   fail(`"${check}" already has recorded evidence. Pass --replace to supersede it.`);
 
-checks[check] = {
+const evidence = {
   passed: true,
+  preview: previewIdentity(deployment),
   observedAt,
   sha256,
   artifactPath: path.relative(root, artifactAbsolute)
 };
+const problems = await acceptanceEvidenceProblems(evidence, { root, preview: deployment });
+if (problems.length) fail(problems.join("; "));
+checks[check] = evidence;
 
 await mkdir(releaseRoot, { recursive: true, mode: 0o700 });
 await chmod(releaseRoot, 0o700);
@@ -147,9 +163,14 @@ await chmod(receiptPath, 0o600);
 console.log(
   `Recorded ${check} from ${path.relative(root, artifactAbsolute)} (sha256 ${sha256.slice(0, 12)}…, observed ${observedAt}).`
 );
+const remaining = [];
+for (const name of requiredChecks) {
+  if ((await acceptanceEvidenceProblems(checks[name], { root, preview: deployment })).length)
+    remaining.push(name);
+}
 console.log(
-  requiredChecks.filter((name) => !checks[name]).length
-    ? `Still unrecorded: ${requiredChecks.filter((name) => !checks[name]).join(", ")}`
-    : "All required preview acceptance checks now carry recorded evidence."
+  remaining.length
+    ? `Still unverified for this preview: ${remaining.join(", ")}`
+    : "All required preview acceptance checks carry current, intact recorded evidence."
 );
 console.log("Run pnpm run release:status to confirm the receipt satisfies the deploy gate.");

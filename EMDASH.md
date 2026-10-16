@@ -228,15 +228,21 @@ What still blocks `pnpm run deploy` is unchanged and is not a content problem: `
 
 Supplementary notes inside an article are plain elements or labelled `section` regions, never `aside` landmarks: a `complementary` landmark inside `main` is exposed as a second page-level region. The note rails on dossiers keep their accessible names as `section` regions.
 
-`pnpm run deploy` is guarded. It requires `.release/production-ready.json` to identify the accepted preview URL, exact active Cloudflare Worker version and current source fingerprint. Each acceptance check must point to a fresh, non-empty, owner-only evidence file under `.release/`, with a recorded timestamp and matching SHA-256 digest. The required preview checks cover the public route matrix; privacy; desktop and phone layouts; owner passkey login; the full editor draft/preview/revision/schedule/publish journey; search/RSS/sitemap updates; media upload/render; public draft isolation; menu editing; MCP read/draft/readback and role boundary; snapshot/evidence history; conversation privacy; enquiry delivery; a recovery drill; automatic backup retention; and scheduled publishing. Before building, the script checks the live production schema and starter content with `verify:content`, verifies the D1 bookmark or private SQL dump, verifies the production R2 archive file hashes and compares its object keys, sizes, ETags, timestamps and HTTP/custom metadata with the live bucket, and reads production secret names only. A non-empty bucket is supported by the archive workflow, but still requires a recent verified backup and a separate non-production restore drill in the acceptance evidence. The script then builds the production config, validates the Worker/D1/R2/domain targets, deploys and checks public routes and privacy. Receipt paths and backup artifacts live under ignored `.release/` and must never contain the encryption key itself. The reviewed content model **is** installed in production D1 as of 4 October 2026, and both required Worker secret names are present. The one outstanding gate is `.release/production-ready.json`: the operator acceptance receipt. Until MP supplies it, the production gate correctly refuses deployment. **Production is nonetheless serving a stale Worker** — see the dated production state below.
+### Full editorial production deployment gate
 
-`pnpm run release:status` reports the same posture without attempting a deploy: whether the recorded preview matches the current source fingerprint, whether that Worker is the active 100% deployment, the read-only production migration, content and secret-name results, and for every required acceptance check whether its artifact exists, is owner-only, is under 30 days old and matches its SHA-256. It exits non-zero while anything is blocked, so it works as a release gate in its own right. On 3 October 2026 it reported the preview as ready and production as blocked on the content model, both secret names, and the acceptance receipt itself.
+Reviewed 16 October 2026: this is the full editorial activation gate; the supported reading-only publication path is described in [ARCHITECTURE.md](ARCHITECTURE.md#public-publication-and-editorial-activation). Historical deployment observations below retain their dates.
+
+Each acceptance observation now stores its own `preview` identity (URL, source fingerprint and exact Worker version), in addition to timestamp, private artifact and digest. Recording requires the current source to match the private preview deployment manifest; observations must follow that deployment. Recording, status and deployment share `scripts/acceptance-evidence.mjs`. Missing or stale checks make `release:status` fail. Updating the receipt's top-level preview cannot promote earlier observations: legacy unbound checks must be repeated and recorded against the actual current preview, never bulk relabelled. This does not enable authoring or satisfy a human/device/recovery observation.
+
+`pnpm run deploy` is guarded. It requires `.release/production-ready.json` to identify the accepted preview URL, exact active Cloudflare Worker version and current source fingerprint. Each acceptance check must point to a fresh, non-empty, owner-only evidence file under `.release/`, with a recorded timestamp and matching SHA-256 digest. The required preview checks cover the public route matrix; privacy; desktop and phone layouts; owner passkey login; the full editor draft/preview/revision/schedule/publish journey; search/RSS/sitemap updates; media upload/render; public draft isolation; menu editing; MCP read/draft/readback and role boundary; snapshot/evidence history; conversation privacy; enquiry delivery; a recovery drill; automatic backup retention; and scheduled publishing. Before building, the script checks the live production schema and starter content with `verify:content`, verifies the D1 bookmark or private SQL dump, verifies the production R2 archive file hashes and compares its object keys, sizes, ETags, timestamps and HTTP/custom metadata with the live bucket, and reads production secret names only. A non-empty bucket is supported by the archive workflow, but still requires a recent verified backup and a separate non-production restore drill in the acceptance evidence. The script then builds the production config, validates the Worker/D1/R2/domain targets, deploys and checks public routes and privacy. Receipt paths and backup artifacts live under ignored `.release/` and must never contain the encryption key itself. Historical observation, 4 October 2026: the reviewed content model was installed in production D1 and both required Worker secret names were present; the full editorial acceptance receipt remained outstanding. Later reading-only publication does not satisfy those editorial observations. Use the publication path above and current served identity for public release state.
+
+`pnpm run release:status` reports the same posture without attempting a deploy: whether the recorded preview matches the current source fingerprint, whether that Worker is the active 100% deployment, the read-only production migration, content and secret-name results, and for every required acceptance check whether its artifact exists, is owner-only, is under 30 days old and matches its SHA-256. It exits non-zero while a reported item is blocked; the enforcing deploy command still checks backups, manifests and served identity independently. On 3 October 2026 it reported the preview as ready and production as blocked on the content model, both secret names, and the acceptance receipt itself.
 
 `pnpm run evidence:capture` writes the acceptance evidence that can be observed without a browser session into `.release/evidence/`, and lists the checks that genuinely need a signed-in operator. It currently covers five: owner passkey login, evidenced by a WebAuthn assertion arriving in the preview `credentials` table with a `last_used_at` stamp rather than by an operator claim; the public route matrix, from `audit:pages` and `smoke:preview`; the privacy scan, from per-request stamped fetches of the public and protected routes; the dated snapshot and evidence history, from direct D1 queries; and the conversation privacy policy, from the collection counts, the editorial policy tests and the published Agent Reception permissions. Each artifact states its method and an explicit list of what it does not prove, and the `ownerPasskeyLogin` artifact records that `backed_up=0` leaves the account un-synced rather than reading that as a pass.
 
 `pnpm run evidence:record -- <check> <artifact-under-.release>` writes one acceptance entry into the private receipt. It validates that the check name is required, that the artifact exists under ignored `.release` and is non-empty and owner-only, then records the artifact's SHA-256 and the observation time. It refuses to overwrite an existing entry without `--replace`, refuses an artifact outside `.release`, refuses a world-readable artifact, refuses an unknown check name, and refuses to create a receipt at all unless the operator passes `--confirm-hostname woodhouse.loftwah.com`. It does not decide that a check passed and it cannot invent an observation: the operator supplies the artifact and asserts it. Use it so nobody has to hand-edit a digest or a file mode in a security-relevant file.
 
-The readiness receipt is a private operator record, not an approval switch. Its shape is:
+The readiness receipt is a private operator record, not an approval switch. This example shows one check; every check listed above needs the same bound evidence shape:
 
 ```json
 {
@@ -250,103 +256,12 @@ The readiness receipt is a private operator record, not an approval switch. Its 
         "passed": true,
         "observedAt": "<ISO timestamp>",
         "artifactPath": ".release/evidence/routes.json",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "privacyScan": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/privacy.txt",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "desktopAndMobile": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/responsive-check.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "ownerPasskeyLogin": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/owner-login.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "editorDraftRevisionPreviewSchedulePublish": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/editor-lifecycle.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "searchRssSitemapUpdates": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/discovery.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "mediaUploadAndRender": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/media.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "publicDraftIsolation": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/draft-isolation.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "menuEditing": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/menus.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "agentMcpSchemaReadAndDraftReadback": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/mcp-draft.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "agentMcpRoleBoundary": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/mcp-role.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "evidenceSnapshotHistory": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/evidence-history.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "conversationPrivacyPolicy": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/conversation-policy.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "enquiryDelivery": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/enquiry-delivery.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "backupRecoveryDrill": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/recovery-drill.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "automaticBackupRetention": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/backup-retention.md",
-        "sha256": "<64 lowercase hex characters>"
-      },
-      "scheduledPublishCron": {
-        "passed": true,
-        "observedAt": "<ISO timestamp>",
-        "artifactPath": ".release/evidence/scheduled-publish.md",
-        "sha256": "<64 lowercase hex characters>"
+        "sha256": "<64 lowercase hex characters>",
+        "preview": {
+          "url": "https://woodhouse-loftwah-preview.loftwah.workers.dev",
+          "sourceDigest": "<current sha256 fingerprint>",
+          "workerVersion": "<accepted version id>"
+        }
       }
     }
   },

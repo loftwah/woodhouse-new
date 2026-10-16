@@ -100,7 +100,7 @@ function short(v: unknown, max = 600): v is string {
     ![...v].some((c) => c.charCodeAt(0) < 32)
   );
 }
-export function parseDays(value: string | null) {
+function parseDays(value: string | null) {
   return value === null ? 7 : ["7", "30", "90"].includes(value) ? Number(value) : null;
 }
 export function periodFor(days: number, now = Date.now()) {

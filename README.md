@@ -16,6 +16,8 @@ Most project repositories are private. Public copy comes from the shareable fact
 
 ## Local work
 
+Agent task routing and the launch/doctor/drive/evidence/cleanup sequence live in [docs/AGENT_INDEX.md](docs/AGENT_INDEX.md).
+
 Use Node 22.16 or later and pnpm.
 
 - Install dependencies with `pnpm install --frozen-lockfile`.
@@ -28,6 +30,7 @@ Use Node 22.16 or later and pnpm.
 - Install the reviewed content model and starter records into a deployed environment with pnpm run emdash:seed:remote -- preview|production. Add --dry-run to print the plan and the generated SQL under the ignored .release directory without writing. A write also requires WOODHOUSE_CONTENT_MODEL_CONFIRMED to name the environment, because it changes a live database. It builds the model locally with EmDash's own init and seed and replays it into D1, so no collection, field or trigger is hand-written; it never copies users, credentials, sessions, media or plugin state from anywhere, and it refuses to run over entries the seed does not describe.
 - Re-render the diagrams and refresh their reserved sizes with pnpm run diagrams.
 - Build and deploy the isolated Cloudflare preview with `pnpm run deploy:preview`.
+- For the currently supported public reading release, use `pnpm run deploy:publication -- preview`, then `pnpm run deploy:publication -- production` from clean pushed main after the matching preview passes. See [the publication boundary](ARCHITECTURE.md#public-publication-and-editorial-activation). The full editorial path below retains separate authoring/recovery acceptance.
 - Measure how long a content change takes to reach the public site with `pnpm run measure:visibility -- --environment=preview|production`. It writes a unique token straight into D1, polls the plain public URL, records when it appears and reverts the record afterwards.
 - Read the production release posture with `pnpm run release:status`. It compares the recorded preview against the current source, confirms the active preview deployment, runs the read-only production checks and verifies every acceptance artifact for freshness, permissions and digest. It exits non-zero while anything is blocked.
 - Record one human acceptance observation with `pnpm run evidence:record -- <check> <artifact-under-.release>`. It validates that the artifact exists, is owner-only and is non-empty, computes its digest and writes the receipt entry in the shape the deploy gate requires. It never decides that a check passed: the operator supplies the artifact and asserts the observation.
@@ -49,7 +52,7 @@ EmDash's authenticated content MCP endpoint is `/_emdash/api/mcp`. Connect only 
 
 ## Refreshing the public snapshot
 
-The newest portfolio snapshot is dated 5 October 2026; it re-reviewed Asset Hunter only, and the eight launch projects keep their 28 September 2026 review dates. A portfolio-level review is not a fresh review of each project, so a snapshot never re-dates projects whose own evidence was not re-read.
+Read the latest published snapshot and each project's own review date from the current EmDash records and `/agents/facts.json`; this README does not maintain a second snapshot date. A portfolio-level review is not a fresh review of each project, so a snapshot never re-dates projects whose own evidence was not re-read.
 
 Update the `projects`, `factory_snapshots`, `project_statuses` and `evidence_records` in EmDash from a reviewed, public-safe report before changing review dates. Do not copy private issue or pull request bodies into public data. Check any claim that a deployed origin can support against that origin rather than against a deploy message, and record a supplied analysis as a hypothesis to be tested rather than as a fact to be republished: `scripts/apply-portfolio-brain.py` is the worked example of that pass, and it is idempotent.
 

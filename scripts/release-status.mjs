@@ -1,34 +1,15 @@
-import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
 import { lstat, readFile } from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { computeSourceDigest } from "./source-digest.mjs";
+import {
+  acceptanceEvidenceProblems,
+  previewIdentity,
+  requiredPreviewChecks
+} from "./acceptance-evidence.mjs";
 
 const root = process.cwd();
 const previewUrl = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
-
-// The preview acceptance journey pnpm run deploy insists on. Kept in step with
-// scripts/deploy-production.mjs, which is the enforcing gate.
-const requiredChecks = [
-  "publicRouteMatrix",
-  "privacyScan",
-  "desktopAndMobile",
-  "ownerPasskeyLogin",
-  "editorDraftRevisionPreviewSchedulePublish",
-  "searchRssSitemapUpdates",
-  "mediaUploadAndRender",
-  "publicDraftIsolation",
-  "menuEditing",
-  "agentMcpSchemaReadAndDraftReadback",
-  "agentMcpRoleBoundary",
-  "evidenceSnapshotHistory",
-  "conversationPrivacyPolicy",
-  "enquiryDelivery",
-  "backupRecoveryDrill",
-  "automaticBackupRetention",
-  "scheduledPublishCron"
-];
 
 async function readPrivateJson(value) {
   const absolute = path.resolve(root, value);
@@ -39,12 +20,6 @@ async function readPrivateJson(value) {
   } catch {
     return null;
   }
-}
-
-async function digestOf(absolute) {
-  const hash = createHash("sha256");
-  for await (const chunk of createReadStream(absolute)) hash.update(chunk);
-  return hash.digest("hex");
 }
 
 function command(args) {
@@ -98,6 +73,7 @@ const active = command([
 const activeVersion = Array.isArray(active.json?.versions) ? active.json.versions[0] : null;
 if (
   active?.ok &&
+  active.json?.versions?.length === 1 &&
   activeVersion?.version_id === preview?.workerVersion &&
   activeVersion.percentage === 100
 )
@@ -161,6 +137,13 @@ if (!receipt) {
     blocked.push("The receipt does not confirm the production hostname woodhouse.loftwah.com.");
   if (receipt.preview?.sourceDigest !== digest)
     blocked.push("The receipt was written for a different source fingerprint.");
+  try {
+    const accepted = previewIdentity(receipt.preview);
+    if (Object.keys(accepted).some((key) => accepted[key] !== preview?.[key]))
+      throw new Error("mismatch");
+  } catch {
+    blocked.push("The acceptance receipt does not identify the current preview URL/source/Worker.");
+  }
   if (!receipt.production?.contentModelMigrated)
     blocked.push("The receipt does not record the production content-model migration.");
   if (!receipt.production?.starterContentVerified)
@@ -171,31 +154,25 @@ if (!receipt) {
   const fresh = [];
   const stale = [];
   const unrecorded = [];
-  for (const check of requiredChecks) {
+  for (const check of requiredPreviewChecks) {
     const evidence = receipt.preview?.checks?.[check];
     if (!evidence || evidence.passed !== true) {
       unrecorded.push(`  ${check}: not recorded`);
       continue;
     }
-    const observedAt = Date.parse(evidence.observedAt ?? "");
-    const artifact = await lstat(path.resolve(root, evidence.artifactPath ?? "")).catch(() => null);
-    const isFresh =
-      Number.isFinite(observedAt) &&
-      observedAt <= Date.now() + 60_000 &&
-      Date.now() - observedAt < 30 * 24 * 60 * 60 * 1000;
-    const isIntact =
-      artifact?.isFile() &&
-      artifact.size > 0 &&
-      (artifact.mode & 0o077) === 0 &&
-      (await digestOf(path.resolve(root, evidence.artifactPath))) === evidence.sha256;
-    if (isFresh && isIntact)
+    const problems = await acceptanceEvidenceProblems(evidence, { root, preview });
+    if (!problems.length)
       fresh.push(`  ${check}: evidence from ${evidence.observedAt.slice(0, 10)}`);
-    else stale.push(`  ${check}: evidence is older than 30 days or does not match its digest`);
+    else stale.push(`  ${check}: ${problems.join("; ")}`);
   }
   console.log(
-    `\nPreview acceptance evidence: ${fresh.length}/${requiredChecks.length} checks carry a fresh, intact artifact.`
+    `\nPreview acceptance evidence: ${fresh.length}/${requiredPreviewChecks.length} checks carry a fresh, intact artifact.`
   );
   for (const line of [...fresh, ...stale, ...unrecorded]) console.log(line);
+  if (stale.length || unrecorded.length)
+    blocked.push(
+      "Preview acceptance observations are missing, stale or from another revision; repeat and record the listed journeys."
+    );
 }
 
 console.log("");
@@ -205,6 +182,6 @@ console.log("");
 console.log(
   blocked.length
     ? "pnpm run deploy will refuse until every blocked item is resolved and recorded."
-    : "Every gate condition is recorded; pnpm run deploy will proceed."
+    : "Recorded checks passed; pnpm run deploy still enforces its full release preflight."
 );
 process.exitCode = blocked.length ? 1 : 0;

@@ -5,7 +5,8 @@
     "src/plugins/resend-email.ts",
     "src/plugins/woodhouse-editorial-policy.ts",
     "src/plugins/woodhouse-enquiries.ts",
-    "src/plugins/resend-email-env.ts"
+    "src/plugins/resend-email-env.ts",
+    "src/scripts/analytics-workbench.ts"
   ],
   "ignoreDependencies": ["cloudflare"]
 }
