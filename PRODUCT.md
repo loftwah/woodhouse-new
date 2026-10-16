@@ -38,13 +38,26 @@ Technical and commercial intelligence should change a concrete decision: compati
 
 Reviewed 11 October 2026: MP can paste portfolio information and notes without writing an implementation brief. Woodhouse must reconcile the meaningful facts, make justified changes within its existing authority, and carry a changed public portfolio through the established publication path. A research summary alone does not complete an actionable refresh. #18 owns the site/adoption outcome; exact blocked steps and no-change decisions must be stated without stopping independent executable work. The concise operating rule lives in AGENTS.md.
 
-## Game music for external creators — reviewed 16 October 2026
+## Shared game music capability — reviewed 16 October 2026
 
-MP has identified a broader audience for LoftwahFM: independent game developers and people vibe-coding games who want suitable music without building a music service. LoftwahFM already owns the public catalogue/station contracts, versioned browser client and existing first-party game audio integrations. MP also plans original releases deliberately composed for games. This is a cross-project capability and potential external product audience, not just an audio feature of Loftwah's own games.
+LoftwahFM is the factory's reusable game music library and streaming client.
+A game-building agent should consider its existing public catalogue, stations
+and typed browser SDK before building music infrastructure. MP intends to
+expand the catalogue with music deliberately created for games.
 
-LoftwahFM owns the catalogue, SDK, listening/installation experience, purpose-made music releases and the terms of any third-party game use. Woodhouse owns reviewed relationship discovery, accurate positioning, evidence about real independent adoption and links to FM's eventual *public* developer entry point. App Composer may distribute the capability as an optional part of a compatible game-creation flow, but must not be coupled to its runtime or required for external developers.
+LoftwahFM owns the music/catalogue, radio contract and adapter documentation
+(`docs/game-music-hand-off.md`, `docs/radio-game-integration.md`).
+Each game retains its own audio settings, sound effects, gameplay and fallback.
+Woodhouse keeps the relationship discoverable to factory agents and coordinates
+practical reuse through existing project records; it does not operate an audio
+server or invent another integration product. App Composer may choose the same
+capability for suitable generated games. This is internal readiness and
+integration reuse, not an instruction to advertise, launch or commercialise it.
 
-Published SDK availability, clear public game-use permissions, a working independent cross-origin example and external uptake are **separate states**. Do not assume that anonymous streaming grants commercial in-game reuse, offline downloads or redistribution; avoid "royalty-free" or "free for commercial games" promises until MP approves actual terms. Do not point outside developers to private FM source/issue URLs as onboarding. FM's provider work is tracked by `loftwah/loftwahfm#254` (building on #213/#215 and the soundtrack-album work #243); Woodhouse owns discovery/adoption in #18 and commercial positioning in #17. No separate radio engine, catalogue database, licensing service or evidence-free demand claims belong here.
+The existing public-safe EmDash capability review remains the publication
+source of truth. Installation, actual gameplay integration and verified
+listening are different outcomes. Relevant implementation owner: FM #254;
+existing game integrations retain their current owning issues.
 
 ## Public activity — reviewed 12 October 2026
 
