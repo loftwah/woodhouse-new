@@ -19,6 +19,12 @@ Naming MP confers no authority, and no naming convention can widen a safety, rel
 
 Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
 
+## Routing and verification — reviewed 16 October 2026
+
+[docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here.
+
+Current source and tests establish observed behaviour. MP's current intent and accepted product/design requirements establish desired behaviour. Investigate a mismatch with its owning issue and review date: neither implement stale prose blindly nor dismiss an unmet requirement because current code or tests disagree.
+
 ## Evidence
 
 - Keep every project state tied to an explicit review date.

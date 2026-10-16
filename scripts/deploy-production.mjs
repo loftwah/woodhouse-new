@@ -4,6 +4,7 @@ import { chmod, lstat, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { computeSourceDigest } from "./source-digest.mjs";
+import { acceptanceEvidenceProblems, requiredPreviewChecks } from "./acceptance-evidence.mjs";
 import { awaitBuildIdentity, describeIdentity } from "./verify-build-identity.mjs";
 import { verifyDatabaseReadiness } from "./deployment-readiness.mjs";
 import { scanPublicText } from "./public-privacy.mjs";
@@ -20,25 +21,7 @@ const productionUrl = "https://woodhouse.loftwah.com";
 const previewUrl = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
 const productionDatabase = { name: "woodhouse-emdash", id: "b62500b4-b25a-4fad-8969-eff9ba3c8efa" };
 const productionBucket = "woodhouse-emdash-media";
-const requiredPreviewChecks = [
-  "publicRouteMatrix",
-  "privacyScan",
-  "desktopAndMobile",
-  "ownerPasskeyLogin",
-  "editorDraftRevisionPreviewSchedulePublish",
-  "searchRssSitemapUpdates",
-  "mediaUploadAndRender",
-  "publicDraftIsolation",
-  "menuEditing",
-  "agentMcpSchemaReadAndDraftReadback",
-  "agentMcpRoleBoundary",
-  "evidenceSnapshotHistory",
-  "conversationPrivacyPolicy",
-  "enquiryDelivery",
-  "backupRecoveryDrill",
-  "automaticBackupRetention",
-  "scheduledPublishCron"
-];
+
 const receiptPath = path.resolve(root, ".release/production-ready.json");
 const releaseRoot = path.resolve(root, ".release") + path.sep;
 
@@ -91,37 +74,6 @@ async function readPrivateJson(value, field) {
     return { absolute, value: JSON.parse(await readFile(absolute, "utf8")) };
   } catch {
     fail(field + " is not valid JSON.");
-  }
-}
-
-async function verifyPrivateEvidence(evidence, field) {
-  if (
-    !evidence ||
-    evidence.passed !== true ||
-    typeof evidence.observedAt !== "string" ||
-    !/^[a-f0-9]{64}$/.test(evidence.sha256 ?? "")
-  ) {
-    fail(field + " must record a passing observation, timestamp and SHA-256 evidence digest.");
-  }
-  const observedAt = Date.parse(evidence.observedAt);
-  if (
-    !Number.isFinite(observedAt) ||
-    observedAt > Date.now() + 60_000 ||
-    Date.now() - observedAt > 30 * 24 * 60 * 60 * 1000
-  ) {
-    fail(field + " evidence must be less than 30 days old and not in the future.");
-  }
-  const absolute = releaseFile(evidence.artifactPath, field + " evidence artifact");
-  const details = await lstat(absolute).catch(() => null);
-  if (
-    !details?.isFile() ||
-    details.size === 0 ||
-    (details.mode & 0o077) !== 0 ||
-    (await fileSha256(absolute)) !== evidence.sha256
-  ) {
-    fail(
-      field + " evidence must be a non-empty, owner-only artifact that matches its SHA-256 digest."
-    );
   }
 }
 
@@ -196,10 +148,11 @@ if (
   );
 }
 for (const check of requiredPreviewChecks) {
-  await verifyPrivateEvidence(
-    receipt.preview?.checks?.[check],
-    "Preview acceptance check '" + check + "'"
-  );
+  const problems = await acceptanceEvidenceProblems(receipt.preview?.checks?.[check], {
+    root,
+    preview: previewDeployment
+  });
+  if (problems.length) fail(`Preview acceptance check '${check}': ${problems.join("; ")}.`);
 }
 
 if (
