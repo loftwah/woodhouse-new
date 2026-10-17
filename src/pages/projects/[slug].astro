@@ -1,4 +1,5 @@
 ---
+import BuildExamples from "../../components/BuildExamples.astro";
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
 import { listPublicCapabilities } from "../../content/repository";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -188,9 +189,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           </strong>
           {siteMeta ? (
             <>
-              <span class="dossier-preview__title">{siteMeta.title}</span>
-              <span class="dossier-preview__description">{siteMeta.description}</span>
-              <span class="dossier-preview__caption">
+              <span class="dossier-preview__title" data-artwork-source-metadata>
+                {siteMeta.title}
+              </span>
+              <span class="dossier-preview__description" data-artwork-source-metadata>
+                {siteMeta.description}
+              </span>
+              <span class="dossier-preview__caption" data-artwork-source-metadata>
                 {project.previewCaption ?? "Artwork displayed directly from the project site."}
               </span>
             </>
@@ -235,6 +240,11 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           </li>
         </ol>
       </D2Diagram>
+    </section>
+  )}
+  {["loftwahfm", "app-composer"].includes(project.slug) && (
+    <section class="container" aria-label="Try a working connection">
+      <BuildExamples projects={[project]} only={project.slug} />
     </section>
   )}
   <section class="container dossier-grid" id="where-the-work-stands">

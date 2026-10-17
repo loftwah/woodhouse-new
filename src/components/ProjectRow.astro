@@ -65,23 +65,12 @@ const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
         <span class="project-row__domain">
           {domain} ·{" "}
           {siteMeta ? (
-            <span data-artwork-status>LAST REVIEWED SITE DETAILS</span>
+            <span data-artwork-status>ARTWORK FROM THE PROJECT</span>
           ) : (
             <span data-artwork-status>WOODHOUSE ILLUSTRATION</span>
           )}
         </span>
       </span>
-      {siteMeta ? (
-        <>
-          <strong class="project-row__og-title">{siteMeta.title}</strong>
-          <span class="project-row__og-description">{siteMeta.description}</span>
-        </>
-      ) : (
-        <>
-          <strong class="project-row__og-title">Woodhouse illustration</strong>
-          <span class="project-row__og-description">Made for this record.</span>
-        </>
-      )}
     </figcaption>
   </figure>
   <div class="project-row__record">

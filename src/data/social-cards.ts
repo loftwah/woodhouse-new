@@ -18,10 +18,14 @@ const DISPATCH_SOCIAL_CARDS: readonly string[] = [
   "playing-the-work",
   "prove-which-build-is-live",
   "software-is-not-the-walker",
-  "the-tests-passed"
+  "the-tests-passed",
+  "your-apps-should-get-along",
+  "your-game-its-own-soundtrack"
 ];
 
 export function dispatchSocialCard(slug: string | null | undefined): string {
-  if (!slug) return "/og/factory.jpg";
-  return DISPATCH_SOCIAL_CARDS.includes(slug) ? `/og/dispatches/${slug}.jpg` : "/og/factory.jpg";
+  if (!slug) return "/og/factory-workshop-20261018.jpg";
+  return DISPATCH_SOCIAL_CARDS.includes(slug)
+    ? `/og/dispatches/${slug}.jpg`
+    : "/og/factory-workshop-20261018.jpg";
 }

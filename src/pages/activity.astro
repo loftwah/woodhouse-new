@@ -332,7 +332,7 @@ const shareLink = (() => {
 })();
 const image = report
   ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}` : ""}`
-  : "/og/woodhouse.jpg";
+  : "/og/woodhouse-workshop-20261018.jpg";
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString("en-AU", {
     timeZone: "UTC",

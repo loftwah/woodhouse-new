@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Try LoftwahFM inside a game · Woodhouse</title>
+  <meta name="description" content="Try a small game with independent sound effects and optional streamed LoftwahFM music. Then use the public game-music quick-start in your own game.">
+  <link rel="canonical" href="https://woodhouse.loftwah.com/lab/game-music.html">
+  <meta property="og:title" content="Your game. Its own soundtrack.">
+  <meta property="og:description" content="Play with a public LoftwahFM station from a separately hosted game. Gameplay and effects keep working when music is off.">
+  <meta property="og:image" content="https://woodhouse.loftwah.com/og/woodhouse-workshop-20261018.jpg">
+  <meta property="og:image:alt" content="A maker connects miniature game and music worlds at a workbench.">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:type" content="website"><meta property="og:url" content="https://woodhouse.loftwah.com/lab/game-music.html">
+  <meta name="robots" content="noindex,nofollow">
+  <style>
+    body{background:#0b101a;color:#f4f6fc;font:16px system-ui;margin:0;padding:24px}
+    main{max-width:620px;margin:auto}button{padding:13px 18px;margin:5px 4px 5px 0;border:1px solid #ccd5f9;border-radius:5px;background:#18243b;color:inherit;font:inherit}
+    button:focus-visible{outline:3px solid #79d8ff}button:disabled{opacity:.45}
+    #field{position:relative;height:200px;background:#142339;border:2px solid #546887;overflow:hidden;margin:20px 0;touch-action:none}
+    #player{position:absolute;left:45%;top:82px;width:36px;height:36px;background:#79d8ff;border-radius:4px}
+    #status{min-height:1.4em}a{color:#79d8ff}
+  </style>
+</head>
+<body>
+<main>
+  <p><a href="/factory/">← Woodhouse</a> · <a href="https://fm.loftwah.com/game-music">Use this in your game</a></p>
+  <h1>Your game. Its own soundtrack.</h1>
+  <p>A small playable field with its own controls and effects. Music is streamed from LoftwahFM using the existing headless client. No sound starts on page load. The field and its effects always work, even when the FM music engine, station manifest or media cannot be reached.</p>
+  <div id="field" aria-label="Play area; use arrow keys or tap to move">
+    <div id="player"></div>
+  </div>
+  <div>
+    <button id="left">Move left</button>
+    <button id="right">Move right</button>
+    <button id="sfx">Game sound</button>
+  </div>
+  <div>
+    <button id="play" disabled>Play FM music</button>
+    <button id="pause" disabled>Pause music</button>
+    <button id="mute" disabled>Mute music</button>
+    <button id="retry" hidden>Retry music</button>
+  </div>
+  <p id="status" role="status">Loading station…</p>
+  <p><a href="https://fm.loftwah.com/game-music">Get the quick-start and agent brief</a> · <a href="https://fm.loftwah.com/radio">Listen on LoftwahFM</a></p>
+  <p>This prototype runs on Woodhouse and streams public music from LoftwahFM, a different origin. It demonstrates an integration; it is not an independent customer game or a music redistribution licence.</p>
+  <p>Based on FM’s public <a href="https://fm.loftwah.com/lab/game-music">standalone reference</a>, client 1.2.0. <a href="/dispatches/your-game-its-own-soundtrack/">Read the story</a>.</p>
+</main>
+
+<!--
+  Local gameplay runs in a classic script, independently of the optional FM
+  music module below. Movement, keyboard/pointer input and generated SFX never
+  depend on the SDK, the station manifest or any media request, so a blocked or
+  failed network edge cannot disable the game itself.
+-->
+<script>
+  (function () {
+    var byId = function (id) { return document.getElementById(id); };
+    var field = byId("field");
+    var marker = byId("player");
+    var x = 0.45;
+    var sfxContext;
+    function beep() {
+      try {
+        sfxContext = sfxContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (sfxContext.state === "suspended") void sfxContext.resume();
+        var oscillator = sfxContext.createOscillator();
+        var gain = sfxContext.createGain();
+        oscillator.frequency.value = 300 + Math.round(x * 500);
+        gain.gain.setValueAtTime(0.035, sfxContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, sfxContext.currentTime + 0.09);
+        oscillator.connect(gain).connect(sfxContext.destination);
+        oscillator.start();
+        oscillator.stop(sfxContext.currentTime + 0.1);
+      } catch (error) { /* game remains interactive */ }
+    }
+    function move(dx) {
+      x = Math.min(0.93, Math.max(0, x + dx));
+      marker.style.left = (x * 100) + "%";
+      beep();
+    }
+    window.__gameLab = { move: move, position: function () { return x; } };
+    byId("left").addEventListener("click", function () { move(-0.08); });
+    byId("right").addEventListener("click", function () { move(0.08); });
+    byId("sfx").addEventListener("click", beep);
+    field.addEventListener("pointerdown", function (event) {
+      var rect = field.getBoundingClientRect();
+      x = Math.min(0.93, Math.max(0, (event.clientX - rect.left) / rect.width));
+      marker.style.left = (x * 100) + "%";
+      beep();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        event.preventDefault();
+        move(event.key === "ArrowLeft" ? -0.08 : 0.08);
+      }
+    });
+  })();
+</script>
+
+<!--
+  Optional FM music. Contained: SDK, manifest and media failures are reported
+  separately and never affect local gameplay. One transport and one set of
+  listeners are created for the page; Retry reuses them.
+-->
+<script type="module">
+  const SDK_URL = "https://fm.loftwah.com/radio/v1/client/1.2.0/index.js";
+  const STATION_URL =
+    "https://fm.loftwah.com/api/radio/v1/stations/night-signal/current";
+  const byId = (id) => document.getElementById(id);
+  const status = byId("status");
+  const playButton = byId("play");
+  const pauseButton = byId("pause");
+  const muteButton = byId("mute");
+  const retryButton = byId("retry");
+
+  let radio = null;
+  let wired = false;
+  let musicElement = null;
+  let playEvents = 0;
+
+  const render = (snapshot) => {
+    if (!snapshot.item && (snapshot.phase === "unavailable" || snapshot.error)) {
+      showUnavailable("Music unavailable (station or media).");
+      return;
+    }
+    retryButton.hidden = true;
+    status.textContent = snapshot.item
+      ? snapshot.phase + " — " + snapshot.item.title + " · " + snapshot.item.artist
+      : snapshot.phase + (snapshot.error ? " — media unavailable" : " — no track");
+    playButton.disabled = !snapshot.item || snapshot.phase === "playing";
+    pauseButton.disabled = snapshot.phase !== "playing";
+    muteButton.disabled = !snapshot.item;
+    muteButton.textContent = snapshot.preferences.muted ? "Unmute music" : "Mute music";
+  };
+
+  // Debug hooks for the integration test only; they hold no policy.
+  window.__fmLab = {
+    stationPhase: () => (radio ? radio.snapshot().phase : "idle"),
+    musicPaused: () => (musicElement ? musicElement.paused : true),
+    playEvents: () => playEvents,
+    hasEngine: () => Boolean(radio),
+  };
+
+  const showUnavailable = (reason) => {
+    status.textContent = reason + " Game controls still work.";
+    playButton.disabled = true;
+    pauseButton.disabled = true;
+    muteButton.disabled = true;
+    retryButton.hidden = false;
+  };
+
+  const wireOnce = (client) => {
+    if (wired) return;
+    wired = true;
+    playButton.addEventListener("click", () => { void client.play(); });
+    pauseButton.addEventListener("click", () => client.pause());
+    muteButton.addEventListener("click", () => {
+      const muted = client.snapshot().preferences.muted;
+      client.preferences({ muted: !muted });
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) client.suspend();
+    });
+    window.addEventListener("pagehide", () => client.suspend());
+  };
+
+  const loadStation = async () => {
+    try {
+      await radio.selectStation(STATION_URL, "night-signal");
+      render(radio.snapshot());
+    } catch {
+      showUnavailable("Station unavailable (manifest).");
+    }
+  };
+
+  const initMusic = async () => {
+    retryButton.hidden = true;
+    if (radio) {
+      // Engine already loaded: retry the station only, never a second transport.
+      status.textContent = "Retrying music…";
+      await loadStation();
+      return;
+    }
+    status.textContent = "Loading music…";
+    try {
+      const mod = await import(SDK_URL);
+      musicElement = new Audio();
+      musicElement.crossOrigin = "anonymous";
+      musicElement.addEventListener("play", () => { playEvents += 1; });
+      const client = mod.createRadioClient({
+        transport: mod.createMediaElementTransport(musicElement),
+      });
+      client.preferences({ enabled: false, muted: false, speech: false, explicit: false, volume: 0.65 });
+      client.subscribe(render);
+      radio = client;
+      wireOnce(client);
+    } catch {
+      showUnavailable("Music engine unavailable (SDK).");
+      return;
+    }
+    await loadStation();
+  };
+
+  retryButton.addEventListener("click", () => { void initMusic(); });
+  void initMusic();
+</script>
+</body>
+</html>
