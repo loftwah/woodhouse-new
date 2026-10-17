@@ -6,7 +6,8 @@ import {
   createR2Client,
   hasR2Credentials,
   loadLocalEnv,
-  newBackupDirectory
+  newBackupDirectory,
+  safeDrillSourceBucket
 } from "./r2-recovery.mjs";
 
 const root = process.cwd();
@@ -18,15 +19,25 @@ const targets = {
   production: { bucket: "woodhouse-emdash-media" }
 };
 
-if (!targets[environment])
+// The isolated recovery drill (#10) needs a source that is not the live media
+// bucket. A labelled synthetic source keeps the drill from ever reading or
+// writing production media, and the target policy stays unchanged.
+const sourceArgument = args.find((argument) => argument.startsWith("--source-bucket="));
+const drillSource = sourceArgument?.slice("--source-bucket=".length);
+if (drillSource && !safeDrillSourceBucket(drillSource))
   throw new Error(
-    "Usage: pnpm run backup:r2 -- preview|production [--output=/private/.release/path/manifest.json]"
+    "A drill source must be a labelled synthetic bucket named woodhouse-emdash-drill-source-*."
+  );
+if (!targets[environment] && !drillSource)
+  throw new Error(
+    "Usage: pnpm run backup:r2 -- preview|production [--source-bucket=woodhouse-emdash-drill-source-<label>] [--output=/private/.release/path/manifest.json]"
   );
 loadLocalEnv();
 
-const bucket = targets[environment].bucket;
+const bucket = drillSource ?? targets[environment].bucket;
+const backupEnvironment = drillSource ? "drill" : environment;
 const outputArg = args.find((argument) => argument.startsWith("--output="));
-const defaultDirectory = newBackupDirectory(environment, root);
+const defaultDirectory = newBackupDirectory(backupEnvironment, root);
 const outputPath = path.resolve(
   outputArg?.slice("--output=".length) ?? path.join(defaultDirectory, "manifest.json")
 );
@@ -50,7 +61,7 @@ if (path.extname(outputPath).toLowerCase() !== ".json")
 if (hasR2Credentials()) {
   const { manifest, manifestPath } = await backupBucket({
     client: createR2Client(),
-    environment,
+    environment: backupEnvironment,
     bucket,
     outputDirectory
   });

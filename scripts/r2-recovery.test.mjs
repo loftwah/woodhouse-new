@@ -13,6 +13,7 @@ import {
 import {
   backupBucket,
   restoreBucket,
+  safeDrillSourceBucket,
   verifyBackupManifest,
   verifyBucketMatchesManifest
 } from "./r2-recovery.mjs";
@@ -225,6 +226,72 @@ test("R2 restore refuses live buckets and rejects archive tampering before write
       /SHA-256 or size check/
     );
     assert.equal(client.uploads.size, 0);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("an isolated drill source is labelled and can never be a live media bucket", () => {
+  assert.equal(safeDrillSourceBucket("woodhouse-emdash-drill-source-drill01"), true);
+  for (const rejected of [
+    "woodhouse-emdash-media",
+    "woodhouse-emdash-media-preview",
+    "woodhouse-emdash-recovery-test01",
+    "woodhouse-emdash-drill-source-",
+    "woodhouse-emdash-drill-source-x",
+    "woodhouse-emdash-drill-source-Upper",
+    "emdash-drill-source-drill01",
+    "",
+    undefined
+  ])
+    assert.equal(safeDrillSourceBucket(rejected), false, `should reject ${String(rejected)}`);
+});
+
+test("the drill seeds a synthetic object with metadata and restores it into an empty isolated target", async () => {
+  const root = path.resolve(".release", `r2-drill-test-${randomUUID()}`);
+  const backupDirectory = path.join(root, "backup");
+  await mkdir(root, { recursive: true, mode: 0o700 });
+  await chmod(root, 0o700);
+  const synthetic = {
+    key: "drill/proof.txt",
+    body: Buffer.from("synthetic drill object, no project content"),
+    etag: "drill-etag",
+    lastModified: new Date("2026-10-18T00:00:00.000Z"),
+    contentType: "text/plain",
+    cacheControl: "no-store",
+    metadata: { "drill-label": "isolated-recovery", "synthetic-object": "true" }
+  };
+  const client = makeClient([synthetic]);
+  try {
+    const created = await backupBucket({
+      client,
+      environment: "drill",
+      bucket: "woodhouse-emdash-drill-source-drill01",
+      outputDirectory: backupDirectory
+    });
+    assert.equal(created.manifest.objectCount, 1);
+    assert.equal(created.manifest.bucket, "woodhouse-emdash-drill-source-drill01");
+    await restoreBucket({
+      client,
+      manifestPath: created.manifestPath,
+      targetBucket: "woodhouse-emdash-recovery-test01"
+    });
+    const restored = await readBody(
+      (
+        await client.send(
+          new GetObjectCommand({
+            Bucket: "woodhouse-emdash-recovery-test01",
+            Key: "drill/proof.txt"
+          })
+        )
+      ).Body
+    );
+    assert.equal(restored.toString(), synthetic.body.toString());
+    const head = await client.send(
+      new HeadObjectCommand({ Bucket: "woodhouse-emdash-recovery-test01", Key: "drill/proof.txt" })
+    );
+    assert.equal(head.Metadata["drill-label"], "isolated-recovery");
+    assert.equal(head.ContentType, "text/plain");
   } finally {
     await rm(root, { recursive: true, force: true });
   }

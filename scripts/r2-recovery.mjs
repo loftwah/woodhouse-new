@@ -435,6 +435,22 @@ export async function verifyBucketMatchesManifest(client, bucket, manifest) {
   };
 }
 
+/**
+ * A drill source is a labelled, isolated bucket holding only synthetic objects
+ * and meaningful metadata. The observed failure was that "run the restore drill"
+ * had no source that could be named without touching a live Woodhouse bucket, so
+ * the drill either risked production media or could not run at all. A drill
+ * source is therefore its own prefix, and a live bucket can never be one.
+ */
+export function safeDrillSourceBucket(bucket) {
+  return (
+    typeof bucket === "string" &&
+    bucket.length <= 63 &&
+    /^woodhouse-emdash-drill-source-[a-z0-9][a-z0-9-]{2,36}$/.test(bucket) &&
+    !PROTECTED_BUCKETS.has(bucket)
+  );
+}
+
 function safeRecoveryBucket(bucket) {
   return (
     typeof bucket === "string" &&
