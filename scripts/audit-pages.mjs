@@ -1,6 +1,11 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { scanPublicText } from "./public-privacy.mjs";
+import {
+  checkPublishedPaths,
+  parseEnvFile,
+  privateEnvValues,
+  scanPublicText
+} from "./public-privacy.mjs";
 import { isCloudflareHiddenContentLink, socialImageURL } from "./page-link-policy.mjs";
 
 const args = process.argv.slice(2);
@@ -30,21 +35,12 @@ const alwaysChecked = [
   "/contact/"
 ];
 
-function parseEnv(contents) {
-  const values = new Map();
-  for (const line of contents.split("\n")) {
-    const match = /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
-    if (!match) continue;
-    values.set(match[1], match[2]);
-  }
-  return values;
-}
-
+// The same parser the build guard uses, so a quoted `.env` value is compared
+// identically on the local artefact and against the deployed origin.
 let privateValues = [];
 try {
-  const contents = await readFile(path.join(process.cwd(), ".env"), "utf8");
-  privateValues = [...parseEnv(contents)].flatMap(([name, value]) =>
-    /(?:key|token|secret)/i.test(name) || /@deanlofts\.xyz$/i.test(value) ? [value] : []
+  privateValues = privateEnvValues(
+    parseEnvFile(await readFile(path.join(process.cwd(), ".env"), "utf8"))
   );
 } catch (error) {
   if (error?.code !== "ENOENT") throw error;
@@ -388,8 +384,27 @@ for (const [image, page] of socialImages) {
   await response.body?.cancel();
 }
 
+// Safe negative requests to known credential paths. A missing file must not
+// resolve to secret content. A generic HTML fallback is recorded but is neither
+// exposure nor proof of safety; the local artefact scan remains that argument.
+const riskyPaths = await checkPublishedPaths(origin, { privateValues });
+let riskyAbsent = 0;
+const riskyFallbacks = [];
+for (const result of riskyPaths) {
+  if (result.outcome === "absent") riskyAbsent += 1;
+  else if (result.outcome === "exposed")
+    report(result.path, `served ${result.detail} (HTTP ${result.status})`);
+  else if (result.outcome === "unexpected") report(result.path, result.detail);
+  else if (result.outcome === "fallback") riskyFallbacks.push(result.path);
+  else report(result.path, `negative check could not complete: ${result.detail}`);
+}
+if (riskyFallbacks.length)
+  console.log(
+    `Credential paths answered with a generic HTML fallback and no secret content (neither exposure nor proof of safety): ${riskyFallbacks.join(", ")}.`
+  );
+
 console.log(
-  `Audited ${checked.length} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}.`
+  `Audited ${checked.length} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}. ${riskyAbsent}/${riskyPaths.length} credential paths returned a clean 4xx.`
 );
 if (findings.length) {
   for (const finding of findings) console.error("Page audit failed: " + finding);

@@ -7,7 +7,7 @@ import { computeSourceDigest } from "./source-digest.mjs";
 import { acceptanceEvidenceProblems, requiredPreviewChecks } from "./acceptance-evidence.mjs";
 import { awaitBuildIdentity, describeIdentity } from "./verify-build-identity.mjs";
 import { verifyDatabaseReadiness } from "./deployment-readiness.mjs";
-import { scanPublicText } from "./public-privacy.mjs";
+import { parseEnvFile, privateEnvValues, scanPublicText } from "./public-privacy.mjs";
 import {
   createR2Client,
   hasR2Credentials,
@@ -403,26 +403,12 @@ const smokePaths = [
   "/agents/facts.json",
   "/build.json"
 ];
-let localEnv = new Map();
+let privateValues = [];
 try {
-  const contents = await readFile(path.join(root, ".env"), "utf8");
-  for (const line of contents.split(/\r?\n/)) {
-    const match = /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
-    if (!match) continue;
-    let value = match[2];
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    )
-      value = value.slice(1, -1);
-    localEnv.set(match[1], value);
-  }
+  privateValues = privateEnvValues(parseEnvFile(await readFile(path.join(root, ".env"), "utf8")));
 } catch (error) {
   if (error?.code !== "ENOENT") throw error;
 }
-const privateValues = [...localEnv].flatMap(([name, value]) =>
-  /(?:key|token|secret)/i.test(name) || /@deanlofts\.xyz$/i.test(value) ? [value] : []
-);
 for (const pathname of smokePaths) {
   const response = await fetch(new URL(pathname, productionUrl), {
     signal: AbortSignal.timeout(30000),
