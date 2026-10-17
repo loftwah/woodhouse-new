@@ -1,29 +1,110 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-columns: 1
+vertical-gap: 22
 
-inputs: {
-  direction: down
-  event: "EVENT\nMilestone · release · failure" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 18; style.bold: true}
-  schedule: "SCHEDULED CHECK\nHealth · dependencies · docs" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 18; style.bold: true}
-  production: "PRODUCTION READ\nObserve · do not mutate" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 18; style.bold: true}
+plate_title: "Authority has a boundary." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
 }
-
-proposal: "AGENT PROPOSAL\nDraft · issue · changeset" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
-checks: "POLICY AND QUALIFICATION\nScope · rights · cost · rollback" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 18; style.bold: true}
-decision: "DEAN\nReview this exact candidate" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 19; style.bold: true}
-
-outcomes: {
-  direction: down
-  approve: "APPROVE\nRun within policy" {style.fill: "#BEF05E"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 17; style.bold: true}
-  return: "RETURN\nRevise, then qualify again" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 17; style.bold: true}
-  reject: "REJECT\nRecord the decision; stop" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 17; style.bold: true}
+plate_title.near: top-center
+decision: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 4
+  grid-gap: 28
+observe: "Observe\nEvent · schedule\nSafe production read" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
 }
-
-inputs.event -> proposal
-inputs.schedule -> proposal
-inputs.production -> proposal {style.stroke-dash: 7}
-proposal -> checks
-checks -> decision
-decision -> outcomes.approve {style.stroke: "#24623E"; style.stroke-width: 3}
-decision -> outcomes.return {style.stroke: "#835500"; style.stroke-width: 3}
-decision -> outcomes.reject {style.stroke: "#A33425"; style.stroke-width: 3}
+propose: "Propose\nDraft · issue\nChangeset" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+authority: "WITHIN\nAUTHORITY?" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#E9FF49"
+  style.font-size: 24
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 240
+  height: 190
+  style.bold: true
+}
+execute: "Yes / execute\nQualify the\nbounded result" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+observe -> propose: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+propose -> authority: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+authority -> execute: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22;}
+}
+reserved: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 25
+mp: "HUMAN" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#E9FF49"
+  style.font-size: 35
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 140
+  height: 140
+  style.bold: true
+}
+gate: "RESERVED DECISIONS\nAccounts · money · rights\nIrreversible actions and explicit gates" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 30
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+outcome: "APPROVE / Act within scope\nRETURN / Revise and requalify\nREJECT / Record it and stop" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 30
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+}
+plate_note: "WOODHOUSE / AGENT POLICY · 18 OCTOBER 2026 · Ordinary authorised work proceeds.\nReserved decisions go to their actual owner. Existing product, privacy and release\ngates stay in force; agent approval grants no new authority." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

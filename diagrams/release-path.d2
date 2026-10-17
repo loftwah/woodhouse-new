@@ -1,42 +1,84 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: { d2-config: { layout-engine: elk; theme-id: 201 } }
+grid-columns: 1
+vertical-gap: 22
 
-candidate: "RELEASE CANDIDATE\nOne exact version" {
-  style.fill: "#FF746A"
-  style.stroke: "#FF968F"
-  style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 25
+plate_title: "A release belongs to one revision." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
   style.bold: true
 }
-
-qualify: "REVIEW + QUALIFY\nHuman decision + checks" {
-  style.fill: "#B58AFF"
-  style.stroke: "#D0B8FF"
-  style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 25
-  style.bold: true
-}
-
-production: "PRODUCTION\nOnly after approval" {
-  style.fill: "#E9FF49"
+plate_title.near: top-center
+release: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 4
+  grid-gap: 30
+candidate: "Exact candidate\nSource · scope\nIdentity" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
   style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+gate: "CHECKS\nPASS?" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#79D8FF"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
   style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 25
+  width: 200
+  height: 180
   style.bold: true
 }
-
-real_use: "REAL USE\nPeople + devices" {
-  style.fill: "#79D8FF"
-  style.stroke: "#9BE4FF"
-  style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 25
+live: "Production\nDeploy; inspect\nlive identity" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+use: "Real use\nPeople · devices\nSeparate evidence" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+candidate -> gate: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+gate -> live: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+live -> use: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+}
+stop: "STOP / THE CANDIDATE CHANGED\nEarlier checks no longer qualify this state. Revise and repeat the affected checks." {
+  shape: text
+  style.font-color: "#FF746A"
+  style.font-size: 33
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 0
   style.bold: true
 }
-
-candidate -> qualify: "exact scope" {style.stroke: "#FF746A"; style.stroke-width: 3; style.font-size: 20}
-qualify -> production: "evidence clears the gate" {style.stroke: "#B58AFF"; style.stroke-width: 3; style.font-size: 20}
-production -> real_use: "verify in the world" {style.stroke: "#79D8FF"; style.stroke-width: 3; style.font-size: 20}
+plate_note: "WOODHOUSE / RELEASE BOUNDARY · 18 OCTOBER 2026 · Use the owning repository’s required\ngates. Tests, deployed identity, human acceptance and physical observation establish\ndifferent claims." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

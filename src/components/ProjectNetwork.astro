@@ -50,10 +50,10 @@ import D2Diagram from "./D2Diagram.astro";
 
   <D2Diagram
     title="Review. Qualify. Then release."
-    description="A separate release path follows one exact candidate through human review, qualification, production approval and real-world use."
+    description="One exact candidate passes its owning review and qualification gates before its live production identity is observed. A changed candidate repeats affected checks. Real use, human acceptance and device proof remain separate observations."
     desktop="/images/diagrams/release-path.svg"
     mobile="/images/diagrams/release-path-mobile.svg"
-    caption="An exact candidate must clear human review and checks before production. Real use supplies a separate proof."
+    caption="The owning release gates apply to one exact candidate. A change invalidates affected checks. Deployment and real use establish different claims."
     className="release-path-plate"
   >
     <ol class="diagram-transcript">
@@ -63,11 +63,15 @@ import D2Diagram from "./D2Diagram.astro";
       </li>
       <li>
         <strong>Review and qualify</strong>
-        <span>A human decision and checks must clear the gate.</span>
+        <span>The owning repository’s required review, checks and reserved decisions apply.</span>
       </li>
       <li>
         <strong>Production</strong>
         <span>Only the approved version reaches people.</span>
+      </li>
+      <li>
+        <strong>Changed candidate</strong>
+        <span>Earlier checks no longer qualify the changed state; repeat the affected checks.</span>
       </li>
       <li>
         <strong>Real use</strong>

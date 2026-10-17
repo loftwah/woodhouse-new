@@ -1,48 +1,102 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-columns: 1
+vertical-gap: 22
 
-evidence: {
-  label: "01 / ORIGINAL EVIDENCE"
-  direction: down
-  style.fill: "#141D32"
-  style.stroke: "#B8B4A8"
-  style.stroke-width: 1
-  style.font-color: "#E9F0FF"
-  style.font-size: 23
+plate_title: "First reconstruct. Then earn expansion." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
   style.bold: true
-  source: "SOURCE\nOriginal game" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-  unknown: "SOURCE GAP\nUnknown stays open" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 20; style.bold: true}
-  source -> unknown {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7}
 }
-
-reconstruction: {
-  label: "02 / REBUILD AND COMPARE"
-  direction: down
-  style.fill: "#141D32"
-  style.stroke: "#B8B4A8"
-  style.stroke-width: 1
-  style.font-color: "#E9F0FF"
-  style.font-size: 23
+plate_title.near: top-center
+source: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 4
+  grid-gap: 30
+original: "PR / Source\nOriginal rules\nKeep provenance" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+rebuild: "Reconstruction\nImplement\nevidenced rules" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+parity: "PARITY" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#79D8FF"
+  style.font-size: 27
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 200
+  height: 175
   style.bold: true
-  rebuild: "REBUILD\nMatch the source" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-  parity: "INTEGRATED PARITY\nWhole game compared" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-  rebuild -> parity {style.stroke: "#6E819F"; style.stroke-width: 3}
 }
-
-gate: {
-  label: "03 / GATE B"
-  direction: down
-  style.fill: "#141D32"
-  style.stroke: "#B8B4A8"
-  style.stroke-width: 1
-  style.font-color: "#E9F0FF"
-  style.font-size: 23
+gate: "GATE B\nLOCKED" {
+  label.near: center-center
+  shape: hexagon
+  style.font-color: "#FF746A"
+  style.font-size: 27
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 2
+  width: 220
+  height: 160
   style.bold: true
-  gateb: "GATE B · LOCKED\nExpansion waits" {style.fill: "#111A2C"; style.stroke: "#FF746A"; style.stroke-width: 5; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-  expansion: "EXPANSION\nAfter parity" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
-  gateb -> expansion {style.stroke: "#6E819F"; style.stroke-width: 3}
 }
-
-evidence.source -> reconstruction.rebuild {style.stroke: "#6E819F"; style.stroke-width: 3}
-evidence.unknown -> reconstruction.rebuild {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7}
-reconstruction.parity -> gate.gateb {style.stroke: "#FF746A"; style.stroke-width: 3}
+original -> rebuild: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+rebuild -> parity: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+parity -> gate: "" {style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#FF746A"; style.font-size: 22;}
+}
+limits: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 2
+  grid-gap: 32
+gap: "SOURCE GAP / STOP\nAn unknown stays unknown.\nPlausibility is not source evidence." {
+  shape: text
+  style.font-color: "#FF746A"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 0
+}
+expansion: "EXPANSION / CONDITIONAL\nOnly after integrated parity\nand the owning gate’s acceptance." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+}
+plate_note: "PR / PIRATES · PARITY RECONSTRUCTION · Reviewed 18 October 2026. Historical project\nexample retained from the founding account. This plate does not declare Gate B open." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

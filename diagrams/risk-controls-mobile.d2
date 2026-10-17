@@ -1,15 +1,151 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-rows: 6
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 30
 
-c00: "CLASS 00 · THROWAWAY\nExplore; discard cheaply" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-c01: "CLASS 01 · EXPERIMENT\nPreserve learning; useful checks" {style.fill: "#BEF05E"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-c02: "CLASS 02 · PROJECT\nProtect source and records" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-c03: "CLASS 03 · PRODUCT\nProve users and production" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-c04: "CLASS 04 · COMMERCIAL\nControl money and rollback" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-c05: "CLASS 05 · TREASURED\nNarrow authority; prove safety" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-
-c00 -> c01 {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-c01 -> c02 {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-c02 -> c03 {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-c03 -> c04 {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-c04 -> c05 {style.stroke: "#FF746A"; style.stroke-width: 2; style.font-size: 15}
+plate_title: "Controls follow\nthe stakes." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
+}
+plate_title.near: top-center
+n0: "00" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t0: "Throwaway\nDiscard cheaply" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+n1: "01" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t1: "Experiment\nKeep useful\nlearning" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+n2: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t2: "Project\nProtect the work" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+n3: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t3: "Product\nProve real use" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+n4: "04" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#FF746A"
+  style.stroke: "#FF746A"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t4: "Commercial\nProtect money and\ncommitments" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+n5: "05" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 45
+  height: 45
+  style.bold: true
+}
+t5: "Treasured\nRestrict access to\nwhat matters" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+plate_note: "CLASSIFICATION / NOT\nSTAGES\nChoose for the actual\nrisk.\nProjects need not climb a\nladder.\n\nWOODHOUSE / RISK CLASSES\nReviewed 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

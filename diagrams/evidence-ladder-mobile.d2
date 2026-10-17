@@ -1,19 +1,135 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: {
-  d2-config: {layout-engine: elk; theme-id: 201}
+grid-rows: 5
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 28
+
+plate_title: "Each claim\nneeds its\nproof." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
 }
-
-observed: "01 · OBSERVED\nSource or behavior inspected" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-implemented: "02 · IMPLEMENTED\nRequested change exists" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-merged: "03 · MERGED\nIntegrated revision identified" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-qualified: "04 · QUALIFIED\nNamed gates passed" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-production: "05 · PRODUCTION VERIFIED\nDeployed version observed" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-accepted: "OWNER ACCEPTED\nAccountable person confirms the bar" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-physical: "PHYSICAL PROOF · WHEN RELEVANT\nReal device · environment · human use" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-
-observed -> implemented {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-implemented -> merged {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-merged -> qualified {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-qualified -> production {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-production -> accepted {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 14}
-production -> physical {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+plate_title.near: top-center
+r0: "01" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t0: "Observed\nSource examined" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r1: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t1: "Implemented\nChange exists" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r2: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t2: "Merged\nRevision integrated" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r3: "04" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t3: "Qualified\nNamed checks pass" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r4: "05" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t4: "Production verified\nLive version\nobserved" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r3 -> r4: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+plate_note: "SEPARATE QUESTIONS\nHuman: does it meet the\nbrief?\nDevice: does it work in\nthe world?\nNeither follows from\ndeployment.\n\nWOODHOUSE / EVIDENCE\nMethod · 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

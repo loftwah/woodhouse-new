@@ -5,7 +5,7 @@ const { value } = Astro.props;
 
 {value.image && (
   <figure class:list={["image-plate", value.variant && `image-plate--${value.variant}`]}>
-    <Image image={value.image} />
+    <Image image={value.image} priority={value.variant === "full-bleed"} />
     {value.caption && <figcaption>{value.caption}</figcaption>}
   </figure>
 )}

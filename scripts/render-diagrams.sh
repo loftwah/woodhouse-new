@@ -14,7 +14,9 @@ fi
 mkdir -p "$IMAGE_DIR" "$PUBLIC_SOURCE_DIR"
 for source in "$SOURCE_DIR"/*.d2; do
   name="$(basename "$source" .d2)"
-  d2 "$source" "$IMAGE_DIR/$name.svg"
+  d2 --font-regular "$ROOT/public/fonts/bricolage-report-400.ttf" \
+    --font-bold "$ROOT/public/fonts/bricolage-report-700.ttf" \
+    "$source" "$IMAGE_DIR/$name.svg"
   cp "$source" "$PUBLIC_SOURCE_DIR/$name.d2"
 done
 

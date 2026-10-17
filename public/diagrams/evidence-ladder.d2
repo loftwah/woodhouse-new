@@ -1,28 +1,127 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-columns: 1
+vertical-gap: 22
 
-work: {
-  direction: down
-  observed: "01 · OBSERVED\nSource examined" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 20; style.bold: true}
-  implemented: "02 · IMPLEMENTED\nChange exists" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 20; style.bold: true}
-  observed -> implemented
+plate_title: "Every claim needs its own proof." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
 }
-
-candidate: {
-  direction: down
-  merged: "03 · MERGED\nRevision integrated" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 20; style.bold: true}
-  qualified: "04 · QUALIFIED\nGates pass" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 20; style.bold: true}
-  merged -> qualified
+plate_title.near: top-center
+claims: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 5
+  grid-gap: 24
+a: "01 / Observed\nSource\nexamined" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
 }
-
-realworld: {
-  direction: down
-  production: "05 · PRODUCTION\nLive version observed" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 20; style.bold: true}
-  accepted: "OWNER ACCEPTED\nHuman signs off" {style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
-  physical: "PHYSICAL PROOF\nDevice · place · person" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 19; style.bold: true}
-  production -> accepted
-  production -> physical {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7}
+b: "02 / Implemented\nChange\nexists" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
 }
-
-work.implemented -> candidate.merged
-candidate.qualified -> realworld.production
+c: "03 / Merged\nRevision\nintegrated" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+d: "04 / Qualified\nNamed\nchecks pass" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+e: "05 / Verified\nLive production\nobserved" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+a -> b: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+b -> c: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+c -> d: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+d -> e: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+}
+separate: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 4
+  grid-gap: 22
+human: "HUMAN" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#E9FF49"
+  style.font-size: 25
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 140
+  height: 140
+  style.bold: true
+}
+accept: "Acceptance\nDoes it meet the brief?" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 30
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+device: "DEVICE" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#FF746A"
+  style.font-size: 25
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 2
+  width: 160
+  height: 140
+  style.bold: true
+}
+physical: "Physical proof\nDoes it work in the world?" {
+  shape: text
+  style.font-color: "#FF746A"
+  style.font-size: 30
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 0
+}
+}
+plate_note: "WOODHOUSE / EVIDENCE · 18 OCTOBER 2026 The rail orders claims; it does not grant them.\nHuman acceptance and physical proof each need their own observation." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

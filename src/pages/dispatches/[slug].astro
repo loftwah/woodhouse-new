@@ -27,6 +27,8 @@ const isPreview = result?.isPreview === true;
 // without one falls back to the shared factory card rather than advertising a
 // path that was never rendered.
 const socialCard = dispatchSocialCard(slug);
+const isFoundingEssay = slug === "i-didnt-mean-to-build-a-software-factory";
+const hasFeatureArt = isFoundingEssay && editorial?.content[0]?._type === "image_plate";
 if (slug && !editorial) Astro.response.status = 404;
 if (isPreview) {
   Astro.cache?.set(false);
@@ -61,7 +63,7 @@ if (isPreview) {
         preview and is not part of the public dispatch list.
       </p>
     )}
-    <section class="container dossier-hero">
+    <section class:list={["container dossier-hero", isFoundingEssay && "founding-hero"]}>
       <div>
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="/">WOODHOUSE</a>
@@ -81,18 +83,21 @@ if (isPreview) {
           {editorial.deck}
         </p>
       </div>
-      <div class="dossier-hero__side">
-        <span class="micro-label">Evidence reviewed {editorial.reviewDate}</span>
-        <dl>
-          <dt>Filed under</dt>
-          <dd>{editorial.kind}</dd>
-          <dt>Source state</dt>
-          <dd>Editor-reviewed public summary</dd>
-        </dl>
-      </div>
+      {!isFoundingEssay && (
+        <div class="dossier-hero__side">
+          <span class="micro-label">Evidence reviewed {editorial.reviewDate}</span>
+          <dl>
+            <dt>Filed under</dt>
+            <dd>{editorial.kind}</dd>
+            <dt>Source state</dt>
+            <dd>Editor-reviewed public summary</dd>
+          </dl>
+        </div>
+      )}
     </section>
-    <section class="container dossier-grid">
+    <section class:list={["container dossier-grid", isFoundingEssay && "founding-feature"]}>
       <article class="prose" {...entry?.edit}>
+        {hasFeatureArt && <EditorialBlocks value={editorial.content.slice(0, 1)} />}
         <p {...entry?.edit.lead}>
           <strong>{editorial.lead}</strong>
         </p>
@@ -102,7 +107,7 @@ if (isPreview) {
           </figure>
         )}
         <div {...entry?.edit.content}>
-          <EditorialBlocks value={editorial.content} />
+          <EditorialBlocks value={hasFeatureArt ? editorial.content.slice(1) : editorial.content} />
         </div>
         <div class="callout" {...entry?.edit.source_reference}>
           <p class="callout__title">Source and review</p>

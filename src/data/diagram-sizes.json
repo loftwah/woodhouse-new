@@ -1,90 +1,90 @@
 {
   "agent-policy-mobile": {
-    "width": 569,
-    "height": 875
+    "width": 327,
+    "height": 946
   },
   "agent-policy": {
-    "width": 2021,
-    "height": 600
+    "width": 1211,
+    "height": 674
   },
   "evidence-ladder-mobile": {
-    "width": 1044,
-    "height": 1132
+    "width": 332,
+    "height": 866
   },
   "evidence-ladder": {
-    "width": 2147,
-    "height": 498
+    "width": 1202,
+    "height": 547
   },
   "factory-flow-mobile": {
-    "width": 624,
-    "height": 957
+    "width": 330,
+    "height": 856
   },
   "factory-flow": {
-    "width": 1894,
-    "height": 438
+    "width": 1208,
+    "height": 612
   },
   "failure-loop-mobile": {
-    "width": 604,
-    "height": 1142
+    "width": 344,
+    "height": 970
   },
   "failure-loop": {
-    "width": 2234,
-    "height": 436
+    "width": 1070,
+    "height": 640
   },
   "lineage-mobile": {
-    "width": 583,
-    "height": 1067
+    "width": 337,
+    "height": 1080
   },
   "lineage": {
-    "width": 1629,
-    "height": 395
+    "width": 1014,
+    "height": 582
   },
   "payment-fulfilment-mobile": {
-    "width": 820,
-    "height": 1193
+    "width": 354,
+    "height": 1152
   },
   "payment-fulfilment": {
-    "width": 2343,
-    "height": 395
+    "width": 1106,
+    "height": 638
   },
   "pirates-parity-mobile": {
-    "width": 606,
-    "height": 1142
+    "width": 333,
+    "height": 924
   },
   "pirates-parity": {
-    "width": 2138,
-    "height": 439
+    "width": 1129,
+    "height": 614
   },
   "project-network-mobile": {
-    "width": 604,
-    "height": 1225
+    "width": 353,
+    "height": 1697
   },
   "project-network": {
-    "width": 2407,
-    "height": 432
+    "width": 1145,
+    "height": 685
   },
   "publication-path-mobile": {
-    "width": 732,
-    "height": 989
+    "width": 352,
+    "height": 946
   },
   "publication-path": {
-    "width": 2132,
-    "height": 474
+    "width": 1164,
+    "height": 610
   },
   "release-path-mobile": {
-    "width": 500,
-    "height": 1079
+    "width": 376,
+    "height": 836
   },
   "release-path": {
-    "width": 2139,
-    "height": 304
+    "width": 1321,
+    "height": 551
   },
   "risk-controls-mobile": {
-    "width": 560,
-    "height": 1122
+    "width": 355,
+    "height": 948
   },
   "risk-controls": {
-    "width": 1973,
-    "height": 390
+    "width": 1028,
+    "height": 522
   }
 }

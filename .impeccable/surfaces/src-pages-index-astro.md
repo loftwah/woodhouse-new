@@ -14,3 +14,7 @@ related_targets: ["src/pages/projects/index.astro","src/pages/projects/[slug].as
 - **Chosen direction:** A dark, web-native engineering journal, with an eight-project D2 network as the first-view focal point, then the source sites' own artwork and their full project record. A separate factory-flow diagram explains human review, qualification, production and evidence without implying that every project has passed those gates.
 - **Composition reference:** Exploratory generated studies helped compare energy and image/map hierarchy. Their invented project names, people, dates and activity are rejected; they are not content or asset sources.
 - **Unresolved decisions:** None for this pass. Woodhouse remains a fixed dark-mode publication with no theme toggle.
+
+## Accepted reading-order correction — 18 October 2026
+
+The earlier first-view network direction above is historical. PRODUCT.md and DESIGN.md now put real things to play, hear and build first; the technical map explains the system later. The rejected old D2 exports are not visual authority. The rebuilt plate family retains the shared ink/Bricolage world while giving each system its own composition and a fully readable portrait edition. MP’s taste acceptance remains separate from an agent review or a successful publication.

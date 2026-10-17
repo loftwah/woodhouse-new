@@ -20,6 +20,20 @@ const visible = (slug: string) => (!only || only === slug) && projects.some((p) 
         </p>
       </div>
       <div class="build-example__next">
+        <figure class="build-example__image">
+          <a href="/lab/game-music.html" aria-label="Open the playable FM music example">
+            <img
+              src="/images/factory-music-demo-20261018.webp"
+              alt="The small playable field with separate game sound and FM music controls."
+              width="1200"
+              height="760"
+              loading="lazy"
+            />
+          </a>
+          <figcaption>
+            FM / A game here, a soundtrack from LoftwahFM. Captured 18 October 2026.
+          </figcaption>
+        </figure>
         <a class="home-action" href="/lab/game-music.html">
           Try the music demo ↗
         </a>
@@ -52,8 +66,28 @@ const visible = (slug: string) => (!only || only === slug) && projects.some((p) 
         </p>
       </div>
       <div class="build-example__next">
+        <figure class="build-example__image">
+          <a href="https://composer.loftwah.com/demo" aria-label="Open the connected-app example">
+            <img
+              src="/images/factory-composer-pair-20261018.webp"
+              alt="The Here / there guestbook and Linkarooie showcase side by side, each with its own artwork, app and source links."
+              width="1280"
+              height="572"
+              loading="lazy"
+            />
+          </a>
+          <figcaption>
+            AC / Two owned apps in the live composition demo. Captured 18 October 2026.
+          </figcaption>
+        </figure>
         <a class="home-action" href="https://composer.loftwah.com/demo">
           Try the connected apps ↗
+        </a>
+        <a
+          class="text-link"
+          href="https://composer.loftwah.com/init?start=composition#starting-point"
+        >
+          Start your collection ↗
         </a>
         <a class="text-link" href="https://composer.loftwah.com/release">
           See the running versions ↗
@@ -95,6 +129,22 @@ const visible = (slug: string) => (!only || only === slug) && projects.some((p) 
   }
   .build-example__next .source-note {
     margin: 0;
+  }
+  .build-example__image {
+    width: 100%;
+    margin: 0 0 0.5rem;
+  }
+  .build-example__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+  }
+  .build-example__image figcaption {
+    margin-top: 0.6rem;
+    color: var(--copy-soft);
+    font-size: 0.8rem;
+    line-height: 1.5;
   }
   @media (max-width: 760px) {
     .build-example {

@@ -1,27 +1,108 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-columns: 1
+vertical-gap: 22
 
-intent: {
-  direction: down
-  expectation: "01 · EXPECT\nSet the result" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
-  change: "02 · CHANGE\nReviewable revision" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
-  expectation -> change
+plate_title: "The miss must change the method." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
 }
-
-inspect: {
-  direction: down
-  observe: "03 · OBSERVE\nSee actual result" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
-  contain: "04 · CONTAIN\nStop unsupported work" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
-  observe -> contain
+plate_title.near: top-center
+attempt: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 4
+  grid-gap: 24
+belief: "Expectation\nState what\nshould happen" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
 }
-
-learn: {
-  direction: down
-  control: "05 · CONTROL\nFix the cause" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#111A2C"; style.font-size: 21; style.bold: true}
-  recheck: "06 · RECHECK\nRepeat same failure" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 3; style.font-color: "#FFFFFF"; style.font-size: 21; style.bold: true}
-  control -> recheck
+work: "Attempt\nA reviewable\nchange" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
 }
-
-intent.change -> inspect.observe
-inspect.contain -> learn.control
-learn.recheck -> intent.expectation {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7}
+observe: "REALITY" {
+  label.near: center-center
+  shape: diamond
+  style.font-color: "#FF746A"
+  style.font-size: 27
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 2
+  width: 200
+  height: 175
+  style.bold: true
+}
+failure: "Name the miss\nWhat escaped\nthe checks?" {
+  shape: text
+  style.font-color: "#FF746A"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#FF746A"
+  style.stroke-width: 0
+}
+belief -> work: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+work -> observe: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+observe -> failure: "" {style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#FF746A"; style.font-size: 22;}
+}
+learn: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 24
+control: "Change the control\nPrevent the same\nclass of failure" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+recheck: "Recheck\nTry the same\nfailure again" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+example: "FT / FIGHTER\nGeometry passed. Design missed.\nIndependent visual criticism\nbecame a separate check." {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
+}
+control -> recheck: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+recheck -> example: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22; style.stroke-dash: 5;}
+}
+plate_note: "WOODHOUSE / FAILURE LOOP · Retest the failure and return the evidence to the original\nexpectation. Historical example: founding account reviewed 28 September 2026. Method\nplate reviewed 18 October 2026." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

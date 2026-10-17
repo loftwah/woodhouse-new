@@ -50,7 +50,7 @@ export const prerender = false;
         title="Value classes and controls"
         variant="ladder"
         diagram="risk-controls"
-        note="Controls increase with value, irreversibility and consequence. Classification is a working judgement, not an automatic risk score."
+        note="Choose controls for the actual consequence. These are classes, not stages a project has to climb, and classification is not an automatic risk score."
         steps={[
           { label: "Class 00", title: "Throwaway", detail: "Explore freely; discard cheaply." },
           {
@@ -158,7 +158,7 @@ export const prerender = false;
     <div class="container">
       <div class="section-heading">
         <div>
-          <h2>Events and schedules can start work. They cannot approve it.</h2>
+          <h2>Events can start work. Authority still has limits.</h2>
         </div>
         <p>
           A milestone, failed check, shipment event or scheduled review can ask an agent to prepare
@@ -166,11 +166,11 @@ export const prerender = false;
         </p>
       </div>
       <D2Diagram
-        title="Work stops at the human gate"
-        description="Project events, scheduled checks and read-only production observations create an agent proposal. Policy and qualification run before Dean reviews that exact candidate and approves, returns or rejects it."
+        title="Authority has a boundary"
+        description="Events, scheduled checks and safe production observations can create bounded work. Agents check scope, rights, cost and recovery. Ordinary work proceeds within existing authority; reserved account, money, rights and irreversible decisions go to MP. Existing product and release gates still apply."
         desktop="/images/diagrams/agent-policy.svg"
         mobile="/images/diagrams/agent-policy-mobile.svg"
-        caption="An approval is tied to one qualified candidate. A revised candidate goes through the checks again."
+        caption="Existing authority permits routine work. A reserved decision applies only to its approved scope; a revision repeats the affected checks."
         className="agent-policy-plate"
       >
         <ol class="diagram-transcript">
@@ -196,15 +196,16 @@ export const prerender = false;
           <li>
             <strong>Policy and qualification</strong>
             <span>
-              Check scope, asset rights, spend, required gates and recovery before asking for a
-              decision.
+              Check scope, asset rights, spend, required gates and recovery. Work already within
+              authority proceeds and is qualified; an event does not grant new permission.
             </span>
           </li>
           <li>
-            <strong>Dean decides</strong>
+            <strong>Reserved decisions go to MP</strong>
             <span>
-              Approve the qualified candidate, return it for changes or reject it. A new revision
-              needs a new review.
+              Account access, money, rights, irreversible actions and explicit owning gates need
+              their actual decision. Approve the exact scope, return it for revision and new checks,
+              or reject it and stop. Agent approval does not replace that decision.
             </span>
           </li>
         </ol>
@@ -241,7 +242,7 @@ export const prerender = false;
         description="Dean approves the catalogue item, artwork rights, price and spend limits. The customer pays through a payment provider. A validated, deduplicated event updates the order ledger and may create one Printful order within those limits. Shipment events update the same record."
         desktop="/images/diagrams/payment-fulfilment.svg"
         mobile="/images/diagrams/payment-fulfilment-mobile.svg"
-        caption="Retries and duplicate events must not create a second charge, order, shipment or refund."
+        caption="Reference architecture, not a live shop. Retries and duplicate events must not create a second charge, order, shipment or refund."
         className="payment-fulfilment-plate"
       >
         <ol class="diagram-transcript">
