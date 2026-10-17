@@ -1,47 +1,97 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: right
-vars: { d2-config: { layout-engine: elk; theme-id: 201 } }
+grid-columns: 1
+vertical-gap: 22
 
-operator: "THE OPERATOR\nSets direction + authority" {
-  style.fill: "#E9FF49"
+plate_title: "One operator. Different finish lines." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 58
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
+}
+plate_title.near: top-center
+authority: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 35
+human: "HUMAN" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#E9FF49"
+  style.font-size: 28
+  style.fill: "transparent"
   style.stroke: "#E9FF49"
   style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 24
+  width: 155
+  height: 155
   style.bold: true
 }
-
-agents: "CODING AGENTS\nBounded, reviewable work" {
-  style.fill: "#647DFF"
-  style.stroke: "#8DA0FF"
-  style.stroke-width: 2
-  style.font-color: "#FFFFFF"
-  style.font-size: 24
-  style.bold: true
+intent: "Direction and authority\nThe goal and its limits" {
+  shape: text
+  style.font-color: "#E9FF49"
+  style.font-size: 33
+  style.fill: "transparent"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 0
 }
-
-projects: {
-  label: "REAL PROJECTS · DIFFERENT FINISH LINES"
-  grid-rows: 2
-  grid-columns: 5
-  grid-gap: 14
-  style.fill: "#0F182A"
-  style.stroke: "#455575"
-  style.stroke-width: 2
-  style.font-color: "#DCE6F5"
-  style.font-size: 22
-  style.bold: true
-
-  bubbles: "BUBBLES\nArcade systems" {style.fill: "#FF746A"; style.font-color: "#080D19"}
-  fighter: "FIGHTER\nAuthored game" {style.fill: "#647DFF"; style.font-color: "#FFFFFF"}
-  shoalshot: "SHOALSHOT\nFishing game" {style.fill: "#79D8FF"; style.font-color: "#080D19"}
-  protocol: "PROTOCOL 11\nCard-table play" {style.fill: "#E9FF49"; style.font-color: "#080D19"}
-  max: "MAX\nAssistive tech" {style.fill: "#79D8FF"; style.font-color: "#080D19"}
-  pirates: "PIRATES\nSource study" {style.fill: "#FF746A"; style.font-color: "#080D19"}
-  fm: "LOFTWAHFM\nMusic platform" {style.fill: "#647DFF"; style.font-color: "#FFFFFF"}
-  club: "SOCIAL CLUB\nHospitality" {style.fill: "#E9FF49"; style.font-color: "#080D19"}
-  hunter: "ASSET HUNTER\nReference" {style.fill: "#79D8FF"; style.font-color: "#080D19"}
-  composer: "APP COMPOSER\nAgent-led setup" {style.fill: "#FF9B55"; style.font-color: "#080D19"}
+agents: "CODING AGENTS\nBounded tasks, named owners" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 33
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
 }
-
-operator -> agents: "sets the boundary" {style.stroke: "#E9FF49"; style.stroke-width: 3; style.font-size: 20}
-agents -> projects: "bounded work, across the portfolio" {style.stroke: "#79D8FF"; style.stroke-width: 3; style.font-size: 20}
+human -> intent: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22;}
+intent -> agents: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
+}
+portfolio: "" {
+  style.fill: transparent
+  style.stroke-width: 0
+  grid-rows: 1
+  grid-columns: 3
+  grid-gap: 30
+games: "PLAY / GAMES\nBB  Bubbles\nFT  Fighter\nSS  SHOALSHOT\nP11  Protocol 11" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+build: "BUILD / TOOLS\nAC  App Composer\nAH  Asset Hunter" {
+  shape: text
+  style.font-color: "#79D8FF"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 0
+}
+explore: "EXPLORE / OTHER WORK\nFM  LoftwahFM · MX  MAX\nSC  Social Club · PR  Pirates" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 31
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+}
+plate_note: "WOODHOUSE / PORTFOLIO RELATIONSHIP · 18 OCTOBER 2026 · The project markers identify\nwork, not activity or health. Each project owns its identity, source, data and release\ngates. Agents work across the portfolio within those boundaries." {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 23
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

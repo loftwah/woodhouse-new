@@ -1,42 +1,114 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: { d2-config: { layout-engine: elk; theme-id: 201 } }
+grid-rows: 4
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 28
 
-candidate: "RELEASE CANDIDATE\nOne exact version" {
-  style.fill: "#FF746A"
-  style.stroke: "#FF968F"
-  style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 23
+plate_title: "One release.\nOne exact\nrevision." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
   style.bold: true
 }
-
-qualify: "REVIEW + QUALIFY\nHuman decision + checks" {
-  style.fill: "#B58AFF"
-  style.stroke: "#D0B8FF"
-  style.stroke-width: 2
+plate_title.near: top-center
+r0: "01" {
+  label.near: center-center
+  shape: circle
   style.font-color: "#080D19"
-  style.font-size: 23
-  style.bold: true
-}
-
-production: "PRODUCTION\nOnly after approval" {
+  style.font-size: 24
   style.fill: "#E9FF49"
   style.stroke: "#E9FF49"
   style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 23
+  width: 42
+  height: 42
   style.bold: true
 }
-
-real_use: "REAL USE\nPeople + devices" {
+t0: "Candidate\nSource · scope ·\nidentity" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r1: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
   style.fill: "#79D8FF"
-  style.stroke: "#9BE4FF"
+  style.stroke: "#79D8FF"
   style.stroke-width: 2
-  style.font-color: "#080D19"
-  style.font-size: 23
+  width: 42
+  height: 42
   style.bold: true
 }
-
-candidate -> qualify: "exact scope" {style.stroke: "#FF746A"; style.stroke-width: 3; style.font-size: 18}
-qualify -> production: "evidence clears the gate" {style.stroke: "#B58AFF"; style.stroke-width: 3; style.font-size: 18}
-production -> real_use: "verify in the world" {style.stroke: "#79D8FF"; style.stroke-width: 3; style.font-size: 18}
+t1: "Required gates\nCheck this exact\nstate" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r2: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t2: "Production\nDeploy; inspect\nlive identity" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r3: "04" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t3: "Real use\nObserve people and\ndevices" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+plate_note: "STOP / If the candidate\nchanges,\nrepeat the affected\nchecks.\nA test is not a live\nobservation.\n\nWOODHOUSE / RELEASE METHOD\nReviewed 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

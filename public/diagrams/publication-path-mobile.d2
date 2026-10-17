@@ -1,32 +1,114 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: {
-  d2-config: {
-    layout-engine: elk
-    theme-id: 201
-  }
-}
+grid-rows: 4
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 28
 
-source: "PROJECT SITE\nTitle · artwork · icon" {
-  style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+plate_title: "Public window.\nPrivate\nworkshop." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
 }
-build: "WOODHOUSE BUILD\nReads site details\nUses saved details if offline" {
-  style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+plate_title.near: top-center
+r0: "01" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
 }
-html: "WOODHOUSE PAGE\nShows the project artwork" {
-  style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true
+t0: "Project site\nPublic title and\nartwork URL" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
 }
-browser: "YOUR BROWSER\nLoads the project artwork" {
-  style.fill: "#FFFFFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+r1: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
 }
-fallback: "LOCAL ART FALLBACK\nOnly if source art fails" {
-  style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+t1: "Reviewed record\nPublic-safe\nmaterial only" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
 }
-boundary: "PRIVATE DATA\nNever published" {
-  style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true
+r2: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
 }
-
-source -> build {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
-build -> html {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
-html -> browser {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 16}
-browser -> fallback {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 16}
-source -> boundary {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 14}
+t2: "Woodhouse page\nHuman and agent\nviews" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r3: "04" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t3: "Browser\nLoads the project’s\nimage" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+plate_note: "PRIVATE / NO PUBLICATION\nRepository bodies,\ncredentials\nand working conversations\nstop.\n\nIF SOURCE ART FAILS\nShow a Woodhouse\nillustration;\nchange its text and\ncredit.\n\nWOODHOUSE / PUBLICATION\nReviewed 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

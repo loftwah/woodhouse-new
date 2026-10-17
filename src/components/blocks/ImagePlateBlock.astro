@@ -1,11 +1,31 @@
 ---
 import { Image } from "emdash/ui";
 const { value } = Astro.props;
+// These images are already bounded, checked-in publication assets. Sending a
+// dimensioned same-origin value through EmDash's image service made the article
+// fail at runtime. Retain CMS metadata and dimensions on the native static path;
+// uploaded/provider media continues through the established EmDash renderer.
+const image = value.image;
+const staticSource =
+  typeof image?.src === "string" && /^\/(?:images|share)\//.test(image.src) ? image.src : null;
+const priority = value.variant === "full-bleed";
 ---
 
 {value.image && (
   <figure class:list={["image-plate", value.variant && `image-plate--${value.variant}`]}>
-    <Image image={value.image} />
+    {staticSource ? (
+      <img
+        src={staticSource}
+        alt={image.alt ?? ""}
+        width={image.width}
+        height={image.height}
+        loading={priority ? "eager" : "lazy"}
+        fetchpriority={priority ? "high" : "auto"}
+        decoding="async"
+      />
+    ) : (
+      <Image image={image} priority={priority} />
+    )}
     {value.caption && <figcaption>{value.caption}</figcaption>}
   </figure>
 )}

@@ -1,59 +1,135 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: {
-  d2-config: {
-    layout-engine: elk
-    theme-id: 201
-  }
-}
+grid-rows: 5
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 28
 
-human: Human operator {
-  label: "HUMAN OPERATOR\nIntent · authority"
+plate_title: "Work moves.\nAuthority\nstays." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
+}
+plate_title.near: top-center
+r0: "01" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
   style.fill: "#E9FF49"
-  style.stroke: "#6E819F"
+  style.stroke: "#E9FF49"
   style.stroke-width: 2
-  style.font-color: "#111A2C"
-  style.font-size: 20
+  width: 42
+  height: 42
   style.bold: true
 }
-agents: Software agents {
-  label: "SOFTWARE AGENTS\nBounded work"
-  style.fill: "#647DFF"
-  style.stroke: "#6E819F"
+t0: "Human intent\nGoal · limits ·\nowner" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r1: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
   style.stroke-width: 2
-  style.font-color: "#FFFFFF"
-  style.font-size: 20
+  width: 42
+  height: 42
   style.bold: true
 }
-qualification: Qualification {
-  label: "QUALIFICATION\nChecks · review · exact state"
-  style.fill: "#FF746A"
-  style.stroke: "#6E819F"
+t1: "Coding agents\nBounded, parallel\ntasks" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r2: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
   style.stroke-width: 2
-  style.font-color: "#111A2C"
-  style.font-size: 20
+  width: 42
+  height: 42
   style.bold: true
 }
-release: Production release {
-  label: "PRODUCTION\nDeployed version · live behavior"
-  style.fill: "#111A2C"
-  style.stroke: "#6E819F"
+t2: "Independent review\nCheck the exact\nstate" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r3: "04" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
   style.stroke-width: 2
-  style.font-color: "#FFFFFF"
-  style.font-size: 20
+  width: 42
+  height: 42
   style.bold: true
 }
-reality: Real use {
-  label: "REAL USE\nPeople · devices · environment"
-  style.fill: "#FFFFFF"
-  style.stroke: "#6E819F"
+t3: "Production\nObserve the live\nversion" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r4: "05" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
   style.stroke-width: 2
-  style.font-color: "#111A2C"
-  style.font-size: 20
+  width: 42
+  height: 42
   style.bold: true
 }
-
-human -> agents {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
-agents -> qualification {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
-qualification -> release {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
-release -> reality {style.stroke: "#6E819F"; style.stroke-width: 3; style.font-size: 16}
-reality -> human {style.stroke: "#FF746A"; style.stroke-width: 3; style.stroke-dash: 7; style.font-size: 16}
+t4: "Real use\nPeople and devices" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r3 -> r4: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+plate_note: "RETURN / Evidence from use\nchanges the next human\ndecision.\n\nWOODHOUSE / METHOD\nReviewed 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center

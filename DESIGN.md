@@ -100,3 +100,13 @@ Remove a repeated generic paragraph when a concise local statement and one link 
 Factory gives builders a route through working connections: FM music in a separately hosted demo and independently owned apps composed into one studio. Open rows pair a concrete explanation with immediate actions; versions and adoption records remain available in native disclosures. Projects keeps the complete inventory. The phone navigation says Menu when it is the only navigation control. Repeated source metadata no longer delays the project action, and a failed source image removes its source-only caption as well as changing its credit.
 
 Woodhouse’s social identity is a tactile miniature workshop: one symbolic maker connects underwater play, a game arena and a record player. Ink, lime type and the large “One human. Many worlds.” line carry the thumbnail. This is a conceptual illustration, not Dean’s portrait or screenshots of the products. The generated master, prompt and deterministic export instructions live beside the existing renderer.
+
+## Rebuilt technical plates — reviewed 18 October 2026
+
+The rebuilt family uses open typographic fields on ink, Bricolage lettering, cyan work paths, lime human direction and coral stops. Text names the work; reference medallions order a sequence; a human circle and a decision diamond separate responsibility from a check. A blocked lane has no outgoing publication path. Risk classes form a comparison register with no lifecycle arrows. Lineage is a sequence of working habits rather than an invented dated roadmap. Each plate carries its own subject, exception and dated source or method note.
+
+Wide editions use bounded reading fields rather than an automatic line of nested boxes. Portrait editions are separately composed at 327–376 source pixels wide, with explicit line breaks and full exceptions retained. They do not require the transcript to rescue miniature lettering. Editable `.d2` sources and SVGs remain paired; `pnpm diagrams` embeds the existing Bricolage fonts. Native transcripts and source links remain available. The cobalt glow is removed.
+
+The founding essay alternates a readable prose measure with full-width plates, the existing conceptual workshop illustration and dated public product captures. Its historical account stays tied to 28 September; the editorial expansion has its own 18 October review. The continuation leads to the working Factory examples. Product-first Home and Factory reading orders are retained.
+
+These describe the rebuilt edition. Independent agent review and publication verification are evidence about that edition, not MP’s taste acceptance. MP’s rejection of the former edition remains recorded above.

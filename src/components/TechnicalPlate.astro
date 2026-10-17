@@ -17,6 +17,7 @@ const source =
   diagram ??
   (variant === "loop" ? "failure-loop" : variant === "ladder" ? "evidence-ladder" : "factory-flow");
 const base = `/images/diagrams/${source}`;
+const TranscriptList = variant === "ladder" ? "ul" : "ol";
 ---
 
 <D2Diagram
@@ -28,7 +29,7 @@ const base = `/images/diagrams/${source}`;
   caption={note}
   className={`technical-plate technical-plate--${variant}`}
 >
-  <ol class="technical-plate__steps" aria-label={`Diagram ${number}: ${title}`}>
+  <TranscriptList class="technical-plate__steps" aria-label={`Diagram ${number}: ${title}`}>
     {steps.map((step) => (
       <li>
         <strong>
@@ -37,5 +38,5 @@ const base = `/images/diagrams/${source}`;
         <span>{step.detail}</span>
       </li>
     ))}
-  </ol>
+  </TranscriptList>
 </D2Diagram>

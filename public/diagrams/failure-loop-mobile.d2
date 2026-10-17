@@ -1,16 +1,135 @@
+# Woodhouse authored technical plate. Reviewed 18 October 2026.
+# Shape grammar: text = work; circle = responsibility; diamond = decision;
+# labelled stop = evidence boundary; dashed line = return or conditional path.
+# This is a method/relationship, not a claim that every project passed it.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
+style.fill: "#080D19"
 direction: down
-vars: {d2-config: {layout-engine: elk; theme-id: 201}}
+grid-rows: 5
+grid-columns: 2
+horizontal-gap: 16
+vertical-gap: 28
 
-belief: "01 · EXPECTATION\nState what should happen" {style.fill: "#E9FF49"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-attempt: "02 · CHANGE\nMake a reviewable revision" {style.fill: "#647DFF"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-observe: "03 · OBSERVE\nInspect the real outcome" {style.fill: "#FF746A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-contain: "04 · CONTAIN\nStop unsupported action" {style.fill: "#FF746A"; style.stroke: "#FF746A"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-control: "05 · CONTROL\nChange the gate or product" {style.fill: "#FFC95A"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#111A2C"; style.font-size: 22; style.bold: true}
-recheck: "06 · RECHECK\nRepeat the failure class" {style.fill: "#111A2C"; style.stroke: "#6E819F"; style.stroke-width: 2; style.font-color: "#FFFFFF"; style.font-size: 22; style.bold: true}
-
-belief -> attempt {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-attempt -> observe {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-observe -> contain {style.stroke: "#FF746A"; style.stroke-width: 2; style.font-size: 15}
-contain -> control {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-control -> recheck {style.stroke: "#6E819F"; style.stroke-width: 2; style.font-size: 15}
-recheck -> belief {style.stroke: "#FF746A"; style.stroke-width: 2; style.stroke-dash: 6; style.font-size: 15}
+plate_title: "A miss must\nchange the\nmethod." {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 44
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+  style.bold: true
+}
+plate_title.near: top-center
+r0: "01" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#E9FF49"
+  style.stroke: "#E9FF49"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t0: "Expectation\nState what should\nhappen" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r1: "02" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t1: "Attempt\nMake a reviewable\nchange" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r2: "03" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#FF746A"
+  style.stroke: "#FF746A"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t2: "Reality\nInspect the actual\nresult" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r3: "04" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#79D8FF"
+  style.stroke: "#79D8FF"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t3: "Control\nFix what let it\nescape" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r4: "05" {
+  label.near: center-center
+  shape: circle
+  style.font-color: "#080D19"
+  style.font-size: 24
+  style.fill: "#EAF0FA"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 2
+  width: 42
+  height: 42
+  style.bold: true
+}
+t4: "Recheck\nRepeat the same\nfailure" {
+  shape: text
+  style.font-color: "#EAF0FA"
+  style.font-size: 26
+  style.fill: "transparent"
+  style.stroke: "#EAF0FA"
+  style.stroke-width: 0
+}
+r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+r3 -> r4: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
+plate_note: "FIGHTER / VISUAL JUDGEMENT\nGeometry passed; design\nmissed.\nAdd independent visual\ncriticism.\nRecheck before calling it\nfixed.\n\nWOODHOUSE / METHOD\nReviewed 18 October 2026" {
+  shape: text
+  style.font-color: "#A6B4CB"
+  style.font-size: 22
+  style.fill: "transparent"
+  style.stroke: "#A6B4CB"
+  style.stroke-width: 0
+}
+plate_note.near: bottom-center
