@@ -10,7 +10,7 @@ import {
   listPublicEvidence
 } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
-import { getSiteMetadata } from "../data/site-metadata";
+import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
 import { sharePreviews } from "../data/share-previews";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
@@ -331,6 +331,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                     alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
                     loading={index < 3 ? "eager" : "lazy"}
                     data-gallery-image
+                    data-fallback-image={getArtworkFallback(project).image}
                   />
                 </a>
                 <figcaption>
@@ -338,7 +339,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                     <h2>{project.name}</h2>
                     <span data-image-size>Original image</span>
                   </div>
-                  <p class="credit">
+                  <p class="credit" data-image-credit>
                     {project.previewImage
                       ? `Artwork from ${project.name}`
                       : "Illustration by Woodhouse"}
@@ -576,6 +577,16 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
     if (image.complete) describe();
     else image.addEventListener("load", describe, { once: true });
     image.addEventListener("error", () => {
+      // A project's published artwork can move or disappear. Fall back once to the
+      // reviewed Woodhouse illustration and say so, rather than leaving a broken
+      // image with the project's credit on it.
+      const fallback = image.dataset.fallbackImage;
+      if (fallback && image.src !== new URL(fallback, location.href).href) {
+        image.src = fallback;
+        const credit = image.closest("figure")?.querySelector("[data-image-credit]");
+        if (credit) credit.textContent = "Illustration by Woodhouse";
+        return;
+      }
       if (label) label.textContent = "Open original image";
     });
   }
