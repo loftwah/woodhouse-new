@@ -1,0 +1,5 @@
+Use case: ads-marketing
+Asset: flagship social artwork background for Woodhouse, a human-authored collection of games, original music, creative tools and software made with AI.
+Create one human maker at a workbench building an interconnected miniature world: a continuous hand-cut paper and painted-wood sculpture with an underwater pocket, small game arena and record player joined by an acid-lime ribbon. Anonymous adult in three-quarter back view; no actual likeness. Warm directional light, crafted edges, subtle print texture, intentional silhouettes, restrained detail. Ink navy ground #080d19, acid lime #e9ff49, restrained coral and cyan. Landscape 1.9:1. Sculpture fills the right 60%; left 40% stays quiet ink navy for separate typography. Readable silhouette at 300px. No text, logos, watermark, gradients, robots, brains, technology symbols, application windows, floating cards, plastic rendering, cloned objects or extra limbs.
+Typeset separately: WOODHOUSE / One human. Many worlds. / Games, music & tools. / Built with AI. Directed by Dean. / loftwah.com
+Factory variant: Made here. Used together.

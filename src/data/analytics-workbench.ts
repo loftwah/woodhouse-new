@@ -247,8 +247,11 @@ export function isOverviewMeasure(measure: { key: string }): measure is typeof o
 export function measureForProjectSwitch(
   from: AnalyticsProject | null,
   to: AnalyticsProject | null,
-  current: string
+  current: string,
+  requested?: string
 ) {
+  // An explicit drill-down wins over the default chosen when switching families.
+  if (requested !== undefined) return resolveMeasure(to, requested);
   const previous = productView(from),
     next = productView(to);
   // Leaving All projects always lands on the destination's own default.

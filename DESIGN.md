@@ -85,3 +85,9 @@ Project identity fields describe the product and stay stable. Dated engineering 
 separate and dated. A limitation that changes a visitor's decision sits beside the claim or action
 it affects; detailed version, source and verification material belongs in labelled deeper sections.
 Remove a repeated generic paragraph when a concise local statement and one link do the same job.
+
+## Connected examples and workshop artwork — reviewed 18 October 2026
+
+Factory gives builders a route through working connections: FM music in a separately hosted demo and independently owned apps composed into one studio. Open rows pair a concrete explanation with immediate actions; versions and adoption records remain available in native disclosures. Projects keeps the complete inventory. The phone navigation says Menu when it is the only navigation control. Repeated source metadata no longer delays the project action, and a failed source image removes its source-only caption as well as changing its credit.
+
+Woodhouse’s social identity is a tactile miniature workshop: one symbolic maker connects underwater play, a game arena and a record player. Ink, lime type and the large “One human. Many worlds.” line carry the thumbnail. This is a conceptual illustration, not Dean’s portrait or screenshots of the products. The generated master, prompt and deterministic export instructions live beside the existing renderer.

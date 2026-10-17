@@ -1,0 +1,106 @@
+---
+import type { WoodhouseProject } from "../content/repository";
+type Props = { projects: WoodhouseProject[]; only?: string };
+const { projects, only } = Astro.props;
+const visible = (slug: string) => (!only || only === slug) && projects.some((p) => p.slug === slug);
+---
+
+<div class="build-examples">
+  {visible("loftwahfm") && (
+    <section class="build-example" aria-labelledby="build-with-music">
+      <div>
+        <h2 id="build-with-music">Give your game a soundtrack.</h2>
+        <p>
+          Move the player, trigger a sound effect, then turn on a LoftwahFM station. The game runs
+          here; the music comes from FM. Turning music off leaves the game and its effects working.
+        </p>
+        <p>
+          For browser-game builders, the useful part is the player you don’t have to write: a
+          versioned client, public stations and a short integration recipe.
+        </p>
+      </div>
+      <div class="build-example__next">
+        <a class="home-action" href="/lab/game-music.html">
+          Try the music demo ↗
+        </a>
+        <a class="text-link" href="https://fm.loftwah.com/game-music">
+          Use it in your game ↗
+        </a>
+        <a class="text-link" href="/dispatches/your-game-its-own-soundtrack/">
+          Read the story ↗
+        </a>
+        <p class="source-note">
+          A streaming prototype with public music. It demonstrates the connection, without claiming
+          a customer adoption or redistribution rights.
+        </p>
+      </div>
+    </section>
+  )}
+  {visible("app-composer") && (
+    <section class="build-example" aria-labelledby="build-with-apps">
+      <div>
+        <h2 id="build-with-apps">Build a home from apps you own.</h2>
+        <p>
+          Here / there collects photos. The owner approves them. Linkarooie chooses which to feature
+          and links each photo back to its original. Hide a source and its controlled feature
+          disappears too.
+        </p>
+        <p>
+          Try the pair inside App Composer, then open the standalone apps. Each keeps its own
+          source, address and data. That’s the point: useful connections without turning every piece
+          into one inseparable app.
+        </p>
+      </div>
+      <div class="build-example__next">
+        <a class="home-action" href="https://composer.loftwah.com/demo">
+          Try the connected apps ↗
+        </a>
+        <a class="text-link" href="https://composer.loftwah.com/release">
+          See the running versions ↗
+        </a>
+        <a class="text-link" href="/dispatches/your-apps-should-get-along/">
+          Follow the example ↗
+        </a>
+        <p class="source-note">
+          One live reference stack. Fresh-user setup and WordPress migration demonstrations remain
+          unfinished. Downloaded copies of a photo cannot be recalled.
+        </p>
+      </div>
+    </section>
+  )}
+</div>
+
+<style>
+  .build-example {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 2rem 4rem;
+    border-top: 1px solid var(--line);
+    padding-block: 2.5rem;
+  }
+  .build-example h2 {
+    margin: 0 0 1rem;
+    font: 700 clamp(1.8rem, 3vw, 2.5rem)/1.1 var(--display);
+    letter-spacing: -0.025em;
+  }
+  .build-example p {
+    max-width: 65ch;
+    line-height: 1.7;
+  }
+  .build-example__next {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .build-example__next .source-note {
+    margin: 0;
+  }
+  @media (max-width: 760px) {
+    .build-example {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      padding-block: 2rem;
+    }
+  }
+</style>

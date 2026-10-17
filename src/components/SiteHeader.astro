@@ -46,8 +46,9 @@ const houseIndex = withAnalyticsLabel(houseIndexLinks);
       </nav>
       <slot />
       <details class="mobile-index">
-        <summary aria-label="Open the secondary navigation">
-          <span>More</span>
+        <summary aria-label="Open the navigation">
+          <span class="navigation-more">More</span>
+          <span class="navigation-menu">Menu</span>
           <span class="mobile-index__glyph" aria-hidden="true">
             ＋
           </span>
@@ -99,6 +100,9 @@ const houseIndex = withAnalyticsLabel(houseIndexLinks);
 </header>
 
 <style>
+  .navigation-menu {
+    display: none;
+  }
   .mobile-index__search {
     display: none;
     width: 100%;
@@ -122,6 +126,12 @@ const houseIndex = withAnalyticsLabel(houseIndexLinks);
     background: var(--acid);
   }
   @media (max-width: 760px) {
+    .navigation-more {
+      display: none;
+    }
+    .navigation-menu {
+      display: inline;
+    }
     .mobile-index__search {
       display: block;
     }

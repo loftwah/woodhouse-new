@@ -40,7 +40,7 @@ const {
   title,
   description,
   path,
-  image = "/og/woodhouse.jpg",
+  image = "/og/woodhouse-workshop-20261018.jpg",
   imageAlt: suppliedImageAlt,
   imageWidth = 1200,
   imageHeight = 630,
@@ -82,7 +82,10 @@ const pageDescription = contentSeo?.description || description;
 const canonical = contentSeo?.canonical ?? new URL(path, siteUrl).toString();
 const imageUrl = new URL(contentSeo?.ogImage ?? image, siteUrl).toString();
 const imageAlt =
-  suppliedImageAlt ?? title + " social preview for Woodhouse and the Loftwah Software Factory";
+  suppliedImageAlt ??
+  (imageUrl.includes("workshop-20261018.jpg")
+    ? "An illustrated maker at a workbench connects a miniature underwater world, game arena and record player. Woodhouse: one human, many worlds."
+    : title + " social preview for Woodhouse and the Loftwah Software Factory");
 const socialTitle = ogTitle ?? contentSeo?.ogTitle ?? fullTitle;
 const socialDescription = contentSeo?.ogDescription ?? pageDescription;
 const structuredSiteName = path === "/" || type === "article" ? siteTitle : undefined;
@@ -201,9 +204,11 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
             image.dataset.fallbackApplied = "true";
             image.src = fallback;
             if (image.dataset.fallbackAlt) image.alt = image.dataset.fallbackAlt;
-            const status = image
-              .closest("[data-project-artwork]")
-              ?.querySelector("[data-artwork-status]");
+            const artwork = image.closest("[data-project-artwork]");
+            const status = artwork?.querySelector("[data-artwork-status]");
+            artwork?.querySelectorAll("[data-artwork-source-metadata]").forEach((node) => {
+              node.hidden = true;
+            });
             if (status)
               status.textContent = image.dataset.fallbackCredit ?? "ILLUSTRATION BY WOODHOUSE";
           }

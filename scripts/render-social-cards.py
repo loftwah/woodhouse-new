@@ -1,5 +1,6 @@
 from pathlib import Path
 import html
+import base64
 import json
 import subprocess
 import tempfile
@@ -15,7 +16,15 @@ DEST = ROOT / "public" / "og"
 # was not reviewed on that day. `{n}` in a subtitle is the current published
 # project count; the evergreen cards use it so refreshing the portfolio cannot
 # leave a stale count baked into the artwork.
+WORKSHOP_CARDS = {
+    "woodhouse": ("One human.", "Many worlds."),
+    "factory": ("Made here.", "Used together."),
+    "dispatches/your-game-its-own-soundtrack": ("Your game.", "Its soundtrack."),
+    "dispatches/your-apps-should-get-along": ("Separate apps.", "Better together."),
+}
 CARDS = {
+    "dispatches/your-game-its-own-soundtrack": ("", "", "", "18 October 2026"),
+    "dispatches/your-apps-should-get-along": ("", "", "", "18 October 2026"),
     "dispatches/playing-the-work": ("PORTFOLIO REPORT", "The factory is learning to play its own work.", "Protocol 11 leads the 7 October review.", "7 October 2026"),
     "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "{n} projects. One human operator.", "17 October 2026"),
     "factory": ("THE FACTORY FLOOR", "{n} projects.", "{n} kinds of proof.", "17 October 2026"),
@@ -91,6 +100,24 @@ def card_svg(label: str, title: str, subtitle: str, reviewed: str, projects: int
 </svg>'''
 
 
+def evergreen_svg(name: str) -> str:
+    """Typeset the generated workshop master; never regenerate historical reports."""
+    master = ROOT / "scripts/assets/woodhouse-workshop/master.png"
+    image = base64.b64encode(master.read_bytes()).decode("ascii")
+    lines = WORKSHOP_CARDS[name]
+    title_size = 62 if name in ("woodhouse", "factory") else 48
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+      <rect width="1200" height="630" fill="#080d19"/>
+      <image width="1200" height="630" preserveAspectRatio="xMidYMid slice" href="data:image/png;base64,{image}"/>
+      <text x="40" y="76" fill="#e9ff49" font-family="Bricolage Grotesque" font-size="46" font-weight="800">WOODHOUSE</text>
+      <text x="40" y="247" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="{title_size}" font-weight="800">{lines[0]}</text>
+      <text x="40" y="314" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="{title_size}" font-weight="800">{lines[1]}</text>
+      <text x="42" y="400" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="25" font-weight="600">Games, music &amp; tools.</text>
+      <text x="42" y="436" fill="#b7c7df" font-family="Bricolage Grotesque" font-size="21">Built with AI. Directed by Dean.</text>
+      <text x="42" y="583" fill="#e9ff49" font-family="Bricolage Grotesque" font-size="23" font-weight="700">loftwah.com</text>
+    </svg>'''
+
+
 def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
     only = next((arg.split("=", 1)[1] for arg in sys.argv[1:] if arg.startswith("--only=")), None)
@@ -107,9 +134,12 @@ def main() -> None:
             scratch_path = Path(scratch)
             overlay = scratch_path / "overlay.png"
             source = scratch_path / "card.svg"
-            source.write_text(card_svg(label, title, subtitle, reviewed, projects), encoding="utf-8")
+            source.write_text(evergreen_svg(name) if name in WORKSHOP_CARDS else card_svg(label, title, subtitle, reviewed, projects), encoding="utf-8")
             subprocess.run(["magick", "-font", str(FONT_PATH), "-background", "none", str(source), str(overlay)], check=True)
             subprocess.run(["magick", str(overlay), "-background", "#080d19", "-alpha", "remove", "-strip", "-quality", "90", str(jpg_path)], check=True)
+        if name in ("woodhouse", "factory"):
+            versioned = DEST / (name + "-workshop-20261018.jpg")
+            versioned.write_bytes(jpg_path.read_bytes())
         print(jpg_path.relative_to(ROOT))
 
 

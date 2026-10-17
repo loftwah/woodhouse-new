@@ -9186,6 +9186,456 @@
             }
           ]
         }
+      },
+      {
+        "id": "dispatch-your-game-its-own-soundtrack",
+        "slug": "your-game-its-own-soundtrack",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "Your game. Its own soundtrack.",
+          "kind": "Field note",
+          "deck": "Turn on a LoftwahFM station inside a tiny game hosted on Woodhouse. Then take the working recipe into your own browser game.",
+          "review_date": "2026-10-18",
+          "source_reference": "Public production pages, exact app build identities and published release evidence checked on 18 October 2026. Public-safe derived explanation; no private source, profile inventory or conversation is reproduced. The connected example and each product retain their own release and acceptance limits.",
+          "lead": "A game needs its own controls and sound effects. Its music does not need another backend.",
+          "lesson": "Make the connection playable before inventing a business around it.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "example",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Try it before you integrate it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The small demo runs on Woodhouse. Its browser client, station programme and public music come from LoftwahFM, a separate origin. Move the player and trigger an effect, then press Play FM music. Pause or mute the music and the game still works. Nothing plays on arrival.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/lab/game-music.html"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the playable music demo",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The game stays in charge.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The versioned radio client supplies station selection and playback state. Your game keeps its own audio controls, effects, saved preferences and fallback when the network is unavailable. Use your existing audio manager rather than growing a second music system.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/game-music"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Use the public quick-start and copyable agent brief",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A useful prototype, with a clear boundary.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This is a public-streaming proof of concept using the existing catalogue and client 1.2.0. The independent host demonstrates the connection. It is not a customer adoption, a promise of offline music, or permission to redistribute tracks. Human listening and physical-device acceptance are separate from browser playback checks.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/radio"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Browse the public stations",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/factory/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "See how the factory’s parts connect",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-your-apps-should-get-along",
+        "slug": "your-apps-should-get-along",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "Your apps should get along.",
+          "kind": "Field note",
+          "deck": "A guestbook, a creator’s collection and a studio: three useful jobs, without one inseparable application.",
+          "review_date": "2026-10-18",
+          "source_reference": "Public production pages, exact app build identities and published release evidence checked on 18 October 2026. Public-safe derived explanation; no private source, profile inventory or conversation is reproduced. The connected example and each product retain their own release and acceptance limits.",
+          "lead": "Here is a concrete reason to care about independently owned software: one app can become more useful without owning everything around it.",
+          "lesson": "Show the useful connection and the source you keep, before explaining the machinery.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-app-composer"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "example",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Follow a photo.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Here / there collects photographs and messages. The owner decides what is public. Linkarooie features approved entries beside a creator’s own links, and each photo opens its original contribution. The source keeps control of its visibility; downloaded copies cannot be recalled.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/demo"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Try the connected pair",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Now open the pieces.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The same pair runs inside App Composer and at independent addresses. Each application has its own source repository, configuration and data. The public release page identifies the exact versions mounted in the studio. Composition connects those parts without handing every job to one application.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://guestbook.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the standalone guestbook",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://showcase.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the standalone collection",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/release"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Compare the running source versions",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What can you do with this today?",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Explore the working reference, inspect its apps and prepare your own idea through Get Ready and Init. App Composer is operated with an authorised coding agent and your chosen source and cloud account. It is not a one-click hosted service for a new customer yet.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/ready"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Prepare your environment",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/init"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Shape your own app",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This is composition, demonstrated now. It is not a completed WordPress migration. That separate programme must show content, URLs, editing and replacement behaviour before a migration claim belongs here.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/app-composer/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Explore App Composer",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       }
     ],
     "incidents": [
