@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { scanPublicText } from "./public-privacy.mjs";
+import { parseEnvFile, privateEnvValues, scanPublicText } from "./public-privacy.mjs";
 
 const root = process.cwd();
 const origin = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
@@ -30,29 +30,9 @@ function fail(message) {
   process.exit(1);
 }
 
-function parseEnv(contents) {
-  const values = new Map();
-  for (const line of contents.split(/\r?\n/)) {
-    const match = /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
-    if (!match) continue;
-    let value = match[2];
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    )
-      value = value.slice(1, -1);
-    if (
-      value.length >= 8 &&
-      (/(?:key|token|secret)/i.test(match[1]) || /@deanlofts\.xyz$/i.test(value))
-    )
-      values.set(match[1], value);
-  }
-  return [...values.values()];
-}
-
 let privateValues = [];
 try {
-  privateValues = parseEnv(await readFile(path.join(root, ".env"), "utf8"));
+  privateValues = privateEnvValues(parseEnvFile(await readFile(path.join(root, ".env"), "utf8")));
 } catch (error) {
   if (error?.code !== "ENOENT") throw error;
 }
