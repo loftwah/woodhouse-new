@@ -13,7 +13,9 @@ import {
   overviewMeasures,
   isOverviewMeasure,
   overviewMeasure,
-  reportCaption
+  reportCaption,
+  supportsMeasure,
+  measureScope
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric, analyticsSchema } from "./portfolio-analytics.ts";
 import { reportSvg, reportQualifier } from "./portfolio-card.ts";
@@ -458,6 +460,54 @@ test("overview exports keep the mixed scope, each measure label and the real zer
     assert(gameplaySvg.includes("Not measured"));
   }
 });
+test("a missing whole report or an omitted metric keeps an applicable project in scope", () => {
+  // Applicability is a product fact, independent of what a source returned.
+  assert.equal(supportsMeasure("fighter", "game_starts"), true);
+  assert.equal(supportsMeasure("woodhouse", "game_starts"), false);
+  assert.equal(supportsMeasure("app-composer", "app_opens"), true);
+  assert.deepEqual(
+    measureScope(
+      ["fighter", "bubbles", "protocol-11", "shoalshot", "loftwahfm", "app-composer", "woodhouse"],
+      "game_starts"
+    ),
+    ["fighter", "bubbles", "protocol-11", "shoalshot"]
+  );
+  const missingReport: PortfolioReport = {
+    ...mixed,
+    projects: mixed.projects.map((row) =>
+      row.project === "protocol-11" ? { project: row.project, report: null } : row
+    )
+  };
+  const omittedMetric: PortfolioReport = {
+    ...mixed,
+    projects: mixed.projects.map((row) =>
+      row.project === "protocol-11"
+        ? {
+            project: row.project,
+            report: fixture("protocol-11", [{ key: "active_seconds", value: 30, unit: "seconds" }])
+          }
+        : row
+    )
+  };
+  for (const [label, report] of [
+    ["missing report", missingReport],
+    ["omitted metric", omittedMetric]
+  ] as const)
+    for (const format of ["landscape", "square", "portrait"] as const) {
+      const svg = reportSvg(report, names, format, "game_starts");
+      assert(svg.includes("Protocol 11"), `${label} ${format} dropped the applicable game`);
+      assert(svg.includes("3/4 sources supply this measure"), `${label} ${format} denominator`);
+      assert(!svg.includes("3/3"));
+      assert(svg.includes(">0</text>"), `${label} ${format} dropped a genuine zero`);
+      for (const project of ["LoftwahFM", "App Composer", "Woodhouse"])
+        assert(!svg.includes(project), `${label} ${format} listed ${project} under gameplay`);
+    }
+  // A wholly missing source and an omitted metric are named, not silently zero.
+  assert(
+    reportSvg(missingReport, names, "landscape", "game_starts").includes("Source unavailable")
+  );
+  assert(reportSvg(omittedMetric, names, "landscape", "game_starts").includes("Not reported"));
+});
 test("the share caption names each project's own measure and the mixed scope", () => {
   const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({
     name: row.label,
@@ -534,7 +584,7 @@ test("shared images describe the same evidence the page shows", () => {
   );
   // A source that supplied no such metric is not a measured zero.
   assert.equal(reportQualifier(undefined, { coverage }, period), "Not reported");
-  assert.equal(reportQualifier(undefined, null, period), "Not measured");
+  assert.equal(reportQualifier(undefined, null, period), "Source unavailable");
   assert.equal(reportQualifier({ ...exact, value: null }, { coverage }, period), "Not measured");
   assert.equal(reportQualifier({ ...exact, quality: "bounded" }, null, period), "Bounded count");
   assert.equal(reportQualifier({ ...exact, quality: "sampled" }, null, period), "Sampled estimate");

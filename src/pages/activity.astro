@@ -25,6 +25,7 @@ import {
   dailyPoints,
   dailyStatus,
   qualityText,
+  reportQualifier,
   svgPlot,
   measuresFor,
   resolveMeasure,
@@ -34,6 +35,7 @@ import {
   productView,
   reportCaption,
   reportMetric,
+  supportsMeasure,
   measureForProjectSwitch
 } from "../data/analytics-workbench";
 export const prerender = false;
@@ -134,7 +136,11 @@ const metricRows = overview
         overviewMeasure: null,
         metric: reportMetric(r.project, r.data?.metrics, measure.key)
       }))
-      .filter((r) => r.metric);
+      // Applicability comes from the product view, not from whether the source
+      // returned a metric object: a game whose whole report is missing, or whose
+      // report omits the measure, must stay in the scope and the denominator as
+      // "Not measured" rather than disappear and flatter the coverage figure.
+      .filter((r) => supportsMeasure(r.project, measure.key));
 const guestReceipts = allRows
   .find((r) => r.project === "app-composer")
   ?.data?.metrics.find((m) => m.key === "guest_postcards_received");
@@ -208,6 +214,9 @@ const sourcesReporting = allRows.filter((r) =>
   r.data?.metrics.some((m) => m.value !== null)
 ).length;
 const qaOff = Astro.url.searchParams.get("analytics") === "off";
+// `?qa` (any value) is the other documented measurement exclusion. It must
+// survive every control so a QA pass cannot silently start reporting.
+const qaValue = Astro.url.searchParams.get("qa");
 function pageLink(
   changes: {
     project?: AnalyticsProject | null;
@@ -233,6 +242,7 @@ function pageLink(
       : resolveMeasure(project ?? null, changes.measure ?? measure.key).key
   );
   if (qaOff) q.set("analytics", "off");
+  if (qaValue !== null) q.set("qa", qaValue || "1");
   return `/activity/?${q}`;
 }
 const title = selected ? `${names.get(selected)} analytics` : "Portfolio analytics";
@@ -249,7 +259,20 @@ const dateLabel = (date: string) =>
     month: "short",
     year: "numeric"
   });
-const caption = report ? reportCaption(metricRows, measure, window, link, dateLabel) : "";
+const caption = report
+  ? reportCaption(
+      metricRows.map((r) => ({
+        name: r.name,
+        metric: r.metric,
+        overviewMeasure: r.overviewMeasure,
+        report: r.data
+      })),
+      measure,
+      window,
+      link,
+      dateLabel
+    )
+  : "";
 const dataPayload = {
   period: window,
   measure: measure.label,
@@ -338,6 +361,7 @@ const dataPayload = {
               {selected && <input type="hidden" name="project" value={selected} />}
               <input type="hidden" name="measure" value={measure.key} />
               {qaOff && <input type="hidden" name="analytics" value="off" />}
+              {qaValue !== null && <input type="hidden" name="qa" value={qaValue || "1"} />}
               <label>
                 From{" "}
                 <input
@@ -495,11 +519,7 @@ const dataPayload = {
                       </span>
                       <span class="overview-card__measure">{r.overviewMeasure.label}</span>
                       <span class="overview-card__quality">
-                        {r.metric
-                          ? qualityText(r.metric)
-                          : r.data
-                            ? "Not reported in this window"
-                            : "Source unavailable"}
+                        {reportQualifier(r.metric, r.data, window)}
                       </span>
                     </a>
                   ))}
@@ -513,27 +533,20 @@ const dataPayload = {
             ) : (
               <>
                 <dl class="metric-strip">
-                  {headlines
-                    .filter((r) => selected || r.metric)
-                    .map((r) => (
-                      <div>
-                        <dt>
-                          <span
-                            class="source-dot"
-                            style={`--source:${r.colour}`}
-                            aria-hidden="true"
-                          ></span>
-                          {r.name}
-                        </dt>
-                        <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
-                        <small>
-                          {qualityText(r.metric)}
-                          {days.some((day) => dailyStatus(r.data, r.metric, day) === "legacy")
-                            ? " · legacy in range"
-                            : ""}
-                        </small>
-                      </div>
-                    ))}
+                  {headlines.map((r) => (
+                    <div>
+                      <dt>
+                        <span
+                          class="source-dot"
+                          style={`--source:${r.colour}`}
+                          aria-hidden="true"
+                        ></span>
+                        {r.name}
+                      </dt>
+                      <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
+                      <small>{reportQualifier(r.metric, r.data, window)}</small>
+                    </div>
+                  ))}
                 </dl>
                 {!hasDaily && (
                   <div class="chart-empty">
@@ -836,7 +849,9 @@ const dataPayload = {
             </p>
             <p>
               {report?.analysis?.findings.length
-                ? "Comparable full-week movements are listed below. They describe recorded activity; their causes are unknown."
+                ? overview
+                  ? "Complete-week movements across the portfolio. Each finding names its own project and measure; they are broader context and may describe a different measure from the chart."
+                  : `Complete-week movement for ${names.get(selected!)}. Each finding names its own measure, which may differ from the chart above.`
                 : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
             </p>
             {report?.analysis?.findings.map((f) => (
@@ -845,7 +860,9 @@ const dataPayload = {
                   {names.get(f.project)} · {f.label}: {f.changePercent > 0 ? "+" : ""}
                   {f.changePercent}%
                 </strong>{" "}
-                in the complete week {f.from}–{f.to}. {f.nextAction}
+                in the complete week {f.from}–{f.to}
+                {f.newBest ? `, a new best of ${f.comparedWeeks} comparable weeks` : ""}.{" "}
+                {f.nextAction}
               </p>
             ))}
           </section>
