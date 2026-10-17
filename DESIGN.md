@@ -33,6 +33,14 @@ The site is dark by design on every device. Do not follow the operating-system a
 - A diagram earns its area by explaining a real system, boundary or decision. Keep its editable `.d2` source beside the checked-in SVG, ship a phone composition as well as the wider version, and provide a meaningful image description and readable text transcript.
 - Pages use large type, asymmetrical composition and decisive horizontal rules. Do not solve every section with another box.
 
+### Diagram direction — MP correction, 18 October 2026
+
+MP rejected the current diagram treatment as missing the requested design direction. The shipped D2 exports are not an approved visual reference. Technical clarity, valid rendering, passing checks and the absence of earlier objections do not establish design acceptance.
+
+The owning brief remains `prompt.md`, sections 8–12: recognisably Woodhouse technical plates suitable for a high-end engineering publication, with deliberate typography, line weights, shape grammar, annotations, project markers, evidence notation and composition. The current coloured boxes, default lettering, nested containers and decorative cobalt glow fall short of that brief. A palette or font swap alone does not address the composition failure. Portrait plates need comfortably readable labels and their own full composition; a vertical stack of miniature boxes does not satisfy the phone requirement.
+
+Corrections must preserve the diagrams' real meaning, editable D2 sources, useful descriptions and text transcripts. Assess the finished visual against the original brief and MP's feedback; do not promote the existing implementation or an agent review into MP's taste acceptance.
+
 ## Interaction and states
 
 - Keep page colours fixed from first paint. Dark mode has no transition and no toggle.
