@@ -29,6 +29,7 @@ The site is dark by design on every device. Do not follow the operating-system a
 - Project artwork is fetched from each project's own published page metadata and shown from the source image URL at its original 1200×630 aspect ratio. Titles, descriptions, favicons and links identify the source. Do not copy or recreate source-site OG artwork as Woodhouse art.
 - Source-page metadata is read during the Woodhouse build; the image itself stays at the source URL. A source-site update appears on the next Woodhouse build (and an image-file update at a stable source URL is served directly).
 - Credit product artwork to its project and Woodhouse-made illustrations to Woodhouse. Never present a Woodhouse illustration as product artwork.
+- LoftwahFM’s MP-confirmed identity (18 October 2026) uses its original waveform/Loftwah/FM mark, strong black contrast, vivid pink/cyan and bold musical energy. Follow its approved whole-site image. An approved radio-collection sleeve does not redefine the whole-site brand; preserve the producer’s distinct identity rather than substituting a generic retro-radio treatment.
 - A diagram earns its area by explaining a real system, boundary or decision. Keep its editable `.d2` source beside the checked-in SVG, ship a phone composition as well as the wider version, and provide a meaningful image description and readable text transcript.
 - Pages use large type, asymmetrical composition and decisive horizontal rules. Do not solve every section with another box.
 
