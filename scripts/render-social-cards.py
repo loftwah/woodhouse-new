@@ -1,5 +1,6 @@
 from pathlib import Path
 import html
+import json
 import subprocess
 import tempfile
 import textwrap
@@ -11,11 +12,13 @@ DEST = ROOT / "public" / "og"
 # The project dossier preview is an authored image, separate from this batch renderer.
 # name -> (label, title, subtitle, review date). The review date is per card
 # because a card that names the wrong review date is a claim about work that
-# was not reviewed on that day.
+# was not reviewed on that day. `{n}` in a subtitle is the current published
+# project count; the evergreen cards use it so refreshing the portfolio cannot
+# leave a stale count baked into the artwork.
 CARDS = {
     "dispatches/playing-the-work": ("PORTFOLIO REPORT", "The factory is learning to play its own work.", "Protocol 11 leads the 7 October review.", "7 October 2026"),
-    "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "Nine projects. One human operator.", "28 September 2026"),
-    "factory": ("THE FACTORY FLOOR", "Nine projects.", "Nine kinds of proof.", "4 October 2026"),
+    "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "{n} projects. One human operator.", "17 October 2026"),
+    "factory": ("THE FACTORY FLOOR", "{n} projects.", "{n} kinds of proof.", "17 October 2026"),
     "dean": ("THE HUMAN OPERATOR", "Dean Lofts.", "Systems that turn intent into shipped software.", "28 September 2026"),
     "dispatches/i-didnt-mean-to-build-a-software-factory": ("FOUNDING ESSAY", "I Didn't Mean to Build a Software Factory", "How agents, evidence and real products became one system.", "28 September 2026"),
     "the-tests-passed": ("FACTORY INCIDENT", "The tests passed.", "The game still looked wrong.", "28 September 2026"),
@@ -28,7 +31,24 @@ CARDS = {
 }
 
 
-def card_svg(label: str, title: str, subtitle: str, reviewed: str) -> str:
+def published_project_count() -> int:
+    """The current published portfolio size, from the reviewed seed.
+
+    Deriving the count keeps the evergreen cards honest as projects are added;
+    a hardcoded number is what let "Nine projects" outlive the ninth project.
+    """
+    data = json.loads((ROOT / "seed" / "seed.json").read_text(encoding="utf-8"))
+    projects = [
+        project
+        for project in data.get("content", {}).get("projects", [])
+        if project.get("status") == "published"
+    ]
+    if not projects:
+        raise SystemExit("No published projects were found in seed/seed.json.")
+    return len(projects)
+
+
+def card_svg(label: str, title: str, subtitle: str, reviewed: str, projects: int) -> str:
     safe_label = html.escape(label)
     title_lines = textwrap.wrap(title, width=22, break_long_words=False, break_on_hyphens=False)
     subtitle_lines = textwrap.wrap(subtitle, width=59, break_long_words=False, break_on_hyphens=False)
@@ -52,7 +72,7 @@ def card_svg(label: str, title: str, subtitle: str, reviewed: str) -> str:
   <path d="M52 64h20M54 70h16M57 76h10" stroke="#e9ff49" stroke-width="2"/>
   <text x="99" y="66" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="18" font-weight="800" letter-spacing="2">WOODHOUSE</text>
   <text x="99" y="88" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">THE LOFTWAH SOFTWARE FACTORY</text>
-  <text x="48" y="142" fill="#79d8ff" font-family="Menlo,monospace" font-size="12" font-weight="700" letter-spacing="1.4">ONE HUMAN · NINE PROJECTS</text>
+  <text x="48" y="142" fill="#79d8ff" font-family="Menlo,monospace" font-size="12" font-weight="700" letter-spacing="1.4">ONE HUMAN · {projects} PROJECT{'S' if projects != 1 else ''}</text>
   <path d="M71 192V486" stroke="#647dff" stroke-width="3" stroke-dasharray="5 7"/>
   <circle cx="71" cy="204" r="12" fill="#e9ff49"/><text x="104" y="201" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Intent</text><text x="104" y="220" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Human sets the boundary</text>
   <circle cx="71" cy="273" r="12" fill="#79d8ff"/><text x="104" y="270" fill="#f4f7fd" font-family="Bricolage Grotesque" font-size="17" font-weight="700">Work</text><text x="104" y="289" fill="#a9b8d0" font-family="Bricolage Grotesque" font-size="12">Agents move it forward</text>
@@ -74,16 +94,20 @@ def card_svg(label: str, title: str, subtitle: str, reviewed: str) -> str:
 def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
     only = next((arg.split("=", 1)[1] for arg in sys.argv[1:] if arg.startswith("--only=")), None)
+    override = next((arg.split("=", 1)[1] for arg in sys.argv[1:] if arg.startswith("--projects=")), None)
+    projects = int(override) if override else published_project_count()
     for name, content in CARDS.items():
         if only and name != only:
             continue
+        label, title, subtitle, reviewed = content
+        subtitle = subtitle.replace("{n}", str(projects))
         jpg_path = DEST / (name + ".jpg")
         jpg_path.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=DEST) as scratch:
             scratch_path = Path(scratch)
             overlay = scratch_path / "overlay.png"
             source = scratch_path / "card.svg"
-            source.write_text(card_svg(*content), encoding="utf-8")
+            source.write_text(card_svg(label, title, subtitle, reviewed, projects), encoding="utf-8")
             subprocess.run(["magick", "-font", str(FONT_PATH), "-background", "none", str(source), str(overlay)], check=True)
             subprocess.run(["magick", str(overlay), "-background", "#080d19", "-alpha", "remove", "-strip", "-quality", "90", str(jpg_path)], check=True)
         print(jpg_path.relative_to(ROOT))

@@ -93,6 +93,13 @@ const nativeSharing =
       entry.data.evidence_state === "reviewed"
   );
 const profiles = (footer.menu?.items ?? []).filter((item) => item.url.startsWith("https://"));
+// The ready-post caption names the current portfolio rather than a fixed list, so
+// adding a project cannot leave the desk advertising a stale roster.
+const featuredNames = projects.slice(0, 5).map((project) => project.name);
+const remainingProjects = Math.max(0, projects.length - featuredNames.length);
+const houseCaption = `Games, music, apps and a software factory. ${featuredNames.join(", ")}${
+  remainingProjects ? ` and ${remainingProjects} more` : ""
+} — made by Loftwah.\nhttps://woodhouse.loftwah.com/share/`;
 const stories = dispatches.dispatches.filter((story) =>
   dispatchSocialCard(story.slug).startsWith("/og/dispatches/")
 );
@@ -101,8 +108,7 @@ const houseImages = [
     name: "Woodhouse",
     image: "/og/woodhouse.jpg",
     link: "/",
-    caption:
-      "Games, music and a software factory. Fighter, SHOALSHOT, Protocol 11, Bubbles and LoftwahFM — made by Loftwah.\nhttps://woodhouse.loftwah.com/share/"
+    caption: houseCaption
   },
   {
     name: "The factory",
