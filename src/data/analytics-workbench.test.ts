@@ -672,6 +672,65 @@ test("the discovery breakdown keeps only published destinations and reports a tr
     []
   );
 });
+test("the discovery trend needs recorded history and never sums an unobserved day as zero", () => {
+  const month = { from: "2026-09-17", to: "2026-10-16", days: 30, complete: true };
+  const week = (from: string, value: number) =>
+    Array.from({ length: 7 }, (_, index) => ({
+      date: new Date(Date.parse(from) + index * 86400000).toISOString().slice(0, 10),
+      value
+    }));
+  const metric = (rows: { date: string; value: number }[]): Metric => ({
+    key: "referral_fighter",
+    label: "Referrals to fighter",
+    unit: "count",
+    value: rows.reduce((sum, row) => sum + row.value, 0),
+    quality: "exact",
+    definition: "Referrals",
+    daily: rows
+  });
+  const threeWeeks = [...week("2026-09-26", 4), ...week("2026-10-03", 0), ...week("2026-10-10", 2)];
+  const ask = (rows: { date: string; value: number }[]) =>
+    discoveryReferrals(
+      [metric(rows)],
+      new Set(["fighter"]),
+      new Map([["fighter", "Fighter"]]),
+      new Map(),
+      month
+    )[0]!;
+  // A recorded prior week of zeros is a real baseline: the comparison stands.
+  const complete = ask(threeWeeks);
+  assert.equal(complete.recent, 14);
+  assert.equal(complete.prior, 0);
+  assert.equal(complete.priorCoverage, "observed");
+  assert.equal(complete.hasTrend, true);
+  assert.equal(complete.recentFrom, "2026-10-10");
+  assert.equal(complete.priorTo, "2026-10-09");
+  // History that starts inside the earlier week is incomplete, not zero.
+  const partial = ask(threeWeeks.slice(11));
+  assert.equal(partial.priorObservedDays, 3);
+  assert.equal(partial.priorCoverage, "partial");
+  assert.equal(partial.hasTrend, false);
+  assert.equal(partial.prior, 0);
+  // No earlier history at all is unavailable, and a longer calendar range alone
+  // must not manufacture a comparison.
+  const unavailable = ask(threeWeeks.slice(14));
+  assert.equal(unavailable.priorCoverage, "unavailable");
+  assert.equal(unavailable.hasTrend, false);
+  assert.equal(unavailable.recent, 14);
+  // A window shorter than fourteen days cannot contain a full earlier week, so
+  // its truncated slice is never reported as a complete comparison period.
+  const tenDays = { from: "2026-10-07", to: "2026-10-16", days: 10, complete: true };
+  const shortWindow = discoveryReferrals(
+    [metric(threeWeeks.slice(11))],
+    new Set(["fighter"]),
+    new Map([["fighter", "Fighter"]]),
+    new Map(),
+    tenDays
+  )[0]!;
+  assert.equal(shortWindow.priorObservedDays, 3);
+  assert.notEqual(shortWindow.priorCoverage, "observed");
+  assert.equal(shortWindow.hasTrend, false);
+});
 test("the share caption names each project's own measure and the mixed scope", () => {
   const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({
     name: row.label,
@@ -689,11 +748,14 @@ test("the share caption names each project's own measure and the mixed scope", (
   assert.match(caption, /Fighter: 12 game starts/);
   assert.match(caption, /Bubbles: 0 game starts/);
   assert.match(caption, /Woodhouse: 0 visits/);
-  // An unavailable measure is never captioned as a zero or as a gameplay gap.
-  assert.doesNotMatch(caption, /LoftwahFM/);
-  assert.doesNotMatch(caption, /App Composer/);
-  assert.doesNotMatch(caption, /Protocol 11/);
-  assert.match(caption, /Each project is shown on its own measure; units are not added together\./);
+  // An unavailable measure stays in the caption as a missing entry, never as a
+  // zero and never silently dropped while the PNG still counts it.
+  assert.match(caption, /Protocol 11: game starts not reported · Not measured/);
+  assert.match(caption, /LoftwahFM: audible listening not reported · Not measured/);
+  assert.match(caption, /App Composer: mini-app opens not reported · Not measured/);
+  assert.doesNotMatch(caption, /LoftwahFM: 0/);
+  assert.match(caption, /4\/7 projects supplied their own measure · Current UTC day is partial/);
+  assert.match(caption, /One relevant measure per project; units are not added together\./);
   assert.match(caption, /not unique people/);
   const scopedRows = mixed.projects
     .map((row) => ({

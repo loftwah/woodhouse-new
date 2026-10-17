@@ -2065,11 +2065,11 @@
           "why": "Getting started often requires a person to join accounts, tools and DNS before they can make anything. The useful outcome is an agent that prepares and verifies that environment, explains the few human steps and proves a real deployment before asking for an app idea.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
-          "site_og_image": "https://composer.loftwah.com/brand/share-ai-v1.jpg",
-          "site_og_title": "Build with apps you own. · App Composer",
-          "site_og_description": "Get your environment ready, choose useful mini-apps, and let your coding agent build software you own. Configure independent apps and connect their data.",
+          "site_og_image": "https://composer.loftwah.com/brand/share-composer-20261017.jpg",
+          "site_og_title": "Make software. Keep it yours. · App Composer",
+          "site_og_description": "App Composer is an agent-operated studio for building applications with EmDash and Cloudflare. Get Ready prepares the environment, Init captures what the app should do, and independently maintained mini-apps connect through their data and actions.",
           "site_favicon": "https://composer.loftwah.com/brand/mark.svg",
-          "preview_alt": "App Composer’s original orange and charcoal frames, composed together on an ivory field.",
+          "preview_alt": "App Composer’s illustrated assembly hall, where separate modules combine into one working system.",
           "preview_caption": "Original generated artwork published by App Composer",
           "public_safe": true
         }

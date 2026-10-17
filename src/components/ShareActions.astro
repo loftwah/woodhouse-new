@@ -4,6 +4,13 @@ type Props = {
   image: string;
   /** Bounded source used for clipboard and native-share preparation. Defaults to `image`. */
   shareSource?: string | undefined;
+  /**
+   * A reviewed asset that always resolves, offered when the project's own image
+   * fails. A project can move or remove its published artwork; the desk must
+   * still be able to download, copy and share a real file rather than offering a
+   * broken one, and must say which asset it handed over.
+   */
+  fallbackImage?: string | undefined;
   filename?: string;
   link: string;
   label?: string;
@@ -13,6 +20,7 @@ const {
   caption,
   image,
   shareSource,
+  fallbackImage,
   filename = "loftwah-social.jpg",
   link,
   label = "Copy post",
@@ -24,6 +32,7 @@ const {
   data-share-actions
   data-image={image}
   data-share-source={shareSource ?? image}
+  data-fallback-image={fallbackImage ?? ""}
   data-media-type={mediaType}
   data-filename={filename}
   data-link={link}
@@ -55,12 +64,82 @@ const {
     const copy = root.querySelector<HTMLButtonElement>("[data-copy]");
     const copyImage = root.querySelector<HTMLButtonElement>("[data-copy-image]");
     const share = root.querySelector<HTMLButtonElement>("[data-device-share]");
+    const download = root.querySelector<HTMLAnchorElement>(".download");
     const say = (message: string) => {
       if (status) status.textContent = message;
     };
-    let original: Promise<Blob> | undefined;
+    const absolute = (url: string) => {
+      try {
+        return new URL(url, location.href).href;
+      } catch {
+        return url;
+      }
+    };
+    const extensionOf = (url: string) => {
+      const match = /\.([a-z0-9]+)(?:[?#]|$)/i.exec(url);
+      return match ? `.${match[1]!.toLowerCase()}` : "";
+    };
+    const fallback = root.dataset.fallbackImage ?? "";
+    let resolvedImage = root.dataset.image!;
+    let resolvedSource = root.dataset.shareSource!;
+    // Nothing to do when there is no distinct fallback: the local gallery assets
+    // are already verified, and probing every control would download them twice.
+    const needsResolution = Boolean(fallback) && absolute(fallback) !== absolute(resolvedImage);
+
+    const probe = (url: string) =>
+      new Promise<void>((resolve, reject) => {
+        const image = new Image();
+        const timer = setTimeout(() => {
+          image.onload = null;
+          image.onerror = null;
+          image.src = "";
+          reject(new Error("Image unavailable"));
+        }, 15000);
+        image.onload = () => {
+          clearTimeout(timer);
+          resolve();
+        };
+        image.onerror = () => {
+          clearTimeout(timer);
+          reject(new Error("Image unavailable"));
+        };
+        image.src = url;
+      });
+
+    let settled: boolean | undefined;
+    let settling: Promise<void> | undefined;
+    const resolveImage = () => {
+      if (settling) return settling;
+      settling = (
+        !needsResolution
+          ? Promise.resolve()
+          : probe(resolvedImage)
+              .catch(() => {
+                resolvedImage = fallback;
+                resolvedSource = fallback;
+                return probe(fallback);
+              })
+              .catch(() => {})
+      ).then(() => {
+        settled = true;
+        if (!download) return;
+        download.href = resolvedImage;
+        download.setAttribute(
+          "download",
+          (root.dataset.filename ?? "loftwah-social.jpg").replace(
+            /\.[^.]+$/,
+            extensionOf(resolvedImage) || ".jpg"
+          )
+        );
+        if (resolvedImage !== root.dataset.image)
+          say("Project image unavailable; using the reviewed fallback artwork.");
+      });
+      return settling;
+    };
+    const promises: { original?: Promise<Blob> | undefined } = {};
     const load = () =>
-      (original ??= fetch(root.dataset.shareSource!, { signal: AbortSignal.timeout(15000) })
+      (promises.original ??= resolveImage()
+        .then(() => fetch(resolvedSource, { signal: AbortSignal.timeout(15000) }))
         .then(async (response) => {
           if (!response.ok) throw new Error("Image unavailable");
           const blob = await response.blob();
@@ -69,9 +148,17 @@ const {
           return blob;
         })
         .catch((error) => {
-          original = undefined;
+          promises.original = undefined;
           throw error;
         }));
+    if (download)
+      download.addEventListener("click", (event) => {
+        // The native download follows the resolved href. A click before the
+        // primary asset has been checked waits for that check first.
+        if (settled) return;
+        event.preventDefault();
+        resolveImage().then(() => download.click());
+      });
     if (copy && navigator.clipboard?.writeText) {
       copy.hidden = false;
       copy.addEventListener("click", async () => {
@@ -175,7 +262,7 @@ const {
         visible = entries.some((entry) => entry.isIntersecting);
         if (!visible) {
           prepared = undefined;
-          original = undefined;
+          promises.original = undefined;
           share.hidden = true;
           return;
         }

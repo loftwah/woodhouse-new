@@ -94,6 +94,23 @@ export function projectActionLabel(slug: string) {
 }
 
 /**
+ * The canonical link to the kit the reader is currently looking at: the same
+ * project on the same category they can see. An explicit `type=` is kept, so
+ * "Link to this kit" never silently swaps a screenshot kit for a link card. A
+ * bare project link (`/share/?project=<slug>`) is a separate behaviour: it opens
+ * the first category the project actually has.
+ */
+export function kitURL(slug: string, view: GalleryType): string {
+  const current = (projectGalleryTypes as readonly string[]).includes(view)
+    ? (view as ProjectGalleryType)
+    : null;
+  return galleryURL(
+    slug,
+    current && availableProjectTypes(slug).includes(current) ? current : defaultProjectType(slug)
+  );
+}
+
+/**
  * The category a bare project link should open on, or null when the requested
  * category stands. An explicit `?type=` is always kept so a deliberate link is
  * never silently rewritten; only a project's own link (no explicit category)

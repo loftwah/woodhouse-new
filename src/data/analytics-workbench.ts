@@ -285,6 +285,13 @@ export const overviewOrder: AnalyticsProject[] = [
  * The share caption for one selection. The page, the saved link and the social
  * card must describe the same scope, measure, unit and period, so the caption is
  * built once from the same rows the page renders.
+ *
+ * Every row here is already in the selected applicable scope. A project whose
+ * source is unavailable, whose report omitted the measure or which reported no
+ * value for the window keeps a concise missing-source entry instead of
+ * disappearing, and the coverage line states the supplied/applicable count the
+ * PNG footer uses. The observed failure was a caption that silently shrank the
+ * scope the page, chart and shared images described.
  */
 export function reportCaption(
   rows: {
@@ -299,27 +306,27 @@ export function reportCaption(
   dateLabel: (date: string) => string
 ) {
   const mixed = isOverviewMeasure(measure);
-  const values = rows
-    .filter((r) => r.metric?.value !== null && r.metric)
-    .map(
-      (r) =>
-        `${r.name}: ${formatMetric(r.metric!)} ${
-          mixed && r.overviewMeasure
-            ? r.overviewMeasure.label.toLowerCase()
-            : measure.label.toLowerCase()
-        } · ${reportQualifier(r.metric, r.report ?? null, window)}`
-    );
+  const values = rows.map((r) => {
+    const label = (
+      mixed && r.overviewMeasure ? r.overviewMeasure.label : measure.label
+    ).toLowerCase();
+    const qualifier = reportQualifier(r.metric, r.report ?? null, window);
+    return r.metric && r.metric.value !== null
+      ? `${r.name}: ${formatMetric(r.metric)} ${label} · ${qualifier}`
+      : `${r.name}: ${label} not reported · ${qualifier}`;
+  });
+  const supplied = rows.filter((r) => r.metric?.value !== null && r.metric).length;
+  const coverage = `${supplied}/${rows.length} ${
+    mixed ? "projects supplied their own measure" : "sources supply this measure"
+  } · ${window.complete ? "Closed calendar window" : "Current UTC day is partial"}`;
   return [
     `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
     ...values,
+    coverage,
     mixed
-      ? "Each project is shown on its own measure; units are not added together."
+      ? "One relevant measure per project; units are not added together."
       : "One measure and one unit across the named projects.",
-    `Reported activity, not unique people. ${
-      window.complete
-        ? "Closed calendar window; source coverage varies."
-        : "Current UTC day is partial."
-    } Legacy/test and coverage limitations apply; see report.`,
+    "Reported activity, not unique people. Legacy/test and coverage limits apply.",
     link
   ].join("\n");
 }
@@ -416,6 +423,7 @@ export function dailyStatus(
     return "legacy";
   return "clean";
 }
+type DiscoveryCoverage = "observed" | "partial" | "unavailable";
 export type DiscoveryReferral = {
   slug: string;
   name: string;
@@ -424,6 +432,13 @@ export type DiscoveryReferral = {
   value: number;
   recent: number;
   prior: number;
+  recentFrom: string;
+  recentTo: string;
+  priorFrom: string;
+  priorTo: string;
+  recentCoverage: DiscoveryCoverage;
+  priorCoverage: DiscoveryCoverage;
+  priorObservedDays: number;
   hasTrend: boolean;
 };
 /**
@@ -432,6 +447,15 @@ export type DiscoveryReferral = {
  * counters for the selected period, keeps only destinations that are still
  * published, and attaches the destination name and link. A click towards a
  * project is a referral, not proof of downstream play, adoption or a person.
+ *
+ * The observed failure: a long *selected* calendar range was treated as
+ * sufficient *comparison history*, and days with no observation were summed as
+ * zero. Only days the source actually retained are summed here, and a
+ * week-on-week figure needs every day of the earlier week recorded. An observed
+ * zero, unavailable earlier history and a week that is still in progress are
+ * three different states. The compared windows are the last seven days and the
+ * seven before them inside the selected window, by their real dates, so a custom
+ * or frozen report never borrows today's range.
  */
 export function discoveryReferrals(
   metrics: Metric[] | undefined,
@@ -440,24 +464,44 @@ export function discoveryReferrals(
   siteUrls: Map<string, string | null>,
   period: ReportingWindow
 ): DiscoveryReferral[] {
+  const dates = dateDays(period);
+  const recentDates = dates.slice(-7);
+  const priorDates = dates.slice(-14, -7);
+  const coverageOf = (observedDays: number, total: number): DiscoveryCoverage =>
+    observedDays === 0 ? "unavailable" : observedDays < total ? "partial" : "observed";
   return (metrics ?? [])
     .filter((metric) => metric.key.startsWith("referral_"))
     .map((metric) => {
       const slug = metric.key.slice("referral_".length).replaceAll("_", "-");
-      const daily = dailyPoints(metric, period);
-      const recent = daily.slice(-7).reduce<number>((sum, value) => sum + (value ?? 0), 0);
-      const prior = daily
-        .slice(Math.max(0, daily.length - 14), Math.max(0, daily.length - 7))
-        .reduce<number>((sum, value) => sum + (value ?? 0), 0);
+      const observed = new Map(metric.daily.map((point) => [point.date, point.value]));
+      const sum = (days: string[]) =>
+        days.reduce((total, day) => total + (observed.get(day) ?? 0), 0);
+      const observedDays = (days: string[]) => days.filter((day) => observed.has(day)).length;
+      const recentObserved = observedDays(recentDates);
+      const priorObserved = observedDays(priorDates);
+      // A comparison needs a whole earlier week inside retained history. A
+      // window shorter than fourteen days can never supply one.
+      const priorComplete = priorDates.length === 7 && priorObserved === 7;
       return {
         slug,
         name: names.get(slug) ?? slug,
         siteUrl: siteUrls.get(slug) ?? null,
         metric,
         value: metric.value ?? 0,
-        recent,
-        prior,
-        hasTrend: daily.length >= 14
+        recent: sum(recentDates),
+        prior: sum(priorDates),
+        recentFrom: recentDates[0] ?? period.from,
+        recentTo: recentDates.at(-1) ?? period.to,
+        priorFrom: priorDates[0] ?? period.to,
+        priorTo: priorDates.at(-1) ?? period.to,
+        recentCoverage: coverageOf(recentObserved, recentDates.length),
+        priorCoverage: (
+          priorComplete ? "observed" : priorObserved === 0 ? "unavailable" : "partial"
+        ) as DiscoveryCoverage,
+        priorObservedDays: priorObserved,
+        // The current week may still be in progress; that is shown as a caveat,
+        // never used to invent history.
+        hasTrend: priorComplete
       };
     })
     .filter((entry) => published.has(entry.slug) && entry.value > 0)
