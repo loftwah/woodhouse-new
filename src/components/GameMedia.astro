@@ -1,8 +1,13 @@
 ---
 import ShareActions from "./ShareActions.astro";
 import type { gameMedia } from "../data/share-desk";
-type Props = { asset: (typeof gameMedia)[number]; destination: string; eager?: boolean };
-const { asset, destination, eager = false } = Astro.props;
+type Props = {
+  asset: (typeof gameMedia)[number];
+  destination: string;
+  preview?: string | undefined;
+  eager?: boolean;
+};
+const { asset, destination, preview, eager = false } = Astro.props;
 ---
 
 <figure id={asset.id} class:list={["media-figure", { "art-figure": asset.category === "art" }]}>
@@ -39,10 +44,11 @@ const { asset, destination, eager = false } = Astro.props;
       aria-label={`View ${asset.title} full size`}
     >
       <img
-        src={asset.file}
+        src={preview ?? asset.file}
         width={asset.width}
         height={asset.height}
         alt={asset.alt}
+        decoding="async"
         loading={eager ? "eager" : "lazy"}
       />
     </a>

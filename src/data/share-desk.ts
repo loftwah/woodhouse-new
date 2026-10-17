@@ -33,6 +33,7 @@ const imageHosts = new Set([
   "fm.loftwah.com",
   "max.loftwah.com",
   "club.loftwah.com",
+  "composer.loftwah.com",
   "assets.loftwah.com"
 ]);
 export function approvedShareImage(source: string) {

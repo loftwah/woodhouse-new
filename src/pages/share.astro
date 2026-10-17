@@ -12,6 +12,7 @@ import {
 import { dispatchSocialCard } from "../data/social-cards";
 import { getSiteMetadata } from "../data/site-metadata";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
+import { sharePreviews } from "../data/share-previews";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
 import { compositeIsPublic, cardFormats, type CardFormat } from "../data/activity-sharing";
 import {
@@ -19,7 +20,13 @@ import {
   galleryURL,
   galleryMedia,
   galleryPage,
-  type GalleryType
+  availableProjectTypes,
+  defaultProjectType,
+  projectActionLabel,
+  projectViewRedirect,
+  projectGalleryTypes,
+  type GalleryType,
+  type ProjectGalleryType
 } from "../data/share-browser";
 export const prerender = false;
 const [result, footer, listening, dispatches, evidence] = await Promise.all([
@@ -36,6 +43,7 @@ if (result.error)
   });
 const projects = orderShareProjects(result.projects);
 const requested = Astro.url.searchParams.get("project");
+const explicitType = Astro.url.searchParams.has("type");
 const requestedType = Astro.url.searchParams.get("type") ?? "images";
 if (!galleryTypes.some(([key]) => key === requestedType))
   return new Response("Gallery view not found.", {
@@ -55,6 +63,12 @@ if (requested && !requestedProject)
     status: 404,
     headers: { "cache-control": "no-store" }
   });
+// Entering a project without an explicit category opens the first category it
+// actually has. An explicitly chosen empty category keeps its address and shows a
+// clear empty state instead, so a deliberate link is never silently rewritten.
+const projectRedirect = selected ? projectViewRedirect(selected.slug, view, explicitType) : null;
+if (selected && projectRedirect)
+  return Astro.redirect(galleryURL(selected.slug, projectRedirect), 302);
 if (!listening || dispatches.error || evidence.error)
   Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
@@ -154,6 +168,9 @@ const visibleFactoryIds = new Set(
   galleryPage(factoryItems, requestedPage).items.map((item) => item.id)
 );
 const viewLabel = galleryTypes.find(([key]) => key === view)![1];
+const typeLabel = (key: GalleryType) => galleryTypes.find(([k]) => k === key)![1];
+const selectedTypes = selected ? availableProjectTypes(selected.slug) : [];
+const previewSet = new Set(sharePreviews);
 const pagePath = galleryURL(selected?.slug, view, collection.page);
 const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.project === p.slug));
 ---
@@ -209,7 +226,10 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
           <a
             href={galleryURL(
               project.slug,
-              ["radio", "factory", "logos", "social"].includes(view) ? "images" : view
+              (projectGalleryTypes as readonly string[]).includes(view) &&
+                availableProjectTypes(project.slug).includes(view as ProjectGalleryType)
+                ? (view as ProjectGalleryType)
+                : defaultProjectType(project.slug)
             )}
             aria-current={selected?.slug === project.slug ? "page" : undefined}
           >
@@ -251,21 +271,36 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                 Download image pack
               </a>
             )}
-            {selected && (
-              <a href={selected.siteUrl}>{selected.slug === "loftwahfm" ? "Listen" : "Play"}</a>
-            )}
+            {selected && <a href={selected.siteUrl}>{projectActionLabel(selected.slug)}</a>}
           </div>
         )}
-        <p class="result-count">
-          {collection.total
-            ? `${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${viewLabel}`
-            : `No ${viewLabel.toLowerCase()} in this collection.`}
-        </p>
+        {collection.total ? (
+          <p class="result-count">
+            {`${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${viewLabel}`}
+          </p>
+        ) : selected ? (
+          <p class="result-count">
+            No {viewLabel.toLowerCase()} for {selected.name} in this project's reviewed media.
+            {selectedTypes.length > 1 && (
+              <>
+                {" Available here: "}
+                {selectedTypes
+                  .filter((key) => key !== view)
+                  .map((key) => (
+                    <a href={galleryURL(selected.slug, key)}>{typeLabel(key)}</a>
+                  ))}
+              </>
+            )}
+          </p>
+        ) : (
+          <p class="result-count">No {viewLabel.toLowerCase()} in this collection.</p>
+        )}
         <div class:list={["gallery", { "art-gallery": view === "artwork" }]}>
           {visibleMedia.map((asset, index) => (
             <GameMedia
               asset={asset}
               destination={projects.find((p) => p.slug === asset.project)?.siteUrl ?? "/share/"}
+              preview={previewSet.has(asset.id) ? `/share/previews/${asset.id}.webp` : undefined}
               eager={index < 3}
             />
           ))}
@@ -320,14 +355,10 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                   link={destination}
                 />
                 <div class="asset-links">
-                  <a href={destination}>
-                    {["fighter", "shoalshot", "protocol-11", "bubbles"].includes(project.slug)
-                      ? "Play"
-                      : project.slug === "loftwahfm"
-                        ? "Listen"
-                        : "Open project"}
+                  <a href={destination}>{projectActionLabel(project.slug)}</a>
+                  <a href={galleryURL(project.slug, defaultProjectType(project.slug))}>
+                    Link to this kit
                   </a>
-                  <a href={galleryURL(project.slug)}>Link to this kit</a>
                   {project.slug === "shoalshot" && nativeSharing && (
                     <a href={destination}>Play & share a dive</a>
                   )}

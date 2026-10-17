@@ -55,3 +55,57 @@ export function galleryPage<T>(items: T[], requestedPage = 1) {
     start
   };
 }
+
+/** The gallery categories that belong to one project rather than the whole site. */
+export const projectGalleryTypes = ["images", "clips", "artwork", "cards"] as const;
+export type ProjectGalleryType = (typeof projectGalleryTypes)[number];
+
+/**
+ * What a project actually has to share. Every published project has a link card,
+ * so `cards` is always present; the game categories depend on the reviewed
+ * media. Entering a project without an explicit category opens the first one it
+ * has, so an app never lands on an empty screenshots grid while its own artwork
+ * and cards sit one click away.
+ */
+export function availableProjectTypes(slug: string): ProjectGalleryType[] {
+  const assets = gameMedia.filter((asset) => asset.project === slug);
+  const types: ProjectGalleryType[] = [];
+  if (assets.some((asset) => asset.kind === "image" && asset.category === "gameplay"))
+    types.push("images");
+  if (assets.some((asset) => asset.kind === "video")) types.push("clips");
+  if (assets.some((asset) => asset.category === "art")) types.push("artwork");
+  types.push("cards");
+  return types;
+}
+
+export function defaultProjectType(slug: string): ProjectGalleryType {
+  return availableProjectTypes(slug)[0] ?? "cards";
+}
+
+/**
+ * The action a visitor can take on a project, derived once for the share desk.
+ * A game is played, FM is listened to and everything else is opened; a
+ * screenshot grid for an app must not offer "Play".
+ */
+export function projectActionLabel(slug: string) {
+  if (["fighter", "shoalshot", "protocol-11", "bubbles"].includes(slug)) return "Play";
+  if (slug === "loftwahfm") return "Listen";
+  return "Open project";
+}
+
+/**
+ * The category a bare project link should open on, or null when the requested
+ * category stands. An explicit `?type=` is always kept so a deliberate link is
+ * never silently rewritten; only a project's own link (no explicit category)
+ * moves to a category it actually has.
+ */
+export function projectViewRedirect(
+  slug: string,
+  view: GalleryType,
+  explicit: boolean
+): ProjectGalleryType | null {
+  if (explicit) return null;
+  if (!(projectGalleryTypes as readonly string[]).includes(view)) return null;
+  if (availableProjectTypes(slug).includes(view as ProjectGalleryType)) return null;
+  return defaultProjectType(slug);
+}
