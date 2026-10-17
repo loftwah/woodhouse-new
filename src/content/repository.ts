@@ -5,6 +5,7 @@ import { byDispatchDate } from "../data/dispatch-dates";
 import type { CapabilityReview } from "../data/capabilities";
 import { projectCapabilities } from "../data/capabilities";
 import { searchTextFromBlocks } from "../data/search-text";
+import { aliasesFor } from "../data/search-intent";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
 export type WoodhouseProject = {
@@ -574,16 +575,16 @@ export async function listPublicSearchItems() {
         section: "Analytics"
       },
       {
-        title: "Project dossiers",
-        description: "Nine project dossiers from the Loftwah Software Factory.",
+        title: "Projects",
+        description: `${projectResult.projects.length} things you can play, listen to or try, each with its own record.`,
         href: "/projects/",
         section: "Projects"
       },
       {
-        title: "Dispatches",
+        title: "Stories",
         description: "Edited essays and engineering case studies.",
         href: "/dispatches/",
-        section: "Dispatches"
+        section: "Stories"
       },
       {
         title: "Incidents",
@@ -636,10 +637,11 @@ export async function listPublicSearchItems() {
     ],
     ...projectResult.projects.map((project) => ({
       title: project.name,
-      description: `${project.discipline}. ${project.summary}`,
+      description: `${project.title} ${project.discipline}.`,
       href: `/projects/${project.slug}/`,
       section: "Projects",
-      searchText: `${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
+      keywords: aliasesFor(project.slug),
+      searchText: `${project.title} ${project.summary} ${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
       title: dispatch.title,

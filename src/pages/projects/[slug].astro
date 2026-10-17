@@ -6,9 +6,10 @@ import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
 import GameMedia from "../../components/GameMedia.astro";
-import { gameMedia } from "../../data/share-desk";
+import { featuredMediaFor } from "../../data/featured-media";
 import { listProjectRecords, getProjectRecord } from "../../content/repository";
 import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
+import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
 
@@ -48,9 +49,11 @@ const snapshotSource = project?.snapshotSource ?? "No public snapshot is availab
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const artworkFallback = getArtworkFallback(project);
 const placeholder = artworkFallback.image;
-const studioFilm = gameMedia.find(
-  (asset) => asset.project === project.slug && asset.id === "app-composer-studio-film-20261014"
-);
+const studioFilm = featuredMediaFor(project.slug);
+const action = projectAction(project);
+const actionHref = projectActionHref(project);
+const actionLabel = projectActionLabel(project);
+const actionExternal = Boolean(project.siteUrl);
 const socialPreview = "/og/project-dossier-preview.jpg";
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const capabilityResult = await listPublicCapabilities();
@@ -99,42 +102,60 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <nav class="breadcrumb" aria-label="Breadcrumb">
         <a href="/">WOODHOUSE</a>
         <span>/</span>
-        <a href="/factory/">Factory</a>
+        <a href="/projects/">Projects</a>
         <span>/</span>
         <span>{project.name}</span>
       </nav>
-      <h1 {...projectEntry?.edit.title}>{project.title}</h1>
       <p class="article-meta">{project.discipline}</p>
+      <h1 {...projectEntry?.edit.name}>{project.name}</h1>
+      <p class="dossier-hero__hook" {...projectEntry?.edit.title}>
+        {project.title}
+      </p>
       <p class="dossier-hero__summary" {...projectEntry?.edit.summary}>
         {project.summary}
       </p>
+      <div class="dossier-hero__actions">
+        <a
+          class="dossier-hero__action"
+          href={actionHref}
+          target={actionExternal ? "_blank" : undefined}
+          rel={actionExternal ? "noopener noreferrer" : undefined}
+        >
+          {actionLabel} <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-link" href="#where-the-work-stands">
+          See how it works <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <p class="dossier-hero__availability">{action.availability}</p>
     </div>
     <div class="dossier-hero__side">
       <StatusStamp tone={project.stateTone} label={project.state} />
       <dl>
+        <dt>Reviewed</dt>
+        <dd>{reviewDateLabel}</dd>
+        <dt>Public build</dt>
+        <dd>{siteMeta ? "A site you can open today" : "No public build yet"}</dd>
+        <dt>Evidence</dt>
+        <dd>Operator-reviewed snapshot</dd>
         <dt>Record</dt>
         <dd>
           {project.index} / {allProjects.projects.length}
         </dd>
-        <dt>Reviewed</dt>
-        <dd>{reviewDateLabel}</dd>
-        <dt>Source</dt>
-        <dd>Operator-reviewed snapshot</dd>
-        <dt>Preview</dt>
-        <dd>{siteMeta ? "Product site" : "No public site or demo"}</dd>
       </dl>
     </div>
   </section>
   {studioFilm ? (
     <section class="container dossier-film" aria-label={`${project.name} product film`}>
+      <h2 class="dossier-media__heading">Watch {project.name}</h2>
       <GameMedia asset={studioFilm} destination={project.siteUrl ?? `/projects/${project.slug}/`} />
       <p class="film-links">
         {project.siteUrl && (
           <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
-            Visit {project.name} <span aria-hidden="true">↗</span>
+            Open {project.name} <span aria-hidden="true">↗</span>
           </a>
         )}
-        <a href="/share/?project=app-composer&type=clips">More sharing options</a>
+        <a href={`/share/?project=${project.slug}&type=clips`}>More sharing options</a>
         <a href={studioFilm.file.replace(/\.mp4$/, ".credits.txt")}>Film credits</a>
       </p>
     </section>
@@ -163,7 +184,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <figcaption>
         <span>
           <strong data-artwork-status>
-            {siteMeta ? "LAST REVIEWED PROJECT-SITE DETAILS" : "WOODHOUSE ILLUSTRATION"}
+            {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE ILLUSTRATION"}
           </strong>
           {siteMeta ? (
             <>
@@ -174,12 +195,12 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
               </span>
             </>
           ) : (
-            <span class="dossier-preview__description">Made for this dossier.</span>
+            <span class="dossier-preview__description">Made for this record.</span>
           )}
         </span>
         {project.siteUrl && (
           <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
-            Visit {project.name} <span aria-hidden="true">↗</span>
+            Open {project.name} <span aria-hidden="true">↗</span>
           </a>
         )}
       </figcaption>
@@ -216,9 +237,9 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       </D2Diagram>
     </section>
   )}
-  <section class="container dossier-grid">
+  <section class="container dossier-grid" id="where-the-work-stands">
     <article class="prose">
-      <h2>Why this project matters</h2>
+      <h2>Why you might care</h2>
       <p {...projectEntry?.edit.why}>{project.why}</p>
       <div class="pullquote" {...projectEntry?.edit.teaches}>
         {project.teaches}
@@ -227,7 +248,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <h2>Where the work stands</h2>
       <p {...statusEntry?.edit.current}>{project.current}</p>
       <div class="callout">
-        <p class="callout__title">The next useful proof</p>
+        <p class="callout__title">What comes next</p>
         <p {...statusEntry?.edit.next_proof}>{project.remaining}</p>
       </div>
       {capabilityResult.capabilities
@@ -239,15 +260,18 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         .map((capability) => (
           <CapabilityRecord capability={capability} compact={true} projectKey={project.slug} />
         ))}
-      <h2>What this record does not claim</h2>
+      <h2>How we checked it</h2>
       <p {...statusEntry?.edit.proof_boundary}>{project.proofBoundary}</p>
-      <p>
-        Project state is specific to the reviewed report. An implementation, merge, test result,
-        production deployment and physical observation are separate claims; one does not
-        automatically prove the next.
+      <p class="source-note">
+        Reviewed {reviewDateLabel}.{" "}
+        <a href="/architecture/">
+          How Woodhouse separates implementation, release and physical proof
+        </a>
+        .
       </p>
     </article>
-    <section class="margin-rail" aria-label="Project notes">
+    <section class="margin-rail" aria-label="Development notes">
+      <h2 class="margin-rail__heading">Development notes</h2>
       <div class="margin-note">
         <span class="margin-note__label">House record</span>
         <p>
@@ -296,13 +320,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         <div>
           <h2>Other work in view.</h2>
         </div>
-        <a class="text-link section-heading__action" href="/factory/">
+        <a class="text-link section-heading__action" href="/projects/">
           See all {allProjects.projects.length} projects <span aria-hidden="true">↗</span>
         </a>
       </div>
       <div class="project-ledger">
         {nextProjects.map((item) => (
-          <ProjectRow project={item} total={allProjects.projects.length} compact={true} />
+          <ProjectRow project={item} compact={true} />
         ))}
       </div>
     </div>

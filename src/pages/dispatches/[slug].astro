@@ -66,7 +66,7 @@ if (isPreview) {
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="/">WOODHOUSE</a>
           <span>/</span>
-          <a href="/dispatches/">Dispatches</a>
+          <a href="/dispatches/">Stories</a>
           <span>/</span>
           <span>{editorial.kind}</span>
         </nav>
@@ -112,7 +112,7 @@ if (isPreview) {
           </p>
         </div>
         <p>
-          <a href="/dispatches/">Back to the dispatches</a>
+          <a href="/dispatches/">Back to the stories</a>
         </p>
       </article>
       <section class="margin-rail" aria-label="Article notes">
@@ -134,13 +134,13 @@ if (isPreview) {
   </BaseLayout>
 ) : (
   <BaseLayout
-    title="Dispatch not found"
+    title="Story not found"
     description="This dispatch is not available in the public record."
     path={path}
     noindex
   >
     <section class="container page-intro">
-      <h1 class="page-title">Dispatch not found.</h1>
+      <h1 class="page-title">Story not found.</h1>
       <p>
         <a href="/dispatches/">Return to dispatches.</a>
       </p>

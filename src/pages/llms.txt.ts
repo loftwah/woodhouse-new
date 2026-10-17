@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ cache }) => {
     `- ${url("/doctrine/")}`,
     `- ${url("/dean/")}`,
     "",
-    "## Dispatches",
+    "## Stories",
     "",
     ...dispatchResult.dispatches.map(
       (dispatch) =>

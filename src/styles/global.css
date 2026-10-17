@@ -176,7 +176,56 @@ summary {
   color: var(--brass);
 }
 .mobile-index {
+  display: block;
+  position: relative;
+}
+/* The secondary group is deliberately available at every width, not only on a
+   phone: the factory, architecture, doctrine and agent material needs a clear
+   home beside the five familiar primary destinations. */
+.mobile-index nav {
+  position: absolute;
+  z-index: 12;
+  top: calc(100% + 0.8rem);
+  right: -0.4rem;
+  display: grid;
+  min-width: 15rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-deep);
+  box-shadow: 0 1.2rem 2rem rgba(0, 0, 0, 0.18);
+}
+.mobile-index nav a {
+  padding: 0.7rem 0.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.mobile-index nav a:last-child {
+  border-bottom: 0;
+}
+.mobile-index summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mobile-index summary::-webkit-details-marker {
   display: none;
+}
+.mobile-index summary::-webkit-details-marker {
+  display: none;
+}
+.mobile-index__glyph {
+  color: var(--brass);
+  font-size: 1rem;
+}
+.mobile-index[open] .mobile-index__glyph {
+  transform: rotate(45deg);
 }
 .container {
   width: min(100% - (2 * var(--gutter)), 1440px);
@@ -435,6 +484,17 @@ a.project-row__image {
   color: var(--muted);
   font-size: 0.7rem;
 }
+.project-row__hook {
+  max-width: 30rem;
+  margin: 0.35rem 0 0;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  font-weight: 650;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
 .project-row__summary {
   max-width: 34rem;
   margin: 0.25rem 0 0;
@@ -442,28 +502,53 @@ a.project-row__image {
   font-size: 0.79rem;
   line-height: 1.55;
 }
-.project-row__proof {
-  display: block;
-  margin: 0.35rem 0 0.2rem;
-  padding-left: 0.65rem;
-  border-left: 1px solid var(--brass-dim);
-  color: var(--muted);
-  font-size: 0.75rem;
+.project-row__availability {
+  max-width: 34rem;
+  margin: 0.2rem 0 0;
+  color: var(--copy);
+  font-size: 0.76rem;
   line-height: 1.5;
 }
-.project-row__proof strong {
-  display: block;
-  margin-bottom: 0.15rem;
-  color: var(--brass);
+.project-row__state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
+  margin-top: 0.35rem;
+}
+.project-row__state time {
+  color: var(--muted);
   font-family: var(--mono);
   font-size: 0.56rem;
-  font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.project-row__dossier {
+.project-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
   margin-top: auto;
-  padding-top: 0.4rem;
+  padding-top: 0.75rem;
+}
+.project-row__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+.project-row__action:hover {
+  background: transparent;
+  color: var(--acid);
+}
+.project-row__dossier {
   color: var(--accent-link);
   font-family: var(--mono);
   font-size: 0.6rem;
@@ -472,7 +557,8 @@ a.project-row__image {
   gap: 1rem;
 }
 .project-row--compact .project-row__summary,
-.project-row--compact .project-row__proof {
+.project-row--compact .project-row__availability,
+.project-row--compact .project-row__state {
   display: none;
 }
 
@@ -939,6 +1025,13 @@ a.project-row__image {
   font-size: 0.61rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+.page-intro__lede {
+  max-width: 46rem;
+  margin: 1.4rem 0 0;
+  color: var(--copy);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
 }
 .breadcrumb {
   display: flex;
@@ -1574,29 +1667,6 @@ a.project-row__image {
   .mobile-index {
     display: block;
     position: relative;
-  }
-  .mobile-index summary {
-    min-height: 2.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    cursor: pointer;
-    list-style: none;
-    color: var(--paper);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .mobile-index summary::-webkit-details-marker {
-    display: none;
-  }
-  .mobile-index__glyph {
-    color: var(--brass);
-    font-size: 1rem;
-  }
-  .mobile-index[open] .mobile-index__glyph {
-    transform: rotate(45deg);
   }
   .mobile-index nav {
     position: absolute;
@@ -2459,19 +2529,6 @@ a.project-row__image:hover img {
   color: var(--copy);
   font-size: 0.9rem;
   line-height: 1.58;
-}
-.project-row__proof {
-  max-width: 37rem;
-  margin: 0.55rem 0 0.2rem;
-  padding: 0.55rem 0 0.55rem 0.75rem;
-  border-top: 1px solid var(--line);
-  color: var(--copy-soft);
-  font-size: 0.82rem;
-}
-.project-row__proof strong {
-  color: var(--brass);
-  font-size: 0.59rem;
-  font-weight: 800;
 }
 .project-row__dossier {
   margin-top: auto;
@@ -3491,5 +3548,91 @@ body {
   }
   .footer-line {
     font-size: 1.6rem;
+  }
+}
+
+/* Project dossier introduction — reviewed 18 October 2026.
+   The name leads, the product's own hook follows, and the primary action sits
+   beside the introduction. The editorial hook used to be the whole heading, so
+   a reader met commentary before they met the product. */
+.dossier-hero h1 {
+  max-width: none;
+  margin: 0.55rem 0 0.65rem;
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 4.6vw, 4.25rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.038em;
+}
+.dossier-hero__hook {
+  max-width: 26ch;
+  margin: 0 0 1.15rem;
+  color: var(--acid);
+  font-family: var(--display);
+  font-size: clamp(1.3rem, 2.1vw, 1.9rem);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.dossier-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.6rem;
+  margin-top: 1.5rem;
+}
+.dossier-hero__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+.dossier-hero__action:hover {
+  background: transparent;
+  color: var(--acid);
+}
+.dossier-hero__availability {
+  max-width: 46rem;
+  margin: 0.9rem 0 0;
+  color: var(--copy-soft);
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+.dossier-media__heading {
+  margin: 0 0 0.9rem;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.margin-rail__heading {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+@media (max-width: 760px) {
+  .dossier-hero h1 {
+    font-size: clamp(2.5rem, 10.5vw, 3.4rem);
+  }
+  .dossier-hero__hook {
+    font-size: clamp(1.2rem, 5.6vw, 1.55rem);
+  }
+  .dossier-hero__actions {
+    margin-top: 1.15rem;
   }
 }

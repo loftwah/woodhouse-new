@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../../data/review-date";
+import { portfolioReadout } from "../../data/portfolio";
 import ProjectRow from "../../components/ProjectRow.astro";
 import { listProjectRecords } from "../../content/repository";
 const result = await listProjectRecords();
@@ -11,14 +12,16 @@ if (result.error)
   });
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
-const reviewDate = projects[0]?.reviewDate ?? "review date unavailable";
+// The newest review across the portfolio, not the first row's: projects[0] is
+// Bubbles and would misreport the whole index as reviewed on its own date.
+const reviewDate = portfolioReadout(projects).reviewDate;
 const reviewDateLabel = formatReviewDate(reviewDate) ?? "Review date unavailable";
 export const prerender = false;
 ---
 
 <BaseLayout
-  title="Project dossiers"
-  description="Project dossiers from the Loftwah Software Factory. Each explains the product, the current read and the evidence still required."
+  title="Projects"
+  description="Games you can play now, music you can listen to, tools you can try and experiments with their evidence attached. Every project from the Loftwah Software Factory."
   path="/projects/"
   image="/og/factory.jpg"
 >
@@ -30,14 +33,14 @@ export const prerender = false;
           <span>/</span>
           <span>Projects</span>
         </nav>
-        <h1 class="page-title">Products as they are.</h1>
+        <h1 class="page-title">Explore the projects.</h1>
       </div>
       <div class="page-intro__aside">
         <strong>
-          {projects.length} dossiers · reviewed {reviewDateLabel}
+          {projects.length} projects · newest review {reviewDateLabel}
         </strong>
-        Each dossier pairs project details with public artwork where available. Artwork is not
-        release evidence.
+        Each row starts with what the product is and how you can use it today. The dated status, the
+        artwork source and the limits of each claim sit further in, on the project's own page.
       </div>
     </div>
   </section>
@@ -45,7 +48,7 @@ export const prerender = false;
     <div class="container">
       <div class="project-ledger">
         {projects.map((project) => (
-          <ProjectRow project={project} total={projects.length} headingLevel="h2" />
+          <ProjectRow project={project} headingLevel="h2" />
         ))}
       </div>
       <p class="source-note">
