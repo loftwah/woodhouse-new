@@ -1,5 +1,6 @@
 import {
   formatMetric,
+  weeklyRecord,
   type AnalyticsProject,
   type Metric,
   type PortfolioReport,
@@ -415,11 +416,143 @@ export function dailyStatus(
     return "legacy";
   return "clean";
 }
+export type DiscoveryReferral = {
+  slug: string;
+  name: string;
+  siteUrl: string | null;
+  metric: Metric;
+  value: number;
+  recent: number;
+  prior: number;
+  hasTrend: boolean;
+};
+/**
+ * The destination breakdown for Woodhouse discovery. The collector stores one
+ * `referral_<destination>` counter per published project; this projects those
+ * counters for the selected period, keeps only destinations that are still
+ * published, and attaches the destination name and link. A click towards a
+ * project is a referral, not proof of downstream play, adoption or a person.
+ */
+export function discoveryReferrals(
+  metrics: Metric[] | undefined,
+  published: Set<string>,
+  names: Map<string, string>,
+  siteUrls: Map<string, string | null>,
+  period: ReportingWindow
+): DiscoveryReferral[] {
+  return (metrics ?? [])
+    .filter((metric) => metric.key.startsWith("referral_"))
+    .map((metric) => {
+      const slug = metric.key.slice("referral_".length).replaceAll("_", "-");
+      const daily = dailyPoints(metric, period);
+      const recent = daily.slice(-7).reduce<number>((sum, value) => sum + (value ?? 0), 0);
+      const prior = daily
+        .slice(Math.max(0, daily.length - 14), Math.max(0, daily.length - 7))
+        .reduce<number>((sum, value) => sum + (value ?? 0), 0);
+      return {
+        slug,
+        name: names.get(slug) ?? slug,
+        siteUrl: siteUrls.get(slug) ?? null,
+        metric,
+        value: metric.value ?? 0,
+        recent,
+        prior,
+        hasTrend: daily.length >= 14
+      };
+    })
+    .filter((entry) => published.has(entry.slug) && entry.value > 0)
+    .sort((a, b) => b.value - a.value);
+}
 export function dailyPoints(metric: Metric | undefined, period: ReportingWindow) {
   return dateDays(period).map((day) =>
     metric?.value === null ? null : (metric?.daily.find((d) => d.date === day)?.value ?? null)
   );
 }
+export type WeeklyHighlight = {
+  project: AnalyticsProject;
+  name: string;
+  family: ProductView["family"];
+  measure: (typeof measureChoices)[number];
+  unit: Metric["unit"];
+  from: string;
+  to: string;
+  value: number;
+  previous: number;
+  changePercent: number | null;
+  newBest: boolean;
+  comparedWeeks: number;
+};
+export type WeeklyGap = { project: AnalyticsProject; name: string; reason: string };
+
+/**
+ * The last complete Monday–Sunday UTC week for each admitted project's own
+ * headline measure, with its previous-week comparison and any earned record.
+ *
+ * This is deliberately separate from `analysePortfolio`. That function raises an
+ * operational alert and reports only movements past a 25% and minimum-volume
+ * threshold, so it is the wrong gate for a valid comparison or a genuine record:
+ * reusing it here would silently hide every smaller real observation. A project
+ * earns a record only with exact daily history for two adjacent complete weeks in
+ * retained comparable history.
+ */
+export function weeklyHighlights(
+  projects: PortfolioReport["projects"],
+  names: Map<string, string>,
+  now = Date.now()
+): { highlights: WeeklyHighlight[]; gaps: WeeklyGap[] } {
+  const highlights: WeeklyHighlight[] = [];
+  const gaps: WeeklyGap[] = [];
+  const ordered = [...projects].sort(
+    (a, b) => overviewOrder.indexOf(a.project) - overviewOrder.indexOf(b.project)
+  );
+  for (const { project, report } of ordered) {
+    const name = names.get(project) ?? project;
+    const [primary] = overviewMeasures(project);
+    if (!report) {
+      gaps.push({ project, name, reason: "No source report for these dates" });
+      continue;
+    }
+    const metric = report.metrics.find((m) => m.key === primary!.key);
+    if (!metric) {
+      gaps.push({ project, name, reason: `${primary!.label} is not in this source report` });
+      continue;
+    }
+    const week = weeklyRecord(metric, report.coverage, now);
+    if (!week) {
+      gaps.push({ project, name, reason: weeklyGapReason(metric, report.coverage, primary!) });
+      continue;
+    }
+    highlights.push({
+      project,
+      name,
+      family: productView(project)!.family,
+      measure: primary!,
+      unit: metric.unit,
+      from: week.from,
+      to: week.to,
+      value: week.value,
+      previous: week.previous,
+      changePercent: week.comparison,
+      newBest: week.newBest,
+      comparedWeeks: week.comparedWeeks
+    });
+  }
+  return { highlights, gaps };
+}
+
+function weeklyGapReason(
+  metric: Metric,
+  coverage: ProjectAnalytics["coverage"],
+  measure: { label: string }
+) {
+  if (["browsers", "returning_browsers", "engaged_sessions"].includes(metric.key))
+    return `${measure.label} is a period statistic, not a comparable daily counter`;
+  if (metric.quality !== "exact") return `${measure.label} is not an exact counter`;
+  if (!coverage.startedAt) return "Collection start is not established";
+  if (!coverage.comparableFrom) return "No comparable-history boundary yet";
+  return "Fewer than two complete comparable weeks so far";
+}
+
 export function qualityText(metric?: Metric) {
   return !metric || metric.value === null
     ? "Not measured"

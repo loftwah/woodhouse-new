@@ -460,6 +460,44 @@ export async function localAnalytics(
       daily
     });
   }
+  // Woodhouse discovery referrals: the collector already stores one
+  // `referral_<destination>` counter per published project, so this is the same
+  // anonymous event stream aggregated by destination. A click is a referral, not
+  // proof of downstream play, adoption or a unique person. The page rechecks
+  // current published membership before linking a destination.
+  if (project === "woodhouse") {
+    const referralRows = await db
+      .prepare(
+        "SELECT metric, day, value FROM wh_analytics_daily WHERE project=? AND metric LIKE 'referral\\_%' ESCAPE '\\' AND day>=? AND day<=? ORDER BY day"
+      )
+      .bind(project, period.from, period.to)
+      .all<{ metric: string; day: string; value: number }>();
+    const bySlug = new Map<string, Map<string, number>>();
+    for (const row of referralRows.results) {
+      const slug = row.metric.slice("referral_".length).replaceAll("_", "-");
+      if (!bySlug.has(slug)) bySlug.set(slug, new Map());
+      bySlug.get(slug)!.set(row.day, row.value);
+    }
+    for (const [slug, days] of bySlug) {
+      const daily: Metric["daily"] = [];
+      if (started)
+        for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
+          const date = new Date(t).toISOString().slice(0, 10);
+          if (date < started) continue;
+          daily.push({ date, value: days.get(date) ?? 0 });
+        }
+      metrics.push({
+        key: `referral_${slug.replaceAll("-", "_")}`,
+        label: `Referrals to ${slug}`,
+        unit: "count",
+        value: daily.length ? daily.reduce((s, r) => s + r.value, 0) : null,
+        quality: daily.length ? "exact" : "unavailable",
+        definition:
+          "Accepted deliberate clicks from Woodhouse to this project's destination, from the same anonymous event stream as Project discoveries. A click is a referral, not proof of downstream play, adoption or a unique person; opt-out and blocked measurement make it partial.",
+        daily
+      });
+    }
+  }
   return {
     schema: analyticsSchema,
     project,

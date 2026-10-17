@@ -36,7 +36,9 @@ import {
   reportCaption,
   reportMetric,
   measureScope,
-  measureForProjectSwitch
+  measureForProjectSwitch,
+  weeklyHighlights,
+  discoveryReferrals
 } from "../data/analytics-workbench";
 export const prerender = false;
 Astro.cache.set(false);
@@ -225,6 +227,25 @@ const longestClean = Math.max(0, ...cleanDays);
 const sourcesReporting = allRows.filter((r) =>
   r.data?.metrics.some((m) => m.value !== null)
 ).length;
+// The last complete week is evaluated against the frozen report's own capture
+// time, so a saved snapshot keeps describing the same weeks after it is reopened.
+const weekly = report
+  ? weeklyHighlights(report.projects, names, Date.parse(report.createdAt))
+  : { highlights: [], gaps: [] };
+// Woodhouse discovery referrals. The collector stores one counter per
+// destination; the page keeps only destinations that are still published and
+// links them, because a withdrawn project must not stay linked from here.
+const discovery = discoveryReferrals(
+  allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
+  publicIds,
+  names,
+  new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
+  window
+);
+// Destination referral counters are surfaced in their own section, not repeated
+// as generic source definitions.
+const registerMetrics = (metrics: NonNullable<(typeof allRows)[number]["data"]>["metrics"]) =>
+  metrics.filter((m) => !m.key.startsWith("referral_"));
 const qaOff = Astro.url.searchParams.get("analytics") === "off";
 // `?qa` (any value) is the other documented measurement exclusion. It must
 // survive every control so a QA pass cannot silently start reporting.
@@ -235,10 +256,15 @@ function pageLink(
     measure?: string;
     days?: number;
     latest?: boolean;
+    from?: string;
+    to?: string;
   } = {}
 ) {
   const q = new URLSearchParams();
-  if (frozen && snapshot && !changes.latest && changes.days === undefined)
+  if (changes.from && changes.to) {
+    q.set("from", changes.from);
+    q.set("to", changes.to);
+  } else if (frozen && snapshot && !changes.latest && changes.days === undefined)
     q.set("report", snapshot.id);
   else if (changes.days !== undefined) q.set("days", String(changes.days));
   else if (Astro.url.searchParams.has("from") || frozen) {
@@ -780,6 +806,51 @@ const dataPayload = {
               cannot be separated.
             </p>
           </section>
+          {(overview || selected === "woodhouse") && discovery.length > 0 && (
+            <section class="discovery" aria-labelledby="discovery-heading">
+              <div class="section-title">
+                <div>
+                  <h2 id="discovery-heading">Where Woodhouse sends visitors</h2>
+                  <p>
+                    Recorded clicks from Woodhouse to a published project, for this period. A click
+                    is a referral: it shows discovery intent, not downstream play, adoption or a
+                    unique person.
+                  </p>
+                </div>
+              </div>
+              <ul class="discovery-list">
+                {discovery.map((d) => (
+                  <li>
+                    <i
+                      class="source-dot"
+                      style={`--source:${projectColours[d.slug] ?? "#b4c0d2"}`}
+                      aria-hidden="true"
+                    />
+                    <span class="discovery-name">{d.name}</span>
+                    <span class="discovery-count">{d.value.toLocaleString("en-AU")}</span>
+                    <span class="discovery-trend">
+                      {d.hasTrend
+                        ? `Last 7 days ${d.recent.toLocaleString("en-AU")} · previous 7 ${d.prior.toLocaleString("en-AU")}`
+                        : `This ${window.days}-day window`}
+                    </span>
+                    <span class="discovery-links">
+                      <a href={`/projects/${d.slug}/`}>Dossier</a>
+                      {d.siteUrl && (
+                        <a href={d.siteUrl} rel="noopener">
+                          Open project
+                        </a>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p class="overview-note">
+                Counts come from the same anonymous collection as Visits. Opt-out, blocked
+                measurement and QA exclusion make them partial, and they do not show whether the
+                visitor played, subscribed or came back.
+              </p>
+            </section>
+          )}
           <section class="source-register" aria-labelledby="sources-heading">
             <h2 id="sources-heading">Follow the numbers to their source</h2>
             <p>Every measure has a definition, a collection boundary and blind spots.</p>
@@ -792,7 +863,7 @@ const dataPayload = {
                   </span>
                   <span>
                     {r.data
-                      ? `${r.data.metrics.filter((m) => m.value !== null).length} measures available`
+                      ? `${registerMetrics(r.data.metrics).filter((m) => m.value !== null).length} measures available`
                       : "Source unavailable"}
                   </span>
                 </summary>
@@ -822,7 +893,7 @@ const dataPayload = {
                       ))}
                     </ul>
                     <dl class="definition-list">
-                      {r.data.metrics.map((m) => (
+                      {registerMetrics(r.data.metrics).map((m) => (
                         <div>
                           <dt>
                             {m.label} <strong>{formatMetric(m)}</strong>
@@ -893,6 +964,73 @@ const dataPayload = {
               </p>
             ))}
           </section>
+          {report && (
+            <section class="weekly" aria-labelledby="weekly-heading">
+              <h2 id="weekly-heading">Last complete week</h2>
+              <p class="context-muted">
+                The most recent complete Monday–Sunday UTC week for each project's own headline
+                measure, against the week before. A record needs exact daily history for two
+                adjacent complete weeks; this is a valid comparison, not only the large movements
+                that raise an operational alert.
+              </p>
+              {weekly.highlights.length > 0 ? (
+                <ul class="weekly-list">
+                  {weekly.highlights.map((h) => (
+                    <li class:list={["weekly-row", { "is-record": h.newBest }]}>
+                      <span class="weekly-head">
+                        <span class="weekly-project">{h.name}</span>
+                        <span class="weekly-measure">{h.measure.label}</span>
+                        {h.newBest && <span class="weekly-record">New best</span>}
+                      </span>
+                      <span class="weekly-figures">
+                        <strong>{formatMetric({ value: h.value, unit: h.unit })}</strong>
+                        <span class="weekly-movement">
+                          {h.changePercent === null
+                            ? `no prior baseline (${formatMetric({ value: h.previous, unit: h.unit })} the week before)`
+                            : `${h.changePercent > 0 ? "Up" : h.changePercent < 0 ? "Down" : "Level"} ${Math.abs(h.changePercent)}% from ${formatMetric({ value: h.previous, unit: h.unit })}`}
+                        </span>
+                      </span>
+                      <span class="weekly-context">
+                        {h.from}–{h.to}
+                        {h.newBest
+                          ? ` · best of ${h.comparedWeeks} comparable weeks`
+                          : ` · ${h.comparedWeeks} comparable weeks`}
+                        {" · "}
+                        <a
+                          href={pageLink({
+                            project: h.project,
+                            measure: h.measure.key,
+                            from: h.from,
+                            to: h.to
+                          })}
+                        >
+                          Share this week
+                        </a>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>
+                  No project has two complete comparable weeks yet, so no week-on-week figure is
+                  shown. Collection is too recent to compare honestly, and nothing is inferred from
+                  it.
+                </p>
+              )}
+              {weekly.gaps.length > 0 && (
+                <details class="weekly-gaps">
+                  <summary>Why some projects are not compared ({weekly.gaps.length})</summary>
+                  <ul>
+                    {weekly.gaps.map((gap) => (
+                      <li>
+                        <strong>{gap.name}</strong>: {gap.reason}.
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              )}
+            </section>
+          )}
           {selected === "app-composer" && (
             <section>
               <h2>Is the app delivering value?</h2>
