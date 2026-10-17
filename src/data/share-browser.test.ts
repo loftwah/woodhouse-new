@@ -8,7 +8,8 @@ import {
   availableProjectTypes,
   defaultProjectType,
   projectActionLabel,
-  projectViewRedirect
+  projectViewRedirect,
+  kitURL
 } from "./share-browser.ts";
 const projects = [...new Set(gameMedia.map((asset) => asset.project))];
 const priorityProjects = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
@@ -81,4 +82,20 @@ test("a project without game media opens on a category it actually has", () => {
   assert.equal(projectViewRedirect("woodhouse", "clips", false), "cards");
   // A global (site-wide) category is not a project category and is never moved.
   assert.equal(projectViewRedirect("app-composer", "radio", false), null);
+});
+
+test("Link to this kit preserves the project and the category being viewed", () => {
+  // The reported defect: the App Composer link card offered a kit link that
+  // jumped from its link cards to its clips.
+  assert.equal(kitURL("app-composer", "cards"), "/share/?project=app-composer&type=cards");
+  assert.equal(kitURL("app-composer", "clips"), "/share/?project=app-composer&type=clips");
+  // A category the project does not have falls back to the one a bare link opens.
+  assert.equal(kitURL("app-composer", "images"), "/share/?project=app-composer&type=clips");
+  // Screenshots are the gallery default, so the address keeps its short form.
+  assert.equal(kitURL("fighter", "images"), "/share/?project=fighter");
+  assert.equal(kitURL("fighter", "clips"), "/share/?project=fighter&type=clips");
+  // A site-wide category is not a kit; the project's own first category is used.
+  assert.equal(kitURL("woodhouse", "radio"), "/share/?project=woodhouse&type=cards");
+  // A bare project link is a separate behaviour: it opens the first real category.
+  assert.equal(galleryURL("app-composer"), "/share/?project=app-composer");
 });

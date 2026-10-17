@@ -171,6 +171,12 @@ export function scanPublicText(
  * of safety, so it is reported separately and the local artefact scan remains the
  * safety argument. A 200 with a credential shape, or an unexpected non-HTML body
  * at a credential path, fails.
+ *
+ * The observed failure: an origin that served a real credential at a risky path
+ * *with* a 403/404/410 status was classified absent from the status alone, so a
+ * detected secret was discarded. A detected high-confidence secret shape fails
+ * on the body, whatever the status code says. Status only decides how an
+ * otherwise unremarkable response is described.
  */
 export async function checkPublishedPaths(
   origin,
@@ -195,15 +201,15 @@ export async function checkPublishedPaths(
       includeMarkers: false,
       includePatterns: true
     });
-    if ([403, 404, 410].includes(response.status))
-      results.push({ path: pathname, status: response.status, outcome: "absent" });
-    else if (findings.length)
+    if (findings.length)
       results.push({
         path: pathname,
         status: response.status,
         outcome: "exposed",
         detail: findings.join(", ")
       });
+    else if ([403, 404, 410].includes(response.status))
+      results.push({ path: pathname, status: response.status, outcome: "absent" });
     else if (/^text\/html\b/i.test(type))
       results.push({
         path: pathname,

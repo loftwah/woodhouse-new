@@ -190,6 +190,34 @@ test("deployed credential paths are checked with safe negative requests", async 
   assert(!JSON.stringify(results).includes(CANARY), "the report must not print the secret value");
 });
 
+test("a secret is never dismissed because the response carried an absent status", async () => {
+  const jsonResponse = (status, body, type = "text/plain") =>
+    new Response(body, { status, headers: { "content-type": type } });
+  const results = await checkPublishedPaths("https://example.test", {
+    privateValues: [CANARY],
+    fetcher: async (url) => {
+      const { pathname } = new URL(url);
+      // A misconfigured origin can serve the real credential *with* a status that
+      // usually means "not here". The detected secret must still fail the check.
+      if (pathname === "/.env") return jsonResponse(403, `TEST_API_KEY="${CANARY}"`);
+      if (pathname === "/.dev.vars") return jsonResponse(404, `token=${FAKE_AWS_KEY}`);
+      if (pathname === "/id_rsa")
+        return jsonResponse(410, `-----BEGIN OPENSSH PRIVATE KEY-----\nabc`);
+      if (pathname === "/.git/HEAD") return jsonResponse(404, "ref: refs/heads/main");
+      return jsonResponse(404, "Not found");
+    }
+  });
+  const byPath = new Map(results.map((r) => [r.path, r]));
+  assert.equal(byPath.get("/.env").outcome, "exposed");
+  assert.equal(byPath.get("/.dev.vars").outcome, "exposed");
+  assert.equal(byPath.get("/id_rsa").outcome, "exposed");
+  // Legitimate empty and reject responses stay absent.
+  assert.equal(byPath.get("/.git/HEAD").outcome, "absent");
+  assert.equal(byPath.get("/.npmrc").outcome, "absent");
+  assert(!JSON.stringify(results).includes(CANARY), "the report must not print the secret value");
+  assert(!JSON.stringify(results).includes(FAKE_AWS_KEY), "matched values stay out of the report");
+});
+
 test("an unreachable origin is reported rather than passing silently", async () => {
   const results = await checkPublishedPaths("https://example.test", {
     fetcher: async () => {

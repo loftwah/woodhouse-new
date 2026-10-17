@@ -830,8 +830,14 @@ const dataPayload = {
                     <span class="discovery-count">{d.value.toLocaleString("en-AU")}</span>
                     <span class="discovery-trend">
                       {d.hasTrend
-                        ? `Last 7 days ${d.recent.toLocaleString("en-AU")} · previous 7 ${d.prior.toLocaleString("en-AU")}`
-                        : `This ${window.days}-day window`}
+                        ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")}${
+                            d.recentCoverage === "observed" ? "" : " (week in progress)"
+                          } · ${d.priorFrom}–${d.priorTo}: ${d.prior.toLocaleString("en-AU")}`
+                        : d.priorCoverage === "unavailable"
+                          ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")} · no earlier retained history to compare`
+                          : d.priorCoverage === "partial"
+                            ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")} · earlier week incomplete (${d.priorObservedDays}/7 days recorded)`
+                            : `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")}`}
                     </span>
                     <span class="discovery-links">
                       <a href={`/projects/${d.slug}/`}>Dossier</a>

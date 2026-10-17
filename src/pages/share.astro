@@ -25,6 +25,7 @@ import {
   projectActionLabel,
   projectViewRedirect,
   projectGalleryTypes,
+  kitURL,
   type GalleryType,
   type ProjectGalleryType
 } from "../data/share-browser";
@@ -321,6 +322,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
         <section id="projects" aria-label="Project images" class="gallery">
           {visibleProjects.map((project, index) => {
             const metadata = getSiteMetadata(project);
+            const fallback = getArtworkFallback(project);
             const destination =
               project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
             return (
@@ -328,6 +330,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                 <a
                   class="image-link"
                   href={metadata.image}
+                  data-fallback-href={fallback.image}
                   aria-label={`View ${project.name} image full size`}
                 >
                   <img
@@ -337,7 +340,8 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                     alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
                     loading={index < 3 ? "eager" : "lazy"}
                     data-gallery-image
-                    data-fallback-image={getArtworkFallback(project).image}
+                    data-fallback-image={fallback.image}
+                    data-fallback-alt={fallback.alt}
                   />
                 </a>
                 <figcaption>
@@ -358,14 +362,13 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                       ? `/api/share-image?project=${project.slug}`
                       : metadata.image
                   }
+                  fallbackImage={fallback.image}
                   filename={`${project.slug}-social.jpg`}
                   link={destination}
                 />
                 <div class="asset-links">
                   <a href={destination}>{projectActionLabel(project.slug)}</a>
-                  <a href={galleryURL(project.slug, defaultProjectType(project.slug))}>
-                    Link to this kit
-                  </a>
+                  <a href={kitURL(project.slug, view)}>Link to this kit</a>
                   {project.slug === "shoalshot" && nativeSharing && (
                     <a href={destination}>Play & share a dive</a>
                   )}
@@ -585,10 +588,14 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
     image.addEventListener("error", () => {
       // A project's published artwork can move or disappear. Fall back once to the
       // reviewed Woodhouse illustration and say so, rather than leaving a broken
-      // image with the project's credit on it.
+      // image with the project's credit on it. The full-size link follows the
+      // same resolved asset so preview and original never disagree.
       const fallback = image.dataset.fallbackImage;
       if (fallback && image.src !== new URL(fallback, location.href).href) {
         image.src = fallback;
+        if (image.dataset.fallbackAlt) image.alt = image.dataset.fallbackAlt;
+        const link = image.closest("a");
+        if (link?.dataset.fallbackHref !== undefined) link.href = link.dataset.fallbackHref;
         const credit = image.closest("figure")?.querySelector("[data-image-credit]");
         if (credit) credit.textContent = "Illustration by Woodhouse";
         return;
