@@ -1,5 +1,6 @@
 ---
 import type { PublicMenuItem } from "../content/repository";
+import { analyticsLabel, analyticsUrl, withAnalyticsLabel } from "../data/navigation";
 
 type Props = {
   currentPath?: string;
@@ -8,6 +9,8 @@ type Props = {
 };
 
 const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
+const primary = withAnalyticsLabel(links);
+const houseIndex = withAnalyticsLabel(houseIndexLinks);
 ---
 
 <a class="skip-link" href="#main-content">
@@ -20,9 +23,9 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
     </div>
     <div class="site-header__tools">
       <nav class="desktop-nav" aria-label="Main navigation">
-        {!links.some((link) => link.url === "/activity/") && (
-          <a href="/activity/" aria-current={currentPath === "/activity/" ? "page" : undefined}>
-            Activity
+        {!links.some((link) => link.url === analyticsUrl) && (
+          <a href={analyticsUrl} aria-current={currentPath === analyticsUrl ? "page" : undefined}>
+            {analyticsLabel}
           </a>
         )}
         {!links.some((link) => link.url === "/share/") && (
@@ -30,7 +33,7 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
             Share
           </a>
         )}
-        {links.map((link) => (
+        {primary.map((link) => (
           <a
             href={link.url}
             target={link.target}
@@ -65,12 +68,12 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
               Share desk
             </a>
           )}
-          {!links.some((link) => link.url === "/activity/") && (
-            <a href="/activity/" aria-current={currentPath === "/activity/" ? "page" : undefined}>
-              Portfolio activity
+          {!links.some((link) => link.url === analyticsUrl) && (
+            <a href={analyticsUrl} aria-current={currentPath === analyticsUrl ? "page" : undefined}>
+              {analyticsLabel}
             </a>
           )}
-          {links.map((link) => (
+          {primary.map((link) => (
             <a
               href={link.url}
               target={link.target}
@@ -80,7 +83,7 @@ const { currentPath = "/", links = [], houseIndexLinks = [] } = Astro.props;
               {link.label}
             </a>
           ))}
-          {houseIndexLinks.map((link) => (
+          {houseIndex.map((link) => (
             <a
               href={link.url}
               target={link.target}

@@ -1,6 +1,8 @@
 import {
+  formatMetric,
   type AnalyticsProject,
   type Metric,
+  type PortfolioReport,
   type ProjectAnalytics,
   type ReportingWindow
 } from "./portfolio-analytics.ts";
@@ -198,18 +200,47 @@ const productViews: Record<AnalyticsProject, ProductView> = {
 export function productView(project: AnalyticsProject | null) {
   return project ? productViews[project] : null;
 }
+/**
+ * All projects opens on a mixed overview instead of inheriting the first global
+ * measure. Gameplay is one product family among four; a portfolio of games,
+ * music, an app and this site must not present game starts as its default
+ * reading. `overview` is a scope, not a measure: every row keeps its own metric,
+ * unit and meaning, and no family total is invented.
+ *
+ * The overview scope belongs to All projects only, so
+ * `?measure=overview&project=fighter` normalises back to Game starts instead of
+ * showing a mixed scope for a single product.
+ */
+export const overviewMeasure = {
+  key: "overview",
+  label: "Project overview",
+  meaning:
+    "Each admitted project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app access and outcomes for App Composer and audience discovery for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
+} as const;
 export function measuresFor(project: AnalyticsProject | null) {
   const keys = productView(project)?.keys;
-  return keys ? keys.map((key) => measureChoices.find((m) => m.key === key)!) : [...measureChoices];
+  if (keys) return keys.map((key) => measureChoices.find((m) => m.key === key)!);
+  return [overviewMeasure, ...measureChoices];
 }
 export function resolveMeasure(project: AnalyticsProject | null, requested?: string | null) {
   const choices = measuresFor(project);
+  if (
+    project === null &&
+    (requested === undefined || requested === null || requested === overviewMeasure.key)
+  )
+    return overviewMeasure;
   const canonical = requested === "replays" ? "game_replays" : requested;
+  const known = measureChoices.find((m) => m.key === canonical);
   return (
-    choices.find((m) => m.key === canonical) ??
+    (known && choices.some((m) => m.key === known.key) ? known : undefined) ??
     choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
+    // An unreadable measure for All projects returns to the overview; the route
+    // normalises the address instead of silently drawing one project family.
     choices[0]!
   );
+}
+export function isOverviewMeasure(measure: { key: string }): measure is typeof overviewMeasure {
+  return measure.key === overviewMeasure.key;
 }
 export function measureForProjectSwitch(
   from: AnalyticsProject | null,
@@ -218,7 +249,107 @@ export function measureForProjectSwitch(
 ) {
   const previous = productView(from),
     next = productView(to);
-  return resolveMeasure(to, previous && next && previous.family !== next.family ? null : current);
+  // Leaving All projects always lands on the destination's own default.
+  if (!from || !next) return resolveMeasure(to, null);
+  return resolveMeasure(to, previous && previous.family !== next.family ? null : current);
+}
+/** Each project's own headline measure, in the order the product views define them. */
+export function overviewMeasures(project: AnalyticsProject) {
+  const view = productView(project)!;
+  const primary = measureChoices.find((m) => m.key === view.defaultMeasure)!;
+  const rest = view.headlines
+    .filter((key) => key !== view.defaultMeasure)
+    .map((key) => measureChoices.find((m) => m.key === key)!);
+  return [primary, ...rest];
+}
+/** A project's overview row. Applicability is decided by the product view, never by the payload. */
+export function overviewMetric(
+  report: ProjectAnalytics | null | undefined,
+  project: AnalyticsProject
+) {
+  const [primary] = overviewMeasures(project);
+  return report?.metrics.find((m) => m.key === primary!.key);
+}
+/** Games lead the portfolio overview; the rest follow their product families. */
+export const overviewOrder: AnalyticsProject[] = [
+  "fighter",
+  "bubbles",
+  "protocol-11",
+  "shoalshot",
+  "loftwahfm",
+  "app-composer",
+  "woodhouse"
+];
+/**
+ * The share caption for one selection. The page, the saved link and the social
+ * card must describe the same scope, measure, unit and period, so the caption is
+ * built once from the same rows the page renders.
+ */
+export function reportCaption(
+  rows: {
+    name: string;
+    metric: Metric | undefined;
+    overviewMeasure: { label: string } | null;
+  }[],
+  measure: { key: string; label: string },
+  window: ReportingWindow,
+  link: string,
+  dateLabel: (date: string) => string
+) {
+  const mixed = isOverviewMeasure(measure);
+  const values = rows
+    .filter((r) => r.metric?.value !== null && r.metric)
+    .map(
+      (r) =>
+        `${r.name}: ${formatMetric(r.metric!)} ${
+          mixed && r.overviewMeasure
+            ? r.overviewMeasure.label.toLowerCase()
+            : measure.label.toLowerCase()
+        } · ${qualityText(r.metric)}`
+    );
+  return [
+    `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
+    ...values,
+    mixed
+      ? "Each project is shown on its own measure; units are not added together."
+      : "One measure and one unit across the named projects.",
+    `Reported activity, not unique people. ${
+      window.complete
+        ? "Closed calendar window; source coverage varies."
+        : "Current UTC day is partial."
+    } Legacy/test and coverage limitations apply; see report.`,
+    link
+  ].join("\n");
+}
+export type OverviewRow = {
+  project: AnalyticsProject;
+  family: ProductView["family"];
+  label: string;
+  measure: (typeof measureChoices)[number];
+  metric: Metric | undefined;
+};
+/**
+ * Build the mixed overview in product-family order. A project is applicable by
+ * definition and stays in the list when its source is unavailable, so a real
+ * reporting failure is visible rather than filtered out.
+ */
+export function portfolioOverview(
+  report: PortfolioReport | null,
+  publicIds: Set<string>,
+  names: Map<string, string>
+): OverviewRow[] {
+  const members = overviewOrder.filter((project) => publicIds.has(project));
+  return members.map((project) => {
+    const data = report?.projects.find((p) => p.project === project)?.report ?? null;
+    const [primary] = overviewMeasures(project);
+    return {
+      project,
+      family: productView(project)!.family,
+      label: names.get(project) ?? project,
+      measure: primary!,
+      metric: overviewMetric(data, project)
+    };
+  });
 }
 export function reportMetric(
   project: AnalyticsProject,
@@ -237,8 +368,8 @@ export function dateDays(period: ReportingWindow) {
   );
 }
 export function dailyStatus(
-  report: ProjectAnalytics | null,
-  metric: Metric | undefined,
+  report: { coverage: ProjectAnalytics["coverage"] } | null,
+  metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
   day: string
 ) {
   const point = metric?.daily.find((d) => d.date === day);

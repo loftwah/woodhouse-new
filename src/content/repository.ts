@@ -567,10 +567,11 @@ export async function listPublicSearchItems() {
         section: "Factory"
       },
       {
-        title: "Scores & listening",
-        description: "Public competition links and reported game radio listening.",
+        title: "Analytics",
+        description:
+          "How each project is being used: its own relevant measure, dated and with coverage.",
         href: "/activity/",
-        section: "Activity"
+        section: "Analytics"
       },
       {
         title: "Project dossiers",
