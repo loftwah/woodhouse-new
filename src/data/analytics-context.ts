@@ -59,7 +59,15 @@ export function parseReportReleases(
   now: number
 ): ReportRelease[] | undefined {
   if (!Array.isArray(raw) || raw.length > 80) return undefined;
-  const capturedDay = new Date(now).toISOString().slice(0, 10);
+  // Evidence review dates are calendar strings in the site's Melbourne zone,
+  // not UTC instants. Only this review gate uses that calendar; observed source
+  // dates and the report's inclusive UTC activity window remain untouched.
+  const capturedReviewDay = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Australia/Melbourne",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(now);
   const notes: ReportRelease[] = [];
   const ids = new Set<string>();
   for (const item of raw) {
@@ -74,7 +82,7 @@ export function parseReportReleases(
       !day(item.date) ||
       !day(item.reviewedAt) ||
       item.date > item.reviewedAt ||
-      item.reviewedAt > capturedDay ||
+      item.reviewedAt > capturedReviewDay ||
       !text(item.title, 240) ||
       !text(item.summary, 2400) ||
       !text(item.boundary, 2400) ||

@@ -777,3 +777,45 @@ test("the collector accepts exactly the same six discovery targets as the browse
     6
   );
 });
+
+test("a current Melbourne review is frozen without moving its observed date or UTC report window", async () => {
+  const { db } = database();
+  const capturedAt = Date.parse("2026-10-17T22:00:00Z");
+  const note = {
+    project: "shoalshot" as const,
+    evidenceId: "shoalshot-release",
+    date: "2026-10-17",
+    reviewedAt: "2026-10-18",
+    title: "Reviewed release observation",
+    summary: "A dated source observation.",
+    boundary: "No deployment time is inferred from the calendar date.",
+    revision: "abc123"
+  };
+  const report = await createPortfolioReport(
+    db,
+    7,
+    new Set(["shoalshot"]),
+    fetch,
+    capturedAt,
+    undefined,
+    [note]
+  );
+  assert.equal(report.period?.from, "2026-10-11");
+  assert.equal(report.period?.to, "2026-10-17");
+  assert.deepEqual(report.releases, [note]);
+  assert.deepEqual((await readPortfolioReport(db, report.id))?.releases, [note]);
+  const laterObservation = await createPortfolioReport(
+    db,
+    1,
+    new Set(["shoalshot"]),
+    fetch,
+    capturedAt,
+    { from: "2026-10-17", to: "2026-10-17", days: 1, complete: false },
+    [{ ...note, date: "2026-10-18" }]
+  );
+  assert.deepEqual(
+    laterObservation.releases,
+    [],
+    "observations after the selected UTC end remain omitted"
+  );
+});

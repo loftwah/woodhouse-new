@@ -150,3 +150,32 @@ test("browser-return context preserves real zero, missing source, and exact sour
   });
   assert.match(missing[0]!.gap!, /does not report browser returns/);
 });
+
+test("Melbourne review dates do not become future reviews before UTC midnight", () => {
+  const capturedAt = Date.parse("2026-10-17T22:00:00Z");
+  const notes = releaseNotesFromEvidence(
+    [evidence({ occurred_at: "2026-10-17", reviewed_at: "2026-10-18" })],
+    members,
+    capturedAt
+  );
+  assert.equal(notes.length, 1);
+  assert.equal(notes[0]!.date, "2026-10-17", "the observed source date stays unchanged");
+  assert.equal(notes[0]!.reviewedAt, "2026-10-18");
+  assert.deepEqual(parseReportReleases(notes, members, capturedAt), notes);
+  assert.equal(
+    parseReportReleases([{ ...notes[0], reviewedAt: "2026-10-19" }], members, capturedAt),
+    undefined,
+    "a genuinely future Melbourne review remains rejected"
+  );
+});
+
+test("the review gate follows Melbourne midnight across daylight saving", () => {
+  for (const [before, after, reviewedAt] of [
+    ["2026-10-17T12:59:59Z", "2026-10-17T13:00:00Z", "2026-10-18"],
+    ["2026-06-17T13:59:59Z", "2026-06-17T14:00:00Z", "2026-06-18"]
+  ]) {
+    const entry = evidence({ occurred_at: reviewedAt, reviewed_at: reviewedAt });
+    assert.deepEqual(releaseNotesFromEvidence([entry], members, Date.parse(before!)), []);
+    assert.equal(releaseNotesFromEvidence([entry], members, Date.parse(after!)).length, 1);
+  }
+});
