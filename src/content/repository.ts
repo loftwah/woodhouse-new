@@ -581,10 +581,10 @@ export async function listPublicSearchItems() {
         section: "Projects"
       },
       {
-        title: "Dispatches",
+        title: "Stories",
         description: "Edited essays and engineering case studies.",
         href: "/dispatches/",
-        section: "Dispatches"
+        section: "Stories"
       },
       {
         title: "Incidents",
@@ -640,7 +640,8 @@ export async function listPublicSearchItems() {
       description: `${project.title} ${project.discipline}.`,
       href: `/projects/${project.slug}/`,
       section: "Projects",
-      searchText: `${project.title} ${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary} ${aliasesFor(project.slug)}`
+      keywords: aliasesFor(project.slug),
+      searchText: `${project.title} ${project.summary} ${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
       title: dispatch.title,

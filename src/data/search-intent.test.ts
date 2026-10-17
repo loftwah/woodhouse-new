@@ -1,14 +1,26 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
-import { aliasesFor, searchMatches, searchStopWords, searchTokens } from "./search-intent.ts";
+import {
+  aliasesFor,
+  searchMatches,
+  searchRank,
+  searchScore,
+  searchStopWords,
+  searchTokens
+} from "./search-intent.ts";
 
 const seed = JSON.parse(readFileSync(new URL("../../seed/seed.json", import.meta.url), "utf8"));
 const projects: { slug: string; data: Record<string, string> }[] = seed.content.projects;
 
+/**
+ * The same fields the published index carries for a project: the title, summary,
+ * discipline and dated status text plus the reviewed intent aliases.
+ */
 const haystack = (project: { slug: string; data: Record<string, string> }) =>
   [
     project.data.name,
+    project.data.discipline,
     project.data.title,
     project.data.summary,
     project.data.why,
@@ -18,8 +30,15 @@ const haystack = (project: { slug: string; data: Record<string, string> }) =>
     .filter(Boolean)
     .join(" ");
 
-const matchingSlugs = (query: string) =>
-  projects.filter((project) => searchMatches(haystack(project), query)).map((p) => p.slug);
+const ranked = (query: string) =>
+  projects
+    .map((project) => ({
+      slug: project.slug,
+      score: searchRank(haystack(project), query, aliasesFor(project.slug))
+    }))
+    .filter((row) => row.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .map((row) => row.slug);
 
 test("an ordinary intent phrase finds the project it means", () => {
   // The reported defect: "music for my game" found nothing while "music" worked.
@@ -31,10 +50,24 @@ test("an ordinary intent phrase finds the project it means", () => {
     ["build an app", "app-composer"],
     ["fishing game", "shoalshot"],
     ["fighting game", "fighter"],
-    ["walking frame", "max"]
+    ["walking frame", "max"],
+    ["fm", "loftwahfm"]
   ] as const) {
-    assert.ok(matchingSlugs(query).includes(expected), `"${query}" should find ${expected}`);
+    assert.ok(
+      projects.some(
+        (project) => project.slug === expected && searchMatches(haystack(project), query)
+      ),
+      `"${query}" should match ${expected}`
+    );
   }
+});
+
+test("the best match leads an intent phrase", () => {
+  // LoftwahFM satisfies both tokens; a project that only mentions a game is an
+  // alternative result, not the headline answer.
+  assert.equal(ranked("music for my game")[0], "loftwahfm");
+  assert.equal(ranked("bubble shooter")[0], "bubbles");
+  assert.equal(ranked("card game")[0], "protocol-11");
 });
 
 test("stop words and short tokens do not decide a match", () => {
@@ -49,10 +82,14 @@ test("stop words and short tokens do not decide a match", () => {
 });
 
 test("a query about nothing in the record matches nothing", () => {
-  assert.deepEqual(matchingSlugs("quantum blockchain insurance"), []);
+  assert.deepEqual(ranked("quantum blockchain insurance"), []);
 });
 
-test("a plural query token still finds the singular product word", () => {
-  assert.ok(matchingSlugs("bubbles shooter").includes("bubbles"));
-  assert.ok(matchingSlugs("card games").includes("protocol-11"));
+test("a two-letter word inside another word is not a match", () => {
+  // "incident" must not match a project through the "in" in "inside".
+  const haystackText = "Fighter inside a browser tab";
+  assert.equal(searchScore(haystackText, "incident"), 0);
+  // Real prefix relationships still work, in both directions.
+  assert.equal(searchScore("an app builder inside", "apps"), 1);
+  assert.equal(searchScore("bubble shooter game", "shooters"), 1);
 });

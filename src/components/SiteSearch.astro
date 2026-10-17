@@ -140,6 +140,7 @@ const pages: SearchPage[] = [
             <li
               data-search-item
               data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""} ${page.searchText ?? ""}`.toLowerCase()}
+              data-search-intent={`${page.title} ${page.section} ${"keywords" in page ? page.keywords : ""}`.toLowerCase()}
             >
               <a href={page.href}>
                 <span>
@@ -183,37 +184,47 @@ const pages: SearchPage[] = [
     )
       return;
 
-    const entries = [...list.querySelectorAll("[data-search-item]")].map((item, order) => ({
-      item,
-      order,
-      words: new Set(
-        (item.dataset.search ?? "")
-          .toLocaleLowerCase()
-          .split(/[^a-z0-9]+/)
-          .filter((word) => word.length > 1)
-      )
-    }));
+    const entries = [...list.querySelectorAll("[data-search-item]")].map((item, order) => {
+      const words = (value) =>
+        new Set(
+          (value ?? "")
+            .toLocaleLowerCase()
+            .split(/[^a-z0-9]+/)
+            .filter((word) => word.length > 1)
+        );
+      return {
+        item,
+        order,
+        words: words(item.dataset.search),
+        intentWords: words(item.dataset.searchIntent)
+      };
+    });
     const stop = new Set((dialog.dataset.searchStop ?? "").split(/\s+/).filter(Boolean));
     const empty = dialog.querySelector(".site-search__empty");
     let returnFocusTo = null;
 
-    const matched = (entry, tokens) =>
+    const matches = (words, tokens) =>
       tokens.filter((token) =>
-        [...entry.words].some((word) => word.startsWith(token) || token.startsWith(word))
+        [...words].some(
+          (word) => word.startsWith(token) || (word.length >= 3 && token.startsWith(word))
+        )
       ).length;
+    const matched = (entry, tokens) =>
+      matches(entry.intentWords, tokens) + matches(entry.words, tokens);
 
     const filter = () => {
       // Token matching with a small stop list, so an ordinary intent phrase such
       // as "music for my game" finds LoftwahFM instead of requiring the exact
-      // words a project record happens to use. Entries that satisfy more of the
-      // query sit first; the rest keep the index's own order.
+      // words a project record happens to use. Every entry that matches at least
+      // one token is shown, best match first, so a partial match is an alternative
+      // rather than a competitor to the obvious answer.
       const tokens = (input.value.toLocaleLowerCase().match(/[a-z0-9]+/g) ?? []).filter(
         (token) => token.length > 1 && !stop.has(token)
       );
       const ranked = tokens.length
         ? entries
             .map((entry) => ({ entry, score: matched(entry, tokens) }))
-            .filter((row) => row.score === tokens.length)
+            .filter((row) => row.score > 0)
             .sort((a, b) => b.score - a.score || a.entry.order - b.entry.order)
         : entries.map((entry) => ({ entry, score: 0 }));
       const visible = new Set(ranked.map((row) => row.entry.item));

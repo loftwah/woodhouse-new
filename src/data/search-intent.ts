@@ -28,7 +28,7 @@ const aliases: Record<string, string> = {
   pirates:
     "reconstruction remake retro lost game source archaeology master of the secret sea restoration trust evidence",
   loftwahfm:
-    "music radio station stream song songs album soundtrack playlist music for my game game music background music listening shows radio client audio",
+    "music radio fm station stream song songs album soundtrack playlist music for my game game music background music listening shows radio client audio",
   "social-club":
     "membership club hospitality restaurant venue booking private members experience prototype",
   "asset-hunter":
@@ -99,17 +99,43 @@ export function searchTokens(value: string): string[] {
     .filter((token) => token.length > 1);
 }
 
+/** The meaningful tokens of a query, in order, with stop words removed. */
+function meaningfulTokens(query: string) {
+  const stop = new Set(searchStopWords);
+  return searchTokens(query).filter((token) => !stop.has(token));
+}
+
+/** How many of the query's meaningful tokens this text satisfies. */
+function searchMatchesText(text: string, query: string): number {
+  const words = searchTokens(text);
+  return meaningfulTokens(query).filter((token) =>
+    words.some((word) => word.startsWith(token) || (word.length >= 3 && token.startsWith(word)))
+  ).length;
+}
+
+/** How many of the query's meaningful tokens the entry satisfies at all. */
+export function searchScore(haystack: string, query: string): number {
+  return searchMatchesText(haystack, query);
+}
+
+/**
+ * The ordering score. A token matched in the entry's reviewed intent aliases
+ * counts twice, so "music for my game" leads with LoftwahFM even though another
+ * game's prose happens to mention music. Ties keep the index's own order.
+ */
+export function searchRank(haystack: string, query: string, intent = ""): number {
+  return searchMatchesText(intent, query) + searchMatchesText(haystack, query);
+}
+
 /**
  * Does this entry satisfy every meaningful token of the query? A token matches a
- * haystack word exactly, as a prefix of it, or as a prefix the word extends —
- * enough for "apps" to find "app" and "shooters" to find "shooter".
+ * haystack word exactly, as a prefix of it, or as a prefix the word extends — but
+ * only for words of three letters or more, so a long query token cannot match any
+ * two-letter word. Without that bound, "incident" matched every project through
+ * "in", which is not a search result, it is noise.
  */
 export function searchMatches(haystack: string, query: string): boolean {
-  const stop = new Set(searchStopWords);
-  const tokens = searchTokens(query).filter((token) => !stop.has(token));
+  const tokens = meaningfulTokens(query);
   if (!tokens.length) return true;
-  const words = searchTokens(haystack);
-  return tokens.every((token) =>
-    words.some((word) => word.startsWith(token) || token.startsWith(word))
-  );
+  return searchMatchesText(haystack, query) === tokens.length;
 }

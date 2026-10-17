@@ -107,7 +107,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <FactoryPlate />
       <div class="project-ledger">
         {projects.map((project) => (
-          <ProjectRow project={project} total={projects.length} />
+          <ProjectRow project={project} />
         ))}
       </div>
       <div class="snapshot-band" style="margin-top:2.5rem">

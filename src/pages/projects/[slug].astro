@@ -326,7 +326,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       </div>
       <div class="project-ledger">
         {nextProjects.map((item) => (
-          <ProjectRow project={item} total={allProjects.projects.length} compact={true} />
+          <ProjectRow project={item} compact={true} />
         ))}
       </div>
     </div>

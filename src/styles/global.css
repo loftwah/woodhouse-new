@@ -201,6 +201,32 @@ summary {
 .mobile-index nav a:last-child {
   border-bottom: 0;
 }
+.mobile-index summary {
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mobile-index summary::-webkit-details-marker {
+  display: none;
+}
+.mobile-index summary::-webkit-details-marker {
+  display: none;
+}
+.mobile-index__glyph {
+  color: var(--brass);
+  font-size: 1rem;
+}
+.mobile-index[open] .mobile-index__glyph {
+  transform: rotate(45deg);
+}
 .container {
   width: min(100% - (2 * var(--gutter)), 1440px);
   margin-inline: auto;
@@ -522,25 +548,6 @@ a.project-row__image {
   background: transparent;
   color: var(--acid);
 }
-.project-row__proof {
-  display: block;
-  margin: 0.35rem 0 0.2rem;
-  padding-left: 0.65rem;
-  border-left: 1px solid var(--brass-dim);
-  color: var(--muted);
-  font-size: 0.75rem;
-  line-height: 1.5;
-}
-.project-row__proof strong {
-  display: block;
-  margin-bottom: 0.15rem;
-  color: var(--brass);
-  font-family: var(--mono);
-  font-size: 0.56rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 .project-row__dossier {
   color: var(--accent-link);
   font-family: var(--mono);
@@ -551,7 +558,6 @@ a.project-row__image {
 }
 .project-row--compact .project-row__summary,
 .project-row--compact .project-row__availability,
-.project-row--compact .project-row__proof,
 .project-row--compact .project-row__state {
   display: none;
 }
@@ -1662,29 +1668,6 @@ a.project-row__image {
     display: block;
     position: relative;
   }
-  .mobile-index summary {
-    min-height: 2.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    cursor: pointer;
-    list-style: none;
-    color: var(--paper);
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .mobile-index summary::-webkit-details-marker {
-    display: none;
-  }
-  .mobile-index__glyph {
-    color: var(--brass);
-    font-size: 1rem;
-  }
-  .mobile-index[open] .mobile-index__glyph {
-    transform: rotate(45deg);
-  }
   .mobile-index nav {
     position: absolute;
     z-index: 12;
@@ -2546,19 +2529,6 @@ a.project-row__image:hover img {
   color: var(--copy);
   font-size: 0.9rem;
   line-height: 1.58;
-}
-.project-row__proof {
-  max-width: 37rem;
-  margin: 0.55rem 0 0.2rem;
-  padding: 0.55rem 0 0.55rem 0.75rem;
-  border-top: 1px solid var(--line);
-  color: var(--copy-soft);
-  font-size: 0.82rem;
-}
-.project-row__proof strong {
-  color: var(--brass);
-  font-size: 0.59rem;
-  font-weight: 800;
 }
 .project-row__dossier {
   margin-top: auto;
