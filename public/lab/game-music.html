@@ -120,7 +120,9 @@
   let playEvents = 0;
 
   const render = (snapshot) => {
-    if (!snapshot.item && (snapshot.phase === "unavailable" || snapshot.error)) {
+    // A failed media resource can retain its selected item. Phase decides
+    // availability; a track title is not evidence that it can still play.
+    if (snapshot.phase === "unavailable") {
       showUnavailable("Music unavailable (station or media).");
       return;
     }

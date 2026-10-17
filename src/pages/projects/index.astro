@@ -1,4 +1,5 @@
 ---
+import { projectAction } from "../../data/project-actions";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../../data/review-date";
 import { portfolioReadout } from "../../data/portfolio";
@@ -11,7 +12,27 @@ if (result.error)
     headers: { "cache-control": "private, no-store" }
   });
 const projects = result.projects;
-if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+// Native query views must not share the path-only route cache.
+Astro.cache.set(false);
+Astro.response.headers.set("cache-control", "private, no-store");
+const choices = [
+  { key: "all", label: "Everything", actions: [] },
+  { key: "play", label: "Play a game", actions: ["Play"] },
+  { key: "listen", label: "Listen", actions: ["Listen"] },
+  { key: "build", label: "Build something", actions: ["Try"] },
+  { key: "explore", label: "Explore experiments", actions: ["Open", "See"] }
+];
+const choice = choices.find((item) => item.key === Astro.url.searchParams.get("do")) ?? choices[0]!;
+const shown = projects.filter(
+  (project) => choice.key === "all" || choice.actions.includes(projectAction(project).action)
+);
+function choiceLink(key: string) {
+  const query = new URLSearchParams();
+  if (key !== "all") query.set("do", key);
+  if (Astro.url.searchParams.get("analytics") === "off") query.set("analytics", "off");
+  if (Astro.url.searchParams.has("qa")) query.set("qa", "");
+  return `/projects/${query.size ? `?${query}` : ""}#project-choices`;
+}
 // The newest review across the portfolio, not the first row's: projects[0] is
 // Bubbles and would misreport the whole index as reviewed on its own date.
 const reviewDate = portfolioReadout(projects).reviewDate;
@@ -46,8 +67,23 @@ export const prerender = false;
   </section>
   <section class="section paper-section">
     <div class="container">
+      <nav class="project-choices" id="project-choices" aria-label="Find something to do">
+        {choices.map((item) => (
+          <a
+            href={choiceLink(item.key)}
+            aria-current={item.key === choice.key ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+      <p class="project-choice-count" role="status">
+        {choice.key === "all"
+          ? `All ${projects.length} projects`
+          : `${shown.length} of ${projects.length} projects · ${choice.label}`}
+      </p>
       <div class="project-ledger">
-        {projects.map((project) => (
+        {shown.map((project) => (
           <ProjectRow project={project} headingLevel="h2" />
         ))}
       </div>
@@ -58,3 +94,33 @@ export const prerender = false;
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .project-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    border-block: 1px solid var(--line);
+    padding-block: 0.75rem;
+    scroll-margin-top: 6rem;
+  }
+  .project-choices a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--copy);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+  }
+  .project-choices a[aria-current="page"] {
+    color: var(--acid);
+    border-color: var(--acid);
+  }
+  .project-choices a:hover {
+    color: var(--acid);
+  }
+  .project-choice-count {
+    color: var(--muted);
+    margin-block: 1rem 2rem;
+  }
+</style>
