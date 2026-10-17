@@ -50,6 +50,8 @@
     "social-cards": "python3 scripts/render-social-cards.py",
     "social-cards:record": "node scripts/social-cards.mjs",
     "social-cards:check": "node scripts/social-cards.mjs --check",
+    "share-previews": "node --experimental-strip-types scripts/render-share-previews.mjs",
+    "share-previews:check": "node --experimental-strip-types scripts/render-share-previews.mjs --check",
     "diagrams": "bash scripts/render-diagrams.sh",
     "deploy:publication": "node scripts/deploy-publication.mjs"
   },
