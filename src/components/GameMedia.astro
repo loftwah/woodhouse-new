@@ -70,6 +70,7 @@ const { asset, destination, preview, eager = false } = Astro.props;
   <ShareActions
     caption={asset.caption}
     image={asset.file}
+    shareSource={preview}
     filename={asset.file.split("/").pop() ?? "share-media"}
     link={asset.link ?? destination}
     mediaType={asset.kind}

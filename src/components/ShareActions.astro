@@ -2,6 +2,8 @@
 type Props = {
   caption: string;
   image: string;
+  /** Bounded source used for clipboard and native-share preparation. Defaults to `image`. */
+  shareSource?: string | undefined;
   filename?: string;
   link: string;
   label?: string;
@@ -10,6 +12,7 @@ type Props = {
 const {
   caption,
   image,
+  shareSource,
   filename = "loftwah-social.jpg",
   link,
   label = "Copy post",
@@ -20,6 +23,7 @@ const {
 <div
   data-share-actions
   data-image={image}
+  data-share-source={shareSource ?? image}
   data-media-type={mediaType}
   data-filename={filename}
   data-link={link}
@@ -56,7 +60,7 @@ const {
     };
     let original: Promise<Blob> | undefined;
     const load = () =>
-      (original ??= fetch(root.dataset.image!, { signal: AbortSignal.timeout(15000) })
+      (original ??= fetch(root.dataset.shareSource!, { signal: AbortSignal.timeout(15000) })
         .then(async (response) => {
           if (!response.ok) throw new Error("Image unavailable");
           const blob = await response.blob();
