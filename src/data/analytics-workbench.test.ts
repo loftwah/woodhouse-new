@@ -498,7 +498,10 @@ test("a missing whole report or an omitted metric keeps an applicable project in
       assert(svg.includes("Protocol 11"), `${label} ${format} dropped the applicable game`);
       assert(svg.includes("3/4 sources supply this measure"), `${label} ${format} denominator`);
       assert(!svg.includes("3/3"));
-      assert(svg.includes(">0</text>"), `${label} ${format} dropped a genuine zero`);
+      assert(
+        /Bubbles[\s\S]{0,400}>0<\/text>/.test(svg),
+        `${label} ${format} dropped Bubbles's genuine zero`
+      );
       for (const project of ["LoftwahFM", "App Composer", "Woodhouse"])
         assert(!svg.includes(project), `${label} ${format} listed ${project} under gameplay`);
     }
@@ -507,6 +510,46 @@ test("a missing whole report or an omitted metric keeps an applicable project in
     reportSvg(missingReport, names, "landscape", "game_starts").includes("Source unavailable")
   );
   assert(reportSvg(omittedMetric, names, "landscape", "game_starts").includes("Not reported"));
+});
+test("the saved caption carries the same qualifier the card and PNG show", () => {
+  const coverage = {
+    startedAt: "2026-10-13T00:00:00.000Z",
+    comparableFrom: "2026-10-15T00:00:00.000Z",
+    through: "2026-10-17T15:00:00.000Z",
+    quality: "exact" as const,
+    limitations: []
+  };
+  const full = {
+    ...metric,
+    daily: [
+      { date: "2026-10-14", value: 4 },
+      { date: "2026-10-15", value: 0 },
+      { date: "2026-10-16", value: 0 }
+    ]
+  };
+  const legacy = reportCaption(
+    [{ name: "Fighter", metric: full, overviewMeasure: null, report: { coverage } }],
+    resolveMeasure(null, "game_starts"),
+    period,
+    "https://example.test/activity/",
+    (date) => date
+  );
+  assert.match(legacy, /Fighter: 4 game starts · Legacy\/test risk/);
+  const clean = reportCaption(
+    [
+      {
+        name: "Fighter",
+        metric: full,
+        overviewMeasure: null,
+        report: { coverage: { ...coverage, comparableFrom: "2026-10-13T00:00:00.000Z" } }
+      }
+    ],
+    resolveMeasure(null, "game_starts"),
+    period,
+    "https://example.test/activity/",
+    (date) => date
+  );
+  assert.match(clean, /Fighter: 4 game starts · Reported activity/);
 });
 test("the share caption names each project's own measure and the mixed scope", () => {
   const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({

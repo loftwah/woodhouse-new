@@ -35,7 +35,7 @@ import {
   productView,
   reportCaption,
   reportMetric,
-  supportsMeasure,
+  measureScope,
   measureForProjectSwitch
 } from "../data/analytics-workbench";
 export const prerender = false;
@@ -128,6 +128,12 @@ const overviewRows = overview
         };
       })
   : [];
+const scopedProjects = new Set(
+  measureScope(
+    rows.map((r) => r.project),
+    measure.key
+  )
+);
 const metricRows = overview
   ? overviewRows
   : rows
@@ -140,7 +146,7 @@ const metricRows = overview
       // returned a metric object: a game whose whole report is missing, or whose
       // report omits the measure, must stay in the scope and the denominator as
       // "Not measured" rather than disappear and flatter the coverage figure.
-      .filter((r) => supportsMeasure(r.project, measure.key));
+      .filter((r) => scopedProjects.has(r.project));
 const guestReceipts = allRows
   .find((r) => r.project === "app-composer")
   ?.data?.metrics.find((m) => m.key === "guest_postcards_received");
@@ -186,7 +192,11 @@ const headlines =
         metric: rows[0]?.data?.metrics.find((m) => m.key === key)
       }))
     : metricRows;
-const chartRows = metricRows.filter((r) => r.metric);
+// The chart, its legend and the exported CSV describe the same applicable scope
+// as the daily table and the coverage calendar. An in-scope project with no
+// observation keeps its column and legend entry as an all-gap series rather than
+// vanishing from one representation while the others still count it.
+const chartRows = metricRows;
 function daysForStatus(
   data: (typeof metricRows)[number]["data"],
   metric: (typeof metricRows)[number]["metric"]
@@ -200,7 +210,9 @@ const chartSeries = chartRows.map((r) => ({
   statuses: daysForStatus(r.data, r.metric)
 }));
 const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
-const unit = chartRows[0]?.metric?.unit ?? (measure.key.endsWith("_seconds") ? "seconds" : "count");
+const unit =
+  chartRows.find((r) => r.metric)?.metric?.unit ??
+  (measure.key.endsWith("_seconds") ? "seconds" : "count");
 const days = dateDays(window);
 // Applicable scope, never a truthy-value count: a project that should report this
 // measure but did not stays in the denominator as "not measured".
@@ -249,6 +261,19 @@ const title = selected ? `${names.get(selected)} analytics` : "Portfolio analyti
 const link = report
   ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}`
   : `https://woodhouse.loftwah.com/activity/`;
+// The visible permalink keeps a measurement exclusion; the canonical `link`
+// published in page metadata and the shared caption must not carry a QA
+// parameter, so only this navigable copy is augmented.
+const shareLink = (() => {
+  try {
+    const url = new URL(link);
+    if (qaOff) url.searchParams.set("analytics", "off");
+    if (qaValue !== null) url.searchParams.set("qa", qaValue || "1");
+    return url.href;
+  } catch {
+    return link;
+  }
+})();
 const image = report
   ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}`
   : "/og/woodhouse.jpg";
@@ -851,7 +876,9 @@ const dataPayload = {
               {report?.analysis?.findings.length
                 ? overview
                   ? "Complete-week movements across the portfolio. Each finding names its own project and measure; they are broader context and may describe a different measure from the chart."
-                  : `Complete-week movement for ${names.get(selected!)}. Each finding names its own measure, which may differ from the chart above.`
+                  : selected
+                    ? `Complete-week movement for ${names.get(selected)}. Each finding names its own measure, which may differ from the chart above.`
+                    : "Complete-week movements for the projects in this scope. Each finding names its own project and measure, which may differ from the chart above."
                 : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
             </p>
             {report?.analysis?.findings.map((f) => (
@@ -960,7 +987,7 @@ const dataPayload = {
                   <button data-report-copy type="button">
                     Copy caption + link
                   </button>
-                  <a href={link}>Open frozen permalink</a>
+                  <a href={shareLink}>Open frozen permalink</a>
                   <a href={`/api/portfolio-report.json?report=${report.id}`}>
                     Download public JSON
                   </a>

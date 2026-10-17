@@ -306,11 +306,7 @@ export function reportCaption(
           mixed && r.overviewMeasure
             ? r.overviewMeasure.label.toLowerCase()
             : measure.label.toLowerCase()
-        } · ${
-          r.report === undefined
-            ? qualityText(r.metric)
-            : reportQualifier(r.metric, r.report, window)
-        }`
+        } · ${reportQualifier(r.metric, r.report ?? null, window)}`
     );
   return [
     `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
