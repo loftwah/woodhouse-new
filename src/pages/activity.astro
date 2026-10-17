@@ -243,7 +243,11 @@ const requestedWeek = /^\d{4}-\d{2}-\d{2}$/.test(Astro.url.searchParams.get("wee
 const week = requestedWeek
   ? (weekly.highlights.find(
       (highlight) =>
-        highlight.from === requestedWeek && (!selected || highlight.project === selected)
+        highlight.from === requestedWeek &&
+        (!selected || highlight.project === selected) &&
+        // The same gate the shared PNG applies, so a page, its caption and its
+        // image can never name different projects or measures for one week.
+        (overview || highlight.measure.key === measure.key)
     ) ?? null)
   : null;
 // Woodhouse discovery referrals. The collector stores one counter per
@@ -1045,7 +1049,9 @@ const dataPayload = {
                   : selected
                     ? `Complete-week movement for ${names.get(selected)}. Each finding names its own measure, which may differ from the chart above.`
                     : "Complete-week movements for the projects in this scope. Each finding names its own project and measure, which may differ from the chart above."
-                : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
+                : weekly.highlights.length
+                  ? "A valid complete-week comparison appears under Last complete week. The operational alert above reports only movements past its own thresholds, so it stays quiet for smaller real observations."
+                  : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
             </p>
             {report?.analysis?.findings.map((f) => (
               <p>

@@ -430,7 +430,12 @@ export function parseReportHistory(
   const days = (Date.parse(raw.to) - Date.parse(raw.from)) / 86400000 + 1;
   if (!Number.isSafeInteger(days) || days < 7 || days > maximumDays) return null;
   if (raw.to > new Date(now).toISOString().slice(0, 10)) return null;
-  if (!Array.isArray(raw.entries) || raw.entries.length > analyticsProjects.length) return null;
+  if (
+    !Array.isArray(raw.entries) ||
+    !raw.entries.length ||
+    raw.entries.length > analyticsProjects.length
+  )
+    return null;
   const entries: ReportHistoryEntry[] = [];
   for (const entry of raw.entries) {
     if (
@@ -450,11 +455,15 @@ export function parseReportHistory(
         isoTime(entry.coverage.startedAt) ||
         isoDay(entry.coverage.startedAt)
       ) ||
+      (typeof entry.coverage.startedAt === "string" &&
+        Date.parse(entry.coverage.startedAt) > now + 300000) ||
       !(
         entry.coverage.comparableFrom === null ||
         isoTime(entry.coverage.comparableFrom) ||
         isoDay(entry.coverage.comparableFrom)
       ) ||
+      (typeof entry.coverage.comparableFrom === "string" &&
+        Date.parse(entry.coverage.comparableFrom) > now + 300000) ||
       !isoTime(entry.coverage.through) ||
       Date.parse(entry.coverage.through) > now + 300000 ||
       !Array.isArray(entry.daily) ||

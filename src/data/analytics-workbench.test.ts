@@ -708,6 +708,25 @@ test("a seven-day report keeps its week comparison from retained history", () =>
   assert.match(caption, /Up 100% from 35/);
   assert.match(caption, /previous week 2026-09-28 – 2026-10-04/);
   assert.match(caption, /A new best of 3 comparable weeks\./);
+  // A week that does not belong to the selected measure is dropped by the page
+  // and the renderer alike, so the banner and the image can never disagree.
+  const mismatched = reportSvg(
+    {
+      schema: "woodhouse.portfolio-report/1",
+      id: "c".repeat(24),
+      createdAt: "2026-10-12T00:00:00.000Z",
+      days: 7,
+      period: weekPeriod,
+      projects: [{ project: "fighter", report }],
+      history
+    },
+    names,
+    "landscape",
+    "visits",
+    "https://woodhouse.loftwah.com",
+    "2026-10-05"
+  );
+  assert.doesNotMatch(mismatched, /Week in focus/);
   for (const format of ["landscape", "square", "portrait"] as const) {
     const svg = reportSvg(
       {
