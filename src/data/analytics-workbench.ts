@@ -290,6 +290,7 @@ export function reportCaption(
     name: string;
     metric: Metric | undefined;
     overviewMeasure: { label: string } | null;
+    report?: { coverage: ProjectAnalytics["coverage"] } | null;
   }[],
   measure: { key: string; label: string },
   window: ReportingWindow,
@@ -305,7 +306,7 @@ export function reportCaption(
           mixed && r.overviewMeasure
             ? r.overviewMeasure.label.toLowerCase()
             : measure.label.toLowerCase()
-        } · ${qualityText(r.metric)}`
+        } · ${reportQualifier(r.metric, r.report ?? null, window)}`
     );
   return [
     `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
@@ -351,6 +352,23 @@ export function portfolioOverview(
     };
   });
 }
+/**
+ * Whether the product's own view defines this measure at all. Applicability comes
+ * from the product definition, never from whether a source returned data: a game
+ * that should report gameplay but returned nothing stays in the scope and the
+ * coverage denominator as "Not measured".
+ */
+export function supportsMeasure(project: AnalyticsProject, key: string) {
+  return measuresFor(project).some((m) => m.key === key);
+}
+/**
+ * The projects whose product view supports this measure, in the order supplied.
+ * A missing whole report or an omitted metric is a reporting failure that keeps
+ * the project in scope; a product that does not define the measure is omitted.
+ */
+export function measureScope(projects: AnalyticsProject[], key: string) {
+  return projects.filter((project) => supportsMeasure(project, key));
+}
 export function reportMetric(
   project: AnalyticsProject,
   metrics: Metric[] | undefined,
@@ -358,9 +376,7 @@ export function reportMetric(
 ) {
   // Woodhouse's active_seconds describe site attention, not active gameplay.
   // A shared source key alone does not establish the same product meaning.
-  return measuresFor(project).some((m) => m.key === key)
-    ? metrics?.find((m) => m.key === key)
-    : undefined;
+  return supportsMeasure(project, key) ? metrics?.find((m) => m.key === key) : undefined;
 }
 export function dateDays(period: ReportingWindow) {
   return Array.from({ length: period.days }, (_, i) =>
@@ -414,6 +430,39 @@ export function qualityText(metric?: Metric) {
         : metric.quality === "partial"
           ? "Partial measurement"
           : "Reported activity";
+}
+/**
+ * The one context-aware label a value carries wherever a reader meets it: the
+ * overview card, the single-measure strip, the saved caption and every shared
+ * PNG. A simpler label on one surface used to hide legacy/test risk or partial
+ * coverage that another surface named, so the same qualifier is used everywhere.
+ * Coverage and legacy risk stay distinct from a measured zero.
+ */
+export function reportQualifier(
+  metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
+  report: { coverage: ProjectAnalytics["coverage"] } | null | undefined,
+  period: ReportingWindow
+) {
+  // A missing source, a source that omitted this metric and a measured metric
+  // with no value in the window are three different facts, not one zero.
+  if (!metric) return report ? "Not reported" : "Source unavailable";
+  if (metric.value === null) return "Not measured";
+  if (metric.key === "guest_postcards_received" && metric.quality === "partial")
+    return "Partial coverage";
+  if (metric.quality === "bounded" || report?.coverage.quality === "bounded")
+    return "Bounded count";
+  if (metric.quality === "sampled" || report?.coverage.quality === "sampled")
+    return "Sampled estimate";
+  if (report?.coverage.quality === "unavailable") return "Coverage unavailable";
+  if (dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "legacy"))
+    return "Legacy/test risk";
+  if (
+    metric.quality === "partial" ||
+    metric.daily.length < period.days ||
+    dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "partial")
+  )
+    return "Partial coverage";
+  return "Reported activity";
 }
 export function svgPlot(
   series: { name: string; colour: string; values: (number | null)[] }[],

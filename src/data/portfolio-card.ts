@@ -1,23 +1,19 @@
-import {
-  formatMetric,
-  periodFor,
-  type Metric,
-  type PortfolioReport,
-  type ProjectAnalytics,
-  type ReportingWindow
-} from "./portfolio-analytics.ts";
+import { formatMetric, periodFor, type PortfolioReport } from "./portfolio-analytics.ts";
 import {
   dailyPoints,
-  dailyStatus,
-  dateDays,
   resolveMeasure,
   isOverviewMeasure,
   overviewMeasures,
   overviewOrder,
   reportMetric,
+  reportQualifier,
+  supportsMeasure,
   projectColours,
   svgPlot
 } from "./analytics-workbench.ts";
+// Re-exported so the shared-image tests keep one import path; the qualifier is
+// owned by the workbench module the page and the renderer both use.
+export { reportQualifier };
 export const reportFormats = {
   landscape: { width: 1200, height: 630 },
   square: { width: 1200, height: 1200 },
@@ -29,36 +25,6 @@ const escape = (v: string) =>
     /[&<>"']/g,
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" })[c]!
   );
-/**
- * The one quality label a shared image shows next to a value. The page and the
- * PNGs must describe the same evidence, so this lives beside the renderer.
- */
-export function reportQualifier(
-  metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
-  report: { coverage: ProjectAnalytics["coverage"] } | null | undefined,
-  period: ReportingWindow
-) {
-  // A source that supplied a report without this metric is not the same as a
-  // measured metric with no value in the window.
-  if (!metric) return report ? "Not reported" : "Not measured";
-  if (metric.value === null) return "Not measured";
-  if (metric.key === "guest_postcards_received" && metric.quality === "partial")
-    return "Partial coverage";
-  if (metric.quality === "bounded" || report?.coverage.quality === "bounded")
-    return "Bounded count";
-  if (metric.quality === "sampled" || report?.coverage.quality === "sampled")
-    return "Sampled estimate";
-  if (report?.coverage.quality === "unavailable") return "Coverage unavailable";
-  if (dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "legacy"))
-    return "Legacy/test risk";
-  if (
-    metric.quality === "partial" ||
-    metric.daily.length < period.days ||
-    dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "partial")
-  )
-    return "Partial coverage";
-  return "Reported activity";
-}
 /** Authored layouts share frozen series and coverage, never illustrative chart traces. */
 export function reportSvg(
   report: PortfolioReport,
@@ -104,11 +70,16 @@ export function reportSvg(
       colour: projectColours[row.project] ?? "#b4c0d2"
     };
   });
-  // A scoped measure renders only the projects that support it. A game that
-  // supports it but returned nothing keeps its "Not measured" cell; a non-game
-  // never appears as a missing gameplay source. A single-product report always
-  // names the requested measure, even when that source did not supply it.
-  const shown = overview || rows.length === 1 ? rows : rows.filter((row) => row.metric);
+  // A scoped measure renders every project that supports it. A game that
+  // supports it but returned nothing — because its whole report is missing or the
+  // metric was omitted — keeps its "— / Not measured" cell and stays in the
+  // coverage denominator. A non-game never appears as a missing gameplay source.
+  // A single-product report always names the requested measure, even when that
+  // source did not supply it.
+  const shown =
+    overview || rows.length === 1
+      ? rows
+      : rows.filter((row) => supportsMeasure(row.project, measure.key));
   const applicable = shown.length;
   const qualifier = (row: (typeof rows)[number]) => reportQualifier(row.metric, row.report, period);
   const retrieval = new URL("/activity/", origin);
