@@ -2,15 +2,26 @@ import {
   analyticsProjects,
   loadProjectAnalytics,
   parseProjectAnalytics,
+  parseReportHistory,
   analysePortfolio,
   periodFor,
   windowForDates,
   type AnalyticsProject,
   type PortfolioReport,
+  type ReportHistory,
+  type ReportHistoryEntry,
   type ReportingWindow
 } from "./portfolio-analytics.ts";
 import { localAnalytics } from "./engagement.ts";
+import { overviewMeasures } from "./analytics-workbench.ts";
+
 const reportIdPattern = /^[a-f0-9]{24}$/;
+/**
+ * How much daily history a short report retains so it can still compare weeks.
+ * A 90-day report already holds at least three complete months, so it needs no
+ * extra lookback.
+ */
+const historyDays = 84;
 export async function readPortfolioReport(
   db: D1Database,
   id: string
@@ -51,6 +62,11 @@ export async function readPortfolioReport(
         }))
     };
     // Stored analysis is never trusted as public prose or an additional data source.
+    const history = parseReportHistory(
+      report.history,
+      new Set(safe.projects.map((r) => r.project)),
+      savedAt
+    );
     return {
       schema: safe.schema,
       id: safe.id,
@@ -58,6 +74,7 @@ export async function readPortfolioReport(
       days: safe.days,
       period,
       projects: safe.projects,
+      ...(history ? { history } : {}),
       ...(report.analysis?.schema === "woodhouse.weekly-analysis/1"
         ? { analysis: analysePortfolio(safe.projects, Date.parse(safe.createdAt)) }
         : {})
@@ -66,6 +83,56 @@ export async function readPortfolioReport(
     return null;
   }
 }
+/**
+ * Retain each public project's own headline measure over a longer lookback, so a
+ * short report can still make a week-on-week comparison after it is frozen.
+ * Only exact counters qualify, matching the live rule; a source that cannot serve
+ * the lookback simply contributes no entry and the project reports why.
+ */
+async function collectHistory(
+  load: (
+    project: AnalyticsProject,
+    days: number,
+    window: ReportingWindow | undefined
+  ) => Promise<Awaited<ReturnType<typeof localAnalytics>> | null>,
+  members: AnalyticsProject[],
+  period: ReportingWindow,
+  now: number
+): Promise<ReportHistory | undefined> {
+  if (period.days >= historyDays) return undefined;
+  const from = new Date(Date.parse(period.to) - (historyDays - 1) * 86400000)
+    .toISOString()
+    .slice(0, 10);
+  const window = windowForDates(from, period.to, now);
+  if (!window) return undefined;
+  const loaded = await Promise.all(
+    members.map(async (project) => ({ project, report: await load(project, historyDays, window) }))
+  );
+  const entries: ReportHistoryEntry[] = [];
+  for (const { project, report } of loaded) {
+    if (!report) continue;
+    const [headline] = overviewMeasures(project);
+    const metric = report.metrics.find((m) => m.key === headline!.key);
+    if (!metric || metric.quality !== "exact" || !metric.daily.length) continue;
+    entries.push({
+      project,
+      measure: metric.key,
+      label: metric.label,
+      unit: metric.unit,
+      quality: metric.quality,
+      coverage: {
+        startedAt: report.coverage.startedAt,
+        comparableFrom: report.coverage.comparableFrom ?? null,
+        through: report.coverage.through
+      },
+      daily: metric.daily
+    });
+  }
+  return entries.length
+    ? { from: window.from, to: window.to, days: window.days, entries }
+    : undefined;
+}
+
 export async function createPortfolioReport(
   db: D1Database,
   days: number,
@@ -91,25 +158,29 @@ export async function createPortfolioReport(
     const report = await readPortfolioReport(db, recent.id);
     if (report) return report;
   }
+  const members = analyticsProjects.filter((p) => publicIds.has(p));
+  const load = async (
+    project: AnalyticsProject,
+    days: number,
+    window: ReportingWindow | undefined
+  ) => {
+    try {
+      return ["woodhouse", "shoalshot", "protocol-11"].includes(project)
+        ? await localAnalytics(db, project, days, now, window)
+        : await loadProjectAnalytics(project, days, fetcher, window);
+    } catch {
+      /* Missing storage/source is unavailable, never zero. */
+      return null;
+    }
+  };
   const projects = await Promise.all(
-    analyticsProjects
-      .filter((p) => publicIds.has(p))
-      .map(async (project) => {
-        let report = null;
-        try {
-          report = ["woodhouse", "shoalshot", "protocol-11"].includes(project)
-            ? await localAnalytics(db, project, days, now, period)
-            : await loadProjectAnalytics(project, days, fetcher, requestedWindow);
-        } catch {
-          /* Missing storage/source is unavailable, never zero. */
-        }
-        return { project, report };
-      })
+    members.map(async (project) => ({ project, report: await load(project, days, period) }))
   );
   const createdAt = new Date(now).toISOString();
+  const history = await collectHistory(load, members, period, now);
   const digest = await crypto.subtle.digest(
     "SHA-256",
-    new TextEncoder().encode(JSON.stringify({ createdAt, days, period, projects }))
+    new TextEncoder().encode(JSON.stringify({ createdAt, days, period, projects, history }))
   );
   const id = Array.from(new Uint8Array(digest))
     .map((v) => v.toString(16).padStart(2, "0"))
@@ -122,6 +193,7 @@ export async function createPortfolioReport(
     days,
     period,
     projects,
+    ...(history ? { history } : {}),
     analysis: analysePortfolio(projects, now)
   };
   await db
@@ -134,17 +206,19 @@ export function projectReport(
   report: PortfolioReport,
   project: AnalyticsProject | null,
   publicIds: Set<string>
-) {
+): PortfolioReport {
   const projects = report.projects.filter(
     (p) => publicIds.has(p.project) && (!project || p.project === project)
   );
-  return {
-    ...report,
-    projects,
-    ...(report.analysis
-      ? { analysis: analysePortfolio(projects, Date.parse(report.createdAt)) }
-      : {})
-  };
+  const retained = new Set(projects.map((p) => p.project));
+  const result: PortfolioReport = { ...report, projects };
+  const history = report.history
+    ? { ...report.history, entries: report.history.entries.filter((e) => retained.has(e.project)) }
+    : undefined;
+  if (history?.entries.length) result.history = history;
+  else delete result.history;
+  if (result.analysis) result.analysis = analysePortfolio(projects, Date.parse(report.createdAt));
+  return result;
 }
 export function reportLink(id: string, project?: string | null) {
   return `https://woodhouse.loftwah.com/activity/?report=${id}${project ? `&project=${project}` : ""}`;

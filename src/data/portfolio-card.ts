@@ -9,7 +9,8 @@ import {
   reportQualifier,
   supportsMeasure,
   projectColours,
-  svgPlot
+  svgPlot,
+  weeklyHighlights
 } from "./analytics-workbench.ts";
 // Re-exported so the shared-image tests keep one import path; the qualifier is
 // owned by the workbench module the page and the renderer both use.
@@ -31,7 +32,8 @@ export function reportSvg(
   names: Map<string, string>,
   format: ReportFormat = "landscape",
   requestedMeasure?: string,
-  origin = "https://woodhouse.loftwah.com"
+  origin = "https://woodhouse.loftwah.com",
+  highlightedWeek?: string
 ) {
   const { width: w, height: h } = reportFormats[format];
   const landscape = format === "landscape",
@@ -82,10 +84,27 @@ export function reportSvg(
       : rows.filter((row) => supportsMeasure(row.project, measure.key));
   const applicable = shown.length;
   const qualifier = (row: (typeof rows)[number]) => reportQualifier(row.metric, row.report, period);
+  // A highlighted week comes from the same retained history the page reads, so the
+  // page, caption and all three images state the same week, previous period and
+  // record basis rather than the narrow figure alone.
+  const focus = highlightedWeek
+    ? weeklyHighlights(
+        report.projects,
+        names,
+        Date.parse(report.createdAt),
+        report.history
+      ).highlights.find(
+        (highlight) =>
+          highlight.from === highlightedWeek &&
+          (!requestedMeasure || highlight.measure.key === measure.key) &&
+          (rows.length !== 1 || highlight.project === rows[0]!.project)
+      )
+    : undefined;
   const retrieval = new URL("/activity/", origin);
   retrieval.searchParams.set("report", report.id);
   retrieval.searchParams.set("measure", measure.key);
   if (rows.length === 1) retrieval.searchParams.set("project", rows[0]!.project);
+  if (focus) retrieval.searchParams.set("week", focus.from);
   const retrievalLabel = retrieval.href.replace(/^https?:\/\//, "");
   const series = shown
     .filter((r) => r.metric)
@@ -140,11 +159,28 @@ export function reportSvg(
   );
   svg += text(
     pad,
-    landscape ? 157 : 191,
+    focus ? (landscape ? 140 : 172) : landscape ? 157 : 191,
     `${period.from} — ${period.to} · UTC · ${period.days} ${period.days === 1 ? "day" : "days"}`,
     landscape ? 20 : 25,
     "#a9b8d0"
   );
+  if (focus) {
+    const movement =
+      focus.changePercent === null
+        ? `no prior baseline (${formatMetric({ value: focus.previous, unit: focus.unit })} the week before)`
+        : `${focus.changePercent > 0 ? "up" : focus.changePercent < 0 ? "down" : "level"} ${Math.abs(focus.changePercent)}% from ${formatMetric({ value: focus.previous, unit: focus.unit })}`;
+    const focusLine = `Week in focus · ${focus.from} — ${focus.to} · ${focus.name} · ${formatMetric({ value: focus.value, unit: focus.unit })} ${focus.measure.label.toLowerCase()} · ${movement}${focus.newBest ? ` · new best of ${focus.comparedWeeks} weeks` : ""}`;
+    svg +=
+      `<circle cx="${pad + 4}" cy="${(landscape ? 172 : 204) - 4}" r="4" fill="#e9ff49"/>` +
+      text(
+        pad + 14,
+        landscape ? 172 : 204,
+        focusLine,
+        Math.min(landscape ? 17 : 20, (w - pad * 2) / (focusLine.length * 0.5)),
+        "#e9ff49",
+        500
+      );
+  }
   const chartY = overview
       ? landscape
         ? 236
@@ -157,9 +193,9 @@ export function reportSvg(
           ? 300
           : 250,
     chartH = landscape ? 217 : portrait ? 570 : 400;
-  if (report.projects.length === 1 && !landscape)
+  if (report.projects.length === 1 && !landscape && !focus)
     svg += text(pad, landscape ? 204 : 237, measure.label, landscape ? 22 : 28, "#79d8ff", 500);
-  if (overview && !landscape)
+  if (overview && !landscape && !focus)
     svg += text(pad, landscape ? 204 : 237, "One relevant measure per project", 26, "#79d8ff", 500);
   if (landscape) {
     if (overview) {

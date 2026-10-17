@@ -1,6 +1,7 @@
 import {
   formatMetric,
   weeklyRecord,
+  weeklyRecordFromHistory,
   type AnalyticsProject,
   type Metric,
   type PortfolioReport,
@@ -303,7 +304,8 @@ export function reportCaption(
   measure: { key: string; label: string },
   window: ReportingWindow,
   link: string,
-  dateLabel: (date: string) => string
+  dateLabel: (date: string) => string,
+  week?: CaptionWeek | undefined
 ) {
   const mixed = isOverviewMeasure(measure);
   const values = rows.map((r) => {
@@ -321,6 +323,7 @@ export function reportCaption(
   } · ${window.complete ? "Closed calendar window" : "Current UTC day is partial"}`;
   return [
     `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
+    ...(week ? weekCaptionLines(week, dateLabel) : []),
     ...values,
     coverage,
     mixed
@@ -329,6 +332,42 @@ export function reportCaption(
     "Reported activity, not unique people. Legacy/test and coverage limits apply.",
     link
   ].join("\n");
+}
+/** The highlighted week a shared link carries, so every surface describes it the same way. */
+export type CaptionWeek = {
+  name: string;
+  project: string;
+  from: string;
+  to: string;
+  value: number;
+  previous: number;
+  unit: Metric["unit"];
+  changePercent: number | null;
+  newBest: boolean;
+  comparedWeeks: number;
+};
+
+/**
+ * The lines a highlighted week contributes to a page, caption and image. Kept in
+ * one function so the record basis and the previous period cannot appear on one
+ * surface and vanish on another. A zero previous week is stated as a zero
+ * baseline rather than an invented percentage, and a fall to zero stays visible.
+ */
+export function weekCaptionLines(week: CaptionWeek, dateLabel: (date: string) => string) {
+  const previousFrom = new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10);
+  const previousTo = new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10);
+  const movement =
+    week.changePercent === null
+      ? `No prior baseline (${formatMetric({ value: week.previous, unit: week.unit })} the week before)`
+      : `${week.changePercent > 0 ? "Up" : week.changePercent < 0 ? "Down" : "Level"} ${Math.abs(week.changePercent)}% from ${formatMetric({ value: week.previous, unit: week.unit })}`;
+  return [
+    `Week in focus · ${week.name} · ${dateLabel(week.from)} – ${dateLabel(week.to)} (UTC)`,
+    `${week.name}: ${formatMetric({ value: week.value, unit: week.unit })} (this week)`,
+    `${movement} · previous week ${dateLabel(previousFrom)} – ${dateLabel(previousTo)}`,
+    week.newBest
+      ? `A new best of ${week.comparedWeeks} comparable weeks.`
+      : `Compared with ${week.comparedWeeks} comparable weeks; not a record.`
+  ];
 }
 export type OverviewRow = {
   project: AnalyticsProject;
@@ -544,7 +583,8 @@ export type WeeklyGap = { project: AnalyticsProject; name: string; reason: strin
 export function weeklyHighlights(
   projects: PortfolioReport["projects"],
   names: Map<string, string>,
-  now = Date.now()
+  now = Date.now(),
+  history?: PortfolioReport["history"]
 ): { highlights: WeeklyHighlight[]; gaps: WeeklyGap[] } {
   const highlights: WeeklyHighlight[] = [];
   const gaps: WeeklyGap[] = [];
@@ -558,14 +598,25 @@ export function weeklyHighlights(
       gaps.push({ project, name, reason: "No source report for these dates" });
       continue;
     }
+    const retained = history?.entries.find(
+      (entry) => entry.project === project && entry.measure === primary!.key
+    );
     const metric = report.metrics.find((m) => m.key === primary!.key);
-    if (!metric) {
-      gaps.push({ project, name, reason: `${primary!.label} is not in this source report` });
-      continue;
-    }
-    const week = weeklyRecord(metric, report.coverage, now);
+    // The retained lookback is preferred: a short report's own window cannot
+    // contain two complete weeks, and the comparison must survive freezing.
+    const week = retained
+      ? weeklyRecordFromHistory(retained, now)
+      : metric
+        ? weeklyRecord(metric, report.coverage, now)
+        : null;
     if (!week) {
-      gaps.push({ project, name, reason: weeklyGapReason(metric, report.coverage, primary!) });
+      gaps.push({
+        project,
+        name,
+        reason: metric
+          ? weeklyGapReason(metric, report.coverage, primary!)
+          : `${primary!.label} is not in this source report`
+      });
       continue;
     }
     highlights.push({
@@ -573,7 +624,7 @@ export function weeklyHighlights(
       name,
       family: productView(project)!.family,
       measure: primary!,
-      unit: metric.unit,
+      unit: retained?.unit ?? metric!.unit,
       from: week.from,
       to: week.to,
       value: week.value,

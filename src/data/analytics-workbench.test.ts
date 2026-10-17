@@ -17,7 +17,8 @@ import {
   supportsMeasure,
   measureScope,
   weeklyHighlights,
-  discoveryReferrals
+  discoveryReferrals,
+  weekCaptionLines
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric, analyticsSchema } from "./portfolio-analytics.ts";
 import { reportSvg, reportQualifier } from "./portfolio-card.ts";
@@ -621,6 +622,134 @@ test("the last complete week shows a valid comparison and an earned record below
   );
   assert.equal(little.highlights.length, 0);
   assert.match(little.gaps[0]!.reason, /Fewer than two complete comparable weeks/);
+});
+test("a seven-day report keeps its week comparison from retained history", () => {
+  const now = Date.parse("2026-10-17T12:00:00.000Z");
+  const dateAt = (from: string, index: number) =>
+    new Date(Date.parse(from) + index * 86400000).toISOString().slice(0, 10);
+  const historyDaily: { date: string; value: number }[] = [];
+  for (let t = Date.parse("2026-09-20"); t <= Date.parse("2026-10-11"); t += 86400000)
+    historyDaily.push({ date: new Date(t).toISOString().slice(0, 10), value: 1 });
+  const setWeek = (from: string, value: number) => {
+    for (let i = 0; i < 7; i++) {
+      const row = historyDaily.find((d) => d.date === dateAt(from, i));
+      if (row) row.value = value;
+    }
+  };
+  setWeek("2026-09-21", 5);
+  setWeek("2026-09-28", 5);
+  setWeek("2026-10-05", 10);
+  const weekPeriod = { from: "2026-10-05", to: "2026-10-11", days: 7, complete: true };
+  const starts: Metric = {
+    key: "game_starts",
+    label: "Game starts",
+    unit: "count",
+    value: 70,
+    quality: "exact",
+    definition: "Starts",
+    daily: historyDaily.filter((d) => d.date >= weekPeriod.from)
+  };
+  const report = {
+    ...fixture("fighter", [starts]),
+    period: weekPeriod,
+    coverage: {
+      startedAt: "2026-09-20T00:00:00.000Z",
+      comparableFrom: "2026-09-20T00:00:00.000Z",
+      through: "2026-10-12T00:00:00.000Z",
+      quality: "exact" as const,
+      limitations: []
+    }
+  };
+  const history = {
+    from: "2026-09-20",
+    to: "2026-10-11",
+    days: 22,
+    entries: [
+      {
+        project: "fighter" as const,
+        measure: "game_starts",
+        label: "Game starts",
+        unit: "count" as const,
+        quality: "exact" as const,
+        coverage: {
+          startedAt: "2026-09-20T00:00:00.000Z",
+          comparableFrom: "2026-09-20T00:00:00.000Z",
+          through: "2026-10-12T00:00:00.000Z"
+        },
+        daily: historyDaily
+      }
+    ]
+  };
+  // Without the retained lookback a seven-day report cannot compare anything.
+  const without = weeklyHighlights([{ project: "fighter", report }], names, now);
+  assert.equal(without.highlights.length, 0);
+  // With it, the same week, previous period and record basis are recovered.
+  const with_history = weeklyHighlights([{ project: "fighter", report }], names, now, history);
+  const highlight = with_history.highlights[0]!;
+  assert.equal(highlight.from, "2026-10-05");
+  assert.equal(highlight.to, "2026-10-11");
+  assert.equal(highlight.value, 70);
+  assert.equal(highlight.previous, 35);
+  assert.equal(highlight.changePercent, 100);
+  assert.equal(highlight.newBest, true);
+  assert.equal(highlight.comparedWeeks, 3);
+  // The page, caption and every image format describe that week identically.
+  const dateLabel = (date: string) => date;
+  const caption = reportCaption(
+    [{ name: "Fighter", metric: starts, overviewMeasure: null, report }],
+    resolveMeasure("fighter", "game_starts"),
+    weekPeriod,
+    "https://example.test/activity/?week=2026-10-05",
+    dateLabel,
+    highlight
+  );
+  assert.match(caption, /Week in focus · Fighter · 2026-10-05 – 2026-10-11 \(UTC\)/);
+  assert.match(caption, /Fighter: 70 (counts|game starts)/);
+  assert.match(caption, /Up 100% from 35/);
+  assert.match(caption, /previous week 2026-09-28 – 2026-10-04/);
+  assert.match(caption, /A new best of 3 comparable weeks\./);
+  for (const format of ["landscape", "square", "portrait"] as const) {
+    const svg = reportSvg(
+      {
+        schema: "woodhouse.portfolio-report/1",
+        id: "c".repeat(24),
+        createdAt: "2026-10-12T00:00:00.000Z",
+        days: 7,
+        period: weekPeriod,
+        projects: [{ project: "fighter", report }],
+        history
+      },
+      names,
+      format,
+      "game_starts",
+      "https://woodhouse.loftwah.com",
+      "2026-10-05"
+    );
+    assert.match(svg, /Week in focus/);
+    assert.match(svg, /new best of 3 weeks/);
+    assert.match(svg, /week=2026-10-05/);
+  }
+});
+test("a zero baseline and a fall to zero are stated, not invented", () => {
+  const dateLabel = (date: string) => date;
+  const caption = (week: Parameters<typeof weekCaptionLines>[0]) =>
+    weekCaptionLines(week, dateLabel).join("\n");
+  const base = {
+    name: "Fighter",
+    project: "fighter",
+    from: "2026-10-05",
+    to: "2026-10-11",
+    unit: "count" as const,
+    comparedWeeks: 2
+  };
+  // A zero previous week has no percentage to state.
+  const fromZero = caption({ ...base, value: 10, previous: 0, changePercent: null, newBest: true });
+  assert.match(fromZero, /No prior baseline \(0 the week before\)/);
+  assert.doesNotMatch(fromZero, /Up /);
+  // A fall to zero remains visible.
+  const toZero = caption({ ...base, value: 0, previous: 40, changePercent: -100, newBest: false });
+  assert.match(toZero, /Down 100% from 40/);
+  assert.match(toZero, /not a record/);
 });
 test("the discovery breakdown keeps only published destinations and reports a trend honestly", () => {
   const discoveryPeriod = { from: "2026-10-01", to: "2026-10-16", days: 16, complete: false };

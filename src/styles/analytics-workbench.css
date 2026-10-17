@@ -1338,3 +1338,51 @@
     width: 100%;
   }
 }
+
+/* Highlighted week — reviewed 18 October 2026.
+   A shared "this week" link keeps the report it was read from, so the week, its
+   previous period and its record basis survive reopening instead of becoming a
+   narrow seven-day figure with no comparison. */
+.week-focus {
+  margin: 0 0 1.6rem;
+  padding: 1rem 1.15rem 1.1rem;
+  border: 1px solid var(--line, #26344f);
+  border-left: 3px solid var(--acid, #e9ff49);
+  background: var(--surface-deep, #0f182a);
+}
+.week-focus__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--acid, #e9ff49);
+  font-family: var(--mono, monospace);
+  font-size: 0.58rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.week-focus h2 {
+  margin: 0 0 0.9rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 700;
+}
+.week-focus__figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.9rem 1.4rem;
+  margin: 0;
+}
+.week-focus__figures dt {
+  margin: 0;
+  color: var(--muted, #8d9bb5);
+  font-size: 0.68rem;
+}
+.week-focus__figures dd {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+.week-focus__note {
+  margin: 0.9rem 0 0;
+  color: var(--copy-soft, #a7b4c8);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}

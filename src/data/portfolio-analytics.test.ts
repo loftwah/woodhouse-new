@@ -362,6 +362,60 @@ test("saved report stays immutable after new ingestion and emits three true imag
   }
 });
 
+test("a stored history block is validated before it can be compared", async () => {
+  const { db, sqlite } = database();
+  await collectEngagement(request(payload()), db, now);
+  const report = await createPortfolioReport(db, 7, new Set(["shoalshot"]), fetch, now);
+  const stored = await readPortfolioReport(db, report.id);
+  // A seven-day report keeps a lookback, so its comparison survives freezing.
+  assert(stored?.history, "the short report retains comparison history");
+  assert.equal(stored?.history?.to, stored?.period?.to);
+  assert(stored!.history!.from < stored!.history!.to);
+  assert(stored!.history!.entries.length > 0);
+  for (const entry of stored!.history!.entries) {
+    assert(entry.daily.every((point) => point.date >= stored!.history!.from));
+    assert(entry.daily.every((point) => point.date <= stored!.history!.to));
+  }
+  const tamper = (body: unknown) =>
+    sqlite
+      .prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?")
+      .run(typeof body === "string" ? body : JSON.stringify(body), report.id);
+  // A future day, a duplicate day, an unknown project and an out-of-range span
+  // are each refused rather than trusted.
+  for (const bad of [
+    { ...stored, history: { ...stored!.history!, to: "2030-01-01" } },
+    {
+      ...stored,
+      history: {
+        ...stored!.history!,
+        entries: [
+          {
+            ...stored!.history!.entries[0]!,
+            daily: [stored!.history!.entries[0]!.daily[0]!, stored!.history!.entries[0]!.daily[0]!]
+          }
+        ]
+      }
+    },
+    {
+      ...stored,
+      history: {
+        ...stored!.history!,
+        entries: [{ ...stored!.history!.entries[0]!, project: "unknown-project" }]
+      }
+    },
+    { ...stored, history: { from: "2020-01-01", to: "2026-10-11", days: 2476, entries: [] } }
+  ]) {
+    tamper(bad);
+    const read = await readPortfolioReport(db, report.id);
+    assert(read, "the report itself still renders");
+    assert.equal(read.history, undefined, "the malformed history is dropped");
+  }
+  // A block that is simply absent stays absent; nothing is invented.
+  tamper({ ...stored, history: undefined });
+  assert.equal((await readPortfolioReport(db, report.id))?.history, undefined);
+  tamper(report);
+  assert((await readPortfolioReport(db, report.id))?.history);
+});
 test("mode-less product visit markers are accepted without inventing a gameplay mode", async () => {
   const { db } = database();
   const body: Record<string, unknown> = payload("visit");
