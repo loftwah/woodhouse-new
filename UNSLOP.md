@@ -11,6 +11,8 @@ This is how the factory works. A generic generated-looking website fails the pro
 - No jokes that substitute for useful product design.
 - No desktop layout stretched across mobile or mobile layout with its substance hidden.
 - No hover-only controls, surprise motion or large client-side framework for static reading.
+- No internal vocabulary in introductory copy. A visitor is not asked to understand "dossier", "qualification", "proof boundary" or "admitted project" before they can play, listen or try something.
+- No development status presented as the product's explanation. A visitor meets what the thing is and what they can do with it first, in words they would use themselves.
 - No “autonomous”, “qualified”, “production verified” or “physically proven” without evidence for that specific claim.
 - No private conversation or repository payload in public assets.
 - Do not explain internal fallback, retry, cache or recovery behavior in copy written for readers. State the useful source, status or limitation from the reader's point of view.

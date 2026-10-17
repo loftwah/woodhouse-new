@@ -1,12 +1,18 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
 import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
+import { formatReviewDate } from "../data/review-date";
+import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 const { project, compact = false, headingLevel = "h3" } = Astro.props;
 const Heading = headingLevel;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const fallback = getArtworkFallback(project);
 const placeholder = fallback.image;
+const action = projectAction(project);
+const actionHref = projectActionHref(project);
+const external = Boolean(project.siteUrl);
+const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
 ---
 
 <article class={"project-row" + (compact ? " project-row--compact" : "")}>
@@ -73,7 +79,7 @@ const placeholder = fallback.image;
       ) : (
         <>
           <strong class="project-row__og-title">Woodhouse illustration</strong>
-          <span class="project-row__og-description">Made for this dossier.</span>
+          <span class="project-row__og-description">Made for this record.</span>
         </>
       )}
     </figcaption>
@@ -85,14 +91,25 @@ const placeholder = fallback.image;
       </a>
     </Heading>
     <span class="project-row__discipline">{project.discipline}</span>
-    <StatusStamp tone={project.stateTone} label={project.state} />
+    <p class="project-row__hook">{project.title}</p>
     <p class="project-row__summary">{project.summary}</p>
-    <p class="project-row__proof">
-      <strong>Next proof</strong>
-      {project.remaining}
-    </p>
-    <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>
-      Read the Woodhouse dossier <span aria-hidden="true">↗</span>
-    </a>
+    <p class="project-row__availability">{action.availability}</p>
+    <div class="project-row__state">
+      <StatusStamp tone={project.stateTone} label={project.state} />
+      <time datetime={project.reviewDate}>Reviewed {reviewLabel}</time>
+    </div>
+    <div class="project-row__actions">
+      <a
+        class="project-row__action"
+        href={actionHref}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+      >
+        {projectActionLabel(project)} <span aria-hidden="true">↗</span>
+      </a>
+      <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>
+        See how it works <span aria-hidden="true">↗</span>
+      </a>
+    </div>
   </div>
 </article>

@@ -1720,33 +1720,28 @@
       "items": [
         {
           "type": "custom",
-          "label": "Factory",
-          "url": "/factory/"
-        },
-        {
-          "type": "custom",
           "label": "Projects",
           "url": "/projects/"
         },
         {
           "type": "custom",
-          "label": "Dispatches",
+          "label": "Stories",
           "url": "/dispatches/"
         },
         {
           "type": "custom",
-          "label": "Doctrine",
-          "url": "/doctrine/"
+          "label": "Analytics",
+          "url": "/activity/"
         },
         {
           "type": "custom",
-          "label": "Dean",
+          "label": "Share",
+          "url": "/share/"
+        },
+        {
+          "type": "custom",
+          "label": "About",
           "url": "/dean/"
-        },
-        {
-          "type": "custom",
-          "label": "Agent Reception",
-          "url": "/agents/"
         }
       ]
     },
@@ -1756,8 +1751,23 @@
       "items": [
         {
           "type": "custom",
+          "label": "Factory",
+          "url": "/factory/"
+        },
+        {
+          "type": "custom",
           "label": "Architecture",
           "url": "/architecture/"
+        },
+        {
+          "type": "custom",
+          "label": "Doctrine",
+          "url": "/doctrine/"
+        },
+        {
+          "type": "custom",
+          "label": "Agent Reception",
+          "url": "/agents/"
         },
         {
           "type": "custom",
@@ -1793,12 +1803,27 @@
     },
     {
       "name": "house_index",
-      "label": "House index",
+      "label": "Secondary navigation",
       "items": [
+        {
+          "type": "custom",
+          "label": "Factory",
+          "url": "/factory/"
+        },
         {
           "type": "custom",
           "label": "Architecture",
           "url": "/architecture/"
+        },
+        {
+          "type": "custom",
+          "label": "Doctrine",
+          "url": "/doctrine/"
+        },
+        {
+          "type": "custom",
+          "label": "Agent Reception",
+          "url": "/agents/"
         },
         {
           "type": "custom",
@@ -1862,9 +1887,9 @@
           "name": "Bubbles",
           "index": "01",
           "discipline": "Game systems · deterministic play",
-          "title": "A game can work and still be waiting to feel finished.",
-          "summary": "Bubbles is a polished arcade game with a serious deterministic core. Its remaining work is concentrated in the connected product experience, broad browser qualification and owner acceptance.",
-          "why": "The interesting question has changed. Bubbles no longer needs to prove that a game exists; it needs to prove that the whole product holds together across screens, states and actual play.",
+          "title": "The classic bubble shooter, done properly.",
+          "summary": "Bubbles is an arcade bubble shooter you play in the browser or on your phone: line up a shot, match three or more and clear the board. It’s for anyone who wants a quick round that feels good on a small screen.",
+          "why": "Quick to start, hard to put down. Bubbles has the depth of the arcade original — stars, scores and a global board — with modern controls, saved progress and music you can switch off. It runs in a browser tab, with nothing to install.",
           "teaches": "Closing an issue is a record of work. It is not proof that the product has finished the job.",
           "site_url": "https://bubbles.loftwah.com/",
           "site_og_image": "https://bubbles.loftwah.com/og-image.png",
@@ -1884,9 +1909,9 @@
           "name": "Fighter",
           "index": "02",
           "discipline": "Game systems · authored journeys",
-          "title": "The game is real. The quality bar is deliberately unreasonable.",
-          "summary": "Fighter is a collectible squad battler with authored characters, combat, progression and several play modes. It is also the first product behind a possible family of distinct games using proven gameplay and supported content seams; a configurable boundary and independently releasable variants remain unproven.",
-          "why": "Players need a satisfying game now. Future creators could benefit from a foundation that lets characters, world, Story, artwork and audio vary without weakening combat or accessibility. One independent variation must demonstrate that promise before a platform or licensing offer earns its place.",
+          "title": "Collect fighters. Build a squad. Pick your fight.",
+          "summary": "Fighter is a collectible squad battler you play in the browser: collect characters, build a squad, then commit moves on a shared real-time Charge Strip. It’s for players who like turn-based combat with authored characters, story and several modes to work through.",
+          "why": "Battles are quick and readable, and every fighter has their own look, voice and moves. There’s a collection to build and a story to follow, so a five-minute fight has somewhere to lead.",
           "teaches": "Prove one concrete variation before extracting a reusable product boundary. A product ambition is not a demonstrated white-label release.",
           "site_url": "https://fighter.loftwah.com/",
           "site_og_image": "https://fighter.loftwah.com/assets/generated/promotional/loftwah-fighter-v3-social-2026-08.png",
@@ -1906,9 +1931,9 @@
           "name": "SHOALSHOT",
           "index": "03",
           "discipline": "Game systems · mobile-first presentation",
-          "title": "Good software evidence still has to reach the water.",
-          "summary": "SHOALSHOT is a fishing game with recent work in presentation, performance, responsive play and qualification.",
-          "why": "The remaining question is whether the experience holds up through the full game on real devices, and whether the production claim matches the exact version tested.",
+          "title": "Read the tide. Place the shot.",
+          "summary": "SHOALSHOT is a fishing game for phones and desktop: read the water, place your shot and land the catch. It’s for anyone who wants a calm, quick session that looks good and works properly on a phone.",
+          "why": "Fishing games live or die on the feel of one cast, and this one keeps it simple: read the water, take the shot, see what you caught. It’s built phone-first, so a five-minute session works anywhere.",
           "teaches": "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
           "site_url": "https://shoalshot.loftwah.com/",
           "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v4.jpg",
@@ -1928,9 +1953,9 @@
           "name": "Protocol 11",
           "index": "04",
           "discipline": "Game systems · responsive table play",
-          "title": "A card game becoming an authored world.",
-          "summary": "Protocol 11 brings card-table play, a twelve-stage House Circuit, distinct rooms and characters, and solo recovery into one deliberately authored game.",
-          "why": "A tracker is part of the product's evidence chain. If a closed item still contradicts its own definition of done, the system must reconcile the record before treating it as progress.",
+          "title": "A card game where the table changes every round.",
+          "summary": "Protocol 11 is a card game for two to four players around one table, played solo or with friends. Twelve stages, six rooms and a cast of characters make a house you play through — and every round brings a new Protocol.",
+          "why": "Card games are better with company, and Protocol 11 plays two to four people at one table with no downloads. The round rules keep changing, so no two hands feel the same, and there’s a solo path through the twelve-stage House Circuit if you’d rather learn it alone.",
           "teaches": "A finished product needs play, visual judgement and exact release evidence to agree.",
           "site_url": "https://protocol11.loftwah.com/",
           "site_og_image": "https://protocol11.loftwah.com/og/protocol-11.jpg",
@@ -1950,9 +1975,9 @@
           "name": "MAX",
           "index": "05",
           "discipline": "Assistive technology · software and hardware",
-          "title": "The software cannot prove that a person can find the real walker.",
-          "summary": "MAX is an assistive-technology project with a substantial software platform: PWA, pairing, gateway, offline behaviour, remote FIND and STOP, privacy and device control.",
-          "why": "The product crosses a physical boundary. Simulation and a green software suite cannot prove that a real walker, microphone, speaker and lights work for a person in their environment.",
+          "title": "Your walker, made smarter.",
+          "summary": "MAX is assistive technology for a wheeled walker: a companion app, a small computer on the walker and a gateway that work together to find it, hear it and stop it. It’s for people who use a walker and the people who look after them.",
+          "why": "When a walker goes missing in a care home or hospital, someone has to hunt for it. MAX aims to make finding it and stopping it a job for a phone, using the walker’s own hardware rather than another account to look after.",
           "teaches": "Software proof and physical proof are different kinds of evidence.",
           "site_url": "https://max.loftwah.com/",
           "site_og_image": "https://max.loftwah.com/og-default.png",
@@ -1972,9 +1997,9 @@
           "name": "Pirates",
           "index": "06",
           "discipline": "Game reconstruction · source archaeology",
-          "title": "Reconstruct the original game before asking the agents to invent another one.",
-          "summary": "Pirates is rebuilding Master of the Secret Sea from original source evidence. The work is deliberately parity-first.",
-          "why": "Generative systems are good at filling gaps. In a reconstruction, that instinct can quietly turn an unknown into a confident invention. The project has to know what the source proves and what it does not.",
+          "title": "Rebuilding a lost game from its own evidence.",
+          "summary": "Pirates is a reconstruction of Master of the Secret Sea, built from the original game’s own source evidence rather than from memory. It’s for players who remember the original, and for anyone curious about how a lost game gets rebuilt honestly.",
+          "why": "A reconstruction is only worth playing if it is the game that existed, rather than a guess wearing its name. Keeping what the source proves and saying plainly what it doesn’t is the difference between a rebuild and a tribute.",
           "teaches": "Sometimes the most intelligent agent action is to stop at the edge of the evidence.",
           "site_url": "",
           "site_og_image": "",
@@ -1994,9 +2019,9 @@
           "name": "LoftwahFM",
           "index": "07",
           "discipline": "Music platform · shared radio capability",
-          "title": "One music catalogue. Independent games. Evidence for each.",
-          "summary": "LoftwahFM owns the music catalogue, radio generation, station programming and shared browser client. Listen to its music stations and first original shows, then follow the separate evidence for game adoption. The broader venue business remains a separate roadmap.",
-          "why": "Games can reuse published music and a compatible client while retaining their own sound, settings, lifecycle and release gates. Music availability does not establish in-game adoption or demand for a venue product.",
+          "title": "Music, radio stations and original shows.",
+          "summary": "LoftwahFM is a music catalogue, radio stations, original shows and a browser player that games can reuse. Listen to the stations and shows in your browser; game builders can drop the same player into their own game.",
+          "why": "Music is most of what makes a game feel made, and LoftwahFM hands builders a catalogue, stations and a player they don’t have to build. Listeners get stations to leave running and original shows to replay.",
           "teaches": "A shared capability earns its name through compatible releases and real consumers. Published upstream code and verified game use are different evidence.",
           "site_url": "https://fm.loftwah.com/",
           "site_og_image": "https://fm.loftwah.com/heroimage-og.jpg",
@@ -2016,9 +2041,9 @@
           "name": "Social Club",
           "index": "08",
           "discipline": "Hospitality · membership experience",
-          "title": "The product works. The intended atmosphere has not arrived yet.",
-          "summary": "Social Club has a functional foundation for a private-club and hospitality experience.",
-          "why": "A working feature set cannot make up for an identity that has not yet been designed. The next step is to establish a coherent premium visual direction.",
+          "title": "Membership and hospitality, in prototype.",
+          "summary": "Social Club is a membership and hospitality product: a working foundation for a private-club experience, from joining through to what members see.",
+          "why": "A club is about how it feels to be a member, not just what the booking form does. The foundation works; that feeling is the standard the next design pass has to reach.",
           "teaches": "Product quality includes how a coherent interface feels as well as what its controls do.",
           "site_url": "https://club.loftwah.com/",
           "site_og_image": "https://club.loftwah.com/og/default.svg",
@@ -2038,9 +2063,9 @@
           "name": "Asset Hunter",
           "index": "09",
           "discipline": "Asset discovery · rights-aware delivery",
-          "title": "Discovery becomes useful when the pack reaches another builder.",
-          "summary": "Asset Hunter discovers creative and technical possibilities, inspects source bytes and records rights per example. Its portable-pack implementation can deliver permitted files with provenance, attribution and a reproducible archive, while keeping reference-only material as records. The next proof is another builder using a pack in a real project.",
-          "why": "A builder needs to know what can be used, where it came from and which credits must travel with it. A browsable, self-verifying pack can reduce that handoff work. Successful packaging alone does not establish that a recipient saved effort or wants to return.",
+          "title": "A field guide to what can be made.",
+          "summary": "Asset Hunter is a searchable catalogue of creative and technical assets that records where each one came from and what rights apply. It’s for builders and agents who need to know what they are allowed to use before they use it.",
+          "why": "Finding an asset is easy. Knowing whether you can use it, and who to credit, is the slow part. Asset Hunter records provenance and rights per item, and can package the permitted files into a reproducible archive you can hand on.",
           "teaches": "A deliverable is stronger evidence than a catalogue entry. Independent use is stronger evidence than a successful export.",
           "site_url": "https://assets.loftwah.com/",
           "site_og_image": "https://assets.loftwah.com/og.png",
@@ -2060,9 +2085,9 @@
           "name": "App Composer",
           "index": "10",
           "discipline": "Development tools · agent-operated setup",
-          "title": "A creator home, built from apps you own.",
-          "summary": "App Composer prepares an authorised environment and connects independently maintained mini-apps. Loftwah’s live reference stack brings Linkarooie profile cards, moderated guest postcards and a native owner studio together. The platform remains reusable; full fresh-user provisioning and the wider creator dashboard remain unfinished.",
-          "why": "Getting started often requires a person to join accounts, tools and DNS before they can make anything. The useful outcome is an agent that prepares and verifies that environment, explains the few human steps and proves a real deployment before asking for an app idea.",
+          "title": "Make software. Keep it yours.",
+          "summary": "App Composer is a studio for building software that stays yours: it prepares the environment, then connects independently maintained mini-apps through their own data and actions. Loftwah’s Linkarooie profile, guestbook and owner studio are the live reference stack.",
+          "why": "You get a home for the things you make that isn’t rented from someone else’s platform. Profile cards, guest postcards and an owner studio sit together, each app keeps its own hostname, and none of it is locked behind one company.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
           "site_og_image": "https://composer.loftwah.com/brand/share-composer-20261017.jpg",

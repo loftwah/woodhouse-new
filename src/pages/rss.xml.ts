@@ -53,7 +53,7 @@ export const GET: APIRoute = async ({ cache }) => {
     .join("");
   const latest = dispatches[0]?.date;
   const lastBuildDate = latest ? `<lastBuildDate>${latest.toUTCString()}</lastBuildDate>` : "";
-  const feed = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>WOODHOUSE Dispatches</title><link>${xmlSafe(`${siteOrigin}/dispatches/`)}</link><description>Notes on running the Loftwah Software Factory.</description><language>en-AU</language>${lastBuildDate}<generator>WOODHOUSE</generator><atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="${xmlSafe(`${siteOrigin}/rss.xml`)}" rel="self" type="application/rss+xml"/>${items}</channel></rss>`;
+  const feed = `<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>WOODHOUSE Stories</title><link>${xmlSafe(`${siteOrigin}/dispatches/`)}</link><description>Notes on running the Loftwah Software Factory.</description><language>en-AU</language>${lastBuildDate}<generator>WOODHOUSE</generator><atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="${xmlSafe(`${siteOrigin}/rss.xml`)}" rel="self" type="application/rss+xml"/>${items}</channel></rss>`;
   const headers = new Headers({
     "content-type": "application/rss+xml; charset=utf-8",
     "cache-control": "public, max-age=60, s-maxage=60, stale-while-revalidate=60"

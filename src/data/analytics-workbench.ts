@@ -495,9 +495,11 @@ export function discoveryReferrals(
         priorFrom: priorDates[0] ?? period.to,
         priorTo: priorDates.at(-1) ?? period.to,
         recentCoverage: coverageOf(recentObserved, recentDates.length),
-        priorCoverage: (
-          priorComplete ? "observed" : priorObserved === 0 ? "unavailable" : "partial"
-        ) as DiscoveryCoverage,
+        priorCoverage: (priorComplete
+          ? "observed"
+          : priorObserved === 0
+            ? "unavailable"
+            : "partial") as DiscoveryCoverage,
         priorObservedDays: priorObserved,
         // The current week may still be in progress; that is shown as a caveat,
         // never used to invent history.

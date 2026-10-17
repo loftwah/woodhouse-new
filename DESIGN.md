@@ -67,3 +67,21 @@ This design records inspectable activity and its limits. It supplies no visual s
 3. Does every image name its source or creator accurately?
 4. Does each diagram explain a real boundary, process or decision and work on a phone?
 5. Does every project claim stay inside its source and review date?
+6. Does the first viewport give a stranger something they can do, in words they would use?
+
+## Visitor-facing copy — reviewed 18 October 2026
+
+The first reading layer is for ordinary visitors. A plain sentence answers what a product is, who
+it is for and what a person can do with it before any development detail appears. An available
+product offers its real action beside its introduction — Play, Listen, Try or Open — with a
+separate, clearly labelled route to its story and development notes.
+
+Keep the display typography and dark surfaces exactly as they are; make the reading order and the
+wording plain. Australian English spelling carries through headings, buttons, captions, feedback,
+errors, metadata and current story introductions. Read representative copy aloud: if it cannot be
+said to another person comfortably, rewrite it.
+
+Project identity fields describe the product and stay stable. Dated engineering status stays
+separate and dated. A limitation that changes a visitor's decision sits beside the claim or action
+it affects; detailed version, source and verification material belongs in labelled deeper sections.
+Remove a repeated generic paragraph when a concise local statement and one link do the same job.

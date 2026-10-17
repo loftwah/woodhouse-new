@@ -6,7 +6,29 @@ Build the public interface to the Loftwah software factory: an exceptionally des
 
 ## Audience
 
-Engineers, technical leaders, collaborators and curious readers who want to understand how software-producing agents are operated across real products.
+Reviewed 18 October 2026. The first reading layer is for ordinary visitors: players, listeners,
+builders, potential collaborators and anyone curious about the work. They should be able to find
+something to play, hear, try or read, understand why it is interesting, and know what to do next
+without learning the factory's internal vocabulary.
+
+Technical readers can still inspect the architecture, evidence and operating method in depth. Those
+surfaces stay, clearly labelled, behind the first layer rather than in front of it. A newcomer's
+first viewport answers what Woodhouse is, who is behind it and what they can explore.
+
+## Voice
+
+Reviewed 18 October 2026. Use warm, direct Australian English. Concrete verbs, contractions where
+they are natural, and sentences a person could comfortably say aloud. Explain what someone can do,
+why they might enjoy or benefit from it, and how to start. Technical terms stay where they help a
+technical reader; explain a necessary term on first use. Internal identifiers, status vocabulary
+and operator words ("dossier", "qualification", "proof boundary", "admitted project") do not belong
+in introductory copy.
+
+Keep the distinctive dark Woodhouse design and each project's own identity. Keep a project's
+enduring description separate from its dated engineering status: a recent analytics or dependency
+update must not redefine what the whole product is. Keep Dean's actual voice; do not invent
+personal memories, testimonials or a new persona. Report to MP by leading with the decision and
+result, then the evidence that matters, the remaining uncertainty and the next action.
 
 ## Promise
 
