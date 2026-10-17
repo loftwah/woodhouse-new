@@ -34,12 +34,23 @@ type ChartData = {
   period: { from: string; to: string; days: number };
   measure: string;
   unit: string;
-  series: { name: string; colour: string; statuses: string[]; values: (number | null)[] }[];
+  overview?: boolean;
+  series: {
+    name: string;
+    colour: string;
+    statuses: string[];
+    values: (number | null)[];
+    measure?: string;
+    unit?: string;
+  }[];
   createdAt: string | null;
 };
 const payload = document.querySelector("#activity-chart-data");
 const target = document.querySelector<HTMLElement>("[data-activity-chart]");
-if (payload && target) {
+// The mixed overview has no single-measure chart, but it still owns the same
+// daily values and CSV export. Binding export only inside the chart branch is how
+// the overview download became a dead button.
+if (payload) {
   const data = JSON.parse(payload.textContent ?? "{}") as ChartData;
   const dates = Array.from({ length: data.period.days }, (_, i) =>
     new Date(Date.parse(data.period.from) + i * 86400000).toISOString().slice(0, 10)
@@ -51,10 +62,12 @@ if (payload && target) {
     if (!day || !output) return;
     output.textContent = `${day} UTC · ${data.series.map((s) => `${s.name}: ${s.values[index] === null ? "not measured" : (s.values[index]?.toLocaleString("en-AU") ?? "not measured")}${s.values[index] !== null && data.unit === "seconds" ? " seconds" : ""} (${s.statuses[index]})`).join(" · ")}`;
   };
-  document.querySelector<HTMLElement>("[data-day-inspector]")!.hidden = false;
-  dateInput?.addEventListener("input", () => inspect(Number(dateInput.value)));
-  inspect(data.period.days - 1);
-  if (data.series.some((s) => s.values.some((v) => v !== null))) {
+  if (target) {
+    document.querySelector<HTMLElement>("[data-day-inspector]")!.hidden = false;
+    dateInput?.addEventListener("input", () => inspect(Number(dateInput.value)));
+    inspect(data.period.days - 1);
+  }
+  if (target && data.series.some((s) => s.values.some((v) => v !== null))) {
     try {
       const chart = echarts.init(target, undefined, { renderer: "svg" });
       const mobile = () => target.clientWidth < 560;
@@ -226,12 +239,16 @@ if (payload && target) {
           `Captured ${data.createdAt ?? "unavailable"}`
         ],
         [
-          "Reported activity, not unique people. Empty values mean unavailable. Coverage accompanies each value."
+          data.overview
+            ? "Reported activity, not unique people. Each project uses its own relevant measure and unit; values are not added together. Empty values mean unavailable. Coverage accompanies each value."
+            : "Reported activity, not unique people. Empty values mean unavailable. Coverage accompanies each value."
         ],
         [
           "UTC date",
           ...data.series.flatMap((s) => [
-            `${s.name} · ${data.measure} (${data.unit})`,
+            data.overview
+              ? `${s.name} · ${s.measure ?? data.measure} (${s.unit ?? data.unit})`
+              : `${s.name} · ${data.measure} (${data.unit})`,
             `${s.name} coverage`
           ])
         ],

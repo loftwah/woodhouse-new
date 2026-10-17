@@ -46,7 +46,7 @@ export const GET: APIRoute = async ({ cache }) => {
     `- ${url("/agents/")}`,
     `- ${url("/agents/facts.json")}`,
     `- ${url("/factory/")}`,
-    `- ${url("/activity/")} (public listening and native scoreboard links)`,
+    `- ${url("/activity/")} (analytics: each project's own relevant measure)`,
     `- ${url("/api/activity.json")} (aggregate listening; not unique players)`,
     `- ${url("/architecture/")}`,
     `- ${url("/doctrine/")}`,

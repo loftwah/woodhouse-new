@@ -28,7 +28,11 @@ import {
   svgPlot,
   measuresFor,
   resolveMeasure,
+  isOverviewMeasure,
+  overviewMetric,
+  overviewOrder,
   productView,
+  reportCaption,
   reportMetric,
   measureForProjectSwitch
 } from "../data/analytics-workbench";
@@ -58,6 +62,7 @@ const view = productView(selected);
 const choices = measuresFor(selected);
 const requestedMeasure = Astro.url.searchParams.get("measure");
 const measure = resolveMeasure(selected, requestedMeasure);
+const overview = isOverviewMeasure(measure);
 if (requestedMeasure && requestedMeasure !== measure.key) {
   const corrected = new URL(Astro.url);
   corrected.searchParams.set("measure", measure.key);
@@ -102,6 +107,34 @@ const allRows = analyticsProjects
     colour: projectColours[project]!
   }));
 const rows = allRows.filter((r) => !selected || r.project === selected);
+const overviewRows = overview
+  ? overviewOrder
+      .filter((project) => publicIds.has(project))
+      .map((project) => {
+        const data = snapshot?.projects.find((p) => p.project === project)?.report ?? null;
+        return {
+          project,
+          name: names.get(project) ?? project,
+          colour: projectColours[project]!,
+          data,
+          // A project stays in the overview when its source is unavailable; the
+          // measure is still named so a real reporting failure stays visible.
+          overviewMeasure: measuresFor(project).find(
+            (m) => m.key === productView(project)!.defaultMeasure
+          )!,
+          metric: overviewMetric(data, project)
+        };
+      })
+  : [];
+const metricRows = overview
+  ? overviewRows
+  : rows
+      .map((r) => ({
+        ...r,
+        overviewMeasure: null,
+        metric: reportMetric(r.project, r.data?.metrics, measure.key)
+      }))
+      .filter((r) => r.metric);
 const guestReceipts = allRows
   .find((r) => r.project === "app-composer")
   ?.data?.metrics.find((m) => m.key === "guest_postcards_received");
@@ -139,10 +172,6 @@ const groups = [
     keys: group.keys.filter((key) => choices.some((m) => m.key === key))
   }))
   .filter((group) => group.keys.length);
-const metricRows = rows.map((r) => ({
-  ...r,
-  metric: reportMetric(r.project, r.data?.metrics, measure.key)
-}));
 const headlines =
   selected && view
     ? [...new Set([...view.headlines, measure.key])].map((key) => ({
@@ -167,11 +196,17 @@ const chartSeries = chartRows.map((r) => ({
 const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
 const unit = chartRows[0]?.metric?.unit ?? (measure.key.endsWith("_seconds") ? "seconds" : "count");
 const days = dateDays(window);
-const available = rows.filter((r) => r.data?.metrics.some((m) => m.value !== null)).length;
+// Applicable scope, never a truthy-value count: a project that should report this
+// measure but did not stays in the denominator as "not measured".
+const applicable = overview ? overviewRows : metricRows;
+const available = applicable.filter((r) => r.metric?.value !== null && r.metric).length;
 const cleanDays = metricRows.map(
   (r) => days.filter((day) => dailyStatus(r.data, r.metric, day) === "clean").length
 );
 const longestClean = Math.max(0, ...cleanDays);
+const sourcesReporting = allRows.filter((r) =>
+  r.data?.metrics.some((m) => m.value !== null)
+).length;
 const qaOff = Astro.url.searchParams.get("analytics") === "off";
 function pageLink(
   changes: {
@@ -205,7 +240,7 @@ const link = report
   ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}`
   : `https://woodhouse.loftwah.com/activity/`;
 const image = report
-  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}&measure=${measure.key}`
+  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}`
   : "/og/woodhouse.jpg";
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString("en-AU", {
@@ -214,22 +249,18 @@ const dateLabel = (date: string) =>
     month: "short",
     year: "numeric"
   });
-const caption = report
-  ? `${title} · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)\n${metricRows
-      .filter((r) => r.metric?.value !== null && r.metric)
-      .map(
-        (r) =>
-          `${r.name}: ${formatMetric(r.metric!)} ${measure.label.toLowerCase()} · ${qualityText(r.metric)}`
-      )
-      .join(
-        "\n"
-      )}\nReported activity, not unique people. ${window.complete ? "Closed calendar window; source coverage varies." : "Current UTC day is partial."} Legacy/test and coverage limitations apply; see report.\n${link}`
-  : "";
+const caption = report ? reportCaption(metricRows, measure, window, link, dateLabel) : "";
 const dataPayload = {
   period: window,
   measure: measure.label,
   unit,
-  series: chartSeries,
+  overview,
+  series: chartSeries.map((s) => {
+    const row = metricRows.find((r) => r.name === s.name);
+    return overview && row?.overviewMeasure
+      ? { ...s, measure: row.overviewMeasure.label, unit: row.metric?.unit ?? unit }
+      : s;
+  }),
   createdAt: report?.createdAt ?? null
 };
 ---
@@ -238,12 +269,12 @@ const dataPayload = {
   title={title}
   description={
     view?.description ??
-    "Explore recorded gameplay, mini-app actions and audible listening. Interactive charts, custom UTC dates and clear source coverage across the Loftwah portfolio."
+    "How the portfolio is being used: each project's own measure, with dated charts, custom UTC dates and clear source coverage."
   }
   path={frozen ? link.replace(Astro.url.origin, "") : "/activity/"}
   currentPath="/activity/"
   image={image}
-  imageAlt={`${title}: dated ${measure.label.toLowerCase()} report`}
+  imageAlt={`${title}: dated ${overview ? "mixed-measure project overview" : measure.label.toLowerCase()} report`}
   analyticsWorkbench
 >
   <div class="analytics-workbench">
@@ -281,8 +312,10 @@ const dataPayload = {
     <div class="workbench-body">
       <header class="workbench-heading">
         <div>
-          <h1>{title}</h1>
-          {view && <p class="product-view-label">{view.label}</p>}
+          <h1>{selected ? `${names.get(selected)} analytics` : "Analytics"}</h1>
+          <p class="product-view-label">
+            {view ? view.label : "Each project on its own relevant measure"}
+          </p>
         </div>
         <div class="date-toolbar">
           <nav aria-label="Reporting period">
@@ -355,7 +388,10 @@ const dataPayload = {
           {window.complete ? "Closed calendar dates" : "Today is partial"}
         </span>
         <span>
-          {available}/{rows.length} sources reporting {frozen ? "· Saved snapshot" : ""}
+          {overview
+            ? `${available}/${applicable.length} projects report their measure · ${sourcesReporting}/${allRows.length} sources reporting`
+            : `${available}/${applicable.length} reporting projects for this measure · ${sourcesReporting}/${allRows.length} sources reporting`}{" "}
+          {frozen ? "· Saved snapshot" : ""}
         </span>
       </div>
       {frozen && (
@@ -368,13 +404,18 @@ const dataPayload = {
       <div class="analysis-layout">
         <div class="chart-column">
           <nav class="measure-navigation" aria-label="Choose a measure">
+            {overview && (
+              <a href={pageLink({ measure: "overview" })} aria-current="page">
+                Overview
+              </a>
+            )}
             {(groups.length === 1
               ? choices.map((m) => ({ label: m.label, keys: [m.key] }))
               : groups
             ).map((group) => (
               <a
                 href={pageLink({ measure: group.keys[0]! })}
-                aria-current={group.keys.includes(measure.key) ? "page" : undefined}
+                aria-current={!overview && group.keys.includes(measure.key) ? "page" : undefined}
               >
                 {group.label}
               </a>
@@ -383,10 +424,15 @@ const dataPayload = {
           <section class="main-chart" aria-labelledby="trend-heading">
             <div class="chart-heading">
               <div>
-                <h2 id="trend-heading">{measure.label}</h2>
+                <h2 id="trend-heading">
+                  {overview
+                    ? measure.label
+                    : `${measure.label} · ${selected ? names.get(selected) : "Games"}`}
+                </h2>
                 <p>
-                  {unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · gaps mean
-                  unavailable
+                  {overview
+                    ? "One relevant measure per project · same UTC dates"
+                    : `${unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · gaps mean unavailable`}
                 </p>
               </div>
               <form class="measure-picker" method="get" action="/activity/">
@@ -397,10 +443,17 @@ const dataPayload = {
                   ))}
                 <label for="measure-picker">Measure</label>
                 <select id="measure-picker" name="measure">
+                  {overview && (
+                    <optgroup label="Portfolio">
+                      <option value="overview" selected>
+                        Project overview
+                      </option>
+                    </optgroup>
+                  )}
                   {groups.map((group) => (
                     <optgroup label={group.label}>
                       {choices
-                        .filter((m) => group.keys.includes(m.key))
+                        .filter((m) => m.key !== "overview" && group.keys.includes(m.key))
                         .map((m) => (
                           <option value={m.key} selected={m.key === measure.key}>
                             {m.label}
@@ -420,114 +473,204 @@ const dataPayload = {
                 </button>
               </div>
             </div>
-            <p class="mobile-measure-reading">{measure.meaning}</p>
-            <dl class="metric-strip">
-              {headlines
-                .filter((r) => selected || r.metric)
-                .map((r) => (
-                  <div>
-                    <dt>
-                      <span
-                        class="source-dot"
-                        style={`--source:${r.colour}`}
-                        aria-hidden="true"
-                      ></span>
-                      {r.name}
-                    </dt>
-                    <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
-                    <small>
-                      {qualityText(r.metric)}
-                      {days.some((day) => dailyStatus(r.data, r.metric, day) === "legacy")
-                        ? " · legacy in range"
-                        : ""}
-                    </small>
-                  </div>
-                ))}
-            </dl>
-            {!hasDaily && (
-              <div class="chart-empty">
-                <strong>No daily measurements for this selection</strong>
-                <p>
-                  Choose another measure, project or date range. An unavailable source does not mean
-                  nobody used the product.
+            {!overview && <p class="mobile-measure-reading">{measure.meaning}</p>}
+            {overview ? (
+              <section class="overview" aria-label="Projects and their relevant measures">
+                <h3 class="overview-heading">
+                  Each project, on the measure that describes its use
+                </h3>
+                <div class="overview-grid">
+                  {overviewRows.map((r) => (
+                    <a class="overview-card" href={pageLink({ project: r.project })}>
+                      <span class="overview-card__project">
+                        <span
+                          class="source-dot"
+                          style={`--source:${r.colour}`}
+                          aria-hidden="true"
+                        />
+                        {r.name}
+                      </span>
+                      <span class="overview-card__value">
+                        {r.metric ? formatMetric(r.metric) : "—"}
+                      </span>
+                      <span class="overview-card__measure">{r.overviewMeasure.label}</span>
+                      <span class="overview-card__quality">
+                        {r.metric
+                          ? qualityText(r.metric)
+                          : r.data
+                            ? "Not reported in this window"
+                            : "Source unavailable"}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+                <p class="overview-note">
+                  Different measures with different units; the values are never added together. Open
+                  a project for its full view, or choose one measure for a single-scope chart and
+                  table.
                 </p>
-              </div>
+              </section>
+            ) : (
+              <>
+                <dl class="metric-strip">
+                  {headlines
+                    .filter((r) => selected || r.metric)
+                    .map((r) => (
+                      <div>
+                        <dt>
+                          <span
+                            class="source-dot"
+                            style={`--source:${r.colour}`}
+                            aria-hidden="true"
+                          ></span>
+                          {r.name}
+                        </dt>
+                        <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
+                        <small>
+                          {qualityText(r.metric)}
+                          {days.some((day) => dailyStatus(r.data, r.metric, day) === "legacy")
+                            ? " · legacy in range"
+                            : ""}
+                        </small>
+                      </div>
+                    ))}
+                </dl>
+                {!hasDaily && (
+                  <div class="chart-empty">
+                    <strong>No daily measurements for this selection</strong>
+                    <p>
+                      Choose another measure, project or date range. An unavailable source does not
+                      mean nobody used the product.
+                    </p>
+                  </div>
+                )}
+                <div
+                  class:list={["interactive-plot", { "has-no-data": !hasDaily }]}
+                  data-activity-chart
+                  aria-label={`${measure.label} daily chart`}
+                >
+                  {hasDaily && (
+                    <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />
+                  )}
+                </div>
+                <div class="chart-legend">
+                  {chartRows.map((r) => (
+                    <button type="button" data-series-toggle={r.name} aria-pressed="true" disabled>
+                      <i style={`--source:${r.colour}`} aria-hidden="true"></i>
+                      {r.name}
+                    </button>
+                  ))}
+                </div>
+                <div class="chart-instructions">
+                  <p data-chart-help>
+                    {hasDaily
+                      ? "Inspect a date to see source values. The data table below works without interactive charts."
+                      : "No line is drawn for missing data."}
+                  </p>
+                  <button type="button" data-reset-zoom hidden>
+                    Reset zoom
+                  </button>
+                </div>
+              </>
             )}
-            <div
-              class:list={["interactive-plot", { "has-no-data": !hasDaily }]}
-              data-activity-chart
-              aria-label={`${measure.label} daily chart`}
-            >
-              {hasDaily && <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />}
-            </div>
-            <div class="chart-legend">
-              {chartRows.map((r) => (
-                <button type="button" data-series-toggle={r.name} aria-pressed="true" disabled>
-                  <i style={`--source:${r.colour}`} aria-hidden="true"></i>
-                  {r.name}
-                </button>
-              ))}
-            </div>
-            <div class="chart-instructions">
-              <p data-chart-help>
-                {hasDaily
-                  ? "Inspect a date to see source values. The data table below works without interactive charts."
-                  : "No line is drawn for missing data."}
-              </p>
-              <button type="button" data-reset-zoom hidden>
-                Reset zoom
-              </button>
-            </div>
             <details class="chart-data">
-              <summary>Chart data & export</summary>
-              <div class="day-inspector" data-day-inspector hidden>
-                <label>
-                  Inspect UTC day{" "}
-                  <input
-                    type="range"
-                    min="0"
-                    max={window.days - 1}
-                    value={window.days - 1}
-                    aria-label="Inspect UTC day"
-                    data-inspect-day
-                  />
-                </label>
-                <output data-day-output aria-live="polite"></output>
-              </div>
+              <summary>{overview ? "Daily values & export" : "Chart data & export"}</summary>
+              {!overview && (
+                <div class="day-inspector" data-day-inspector hidden>
+                  <label>
+                    Inspect UTC day{" "}
+                    <input
+                      type="range"
+                      min="0"
+                      max={window.days - 1}
+                      value={window.days - 1}
+                      aria-label="Inspect UTC day"
+                      data-inspect-day
+                    />
+                  </label>
+                  <output data-day-output aria-live="polite"></output>
+                </div>
+              )}
               <p>
-                These are daily values for {measure.label.toLowerCase()}. A dash means unavailable.
-                Daily distinct-browser counts must not be added to estimate period-level people.
+                {overview
+                  ? "One row per project with its own relevant measure, unit and coverage. A dash means unavailable; the measures are not added together."
+                  : `These are daily values for ${measure.label.toLowerCase()}. A dash means unavailable. Daily distinct-browser counts must not be added to estimate period-level people.`}
               </p>
               <button type="button" data-csv-download hidden>
                 Download chart CSV
               </button>
-              <div class="table-scroll" tabindex="0" role="region" aria-label="Daily chart values">
-                <table>
-                  <caption>
-                    {measure.label}· UTC dates ·{unit}
-                  </caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      {metricRows.map((r) => (
-                        <th scope="col">{r.name}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {days.map((d, i) => (
+              <div
+                class="table-scroll"
+                tabindex="0"
+                role="region"
+                aria-label={overview ? "Daily values by project" : "Daily chart values"}
+              >
+                {overview ? (
+                  <table>
+                    <caption>Relevant measure per project · UTC dates</caption>
+                    <thead>
                       <tr>
-                        <th scope="row">{d}</th>
-                        {metricRows.map((r) => (
+                        <th scope="col">Project</th>
+                        <th scope="col">Measure</th>
+                        {days.map((d) => (
+                          <th scope="col">{d}</th>
+                        ))}
+                        <th scope="col">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {overviewRows.map((r) => (
+                        <tr>
+                          <th scope="row">{r.name}</th>
+                          <td>{r.overviewMeasure.label}</td>
+                          {days.map((day, i) => (
+                            <td>
+                              {dailyPoints(r.metric, window)[i]?.toLocaleString("en-AU") ?? "—"}
+                              <small class="cell-coverage">
+                                {dailyStatus(r.data, r.metric, day)}
+                              </small>
+                            </td>
+                          ))}
                           <td>
-                            {dailyPoints(r.metric, window)[i]?.toLocaleString("en-AU") ?? "—"}
-                            <small class="cell-coverage">{dailyStatus(r.data, r.metric, d)}</small>
+                            {r.metric ? formatMetric(r.metric) : "—"}
+                            <small class="cell-coverage">
+                              {r.metric ? r.metric.unit : "not measured"}
+                            </small>
                           </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <table>
+                    <caption>
+                      {measure.label}· UTC dates ·{unit}
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        {metricRows.map((r) => (
+                          <th scope="col">{r.name}</th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {days.map((d, i) => (
+                        <tr>
+                          <th scope="row">{d}</th>
+                          {metricRows.map((r) => (
+                            <td>
+                              {dailyPoints(r.metric, window)[i]?.toLocaleString("en-AU") ?? "—"}
+                              <small class="cell-coverage">
+                                {dailyStatus(r.data, r.metric, d)}
+                              </small>
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </details>
           </section>
@@ -535,7 +678,11 @@ const dataPayload = {
             <div class="section-title">
               <div>
                 <h2 id="coverage-heading">Can we compare these dates?</h2>
-                <p>Coverage for the selected measure. Colour describes evidence, not popularity.</p>
+                <p>
+                  {overview
+                    ? "Coverage for each project's relevant measure. Colour describes evidence, not popularity."
+                    : "Coverage for the selected measure. Colour describes evidence, not popularity."}
+                </p>
               </div>
             </div>
             <div class="coverage-legend">
@@ -569,12 +716,17 @@ const dataPayload = {
                 </div>
                 {metricRows.map((r) => (
                   <>
-                    <a href={pageLink({ project: r.project })}>{r.name}</a>
+                    <a href={pageLink({ project: r.project })}>
+                      {r.name}
+                      {r.overviewMeasure && (
+                        <small class="coverage-measure">{r.overviewMeasure.label}</small>
+                      )}
+                    </a>
                     <div class="calendar-cells">
                       {days.map((day) => (
                         <span
                           class={dailyStatus(r.data, r.metric, day)}
-                          title={`${r.name} · ${day}: ${dailyStatus(r.data, r.metric, day)}${r.metric?.daily.find((d) => d.date === day) ? ` · ${r.metric.daily.find((d) => d.date === day)!.value} ${unit}` : ""}`}
+                          title={`${r.name}${r.overviewMeasure ? ` · ${r.overviewMeasure.label}` : ""} · ${day}: ${dailyStatus(r.data, r.metric, day)}${r.metric?.daily.find((d) => d.date === day) ? ` · ${r.metric.daily.find((d) => d.date === day)!.value} ${r.metric.unit}` : ""}`}
                         ></span>
                       ))}
                     </div>
@@ -585,7 +737,7 @@ const dataPayload = {
             <p class="coverage-caption">
               {longestClean > 0
                 ? `The longest available comparable history in this selection is ${longestClean} complete daily observations.`
-                : "No clean full-day comparison is available for this measure in this snapshot."}{" "}
+                : "No clean full-day comparison is available for this selection in this snapshot."}{" "}
               First collection days and today remain partial. Legacy activity may include tests that
               cannot be separated.
             </p>
@@ -659,8 +811,9 @@ const dataPayload = {
             <h2>What am I looking at?</h2>
             <p>{measure.meaning}</p>
             <p class="context-muted">
-              The chart uses one measure and one unit at a time. Each coloured line belongs to a
-              project; the source totals cover the selected window.
+              {overview
+                ? "One row and one card per project, each on the measure its product view defines. The games, LoftwahFM, App Composer and Woodhouse report different units; the overview keeps them side by side without adding them together."
+                : "The chart uses one measure and one unit at a time. Each coloured line belongs to a project; the source totals cover the selected window."}
             </p>
           </section>
           <section>
@@ -673,9 +826,13 @@ const dataPayload = {
               </p>
             )}
             <p>
-              {hasDaily
-                ? "We can see when recorded activity occurred and inspect how it is distributed across the selected dates."
-                : "This selection cannot currently establish a pattern of use."}
+              {overview
+                ? available > 0
+                  ? `${available} of ${applicable.length} projects report their own measure for these dates. A project that reports nothing keeps its measure named and shows no value rather than a zero.`
+                  : "No project reports its own measure for these dates. That is a collection result for this window, not evidence that nobody used the products."
+                : hasDaily
+                  ? "We can see when recorded activity occurred and inspect how it is distributed across the selected dates."
+                  : "This selection cannot currently establish a pattern of use."}
             </p>
             <p>
               {report?.analysis?.findings.length
@@ -727,7 +884,7 @@ const dataPayload = {
                 <dd>
                   {selected === "app-composer"
                     ? "Bounded access and task counters. Guest postcard receipts, where reported, count submissions accepted for moderation; these signals do not establish users, creator activation or successful publication."
-                    : `${available}/${rows.length} sources provide some activity. Reports are not verified people.`}
+                    : `${available}/${applicable.length} ${overview ? "projects report their own measure" : "projects reporting this measure"}. ${sourcesReporting}/${allRows.length} sources provide some activity. Reports are not verified people.`}
                 </dd>
               </div>
               <div>

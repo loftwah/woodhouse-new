@@ -5,11 +5,12 @@ import wasm from "../../assets/resvg.wasm";
 import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
-import { measureChoices } from "../../data/analytics-workbench";
+import { measureChoices, overviewMeasure } from "../../data/analytics-workbench";
 import type { AnalyticsProject } from "../../data/portfolio-analytics";
 export const prerender = false;
 let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
+const knownMeasures = new Set<string>([overviewMeasure.key, ...measureChoices.map((m) => m.key)]);
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const format = url.searchParams.get("format") ?? "landscape",
@@ -18,7 +19,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
     measure = url.searchParams.get("measure");
   if (
     !id ||
-    (measure !== null && measure !== "replays" && !measureChoices.some((m) => m.key === measure)) ||
+    (measure !== null && measure !== "replays" && !knownMeasures.has(measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
       (k) => !["format", "report", "project", "download", "audit", "measure"].includes(k)
