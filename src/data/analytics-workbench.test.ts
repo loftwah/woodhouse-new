@@ -15,7 +15,9 @@ import {
   overviewMeasure,
   reportCaption,
   supportsMeasure,
-  measureScope
+  measureScope,
+  weeklyHighlights,
+  discoveryReferrals
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric, analyticsSchema } from "./portfolio-analytics.ts";
 import { reportSvg, reportQualifier } from "./portfolio-card.ts";
@@ -550,6 +552,125 @@ test("the saved caption carries the same qualifier the card and PNG show", () =>
     (date) => date
   );
   assert.match(clean, /Fighter: 4 game starts · Reported activity/);
+});
+test("the last complete week shows a valid comparison and an earned record below the alert threshold", () => {
+  const now = Date.parse("2026-10-17T12:00:00.000Z");
+  const days: { date: string; value: number }[] = [];
+  for (let t = Date.parse("2026-09-21"); t <= Date.parse("2026-10-11"); t += 86400000)
+    days.push({ date: new Date(t).toISOString().slice(0, 10), value: 0 });
+  const setSum = (from: string, value: number) => {
+    const row = days.find((d) => d.date === from);
+    if (row) row.value = value;
+  };
+  setSum("2026-09-21", 5);
+  setSum("2026-09-28", 5);
+  setSum("2026-10-05", 10);
+  const starts: Metric = {
+    key: "game_starts",
+    label: "Game starts",
+    unit: "count",
+    value: 160,
+    quality: "exact",
+    definition: "Reported starts",
+    daily: days
+  };
+  const report = {
+    schema: analyticsSchema,
+    project: "fighter",
+    generatedAt: "2026-10-16T15:00:00.000Z",
+    timezone: "UTC",
+    period: { from: "2026-09-21", to: "2026-10-16", days: 26, complete: false },
+    coverage: {
+      startedAt: "2026-09-20T00:00:00.000Z",
+      comparableFrom: "2026-09-20T00:00:00.000Z",
+      through: "2026-10-16T15:00:00.000Z",
+      quality: "exact",
+      limitations: []
+    },
+    metrics: [starts],
+    source: { endpoint: "https://example.test/aggregate", revision: null }
+  } as ProjectAnalytics;
+  const { highlights, gaps } = weeklyHighlights([{ project: "fighter", report }], names, now);
+  assert.deepEqual(gaps, []);
+  assert.equal(highlights.length, 1);
+  const h = highlights[0]!;
+  assert.equal(h.from, "2026-10-05");
+  assert.equal(h.to, "2026-10-11");
+  assert.equal(h.value, 10);
+  assert.equal(h.previous, 5);
+  assert.equal(h.changePercent, 100);
+  assert.equal(h.newBest, true);
+  assert.equal(h.comparedWeeks, 3);
+  assert.equal(h.unit, "count");
+  assert.equal(h.measure.key, "game_starts");
+  // A wholly missing source is named with a reason rather than dropped or shown
+  // as a zero.
+  const missing = weeklyHighlights([{ project: "fighter", report: null }], names, now);
+  assert.equal(missing.highlights.length, 0);
+  assert.match(missing.gaps[0]!.reason, /No source report/);
+  // Too little history cannot earn a comparison or a record.
+  const little = weeklyHighlights(
+    [
+      {
+        project: "fighter",
+        report: { ...report, metrics: [{ ...starts, daily: days.slice(-7) }] }
+      }
+    ],
+    names,
+    now
+  );
+  assert.equal(little.highlights.length, 0);
+  assert.match(little.gaps[0]!.reason, /Fewer than two complete comparable weeks/);
+});
+test("the discovery breakdown keeps only published destinations and reports a trend honestly", () => {
+  const discoveryPeriod = { from: "2026-10-01", to: "2026-10-16", days: 16, complete: false };
+  const referrals = (slug: string, perDay: number): Metric => ({
+    key: `referral_${slug.replaceAll("-", "_")}`,
+    label: `Referrals to ${slug}`,
+    unit: "count",
+    value: perDay * 16,
+    quality: "exact",
+    definition: "Referrals",
+    daily: Array.from({ length: 16 }, (_, i) => ({
+      date: new Date(Date.parse(discoveryPeriod.from) + i * 86400000).toISOString().slice(0, 10),
+      value: perDay
+    }))
+  });
+  const entries = discoveryReferrals(
+    [referrals("fighter", 3), referrals("protocol-11", 1), referrals("ghost", 5)],
+    new Set(["fighter", "protocol-11"]),
+    new Map([
+      ["fighter", "Fighter"],
+      ["protocol-11", "Protocol 11"]
+    ]),
+    new Map([
+      ["fighter", "https://fighter.loftwah.com"],
+      ["protocol-11", null]
+    ]),
+    discoveryPeriod
+  );
+  // A withdrawn destination is not linked; ranking is by recorded referrals.
+  assert.deepEqual(
+    entries.map((e) => e.slug),
+    ["fighter", "protocol-11"]
+  );
+  assert.equal(entries[0]!.name, "Fighter");
+  assert.equal(entries[0]!.siteUrl, "https://fighter.loftwah.com");
+  assert.equal(entries[0]!.value, 48);
+  assert.equal(entries[0]!.recent, 21);
+  assert.equal(entries[0]!.prior, 21);
+  assert.equal(entries[0]!.hasTrend, true);
+  // A zero-referral destination is not shown as a discovery.
+  assert.deepEqual(
+    discoveryReferrals(
+      [{ ...referrals("fighter", 0), value: 0 }],
+      new Set(["fighter"]),
+      new Map([["fighter", "Fighter"]]),
+      new Map(),
+      discoveryPeriod
+    ),
+    []
+  );
 });
 test("the share caption names each project's own measure and the mixed scope", () => {
   const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({
