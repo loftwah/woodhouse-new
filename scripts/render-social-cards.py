@@ -17,12 +17,14 @@ DEST = ROOT / "public" / "og"
 # project count; the evergreen cards use it so refreshing the portfolio cannot
 # leave a stale count baked into the artwork.
 WORKSHOP_CARDS = {
+    "dispatches/take-a-useful-piece": ("Take a piece.", "Make it yours."),
     "woodhouse": ("One human.", "Many worlds."),
     "factory": ("Made here.", "Used together."),
     "dispatches/your-game-its-own-soundtrack": ("Your game.", "Its soundtrack."),
     "dispatches/your-apps-should-get-along": ("Separate apps.", "Better together."),
 }
 CARDS = {
+    "dispatches/take-a-useful-piece": ("", "", "", "18 October 2026"),
     "dispatches/your-game-its-own-soundtrack": ("", "", "", "18 October 2026"),
     "dispatches/your-apps-should-get-along": ("", "", "", "18 October 2026"),
     "dispatches/playing-the-work": ("PORTFOLIO REPORT", "The factory is learning to play its own work.", "Protocol 11 leads the 7 October review.", "7 October 2026"),

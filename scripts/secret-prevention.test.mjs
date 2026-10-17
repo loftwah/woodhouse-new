@@ -3,6 +3,7 @@ import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
+import { parseEnv } from "node:util";
 import { checkBuildPrivacy } from "./check-build-privacy.mjs";
 import {
   checkPublishedPaths,
@@ -67,9 +68,10 @@ test("a quoted .env value is parsed identically for the local and remote checks"
   assert.equal(values.get("OTHER"), "single value");
   assert.equal(values.get("PLAIN"), "abc");
   assert.deepEqual(privateEnvValues(values), [`quoted-${CANARY}`]);
-  // Deliberate client configuration is not a private value, but its content is
-  // still scanned for high-confidence secret shapes.
-  const publicOnes = parseEnvFile(`PUBLIC_TEST_KEY="${CANARY}"\nTEST_TOKEN="${CANARY}"`);
+  // A public prefix cannot turn an opaque credential into client configuration.
+  const publicOnes = parseEnvFile(
+    `PUBLIC_TEST_KEY="${CANARY}"\nPUBLIC_ANALYTICS_ID=public-but-fine`
+  );
   assert.deepEqual(privateEnvValues(publicOnes), [CANARY]);
   assert.deepEqual(
     scanPublicText(`const key = "${CANARY}"`, {
@@ -79,6 +81,44 @@ test("a quoted .env value is parsed identically for the local and remote checks"
     }),
     []
   );
+});
+
+test("dotenv comments and multiline values match the Node runtime parser", () => {
+  const source = [
+    `API_TOKEN=${CANARY} # deployment note`,
+    `QUOTED_SECRET="quoted-${CANARY}" # another note`,
+    `HASH_PASSWORD='hash#${CANARY}' # preserve the quoted hash`,
+    `MULTILINE_SECRET="first\n${CANARY}"`,
+    `export EXPORTED_TOKEN=${CANARY}`
+  ].join("\n");
+  assert.deepEqual(Object.fromEntries(parseEnvFile(source)), { ...parseEnv(source) });
+  for (const secret of privateEnvValues(parseEnvFile(source)))
+    assert.deepEqual(scanPublicText(secret, { privateValues: [secret], includeMarkers: false }), [
+      "configured private value"
+    ]);
+});
+
+test("opaque public-prefixed credentials and commented values fail the actual artefact guard", async () => {
+  for (const env of [
+    `PUBLIC_API_TOKEN=${CANARY}`,
+    `API_TOKEN=${CANARY} # deployment note`,
+    `API_TOKEN="${CANARY}" # deployment note`
+  ]) {
+    const root = await fixture({
+      ".env": env,
+      "dist/client/_astro/app.js": `window.token="${CANARY}"`
+    });
+    try {
+      const result = await checkBuildPrivacy({ root });
+      assert.equal(result.ok, false);
+      assert(result.findings.some((finding) => finding.label === "configured private value"));
+      assert(!JSON.stringify(result).includes(CANARY), "findings must never echo a value");
+      await writeFile(path.join(root, "dist/client/_astro/app.js"), "console.log('ready')");
+      assert.equal((await checkBuildPrivacy({ root })).ok, true);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  }
 });
 
 test("high-confidence secret shapes are detected without printing the value", () => {

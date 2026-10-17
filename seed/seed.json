@@ -2024,12 +2024,12 @@
           "why": "Music is most of what makes a game feel made, and LoftwahFM hands builders a catalogue, stations and a player they don’t have to build. Listeners get stations to leave running and original shows to replay.",
           "teaches": "A shared capability earns its name through compatible releases and real consumers. Published upstream code and verified game use are different evidence.",
           "site_url": "https://fm.loftwah.com/",
-          "site_og_image": "https://fm.loftwah.com/heroimage-og.jpg",
+          "site_og_image": "https://fm.loftwah.com/og/loftwahfm-broadcast-20261018.jpg",
           "site_og_title": "LoftwahFM | Music, branded radio, and streams",
           "site_og_description": "LoftwahFM is the home of Loftwah releases, branded radio segments, custom AI music, and 24/7 streams.",
           "site_favicon": "https://fm.loftwah.com/favicon-32x32.png",
-          "preview_alt": "Promotional artwork on the LoftwahFM site: a bright electric music mark on a dark field.",
-          "preview_caption": "Promotional image from the LoftwahFM site",
+          "preview_alt": "LoftwahFM promotional artwork: a worn analog tuner and reels beneath large cream lettering.",
+          "preview_caption": "Promotional artwork from LoftwahFM’s approved radio illustration",
           "public_safe": true
         }
       },
@@ -2215,6 +2215,19 @@
           "source_description": "MP-supplied portfolio and creator-stack information, checked against current product source, owning release receipts and public production pages and aggregate endpoints on 16 October 2026. Public-safe derived conclusions only.",
           "scope": "New status and evidence for App Composer, Fighter, Bubbles, Protocol 11, SHOALSHOT and LoftwahFM. The other projects retain their earlier review dates. Existing radio-client adoption evidence keeps its own dates and versions.",
           "editorial_notes": "The published creator profile and guest contribution path supersede the earlier reference-stack proposal. Product activity, app access and audible listening retain separate units. No private profile catalogue, raw report, account details, audience totals or unqualified candidate is published.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-18",
+        "slug": "2026-10-18",
+        "status": "published",
+        "data": {
+          "title": "Take a useful piece · 18 October 2026",
+          "reviewed_at": "2026-10-18",
+          "source_description": "Current public production pages, exact release identities, owning release checks and independent browser observations reviewed on 18 October 2026. Public-safe derived conclusions only.",
+          "scope": "Focused new review of LoftwahFM’s public game-music example, App Composer’s connected reference stack and publication guards demonstrated in Composer and Bubbles. Other product and radio-adoption records retain their own review dates.",
+          "editorial_notes": "The working examples make reuse easier to discover and try. Browser playback is separate from human listening, physical-device acceptance and independent customer adoption. Public examples and publication guards establish no audience growth, demand, licensing grant or completed migration.",
           "public_safe": true
         }
       }
@@ -2996,6 +3009,44 @@
           "proof_boundary": "A source-owned listening receipt is neither a unique listener nor a game start. Older unmarked verification cannot be separated or subtracted, so pre-boundary history cannot establish clean growth. The broader React Doctor check still fails on unchanged baseline findings; the owning sanctioned release checks and live verification passed separately.",
           "reviewed_at": "2026-10-16",
           "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-18",
+        "slug": "loftwahfm-2026-10-18",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-18",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-18",
+          "state": "Try the soundtrack. Take the recipe.",
+          "state_tone": "active",
+          "current": "A public game-music quick-start now supplies a copyable starter and agent brief. The playable example runs on Woodhouse while its versioned client, station programme and music come from LoftwahFM. A visitor can start, pause and mute the stream; the field and effects keep working when music is unavailable. The public music catalogue remains available for listening.",
+          "next_proof": "Observe a builder using the recipe in their own game, then verify that game’s exact release and audio behaviour. Human listening and physical phone acceptance remain separate. Let comparable listening periods accumulate before claiming growth.",
+          "proof_boundary": "The independently hosted prototype and browser playback are demonstrated; an independent customer adoption, offline music, redistribution permission and human listening are not. Client 1.2.0 already coexists with supported older releases; existing game adoption records are unchanged.",
+          "reviewed_at": "2026-10-18",
+          "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-18",
+        "slug": "app-composer-2026-10-18",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-18",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-18",
+          "state": "Separate apps, one useful connection.",
+          "state_tone": "active",
+          "current": "The live creator reference connects a guestbook and collection while each application retains its source, configuration, data and standalone address. Woodhouse now gives visitors a concrete route through the connected pair, the pieces and the running versions. The normal build and downloadable-package path also checks actual client, Worker and archive contents for accidental secret publication.",
+          "next_proof": "Observe another creator preparing and operating their own app through the existing Get Ready and Init flow. The separate WordPress migration programme must prove content, URLs, editing and replacement before a migration claim is made.",
+          "proof_boundary": "Reviewed production source aa1b884 contains the guard and the current creator work. A working reference is not one-click customer onboarding, a completed WordPress migration or validated commercial demand. Owner actions retain their existing access boundaries.",
+          "reviewed_at": "2026-10-18",
+          "sort_order": 10,
           "public_safe": true
         }
       }
@@ -4632,6 +4683,75 @@
           "revision": "43e5f291fb7d32107e0cbd72ac32175f77f470b6",
           "public_safe": true,
           "proof_boundary": "Live aggregate source and owning release checked. Audible receipts are separate from gameplay, sampled analytics and unique listeners. The broader unchanged React Doctor baseline failure remains distinct from the passing sanctioned release."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-game-music-2026-10-18",
+        "slug": "loftwahfm-game-music-2026-10-18",
+        "status": "published",
+        "data": {
+          "title": "A playable connection with a copyable starting point",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-18",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-18",
+          "claim": "The public guide and independent Woodhouse example demonstrate streamed station music controlled by a small game without replacing its controls or effects.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-17",
+          "reviewed_at": "2026-10-18",
+          "summary": "The sanctioned FM release and live guide, starter and artwork are checked against exact source. Independent browser checks cover initial silence, gesture playback, mute, pause and failure/retry across Chromium and phone/tablet WebKit profiles. The Woodhouse example serves from a separate origin.",
+          "source_label": "Public destination, exact deployed source and owning release checks",
+          "source_url": "https://fm.loftwah.com/game-music",
+          "revision": "498ef330be45be42f1598ca464ddb7dbf4bbebfa",
+          "public_safe": true,
+          "proof_boundary": "Browser time progression is playback evidence, not human listening or physical-device acceptance. The small prototype is not customer adoption and gives no redistribution licence."
+        }
+      },
+      {
+        "id": "evidence-app-composer-publication-2026-10-18",
+        "slug": "app-composer-publication-2026-10-18",
+        "status": "published",
+        "data": {
+          "title": "The published pieces keep their own identity",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-18",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-18",
+          "claim": "The connected reference remains usable, and normal builds inspect the actual Worker, static files and downloadable CLI/MCP/extension archives before publication.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-17",
+          "reviewed_at": "2026-10-18",
+          "summary": "Opaque credential and dotenv-comment regressions plus adversarial archive fixtures fail closed. The exact current production release and a separately bound preview passed negative credential-path and package-content checks.",
+          "source_label": "Public destination, exact deployed source and owning release checks",
+          "source_url": "https://composer.loftwah.com/build.json",
+          "revision": "aa1b884150ec04d9806bc8211824bc52e8f9962f",
+          "public_safe": true,
+          "proof_boundary": "This is actual release-path and artifact coverage, not a guarantee against every secret format or proof that a new creator has completed onboarding. Private account state and migration work remain separate."
+        }
+      },
+      {
+        "id": "evidence-bubbles-publication-2026-10-18",
+        "slug": "bubbles-publication-2026-10-18",
+        "status": "published",
+        "data": {
+          "title": "A game release checks what it publishes",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-18",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-18",
+          "claim": "Bubbles’ normal build and release path reject synthetic secret exposure in actual static and Worker artifacts while retaining its existing qualification gates.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-17",
+          "reviewed_at": "2026-10-18",
+          "summary": "The independently deployed game passed its normal release, exact candidate asset checks and deployed browser smoke. Safe negative probes returned six clean missing responses and three generic HTML fallbacks; actual output inspection supplies the artifact coverage.",
+          "source_label": "Public destination, exact deployed source and owning release checks",
+          "source_url": "https://bubbles.loftwah.com/",
+          "revision": "542fa9d5fed89634088d0e785ef1e6a814b461ee",
+          "public_safe": true,
+          "proof_boundary": "Generic HTML fallbacks are neither exposure nor proof of safety. Provider preview URLs remain disabled, so no addressable Bubbles preview is claimed tested. This guard release does not complete the broader gameplay qualification programme."
         }
       }
     ],
@@ -9629,6 +9749,297 @@
                       "marks": [
                         "target"
                       ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-take-a-useful-piece",
+        "slug": "take-a-useful-piece",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "Take a useful piece.",
+          "kind": "Portfolio report",
+          "deck": "Try music inside a game. Follow a photo between apps. Find the part of the factory that helps with something you want to make.",
+          "review_date": "2026-10-18",
+          "source_reference": "Public examples, versioned client artifacts, current owning release records and independent browser observations reviewed on 18 October 2026. This focused review preserves other projects’ earlier evidence and dates.",
+          "lead": "The useful part of a software factory is what you can do with the things it makes.",
+          "lesson": "A working example is a better invitation than another promise.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm",
+            "$ref:project-app-composer"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "music",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Give a game some music.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Move around the tiny playable field on Woodhouse, then turn on a LoftwahFM station. Pause or mute the music and the game keeps working. The music arrives from a different site; your game keeps its controls, effects and fallback.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/lab/game-music.html"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Try the music demo",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The public quick-start includes a starter you can copy and a brief to give a coding agent. Use the existing catalogue for this streaming prototype; distributing tracks or promising offline music needs a separate rights decision.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/game-music"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Take the recipe",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "apps",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Let separate apps get along.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A photo contributed through Here / there can appear in Linkarooie’s collection and still lead back to its source. The owner controls what becomes public. Open the connected pair, then its independent pieces: each keeps its own source, data and address.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/dispatches/your-apps-should-get-along/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Follow the connection",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "This is a working reference for people who want to own their software. Preparing and operating a new app still uses an authorised coding agent and your chosen accounts. A completed WordPress migration is a separate result.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "find",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Choose what you came for.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The project directory now lets you go straight to Play, Listen, Build or Experiments. The activity view explains which destinations it measures, keeps dated releases beside frozen reports and distinguishes returning browsers from people.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/projects/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Find something to play, hear or use",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/activity/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Read the activity and its coverage",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "next",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The next useful proof is someone using it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "These examples are ready to try and share. The cheap next check is a builder taking the music recipe into their own game, or a creator following the connected-app example with their own idea. Those are invitations to test usefulness, not findings about demand.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Physical phone play, human listening, customer adoption and commercial permissions keep their own evidence. Other games and experiments retain the dates and limits in their existing records.",
+                      "marks": []
                     }
                   ]
                 }
