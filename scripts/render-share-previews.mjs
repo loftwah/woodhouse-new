@@ -19,8 +19,8 @@ const root = process.cwd();
 const check = process.argv.includes("--check");
 const previewDirectory = path.join(root, "public/share/previews");
 const manifestPath = path.join(root, "src/data/share-previews.ts");
-const maxWidth = 960;
-const quality = 72;
+const maxWidth = 1200;
+const quality = 75;
 
 const items = gameMedia
   .filter((asset) => asset.kind === "image" && asset.file.startsWith("/share/"))
