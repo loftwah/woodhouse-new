@@ -2,8 +2,6 @@
 import CapabilityRecord from "../components/CapabilityRecord.astro";
 import { listPublicCapabilities } from "../content/repository";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { formatReviewDate } from "../data/review-date";
-import { portfolioReadout } from "../data/portfolio";
 import BuildExamples from "../components/BuildExamples.astro";
 import FactoryPlate from "../components/FactoryPlate.astro";
 import { listProjectRecords } from "../content/repository";
@@ -15,12 +13,6 @@ if (result.error)
   });
 const projects = result.projects;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
-// The portfolio is reviewed project by project, so the readout reports the
-// newest review and says how many projects predate it. Reading one project's
-// date would present an older review as the current state of the whole floor.
-const readout = portfolioReadout(projects);
-const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
-const snapshotSource = readout.snapshotSource ?? "No public snapshot is available.";
 export const prerender = false;
 const capabilityResult = await listPublicCapabilities();
 if (capabilityResult.error)
@@ -46,11 +38,6 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           <span>/</span>
           <span>Factory</span>
         </nav>
-        <p>
-          <a class="text-link" href="/activity/">
-            Explore Analytics
-          </a>
-        </p>
         <h1 class="page-title">
           Good ideas.
           <br />
@@ -58,23 +45,18 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         </h1>
       </div>
       <div class="page-intro__aside">
-        <strong>Portfolio readout · {reviewDateLabel}</strong>
-        {snapshotSource} Each state is a reviewed summary, not a live GitHub feed.
-        {readout.olderCount > 0 && (
-          <>
-            {" "}
-            {readout.olderCount} of {projects.length} projects were last reviewed on an earlier
-            date; every row states its own.
-          </>
-        )}
-        {readout.snapshotId && (
-          <>
-            {" "}
-            <a href={`/snapshots/${readout.snapshotId}/`}>
-              Read the dated snapshot archive <span aria-hidden="true">↗</span>
-            </a>
-          </>
-        )}
+        <strong>Make something with this.</strong>
+        Try a working connection, then take the useful part into your own game or app.
+        <p>
+          <a class="home-action" href="/lab/game-music.html">
+            Try the music demo ↗
+          </a>
+        </p>
+        <p>
+          <a class="text-link" href="#build-with-apps">
+            Explore independent apps ↓
+          </a>
+        </p>
       </div>
     </div>
   </section>

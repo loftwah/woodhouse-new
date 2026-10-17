@@ -110,3 +110,7 @@ MP's #34 mission extends activity to Woodhouse, App Composer, Fighter, SHOALSHOT
 
 
 Reviewed 16 October 2026: Woodhouse adds a separate, default-off choice for recognising returning browsers on its own origin, using the existing event pipeline. Anonymous reporting and product use do not require it. Counts are distinct opt-in browser identifiers over retained history, including returns in different tab sessions on the same day; they are partial observations, not unique people or cohort retention. Cross-product identity remains prohibited. Protocol 11 and SHOALSHOT remain tab-only until their own reviewed consumer releases adopt this optional contract. Old history cannot be reconstructed and expired identity windows remain unavailable.
+
+## Public reuse demonstrations — reviewed 18 October 2026
+
+MP authorised the practical public game-music demonstration and the ownership-first composition story. Factory and the corresponding project pages should let a builder try the connection and reach the existing provider’s recipe. Public streaming proof does not wait for speculative commercial packaging; it makes no redistribution, licensing, customer adoption or demand claim. App Composer’s working photo pair demonstrates composition and source ownership; WordPress migration claims still require the separate owning programme’s evidence.
