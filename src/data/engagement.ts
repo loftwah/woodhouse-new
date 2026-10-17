@@ -1,5 +1,6 @@
 import {
   analyticsSchema,
+  discoveryProjects,
   isObject,
   periodFor,
   type AnalyticsProject,
@@ -98,9 +99,7 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
   const target =
     raw.event === "project_open" &&
     typeof raw.target === "string" &&
-    ["app-composer", "fighter", "shoalshot", "protocol-11", "loftwahfm", "bubbles"].includes(
-      raw.target
-    )
+    discoveryProjects.some((project) => project === raw.target)
       ? raw.target
       : "";
   if (raw.event === "project_open" && !target) return null;

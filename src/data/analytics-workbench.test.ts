@@ -967,3 +967,15 @@ test("shared images describe the same evidence the page shows", () => {
     "Coverage unavailable"
   );
 });
+
+test("explicit measure drill-downs survive a project switch from the overview", () => {
+  assert.equal(
+    measureForProjectSwitch(null, "fighter", "overview", "returning_browsers").key,
+    "returning_browsers"
+  );
+  assert.equal(
+    measureForProjectSwitch("app-composer", "bubbles", "app_opens", "returning_browsers").key,
+    "returning_browsers"
+  );
+  assert.equal(measureForProjectSwitch(null, "fighter", "overview").key, "game_starts");
+});

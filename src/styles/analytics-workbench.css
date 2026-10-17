@@ -1386,3 +1386,75 @@
   font-size: 0.72rem;
   line-height: 1.55;
 }
+
+/* Frozen release context and optional return signals — reviewed 18 October 2026. */
+.activity-context {
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+.activity-context h2 {
+  font-size: 1.45rem;
+  margin: 0 0 0.6rem;
+}
+.activity-context > p {
+  color: var(--muted);
+  max-width: 75ch;
+}
+.return-signals,
+.activity-history {
+  padding: 0;
+  margin: 1rem 0 0;
+  list-style: none;
+}
+.return-signals > li,
+.activity-history > li {
+  border-top: 1px solid var(--line);
+  padding: 0.8rem 0;
+}
+.return-signals summary,
+.history-disclosure > summary {
+  cursor: pointer;
+  padding: 0.25rem 0;
+}
+.return-signals summary > span {
+  color: var(--muted);
+  margin-left: 0.8rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.return-signals p,
+.activity-history p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 75ch;
+  margin: 0.65rem 0;
+}
+.return-signals a,
+.activity-history a {
+  font-size: 0.8rem;
+}
+.activity-history > li {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+}
+.activity-history time {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.12rem;
+}
+.activity-history strong {
+  font-size: 0.9rem;
+}
+@media (max-width: 600px) {
+  .return-signals summary > span {
+    display: block;
+    margin: 0.35rem 0 0 1rem;
+  }
+  .activity-history > li {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+}

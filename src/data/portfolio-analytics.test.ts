@@ -699,3 +699,81 @@ test("unsupported game browser tokens remain anonymous and cannot establish pre-
     "Future adoption must start with its own real consent boundary"
   );
 });
+
+test("frozen reports retain reviewed release context, filter membership and reject tampering", async () => {
+  const { db, sqlite } = database();
+  const note = {
+    project: "shoalshot" as const,
+    evidenceId: "shoalshot-release",
+    date: "2026-10-14",
+    reviewedAt: "2026-10-15",
+    title: "Released sharing",
+    summary: "Reviewed release observation.",
+    boundary: "Not a physical-device observation.",
+    revision: "abc123"
+  };
+  const report = await createPortfolioReport(db, 7, new Set(["shoalshot"]), fetch, now, undefined, [
+    note
+  ]);
+  assert.deepEqual(report.releases, [note]);
+  assert.deepEqual((await readPortfolioReport(db, report.id))?.releases, [note]);
+  assert.deepEqual(projectReport(report, null, new Set(["woodhouse"])).releases, []);
+  const narrowed = projectReport(report, "shoalshot", new Set(["shoalshot"]));
+  assert.deepEqual(narrowed.releases, [note]);
+  const historical = await createPortfolioReport(
+    db,
+    1,
+    new Set(["shoalshot"]),
+    fetch,
+    now,
+    { from: "2026-10-14", to: "2026-10-14", days: 1, complete: true },
+    [{ ...note, date: "2026-10-15" }]
+  );
+  assert.deepEqual(
+    historical.releases,
+    [],
+    "a historical report never retains a later release observation"
+  );
+  const caption = reportSvg(report, new Map([["shoalshot", "SHOALSHOT"]]), "landscape");
+  assert.equal(
+    reportSvg({ ...report, releases: [] }, new Map([["shoalshot", "SHOALSHOT"]]), "landscape"),
+    caption,
+    "context never changes the frozen figures or export scope"
+  );
+  sqlite
+    .prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?")
+    .run(
+      JSON.stringify({ ...report, releases: [{ ...note, evidenceId: "../private" }] }),
+      report.id
+    );
+  assert.equal((await readPortfolioReport(db, report.id))?.releases, undefined);
+});
+
+test("the collector accepts exactly the same six discovery targets as the browser", async () => {
+  const { db, sqlite } = database();
+  for (const target of [
+    "app-composer",
+    "fighter",
+    "shoalshot",
+    "protocol-11",
+    "loftwahfm",
+    "bubbles",
+    "max",
+    "asset-hunter",
+    "pirates"
+  ]) {
+    const body = payload("project_open", { project: "woodhouse", mode: "site", target });
+    const response = await collectEngagement(
+      request(body, { origin: "https://woodhouse.loftwah.com" }),
+      db,
+      now
+    );
+    assert.equal(response.status, ["max", "asset-hunter", "pirates"].includes(target) ? 400 : 204);
+  }
+  assert.equal(
+    sqlite
+      .prepare("SELECT SUM(value) AS n FROM wh_analytics_daily WHERE metric LIKE 'referral_%'")
+      .get()!.n,
+    6
+  );
+});

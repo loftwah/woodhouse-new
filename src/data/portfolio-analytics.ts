@@ -10,6 +10,19 @@ export const analyticsProjects = [
   "bubbles"
 ] as const;
 export type AnalyticsProject = (typeof analyticsProjects)[number];
+// Outbound referrals measure the six product destinations in this programme.
+// Share this existing subset across browser, ingress and coverage copy.
+export const discoveryProjects = analyticsProjects.filter((project) => project !== "woodhouse");
+export type ReportRelease = {
+  project: AnalyticsProject;
+  evidenceId: string;
+  date: string;
+  reviewedAt: string;
+  title: string;
+  summary: string;
+  boundary: string;
+  revision: string | null;
+};
 type Quality = "exact" | "sampled" | "bounded" | "partial" | "unavailable";
 export type ReportingWindow = { from: string; to: string; days: number; complete: boolean };
 export type Metric = {
@@ -53,6 +66,8 @@ export type PortfolioReport = {
    * Nothing here is rendered as a value for the selected window.
    */
   history?: ReportHistory;
+  /** Published, reviewed release observations frozen alongside these figures. */
+  releases?: ReportRelease[];
   analysis?: PortfolioAnalysis;
 };
 export type ReportHistoryEntry = {

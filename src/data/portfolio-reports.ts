@@ -10,8 +10,10 @@ import {
   type PortfolioReport,
   type ReportHistory,
   type ReportHistoryEntry,
+  type ReportRelease,
   type ReportingWindow
 } from "./portfolio-analytics.ts";
+import { parseReportReleases } from "./analytics-context.ts";
 import { localAnalytics } from "./engagement.ts";
 import { overviewMeasures } from "./analytics-workbench.ts";
 
@@ -67,6 +69,11 @@ export async function readPortfolioReport(
       new Set(safe.projects.map((r) => r.project)),
       savedAt
     );
+    const releases = parseReportReleases(
+      report.releases,
+      new Set(safe.projects.map((r) => r.project)),
+      savedAt
+    );
     return {
       schema: safe.schema,
       id: safe.id,
@@ -75,6 +82,7 @@ export async function readPortfolioReport(
       period,
       projects: safe.projects,
       ...(history ? { history } : {}),
+      ...(releases ? { releases } : {}),
       ...(report.analysis?.schema === "woodhouse.weekly-analysis/1"
         ? { analysis: analysePortfolio(safe.projects, Date.parse(safe.createdAt)) }
         : {})
@@ -139,7 +147,8 @@ export async function createPortfolioReport(
   publicIds: Set<string>,
   fetcher: typeof fetch = fetch,
   now = Date.now(),
-  requestedWindow?: ReportingWindow
+  requestedWindow?: ReportingWindow,
+  releaseNotes?: ReportRelease[]
 ): Promise<PortfolioReport> {
   const period = requestedWindow ?? periodFor(days, now);
   const recent = await db
@@ -156,7 +165,7 @@ export async function createPortfolioReport(
     .first<{ id: string }>();
   if (recent) {
     const report = await readPortfolioReport(db, recent.id);
-    if (report) return report;
+    if (report && (releaseNotes === undefined || report.releases !== undefined)) return report;
   }
   const members = analyticsProjects.filter((p) => publicIds.has(p));
   const load = async (
@@ -178,9 +187,16 @@ export async function createPortfolioReport(
   );
   const createdAt = new Date(now).toISOString();
   const history = await collectHistory(load, members, period, now);
+  const releases = parseReportReleases(
+    releaseNotes?.filter((note) => note.date <= period.to),
+    new Set(members),
+    now
+  );
   const digest = await crypto.subtle.digest(
     "SHA-256",
-    new TextEncoder().encode(JSON.stringify({ createdAt, days, period, projects, history }))
+    new TextEncoder().encode(
+      JSON.stringify({ createdAt, days, period, projects, history, releases })
+    )
   );
   const id = Array.from(new Uint8Array(digest))
     .map((v) => v.toString(16).padStart(2, "0"))
@@ -194,6 +210,7 @@ export async function createPortfolioReport(
     period,
     projects,
     ...(history ? { history } : {}),
+    ...(releases ? { releases } : {}),
     analysis: analysePortfolio(projects, now)
   };
   await db
@@ -212,6 +229,8 @@ export function projectReport(
   );
   const retained = new Set(projects.map((p) => p.project));
   const result: PortfolioReport = { ...report, projects };
+  if (report.releases)
+    result.releases = report.releases.filter((note) => retained.has(note.project));
   const history = report.history
     ? { ...report.history, entries: report.history.entries.filter((e) => retained.has(e.project)) }
     : undefined;

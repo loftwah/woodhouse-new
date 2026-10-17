@@ -4,9 +4,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/analytics-workbench.css";
 import { env } from "cloudflare:workers";
 import type { D1Database } from "@cloudflare/workers-types";
-import { listProjectRecords } from "../content/repository";
+import { listProjectRecords, listPublicEvidence } from "../content/repository";
 import {
   analyticsProjects,
+  discoveryProjects,
   parseReportingWindow,
   periodFor,
   formatMetric,
@@ -40,6 +41,11 @@ import {
   weeklyHighlights,
   discoveryReferrals
 } from "../data/analytics-workbench";
+import {
+  releaseNotesFromEvidence,
+  activityTimeline,
+  browserReturnSignals
+} from "../data/analytics-context";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -77,6 +83,11 @@ const names = new Map([
   ["woodhouse", "Woodhouse"]
 ]);
 const frozen = Astro.url.searchParams.has("report");
+const releaseEvidence = frozen ? null : await listPublicEvidence();
+const releaseNotes =
+  releaseEvidence && !releaseEvidence.error
+    ? releaseNotesFromEvidence(releaseEvidence.evidence, publicIds, now)
+    : undefined;
 let snapshot: PortfolioReport | null = null;
 try {
   snapshot = frozen
@@ -90,7 +101,8 @@ try {
         publicIds,
         fetch,
         now,
-        Astro.url.searchParams.has("from") ? period : undefined
+        Astro.url.searchParams.has("from") ? period : undefined,
+        releaseNotes
       );
 } catch {
   /* Sources remain explicitly unavailable. */
@@ -102,6 +114,14 @@ if (frozen && !snapshot)
   });
 const report = snapshot ? projectReport(snapshot, selected, publicIds) : null;
 const window = report?.period ?? period;
+const timeline = report ? activityTimeline(report) : [];
+const returnSignals = report ? browserReturnSignals(report) : [];
+const measuredDestinations = identities.projects.filter(
+  (p) => p.siteUrl && discoveryProjects.some((slug) => slug === p.slug)
+);
+const unmeasuredDestinations = identities.projects.filter(
+  (p) => p.siteUrl && !discoveryProjects.some((slug) => slug === p.slug)
+);
 const allRows = analyticsProjects
   .filter((p) => publicIds.has(p))
   .map((project) => ({
@@ -253,6 +273,10 @@ const week = requestedWeek
 // Woodhouse discovery referrals. The collector stores one counter per
 // destination; the page keeps only destinations that are still published and
 // links them, because a withdrawn project must not stay linked from here.
+const discoveryTotal =
+  allRows
+    .find((r) => r.project === "woodhouse")
+    ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
   publicIds,
@@ -303,7 +327,7 @@ function pageLink(
   q.set(
     "measure",
     changes.project !== undefined
-      ? measureForProjectSwitch(selected, project ?? null, changes.measure ?? measure.key).key
+      ? measureForProjectSwitch(selected, project ?? null, measure.key, changes.measure).key
       : resolveMeasure(project ?? null, changes.measure ?? measure.key).key
   );
   if (changes.week !== undefined) {
@@ -899,7 +923,7 @@ const dataPayload = {
               cannot be separated.
             </p>
           </section>
-          {(overview || selected === "woodhouse") && discovery.length > 0 && (
+          {(overview || selected === "woodhouse") && (
             <section class="discovery" aria-labelledby="discovery-heading">
               <div class="section-title">
                 <div>
@@ -911,6 +935,20 @@ const dataPayload = {
                   </p>
                 </div>
               </div>
+              <p class="discovery-coverage">
+                {measuredDestinations.length > 0
+                  ? `This measures outbound clicks to ${measuredDestinations.map((p) => p.name).join(", ")}.`
+                  : "No measured product destinations are currently published."}
+                {unmeasuredDestinations.length > 0 &&
+                  ` Other published projects (${unmeasuredDestinations.map((p) => p.name).join(", ")}) are outside this measured subset; their missing clicks are not zeroes.`}
+              </p>
+              {discovery.length === 0 && (
+                <p class="overview-note">
+                  {discoveryTotal === null
+                    ? "Discovery counts are unavailable for these dates."
+                    : "No positive destination counts were recorded for this measured subset in these dates."}
+                </p>
+              )}
               <ul class="discovery-list">
                 {discovery.map((d) => (
                   <li>
@@ -950,6 +988,95 @@ const dataPayload = {
               </p>
             </section>
           )}
+          <section class="activity-context" aria-labelledby="returns-heading">
+            <h2 id="returns-heading">Have browsers come back?</h2>
+            <p>
+              These are optional browser signals, kept separate for each project. They cannot
+              identify people or establish cohort retention. Daily browser counts do not add up to a
+              period total.
+            </p>
+            <ul class="return-signals">
+              {returnSignals.map((signal) => (
+                <li>
+                  <details>
+                    <summary>
+                      <strong>{names.get(signal.project) ?? signal.project}</strong>
+                      <span>
+                        {signal.value === null
+                          ? "Not measured for these dates"
+                          : `${signal.value.toLocaleString("en-AU")} returning · ${signal.browsers === null ? "browser count unavailable" : `${signal.browsers.toLocaleString("en-AU")} reporting browsers`}`}
+                      </span>
+                    </summary>
+                    {signal.value !== null ? (
+                      <>
+                        <p>{signal.definition}</p>
+                        {signal.browsers === 0 && (
+                          <p>
+                            No opted-in browser was observed in this window. This zero cannot show
+                            whether the wider audience returned.
+                          </p>
+                        )}
+                        <a
+                          href={pageLink({
+                            project: signal.project,
+                            measure: "returning_browsers"
+                          })}
+                        >
+                          Inspect {names.get(signal.project)} returns
+                        </a>
+                      </>
+                    ) : (
+                      <>
+                        <p>{signal.gap}</p>
+                      </>
+                    )}
+                  </details>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section class="activity-context" aria-labelledby="history-heading">
+            <h2 id="history-heading">What changed around this activity?</h2>
+            <p>
+              Dated release observations sit beside the collection and comparison boundaries
+              reported by each source. Nearby dates suggest questions to investigate; they do not
+              show that a release caused a change in use.
+            </p>
+            {report?.releases === undefined && (
+              <p class="overview-note">
+                This saved report has no frozen release notes. Its source collection dates remain
+                available below; later notes are never added to an old snapshot.
+              </p>
+            )}
+            <p class="overview-note">
+              This is a reviewed selection, not a complete release feed. Notes are frozen with the
+              report and may precede the selected dates; notes after its last selected day are
+              omitted.
+            </p>
+            {timeline.length > 0 ? (
+              <details class="history-disclosure">
+                <summary>Explore {timeline.length} dated release and collection notes</summary>
+                <ol class="activity-history">
+                  {timeline.map((note) => (
+                    <li>
+                      <time datetime={note.date}>{note.date}</time>
+                      <div>
+                        <strong>
+                          {names.get(note.project) ?? note.project} · {note.title}
+                        </strong>
+                        <p>{note.detail}</p>
+                        {note.href && (
+                          <a href={note.href}>Read release evidence · reviewed {note.reviewedAt}</a>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              </details>
+            ) : (
+              <p>No dated release or collection observations are available for this report.</p>
+            )}
+          </section>
           <section class="source-register" aria-labelledby="sources-heading">
             <h2 id="sources-heading">Follow the numbers to their source</h2>
             <p>Every measure has a definition, a collection boundary and blind spots.</p>

@@ -1,8 +1,9 @@
 ---
+import { discoveryProjects } from "../data/portfolio-analytics";
 import type { WoodhouseProject } from "../content/repository";
 const { projects } = Astro.props as { projects: WoodhouseProject[] };
 const destinations = projects
-  .filter((p) => p.siteUrl)
+  .filter((p) => p.siteUrl && discoveryProjects.some((slug) => slug === p.slug))
   .map((p) => ({ slug: p.slug, origin: new URL(p.siteUrl!).origin }));
 ---
 
