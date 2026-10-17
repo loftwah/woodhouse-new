@@ -22,7 +22,7 @@ const PUBLIC_MARKERS = [
  * identifiers, so a broad "looks random" rule would fail every legitimate build.
  * Each pattern matches a real, documented token format.
  */
-export const SECRET_PATTERNS = [
+const SECRET_PATTERNS = [
   ["AWS access key id", /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/],
   ["GitHub token", /\bgh[pousr]_[A-Za-z0-9]{36,}\b/],
   ["GitHub fine-grained token", /\bgithub_pat_[A-Za-z0-9_]{20,}\b/],
@@ -74,7 +74,7 @@ export function riskyPathReason(relativePath) {
 }
 
 /** The risky request paths the remote audit asks for. Safe, non-destructive GETs. */
-export const RISKY_PUBLISHED_PATHS = [
+const RISKY_PUBLISHED_PATHS = [
   "/.env",
   "/.env.production",
   "/.env.local",
