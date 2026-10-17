@@ -24,10 +24,17 @@ export const GET: APIRoute = async ({ url, cache }) => {
         { available: false },
         { status: 404, headers: { "cache-control": "no-store" } }
       );
-    return Response.json(
-      projectReport(report, null, new Set(["woodhouse", ...projects.projects.map((p) => p.slug)])),
-      { headers: { "cache-control": "public, max-age=60" } }
+    const narrowed = projectReport(
+      report,
+      null,
+      new Set(["woodhouse", ...projects.projects.map((p) => p.slug)])
     );
+    // The public JSON describes the report's own window. The retained lookback
+    // exists to compare weeks on the report page; it is not a second data set to
+    // publish under a "these dates" heading.
+    const published: Record<string, unknown> = { ...narrowed };
+    delete published.history;
+    return Response.json(published, { headers: { "cache-control": "public, max-age=60" } });
   } catch {
     return Response.json(
       { available: false },

@@ -229,9 +229,27 @@ const sourcesReporting = allRows.filter((r) =>
 ).length;
 // The last complete week is evaluated against the frozen report's own capture
 // time, so a saved snapshot keeps describing the same weeks after it is reopened.
+// Retained lookback history is preferred, so a seven-day report can still show
+// the comparison it was created from.
 const weekly = report
-  ? weeklyHighlights(report.projects, names, Date.parse(report.createdAt))
+  ? weeklyHighlights(report.projects, names, Date.parse(report.createdAt), report.history)
   : { highlights: [], gaps: [] };
+// `?week=<monday>` names the highlighted week a shared link was created from. An
+// unknown, malformed or non-matching value is dropped rather than rendered as a
+// different week than the link promised.
+const requestedWeek = /^\d{4}-\d{2}-\d{2}$/.test(Astro.url.searchParams.get("week") ?? "")
+  ? Astro.url.searchParams.get("week")
+  : null;
+const week = requestedWeek
+  ? (weekly.highlights.find(
+      (highlight) =>
+        highlight.from === requestedWeek &&
+        (!selected || highlight.project === selected) &&
+        // The same gate the shared PNG applies, so a page, its caption and its
+        // image can never name different projects or measures for one week.
+        (overview || highlight.measure.key === measure.key)
+    ) ?? null)
+  : null;
 // Woodhouse discovery referrals. The collector stores one counter per
 // destination; the page keeps only destinations that are still published and
 // links them, because a withdrawn project must not stay linked from here.
@@ -258,13 +276,22 @@ function pageLink(
     latest?: boolean;
     from?: string;
     to?: string;
+    week?: string;
   } = {}
 ) {
   const q = new URLSearchParams();
   if (changes.from && changes.to) {
     q.set("from", changes.from);
     q.set("to", changes.to);
-  } else if (frozen && snapshot && !changes.latest && changes.days === undefined)
+  } else if (
+    snapshot &&
+    !changes.latest &&
+    changes.days === undefined &&
+    (frozen || Boolean(changes.week))
+  )
+    // A highlighted week must carry the report it was read from, so reopening the
+    // link later still shows the same week, the same previous period and the same
+    // record basis instead of a freshly recomputed window.
     q.set("report", snapshot.id);
   else if (changes.days !== undefined) q.set("days", String(changes.days));
   else if (Astro.url.searchParams.has("from") || frozen) {
@@ -279,13 +306,16 @@ function pageLink(
       ? measureForProjectSwitch(selected, project ?? null, changes.measure ?? measure.key).key
       : resolveMeasure(project ?? null, changes.measure ?? measure.key).key
   );
+  if (changes.week !== undefined) {
+    if (changes.week) q.set("week", changes.week);
+  } else if (week) q.set("week", week.from);
   if (qaOff) q.set("analytics", "off");
   if (qaValue !== null) q.set("qa", qaValue || "1");
   return `/activity/?${q}`;
 }
 const title = selected ? `${names.get(selected)} analytics` : "Portfolio analytics";
 const link = report
-  ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}`
+  ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
   : `https://woodhouse.loftwah.com/activity/`;
 // The visible permalink keeps a measurement exclusion; the canonical `link`
 // published in page metadata and the shared caption must not carry a QA
@@ -301,7 +331,7 @@ const shareLink = (() => {
   }
 })();
 const image = report
-  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}`
+  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}` : ""}`
   : "/og/woodhouse.jpg";
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString("en-AU", {
@@ -321,7 +351,21 @@ const caption = report
       measure,
       window,
       link,
-      dateLabel
+      dateLabel,
+      week
+        ? {
+            name: week.name,
+            project: week.project,
+            from: week.from,
+            to: week.to,
+            value: week.value,
+            previous: week.previous,
+            unit: week.unit,
+            changePercent: week.changePercent,
+            newBest: week.newBest,
+            comparedWeeks: week.comparedWeeks
+          }
+        : undefined
     )
   : "";
 const dataPayload = {
@@ -450,6 +494,55 @@ const dataPayload = {
           </svg>
         </a>
       </header>
+      {week && (
+        <section class="week-focus" aria-labelledby="week-focus-title">
+          <div class="week-focus__head">
+            <span class="week-focus__label">Week in focus</span>
+            <h2 id="week-focus-title">
+              {week.name} · {week.measure.label}
+            </h2>
+          </div>
+          <dl class="week-focus__figures">
+            <div>
+              <dt>
+                {dateLabel(week.from)} – {dateLabel(week.to)}
+              </dt>
+              <dd>{formatMetric({ value: week.value, unit: week.unit })}</dd>
+            </div>
+            <div>
+              <dt>
+                Previous week{" "}
+                {dateLabel(
+                  new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10)
+                )}{" "}
+                – {dateLabel(new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10))}
+              </dt>
+              <dd>{formatMetric({ value: week.previous, unit: week.unit })}</dd>
+            </div>
+            <div>
+              <dt>Movement</dt>
+              <dd>
+                {week.changePercent === null
+                  ? "No prior baseline"
+                  : `${week.changePercent > 0 ? "Up" : week.changePercent < 0 ? "Down" : "Level"} ${Math.abs(week.changePercent)}%`}
+              </dd>
+            </div>
+            <div>
+              <dt>Record basis</dt>
+              <dd>
+                {week.newBest
+                  ? `New best of ${week.comparedWeeks} comparable weeks`
+                  : `${week.comparedWeeks} comparable weeks; not a record`}
+              </dd>
+            </div>
+          </dl>
+          <p class="week-focus__note">
+            A complete Monday–Sunday UTC week from this report's retained history, with its own
+            previous week. Week totals are counts of reported activity, not unique people, and the
+            source coverage behind them is the same coverage stated below.
+          </p>
+        </section>
+      )}
       {invalidWindow && (
         <p class="workbench-alert" role="alert">
           Choose real UTC dates in order, ending no later than today, with a maximum 90-day window.
@@ -956,7 +1049,9 @@ const dataPayload = {
                   : selected
                     ? `Complete-week movement for ${names.get(selected)}. Each finding names its own measure, which may differ from the chart above.`
                     : "Complete-week movements for the projects in this scope. Each finding names its own project and measure, which may differ from the chart above."
-                : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
+                : weekly.highlights.length
+                  ? "A valid complete-week comparison appears under Last complete week. The operational alert above reports only movements past its own thresholds, so it stays quiet for smaller real observations."
+                  : "No clean growth comparison yet. New collection and legacy test traffic limit the history we can trust."}
             </p>
             {report?.analysis?.findings.map((f) => (
               <p>
@@ -1006,8 +1101,7 @@ const dataPayload = {
                           href={pageLink({
                             project: h.project,
                             measure: h.measure.key,
-                            from: h.from,
-                            to: h.to
+                            week: h.from
                           })}
                         >
                           Share this week

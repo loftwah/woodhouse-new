@@ -16,13 +16,16 @@ export const GET: APIRoute = async ({ url, cache }) => {
   const format = url.searchParams.get("format") ?? "landscape",
     id = url.searchParams.get("report"),
     selected = url.searchParams.get("project"),
-    measure = url.searchParams.get("measure");
+    measure = url.searchParams.get("measure"),
+    week = /^\d{4}-\d{2}-\d{2}$/.test(url.searchParams.get("week") ?? "")
+      ? url.searchParams.get("week")!
+      : null;
   if (
     !id ||
     (measure !== null && measure !== "replays" && !knownMeasures.has(measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
-      (k) => !["format", "report", "project", "download", "audit", "measure"].includes(k)
+      (k) => !["format", "report", "project", "download", "audit", "measure", "week"].includes(k)
     )
   )
     return new Response("Invalid report image.", {
@@ -67,7 +70,14 @@ export const GET: APIRoute = async ({ url, cache }) => {
       ["woodhouse", "Woodhouse"]
     ]);
     const renderer = new Resvg(
-      reportSvg(report, names, format as ReportFormat, measure ?? undefined, url.origin),
+      reportSvg(
+        report,
+        names,
+        format as ReportFormat,
+        measure ?? undefined,
+        url.origin,
+        week ?? undefined
+      ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
       }

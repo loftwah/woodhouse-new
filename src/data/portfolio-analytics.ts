@@ -44,7 +44,36 @@ export type PortfolioReport = {
   days: number;
   period?: ReportingWindow;
   projects: { project: AnalyticsProject; report: ProjectAnalytics | null }[];
+  /**
+   * Validated daily history retained beyond the selected window, so a short
+   * report can still make an honest week-on-week comparison. Only each
+   * project's own headline measure travels here. The observed failure was a
+   * seven-day report with no earlier period at all: "Share this week" produced a
+   * narrow page, caption and image that had lost the comparison and the record.
+   * Nothing here is rendered as a value for the selected window.
+   */
+  history?: ReportHistory;
   analysis?: PortfolioAnalysis;
+};
+export type ReportHistoryEntry = {
+  project: AnalyticsProject;
+  measure: string;
+  label: string;
+  unit: Metric["unit"];
+  quality: Quality;
+  coverage: {
+    startedAt: string | null;
+    comparableFrom: string | null;
+    through: string;
+  };
+  daily: { date: string; value: number }[];
+};
+export type ReportHistory = {
+  from: string;
+  to: string;
+  /** Days of daily history requested, as retained. */
+  days: number;
+  entries: ReportHistoryEntry[];
 };
 export type PortfolioAnalysis = {
   schema: "woodhouse.weekly-analysis/1";
@@ -363,6 +392,113 @@ export function weeklyRecord(
         : null,
     comparedWeeks: weeks.length
   };
+}
+
+/**
+ * Compare complete Monday–Sunday UTC weeks from a retained history entry, using
+ * exactly the same rules as a live metric. Kept as one function so a short
+ * report cannot compare weeks by a looser standard than a long one.
+ */
+export function weeklyRecordFromHistory(entry: ReportHistoryEntry, now = Date.now()) {
+  return weeklyRecord(
+    {
+      key: entry.measure,
+      label: entry.label,
+      unit: entry.unit,
+      value: null,
+      definition: "",
+      quality: entry.quality,
+      daily: entry.daily
+    },
+    { ...entry.coverage, quality: entry.quality, limitations: [] },
+    now
+  );
+}
+
+/**
+ * Validate retained history on read. Stored bodies are never trusted: a malformed
+ * or out-of-range block is dropped rather than rendered, and a valid block is
+ * never used as a value for the selected window.
+ */
+export function parseReportHistory(
+  raw: unknown,
+  publicProjects: Set<string>,
+  now = Date.now(),
+  maximumDays = 91
+): ReportHistory | null {
+  if (!isObject(raw) || !isoDay(raw.from) || !isoDay(raw.to) || raw.from > raw.to) return null;
+  const days = (Date.parse(raw.to) - Date.parse(raw.from)) / 86400000 + 1;
+  if (!Number.isSafeInteger(days) || days < 7 || days > maximumDays) return null;
+  if (raw.to > new Date(now).toISOString().slice(0, 10)) return null;
+  if (
+    !Array.isArray(raw.entries) ||
+    !raw.entries.length ||
+    raw.entries.length > analyticsProjects.length
+  )
+    return null;
+  const entries: ReportHistoryEntry[] = [];
+  for (const entry of raw.entries) {
+    if (
+      !isObject(entry) ||
+      typeof entry.project !== "string" ||
+      !analyticsProjects.includes(entry.project as AnalyticsProject) ||
+      !publicProjects.has(entry.project) ||
+      entries.some((v) => v.project === entry.project) ||
+      !short(entry.measure, 64) ||
+      !/^[a-z][a-z0-9_]*$/.test(String(entry.measure)) ||
+      !short(entry.label, 100) ||
+      !["count", "seconds"].includes(String(entry.unit)) ||
+      !qualities.has(entry.quality) ||
+      !isObject(entry.coverage) ||
+      !(
+        entry.coverage.startedAt === null ||
+        isoTime(entry.coverage.startedAt) ||
+        isoDay(entry.coverage.startedAt)
+      ) ||
+      (typeof entry.coverage.startedAt === "string" &&
+        Date.parse(entry.coverage.startedAt) > now + 300000) ||
+      !(
+        entry.coverage.comparableFrom === null ||
+        isoTime(entry.coverage.comparableFrom) ||
+        isoDay(entry.coverage.comparableFrom)
+      ) ||
+      (typeof entry.coverage.comparableFrom === "string" &&
+        Date.parse(entry.coverage.comparableFrom) > now + 300000) ||
+      !isoTime(entry.coverage.through) ||
+      Date.parse(entry.coverage.through) > now + 300000 ||
+      !Array.isArray(entry.daily) ||
+      entry.daily.length > days
+    )
+      return null;
+    const daily: { date: string; value: number }[] = [];
+    for (const point of entry.daily) {
+      if (
+        !isObject(point) ||
+        !isoDay(point.date) ||
+        point.date < raw.from ||
+        point.date > raw.to ||
+        !count(point.value) ||
+        daily.some((v) => v.date === point.date)
+      )
+        return null;
+      daily.push({ date: point.date, value: point.value });
+    }
+    daily.sort((a, b) => a.date.localeCompare(b.date));
+    entries.push({
+      project: entry.project as AnalyticsProject,
+      measure: String(entry.measure),
+      label: String(entry.label),
+      unit: entry.unit as Metric["unit"],
+      quality: entry.quality as Quality,
+      coverage: {
+        startedAt: entry.coverage.startedAt as string | null,
+        comparableFrom: entry.coverage.comparableFrom as string | null,
+        through: entry.coverage.through as string
+      },
+      daily
+    });
+  }
+  return { from: raw.from, to: raw.to, days, entries };
 }
 
 /** Scheduled snapshots and readers use the same conservative, versioned analysis. */
