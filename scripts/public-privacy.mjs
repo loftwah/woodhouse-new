@@ -8,6 +8,8 @@
  *
  * Nothing here prints a matched value; findings are labels and paths only.
  */
+import { parseEnv } from "node:util";
+
 const PRIVATE_EMAIL = /\b[A-Z0-9._%+-]+@deanlofts\.xyz\b/i;
 
 const PUBLIC_MARKERS = [
@@ -86,40 +88,21 @@ const RISKY_PUBLISHED_PATHS = [
   "/service-account.json"
 ];
 
-/**
- * Parse a dotenv file the same way everywhere: strip an optional `export`, trim,
- * and remove one layer of matching surrounding quotes. Values keep their inner
- * content so a quoted secret is compared exactly as it is served.
- */
+/** Use the runtime parser for quotes, inline comments, exports and multiline values. */
 export function parseEnvFile(contents) {
-  const values = new Map();
-  for (const line of String(contents).split(/\r?\n/)) {
-    const match = /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
-    if (!match) continue;
-    let value = match[2];
-    if (
-      value.length >= 2 &&
-      ((value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'")))
-    )
-      value = value.slice(1, -1);
-    values.set(match[1], value);
-  }
-  return values;
+  return new Map(Object.entries(parseEnv(String(contents))));
 }
 
 /**
- * The values that must never appear in a published artefact: anything whose name
- * implies a credential, plus the private notification address. `PUBLIC_*` names
- * are deliberate client configuration and are excluded by that naming contract,
- * not by trusting the prefix to be safe — a public value is still scanned for
- * high-confidence secret shapes.
+ * Credential-named values and the private notification address cannot be public.
+ * Woodhouse has no reviewed client-key exception: a PUBLIC_ prefix does not
+ * exempt an opaque credential. Ordinary client IDs and URLs remain permissible;
+ * every artifact is also scanned for high-confidence credential shapes.
  */
 export function privateEnvValues(values) {
   const selected = [];
   for (const [name, value] of values) {
     if (typeof value !== "string" || value.length < 8) continue;
-    if (/^PUBLIC_/i.test(name)) continue;
     if (
       /(?:key|token|secret|password|passwd|credential)/i.test(name) ||
       /@deanlofts\.xyz$/i.test(value)
