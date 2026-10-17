@@ -100,7 +100,7 @@ export const measureChoices = [
     key: "listening_seconds",
     label: "Audible listening",
     meaning:
-      "Accepted forward audible playback. Pauses, seeking, muted, hidden and stalled playback are excluded by the listening collector. This is music time, not gameplay."
+      "Accepted forward audible playback, excluding pauses, seeking, muted and stalled time. LoftwahFM can count observed native audio while its page is hidden; games exclude hidden time. Browser-suspended gaps can remain unmeasured. This is music time, not gameplay."
   },
   {
     key: "listening_starts",
