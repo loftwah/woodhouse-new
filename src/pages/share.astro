@@ -331,6 +331,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                   class="image-link"
                   href={metadata.image}
                   data-fallback-href={fallback.image}
+                  data-fallback-label={`View the Woodhouse artwork for ${project.name} full size`}
                   aria-label={`View ${project.name} image full size`}
                 >
                   <img
@@ -595,7 +596,11 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
         image.src = fallback;
         if (image.dataset.fallbackAlt) image.alt = image.dataset.fallbackAlt;
         const link = image.closest("a");
-        if (link?.dataset.fallbackHref !== undefined) link.href = link.dataset.fallbackHref;
+        if (link?.dataset.fallbackHref !== undefined) {
+          link.href = link.dataset.fallbackHref;
+          if (link.dataset.fallbackLabel)
+            link.setAttribute("aria-label", link.dataset.fallbackLabel);
+        }
         const credit = image.closest("figure")?.querySelector("[data-image-credit]");
         if (credit) credit.textContent = "Illustration by Woodhouse";
         return;

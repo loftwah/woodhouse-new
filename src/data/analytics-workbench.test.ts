@@ -717,6 +717,19 @@ test("the discovery trend needs recorded history and never sums an unobserved da
   assert.equal(unavailable.priorCoverage, "unavailable");
   assert.equal(unavailable.hasTrend, false);
   assert.equal(unavailable.recent, 14);
+  // A window shorter than fourteen days cannot contain a full earlier week, so
+  // its truncated slice is never reported as a complete comparison period.
+  const tenDays = { from: "2026-10-07", to: "2026-10-16", days: 10, complete: true };
+  const shortWindow = discoveryReferrals(
+    [metric(threeWeeks.slice(11))],
+    new Set(["fighter"]),
+    new Map([["fighter", "Fighter"]]),
+    new Map(),
+    tenDays
+  )[0]!;
+  assert.equal(shortWindow.priorObservedDays, 3);
+  assert.notEqual(shortWindow.priorCoverage, "observed");
+  assert.equal(shortWindow.hasTrend, false);
 });
 test("the share caption names each project's own measure and the mixed scope", () => {
   const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({

@@ -479,6 +479,9 @@ export function discoveryReferrals(
       const observedDays = (days: string[]) => days.filter((day) => observed.has(day)).length;
       const recentObserved = observedDays(recentDates);
       const priorObserved = observedDays(priorDates);
+      // A comparison needs a whole earlier week inside retained history. A
+      // window shorter than fourteen days can never supply one.
+      const priorComplete = priorDates.length === 7 && priorObserved === 7;
       return {
         slug,
         name: names.get(slug) ?? slug,
@@ -489,15 +492,16 @@ export function discoveryReferrals(
         prior: sum(priorDates),
         recentFrom: recentDates[0] ?? period.from,
         recentTo: recentDates.at(-1) ?? period.to,
-        priorFrom: priorDates[0] ?? period.from,
-        priorTo: priorDates.at(-1) ?? period.from,
+        priorFrom: priorDates[0] ?? period.to,
+        priorTo: priorDates.at(-1) ?? period.to,
         recentCoverage: coverageOf(recentObserved, recentDates.length),
-        priorCoverage: coverageOf(priorObserved, priorDates.length),
+        priorCoverage: (
+          priorComplete ? "observed" : priorObserved === 0 ? "unavailable" : "partial"
+        ) as DiscoveryCoverage,
         priorObservedDays: priorObserved,
-        // A real week-on-week figure needs the whole earlier week recorded. The
-        // current week may still be in progress; that is shown as a caveat, not
-        // used to invent history.
-        hasTrend: priorObserved === priorDates.length && priorDates.length === 7
+        // The current week may still be in progress; that is shown as a caveat,
+        // never used to invent history.
+        hasTrend: priorComplete
       };
     })
     .filter((entry) => published.has(entry.slug) && entry.value > 0)
