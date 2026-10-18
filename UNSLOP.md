@@ -49,6 +49,12 @@ Before drafting, decide who is reading, what they should understand or be able t
 and which defensible claim makes this project worth their time. Find the strongest current example
 and its sources. If the evidence changes the angle, change the angle before writing the headline.
 
+For a product introduction, establish the whole product before choosing a narrow angle. A newcomer
+must learn what it is, who it helps, what they can use it for and how to start. Explain named apps
+and their relationship to the platform on first use. An accurate component demonstration cannot
+stand in for that explanation. A deeper technical article can assume context only when it clearly
+states its scope and links to an adequate introduction.
+
 Build the draft around that example. Explain what happens, why the choice matters and what it
 costs. Give necessary background where the reader needs it. Paragraphs and headings should follow
 the argument; different projects need different structures. Preserve the useful distinction between
@@ -62,20 +68,29 @@ Before publication, make these editing passes:
    a citation do not repair it.
 2. **Challenge the argument.** Make the stakes and mechanism understandable. Address the strongest
    relevant objection or cost. Cut paragraphs that repeat the premise, narrate the writing process
-   or congratulate the product without showing anything new.
+   or congratulate the product without showing anything new. For an introduction, check whether a
+   reader can explain the product, name a use for it and identify the first practical step from the
+   article itself. Stylistic polish and factual accuracy do not substitute for that understanding.
 3. **Listen to the voice.** Read the prose as spoken language. Prefer concrete nouns, active verbs
    and Australian English. Vary sentence length with the thought. Keep personality and a supported
    judgement; remove canned enthusiasm, forced slang and theatrical fragments. Do not invent an
    experience, quote or personal memory to make the writing sound human.
 4. **Check the invitation.** The headline and deck must promise what the article delivers. End on
    the reader's useful next action or a conclusion the argument earns. Check captions, link labels
-   and share text against that same promise. Verify actual destinations and material limitations
-   through the existing publication path; passing structural checks does not establish good writing.
+   and share text against that same promise. Review the whole rendered page, including margin notes
+   and source notes; keep instructions about the rewrite in private guidance. Verify actual
+   destinations and material limitations through the existing publication path; passing structural
+   checks does not establish good writing.
 
 ### Lessons from the App Composer edit
 
 Reviewed 18 October 2026. Keep these distinctions in future project stories:
 
+- MP's subsequent review rejected the first article as a product introduction: it explained the
+  guestbook connection while leaving App Composer's breadth, Linkarooie's purpose and practical
+  usage unclear. The example was accurate; the editorial scope was wrong. Define the product and
+  give a usable route before developing the example. Publication checks and an agent's editorial
+  review do not establish that MP or an unfamiliar reader understands the result.
 - A fictional postcard whose publication stayed under the guestbook's control gave the independence
   argument something a reader could inspect. It did not establish unfamiliar-creator onboarding or
   a completed migration.

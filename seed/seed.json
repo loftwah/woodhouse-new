@@ -2086,8 +2086,8 @@
           "index": "10",
           "discipline": "Development tools · agent-operated setup",
           "title": "Make software. Keep it yours.",
-          "summary": "App Composer is a studio for building software that stays yours: it prepares the environment, then connects independently maintained mini-apps through their own data and actions. Loftwah’s Linkarooie profile, guestbook and owner studio are the live reference stack.",
-          "why": "You get a home for the things you make that isn’t rented from someone else’s platform. Profile cards, guest postcards and an owner studio sit together, each app keeps its own hostname, and none of it is locked behind one company.",
+          "summary": "App Composer is a studio for building and maintaining web apps with a coding agent. Prepare the environment, shape the app and its editable content, then build a standalone application or reuse existing mini-apps. Loftwah’s Linkarooie creator page is a live example.",
+          "why": "You bring the idea and keep the source in your own project. Get Ready handles supported setup, Init makes the brief concrete, and an agent builds the app around the content and features you need. EmDash provides editing and administration; your selected cloud account runs the result.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
           "site_og_image": "https://composer.loftwah.com/brand/share-composer-20261017.jpg",
@@ -10020,13 +10020,13 @@
           ]
         },
         "data": {
-          "title": "App Composer is built to come apart",
-          "kind": "Case study",
-          "deck": "A guestbook lends a photo to a creator’s page and keeps control of its publication. Inside App Composer’s working argument for independent software.",
+          "title": "Build your own web app with App Composer",
+          "kind": "Field note",
+          "deck": "Prepare your tools, shape your content and work with a coding agent. A practical introduction to the studio, its reusable apps and Loftwah’s Linkarooie creator page.",
           "review_date": "2026-10-18",
-          "source_reference": "App Composer’s public demo, release page, Get Ready and Init, plus the standalone Here / there and Linkarooie pages, inspected on 18 October 2026. The published 18 October project status supplies the existing release and onboarding limits. The demonstrated postcard is labelled fictional; no private contribution or owner session is reproduced.",
-          "lead": "In App Composer’s live example, a photo appears in a guestbook and a creator’s collection. Hide it at the source and both public views stop showing it.",
-          "lesson": "Each app should remain useful on its own. Connecting them should preserve that independence.",
+          "source_reference": "App Composer’s public homepage, platform guide, Learn tutorial, Get Ready, Init, content-model builder and app library, plus Loftwah’s public Linkarooie profile, reviewed on 18 October 2026. Working browser tools, supported agent workflows and unfinished customer setup are distinguished. Examples of possible projects are illustrative; no private profile, account session or repository body is reproduced.",
+          "lead": "App Composer is a studio for building and maintaining web applications with a coding agent. You decide what the app should do; the agent works in your project, builds it and verifies the result.",
+          "lesson": "Use the browser to shape the brief, the coding agent to build the application and the app’s admin for everyday editing.",
           "public_safe": true,
           "projects": [
             "$ref:project-app-composer"
@@ -10034,98 +10034,84 @@
           "content": [
             {
               "_type": "prose",
-              "_key": "composer-section-0",
+              "_key": "composer-product-0",
               "_version": 1,
               "content": [
                 {
                   "_type": "block",
-                  "_key": "b0",
+                  "_key": "product-0",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s0",
-                      "text": "A small connection with consequences",
+                      "_key": "product-0-text",
+                      "text": "What would you use it for?",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b1",
+                  "_key": "product-1",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s1",
-                      "text": "Open the connected example. Here / there is a photo guestbook: an invited contributor sends a photograph and message, and the owner chooses whether to publish it. Linkarooie is a creator’s page, with links to music, games and other work. It can feature an approved guestbook photo beside those links.",
+                      "_key": "product-1-text",
+                      "text": "Say you want a website for your work. You need somewhere to introduce yourself, organise projects and change the content later. Or you are building workshop listings, a community directory or a client’s case-study site. Each needs its own structure and editing controls.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b2",
+                  "_key": "product-2",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s2",
-                      "text": "The public example uses a clearly labelled fictional postcard. Follow its card out of the collection and you arrive at the original contribution. These are separate apps doing separate jobs. The connection is small enough to understand without a diagram.",
+                      "_key": "product-2-text",
+                      "text": "App Composer helps turn that requirement into work a coding agent can carry through. Get Ready prepares the environment. Init captures what you want to make. The content builder lets you design the fields people will edit. You can build a standalone application, use an existing mini-app or connect several when the connection is useful.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b3",
+                  "_key": "product-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-3-text",
+                      "text": "The browser gives you the planning and configuration tools. The build happens with your authorised agent, source repository and chosen services. Browsing Composer or exporting a specification does not start a cloud deployment.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-4",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l3",
-                      "href": "https://composer.loftwah.com/demo"
+                      "_key": "product-4-link",
+                      "href": "https://composer.loftwah.com/"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s3",
-                      "text": "Try the connected example",
+                      "_key": "product-4-text",
+                      "text": "Explore App Composer",
                       "marks": [
-                        "l3"
+                        "product-4-link"
                       ]
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "_key": "b4",
-                  "style": "normal",
-                  "markDefs": [],
-                  "children": [
-                    {
-                      "_type": "span",
-                      "_key": "s4",
-                      "text": "Now consider what should happen when the owner hides that contribution. A second public copy, forgotten in the collection, would leave the owner chasing a contributor’s photograph around the system. Here, Linkarooie checks the guestbook’s current approved items. Hide or delete the source and the controlled photo feature disappears from both public views on the next request. An unavailable or private contribution stays hidden.",
-                      "marks": []
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "_key": "b5",
-                  "style": "normal",
-                  "markDefs": [],
-                  "children": [
-                    {
-                      "_type": "span",
-                      "_key": "s5",
-                      "text": "That control has a limit: someone who already downloaded the photograph still has a copy.",
-                      "marks": []
                     }
                   ]
                 }
@@ -10133,141 +10119,97 @@
             },
             {
               "_type": "prose",
-              "_key": "composer-section-1",
+              "_key": "composer-product-1",
               "_version": 1,
               "content": [
                 {
                   "_type": "block",
-                  "_key": "b6",
+                  "_key": "product-5",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s6",
-                      "text": "Each app keeps its job",
+                      "_key": "product-5-text",
+                      "text": "What is Linkarooie?",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b7",
+                  "_key": "product-6",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s7",
-                      "text": "A creator’s page should be able to display a guestbook contribution without becoming a guestbook. The guestbook should be able to accept a photograph without learning how to arrange a creator’s favourite links. Each app keeps responsibility for the work it understands.",
+                      "_key": "product-6-text",
+                      "text": "Linkarooie is a creator’s home page: a profile, social links and a curated collection of the things you want people to find. Use it to bring your music, games, projects, writing and other links together at one address. A visitor can browse featured picks, move between groups or search the collection.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b8",
+                  "_key": "product-7",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s8",
-                      "text": "App Composer connects the two through a versioned contract: an agreed way for one app to ask the other for approved items. Each has its own source repository, configuration and storage. The pair runs inside Composer, and the apps also have standalone addresses. The release page identifies the source versions running together.",
+                      "_key": "product-7-text",
+                      "text": "Loftwah’s live page shows that purpose. Music has a home, games lead straight to play, and projects and writing sit in their own groups. An invited owner can arrange cards, preview changes, publish or hide links, and change the profile’s appearance. Init also exposes profile settings such as the handle, introduction, social addresses, portrait and banner.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b9",
+                  "_key": "product-8",
                   "style": "normal",
-                  "markDefs": [
-                    {
-                      "_type": "link",
-                      "_key": "l9",
-                      "href": "https://guestbook.loftwah.com/"
-                    }
-                  ],
+                  "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s9",
-                      "text": "Open Here / there on its own",
-                      "marks": [
-                        "l9"
-                      ]
+                      "_key": "product-8-text",
+                      "text": "App Composer is the studio; Linkarooie is one of its reusable apps. Loftwah’s profile is a configured instance of that app. Another creator would bring their own identity, links and content.",
+                      "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b10",
+                  "_key": "product-9",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l10",
+                      "_key": "product-9-link",
                       "href": "https://showcase.loftwah.com/"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s10",
-                      "text": "Open Linkarooie on its own",
+                      "_key": "product-9-text",
+                      "text": "Visit Loftwah’s Linkarooie profile",
                       "marks": [
-                        "l10"
+                        "product-9-link"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b11",
-                  "style": "normal",
-                  "markDefs": [
-                    {
-                      "_type": "link",
-                      "_key": "l11",
-                      "href": "https://composer.loftwah.com/release"
-                    }
-                  ],
-                  "children": [
-                    {
-                      "_type": "span",
-                      "_key": "s11",
-                      "text": "Inspect the running versions",
-                      "marks": [
-                        "l11"
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "_key": "b12",
+                  "_key": "product-10",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s12",
-                      "text": "This is a worthwhile constraint on the builder. A part has to make sense outside the host that assembled it. Loftwah’s instance supplies the profile, curation and settings; the reusable application has to remain useful to somebody with different work to show.",
-                      "marks": []
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "_key": "b13",
-                  "style": "normal",
-                  "markDefs": [],
-                  "children": [
-                    {
-                      "_type": "span",
-                      "_key": "s13",
-                      "text": "Separate apps cost something, too. There are contracts to maintain, versions to reconcile and more than one deployment to operate. Putting everything in one application would remove some of that work. The reason to accept it here is specific: the photo’s publication rules stay with the app that received it, while the collection can give it another useful place to appear.",
+                      "_key": "product-10-text",
+                      "text": "Here / there, the photo guestbook, adds a separate option: invited people can leave photos and messages for approval, and Linkarooie can feature approved entries. That is useful for a community or shared collection. A page of your own links can stand on its own.",
                       "marks": []
                     }
                   ]
@@ -10276,106 +10218,291 @@
             },
             {
               "_type": "prose",
-              "_key": "composer-section-2",
+              "_key": "composer-product-2",
               "_version": 1,
               "content": [
                 {
                   "_type": "block",
-                  "_key": "b14",
+                  "_key": "product-11",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s14",
-                      "text": "Owning the source still leaves work to do",
+                      "_key": "product-11-text",
+                      "text": "The rest of the studio",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b15",
+                  "_key": "product-12",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s15",
-                      "text": "App Composer is an agent-operated studio. EmDash supplies content editing and administration. Cloudflare runs the current supported deployment and stores its data. An authorised coding agent works with your source and chosen accounts. Those dependencies matter when deciding whether this is the right tool for you.",
+                      "_key": "product-12-text",
+                      "text": "Get Ready handles the work before the application: inspect the project folder, check the tools and account connections, prepare the supported starter and verify it at an HTTPS address. You handle official sign-in and decisions about access or spending. The agent handles routine technical work and reports what it actually checked.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b16",
+                  "_key": "product-13",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s16",
-                      "text": "Get Ready checks the actual tools and connections needed to work. Init turns the idea into a portable specification: which apps are involved, what the fields contain, how the result should look and what the agent should build. In the current demo, Make this collection leads to the matching starting configuration. Existing saved drafts stay intact until you choose to act.",
+                      "_key": "product-13-text",
+                      "text": "Init is the structured brief. Choose the intended app or combination, write its title and introduction, set its appearance and describe where it should run. You can preview the configuration, save a draft on your device, download the specification and copy the matching request to your agent.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b17",
+                  "_key": "product-15",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s17",
-                      "text": "That gives the example somewhere to lead. You can inspect a working pair, take a specification and continue with your agent. You still need the accounts and access required to run the result. Fresh-account setup for an unfamiliar creator remains unfinished; Loftwah’s working stack does not establish that anyone can arrive and deploy a site in a click.",
+                      "_key": "product-15-text",
+                      "text": "EmDash is the content management system: it supplies editing and administration for the app’s content. Cloudflare is the currently supported hosting platform. Your coding agent builds the application around those choices. Multiple mini-apps are optional: a site with one content collection can be a sensible project in its own right.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b18",
+                  "_key": "product-14",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-14-text",
+                      "text": "For an app with editable records, the content builder goes further. It has starting patterns for workshop listings, project case studies, a community directory and project enquiries. You can change the fields, try fictional entries and export a model or an EmDash seed. A seed is a file that defines the content structure for the CMS.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-16",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l18",
+                      "_key": "product-16-link",
+                      "href": "https://composer.loftwah.com/init/content"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-16-text",
+                      "text": "Try the content and field builder",
+                      "marks": [
+                        "product-16-link"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-17",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-17-text",
+                      "text": "There are useful standalone tools too. Link Check inspects a supported website URL’s icons, social images and search metadata, then exports findings you can take to your agent. Hello World is the small deployment reference for checking the setup before committing to a larger app. The app library explains what each tool does and links to its source.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-18",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "product-18-link",
+                      "href": "https://composer.loftwah.com/apps"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-18-text",
+                      "text": "Browse the app library",
+                      "marks": [
+                        "product-18-link"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-product-3",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "product-19",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-19-text",
+                      "text": "How to make a start",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-20",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-20-text",
+                      "text": "If you are new to the workflow, open Learn. It walks through meeting the agent, preparing the environment, changing a small app, checking the live result, shaping content and maintaining what you made. You can read it before setting anything up.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-21",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "product-21-link",
+                      "href": "https://composer.loftwah.com/learn"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-21-text",
+                      "text": "Follow the tutorial",
+                      "marks": [
+                        "product-21-link"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-22",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-22-text",
+                      "text": "For a creator page, start with Get Ready in your chosen project folder. Give the page’s setup request to Codex. Let the agent inspect existing work and check the supported environment, then complete official account sign-in when required. The currently verified setup uses Codex on an Apple Silicon Mac with existing supported account paths; fresh-account and new-domain setup remain unfinished.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-23",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "product-23-link",
                       "href": "https://composer.loftwah.com/ready"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s18",
+                      "_key": "product-23-text",
                       "text": "Prepare the environment with Get Ready",
                       "marks": [
-                        "l18"
+                        "product-23-link"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b19",
+                  "_key": "product-24",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-24-text",
+                      "text": "Next, open Init and choose Linkarooie. Set the profile text and appearance, add the links you want on the page, and describe the intended address. Download the spec and give its copied request to your agent. The demonstrated configuration path updates Loftwah’s existing app pair. A new creator’s Linkarooie deployment still needs its own implementation and live checks, even with an existing cloud account; exporting the spec does not provision it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-25",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l19",
+                      "_key": "product-25-link",
                       "href": "https://composer.loftwah.com/init"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s19",
+                      "_key": "product-25-text",
                       "text": "Configure an app in Init",
                       "marks": [
-                        "l19"
+                        "product-25-link"
                       ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-26",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-26-text",
+                      "text": "For a content-led site, try the Project case studies pattern in the field builder instead. Preview the fictional example, change the model to fit your work and export it. The supplied new-project request describes an independent local EmDash site with a collection and individual entry pages. Public submission forms and cloud deployment still need their own implementation and verification.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-27",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-27-text",
+                      "text": "For an existing instance, an invited owner uses its admin for everyday content and configuration. Loftwah’s Linkarooie owner can arrange and publish links there; structural changes and maintenance go to the agent. That keeps changing a link an editing task, while adding a new kind of feature remains development work.",
+                      "marks": []
                     }
                   ]
                 }
@@ -10383,105 +10510,105 @@
             },
             {
               "_type": "prose",
-              "_key": "composer-section-3",
+              "_key": "composer-product-4",
               "_version": 1,
               "content": [
                 {
                   "_type": "block",
-                  "_key": "b20",
+                  "_key": "product-28",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s20",
-                      "text": "The next change is the test",
+                      "_key": "product-28-text",
+                      "text": "Why connect apps at all?",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b21",
+                  "_key": "product-29",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s21",
-                      "text": "The reason to care about this arrangement arrives after the first version works. A creator wants to reorganise a page. A contribution needs to come down. One app changes while the other still has a job to do. Those ordinary changes expose who controls the content and how much of the system has to move with it.",
+                      "_key": "product-29-text",
+                      "text": "Some jobs belong together without becoming the same job. A guestbook receives and moderates a photo; a creator’s page gives an approved contribution another place to appear. In the live connected example, the apps retain separate source, configuration and storage. Linkarooie checks the photo’s current publication status at the guestbook.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b22",
+                  "_key": "product-30",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s22",
-                      "text": "App Composer already demonstrates a useful answer for the guestbook and collection. It has more to prove about another creator setting up and operating their own stack. A WordPress migration is separate unfinished work, with content, URLs and editing behaviour to demonstrate before it earns a claim here.",
+                      "_key": "product-30-text",
+                      "text": "Hide the source and the controlled feature disappears from both public views on the next request. Already downloaded copies remain outside that control. Separate apps also mean contracts and versions to maintain. That tradeoff is worth considering when the connection improves the product.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b23",
-                  "style": "normal",
-                  "markDefs": [],
-                  "children": [
-                    {
-                      "_type": "span",
-                      "_key": "s23",
-                      "text": "Open the fictional postcard, follow it back to the guestbook, then open each app at its own address. Decide whether that arrangement suits something you want to build.",
-                      "marks": []
-                    }
-                  ]
-                },
-                {
-                  "_type": "block",
-                  "_key": "b24",
+                  "_key": "product-31",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l24",
+                      "_key": "product-31-link",
                       "href": "https://composer.loftwah.com/demo"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s24",
-                      "text": "Start with the connected pair",
+                      "_key": "product-31-text",
+                      "text": "Try the connected photo example",
                       "marks": [
-                        "l24"
+                        "product-31-link"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
-                  "_key": "b25",
+                  "_key": "product-32",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "product-32-text",
+                      "text": "App Composer’s broader purpose is to help you prepare, build and keep operating software you can change. Its current tools and working apps give you concrete places to start. A universal one-click customer service, completed WordPress migration and every proposed integration remain work to prove.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "product-33",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "l25",
-                      "href": "/projects/app-composer/"
+                      "_key": "product-33-link",
+                      "href": "https://composer.loftwah.com/learn"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "_key": "s25",
-                      "text": "Read the dated App Composer development record",
+                      "_key": "product-33-text",
+                      "text": "Start with the guided learning path",
                       "marks": [
-                        "l25"
+                        "product-33-link"
                       ]
                     }
                   ]
