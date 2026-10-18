@@ -1,0 +1,31 @@
+Use case: infographic-diagram
+Asset type: Finished commissioned Woodhouse engineering-publication illustration, generated raster artwork. Not a mockup or an SVG placeholder.
+Primary request: Explain the complete real operating loop from human intent through bounded agent work, exact-candidate qualification, production observation, real people/devices, and evidence returning to the human decision. This is a method, not a report that projects passed. Give the illustration the precision and authored composition of a high-end technical book.
+Scene/backdrop: Every background pixel is flat solid DARK INK #080D19, edge to edge. No gradient, vignette, paper, texture, raised panel or glow. Crisp pale #EAF0FA text; cyan #79D8FF engineering strokes; lime #E9FF49 human authority and return route; coral #FF746A only for explicitly labelled stops if present.
+Style/medium: Bespoke technical engraving in disciplined clean linework, deliberate line-weight hierarchy, sparse cutaway detail and small mechanical witness marks. All illustrations remain flat dark inside. Typography is large, confident grotesque with compact monospaced source marginalia. Precise type, not handwriting.
+System meaning: Human sets goal, limits, owner. Agents complete bounded tasks in reviewable changes. Qualification checks the exact candidate and records passed checks; owning release gates still apply before production. Production observes the named live version. Real use supplies distinct people/device/environment observations. A continuous actual lime arrow returns evidence from real use all the way to the human; the loop closes there. No arrow may skip qualification or connect software checks directly to a claim of real use. Depict all five stages with meaningful bespoke instruments, not generic boxes.
+Constraints: Generate complete finished artwork. Text must be verbatim, correctly spelled and comfortably readable. No invented numeric measurements, passing results, product metrics, hash strings, logos, characters, drop shadows, glass, gradients, decorative hatching or fake tiny writing. Do not create a row of generic flowchart boxes or the repeated numbered-oval central rail layout. No giant slogan taking the drawing area.
+Composition/framing: Portrait 2:3, exactly 1024x1536, independently designed for 350px phone display. A tall cutaway operating instrument: lime human drafting desk across the upper quarter; two branching code workbenches in a broad open middle-left region; a large qualification inspection aperture directly to their right, joined by a cyan route; a production rack in the lower-left and real-use handset/person observation in the lower-right. A single cyan serpentine circuit connects human -> agents -> qualification -> production -> real use, with every arrow unambiguous. The lime real-use evidence-return arrow leaves the handset, follows the far right margin upwards, then turns into the human drafting desk at the top. Give the return line a clear arrowhead at human. It is not a numbered vertical ladder. Use five generous illustrated regions, each with no more than three short lines of annotation, spacious enough to read without zoom. Main labels at least 48px, body labels at least 42px; footer/source notes may be 28px. Header under 12% of canvas.
+Text (verbatim), rendered only once each:
+"From intent"
+"to evidence"
+"Human operator"
+"Goal · limits · owner"
+"Software agents"
+"Bounded tasks"
+"Reviewable changes"
+"Qualification"
+"Exact candidate"
+"Record what passed"
+"Production"
+"Named live version"
+"Real use"
+"People · devices"
+"Environments"
+"Evidence returns"
+"to the human"
+"Release gates apply"
+"METHOD, NOT PORTFOLIO STATUS"
+"WOODHOUSE / FACTORY-FLOW"
+"Reviewed 18 October 2026"
+The lime return path must not collide with any words. Primary labels and explanatory labels need to be readable at a displayed width of 350px.

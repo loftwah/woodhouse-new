@@ -1,0 +1,14 @@
+Use case: infographic-diagram
+Commissioned Woodhouse technical-publication infographic. Finished generated raster art with exact typography and authored technical linework. Flat uniform dark ink #080D19 edge-to-edge. Pale #EAF0FA text; precise cyan #79D8FF work paths; acid lime #E9FF49 human direction/identity; labelled coral #FF746A stops. Bricolage Grotesque-like distinctive humanist headings, clean readable sans body, compact monospaced project/source labels. No paper, grain, gradients, vignette, glow, glass, decorative grids, stock UI cards, ornamental geometry, default boxed flowcharts or oval rail. No invented counts, results, dates, project dependencies or statuses. No people, robots, physical machines, servers, aircraft, hardhats or engineering hardware. Draw only SOFTWARE artefacts and truthful relationships. Source notation belongs in a quiet footer. Moderate title, most area devoted to the actual system. All words quoted below are required exact text; don't invent extra prose. LANDSCAPE3:2,1536x1024. Subject: a change in working habits from composing tools to coordinating a software factory. NOT a dated timeline.
+Create a beautifully drafted stepped branching work-tree across the width. Six deliberately different drawings carry the sequence: (1) three plug-compatible SOFTWARE modules, (2) a lime direction point linked to a single change document, (3) one change splitting into bounded task branches with explicit ownership ticks, (4) concurrent code-diff paths meeting an independent review branch, (5) exact-revision tag plus a short named-check register, (6) intent/work/evidence tied together in one operational record. These are explanatory software drawings, not fabricated screenshots or real code. Open typography anchored beside each drawing, no rectangles containing whole stages. A fine continuous angular path must make the order unambiguous from Compose through Operate; it can fold across two levels but connect the levels visibly. Review is independent of the changed code and occurs before qualification. Don't turn this into a release-status claim.
+Exact title: "How the work changed"
+Six stations:
+"Compose tools" / "Plugins · APIs · services"
+"Work in a pair" / "One human, one agent."
+"Delegate work" / "Bounded tasks. Explicit owners."
+"Work in parallel" / "Competing changes. Independent review."
+"Qualify the result" / "Exact revision. Named release gates."
+"Operate a factory" / "Tie intent and work to release evidence."
+Place a readable coral marginal constraint: "A sequence of habits, not a dated timeline."
+Footer: "SOURCE / FOUNDING ACCOUNT · 28 SEP 2026" / "WOODHOUSE / LINEAGE · 18 OCT 2026"
+Headings54px, station labels34px, detail28px minimum. Preserve the complete six-part sequence including qualification; no invented dates for transitions.

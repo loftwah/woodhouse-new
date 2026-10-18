@@ -1,0 +1,14 @@
+{
+  "title": "One operator. Independently owned projects.",
+  "description": "The same human and agents work across independently owned products. The map shows identity and responsibility, not health, adoption or invented dependencies.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "8834134f20f3c3393c0b51632cfcd397f3aa8328f799859c4390c5bf01fabedc",
+  "masterSha256": "a218a7f04d7db36ef857ca338b718e043ffdeea34b5a426ea6773dc2147349b2",
+  "prompt": "project-network.prompt.md",
+  "generatedOriginal": "exec-6d78e02c-12d4-49e2-9989-f900bd8f7883.png",
+  "editReferences": [
+    "generation-history/story/exec-ba87fe7e-9d7c-4aef-b9f0-6946a696268c.png"
+  ]
+}

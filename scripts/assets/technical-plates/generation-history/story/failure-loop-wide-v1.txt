@@ -1,0 +1,32 @@
+Use case: infographic-diagram
+Create one commissioned Woodhouse engineering-publication plate, landscape 3:2, 1536x1024. This is finished raster infographic artwork, not a screenshot, slide deck, dashboard or code render. The entire image must be perfectly flat dark ink #080D19 edge-to-edge. No paper, vignette, gradient, glow, glass, texture, decorative grid or ornamental machinery. Pale #EAF0FA readable editorial type, Bricolage Grotesque-like slightly distinctive humanist grotesk headings, clean body sans, compact monospaced evidence notation. Fine precise cyan #79D8FF technical linework with deliberate weight hierarchy; acid lime #E9FF49 marks human expectation, coral #FF746A labels the failure and limits.
+
+Subject: the failure loop, illustrated as a genuine engineering feedback mechanism. Use an authored asymmetrical composition: six open typographic stations form a clockwise angular loop around a detailed diagnostic viewport illustration, not nested boxes or a row of cards. Clearly draw directional arrows Expectation -> Attempt -> Reality -> Incident -> Control -> Recheck, then a conspicuous continuous RETURN path from Recheck back to Expectation. Labels live in open space beside leader lines. The mechanism occupies most of the image; title is modest at upper left. Add a central small technical illustration of a viewport outline measured by calipers: its contained geometry earns a small cyan "Geometry passed" label, while a coral sight-line identifies "Design missed". This is conceptual explanatory linework, not a fabricated Fighter screenshot. Put "Illustrative diagnostic" beneath that drawing. Use shape grammar meaningfully: a lime human-direction circle at Expectation, a coral decision diamond at Reality, a coral labelled stop at Incident. Do not turn every station into a box or circle.
+
+Exact text, preserve case and spelling:
+"The failure loop"
+"Expectation"
+"State what should happen."
+"Attempt"
+"Make a reviewable change."
+"Reality"
+"Inspect the actual result."
+"Incident"
+"Name what escaped the checks."
+"Control"
+"Prevent the same failure class."
+"Recheck"
+"Repeat the failure; record evidence."
+"Return evidence to the expectation"
+"Geometry passed"
+"Design missed"
+"Illustrative diagnostic"
+A distinct lower-right evidence annotation, anchored to the diagnostic with a thin leader:
+"FT / FIGHTER"
+"Geometry passed. Design missed."
+"Independent visual review became a separate check."
+Along the bottom fine horizontal rule:
+"PUBLIC ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / METHOD · 18 OCT 2026"
+
+All these words must be accurate and comfortably readable; no tiny text. Use titles around 60px, labels around 38px, detail around 28px at this image size. Fit the text with generous calm spacing. No invented numbers, outcomes, graphs, dates or extra prose; no giant slogan heading. The exact lesson is a passed geometry check cannot establish design quality. The changed control must be tested against the same failure class and evidence returned to the expectation.

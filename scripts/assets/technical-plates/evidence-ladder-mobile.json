@@ -1,0 +1,13 @@
+{
+  "title": "The evidence ladder",
+  "description": "Five individually witnessed claims about one candidate revision. Human acceptance and physical-device observation remain independent.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "df8765cb470a6f51e9c55e043f4affe32eabeb413f0c4842a075ed71afe83e51",
+  "masterSha256": "0b882b3aa04941229bf40d3eed4dfe1c1608fa78ed61e5d0b3c87aa33ae49371",
+  "prompt": "evidence-ladder.prompt.md",
+  "master": "evidence-ladder.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

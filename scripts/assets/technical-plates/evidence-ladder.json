@@ -1,0 +1,13 @@
+{
+  "title": "The evidence ladder",
+  "description": "Five individually witnessed claims about one candidate revision. Human acceptance and physical-device observation remain independent.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "ded64d33e4f75ed3098fb59c1aa2ca28a3e749643680fdd86a4f2a5b72c5fb5b",
+  "masterSha256": "0b882b3aa04941229bf40d3eed4dfe1c1608fa78ed61e5d0b3c87aa33ae49371",
+  "prompt": "evidence-ladder.prompt.md",
+  "editReferences": [
+    "generation-history/root/exec-15756953-03a0-49e9-bc74-6288b603e8bf.png"
+  ]
+}

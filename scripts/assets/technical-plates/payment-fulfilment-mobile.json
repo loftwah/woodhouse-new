@@ -1,0 +1,13 @@
+{
+  "title": "Payment before fulfilment",
+  "description": "A proposed commercial control model, not a live shop. Verified events enter the ledger; approved policy bounds fulfilment, shipment evidence returns to the same ledger, and a browser redirect is not payment proof.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "74fc287f5afa35712602963407fae39b1cb41e2956cb706d8560a7894140c9a9",
+  "masterSha256": "b1caba6f97ca1ff3fa889c09a486456ab5d9c7befccd97af45beb752a2cb3e5a",
+  "prompt": "payment-fulfilment.prompt.md",
+  "master": "payment-fulfilment.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

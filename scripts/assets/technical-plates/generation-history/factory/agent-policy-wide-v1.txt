@@ -1,0 +1,32 @@
+Use case: infographic-diagram
+Asset type: Finished commissioned Woodhouse generated raster technical illustration, high-end engineering publication.
+Visual craft: Flat DARK INK#080D19 background edge-to-edge, large pale#EAF0FA grotesque SANS-SERIF type, crisp cyan#79D8FF software-document linework, lime#E9FF49 reserved human authority, coral#FF746A reject stop. Deliberate typographic hierarchy, precise thin arrows, labelled boundaries, open dark negative space, small monospaced source/footer. No paper, gradient, glow, glass, shadows, texture, decorative marks, invented measurements, fake URLs/versions/results.
+Actual policy: An event/schedule/permitted production read can start a bounded proposal. Production observations remain read-only. A draft/issue/changeset includes evidence, risk and rollback. Check scope, rights, cost and recovery against existing authority. Work ALREADY WITHIN AUTHORITY proceeds directly to execute and qualify, with NO new human approval inserted. Reserved accounts, money, rights, irreversible actions and explicit owning gates go to MP's actual decision. Approval permits only exact approved scope and connects to execute/qualify; return revises and requalifies via a real loop back to proposal; rejection records it and ends at a coral STOP. Events and agent approval grant no new authority. Existing product, privacy and release gates remain in force.
+Drawing language: Only proposal/review/policy/result document slips, a permission-boundary rule and precise software routes. No people, robot icons, hands, hardware, machinery, server racks, physical objects, fake analytics. This is not a factory floor. Every real branch has a named condition. Every stop terminates. The return arrow physically reconnects. No generic flowchart boxes, giant slogans or numbered-oval rail. No new labels or tiny extra writing beyond the exact list.
+Composition: Landscape3:2 1536x1024. Distinct authority FORK geometry: an observation note upper-left leads to a proposal-document fan at center-left then a single permission-manifest sheet at center. From that authority check, the ordinary cyan route goes directly right to an open bounded-result slip, labelled Within authority / Execute and qualify. A separate lime reserved route turns downward into MP's permission document in the lower center, with its reserved decision scope annotated to the left. From that document three clearly distinct branches: Approve goes right and up into the same bounded-result slip; Return loops LEFT all the way back to the proposal fan, arrowhead entering Propose; Reject goes down/right into an unbroken coral terminal cap. Use labels on actual branches rather than nested containers. Big source-boundary note across bottom. Main labels44px, body32px, header64px max, footer26px.
+Exact text:
+"Authority has a boundary"
+"Observe"
+"Event · schedule · safe read"
+"Propose"
+"Draft · issue · changeset"
+"Evidence · risk · rollback"
+"Check authority"
+"Scope · rights · cost · recovery"
+"Within authority"
+"Execute and qualify"
+"Reserved decision"
+"MP"
+"Accounts · money · rights"
+"Irreversible actions"
+"Explicit owning gates"
+"Approve"
+"Act in exact scope"
+"Return"
+"Revise and requalify"
+"Reject"
+"Record and stop"
+"Events grant no new authority"
+"Product, privacy and release gates remain"
+"WOODHOUSE / AGENT-POLICY"
+"Reviewed 18 October 2026"

@@ -1,0 +1,43 @@
+Use case: infographic-diagram
+Commissioned Woodhouse technical-publication infographic. Finished generated raster art with exact typography and authored technical linework. Flat uniform dark ink #080D19 edge-to-edge. Pale #EAF0FA text; precise cyan #79D8FF work paths; acid lime #E9FF49 human direction/identity; labelled coral #FF746A stops. Bricolage Grotesque-like distinctive humanist headings, clean readable sans body, compact monospaced project/source labels. No paper, grain, gradients, vignette, glow, glass, decorative grids, stock UI cards, ornamental geometry, default boxed flowcharts or oval rail. No invented counts, results, dates, project dependencies or statuses. No people, robots, physical machines, servers, aircraft, hardhats or engineering hardware. Draw only SOFTWARE artefacts and truthful relationships. Source notation belongs in a quiet footer. Moderate title, most area devoted to the actual system. All words quoted below are required exact text; don't invent extra prose. PHONE edition PORTRAIT1:2,1024x2048. Independently compose for350px display width. This taller native canvas is needed to keep ten independent products plus ownership readable. Labels58–60px, descriptions46–48px, footer32px. NO half-column body and no miniature type.
+Subject: one human directs bounded agent work across independently owned products. Draw an open software portfolio wiring register: a lime direction circle and short authority label at the top, cyan bounded-work bracket below, then ten independent parallel take-off stems from a shared scope margin into ten full-width labelled project rows. Each branch ends at its own ownership tick. There are NO connections from a project to another project, no false release chain. The common margin means bounded agent work can reach a project; it does not mean shared data or dependencies. Use project markers, no pictograms, no robots, no physical factory.
+Exact title:
+"One operator."
+"Distinct products."
+Exact authority words:
+"Human direction"
+"Scope and authority."
+"Coding agents"
+"Bounded tasks. Named owners."
+Ten independent project rows:
+"BB / Bubbles"
+"Game systems."
+"FT / Fighter"
+"Authored play."
+"SS / SHOALSHOT"
+"Fishing arcade play."
+"P11 / Protocol 11"
+"A changing card table."
+"MX / MAX"
+"Assistive technology."
+"PR / Pirates"
+"Source-backed reconstruction."
+"FM / LoftwahFM"
+"Music."
+"SC / Social Club"
+"Hospitality."
+"AC / App Composer"
+"Environment preparation."
+"Independent app composition."
+"AH / Asset Hunter"
+"Public capability catalogue."
+"Rights per example."
+Bottom ownership annotation in46px:
+"Each owns its identity, source,"
+"data and release gates."
+"Markers do not show activity"
+"or project health."
+Footer32px:
+"WOODHOUSE / RELATIONSHIPS"
+"18 OCT 2026"
+No invented project health, status or dependency. All names and purposes retained. Fit by reducing blank space and drawing size, never by making key text smaller.

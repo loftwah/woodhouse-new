@@ -1,75 +1,23 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/project-network-mobile.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: down
-
-plate_title: "One operator.\nDifferent\nfinish lines." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 44
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-human: "One human\nDirection ·\nauthority" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#E9FF49"
-  style.font-size: 29
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 235
-  height: 235
-  style.bold: true
-}
-agents: "Coding agents\nBounded, owned\ntasks" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 28
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-games: "PLAY / GAMES\nBB  Bubbles · FT\nFighter\nSS  SHOALSHOT\nP11  Protocol 11" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-tools: "BUILD / TOOLS\nAC  App Composer\nAH  Asset Hunter" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-other: "EXPLORE / OTHER\nWORK\nFM  LoftwahFM · MX\nMAX\nSC  Social Club ·\nPR  Pirates" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-human -> agents: "scope" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22;}
-agents -> games: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-games -> tools: "portfolio continues" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; style.stroke-dash: 5; target-arrowhead.shape: none;}
-tools -> other: "portfolio continues" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; style.stroke-dash: 5; target-arrowhead.shape: none;}
-plate_note: "Markers identify the\nprojects.\nEach owns its identity and\ngates.\nNo activity or health is\nimplied.\n\nWOODHOUSE / RELATIONSHIPS\nReviewed 18 October 2026" {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 22
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "One operator. Independently owned products." {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+human: "HUMAN" {}
+intent: "Direction and authority\nThe goal and its limits" {}
+agents: "CODING AGENTS\nBounded tasks, named owners" {}
+games: "PLAY / GAMES\nBB  Bubbles\nFT  Fighter\nSS  SHOALSHOT\nP11  Protocol 11" {}
+build: "BUILD / TOOLS\nAC  App Composer\nAH  Asset Hunter" {}
+explore: "EXPLORE / OTHER WORK\nFM  LoftwahFM · MX  MAX\nSC  Social Club · PR  Pirates" {}
+human -> intent: ""
+intent -> agents: ""
+agents -> games: "Bounded work"
+agents -> build: "Bounded work"
+agents -> explore: "Bounded work"
+note: "Project markers identify work, not activity or health. Each project owns its identity, source, data and release gates." {shape: text; near: bottom-center; style.font-size: 16}

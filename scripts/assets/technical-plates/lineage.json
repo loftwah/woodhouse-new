@@ -1,0 +1,14 @@
+{
+  "title": "How the working method changed",
+  "description": "A sequence of working habits from tools to coordinated factory operation, not an invented dated roadmap.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "2240be70a2b3d1ba923ddef57e8e990c336e16545ac071e3ca81379d2e502898",
+  "masterSha256": "ed1c025e9e146c0fa4da268812a2f6dc730900a7909cfd60cb3cfd0cf42e7c0a",
+  "prompt": "lineage.prompt.md",
+  "generatedOriginal": "exec-2c725185-e475-4abe-a290-3589fae14934.png",
+  "editReferences": [
+    "generation-history/story/exec-95848eb5-1560-4c69-8939-75b8b314d23b.png"
+  ]
+}

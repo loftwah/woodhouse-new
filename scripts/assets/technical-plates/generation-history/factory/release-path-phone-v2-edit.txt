@@ -1,0 +1,14 @@
+Use case: precise-object-edit
+Input image1 is the Woodhouse release-path phone plate to correct. Image2 is ONLY a reference for comfortably readable full-width text rows with small secondary software drawings, not subject or wording.
+Correct ONLY the phone legibility and layout, preserving all release meaning and exact words. Recompose portrait1024x1536 into broad open full-width annotation rows. Main stage labels64px, EVERY explanatory label48px minimum, small source/footer30px. Small software documents/browser drawings stay at the right margin and never force half-column text. The current three-column independent-claim labels and owning-gate words are microscopic; fix those.
+Layout and words:
+Header64px two lines: "Release follows" / "one revision"
+Row1: "Exact candidate" / "Source · scope · identity", small candidate slip
+Row2: "Review and qualify" / "Owning repository gates" / "Reserved decisions apply", small review/check slips
+Row3: "Production" / "Deploy; inspect" / "live identity", small abstract browser
+The first3 rows share a clear connected cyan forward route, candidate -> review -> production.
+Row4 coral: "Candidate changed" / "STOP" / "Earlier checks no longer qualify" / "Revise; repeat affected checks". A coral branch from the original candidate terminates here at a solid stop cap. A SEPARATE dashed cyan line from this revision branch physically returns to Review and qualify; it never bypasses the checks.
+Bottom separate-observation region: small heading "Separate claims", then THREE FULL-WIDTH48px lines "Real use · people · devices", "Human acceptance", "Physical observation". Do not put these side by side or draw oversized icons. They are distinct evidence, no passing arrows between them.
+Bottom48px statement: "Tests are not live observations"
+Footer30px: "WOODHOUSE / RELEASE-PATH" / "Reviewed 18 October 2026"
+No fictitious URLs, versions, results, hardware or people. Preserve flat dark ink ground and crisp cyan/lime/coral linecraft. Eliminate huge Separate claims heading and giant decorative icons to make room. All meaning must be readable at350px without zoom.

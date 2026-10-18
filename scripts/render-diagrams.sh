@@ -11,13 +11,14 @@ if ! command -v d2 >/dev/null 2>&1; then
   exit 1
 fi
 
-mkdir -p "$IMAGE_DIR" "$PUBLIC_SOURCE_DIR"
+mkdir -p "$IMAGE_DIR" "$PUBLIC_SOURCE_DIR" "$ROOT/output/diagram-models"
 for source in "$SOURCE_DIR"/*.d2; do
   name="$(basename "$source" .d2)"
   d2 --font-regular "$ROOT/public/fonts/bricolage-report-400.ttf" \
     --font-bold "$ROOT/public/fonts/bricolage-report-700.ttf" \
-    "$source" "$IMAGE_DIR/$name.svg"
+    "$source" "$ROOT/output/diagram-models/$name.svg"
   cp "$source" "$PUBLIC_SOURCE_DIR/$name.d2"
 done
 
+node "$ROOT/scripts/render-illustrated-plates.mjs"
 node "$ROOT/scripts/diagram-sizes.mjs"

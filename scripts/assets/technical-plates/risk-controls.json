@@ -1,0 +1,13 @@
+{
+  "title": "Controls follow consequences",
+  "description": "A comparison register of work classes and proportionate controls, not a maturity sequence.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "1569f3a7a5106263b482ce3bc5cbb75abd8265e358963cf39a5c8c7c6645547c",
+  "masterSha256": "35797eea2466476fae50c3a7d2bb2240b46d15abef466e016964f7be29446ac3",
+  "prompt": "risk-controls.prompt.md",
+  "editReferences": [
+    "generation-history/root/exec-8ef13627-3cff-4ac1-b001-3e325c113e24.png"
+  ]
+}

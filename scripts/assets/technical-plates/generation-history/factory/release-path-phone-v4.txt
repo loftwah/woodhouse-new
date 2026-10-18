@@ -1,0 +1,23 @@
+Use case: infographic-diagram
+Asset type: Finished Woodhouse commissioned generated technical artwork for narrow phone reading.
+CRITICAL NATIVE OUTPUT SIZE: exactly1024x2048 pixels, aspect ratio1:2. This is a TALL new composition, not a1536px portrait stretched or cropped. Allocate the full2048px canvas.
+Primary request: Recompose the entire software system for comfortably readable meaning at a280px CONTENT width. Core explanatory text must be a true72px at1024px source (minimum64px only if explicitly specified below); main labels88px. This is much larger than earlier attempts. All core words are FULL-WIDTH left-aligned statements, max940px width with deliberate short line breaks. Do not reduce type to fit beside drawings. Small software artefact illustrations sit only in leftover negative space near the right margin, and stay at most200px wide. Less title height, far less drawing detail, generous typographic rows. No half-column text. No tiny core explanations.
+Style: Exact DARK INK#080D19 ground edge-to-edge; pale#EAF0FA grotesque sans-serif type; crisp cyan#79D8FF software document and browser linework; lime#E9FF49 human authority; coral#FF746A labelled stops. No paper, gradients, decorative glow, shadow, texture, figures, robots, hardware, machines, charts, invented numbers, URLs, versions, results or tiny labels. Simple source/diff/candidate/checks/browser software artefacts, no physical manufacturing metaphor. No generic flowchart boxes or numbered-oval rail.
+This is a METHOD, not a claim that projects passed. Every real route connects to its objects; every return genuinely reconnects, every terminal stop ends. All exact text listed below appears once; source footer is quiet32px. No extra wording.
+Subject: Revision dossier, native1024x2048. Three broad main rows Candidate -> Review/qualify -> Production. A candidate identity strap associates source with review/check record and live observation; the process is forward-only for a qualified candidate. A CORAL changed-revision branch from original candidate goes to a wide disabled-qualification STOP; a SEPARATE dashed cyan revision route begins at the changed packet BEFORE the stop and returns to Review and qualify. STOP has no outgoing line. Do not confuse border rules with routes. At bottom a separate-claims region uses THREE FULL-WIDTH text rows without large icons or passing arrows.
+Typography: Main labels88px; core explanations72px; header72px max two short lines; footer32px. Do not shrink words for tiny side columns. Small software slips sit only in spare right margin.
+Exact text:
+HEADER "Release follows" / "one revision"
+"Exact candidate" / "Source · scope · identity"
+"Review and qualify" / "Owning repository gates" / "Reserved decisions apply"
+"Production" / "Deploy; inspect" / "live identity"
+"Candidate changed" / "STOP"
+"Earlier checks no longer" / "qualify this state"
+"Revise; repeat" / "affected checks"
+"Separate claims"
+"Real use · people · devices"
+"Human acceptance"
+"Physical observation"
+"Tests are not" / "live observations"
+FOOTER "WOODHOUSE / RELEASE-PATH" / "Reviewed 18 October 2026"
+Do not invent example deployed identities, pass statistics or user counts. Conceptual checks only. All gates belong to the owning repository and exact candidate.

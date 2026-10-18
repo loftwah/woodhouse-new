@@ -1,0 +1,13 @@
+{
+  "title": "One operator. Independently owned projects.",
+  "description": "The same human and agents work across independently owned products. The map shows identity and responsibility, not health, adoption or invented dependencies.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "edfb6c6b59d20423e432d78263620cc21f8660abce1e8bcc9eef16d31e7cb206",
+  "masterSha256": "a218a7f04d7db36ef857ca338b718e043ffdeea34b5a426ea6773dc2147349b2",
+  "prompt": "project-network.prompt.md",
+  "master": "project-network.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

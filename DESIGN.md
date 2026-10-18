@@ -101,7 +101,7 @@ Factory gives builders a route through working connections: FM music in a separa
 
 Woodhouse’s social identity is a tactile miniature workshop: one symbolic maker connects underwater play, a game arena and a record player. Ink, lime type and the large “One human. Many worlds.” line carry the thumbnail. This is a conceptual illustration, not Dean’s portrait or screenshots of the products. The generated master, prompt and deterministic export instructions live beside the existing renderer.
 
-## Rebuilt technical plates — reviewed 18 October 2026
+## Rejected second diagram edition — reviewed 18 October 2026
 
 The rebuilt family uses open typographic fields on ink, Bricolage lettering, cyan work paths, lime human direction and coral stops. Text names the work; reference medallions order a sequence; a human circle and a decision diamond separate responsibility from a check. A blocked lane has no outgoing publication path. Risk classes form a comparison register with no lifecycle arrows. Lineage is a sequence of working habits rather than an invented dated roadmap. Each plate carries its own subject, exception and dated source or method note.
 
@@ -110,3 +110,14 @@ Wide editions use bounded reading fields rather than an automatic line of nested
 The founding essay alternates a readable prose measure with full-width plates, the existing conceptual workshop illustration and dated public product captures. Its historical account stays tied to 28 September; the editorial expansion has its own 18 October review. The continuation leads to the working Factory examples. Product-first Home and Factory reading orders are retained.
 
 These describe the rebuilt edition. Independent agent review and publication verification are evidence about that edition, not MP’s taste acceptance. MP’s rejection of the former edition remains recorded above.
+
+
+### MP rejection of the second edition — 18 October 2026
+
+MP rejected the oversized typographic D2 exports after seeing production. Their deployment and agent PASS did not meet the visual brief. Large slogans, repeated numbered portrait rails, unstable symbols and relationships supplied only by footer prose are failures, not an accepted reference.
+
+The replacement uses commissioned-style generated illustrations with subject-specific technical composition and genuinely readable portrait labels. The final illustration and the editable D2 system model are different artifacts and must be labelled honestly. Retain the generated masters, exact prompts and reviewed model identity together. A renderer must refuse a model/master change that has not been reviewed as a pair. Native descriptions and complete transcripts remain mandatory. Production and agent review never confer MP taste acceptance.
+
+### Replacement direction — MP feedback, 18 October 2026
+
+MP positively received the illustrated replacement shown in the article's before/after comparison and asked for the family to be used fully. Carry the selected eleven illustrations and their readable phone editions through the existing pages and share gallery. Preserve the generated masters, prompts, editable system models and transcripts. This feedback establishes the shown visual direction; the earlier rejected editions remain rejected, and technical verification still belongs to each released format.

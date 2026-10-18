@@ -6,7 +6,9 @@
     "src/plugins/woodhouse-editorial-policy.ts",
     "src/plugins/woodhouse-enquiries.ts",
     "src/plugins/resend-email-env.ts",
-    "src/scripts/analytics-workbench.ts"
+    "src/scripts/analytics-workbench.ts",
+    "scripts/render-illustrated-plates.mjs"
   ],
-  "ignoreDependencies": ["cloudflare"]
+  "ignoreDependencies": ["cloudflare"],
+  "ignoreBinaries": ["magick"]
 }

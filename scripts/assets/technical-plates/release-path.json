@@ -1,0 +1,12 @@
+{
+  "title": "Qualify what you ship",
+  "description": "Check the exact candidate. A change invalidates affected checks; production and real-use observations remain separate claims.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "4d48a808f2147ff0f165181430de95c5e5d2407118e1a75e5545a0c2df9bfdef",
+  "masterSha256": "c0e572bd43e7ef775fb60b765a75ad546efa89b7c4171046aabe2abe249e5d06",
+  "prompt": "release-path.prompt.md",
+  "editReferences": [],
+  "generatedOriginal": "exec-684a156c-796e-429d-9162-cf60b582a938.png"
+}

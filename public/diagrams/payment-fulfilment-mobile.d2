@@ -1,156 +1,32 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/payment-fulfilment-mobile.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: down
-grid-rows: 6
-grid-columns: 2
-horizontal-gap: 16
-vertical-gap: 28
-
-plate_title: "Payment truth.\nThen\nfulfilment." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 44
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-r0: "01" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t0: "Checkout\nThe provider takes\npayment" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r1: "02" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t1: "Provider event\nPayment · order ·\nevent ID" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r2: "03" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t2: "Verify and\ndeduplicate\nAdmit one valid\nevent" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r3: "04" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#E9FF49"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t3: "Order ledger\nState · limits ·\nevidence" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r4: "05" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t4: "Printful order\nWithin approved\npolicy" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r5: "06" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t5: "Shipment event\nUpdate ledger;\nnotify buyer" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r3 -> r4: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r4 -> r5: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-plate_note: "HUMAN APPROVES THE POLICY\nArtwork, rights, prices\nand caps.\nBrowser redirects do not\nprove\npayment. Delivery updates\nreturn\nto the same order ledger.\n\nREFERENCE / NOT A LIVE\nSHOP\nReviewed 18 October 2026" {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 22
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Payment before fulfilment" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+checkout: "Checkout\nPayment\nprovider" {}
+event: "Signed event\nPayment · order\nEvent ID" {}
+verify: "VERIFY +\nDEDUPLICATE" {}
+ledger: "ORDER\nLEDGER" {}
+policy: "HUMAN / APPROVED POLICY\nArtwork · rights · price\nSpend and fulfilment limits" {}
+fulfil: "Printful order\nOnly within\napproved limits" {}
+shipment: "Shipment event\nUpdate the same ledger.\nNotify the customer." {}
+redirect: "Browser redirect\nNot payment proof" {}
+stop: "Reject as payment proof" {}
+notify: "Notify the customer" {}
+checkout -> event: ""
+event -> verify: ""
+verify -> ledger: "Verified event only"
+ledger -> fulfil: "Only within approved policy"
+policy -> fulfil: "Authority / rights / spend limits" {style.stroke-dash: 5}
+fulfil -> shipment: ""
+shipment -> ledger: "Update the same order"
+shipment -> notify: ""
+checkout -> redirect: "Browser return" {style.stroke-dash: 5}
+redirect -> stop: ""
+note: "Proposed commercial control model, not a live shop or sales claim. Signed events must be verified and deduplicated. Browser redirects have no route to the ledger." {shape: text; near: bottom-center; style.font-size: 16}

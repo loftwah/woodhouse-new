@@ -1,0 +1,27 @@
+Use case: infographic-diagram
+Commissioned Woodhouse technical-publication infographic. Finished generated raster art with exact typography and authored technical linework. Flat uniform dark ink #080D19 edge-to-edge. Pale #EAF0FA text; precise cyan #79D8FF work paths; acid lime #E9FF49 human direction/identity; labelled coral #FF746A stops. Bricolage Grotesque-like distinctive humanist headings, clean readable sans body, compact monospaced project/source labels. No paper, grain, gradients, vignette, glow, glass, decorative grids, stock UI cards, ornamental geometry, default boxed flowcharts or oval rail. No invented counts, results, dates, project dependencies or statuses. No people, robots, physical machines, servers, aircraft, hardhats or engineering hardware. Draw only SOFTWARE artefacts and truthful relationships. Source notation belongs in a quiet footer. Moderate title, most area devoted to the actual system. All words quoted below are required exact text; don't invent extra prose. PHONE edition portrait2:3,1024x1536, independently composed. All principal labels60px, explanatory text48px, no half-column body. Footer32px. Keep the whole meaning readable at350px wide. Fit by using compact software illustrations beside headings and full-width explanation rows, never shrinking type.
+Subject: working habits grow from composing tools to coordinating work. Use a carefully composed branching change trace down the left quarter: it begins with three little software module tabs, joins a lime human-direction point, splits into owned task branches, adds a distinct independent review branch, and converges at a revision tag plus named checks. The last record connects intent, work and evidence. The line geometry must express these actual changes, not a generic central oval or repeated row of icons. No default numbered timeline and no dates on steps. The six open full-width text fields align with that changing trace. Drawings small, text large.
+Exact title: "How the work changed"
+Exact six stations in order:
+"Compose tools"
+"Plugins · APIs · services"
+"Work in a pair"
+"One human, one agent."
+"Delegate work"
+"Bounded tasks. Explicit owners."
+"Work in parallel"
+"Competing changes."
+"Independent review."
+"Qualify the result"
+"Exact revision."
+"Named release gates."
+"Operate a factory"
+"Tie intent and work"
+"to release evidence."
+At bottom,48px readable constraint:
+"Working habits, not dated steps."
+Footer32px:
+"SOURCE / FOUNDING ACCOUNT"
+"28 SEP 2026"
+"WOODHOUSE / LINEAGE · 18 OCT 2026"
+No invented chronology. The account supplies the order, not dated transitions. Keep all six parts, especially qualification.

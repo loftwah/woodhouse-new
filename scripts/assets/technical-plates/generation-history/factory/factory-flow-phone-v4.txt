@@ -1,0 +1,19 @@
+Use case: infographic-diagram
+Asset type: Finished generated raster technical plate for Woodhouse, a high-end engineering publication.
+Primary request: Draw the ACTUAL SOFTWARE operating loop in six stages: human intent -> coding agents -> independent review -> qualification -> production observation -> real-use observation -> evidence returning to human intent. This is a method, not a claim that any project passed.
+Ground and style: Flat exact solid RGB(8,13,25), #080D19, every background pixel. No shading, gradient, lighting, grain, texture, glow or vignette. Crisp pale #EAF0FA GROTESQUE SANS-SERIF lettering, cyan #79D8FF precise technical linework, lime #E9FF49 human authority and returning evidence. Tiny marginal source labels in monospace, also sans. Do NOT use serif lettering. Clean commissioned editorial drawing with software artefacts only.
+System objects: Human intent is an authored task-brief document with goal/limits/owner rules. Coding agents are branching source-diff slips with plus/minus lines, rejoining into one changeset. Independent review is a SEPARATE review-witness document facing the held revision, both attached to the same small candidate identity tab. Qualification is a candidate bundle with a passed-checks record; do not invent passing results. Production is a product-browser frame observing one named live version. Real use is a separate observation note with a browser and phone viewport outline, representing real people/devices/environments without drawing people or hardware. Every depicted viewport is an abstract software artefact, not a physical monitor. The lime evidence-return circuit physically connects the real-use note back to the task brief. Cyan arrowheads show each forward transition. No stage may be skipped.
+Constraints: No people, robots, humanoids, hands, machines, industrial tools, server racks, factory landscapes, buildings, trucks, hardware, fake analytics graphs, invented numbers, fake hash values, glass, shadows, gradients, tiny gibberish writing, generic flowchart boxes, giant slogan or repeated numbered-oval rail. Use generous open dark ground and meaningful authored document/package/browser-like line objects. Retain all actual meaning. All quoted text must appear once verbatim. No extra text.
+Composition: Portrait 2:3, 1024x1536, independently composed for a350px phone. Six full-width open horizontal lanes, no containers. Read top to bottom. Each lane has a72px main label and52px body labels, left-aligned at x90 with up to760px text width. Small software artefact drawings sit in the right margin, never take width from text or shrink it; omit detail to protect type. Each lane roughly185px high. Cyan route is a thin, continuous serpentine wire in the far-right margin, touching the proper software artefact in each lane and carrying arrowheads to the next stage. Lime return route runs from the final observation note around the bottom and up the far-left edge into Human intent, with a visible connected arrowhead. Header64px one line only, footer30px. SANS-SERIF GROTESQUE type. No serif letters. Do not let drawings dominate. The important words must be comfortably legible at350px width.
+Text, in order, each once verbatim:
+HEADER: "The operating loop"
+LANE1: "Human intent" / "Goal · limits · owner"
+LANE2: "Coding agents" / "Bounded tasks" / "Reviewable changes"
+LANE3: "Independent review" / "Check the held" / "revision"
+LANE4: "Qualification" / "Exact candidate" / "Record what passed"
+LANE5: "Production" / "Observe the named" / "live version"
+LANE6: "Real use" / "People · devices" / "Environments"
+RETURN56px: "Evidence returns to the human"
+NOTE40px: "Owning release gates apply"
+FOOTER30px: "METHOD, NOT PORTFOLIO STATUS" / "WOODHOUSE / FACTORY-FLOW" / "Reviewed 18 October 2026"
+The Independent review and Qualification stages must stay separate and visibly connected to the same candidate, with no shortcut.

@@ -1,106 +1,25 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/publication-path.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: right
-grid-columns: 1
-vertical-gap: 22
-
-plate_title: "A public window. A private workshop." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 58
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-public: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 4
-  grid-gap: 26
-site: "Project site\nTitle · summary\nArtwork URL" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-}
-record: "Public record\nReviewed\nPublic-safe" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-page: "Woodhouse page\nHuman and\nagent views" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-browser: "Browser\nLoads original art\nfrom the project" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-site -> record: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-record -> page: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-page -> browser: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-}
-boundary: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 3
-  grid-gap: 25
-private: "PRIVATE\nBLOCKED" {
-  label.near: center-center
-  shape: hexagon
-  style.font-color: "#FF746A"
-  style.font-size: 27
-  style.fill: "transparent"
-  style.stroke: "#FF746A"
-  style.stroke-width: 2
-  width: 230
-  height: 170
-  style.bold: true
-}
-denied: "NO PUBLICATION PATH\nRepository bodies · credentials\nWorking conversations" {
-  shape: text
-  style.font-color: "#FF746A"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#FF746A"
-  style.stroke-width: 0
-}
-fallback: "IF SOURCE ART FAILS\nWoodhouse illustration.\nIts text and credit change." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 30
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-}
-plate_note: "WOODHOUSE / PUBLICATION BOUNDARY · 18 OCTOBER 2026 · The private lane is a\nprohibition, not a data feed. Source artwork remains the project’s artwork. Woodhouse\ndoes not claim it as an original illustration." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 23
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "A public window. A private workshop." {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+site: "Project site metadata\nTitle, summary and original artwork URL" {}
+record: "Reviewed public-safe record\nClaims and review date" {}
+page: "Woodhouse page\nHuman and agent views" {}
+browser: "Browser\nLoads original art\nfrom the project" {}
+private: "PRIVATE\nBLOCKED" {}
+denied: "NO PUBLICATION PATH\nRepository bodies · credentials\nWorking conversations" {}
+fallback: "IF SOURCE ART FAILS\nWoodhouse illustration.\nIts text and credit change." {}
+site -> page: "Metadata read at build"
+record -> page: "Reviewed claims"
+page -> browser: "Publishes source artwork URL"
+site -> browser: "Original artwork loads from its producer"
+private -> denied: "Blocked"
+fallback -> browser: "Only if source artwork fails" {style.stroke-dash: 5}
+note: "The private lane has no path to publication. Source artwork remains credited to its project. Fallback text and credit identify Woodhouse." {shape: text; near: bottom-center; style.font-size: 16}

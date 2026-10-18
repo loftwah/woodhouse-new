@@ -1,0 +1,24 @@
+Use case: infographic-diagram
+Woodhouse generated engineering-publication artwork. Exact flat uniform ink #080D19 edge-to-edge, pale #EAF0FA Bricolage-like headings and clear sans body, precise cyan #79D8FF lines, lime #E9FF49 human direction, coral #FF746A only a real labelled stop or constraint. No texture, grain, gradient, vignette, glow, glass, decorative grid or paper. SOFTWARE only: no people, machines, aircraft, hardware, robots, servers, hardhats. No unrequested text or invented revision identifiers, check names, counts, dates, statuses. No default boxed flowchart. The previous generation failed the phone font-size requirement. This must be a genuinely readable narrow editorial infographic. Full-width text, very small drawings, no half-column captions. All explanatory text must be50px at1024px canvas width. Main labels62px. At350px display width explanations must be17px. It is better to be typographically plain and correct than visually busy and unreadable. PORTRAIT2:3,1024x1536. Original phone composition with SINGLE COLUMN, NOT three columns across the top. Use a fine narrow cyan rule-comparison trace in the60px left margin and LARGE full-width text to its right. No big document drawings, no half-width annotation boxes, no danger-stripe decoration. The source comparison can be just three tiny registered rule strips of120px width beside a heading. The coral Gate B barrier runs horizontally AFTER integrated parity, no arrow crosses it. A small coral source-gap branch terminates at STOP. Every meaningful phrase is large.
+Exact words, title70px, labels62px, explanations50px:
+"Parity before expansion"
+"PR / PIRATES"
+"Original evidence"
+"Rules and provenance."
+"Reconstruction"
+"Evidenced rules only."
+"Integrated parity"
+"Compare the whole game."
+"Gate B / locked"
+"Expansion waits."
+Large full-width coral exception:
+"Source gap / STOP"
+"An unknown stays unknown."
+"Plausibility is not evidence."
+Below locked barrier, full-width50px:
+"Expansion only after parity"
+"and the owning gate's acceptance."
+Footer32px:
+"HISTORICAL PROJECT EXAMPLE"
+"WOODHOUSE / METHOD · 18 OCT 2026"
+No extra text. Do not imply Gate B open. No connector crosses the locked barrier. Keep sources and reconstructed behaviour distinct; don't invent any game assets, source code or completed parity result.

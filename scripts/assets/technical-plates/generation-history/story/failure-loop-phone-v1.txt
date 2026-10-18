@@ -1,0 +1,31 @@
+Use case: infographic-diagram
+Generate one final Woodhouse engineering-publication infographic, independently composed PHONE edition, PORTRAIT 2:3, 1024x1536. Finished raster artwork. Flat solid dark ink #080D19 background edge-to-edge; absolutely no paper, pale surface, gradient, vignette, glow, glass, grain or decorative grid. Pale #EAF0FA type, slightly distinctive Bricolage Grotesque-like headings, clean sans body, compact monospaced source notation. Crisp precision cyan #79D8FF lines, lime #E9FF49 for human expectation, coral #FF746A for failure and limits. High-end technical drawing and typographic craft. Readable when the entire image is displayed at 350px wide: principal labels must be 60px and explanatory text 48px at 1024px source width, evidence explanation 46px, footer source notation 32px. Title moderate, do not waste space on a slogan.
+
+Subject: a failure must change the method. Make the feedback loop obvious with an actual prominent arrow returning from Recheck to Expectation. This portrait is NOT a shrunken landscape and NOT a stack of miniature flowchart boxes. Compose an open vertical technical field with full-width, generously spaced text stations and an angular work path, with a separate far-left return stroke that turns at the bottom and visibly re-enters the lime Expectation marker. Small tapered cyan arrowheads guide the forward sequence. Use a lime human-direction circle for Expectation and a coral diamond at Reality. At the bottom beside the evidence place one precise compact conceptual line drawing of a measured viewport: cyan caliper marks show containment, a coral sight line shows missed hierarchy. It is an illustrative diagnostic, never a fabricated Fighter screenshot. No generic oval central rail. No rectangular containers around text.
+
+Place all of this exact text, clear with intentional line breaks:
+"The failure loop"
+"Expectation"
+"State what should happen."
+"Attempt"
+"Make a reviewable change."
+"Reality"
+"Inspect the actual result."
+"Incident"
+"Name what escaped the checks."
+"Control"
+"Prevent the same failure class."
+"Recheck"
+"Repeat the failure; record evidence."
+"Return to expectation"
+Evidence annotation near the diagnostic, separated by a fine rule:
+"FT / FIGHTER"
+"Geometry passed. Design missed."
+"Add independent visual review."
+"Illustrative diagnostic"
+Footer:
+"PUBLIC ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / METHOD"
+"18 OCT 2026"
+
+Do not add text, facts, results, counts, pseudo-code or made-up UI. Do not imply this is current game status or that the control has passed. Six stations and complete return geometry are essential. Use full-width text rows, labels 60px and descriptions 48px; do not squeeze labels into half columns. Each description should fit one line if possible. Let the small diagnostic sit beside FT with the two-line readable evidence below it. No miniature text. Dense information should look deliberately typeset, with at least 45px outer margins and no clipping.

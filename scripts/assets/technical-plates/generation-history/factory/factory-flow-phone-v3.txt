@@ -1,0 +1,18 @@
+Use case: infographic-diagram
+Asset type: A complete commissioned technical illustration for Woodhouse, portrait 2:3, 1024x1536.
+Primary request: Redraw the operating loop as an exquisitely typeset PHONE technical plate. Text-first editorial hierarchy, with five distinct small engraved instrument illustrations. The whole plate at 350px wide must be comfortably readable. Do not make a poster with a gigantic headline or a large scenic illustration.
+Scene/backdrop: EXACT uniform solid DARK INK RGB(8,13,25), hex #080D19 throughout. Absolutely no gradient, grain, texture, vignette, shadow or glow. The whole background is one flat color. Pale #EAF0FA lettering, cyan #79D8FF strokes, lime #E9FF49 human authority and connected return route. No other backgrounds.
+Typography/composition: Top header 70px, one line. Five broad open horizontal annotation lanes, each 230px tall, without boxes or badges. In each lane use a 72px main label and 56px body text. Put all words to the left, starting x=70 and having 700px available. Put a small authored line illustration in the rightmost 220px; it must never reduce the text size. Body lines are deliberately short. Leave the far-left 35px clear for the return arrow. Bottom footer at 34px. No text smaller than 34px anywhere. Illustration detail must stay secondary to this typography. No numbered vertical rail.
+Actual systems drawing: The five lanes read top-to-bottom. Their instruments are respectively a lime drafting plan/control wheel; branching/rejoining code terminals without robots; a candidate slip in a precise caliper/check fixture; a live-version observation monitor/rack without invented graphs; a handset and human observation symbol. Cyan path descends in the far-right instrument column, with an arrow at each next instrument. From the last instrument, a lime evidence-return route runs along the bottom, up the far-left margin, and into the first drafting plan. Its large arrowhead visibly ends at the human-authority plan. Only this return arrow and the plan use lime. There are NO scenery, people drawings, buildings, trucks, robots, dashboard tiles, charts or invented measurement numbers.
+Exact text and explicit lane arrangement:
+HEADER: "The operating loop"
+LANE 1: "Human operator" / "Goal · limits · owner"
+LANE 2: "Software agents" / "Bounded tasks" / "Reviewable changes"
+LANE 3: "Qualification" / "Exact candidate" / "Record what passed"
+LANE 4: "Production" / "Observe the named" / "live version"
+LANE 5: "Real use" / "People · devices" / "Environments"
+RETURN annotation at bottom, large56px: "Evidence returns to the human"
+SMALL NOTE at bottom: "Release gates apply"
+FOOTER34px two lines: "WOODHOUSE / FACTORY-FLOW" / "Reviewed 18 October 2026"
+A small top margin annotation34px: "METHOD, NOT PORTFOLIO STATUS"
+Meaning constraints: Owning qualification/release gates apply before production. Tests and live deployed identity do not prove real people/device use. Real-use evidence changes the next human decision. This is a method, not a statement that projects passed. Draw all real paths connected. Render every listed text once verbatim. Crisp commissioned engineering-publication craft, flat dark line-art. No giant slogan, default flowchart, central numbered-oval rail, glow, gradient or tiny type.

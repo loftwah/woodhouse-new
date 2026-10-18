@@ -1,0 +1,36 @@
+Use case: infographic-diagram
+Create an independently composed native PHONE infographic, portrait1:2,1024x2048, for Woodhouse's high-end engineering publication. This is a NEW editorial composition. Flat solid #080D19 background edge-to-edge; pale #EAF0FA type, precise cyan #79D8FF software linework, acid lime #E9FF49 for human direction, coral #FF746A only for a labelled constraint. No paper, decorative glow, grids, glass, gradient or texture. No people, robots, physical machines, aircraft or servers. Do not draw a central vertical rail, oval circuit, giant numbers, or connected repeating pictograms.
+
+Subject: six changes in working practice, from composing tools to coordinating a software factory. Draw SIX DISTINCT small actual SOFTWARE artefact illustrations beside six full-width typographic fields: compatible module tabs; a direction point beside a change document; a work item split into owned tasks; independent concurrent diff branches with a separate review mark; an exact-revision tag beside unnamed checks; a compact intent/work/evidence record. Each illustration must be specific to its practice. No invented hashes, task numbers, labels, dates, check names or passed-state claims. These illustrations are conceptual notation, not screenshots or code evidence. The illustrations are no larger than170px wide and100px tall, placed to the right of a heading or between heading and text. Text gets the full available width. Do NOT link the six fields with one vertical rail. The top-to-bottom reading sequence supplies the order. Use subtle horizontal rules and deliberate white space rather than cards or circles around everything.
+
+Typography is mandatory. At1024px source width the title is56px maximum and principal field labels56px; explanation48px. This yields about19–20px principal and16px body at350px display width. No word in the principal fields larger than60px. Do not turn the title or field names into oversized slogans. Do not place body text into a half-column; explanations are full width with intentional line breaks. Use Bricolage Grotesque-like headings and a clean readable body sans.
+
+Exact text:
+Modest title: "How the work changed"
+Field1:
+"Compose tools"
+"Plugins · APIs · services"
+Field2:
+"Work in a pair"
+"One human, one agent."
+Field3:
+"Delegate work"
+"Bounded tasks. Explicit owners."
+Field4:
+"Work in parallel"
+"Competing changes."
+"Independent review."
+Field5:
+"Qualify the result"
+"Exact revision. Named release gates."
+Field6:
+"Operate a factory"
+"Tie intent and work"
+"to release evidence."
+Small readable48px constraint at bottom:
+"Working habits, not dated steps."
+Footer32px:
+"SOURCE / FOUNDING ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / LINEAGE · 18 OCT 2026"
+
+The six fields must be complete, equally readable and visually distinct. No invented chronology and no loop back to composition. No huge unused poster area. It should feel like a carefully typeset illustrated engineering article page, not a slogan slide or default flowchart.

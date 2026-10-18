@@ -1,0 +1,25 @@
+Use case: infographic-diagram material phone-readability correction
+Edit the attached native1:2 Woodhouse lineage plate. Preserve its six distinct SOFTWARE artefact drawings, six-field open editorial register, dark/cyan/lime style, complete exact wording, no vertical rail, no invented chronology. Keep the moderate title and current principal heading sizes unchanged.
+
+The explanatory type is materially TOO SMALL at350px display width. Increase ALL explanatory text by40% from the current image. This is the sole essential correction. Body text should be about80% of the visible principal heading height, NOT the current50–55%. At the actual887px-wide source, use at least41px body versus roughly50px headings; this gives16px body at350px. Do not shrink these words to accommodate drawings. The six drawings must become smaller or move into the far-right HEADER areas, maximum80px source height, while each explanation is placed BELOW the drawing in a FULL-WIDTH row. The tall canvas has enough space: reduce the current large row padding, give body two lines where specified.
+
+These are the EXACT body line breaks required:
+Compose tools:
+"Plugins · APIs · services"
+Work in a pair:
+"One human, one agent."
+Delegate work:
+"Bounded tasks. Explicit owners."
+Work in parallel:
+"Competing changes."
+"Independent review."
+Qualify the result:
+"Exact revision."
+"Named release gates."
+Operate a factory:
+"Tie intent and work"
+"to release evidence."
+
+Do not put any body in a narrow half column. In particular split Exact revision/Named release gates into TWO full-width lines and enlarge it; it must not be squeezed to one small line alongside the tag drawing. The no-dated-steps constraint can stay current size or increase. Source footer stays compact and unchanged. All meaning remains identical.
+
+Keep title "How the work changed", principal labels "Compose tools", "Work in a pair", "Delegate work", "Work in parallel", "Qualify the result", "Operate a factory", constraint "Working habits, not dated steps.", footers "SOURCE / FOUNDING ACCOUNT · 28 SEP 2026" and "WOODHOUSE / LINEAGE · 18 OCT 2026". No extra words or changed facts. Native portrait1:2. Do not recreate a rail or enlarge headings. This is a body-size and full-width-row correction, not a new style.

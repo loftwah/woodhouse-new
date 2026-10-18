@@ -1,0 +1,21 @@
+Use case: infographic-diagram
+Asset type: Finished Woodhouse commissioned generated technical artwork for narrow phone reading.
+CRITICAL NATIVE OUTPUT SIZE: exactly1024x2048 pixels, aspect ratio1:2. This is a TALL new composition, not a1536px portrait stretched or cropped. Allocate the full2048px canvas.
+Primary request: Recompose the entire software system for comfortably readable meaning at a280px CONTENT width. Core explanatory text must be a true72px at1024px source (minimum64px only if explicitly specified below); main labels88px. This is much larger than earlier attempts. All core words are FULL-WIDTH left-aligned statements, max940px width with deliberate short line breaks. Do not reduce type to fit beside drawings. Small software artefact illustrations sit only in leftover negative space near the right margin, and stay at most200px wide. Less title height, far less drawing detail, generous typographic rows. No half-column text. No tiny core explanations.
+Style: Exact DARK INK#080D19 ground edge-to-edge; pale#EAF0FA grotesque sans-serif type; crisp cyan#79D8FF software document and browser linework; lime#E9FF49 human authority; coral#FF746A labelled stops. No paper, gradients, decorative glow, shadow, texture, figures, robots, hardware, machines, charts, invented numbers, URLs, versions, results or tiny labels. Simple source/diff/candidate/checks/browser software artefacts, no physical manufacturing metaphor. No generic flowchart boxes or numbered-oval rail.
+This is a METHOD, not a claim that projects passed. Every real route connects to its objects; every return genuinely reconnects, every terminal stop ends. All exact text listed below appears once; source footer is quiet32px. No extra wording.
+Subject: Six-stage operating loop. Native1024x2048.
+Read top to bottom in six open typography-first regions. A thin cyan wire along the far right connects task brief -> branching/rejoining source diffs -> SEPARATE review witness and held revision -> candidate/checks record -> named-version product browser -> separate real-use browser/phone observation note. Make no shortcut. A continuous lime arrow from final real-use note runs BELOW the return annotation, UP the far-left margin and ends into Human intent. Only one arrowhead at the human destination. Lines must not be severed by words.
+Typography: Main labels88px; all explanatory labels72px; header76px max one line; footer32px. The prose may occupy almost the full width; shrink drawings, not type.
+Exact text arranged as:
+HEADER "The operating loop"
+1 "Human intent" / "Goal · limits · owner"
+2 "Coding agents" / "Bounded tasks" / "Reviewable changes"
+3 "Independent review" / "Check the held revision"
+4 "Qualification" / "Exact candidate" / "Record what passed"
+5 "Production" / "Observe the named" / "live version"
+6 "Real use" / "People · devices" / "Environments"
+RETURN "Evidence returns" / "to the human"
+NOTE "Owning release gates apply"
+FOOTER "METHOD, NOT PORTFOLIO STATUS" / "WOODHOUSE / FACTORY-FLOW" / "Reviewed 18 October 2026"
+Keep Independent review and Qualification visibly separate. The same candidate remains held through them.

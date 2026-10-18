@@ -1,0 +1,7 @@
+# One operator. Independently owned projects.
+
+Built-in imagegen. Generated candidate; MP taste acceptance not established.
+
+Use case: infographic-diagram targeted colour correction
+Edit this landscape project-network infographic. Keep all project names, purposes, independent branch connections, titles, authority wording, own-source/release-gate boundary and source date EXACTLY unchanged. The map already correctly shows independent projects and must not gain project-to-project connections.
+Change ONLY the project-marker and ownership-bar colours: all ten coral/red project marker circles, their marker letters and the short coral/red lines beneath the project purposes must become PALE #EAF0FA or cyan #79D8FF. They must not be coral because coral denotes a STOP in Woodhouse. There is no blocked project status implied here. Keep lime #E9FF49 for human direction, cyan for coding agents and work connections. All background ink#080D19, with no glow or gradient. Do not add any other word, symbol, label, status or visual.

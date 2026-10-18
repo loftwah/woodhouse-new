@@ -1,84 +1,18 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/risk-controls.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: right
-grid-columns: 1
-vertical-gap: 22
-
-plate_title: "Match the control to the stakes." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 58
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-risk_register: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 2
-  grid-columns: 3
-  grid-gap: 44
-throw: "00 / THROWAWAY\nDiscard cheaply" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-experiment: "01 / EXPERIMENT\nKeep useful learning" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-project: "02 / PROJECT\nProtect the work" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-product: "03 / PRODUCT\nProve real use" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-commercial: "04 / COMMERCIAL\nProtect money\nand commitments" {
-  shape: text
-  style.font-color: "#FF746A"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#FF746A"
-  style.stroke-width: 0
-}
-treasured: "05 / TREASURED\nRestrict access\nto what matters" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 32
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-}
-}
-plate_note: "WOODHOUSE / RISK CLASSIFICATION · 18 OCTOBER 2026 · A register, not a maturity ladder.\nNo arrows join the classes. Choose controls for the actual consequence; a project need\nnot progress through them." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 23
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Controls follow consequences" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+throw: "Throwaway\nDiscard cheaply; keep it reversible" {}
+experiment: "Experiment\nRetain useful observations" {}
+project: "Project\nProtect source and history" {}
+product: "Product\nObserve real use" {}
+commercial: "Commercial\nProtect money and commitments\nBound authority and fulfilment" {}
+treasured: "Treasured\nRestrict access to what must stay private" {}
+note: "Classes, not stages. Choose proportionate controls for the actual consequence; no maturity or progress is implied." {shape: text; near: bottom-center; style.font-size: 16}

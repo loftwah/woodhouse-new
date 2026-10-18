@@ -1,0 +1,22 @@
+Use case: infographic-diagram
+Asset type: Finished Woodhouse commissioned generated technical artwork for narrow phone reading.
+CRITICAL NATIVE OUTPUT SIZE: exactly1024x2048 pixels, aspect ratio1:2. This is a TALL new composition, not a1536px portrait stretched or cropped. Allocate the full2048px canvas.
+Primary request: Recompose the entire software system for comfortably readable meaning at a280px CONTENT width. Core explanatory text must be a true72px at1024px source (minimum64px only if explicitly specified below); main labels88px. This is much larger than earlier attempts. All core words are FULL-WIDTH left-aligned statements, max940px width with deliberate short line breaks. Do not reduce type to fit beside drawings. Small software artefact illustrations sit only in leftover negative space near the right margin, and stay at most200px wide. Less title height, far less drawing detail, generous typographic rows. No half-column text. No tiny core explanations.
+Style: Exact DARK INK#080D19 ground edge-to-edge; pale#EAF0FA grotesque sans-serif type; crisp cyan#79D8FF software document and browser linework; lime#E9FF49 human authority; coral#FF746A labelled stops. No paper, gradients, decorative glow, shadow, texture, figures, robots, hardware, machines, charts, invented numbers, URLs, versions, results or tiny labels. Simple source/diff/candidate/checks/browser software artefacts, no physical manufacturing metaphor. No generic flowchart boxes or numbered-oval rail.
+This is a METHOD, not a claim that projects passed. Every real route connects to its objects; every return genuinely reconnects, every terminal stop ends. All exact text listed below appears once; source footer is quiet32px. No extra wording.
+Subject: Two-feed publication, native1024x2048. Source project metadata goes to Reviewed public record -> Woodhouse page human/agent views -> Visitor's browser. A SEPARATE original-art route travels directly from the project-site art frame down the far-left margin into the visitor-browser image aperture, bypassing metadata. Label that source route with a large horizontal statement above the browser, never small rotated lettering. If original artwork fails, dashed conditional route from Woodhouse illustration enters browser; BOTH its text and credit change. Private repository/conversation/credential packet sits disconnected at bottom, ends at coral terminal, and has NO route to public work. No publication bypass.
+Typography: Main labels80–88px; EVERY core explanation72px; header72px max two lines; footer32px. Full-width left aligned text, tiny secondary software drawings in leftover space only.
+Exact text:
+HEADER "Artwork keeps" / "its source"
+"Project site" / "Title · icon · summary" / "Original artwork URL"
+"Reviewed public record" / "Public-safe"
+"Woodhouse page" / "Human and agent views"
+"Original artwork direct"
+"Visitor's browser" / "Links and credits" / "the project"
+"If source art fails"
+"Woodhouse illustration" / "Text and credit change"
+"PRIVATE" / "NO PUBLICATION"
+"Repository bodies"
+"Credentials · conversations"
+FOOTER "WOODHOUSE / PUBLICATION-PATH" / "Reviewed 18 October 2026"
+Keep source art and fallback art visibly distinct, but as abstract image glyphs, not scenic pictures. Source artwork retains project ownership.

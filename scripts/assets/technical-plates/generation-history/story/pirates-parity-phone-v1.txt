@@ -1,0 +1,25 @@
+Use case: infographic-diagram
+Commissioned Woodhouse technical-publication infographic. Finished generated raster art with exact typography and authored technical linework. Flat uniform dark ink #080D19 edge-to-edge. Pale #EAF0FA text; precise cyan #79D8FF work paths; acid lime #E9FF49 human direction/identity; labelled coral #FF746A stops. Bricolage Grotesque-like distinctive humanist headings, clean readable sans body, compact monospaced project/source labels. No paper, grain, gradients, vignette, glow, glass, decorative grids, stock UI cards, ornamental geometry, default boxed flowcharts or oval rail. No invented counts, results, dates, project dependencies or statuses. No people, robots, physical machines, servers, aircraft, hardhats or engineering hardware. Draw only SOFTWARE artefacts and truthful relationships. Source notation belongs in a quiet footer. Moderate title, most area devoted to the actual system. All words quoted below are required exact text; don't invent extra prose. PHONE edition portrait2:3,1024x1536, independently composed, labels60px and full-width explanation48px. Footer32px. The stop and source-gap exceptions must read comfortably at350px.
+Subject: Pirates source-backed reconstruction before expansion. The central drawing is a compact top-to-bottom registered SOFTWARE comparison: an original-rule strip transfers only evidenced marks into a reconstructed-rule strip; a tiny side branch for source gaps ends at a labelled coral STOP. Beneath the comparison is an unmistakable coral horizontal barrier with a padlock and "Gate B / locked". No arrow crosses it. Do not draw pirate ships or treasure maps: this is source reconstruction, not game advertising. Tiny rule strips are conceptual technical notation, not a fabricated product capture.
+Open full-width typographic bands use all exact words:
+"Parity before expansion"
+"PR / PIRATES"
+"Original evidence"
+"Rules and provenance."
+"Reconstruction"
+"Evidenced rules only."
+"Integrated parity"
+"Compare the whole game."
+"Gate B / locked"
+"Expansion waits."
+Coral exception, large:
+"Source gap / STOP"
+"An unknown stays unknown."
+"Plausibility is not evidence."
+Below the locked barrier a conditional annotation,48px:
+"Expansion only after parity"
+"and the owning gate's acceptance."
+Footer32px:
+"HISTORICAL PROJECT EXAMPLE"
+"WOODHOUSE / METHOD · 18 OCT 2026"
+All meaning retained in the image. The exception is not tiny marginalia. Do not imply this plate declares Gate B open. The owning acceptance gate is mandatory.

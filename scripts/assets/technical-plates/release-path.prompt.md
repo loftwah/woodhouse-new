@@ -1,0 +1,31 @@
+# Qualify what you ship
+
+Built-in imagegen. Generated candidate, not MP acceptance.
+
+Use case: infographic-diagram
+Asset type: Complete finished generated raster artwork for Woodhouse, commissioned high-end engineering-publication technical plate.
+Visual craft: Flat uniform DARK INK #080D19 RGB8,13,25 edge-to-edge, pale #EAF0FA type, cyan #79D8FF exact software-document linework, lime #E9FF49 human authority, coral #FF746A explicitly labelled stops. Grotesque sans-serif typography throughout, compact monospaced source notes. Clean crisp strokes, deliberate line-weight hierarchy, open dark space. Software artefacts only: source document, candidate packet, review witness, checks receipt, abstract browser/product viewport. No people, robots, hands, hardware, racks, physical machinery, fake graphs, invented URLs, version numbers, result values, workforce counts, decorative glow, glass, shadows, paper ground, gradients or texture. No giant slogan, default flowchart boxes, numbered-oval rail or generic cards.
+Subject: Release qualification belongs to one exact candidate. Source, scope and identity are known. The owning repository's review/checks and reserved decisions apply. A qualified candidate can deploy and its live identity must be observed. Real use, human acceptance and physical observation establish separate claims. If the candidate changes, earlier checks no longer qualify it; stop that claim and revise/repeat affected checks. Never imply a test pass proves production or physical use. All lines and arrowheads must have correct topology; a coral stop terminates, and a separate dashed revision return route reconnects to review. This is a method, not evidence that any actual project passed.
+Text accuracy: Render listed words exactly once, no extra labels except generic "candidate", "review" and "checks" inside documents. No fictitious identity strings or examples.
+Composition: Wide3:2 1536x1024. Distinct "revision dossier" geometry, not an operating loop. A large held candidate packet at left sends ONE cyan identity line across a review-witness sheet and checks receipt at center to an abstract production browser at right. Use a thin identity strap passing under these software artefacts to show they concern the same candidate. Beneath the candidate, a second displaced changed-revision packet branches down to a coral terminal rule labelled STOP; it cannot join production. A thin dashed cyan return from that changed packet reconnects at the center review/checks artefacts, labelled repeat affected checks. Under the production browser, three separate open observation notes stand independently: Real use, Human acceptance, Physical observation. These are not automatic stages of one passing test. Use a thin separation rule and the label Separate claims. Illustrations generous but secondary to44px principal labels and32px explanatory labels. Header64px max, footer26px.
+Text (verbatim):
+"Release follows one revision"
+"Exact candidate"
+"Source · scope · identity"
+"Review and qualify"
+"Owning repository gates"
+"Reserved decisions apply"
+"Only the qualified version"
+"Production"
+"Deploy; inspect live identity"
+"Candidate changed"
+"STOP / Earlier checks no longer qualify"
+"Revise; repeat affected checks"
+"Real use"
+"People · devices"
+"Human acceptance"
+"Physical observation"
+"Separate claims"
+"Tests are not live observations"
+"WOODHOUSE / RELEASE-PATH"
+"Reviewed 18 October 2026"

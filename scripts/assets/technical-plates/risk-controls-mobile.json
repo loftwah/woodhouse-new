@@ -1,0 +1,13 @@
+{
+  "title": "Controls follow consequences",
+  "description": "A comparison register of work classes and proportionate controls, not a maturity sequence.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "126c27ecb868caadada9f1420e14aa54b689088faba21c7f01d8bb4121cad0e9",
+  "masterSha256": "35797eea2466476fae50c3a7d2bb2240b46d15abef466e016964f7be29446ac3",
+  "prompt": "risk-controls.prompt.md",
+  "master": "risk-controls.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

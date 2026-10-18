@@ -1,110 +1,25 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/agent-policy.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: right
-grid-columns: 1
-vertical-gap: 22
-
-plate_title: "Authority has a boundary." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 58
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-decision: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 4
-  grid-gap: 28
-observe: "Observe\nEvent · schedule\nSafe production read" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-propose: "Propose\nDraft · issue\nChangeset" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-authority: "WITHIN\nAUTHORITY?" {
-  label.near: center-center
-  shape: diamond
-  style.font-color: "#E9FF49"
-  style.font-size: 24
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 240
-  height: 190
-  style.bold: true
-}
-execute: "Yes / execute\nQualify the\nbounded result" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-observe -> propose: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-propose -> authority: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-authority -> execute: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22;}
-}
-reserved: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 3
-  grid-gap: 25
-mp: "HUMAN" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#E9FF49"
-  style.font-size: 35
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 140
-  height: 140
-  style.bold: true
-}
-gate: "RESERVED DECISIONS\nAccounts · money · rights\nIrreversible actions and explicit gates" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 30
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-}
-outcome: "APPROVE / Act within scope\nRETURN / Revise and requalify\nREJECT / Record it and stop" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 30
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-}
-plate_note: "WOODHOUSE / AGENT POLICY · 18 OCTOBER 2026 · Ordinary authorised work proceeds.\nReserved decisions go to their actual owner. Existing product, privacy and release\ngates stay in force; agent approval grants no new authority." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 23
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Act within the authority you have." {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+observe: "Observe\nEvent · schedule\nSafe production read" {}
+propose: "Propose\nDraft · issue\nChangeset" {}
+authority: "Check authority" {}
+execute: "Yes / execute\nQualify the\nbounded result" {}
+mp: "Reserved human decision\nAccounts · money · rights\nIrreversible actions and explicit gates" {}
+stop: "Reject\nRecord and stop" {}
+observe -> propose: ""
+propose -> authority: ""
+authority -> execute: "Ordinary authorised work"
+authority -> mp: "Reserved decision or explicit gate"
+mp -> execute: "Approve within scope"
+mp -> propose: "Return for revision" {style.stroke-dash: 5}
+mp -> stop: "Reject"
+note: "MP is not the default decision engine for routine authorised work. Approval, return and rejection have different outcomes." {shape: text; near: bottom-center; style.font-size: 16}

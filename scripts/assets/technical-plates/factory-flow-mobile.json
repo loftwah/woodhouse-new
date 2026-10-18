@@ -1,0 +1,13 @@
+{
+  "title": "From intent to evidence",
+  "description": "Human direction, bounded agent work, independent review, qualification, production and a real-use evidence return form a complete operating circuit.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "bd55870179b4c257878c44454594a6f520801e15977c1ab927dacaef2e957bae",
+  "masterSha256": "a79c9086d4b8fbabb6850d90d9d81a7c7a79bd687c4745f96fef750e18ec8fd9",
+  "prompt": "factory-flow.prompt.md",
+  "master": "factory-flow.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}
