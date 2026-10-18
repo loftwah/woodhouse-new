@@ -37,7 +37,7 @@ as a compelling project story. An article needs an argument, a useful example an
 - Edit the argument before polishing the words. Read the draft aloud, check its factual claims
   against current sources, then cut the passages that repeat the point. No word blacklist or
   detector score can establish authorship or substitute for an edit.
-- Finish with an action the reader can actually take. Preserve the project's current availability;
+- Finish with a useful action or an earned conclusion. Preserve the project's current availability;
   a prototype can earn a good article without becoming a launch or a customer success story.
 
 ### Brief, draft, edit
@@ -76,8 +76,9 @@ Before publication, make these editing passes:
 
 Reviewed 18 October 2026. Keep these distinctions in future project stories:
 
-- A source-controlled fictional postcard gave the independence argument something a reader could
-  inspect. It did not establish unfamiliar-creator onboarding or a completed migration.
+- A fictional postcard whose publication stayed under the guestbook's control gave the independence
+  argument something a reader could inspect. It did not establish unfamiliar-creator onboarding or
+  a completed migration.
 - An app operator controlling publication does not establish that they own a contributor's photo
   or have a legal right to redistribute it. Name the actor and the precise control involved.
 - Explaining the cost of separate contracts and deployments made the case more credible. Keep a
