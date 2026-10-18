@@ -10020,13 +10020,13 @@
           ]
         },
         "data": {
-          "title": "Your apps should get along.",
-          "kind": "Field note",
-          "deck": "A guestbook, a creator’s collection and a studio: three useful jobs, without one inseparable application.",
+          "title": "App Composer is built to come apart",
+          "kind": "Case study",
+          "deck": "A guestbook lends a photo to a creator’s page and keeps control of its publication. Inside App Composer’s working argument for independent software.",
           "review_date": "2026-10-18",
-          "source_reference": "Public production pages, exact app build identities and published release evidence checked on 18 October 2026. Public-safe derived explanation; no private source, profile inventory or conversation is reproduced. The connected example and each product retain their own release and acceptance limits.",
-          "lead": "Here is a concrete reason to care about independently owned software: one app can become more useful without owning everything around it.",
-          "lesson": "Show the useful connection and the source you keep, before explaining the machinery.",
+          "source_reference": "App Composer’s public demo, release page, Get Ready and Init, plus the standalone Here / there and Linkarooie pages, inspected on 18 October 2026. The published 18 October project status supplies the existing release and onboarding limits. The demonstrated postcard is labelled fictional; no private contribution or owner session is reproduced.",
+          "lead": "In App Composer’s live example, a photo appears in a guestbook and a creator’s collection. Hide it at the source and both public views stop showing it.",
+          "lesson": "Each app should remain useful on its own. Connecting them should preserve that independence.",
           "public_safe": true,
           "projects": [
             "$ref:project-app-composer"
@@ -10034,229 +10034,454 @@
           "content": [
             {
               "_type": "prose",
-              "_key": "example",
+              "_key": "composer-section-0",
               "_version": 1,
               "content": [
                 {
                   "_type": "block",
+                  "_key": "b0",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Follow a photo.",
+                      "_key": "s0",
+                      "text": "A small connection with consequences",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b1",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Here / there collects photographs and messages. The owner decides what is public. Linkarooie features approved entries beside a creator’s own links, and each photo opens its original contribution. The source keeps control of its visibility; downloaded copies cannot be recalled.",
+                      "_key": "s1",
+                      "text": "Open the connected example. Here / there is a photo guestbook: an invited contributor sends a photograph and message, and the owner chooses whether to publish it. Linkarooie is a creator’s page, with links to music, games and other work. It can feature an approved guestbook photo beside those links.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s2",
+                      "text": "The public example uses a clearly labelled fictional postcard. Follow its card out of the collection and you arrive at the original contribution. These are separate apps doing separate jobs. The connection is small enough to understand without a diagram.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b3",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l3",
                       "href": "https://composer.loftwah.com/demo"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Try the connected pair",
+                      "_key": "s3",
+                      "text": "Try the connected example",
                       "marks": [
-                        "target"
+                        "l3"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b4",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s4",
+                      "text": "Now consider what should happen when the owner hides that contribution. A second public copy, forgotten in the collection, would leave the owner chasing a contributor’s photograph around the system. Here, Linkarooie checks the guestbook’s current approved items. Hide or delete the source and the controlled photo feature disappears from both public views on the next request. An unavailable or private contribution stays hidden.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b5",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s5",
+                      "text": "That control has a limit: someone who already downloaded the photograph still has a copy.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-section-1",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "b6",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Now open the pieces.",
+                      "_key": "s6",
+                      "text": "Each app keeps its job",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b7",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The same pair runs inside App Composer and at independent addresses. Each application has its own source repository, configuration and data. The public release page identifies the exact versions mounted in the studio. Composition connects those parts without handing every job to one application.",
+                      "_key": "s7",
+                      "text": "A creator’s page should be able to display a guestbook contribution without becoming a guestbook. The guestbook should be able to accept a photograph without learning how to arrange a creator’s favourite links. Each app keeps responsibility for the work it understands.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b8",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s8",
+                      "text": "App Composer connects the two through a versioned contract: an agreed way for one app to ask the other for approved items. Each has its own source repository, configuration and storage. The pair runs inside Composer, and the apps also have standalone addresses. The release page identifies the source versions running together.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b9",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l9",
                       "href": "https://guestbook.loftwah.com/"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Open the standalone guestbook",
+                      "_key": "s9",
+                      "text": "Open Here / there on its own",
                       "marks": [
-                        "target"
+                        "l9"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b10",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l10",
                       "href": "https://showcase.loftwah.com/"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Open the standalone collection",
+                      "_key": "s10",
+                      "text": "Open Linkarooie on its own",
                       "marks": [
-                        "target"
+                        "l10"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b11",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l11",
                       "href": "https://composer.loftwah.com/release"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Compare the running source versions",
+                      "_key": "s11",
+                      "text": "Inspect the running versions",
                       "marks": [
-                        "target"
+                        "l11"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b12",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s12",
+                      "text": "This is a worthwhile constraint on the builder. A part has to make sense outside the host that assembled it. Loftwah’s instance supplies the profile, curation and settings; the reusable application has to remain useful to somebody with different work to show.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b13",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s13",
+                      "text": "Separate apps cost something, too. There are contracts to maintain, versions to reconcile and more than one deployment to operate. Putting everything in one application would remove some of that work. The reason to accept it here is specific: the photo’s publication rules stay with the app that received it, while the collection can give it another useful place to appear.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-section-2",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "b14",
                   "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "What can you do with this today?",
+                      "_key": "s14",
+                      "text": "Owning the source still leaves work to do",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b15",
                   "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Explore the working reference, inspect its apps and prepare your own idea through Get Ready and Init. App Composer is operated with an authorised coding agent and your chosen source and cloud account. It is not a one-click hosted service for a new customer yet.",
+                      "_key": "s15",
+                      "text": "App Composer is an agent-operated studio. EmDash supplies content editing and administration. Cloudflare runs the current supported deployment and stores its data. An authorised coding agent works with your source and chosen accounts. Those dependencies matter when deciding whether this is the right tool for you.",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b16",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s16",
+                      "text": "Get Ready checks the actual tools and connections needed to work. Init turns the idea into a portable specification: which apps are involved, what the fields contain, how the result should look and what the agent should build. In the current demo, Make this collection leads to the matching starting configuration. Existing saved drafts stay intact until you choose to act.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b17",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s17",
+                      "text": "That gives the example somewhere to lead. You can inspect a working pair, take a specification and continue with your agent. You still need the accounts and access required to run the result. Fresh-account setup for an unfamiliar creator remains unfinished; Loftwah’s working stack does not establish that anyone can arrive and deploy a site in a click.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b18",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l18",
                       "href": "https://composer.loftwah.com/ready"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Prepare your environment",
+                      "_key": "s18",
+                      "text": "Prepare the environment with Get Ready",
                       "marks": [
-                        "target"
+                        "l18"
                       ]
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b19",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l19",
                       "href": "https://composer.loftwah.com/init"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Shape your own app",
+                      "_key": "s19",
+                      "text": "Configure an app in Init",
                       "marks": [
-                        "target"
+                        "l19"
                       ]
                     }
                   ]
-                },
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-section-3",
+              "_version": 1,
+              "content": [
                 {
                   "_type": "block",
-                  "style": "normal",
+                  "_key": "b20",
+                  "style": "h2",
                   "markDefs": [],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "This is composition, demonstrated now. It is not a completed WordPress migration. That separate programme must show content, URLs, editing and replacement behaviour before a migration claim belongs here.",
+                      "_key": "s20",
+                      "text": "The next change is the test",
                       "marks": []
                     }
                   ]
                 },
                 {
                   "_type": "block",
+                  "_key": "b21",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s21",
+                      "text": "The reason to care about this arrangement arrives after the first version works. A creator wants to reorganise a page. A contribution needs to come down. One app changes while the other still has a job to do. Those ordinary changes expose who controls the content and how much of the system has to move with it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b22",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s22",
+                      "text": "App Composer already demonstrates a useful answer for the guestbook and collection. It has more to prove about another creator setting up and operating their own stack. A WordPress migration is separate unfinished work, with content, URLs and editing behaviour to demonstrate before it earns a claim here.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b23",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s23",
+                      "text": "Open the fictional postcard, follow it back to the guestbook, then open each app at its own address. Decide whether that arrangement suits something you want to build.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b24",
                   "style": "normal",
                   "markDefs": [
                     {
                       "_type": "link",
-                      "_key": "target",
+                      "_key": "l24",
+                      "href": "https://composer.loftwah.com/demo"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "s24",
+                      "text": "Start with the connected pair",
+                      "marks": [
+                        "l24"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b25",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "l25",
                       "href": "/projects/app-composer/"
                     }
                   ],
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Explore App Composer",
+                      "_key": "s25",
+                      "text": "Read the dated App Composer development record",
                       "marks": [
-                        "target"
+                        "l25"
                       ]
                     }
                   ]
