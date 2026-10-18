@@ -1,0 +1,24 @@
+Use case: infographic-diagram
+Commissioned Woodhouse technical-publication infographic. Finished generated raster art with exact typography and authored technical linework. Flat uniform dark ink #080D19 edge-to-edge. Pale #EAF0FA text; precise cyan #79D8FF work paths; acid lime #E9FF49 human direction/identity; labelled coral #FF746A stops. Bricolage Grotesque-like distinctive humanist headings, clean readable sans body, compact monospaced project/source labels. No paper, grain, gradients, vignette, glow, glass, decorative grids, stock UI cards, ornamental geometry, default boxed flowcharts or oval rail. No invented counts, results, dates, project dependencies or statuses. No people, robots, physical machines, servers, aircraft, hardhats or engineering hardware. Draw only SOFTWARE artefacts and truthful relationships. Source notation belongs in a quiet footer. Moderate title, most area devoted to the actual system. All words quoted below are required exact text; don't invent extra prose. LANDSCAPE3:2,1536x1024. Subject: one human directs bounded coding-agent work across independent products. This map is NOT a dependency graph or activity/health report.
+Design a sophisticated open portfolio wiring register. Top-left lime circle labelled "Human direction" emits a short scope line into the cyan "Coding agents" work bracket. That bracket has ten SEPARATE fine cyan take-off stems, one to each independently named project terminal. Use two staggered banks of five terminals across a generous open field, with distinct project markers and a compact purpose beside each. Project terminals must not link to one another. Each terminal ends with a small ownership bar; no single central source database, shared product stack, or release gateway. A large lower boundary note explains ownership. No logos fabricated from other products. Use project marker typography as identity. No cards and no mechanical or architectural factory illustration.
+Exact title: "One operator. Distinct products."
+Authority:
+"Human direction" / "Direction, scope and authority."
+"Coding agents" / "Bounded tasks. Named owners."
+Exact ten independent terminals, each marker and project label plus purpose:
+"BB / Bubbles" / "Game systems."
+"FT / Fighter" / "Authored play."
+"SS / SHOALSHOT" / "Fishing arcade play."
+"P11 / Protocol 11" / "A changing card table."
+"MX / MAX" / "Assistive technology."
+"PR / Pirates" / "Source-backed reconstruction."
+"FM / LoftwahFM" / "Music."
+"SC / Social Club" / "Hospitality."
+"AC / App Composer" / "Environment preparation and independent app composition."
+"AH / Asset Hunter" / "Public capability catalogue; rights per example."
+Bottom ownership annotation, readable:
+"Each project owns its identity, source, data and release gates."
+"Markers identify work; no activity or health is implied."
+Footer:
+"WOODHOUSE / PORTFOLIO RELATIONSHIPS · 18 OCT 2026"
+Keep all ten project names precise. Labels32–36px, purpose28px or larger, footer24px. Calm, exact line routing with no overlapping text.

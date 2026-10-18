@@ -1,0 +1,26 @@
+Use case: infographic-diagram
+Asset type: Finished commissioned generated raster illustration for Woodhouse, high-end engineering-publication technical plate.
+Visual craft: Flat DARK INK #080D19 RGB8,13,25 edge-to-edge. Pale #EAF0FA large precise grotesque sans-serif words. Cyan #79D8FF software routes and document/browser linework. Lime #E9FF49 reviewed public authority. Coral #FF746A a labelled private prohibition only. Clean crisp lines, open dark negative space, strong hierarchy, compact monospaced source footer. No lighting, glow, paper, gradient, glass, shadows or texture.
+Actual system: A project site owns its title/icon/summary and original artwork URL. Public metadata enters a reviewed public-safe record and then the Woodhouse human/agent page views. The visitor's browser receives those views but loads the original artwork DIRECTLY from the project site/source URL. Therefore show TWO genuinely separate routes: metadata to reviewed record to page to browser; original artwork directly from project site to browser. Source artwork keeps its project ownership, credit and project-site link. A disconnected private packet containing repository bodies, credentials and working conversations ends at a coral STOP with no arrow into any public node: there is NO PRIVATE PUBLICATION FEED. If original source artwork fails, the browser uses a Woodhouse illustration and BOTH its text and visible credit change. Illustrations made by Woodhouse are credited to Woodhouse.
+Constraints: Only software artefacts, metadata slips, abstract browser viewports and image frames. No humans, robots, hardware, clouds, fake plots, invented URLs/domains/versions, invented claims or numeric results. Every real arrow joins its source and destination; the private stop terminates. No generic flowchart boxes, giant slogan or numbered central rail. All listed labels appear once verbatim, no tiny extra writing.
+Composition: Wide3:2 1536x1024. A two-feed publication drawing. Project site is a large open source-page/document at upper-left with a small original-art frame attached. The metadata route travels across the upper half into Reviewed public record then Woodhouse page at upper-right. That page forks into Human and agent views, both converging at one large visitor browser at lower-right. The original-art frame has its OWN cyan route running around the far-left and lower edge directly into the browser's image aperture; label the route "Original artwork direct from project". At lower-left, a standalone coral private packet terminates at an unbroken coral stop rule; keep a visible void between it and every public route. At center-bottom, a smaller Woodhouse illustration frame connects conditionally to the browser with a dashed line labelled "If source art fails", carrying the annotation that text and credit change. This is not a linear pipeline and not an operating loop. Main labels44px, explanatory32px, headline64px max, footer26px.
+Exact text:
+"Artwork keeps its source"
+"Project site"
+"Title · icon · summary"
+"Original artwork URL"
+"Reviewed public record"
+"Public-safe"
+"Woodhouse page"
+"Human and agent views"
+"Visitor's browser"
+"Links and credits the project"
+"Original artwork direct from project"
+"PRIVATE / NO PUBLICATION"
+"Repository bodies"
+"Credentials · conversations"
+"If source art fails"
+"Woodhouse illustration"
+"Text and credit change"
+"WOODHOUSE / PUBLICATION-PATH"
+"Reviewed 18 October 2026"

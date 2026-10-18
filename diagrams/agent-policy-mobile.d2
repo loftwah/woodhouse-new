@@ -1,114 +1,25 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/agent-policy-mobile.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: down
-grid-rows: 4
-grid-columns: 2
-horizontal-gap: 16
-vertical-gap: 28
-
-plate_title: "Authority has\na boundary." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 44
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-r0: "01" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t0: "Observe\nEvent · schedule ·\nsafe read" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r1: "02" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t1: "Propose\nDraft · issue ·\nchangeset" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r2: "03" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#E9FF49"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t2: "Check authority\nScope · rights ·\ncost · undo" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r3: "04" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t3: "Within authority\nExecute and qualify\nthe work" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-plate_note: "RESERVED GATE / HUMAN\nAccounts, money, rights\nand\nirreversible actions\nrequire\ntheir real owning\ndecision.\nApprove: act in that exact\nscope.\nReturn: revise and\nrequalify.\nReject: record it and\nstop.\n\nWOODHOUSE / POLICY\nReviewed 18 October 2026" {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 22
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Act within the authority you have." {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+observe: "Observe\nEvent · schedule\nSafe production read" {}
+propose: "Propose\nDraft · issue\nChangeset" {}
+authority: "Check authority" {}
+execute: "Yes / execute\nQualify the\nbounded result" {}
+mp: "Reserved human decision\nAccounts · money · rights\nIrreversible actions and explicit gates" {}
+stop: "Reject\nRecord and stop" {}
+observe -> propose: ""
+propose -> authority: ""
+authority -> execute: "Ordinary authorised work"
+authority -> mp: "Reserved decision or explicit gate"
+mp -> execute: "Approve within scope"
+mp -> propose: "Return for revision" {style.stroke-dash: 5}
+mp -> stop: "Reject"
+note: "MP is not the default decision engine for routine authorised work. Approval, return and rejection have different outcomes." {shape: text; near: bottom-center; style.font-size: 16}

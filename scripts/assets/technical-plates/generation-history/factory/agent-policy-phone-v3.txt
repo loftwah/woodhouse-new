@@ -1,0 +1,25 @@
+Use case: infographic-diagram
+Asset type: Finished Woodhouse commissioned generated technical artwork for narrow phone reading.
+CRITICAL NATIVE OUTPUT SIZE: exactly1024x2048 pixels, aspect ratio1:2. This is a TALL new composition, not a1536px portrait stretched or cropped. Allocate the full2048px canvas.
+Primary request: Recompose the entire software system for comfortably readable meaning at a280px CONTENT width. Core explanatory text must be a true72px at1024px source (minimum64px only if explicitly specified below); main labels88px. This is much larger than earlier attempts. All core words are FULL-WIDTH left-aligned statements, max940px width with deliberate short line breaks. Do not reduce type to fit beside drawings. Small software artefact illustrations sit only in leftover negative space near the right margin, and stay at most200px wide. Less title height, far less drawing detail, generous typographic rows. No half-column text. No tiny core explanations.
+Style: Exact DARK INK#080D19 ground edge-to-edge; pale#EAF0FA grotesque sans-serif type; crisp cyan#79D8FF software document and browser linework; lime#E9FF49 human authority; coral#FF746A labelled stops. No paper, gradients, decorative glow, shadow, texture, figures, robots, hardware, machines, charts, invented numbers, URLs, versions, results or tiny labels. Simple source/diff/candidate/checks/browser software artefacts, no physical manufacturing metaphor. No generic flowchart boxes or numbered-oval rail.
+This is a METHOD, not a claim that projects passed. Every real route connects to its objects; every return genuinely reconnects, every terminal stop ends. All exact text listed below appears once; source footer is quiet32px. No extra wording.
+Subject: Authority fork, native1024x2048. Observe -> Propose -> Check authority. TWO SEPARATE branches originate at Check authority: ordinary authorised work goes directly to Within authority / Execute and qualify; reserved decisions bypass that result and go to MP. DO NOT draw any arrow from ordinary execute to MP. From MP, Approve rejoins the execute/qualify result, Return reconnects ONLY to Propose with a visible arrowhead, Reject ends at a coral stop with NO continuation. A production read/event never grants new permission. Draw only sparse software slips; no big outlined cards.
+Typography: Main labels80–88px; EVERY core explanation64px MINIMUM, preferably72px. Never smaller. Header72px max two lines, footer32px. Core words get full-width rows, no half columns. Main title less than10% of canvas. Small drawings in spare right margin only. This text-first policy composition must be readable at280px content width.
+Exact text in order:
+HEADER "Authority has" / "a boundary"
+"Observe" / "Event · schedule · safe read"
+"Propose" / "Draft · issue · changeset" / "Evidence · risk · rollback"
+"Check authority" / "Scope · rights · cost" / "Recovery"
+"Within authority" / "Execute and qualify"
+"Reserved decision · MP"
+"Accounts · money · rights"
+"Irreversible actions"
+"Explicit owning gates"
+"Approve · act in exact scope"
+"Return · revise and requalify"
+"Reject · record and stop"
+"Events grant no new authority"
+"Product, privacy and" / "release gates remain"
+FOOTER "WOODHOUSE / AGENT-POLICY" / "Reviewed 18 October 2026"
+Preserve all ordinary/reserved authority semantics and accurate branch topology. No new human approval gate for routine work.

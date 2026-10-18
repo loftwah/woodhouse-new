@@ -1,0 +1,13 @@
+{
+  "title": "Qualify what you ship",
+  "description": "Check the exact candidate. A change invalidates affected checks; production and real-use observations remain separate claims.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "288e4dc41e37a45d848b5ef555d2043ec58720817e74da4db3e7342062208a57",
+  "masterSha256": "c0e572bd43e7ef775fb60b765a75ad546efa89b7c4171046aabe2abe249e5d06",
+  "prompt": "release-path.prompt.md",
+  "master": "release-path.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

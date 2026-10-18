@@ -1,0 +1,39 @@
+Use case: infographic-diagram
+Create ONE finished Woodhouse WIDE technical-book plate, landscape3:2,1536x1024. This is a targeted replacement for a failed generic-icon lineage plate. The illustrations must explain the software working practices; changing the captions under interchangeable browser/cloud/gear/document icons would fail.
+
+VISUAL WORLD
+Flat dark ink #080D19 edge-to-edge, pale #EAF0FA readable typography, precise cyan #79D8FF draughtsmanship, lime #E9FF49 human intent and ownership, restrained coral #FF746A for explicitly marked removed/conflicting diff lines. Fine line hierarchy and careful annotation like a commissioned engineering-book foldout. No texture, gradients, glows, grids, glass, paper or ornamental components. No people, head silhouettes, robots, physical hardware, clouds, gears, puzzle-piece icons, dashboards or server stacks. No huge slogan. Title no larger than52px at1536 width; stage labels34px and explanation30px. Source footer24px.
+
+COMPOSITION
+A coherent annotated SOFTWARE WORK STUDY occupying most of the page. Follow six practices in a continuous, understated reading sequence across two levels; a fine dog-leg continuation clearly joins practice3 to practice4. The artefacts are detailed, content-bearing software records and diffs, drawn at useful size with open margins and callouts. They must not become six equal boxed slide panels or six isolated icon-and-caption cards. Let drawings share alignment, traces and the same abstract change notation so the reader can follow what becomes more coordinated. No return loop and no invented dated chronology.
+
+THE SIX PARTICULAR SOFTWARE VIGNETTES — draw their internal relationships, not generic symbols:
+1 COMPOSE TOOLS: three small genuine SOFTWARE INTERFACES, visibly distinct labelled Plugins/APIs/services, have matching labelled input/output ports and connecting contract lines. The drawing shows composition by compatible interfaces. No cloud, gear or puzzle piece.
+2 WORK IN A PAIR: one visible change hunk with a lime margin annotation "Human intent" and a cyan margin annotation "Agent change" applied to the same hunk. Use abstract added/removed lines and +/- notation, no real code. This shows the human and agent working on one change without human/robot pictograms.
+3 DELEGATE WORK: an actual bounded task BRIEF with readable field labels "Scope", "Owner", "Limit", beside the specific change area its scope encloses. A lime ownership mark is attached to the brief. It explains scope and explicit ownership, not an unlabelled document splitting into generic cards.
+4 WORK IN PARALLEL: two competing DIFF HUNKS share the same before-context but show different changed-line positions. A separate margin REVIEW WITNESS points to BOTH versions independently; it is not part of either author branch. Its annotation says "Independent review". No generic person, magnifier icon, success badge or automatic merge checkmark. Show the actual conflict/review relationship with precision leader lines.
+5 QUALIFY THE RESULT: one exact-candidate strip is visibly bound to a GATE RECORD. The gate record has field labels "Revision" and "Gate name", with blank ruled values rather than a fake hash or made-up gate command. Their connecting revision registration line explains that named checks qualify the SAME candidate. All check squares remain empty; no passed status, no invented gate names or results. This is exact candidate identity tied to named gates, not a generic completed checklist.
+6 OPERATE A FACTORY: three actual small source/evidence RECORDS labelled "Intent", "Work", "Evidence" are cross-registered on the SAME revision edge and refer to each other with precise lines. Intent is a scoped brief, Work is a change hunk, Evidence is an observation note; these must be recognisably different artefacts with their actual fields/line structures, not three identical file icons. No chart, dashboard, gears, target icon or award badge. The drawing itself explains coordinated intent/work/evidence.
+
+REQUIRED MAIN TEXT, accurate spelling:
+"How the work changed"
+"Compose tools"
+"Plugins · APIs · services"
+"Work in a pair"
+"One human, one agent."
+"Delegate work"
+"Bounded tasks. Explicit owners."
+"Work in parallel"
+"Competing changes. Independent review."
+"Qualify the result"
+"Exact revision. Named release gates."
+"Operate a factory"
+"Tie intent and work to release evidence."
+"A sequence of habits, not a dated timeline."
+"Illustrative work artefacts"
+"SOURCE / FOUNDING ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / LINEAGE · 18 OCT 2026"
+
+Additional small text allowed ONLY the internal field/annotation labels already explicitly specified above: "Plugins", "APIs", "services", "input", "output", "Human intent", "Agent change", "Scope", "Owner", "Limit", "Independent review", "Revision", "Gate name", "Intent", "Work", "Evidence". All other miniature content is abstract ruled lines and +/- notation, not fake readable source code. No invented revision ID, date, task/owner identity, command, counts, check results, project status, timeline dates or production evidence. Historical source is the founding account reviewed28September2026; plate is a method illustration reviewed18October2026, not a claim that every project passed it.
+
+Deliver a single polished wide illustration. Its detailed software artefacts must carry the meaning even with the main captions covered.

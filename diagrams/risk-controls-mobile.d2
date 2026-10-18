@@ -1,151 +1,18 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/risk-controls-mobile.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: down
-grid-rows: 6
-grid-columns: 2
-horizontal-gap: 16
-vertical-gap: 30
-
-plate_title: "Controls follow\nthe stakes." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 44
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-n0: "00" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t0: "Throwaway\nDiscard cheaply" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-n1: "01" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t1: "Experiment\nKeep useful\nlearning" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-n2: "02" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t2: "Project\nProtect the work" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-n3: "03" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t3: "Product\nProve real use" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-n4: "04" {
-  label.near: center-center
-  shape: diamond
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#FF746A"
-  style.stroke: "#FF746A"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t4: "Commercial\nProtect money and\ncommitments" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-n5: "05" {
-  label.near: center-center
-  shape: diamond
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#E9FF49"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 45
-  height: 45
-  style.bold: true
-}
-t5: "Treasured\nRestrict access to\nwhat matters" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-plate_note: "CLASSIFICATION / NOT\nSTAGES\nChoose for the actual\nrisk.\nProjects need not climb a\nladder.\n\nWOODHOUSE / RISK CLASSES\nReviewed 18 October 2026" {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 22
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Controls follow consequences" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+throw: "Throwaway\nDiscard cheaply; keep it reversible" {}
+experiment: "Experiment\nRetain useful observations" {}
+project: "Project\nProtect source and history" {}
+product: "Product\nObserve real use" {}
+commercial: "Commercial\nProtect money and commitments\nBound authority and fulfilment" {}
+treasured: "Treasured\nRestrict access to what must stay private" {}
+note: "Classes, not stages. Choose proportionate controls for the actual consequence; no maturity or progress is implied." {shape: text; near: bottom-center; style.font-size: 16}

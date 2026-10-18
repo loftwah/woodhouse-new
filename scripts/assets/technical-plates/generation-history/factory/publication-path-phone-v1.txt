@@ -1,0 +1,29 @@
+Use case: infographic-diagram
+Asset type: Finished commissioned generated raster illustration for Woodhouse, high-end engineering-publication technical plate.
+Visual craft: Flat DARK INK #080D19 RGB8,13,25 edge-to-edge. Pale #EAF0FA large precise grotesque sans-serif words. Cyan #79D8FF software routes and document/browser linework. Lime #E9FF49 reviewed public authority. Coral #FF746A a labelled private prohibition only. Clean crisp lines, open dark negative space, strong hierarchy, compact monospaced source footer. No lighting, glow, paper, gradient, glass, shadows or texture.
+Actual system: A project site owns its title/icon/summary and original artwork URL. Public metadata enters a reviewed public-safe record and then the Woodhouse human/agent page views. The visitor's browser receives those views but loads the original artwork DIRECTLY from the project site/source URL. Therefore show TWO genuinely separate routes: metadata to reviewed record to page to browser; original artwork directly from project site to browser. Source artwork keeps its project ownership, credit and project-site link. A disconnected private packet containing repository bodies, credentials and working conversations ends at a coral STOP with no arrow into any public node: there is NO PRIVATE PUBLICATION FEED. If original source artwork fails, the browser uses a Woodhouse illustration and BOTH its text and visible credit change. Illustrations made by Woodhouse are credited to Woodhouse.
+Constraints: Only software artefacts, metadata slips, abstract browser viewports and image frames. No humans, robots, hardware, clouds, fake plots, invented URLs/domains/versions, invented claims or numeric results. Every real arrow joins its source and destination; the private stop terminates. No generic flowchart boxes, giant slogan or numbered central rail. All listed labels appear once verbatim, no tiny extra writing.
+Composition: Portrait2:3 1024x1536 designed for350px display. A phone-specific TWO-FEED software cutaway. Main labels72px and explanatory labels52px, full-width annotation rows with short intentional line breaks. Small software document drawings must stay secondary and never shrink the text. Top region is Project site and its metadata/artwork pair. Metadata descends through Reviewed public record then Woodhouse page, then Visitor's browser at center-lower area. The independent ORIGINAL ARTWORK route runs down the far-left margin straight from the project art frame into the visitor-browser image aperture, bypassing the metadata documents. Label it horizontally "Original artwork direct" above the browser, not tiny rotated lettering. Below the browser, a full-width fallback region shows Woodhouse illustration, text/credit change and a dashed conditional route into the browser. At the very bottom a disconnected private packet terminates at an unbroken coral stop rule, separated by empty dark ground. No route goes from private to public. No side-by-side tiny text, generic boxes or central numbered rail.
+Exact text in reading order:
+"Artwork keeps"
+"its source"
+"Project site"
+"Title · icon · summary"
+"Original artwork URL"
+"Reviewed public record"
+"Public-safe"
+"Woodhouse page"
+"Human and agent views"
+"Original artwork direct"
+"Visitor's browser"
+"Links and credits"
+"the project"
+"If source art fails"
+"Woodhouse illustration"
+"Text and credit change"
+"PRIVATE / NO PUBLICATION"
+"Repository bodies"
+"Credentials · conversations"
+"WOODHOUSE / PUBLICATION-PATH"
+"Reviewed 18 October 2026"
+Footer30px; all other explanatory words52px minimum. Make the illustration detail smaller to fit ALL meaning at this large type.

@@ -1,0 +1,14 @@
+{
+  "title": "From intent to evidence",
+  "description": "Human direction, bounded agent work, independent review, qualification, production and a real-use evidence return form a complete operating circuit.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "17e940f1e0a5f2c59ea83846c5588084b0b501cab7036756481c99bb4ffd744f",
+  "masterSha256": "a79c9086d4b8fbabb6850d90d9d81a7c7a79bd687c4745f96fef750e18ec8fd9",
+  "prompt": "factory-flow.prompt.md",
+  "editReferences": [
+    "generation-history/factory/factory-flow-wide-v3.png"
+  ],
+  "generatedOriginal": "exec-037dbfee-38da-4385-a4d5-251c7744c2c8.png"
+}

@@ -1,0 +1,15 @@
+Use case: infographic-diagram
+Woodhouse generated engineering-publication artwork. Exact flat uniform ink #080D19 edge-to-edge, pale #EAF0FA Bricolage-like headings and clear sans body, precise cyan #79D8FF lines, lime #E9FF49 human direction, coral #FF746A only a real labelled stop or constraint. No texture, grain, gradient, vignette, glow, glass, decorative grid or paper. SOFTWARE only: no people, machines, aircraft, hardware, robots, servers, hardhats. No unrequested text or invented revision identifiers, check names, counts, dates, statuses. No default boxed flowchart. Create a wide LANDSCAPE image in exact3:2 ratio1536x1024, NOT a panoramic strip. Six open work fields on TWO LEVELS: first row Compose tools -> Work in a pair -> Delegate work; a visible cyan dog-leg continuation carries stage3 to stage4 at the left of the second row; second row Work in parallel -> Qualify the result -> Operate a factory. This is a sequential change in practice, NOT a loop, so do NOT draw any return arrow from Operate to Compose. No dated timeline.
+Draw a compact, highly crafted software illustration beside each field: interlocking software-module tabs; a lime direction point with a single change record; one task branching into bounded owned changes; concurrent diffs meeting an independent review branch; an exact-revision label with unnamed check marks; a record binding intent/work/evidence. Keep visual geometry subordinate to real labels, varied diagrams, no huge boxes. The paths are a sequence of practices, not an execution workflow or claim any project passed.
+Exact required words only:
+"How the work changed"
+"Compose tools" / "Plugins · APIs · services"
+"Work in a pair" / "One human, one agent."
+"Delegate work" / "Bounded tasks. Explicit owners."
+"Work in parallel" / "Competing changes. Independent review."
+"Qualify the result" / "Exact revision. Named release gates."
+"Operate a factory" / "Tie intent and work to release evidence."
+"A sequence of habits, not a dated timeline."
+"SOURCE / FOUNDING ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / LINEAGE · 18 OCT 2026"
+Do NOT add any hash, version string, task letters, owner names, gate names, dates for steps or extra annotation. Do not put checkmarks next to invented check labels. Text labels34px and descriptions30px or larger. Moderate54px title.

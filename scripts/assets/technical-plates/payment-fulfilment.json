@@ -1,0 +1,13 @@
+{
+  "title": "Payment before fulfilment",
+  "description": "A proposed commercial control model, not a live shop. Verified events enter the ledger; approved policy bounds fulfilment, shipment evidence returns to the same ledger, and a browser redirect is not payment proof.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "a70d8efdde21cdc7c9fd5929ff8991f388ec13ce1bbf6c351c9852728aaaefe1",
+  "masterSha256": "b1caba6f97ca1ff3fa889c09a486456ab5d9c7befccd97af45beb752a2cb3e5a",
+  "prompt": "payment-fulfilment.prompt.md",
+  "editReferences": [
+    "generation-history/root/exec-3a4fd2a0-e622-4712-ade5-75b6ded8122b.png"
+  ]
+}

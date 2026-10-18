@@ -1,0 +1,12 @@
+{
+  "title": "First reconstruct. Then earn expansion.",
+  "description": "Pirates reconstructs source-evidenced rules before expansion. Unknown source stays unknown and Gate B remains locked until integrated parity and owning acceptance.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "3696ef2865b316b305e4fd72c2e90258ebf45e25870d41dd5aedc4d9672672ef",
+  "masterSha256": "c53a6e8234fd216064bf5682056b4c5e102a7f0d5bcc0cd9415dc0091f104285",
+  "prompt": "pirates-parity.prompt.md",
+  "generatedOriginal": "exec-530cbf71-f4a4-4163-8913-a0cd0ce87208.png",
+  "editReferences": []
+}

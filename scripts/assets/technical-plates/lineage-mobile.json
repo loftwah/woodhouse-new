@@ -1,0 +1,13 @@
+{
+  "title": "How the working method changed",
+  "description": "A sequence of working habits from tools to coordinated factory operation, not an invented dated roadmap.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "ae022196f1e439a163c43c52211aff0c48ed516186d8eb12d1d391b3d527bec4",
+  "masterSha256": "ed1c025e9e146c0fa4da268812a2f6dc730900a7909cfd60cb3cfd0cf42e7c0a",
+  "prompt": "lineage.prompt.md",
+  "master": "lineage.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

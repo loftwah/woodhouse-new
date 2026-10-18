@@ -1,0 +1,29 @@
+Use case: infographic-diagram
+Asset type: Finished generated raster technical plate for Woodhouse, a high-end engineering publication.
+Primary request: Draw the ACTUAL SOFTWARE operating loop in six stages: human intent -> coding agents -> independent review -> qualification -> production observation -> real-use observation -> evidence returning to human intent. This is a method, not a claim that any project passed.
+Ground and style: Flat exact solid RGB(8,13,25), #080D19, every background pixel. No shading, gradient, lighting, grain, texture, glow or vignette. Crisp pale #EAF0FA GROTESQUE SANS-SERIF lettering, cyan #79D8FF precise technical linework, lime #E9FF49 human authority and returning evidence. Tiny marginal source labels in monospace, also sans. Do NOT use serif lettering. Clean commissioned editorial drawing with software artefacts only.
+System objects: Human intent is an authored task-brief document with goal/limits/owner rules. Coding agents are branching source-diff slips with plus/minus lines, rejoining into one changeset. Independent review is a SEPARATE review-witness document facing the held revision, both attached to the same small candidate identity tab. Qualification is a candidate bundle with a passed-checks record; do not invent passing results. Production is a product-browser frame observing one named live version. Real use is a separate observation note with a browser and phone viewport outline, representing real people/devices/environments without drawing people or hardware. Every depicted viewport is an abstract software artefact, not a physical monitor. The lime evidence-return circuit physically connects the real-use note back to the task brief. Cyan arrowheads show each forward transition. No stage may be skipped.
+Constraints: No people, robots, humanoids, hands, machines, industrial tools, server racks, factory landscapes, buildings, trucks, hardware, fake analytics graphs, invented numbers, fake hash values, glass, shadows, gradients, tiny gibberish writing, generic flowchart boxes, giant slogan or repeated numbered-oval rail. Use generous open dark ground and meaningful authored document/package/browser-like line objects. Retain all actual meaning. All quoted text must appear once verbatim. No extra text.
+Composition: Landscape 3:2, 1536x1024. A deliberate six-station software circuit in an open rectangular loop: Human intent upper-left, Coding agents upper-middle, Independent review upper-right; Qualification lower-right, Production lower-middle, Real use lower-left. Text sits at each station in clear negative space. Small software artefact drawings, each under 220px tall, connect by a thin cyan path clockwise around the open center. The center contains only the clear annotation "One exact candidate" and fine alignment marks, not a giant slogan. A lime arrow leaves Real use, travels up the far left edge and enters Human intent. At the review-to-qualification turn write "Owning release gates apply". Six stages must be visibly distinct, correctly connected. Header60px max, main stage labels44px, secondary labels32px, small footer24px. Grotesque sans-serif throughout.
+Text (verbatim):
+"From intent to evidence"
+"Human intent"
+"Goal · limits · owner"
+"Coding agents"
+"Bounded tasks"
+"Reviewable changes"
+"Independent review"
+"Check the held revision"
+"Qualification"
+"Exact candidate"
+"Record what passed"
+"Production"
+"Observe the named live version"
+"Real use"
+"People · devices · environments"
+"Evidence returns to the human"
+"One exact candidate"
+"Owning release gates apply"
+"METHOD, NOT PORTFOLIO STATUS"
+"WOODHOUSE / FACTORY-FLOW"
+"Reviewed 18 October 2026"

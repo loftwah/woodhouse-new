@@ -1,0 +1,13 @@
+{
+  "title": "A public window. A private workshop.",
+  "description": "Reviewed public records and project metadata feed publication; the browser loads original producer artwork. A fallback changes its text and credit. Private material has no publication path.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "c81e029bcc2fad32bba5d1112796bf838d1a3322341976db8a8336642f14bd41",
+  "masterSha256": "44fb220315ae37d4c72f84b831d9f2c922b0fd7dd87b5a64f707d7438706891e",
+  "prompt": "publication-path.prompt.md",
+  "master": "publication-path.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

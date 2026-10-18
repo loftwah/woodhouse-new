@@ -1,0 +1,13 @@
+{
+  "title": "The failure loop",
+  "description": "A returned observation changes the next attempt and control. FT/Fighter geometry passed while visual design missed; the diagnostic is illustrative, not a product capture.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "c94cf102cadef8e945a82483caa0e5c60a0c89b84473fe54a648dae705e87de3",
+  "masterSha256": "d616f0a5e54f74880537d6ec4506800d48dd25d947111fb8312c8e2e8097c22b",
+  "prompt": "failure-loop.prompt.md",
+  "master": "failure-loop.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

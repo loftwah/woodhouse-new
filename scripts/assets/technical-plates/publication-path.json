@@ -1,0 +1,12 @@
+{
+  "title": "A public window. A private workshop.",
+  "description": "Reviewed public records and project metadata feed publication; the browser loads original producer artwork. A fallback changes its text and credit. Private material has no publication path.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "5df915922b93ceb8dfc1f9bee5a6e9493a6416d71dd290731589628bab54e5da",
+  "masterSha256": "44fb220315ae37d4c72f84b831d9f2c922b0fd7dd87b5a64f707d7438706891e",
+  "prompt": "publication-path.prompt.md",
+  "editReferences": [],
+  "generatedOriginal": "exec-b6fe76cd-8598-4bb6-acb3-5585825c342f.png"
+}

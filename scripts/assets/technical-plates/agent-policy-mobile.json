@@ -1,0 +1,13 @@
+{
+  "title": "Act within your authority.",
+  "description": "Ordinary authorised work proceeds to execution and qualification. Reserved human decisions may approve within scope, return to proposal, or reject and stop; approval never substitutes for execution.",
+  "reviewed": "2026-10-18",
+  "generator": "Native SVG composition with built-in OpenAI-generated software illustrations",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "f456a609aae2f4f5aec0939a310d33c0f877d0fe54760d0b488a3e55d44e55b5",
+  "masterSha256": "b891e79affa007d69caca8c9494c89ade6e02f2a52fe1648dba1cfe4e915746e",
+  "prompt": "agent-policy.prompt.md",
+  "master": "agent-policy.png",
+  "rendering": "Native SVG reading type and system paths, composed with generated illustration details from the wide master. Bitmap phone studies are not published.",
+  "composition": "scripts/phone-technical-plates.mjs"
+}

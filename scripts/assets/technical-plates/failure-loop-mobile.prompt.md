@@ -1,0 +1,36 @@
+# The failure loop
+
+Built-in imagegen. Generated candidate; MP taste acceptance not established.
+
+Use case: infographic-diagram
+Create an ORIGINAL final Woodhouse engineering publication infographic for PHONE, portrait 2:3,1024x1536. This is a new composition, not a shrunken desktop. Flat uniform solid #080D19 from edge to edge, pale #EAF0FA clean readable text, precise cyan #79D8FF linework, lime #E9FF49 expectation and return, coral #FF746A failure. No texture, gradient, vignette, glow, glass or grid. Do not draw people, robots, machines, servers, aircraft or mechanical tools. Fighter means a browser video GAME.
+
+Title at top "The failure loop", 70px. Make a true, visible closed feedback circuit. Six full-width open typographic rows run down the page, connected by a fine angular cyan forward path on their far left. Recheck must feed an outside lime return line rising all the way back and arrowing into Expectation. No oversized icons and no circles around every row. Use small meaningful markers only: lime direction circle at Expectation, coral decision diamond at Reality, coral labelled stop at Incident. All station labels 62px; explanations50px, visibly large. Body text must span the available width, no half-column text. A350px-wide reader should see 21px labels and17px descriptions.
+
+Exact six stations in order:
+"Expectation"
+"State the expected outcome."
+"Attempt"
+"Make a reviewable change."
+"Reality"
+"Observe actual behaviour."
+"Incident"
+"Name what the checks missed."
+"Control"
+"Prevent this failure class."
+"Recheck"
+"Repeat it; record the result."
+Lime return arrow label:
+"Return evidence to expectation"
+
+Under a fine rule, FULL-WIDTH FT evidence annotation. Its two explanatory sentences must also be50px, full width:
+"FT / FIGHTER"
+"Geometry passed. Design missed."
+"Add independent visual review."
+
+Beside the FT heading only, a small140px-wide cyan technical browser-viewport outline: an outer width bracket indicates containment; inside, three equal-weight abstract typography bars have a coral inspection point. No physical measuring instrument and no invented game screenshot. The evidence words go BELOW this heading in full-width rows, never beside the little drawing. A small caption "Illustrative diagnostic" sits under the viewport,32px.
+Footer in two legible32px lines:
+"PUBLIC ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / METHOD · 18 OCT 2026"
+
+Fit by reducing empty space and icon sizes, never by making descriptions or FT evidence small. Keep50px explanatory text. No extra prose. The public historical evidence is that geometry checks PASSED but composition still missed its purpose; independent visual review became an added control. The loop retests the same failure class and returns evidence to expectation.

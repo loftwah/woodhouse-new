@@ -1,112 +1,32 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/payment-fulfilment.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: right
-grid-columns: 1
-vertical-gap: 22
-
-plate_title: "Payment truth before fulfilment." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 58
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-payment: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 4
-  grid-gap: 25
-checkout: "Checkout\nPayment\nprovider" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-event: "Signed event\nPayment · order\nEvent ID" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-verify: "VERIFY +\nDEDUPLICATE" {
-  label.near: center-center
-  shape: diamond
-  style.font-color: "#79D8FF"
-  style.font-size: 24
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 240
-  height: 190
-  style.bold: true
-}
-ledger: "ORDER\nLEDGER" {
-  label.near: center-center
-  shape: cylinder
-  style.font-color: "#E9FF49"
-  style.font-size: 28
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 230
-  height: 170
-  style.bold: true
-}
-checkout -> event: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-event -> verify: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-verify -> ledger: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-}
-delivery: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 3
-  grid-gap: 30
-policy: "HUMAN / APPROVED POLICY\nArtwork · rights · price\nSpend and fulfilment limits" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 30
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-}
-fulfil: "Printful order\nOnly within\napproved limits" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-shipment: "Shipment event\nUpdate the same ledger.\nNotify the customer." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 30
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-policy -> fulfil: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22; style.stroke-dash: 5;}
-fulfil -> shipment: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-}
-plate_note: "WOODHOUSE / COMMERCIAL REFERENCE · 18 OCTOBER 2026 · A proposed control model, not a\nlive shop or sales claim. A browser redirect is not payment proof. Verified events\nenter the ledger; shipment evidence returns to it." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 23
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "Payment before fulfilment" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+checkout: "Checkout\nPayment\nprovider" {}
+event: "Signed event\nPayment · order\nEvent ID" {}
+verify: "VERIFY +\nDEDUPLICATE" {}
+ledger: "ORDER\nLEDGER" {}
+policy: "HUMAN / APPROVED POLICY\nArtwork · rights · price\nSpend and fulfilment limits" {}
+fulfil: "Printful order\nOnly within\napproved limits" {}
+shipment: "Shipment event\nUpdate the same ledger.\nNotify the customer." {}
+redirect: "Browser redirect\nNot payment proof" {}
+stop: "Reject as payment proof" {}
+notify: "Notify the customer" {}
+checkout -> event: ""
+event -> verify: ""
+verify -> ledger: "Verified event only"
+ledger -> fulfil: "Only within approved policy"
+policy -> fulfil: "Authority / rights / spend limits" {style.stroke-dash: 5}
+fulfil -> shipment: ""
+shipment -> ledger: "Update the same order"
+shipment -> notify: ""
+checkout -> redirect: "Browser return" {style.stroke-dash: 5}
+redirect -> stop: ""
+note: "Proposed commercial control model, not a live shop or sales claim. Signed events must be verified and deduplicated. Browser redirects have no route to the ledger." {shape: text; near: bottom-center; style.font-size: 16}

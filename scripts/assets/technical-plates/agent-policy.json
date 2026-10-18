@@ -1,0 +1,14 @@
+{
+  "title": "Act within your authority.",
+  "description": "Ordinary authorised work proceeds to execution and qualification. Reserved human decisions may approve within scope, return to proposal, or reject and stop; approval never substitutes for execution.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance not established",
+  "modelSha256": "73a0daf7a8c58669cb54e12e606462f7df941b854f3dfab0c0c721b9b69713c2",
+  "masterSha256": "b891e79affa007d69caca8c9494c89ade6e02f2a52fe1648dba1cfe4e915746e",
+  "prompt": "agent-policy.prompt.md",
+  "editReferences": [
+    "generation-history/factory/agent-policy-wide-v1.png"
+  ],
+  "generatedOriginal": "exec-296d8e0a-a588-4517-9494-ba77f3433297.png"
+}

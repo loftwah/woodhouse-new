@@ -1,0 +1,24 @@
+Use case: infographic-diagram
+Woodhouse generated engineering-publication artwork. Exact flat uniform ink #080D19 edge-to-edge, pale #EAF0FA Bricolage-like headings and clear sans body, precise cyan #79D8FF lines, lime #E9FF49 human direction, coral #FF746A only a real labelled stop or constraint. No texture, grain, gradient, vignette, glow, glass, decorative grid or paper. SOFTWARE only: no people, machines, aircraft, hardware, robots, servers, hardhats. No unrequested text or invented revision identifiers, check names, counts, dates, statuses. No default boxed flowchart. The previous generation failed the phone font-size requirement. This must be a genuinely readable narrow editorial infographic. Full-width text, very small drawings, no half-column captions. All explanatory text must be50px at1024px canvas width. Main labels62px. At350px display width explanations must be17px. It is better to be typographically plain and correct than visually busy and unreadable. PORTRAIT2:3 image1024x1536. Independent phone composition, six full-width typographic stations; draw only a small software branching trace in the50px left margin. Text starts at90px and has880px width. Do NOT place big diagrams in half the image. Tiny module tabs near first heading connect into a lime direction point, split into owned changes, then converge at review and a revision record; this actual changing trace is subordinate to the LARGE words. No circles/pictograms in every row. No invented revision string or named checks. The six stations are a sequence of working habits, not a release state claim and not a dated timeline.
+Moderate70px title "How the work changed".
+Exact station text, headings62px, explanations50px:
+"Compose tools"
+"Plugins · APIs · services"
+"Work in a pair"
+"One human, one agent."
+"Delegate work"
+"Bounded tasks. Explicit owners."
+"Work in parallel"
+"Competing changes."
+"Independent review."
+"Qualify the result"
+"Exact revision. Named release gates."
+"Operate a factory"
+"Tie intent and work"
+"to release evidence."
+Full-width constraint50px:
+"Working habits, not dated steps."
+Footer32px:
+"SOURCE / FOUNDING ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / LINEAGE · 18 OCT 2026"
+All meaningful words must be comfortable at350px image width. Fit by reducing spaces and illustration, never type. No visual return loop; the account supplies order only.

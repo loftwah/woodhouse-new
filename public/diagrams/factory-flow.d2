@@ -1,113 +1,31 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/factory-flow.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: right
-grid-columns: 1
-vertical-gap: 22
-
-plate_title: "Work moves. Accountability stays." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 58
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-work: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 4
-  grid-gap: 28
-human: "HUMAN" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#E9FF49"
-  style.font-size: 28
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 155
-  height: 155
-  style.bold: true
-}
-intent: "Set intent\nGoal · limits\nOwner" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-}
-agent: "Coding agents\nBounded tasks\nReviewable changes" {
-  shape: text
-  style.font-color: "#79D8FF"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 0
-}
-review: "REVIEW" {
-  label.near: center-center
-  shape: diamond
-  style.font-color: "#79D8FF"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 200
-  height: 170
-  style.bold: true
-}
-human -> intent: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22;}
-intent -> agent: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-agent -> review: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-}
-observe: "" {
-  style.fill: transparent
-  style.stroke-width: 0
-  grid-rows: 1
-  grid-columns: 3
-  grid-gap: 24
-production: "Production\nObserve the\nnamed live version" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-real: "Real use\nPeople · devices\nA separate test" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 31
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-return: "RETURN TO THE HUMAN\nEvidence changes the next decision" {
-  shape: text
-  style.font-color: "#E9FF49"
-  style.font-size: 34
-  style.fill: "transparent"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 0
-  style.bold: true
-}
-production -> real: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22;}
-real -> return: "" {style.stroke: "#E9FF49"; style.stroke-width: 2; style.font-color: "#E9FF49"; style.font-size: 22; style.stroke-dash: 5;}
-}
-plate_note: "WOODHOUSE / OPERATING METHOD · 18 OCTOBER 2026 · Read the work row, then the\nobservation row. Required review and release gates apply to the exact candidate. Real\nuse returns evidence; deployment alone does not close the loop." {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 23
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "From intent to evidence" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+human: "HUMAN" {}
+intent: "Set intent\nGoal · limits\nOwner" {}
+agent: "Coding agents\nBounded tasks\nReviewable changes" {}
+review: "Independent review\nCheck the exact candidate" {}
+production: "Production\nObserve the\nnamed live version" {}
+real: "Real use\nPeople · devices\nA separate test" {}
+return: "RETURN TO THE HUMAN\nEvidence changes the next decision" {}
+qualification: "Qualification\nNamed checks on the same candidate" {}
+revise: "Revise the work\nNo publication from a rejected review" {}
+human -> intent: ""
+intent -> agent: ""
+agent -> review: ""
+review -> qualification: "Accepted for qualification"
+review -> revise: "Held / rejected"
+revise -> agent: "Revise" {style.stroke-dash: 5}
+qualification -> production: "Owning release gates apply"
+production -> real: "Observe separately"
+real -> return: ""
+return -> human: "Evidence informs the next decision" {style.stroke-dash: 5}
+note: "Method, not portfolio status. Review, production and real use are different observations." {shape: text; near: bottom-center; style.font-size: 16}

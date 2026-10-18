@@ -1,0 +1,14 @@
+{
+  "title": "The failure loop",
+  "description": "A returned observation changes the next attempt and control. FT/Fighter geometry passed while visual design missed; the diagnostic is illustrative, not a product capture.",
+  "reviewed": "2026-10-18",
+  "generator": "OpenAI imagegen built-in tool",
+  "acceptance": "Candidate; MP taste acceptance is not established",
+  "modelSha256": "bcf4ac6b01cd1bcd66c9c82bac80ed36b54a92ff0a9ec8df73447e888acb207d",
+  "masterSha256": "d616f0a5e54f74880537d6ec4506800d48dd25d947111fb8312c8e2e8097c22b",
+  "prompt": "failure-loop.prompt.md",
+  "generatedOriginal": "exec-083e3d54-c072-4ade-a960-600549fb440f.png",
+  "editReferences": [
+    "generation-history/story/exec-8ab6fe2b-9eb1-4cdf-928b-91e88e0b3a48.png"
+  ]
+}

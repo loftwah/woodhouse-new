@@ -1,0 +1,14 @@
+# Act within your authority.
+
+Built-in imagegen. Generated candidate, not MP acceptance.
+
+Use case: precise-object-edit
+Input image: Image1 is a Woodhouse agent-policy phone plate. Preserve all correct text, large sans-serif typography, software-document drawing, dark palette and overall1024x1536 layout.
+Fix the POLICY TOPOLOGY only:
+- REMOVE the lime downward arrow from the "Within authority / Execute and qualify" result to the "Reserved decision · MP" section. Ordinary authorised work must NOT proceed through MP approval.
+- Draw a SEPARATE lime branch that ORIGINATES at the "Check authority" policy document above, runs to the far-right outer margin OUTSIDE the Within authority result, descends there, and enters the MP reserved section with a lime arrowhead. It must bypass the ordinary result, never originate from it.
+- Keep the existing cyan Check authority -> Within authority route direct.
+- Keep Approve -> Execute and qualify connector.
+- Make Return reconnect ONLY to Propose. Remove any return-loop arrow into Observe, and remove disconnected left-margin wire stubs. Return starts at the MP Return outcome, goes up the far-left margin, and ends with a clear arrowhead at Propose.
+- Keep Reject -> coral stop and no continuation after stop.
+All other correct words and exact artwork remain unchanged. Do not alter the caption text or add explanatory words. No decoration, new boxes, altered colors, figures or smaller type.

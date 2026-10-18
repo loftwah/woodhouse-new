@@ -1,0 +1,31 @@
+Use case: infographic-diagram
+Asset type: Finished commissioned Woodhouse generated raster technical illustration, high-end engineering publication.
+Visual craft: Flat DARK INK#080D19 background edge-to-edge, large pale#EAF0FA grotesque SANS-SERIF type, crisp cyan#79D8FF software-document linework, lime#E9FF49 reserved human authority, coral#FF746A reject stop. Deliberate typographic hierarchy, precise thin arrows, labelled boundaries, open dark negative space, small monospaced source/footer. No paper, gradient, glow, glass, shadows, texture, decorative marks, invented measurements, fake URLs/versions/results.
+Actual policy: An event/schedule/permitted production read can start a bounded proposal. Production observations remain read-only. A draft/issue/changeset includes evidence, risk and rollback. Check scope, rights, cost and recovery against existing authority. Work ALREADY WITHIN AUTHORITY proceeds directly to execute and qualify, with NO new human approval inserted. Reserved accounts, money, rights, irreversible actions and explicit owning gates go to MP's actual decision. Approval permits only exact approved scope and connects to execute/qualify; return revises and requalifies via a real loop back to proposal; rejection records it and ends at a coral STOP. Events and agent approval grant no new authority. Existing product, privacy and release gates remain in force.
+Drawing language: Only proposal/review/policy/result document slips, a permission-boundary rule and precise software routes. No people, robot icons, hands, hardware, machinery, server racks, physical objects, fake analytics. This is not a factory floor. Every real branch has a named condition. Every stop terminates. The return arrow physically reconnects. No generic flowchart boxes, giant slogans or numbered-oval rail. No new labels or tiny extra writing beyond the exact list.
+Composition: Portrait2:3 1024x1536 independently designed at350px. Text-first full-width annotation rows; primary60–72px and body48–52px. A narrow right-margin software-document circuit supplies drawing detail, all text gets full width and never shrinks to fit half-columns. Header64px max. Top quarter: Observe then Propose with small software slips to right. Middle: Check authority; a short direct cyan branch ends at a large full-width "Within authority / Execute and qualify" result, needing no human gate. Below that: distinct lime reserved branch leading to "Reserved decision / MP". Under the reserved note, three full-width outcome rows: Approve goes by a thin outer-right connector back into the already-drawn execute/qualify result; Return runs up the far-left margin and reconnects to Propose with a visible arrowhead; Reject terminates at an unbroken coral STOP cap below its words. Keep the direct ordinary-work route visually separate from reserved MP route. Footer30px.
+Exact text in reading order:
+"Authority has"
+"a boundary"
+"Observe"
+"Event · schedule · safe read"
+"Propose"
+"Draft · issue · changeset"
+"Evidence · risk · rollback"
+"Check authority"
+"Scope · rights · cost · recovery"
+"Within authority"
+"Execute and qualify"
+"Reserved decision · MP"
+"Accounts · money · rights"
+"Irreversible actions"
+"Explicit owning gates"
+"Approve · act in exact scope"
+"Return · revise and requalify"
+"Reject · record and stop"
+"Events grant no new authority"
+"Product, privacy and"
+"release gates remain"
+"WOODHOUSE / AGENT-POLICY"
+"Reviewed 18 October 2026"
+The full policy meaning must remain readable in the image at350px. Use small software artefact drawings and short intentional line breaks, not miniature explanation text.

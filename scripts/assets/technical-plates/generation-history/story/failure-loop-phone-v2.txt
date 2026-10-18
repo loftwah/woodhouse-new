@@ -1,0 +1,20 @@
+Use case: infographic-diagram revision
+Edit this PHONE2:3 infographic, 1024x1536. Keep exact six stations, their order, real returning arrow from Recheck to Expectation, correct wording and Woodhouse palette. Crucial correction: FIGHTER IS A BROWSER VIDEO GAME. REMOVE THE AIRCRAFT ENTIRELY. No jet, airplane, fighter pilot, mechanical part or physical measuring tool.
+Also correct phone readability. The image must work displayed at350px width. Reduce the giant title to a moderate "The failure loop" at70px and use the freed space. The six principal station names must be60px; their explanatory sentences48px. Full-width rows, no half-column body. Recompose freely within1024x1536 to achieve that, preserving the exact words. Shrink pictograms, not text. The evidence is a full-width lower annotation with46px text, not half-width caption.
+At bottom use one tiny precise conceptual BROWSER VIEWPORT illustration, flat rectangular cyan screen outline with an outside dimension bracket and three abstract typographic hierarchy bars. A coral inspection line points to the bars. Not a fabricated game capture; caption "Illustrative diagnostic" can be small source notation. Do not let the illustration compete with words.
+All required exact text:
+"The failure loop"
+"Expectation" / "State what should happen."
+"Attempt" / "Make a reviewable change."
+"Reality" / "Inspect the actual result."
+"Incident" / "Name what escaped the checks."
+"Control" / "Prevent the same failure class."
+"Recheck" / "Repeat the failure; record evidence."
+"Return to expectation"
+"FT / FIGHTER"
+"Geometry passed. Design missed."
+"Add independent visual review."
+"Illustrative diagnostic"
+"PUBLIC ACCOUNT · 28 SEP 2026"
+"WOODHOUSE / METHOD · 18 OCT 2026"
+No new facts. Make source footer32px. Background exactly flat solid #080D19 edge-to-edge, no gradients, vignette, texture, glow or mottling. Pale type#EAF0FA, cyan lines#79D8FF, lime human/return#E9FF49 and coral failure#FF746A. Distinctive Bricolage Grotesque-like display letters and clean readable body. Keep the loop a loop.

@@ -1,0 +1,29 @@
+Use case: infographic-diagram
+Asset type: Complete finished generated raster artwork for Woodhouse, commissioned high-end engineering-publication technical plate.
+Visual craft: Flat uniform DARK INK #080D19 RGB8,13,25 edge-to-edge, pale #EAF0FA type, cyan #79D8FF exact software-document linework, lime #E9FF49 human authority, coral #FF746A explicitly labelled stops. Grotesque sans-serif typography throughout, compact monospaced source notes. Clean crisp strokes, deliberate line-weight hierarchy, open dark space. Software artefacts only: source document, candidate packet, review witness, checks receipt, abstract browser/product viewport. No people, robots, hands, hardware, racks, physical machinery, fake graphs, invented URLs, version numbers, result values, workforce counts, decorative glow, glass, shadows, paper ground, gradients or texture. No giant slogan, default flowchart boxes, numbered-oval rail or generic cards.
+Subject: Release qualification belongs to one exact candidate. Source, scope and identity are known. The owning repository's review/checks and reserved decisions apply. A qualified candidate can deploy and its live identity must be observed. Real use, human acceptance and physical observation establish separate claims. If the candidate changes, earlier checks no longer qualify it; stop that claim and revise/repeat affected checks. Never imply a test pass proves production or physical use. All lines and arrowheads must have correct topology; a coral stop terminates, and a separate dashed revision return route reconnects to review. This is a method, not evidence that any actual project passed.
+Text accuracy: Render listed words exactly once, no extra labels except generic "candidate", "review" and "checks" inside documents. No fictitious identity strings or examples.
+Composition: Portrait2:3 1024x1536, independently designed at350px. Main stage labels72px, explanatory labels52px, footer30px. Use the full width for words. At top a held candidate document paired with a review/checks receipt, all bound by one thin candidate identity strap. Make the first three sections read downward: Exact candidate, Review and qualify, Production. Small drawings in the right margin or under labels, never squeeze text into half-width. A coral changed-candidate branch departs the original candidate and runs in the left margin to a wide coral terminal at mid-lower page; text STOP has its own unbroken terminal cap. A separate dashed cyan return from there runs back to Review and qualify and has a clear arrowhead. The bottom area below a separation rule contains three large independent observation labels; no arrows claiming tests prove them. This composition is a revision dossier with an invalidated branch, not a central ladder or a generic flowchart.
+Text in order, exactly:
+"Release follows"
+"one revision"
+"Exact candidate"
+"Source · scope · identity"
+"Review and qualify"
+"Owning repository gates"
+"Reserved decisions apply"
+"Production"
+"Deploy; inspect"
+"live identity"
+"Candidate changed"
+"STOP"
+"Earlier checks no longer qualify"
+"Revise; repeat affected checks"
+"Separate claims"
+"Real use · people · devices"
+"Human acceptance"
+"Physical observation"
+"Tests are not live observations"
+"WOODHOUSE / RELEASE-PATH"
+"Reviewed 18 October 2026"
+Never reduce the 52px explanatory type; use short deliberate line breaks and fewer illustration details to preserve all meaning.

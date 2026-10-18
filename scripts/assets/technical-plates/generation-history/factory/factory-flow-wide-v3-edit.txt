@@ -1,0 +1,8 @@
+Use case: precise-object-edit
+Input image: Image1, Woodhouse software operating loop. Preserve the entire1536x1024 composition, exact labels, grotesque sans-serif type sizes, document drawings, six-stage loop and line colors.
+Make only these corrections:
+- The lime evidence return route at lower-left must CONNECT directly to the Real use browser observation object. Add a short unbroken lime segment from the lower-left corner of that browser object, down into the existing lime return path. The current route starts loose beneath it. Keep the return annotation above/beside the route and the arrowhead ending into Human intent. No route breaks.
+- Remove the fictitious https://app.example.com text from the production-browser address bar, replacing it with one blank horizontal rule.
+- Replace the small labels Agent1, Agent2, Agent3 with the generic word "Task" on each of the three source-diff slips. Do not invent numerical counts or examples.
+- Make every dark interior and background area EXACT uniform solid RGB8,13,25 hex#080D19 with NO gradient, vignette, texture, grain, shading or lighting. Preserve bright pale/cyan/lime strokes and text.
+Do not change anything else. No added graphics, no physical metaphors, no people, no hardware, no serif lettering, no tiny type. Keep all correct words.

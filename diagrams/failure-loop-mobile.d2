@@ -1,135 +1,25 @@
-# Woodhouse authored technical plate. Reviewed 18 October 2026.
-# Shape grammar: text = work; circle = responsibility; diamond = decision;
-# labelled stop = evidence boundary; dashed line = return or conditional path.
-# This is a method/relationship, not a claim that every project passed it.
+# Editable Woodhouse system model. Reviewed 18 October 2026.
+# Published illustration and this editable topology are separate artifacts.
+# Retained image master, exact prompts and paired provenance: scripts/assets/technical-plates/failure-loop-mobile.*
 vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 16}}
-style.fill: "#080D19"
 direction: down
-grid-rows: 5
-grid-columns: 2
-horizontal-gap: 16
-vertical-gap: 28
-
-plate_title: "A miss must\nchange the\nmethod." {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 44
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-  style.bold: true
-}
-plate_title.near: top-center
-r0: "01" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#E9FF49"
-  style.stroke: "#E9FF49"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t0: "Expectation\nState what should\nhappen" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r1: "02" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t1: "Attempt\nMake a reviewable\nchange" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r2: "03" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#FF746A"
-  style.stroke: "#FF746A"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t2: "Reality\nInspect the actual\nresult" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r3: "04" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#79D8FF"
-  style.stroke: "#79D8FF"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t3: "Control\nFix what let it\nescape" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r4: "05" {
-  label.near: center-center
-  shape: circle
-  style.font-color: "#080D19"
-  style.font-size: 24
-  style.fill: "#EAF0FA"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 2
-  width: 42
-  height: 42
-  style.bold: true
-}
-t4: "Recheck\nRepeat the same\nfailure" {
-  shape: text
-  style.font-color: "#EAF0FA"
-  style.font-size: 26
-  style.fill: "transparent"
-  style.stroke: "#EAF0FA"
-  style.stroke-width: 0
-}
-r0 -> r1: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r1 -> r2: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r2 -> r3: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-r3 -> r4: "" {style.stroke: "#79D8FF"; style.stroke-width: 2; style.font-color: "#79D8FF"; style.font-size: 22; target-arrowhead.shape: none;}
-plate_note: "FIGHTER / VISUAL JUDGEMENT\nGeometry passed; design\nmissed.\nAdd independent visual\ncriticism.\nRecheck before calling it\nfixed.\n\nWOODHOUSE / METHOD\nReviewed 18 October 2026" {
-  shape: text
-  style.font-color: "#A6B4CB"
-  style.font-size: 22
-  style.fill: "transparent"
-  style.stroke: "#A6B4CB"
-  style.stroke-width: 0
-}
-plate_note.near: bottom-center
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 18
+title: "The failure loop" {shape: text; near: top-center; style.font-size: 28; style.bold: true}
+belief: "Expectation\nState what\nshould happen" {}
+work: "Attempt\nA reviewable\nchange" {}
+observe: "REALITY" {}
+failure: "Name the miss\nWhat escaped\nthe checks?" {}
+control: "Change the control\nPrevent the same\nclass of failure" {}
+recheck: "Recheck\nTry the same\nfailure again" {}
+example: "FT / FIGHTER\nGeometry passed. Design missed.\nIndependent visual criticism\nbecame a separate check." {}
+belief -> work: ""
+work -> observe: ""
+observe -> failure: ""
+failure -> control: ""
+control -> recheck: ""
+recheck -> belief: "Return evidence to the expectation" {style.stroke-dash: 5}
+note: "FT / Fighter: geometry passed while design missed. Public founding account 28 September 2026; reviewed 18 October 2026. The illustrative diagnostic is not a product screenshot." {shape: text; near: bottom-center; style.font-size: 16}
