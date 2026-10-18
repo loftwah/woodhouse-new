@@ -126,9 +126,24 @@ const houseImages = [
   }
 ];
 const smallAssets = [
-  { name: "Project network", image: "/images/diagrams/project-network.svg", credit: "Woodhouse" },
-  { name: "Release path", image: "/images/diagrams/release-path.svg", credit: "Woodhouse" },
-  { name: "Evidence ladder", image: "/images/diagrams/evidence-ladder.svg", credit: "Woodhouse" },
+  ...(
+    [
+      ["Project network", "project-network"],
+      ["Release path", "release-path"],
+      ["Evidence ladder", "evidence-ladder"],
+      ["Factory flow", "factory-flow"],
+      ["How the work changed", "lineage"],
+      ["The failure loop", "failure-loop"],
+      ["Parity before expansion", "pirates-parity"],
+      ["Risk controls", "risk-controls"],
+      ["Agent authority", "agent-policy"],
+      ["Publication path", "publication-path"],
+      ["Payment before fulfilment", "payment-fulfilment"]
+    ] as const
+  ).flatMap(([name, slug]) => [
+    { name, image: `/images/diagrams/${slug}.svg`, credit: "Woodhouse" },
+    { name: `${name} (phone)`, image: `/images/diagrams/${slug}-mobile.svg`, credit: "Woodhouse" }
+  ]),
   { name: "Woodhouse mark", image: "/favicon.svg", credit: "Woodhouse" },
   ...(publicIds.has("shoalshot")
     ? [
@@ -521,7 +536,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
           <h2 id="assets-title">Logos & SVGs</h2>
         </div>
         <div class="gallery small-assets">
-          {smallAssets.map((item) => (
+          {galleryPage(smallAssets, requestedPage).items.map((item) => (
             <figure>
               <a
                 class="image-link svg-preview"
