@@ -3476,6 +3476,9 @@ body {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+  .two-column-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .split-section--reverse > :first-child {
     order: 2;
   }
