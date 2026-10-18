@@ -117,3 +117,7 @@ These describe the rebuilt edition. Independent agent review and publication ver
 MP rejected the oversized typographic D2 exports after seeing production. Their deployment and agent PASS did not meet the visual brief. Large slogans, repeated numbered portrait rails, unstable symbols and relationships supplied only by footer prose are failures, not an accepted reference.
 
 The replacement uses commissioned-style generated illustrations with subject-specific technical composition and genuinely readable portrait labels. The final illustration and the editable D2 system model are different artifacts and must be labelled honestly. Retain the generated masters, exact prompts and reviewed model identity together. A renderer must refuse a model/master change that has not been reviewed as a pair. Native descriptions and complete transcripts remain mandatory. Production and agent review never confer MP taste acceptance.
+
+### Replacement direction — MP feedback, 18 October 2026
+
+MP positively received the illustrated replacement shown in the article's before/after comparison and asked for the family to be used fully. Carry the selected eleven illustrations and their readable phone editions through the existing pages and share gallery. Preserve the generated masters, prompts, editable system models and transcripts. This feedback establishes the shown visual direction; the earlier rejected editions remain rejected, and technical verification still belongs to each released format.
