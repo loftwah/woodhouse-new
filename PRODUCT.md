@@ -30,6 +30,13 @@ update must not redefine what the whole product is. Keep Dean's actual voice; do
 personal memories, testimonials or a new persona. Report to MP by leading with the decision and
 result, then the evidence that matters, the remaining uncertainty and the next action.
 
+Reviewed 18 October 2026: develop a dedicated article for every project, starting with App Composer
+and building the series individually. Each article needs a particular reader, a defensible argument
+and a concrete example worth their attention. Explain the product's value and its consequential
+tradeoffs; confidence comes from the work shown. Use the existing EmDash dispatches and project
+links, retaining historical records and dates. Follow the writing guidance in UNSLOP.md and the
+existing discovery programme in #18; a coverage target does not justify thin or repetitive articles.
+
 ## Promise
 
 Claims have a source and a review date. Implementation, qualification, production verification and physical proof remain distinct states. A project can be strong in one dimension and unfinished in another.

@@ -18,3 +18,43 @@ This is how the factory works. A generic generated-looking website fails the pro
 - Do not explain internal fallback, retry, cache or recovery behavior in copy written for readers. State the useful source, status or limitation from the reader's point of view.
 
 The product is not optimised to look like a portfolio. It is designed to be Woodhouse.
+
+## Writing that earns a reader's time
+
+Reviewed 18 October 2026. The observed failure is treating a technically accurate release summary
+as a compelling project story. An article needs an argument, a useful example and editorial judgement.
+
+- Start with the thing a reader can understand or inspect. Choose an angle specific to this project;
+  swapping the product name should break the article.
+- Make a claim with consequences. Explain the mechanism and the cost of the choice. Keep opinion
+  recognisable as opinion, and put a material limitation beside the claim it limits.
+- Remove empty significance, unnamed experts, invented experience and unsupported comparisons.
+  Avoid synonym cycling, compulsory threes, repeated "not X, but Y" constructions, canned rhetorical
+  questions and paragraphs that announce what the article will explain.
+- Read for manufactured swagger too: profanity, sentence fragments and a slogan every few lines
+  can be as empty as corporate enthusiasm. Let sentence length follow the thought. Keep a strong
+  judgement when the evidence supports it.
+- Edit the argument before polishing the words. Read the draft aloud, check its factual claims
+  against current sources, then cut the passages that repeat the point. No word blacklist or
+  detector score can establish authorship or substitute for an edit.
+- Finish with an action the reader can actually take. Preserve the project's current availability;
+  a prototype can earn a good article without becoming a launch or a customer success story.
+
+The research informs these choices; it does not supply a universal template. These are close-reading
+judgements about why the articles work, not measured explanations of their reach:
+
+- [Paul Graham's Maker's Schedule, Manager's Schedule](https://paulgraham.com/makersschedule.html)
+  gives a familiar frustration a useful name, then explains the cost of an interruption through a
+  concrete working day. Borrow the explanatory precision, not the author's personal experience.
+- [Joel Spolsky's Things You Should Never Do, Part I](https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/)
+  makes a forceful argument through a named failure and shows how apparently messy code preserves
+  hard-won knowledge. Borrow the causal detail; challenge the absolute claim where the evidence differs.
+- [Dan Luu's In defense of simple architectures](https://danluu.com/simple-architectures/)
+  earns its position with operational choices, admitted mistakes and exceptions. Give a technical
+  reader enough detail to disagree intelligently.
+
+[Measuring AI "Slop" in Text](https://arxiv.org/abs/2509.19163) treats quality through interpretable
+dimensions and reports subjectivity in binary judgements. [Wikipedia's editing observations](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
+are useful warning patterns for revision. Neither makes a punctuation mark proof of AI authorship.
+Our editorial concern is writing that wastes attention through generic claims, repetition or missing
+substance. AI assistance does not excuse that failure, and disguising assistance does not fix it.
