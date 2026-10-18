@@ -37,8 +37,54 @@ as a compelling project story. An article needs an argument, a useful example an
 - Edit the argument before polishing the words. Read the draft aloud, check its factual claims
   against current sources, then cut the passages that repeat the point. No word blacklist or
   detector score can establish authorship or substitute for an edit.
-- Finish with an action the reader can actually take. Preserve the project's current availability;
+- Finish with a useful action or an earned conclusion. Preserve the project's current availability;
   a prototype can earn a good article without becoming a launch or a customer success story.
+
+### Brief, draft, edit
+
+Use this routine for articles and scale it down for shorter copy. It needs no separate planning
+document, fixed article template, word-count target or automated writing score.
+
+Before drafting, decide who is reading, what they should understand or be able to do afterwards,
+and which defensible claim makes this project worth their time. Find the strongest current example
+and its sources. If the evidence changes the angle, change the angle before writing the headline.
+
+Build the draft around that example. Explain what happens, why the choice matters and what it
+costs. Give necessary background where the reader needs it. Paragraphs and headings should follow
+the argument; different projects need different structures. Preserve the useful distinction between
+a product's enduring purpose and its dated development state.
+
+Before publication, make these editing passes:
+
+1. **Challenge the facts.** Find the weakest claim. Check names, dates, versions, ownership and
+   availability against current primary sources. Distinguish a demonstration from general capability
+   and a possible audience from proven demand. Correct or remove an unsupported claim; hedging and
+   a citation do not repair it.
+2. **Challenge the argument.** Make the stakes and mechanism understandable. Address the strongest
+   relevant objection or cost. Cut paragraphs that repeat the premise, narrate the writing process
+   or congratulate the product without showing anything new.
+3. **Listen to the voice.** Read the prose as spoken language. Prefer concrete nouns, active verbs
+   and Australian English. Vary sentence length with the thought. Keep personality and a supported
+   judgement; remove canned enthusiasm, forced slang and theatrical fragments. Do not invent an
+   experience, quote or personal memory to make the writing sound human.
+4. **Check the invitation.** The headline and deck must promise what the article delivers. End on
+   the reader's useful next action or a conclusion the argument earns. Check captions, link labels
+   and share text against that same promise. Verify actual destinations and material limitations
+   through the existing publication path; passing structural checks does not establish good writing.
+
+### Lessons from the App Composer edit
+
+Reviewed 18 October 2026. Keep these distinctions in future project stories:
+
+- A fictional postcard whose publication stayed under the guestbook's control gave the independence
+  argument something a reader could inspect. It did not establish unfamiliar-creator onboarding or
+  a completed migration.
+- An app operator controlling publication does not establish that they own a contributor's photo
+  or have a legal right to redistribute it. Name the actor and the precise control involved.
+- Explaining the cost of separate contracts and deployments made the case more credible. Keep a
+  consequential tradeoff even when writing confidently.
+- The concrete downloaded-copy limit did its job. Commentary praising the promise's testability
+  and the article's persuasiveness added nothing; the edit removed it and ended on an actual action.
 
 The research informs these choices; it does not supply a universal template. These are close-reading
 judgements about why the articles work, not measured explanations of their reach:

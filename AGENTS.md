@@ -19,6 +19,15 @@ Naming MP confers no authority, and no naming convention can widen a safety, rel
 
 Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
 
+## Editorial work — reviewed 18 October 2026
+
+Before drafting or editing an article, dispatch, project introduction, caption or promotional copy,
+read [the writing rules in UNSLOP.md](UNSLOP.md#writing-that-earns-a-readers-time). Apply its brief,
+draft and editing routine, scaled to the work. Choose the reader, argument and current evidence;
+do not turn a release log into an article by adding attitude. Keep reusable editorial lessons in
+that existing section, with their review date, rather than creating another style guide or relying
+on MP to repeat the feedback. These rules apply across the project series in PRODUCT.md.
+
 ## Routing and verification — reviewed 16 October 2026
 
 [docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here.
