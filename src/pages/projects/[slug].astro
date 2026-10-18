@@ -13,6 +13,7 @@ import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
+import { analyticsProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
 
 export const prerender = false;
 const slug = Astro.params.slug;
@@ -317,6 +318,12 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <div class="margin-note">
         <span class="margin-note__label">Related work</span>
         <p>
+          {analyticsProjects.includes(project.slug as AnalyticsProject) && (
+            <>
+              <a href={`/activity/?project=${project.slug}`}>Public activity</a>
+              <br />
+            </>
+          )}
           <a href="/incidents/">Incidents</a>
           <br />
           <a href="/doctrine/">Factory doctrine</a>
