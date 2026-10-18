@@ -18,7 +18,10 @@ import {
   measureScope,
   weeklyHighlights,
   discoveryReferrals,
-  weekCaptionLines
+  weekCaptionLines,
+  modeBreakdowns,
+  modeMeasureGroups,
+  modeSplitNote
 } from "./analytics-workbench.ts";
 import { type ProjectAnalytics, type Metric, analyticsSchema } from "./portfolio-analytics.ts";
 import { reportSvg, reportQualifier } from "./portfolio-card.ts";
@@ -978,4 +981,146 @@ test("explicit measure drill-downs survive a project switch from the overview", 
     "returning_browsers"
   );
   assert.equal(measureForProjectSwitch(null, "fighter", "overview").key, "game_starts");
+});
+
+/* ----------------------------------------- Protocol 11 local vs online split */
+
+const splitDays = ["2026-10-14", "2026-10-15", "2026-10-16"];
+const splitMetric = (key: string, values: number[], unit: Metric["unit"] = "count"): Metric => ({
+  key,
+  label: key,
+  unit,
+  value: values.reduce((sum, value) => sum + value, 0),
+  quality: "exact",
+  definition: `Fixture definition for ${key}`,
+  daily: values.map((value, index) => ({ date: splitDays[index]!, value }))
+});
+const splitFixture = (overrides: Record<string, number[]> = {}) => {
+  const started = {
+    game_starts: [4, 3, 3],
+    game_starts_classic: [3, 2, 1],
+    game_starts_journey: [1, 1, 0],
+    game_starts_private_room: [0, 0, 1],
+    game_starts_public_matchmaking: [0, 0, 1],
+    ...overrides
+  };
+  return Object.entries(started).map(([key, values]) => splitMetric(key, values));
+};
+test("the mode split is additive with its overall measure and says when it is not", () => {
+  const rows = modeBreakdowns(splitFixture(), period);
+  assert.equal(rows.length, 1, "only a measure with a published split produces a row");
+  const row = rows[0]!;
+  assert.equal(row.key, "game_starts");
+  assert.equal(row.total, 10);
+  assert.equal(row.from, "2026-10-14");
+  assert.equal(row.coversWindow, true);
+  assert.equal(row.reconciles, true);
+  assert.deepEqual(
+    row.groups.map((group) => [group.key, group.label, group.value]),
+    [
+      ["local", "Local play", 8],
+      ["online", "Online play", 2]
+    ]
+  );
+  assert.deepEqual(
+    row.groups[0]!.modes.map((mode) => [mode.measure, mode.label, mode.value]),
+    [
+      ["game_starts_classic", "Classic", 6],
+      ["game_starts_journey", "Journey", 2]
+    ]
+  );
+  assert.match(row.groups[0]!.definition, /Classic and Journey/);
+  // A window that begins before the split keeps the covered days and does not
+  // pretend the uncovered ones are zero.
+  const partial = modeBreakdowns(splitFixture(), {
+    from: "2026-10-13",
+    to: period.to,
+    days: 4,
+    complete: false
+  })[0]!;
+  assert.equal(partial.coversWindow, false);
+  assert.equal(partial.from, "2026-10-14");
+  assert.equal(partial.reconciles, true);
+  assert.equal(partial.total, 10, "the overall measure keeps its own full window");
+  // A split that does not add up is reported as incomplete, never rendered as if
+  // it agreed with the overall measure.
+  const broken = modeBreakdowns(splitFixture({ game_starts_classic: [2, 2, 1] }), period)[0]!;
+  assert.equal(broken.reconciles, false);
+  // A group with an unpublished mode has no honest total, so it reports none.
+  const missing = modeBreakdowns(
+    splitFixture().filter((metric) => metric.key !== "game_starts_public_matchmaking"),
+    period
+  )[0]!;
+  assert.equal(missing.groups[1]!.value, null);
+  assert.equal(missing.groups[1]!.modes[1]!.value, null);
+  assert.equal(missing.reconciles, null);
+  // No split at all is no breakdown, and the overall measure stays untouched.
+  assert.deepEqual(modeBreakdowns([splitMetric("game_starts", [1, 1, 1])], period), []);
+  assert.deepEqual(modeBreakdowns(undefined, period), []);
+});
+test("the mode split note describes the coverage it actually has", () => {
+  const rows = modeBreakdowns(splitFixture(), period);
+  const covered = modeSplitNote(rows);
+  assert.match(covered, /sum to the overall figure above them/);
+  assert.match(covered, /not split by mode/);
+  const partial = modeSplitNote(
+    modeBreakdowns(splitFixture(), {
+      from: "2026-10-13",
+      to: period.to,
+      days: 4,
+      complete: false
+    })
+  );
+  assert.match(partial, /begins inside this window \(2026-10-14\)/);
+  assert.match(partial, /gaps rather than zeroes/);
+  const broken = modeSplitNote(
+    modeBreakdowns(splitFixture({ game_starts_classic: [2, 2, 1] }), period)
+  );
+  assert.match(broken, /Game starts currently does not add up to the overall figure/);
+  assert.equal(modeSplitNote([]), "");
+});
+test("mode measures are Protocol 11's alone and stay addressable by key", () => {
+  const keys = measuresFor("protocol-11").map((choice) => choice.key);
+  for (const key of [
+    "game_starts_classic",
+    "game_starts_journey",
+    "game_starts_private_room",
+    "game_starts_public_matchmaking",
+    "game_completions_public_matchmaking",
+    "game_replays_classic",
+    "active_seconds_private_room"
+  ])
+    assert(keys.includes(key as (typeof keys)[number]), key);
+  assert.equal(supportsMeasure("protocol-11", "game_starts_classic"), true);
+  for (const project of ["fighter", "bubbles", "shoalshot", "woodhouse", "app-composer"] as const)
+    assert.equal(supportsMeasure(project, "game_starts_classic"), false, project);
+  assert.deepEqual(measureScope(["fighter", "protocol-11", "shoalshot"], "game_starts_classic"), [
+    "protocol-11"
+  ]);
+  // The mode drill-down survives the All projects scope and the shared image
+  // address instead of quietly becoming the mixed overview.
+  assert.equal(resolveMeasure("protocol-11", "game_starts_classic").key, "game_starts_classic");
+  assert.equal(resolveMeasure(null, "game_starts_classic").key, "game_starts_classic");
+  assert.equal(resolveMeasure("protocol-11", "game_starts_practice").key, "game_starts");
+  // The definition the interface shows is the four-part sentence the endpoint
+  // publishes, not a second description of the same counter.
+  const classic = resolveMeasure("protocol-11", "game_starts_classic");
+  assert.equal(classic.label, "Game starts · Classic");
+  assert.match(classic.meaning, /^Accepted new game launches/);
+  assert.match(classic.meaning, /mode is classic/);
+  assert.match(classic.meaning, /Additive with Game starts/);
+  assert.match(classic.meaning, /does not mean distinct people/);
+  assert.deepEqual(
+    modeMeasureGroups.map((group) => [group.label, group.keys.length]),
+    [
+      ["Local play", 8],
+      ["Online play", 8]
+    ]
+  );
+  assert(modeMeasureGroups[0]!.keys.includes("active_seconds_journey"));
+  // Games without a split keep their view: no mode measure is offered for them.
+  assert.deepEqual(
+    measuresFor("fighter").filter((choice) => choice.key.includes("classic")),
+    []
+  );
 });

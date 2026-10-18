@@ -7,6 +7,15 @@ import {
   type Metric,
   type ProjectAnalytics
 } from "./portfolio-analytics.ts";
+import {
+  gameplayKindMeasures,
+  gameplayModes,
+  gameplayModeDefinition,
+  modeMeasureKey,
+  modeMeasureLabel,
+  modeMetricName,
+  type GameplayMode
+} from "./mode-measures.ts";
 const origins: Record<string, string> = {
   woodhouse: "https://woodhouse.loftwah.com",
   shoalshot: "https://shoalshot.loftwah.com",
@@ -27,6 +36,18 @@ const events = new Set([
   "active_time"
 ]);
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
+/**
+ * The modes this product's public client actually reports, in the table's order.
+ * A split needs at least two modes to say anything: a single-mode product keeps
+ * its overall counter and publishes no subtotal that would only repeat it.
+ */
+function splitModesFor(project: string): GameplayMode[] {
+  const allowed = modes[project] ?? [];
+  const known = gameplayModes
+    .filter((entry) => allowed.includes(entry.key))
+    .map((entry) => entry.key);
+  return known.length > 1 ? known : [];
+}
 export type EngagementEvent = {
   schema: "woodhouse.engagement/1";
   project: string;
@@ -376,6 +397,57 @@ export async function localAnalytics(
         daily
       };
     });
+  // The mode split of the additive gameplay counters. The daily rows are written
+  // by the same accepted events as the overall counter, so a subtotal can only
+  // exist where its parent does. A day before the project's first mode row is a
+  // gap: the split did not exist yet, and a zero there would claim weeks of
+  // measured silence for a metric that began today. Once the split exists, a
+  // missing row for a mode is a measured zero for that mode, because the counter
+  // is written for every accepted event that mode receives, and the partition of
+  // the parent counter stays exact.
+  const splitModes = splitModesFor(project);
+  const splitStarts = new Map<string, string>();
+  let splitFrom: string | undefined;
+  if (splitModes.length) {
+    const starts = await db
+      .prepare(
+        "SELECT metric, MIN(day) AS day FROM wh_analytics_daily WHERE project=? GROUP BY metric"
+      )
+      .bind(project)
+      .all<{ metric: string; day: string }>();
+    for (const row of starts.results) splitStarts.set(row.metric, row.day);
+    splitFrom = gameplayKindMeasures
+      .flatMap((kind) => splitModes.map((mode) => splitStarts.get(modeMetricName(kind.kind, mode))))
+      .filter((day): day is string => typeof day === "string")
+      .sort()[0];
+  }
+  for (const kind of gameplayKindMeasures) {
+    if (!splitFrom) break;
+    for (const mode of splitModes) {
+      const name = modeMetricName(kind.kind, mode);
+      const daily: Metric["daily"] = [];
+      for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
+        const date = new Date(t).toISOString().slice(0, 10);
+        if (date < splitFrom) continue;
+        daily.push({
+          date,
+          value: rows.results.find((r) => r.day === date && r.metric === name)?.value ?? 0
+        });
+      }
+      metrics.push({
+        key: modeMeasureKey(kind.parent, mode),
+        label: modeMeasureLabel(kind, mode),
+        unit: kind.unit,
+        value: daily.length ? daily.reduce((s, r) => s + r.value, 0) : null,
+        // A window that reaches back before the split began is partial, not exact:
+        // the covered days are real, the uncovered ones are unknown.
+        quality:
+          daily.length === 0 ? "unavailable" : daily.length === period.days ? "exact" : "partial",
+        definition: gameplayModeDefinition(kind, mode),
+        daily
+      });
+    }
+  }
   // Only Woodhouse's reviewed client currently offers consent. Collector acceptance alone
   // must never advertise that Protocol 11 or SHOALSHOT adopted browser measurement.
   const browserStart =
@@ -520,7 +592,13 @@ export async function localAnalytics(
               "Browser measures cover opt-in visits only and remain partial. Private project-scoped visit associations expire after 90 days; a window intersecting expired history is unavailable. Browser totals use retained period DISTINCT counts, never daily sums."
             ]
           : [
-              "Browser returns are unavailable until this product releases its own optional consent client."
+              "Browser returns are unavailable until this product releases its own optional consent client.",
+              ...(splitModes.length
+                ? [
+                    "Mode subtotals come from the same accepted gameplay events as their overall measure: from the day the split begins, the mode subtotals sum exactly to that measure, and a day with no row for a mode is a measured zero for it. Before the split begins there are gaps, not zeroes, and raw history older than 90 days cannot be reconstructed.",
+                    "Visits and engaged sessions are tab session markers and are deliberately not split by mode: one tab session can span several modes, so per-mode session counts would overlap and double-count."
+                  ]
+                : [])
             ])
       ]
     },

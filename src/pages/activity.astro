@@ -39,7 +39,10 @@ import {
   measureScope,
   measureForProjectSwitch,
   weeklyHighlights,
-  discoveryReferrals
+  discoveryReferrals,
+  modeMeasureGroups,
+  modeBreakdowns,
+  modeSplitNote
 } from "../data/analytics-workbench";
 import {
   releaseNotesFromEvidence,
@@ -177,6 +180,11 @@ const groups = [
     label: "Gameplay",
     keys: ["game_starts", "game_completions", "active_seconds", "game_replays"]
   },
+  // Local play and online play are the mode grouping, not a separate measurement:
+  // each group is the sum of the mode measures it names, and both groups together
+  // equal the gameplay measure above them. The groups only survive the filter
+  // below for a project whose client reports more than one mode.
+  ...modeMeasureGroups.map((group) => ({ label: group.label, keys: [...group.keys] })),
   {
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
@@ -284,6 +292,13 @@ const discovery = discoveryReferrals(
   new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
   window
 );
+// The local-versus-online split of the selected project's additive gameplay
+// counters. It comes from the payload, not from the project name: a source that
+// publishes no mode subtotal shows no breakdown, and nothing is inferred from the
+// overall counter alone. `rows[0]` is the selected project's row (or the first
+// public project under the mixed overview), and only a real split produces rows.
+const modes = overview ? [] : modeBreakdowns(rows[0]?.data?.metrics, window);
+const modeNote = modeSplitNote(modes);
 // Destination referral counters are surfaced in their own section, not repeated
 // as generic source definitions.
 const registerMetrics = (metrics: NonNullable<(typeof allRows)[number]["data"]>["metrics"]) =>
@@ -986,6 +1001,51 @@ const dataPayload = {
                 measurement and QA exclusion make them partial, and they do not show whether the
                 visitor played, subscribed or came back.
               </p>
+            </section>
+          )}
+          {modes.length > 0 && (
+            <section class="activity-context" aria-labelledby="mode-split-heading">
+              <h2 id="mode-split-heading">Local vs online play</h2>
+              <p>
+                {rows[0]?.name} reports the play mode of every accepted gameplay event. Local play
+                is Classic plus Journey; online play is Private room plus Public matchmaking. Each
+                accepted event belongs to exactly one mode, so these subtotals are additive with the
+                overall measure above them, not a second measurement of it. Every mode measure
+                carries its own four-part definition in the source register below.
+              </p>
+              <ul class="mode-split-list">
+                {modes.map((row) => (
+                  <li>
+                    <span class="discovery-name">{row.label}</span>
+                    <span class="discovery-count">
+                      {formatMetric({ value: row.total, unit: row.unit })}
+                    </span>
+                    <span class="mode-split-groups">
+                      {row.groups.map((group) => (
+                        <span class="mode-split-group">
+                          <strong>{group.label}</strong>
+                          <span class="mode-split-value">
+                            {group.value === null
+                              ? "not measured"
+                              : formatMetric({ value: group.value, unit: row.unit })}
+                          </span>
+                          <span class="mode-split-modes">
+                            {group.modes.map((mode) => (
+                              <a href={pageLink({ measure: mode.measure })}>
+                                {mode.label}{" "}
+                                {mode.value === null
+                                  ? "—"
+                                  : formatMetric({ value: mode.value, unit: row.unit })}
+                              </a>
+                            ))}
+                          </span>
+                        </span>
+                      ))}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p class="overview-note">{modeNote}</p>
             </section>
           )}
           <section class="activity-context" aria-labelledby="returns-heading">

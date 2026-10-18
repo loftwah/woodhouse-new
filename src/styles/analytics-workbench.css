@@ -1458,3 +1458,58 @@
     gap: 0.35rem;
   }
 }
+
+/* Local vs online mode split — reviewed 18 October 2026.
+   The group totals are sums of the named mode measures, so local plus online is
+   the overall measure; the per-mode links are the same measures the chart and the
+   source register publish. */
+.mode-split-list {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.mode-split-list > li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0;
+}
+.mode-split-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.mode-split-group {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+.mode-split-group strong {
+  color: var(--copy);
+  font-weight: 600;
+}
+.mode-split-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.mode-split-modes {
+  display: inline-flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+.mode-split-modes a {
+  color: inherit;
+}
+@media (max-width: 720px) {
+  .mode-split-groups {
+    width: 100%;
+  }
+}

@@ -5,12 +5,20 @@ import wasm from "../../assets/resvg.wasm";
 import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
-import { measureChoices, overviewMeasure } from "../../data/analytics-workbench";
+import {
+  measureChoices,
+  modeMeasureChoices,
+  overviewMeasure
+} from "../../data/analytics-workbench";
 import type { AnalyticsProject } from "../../data/portfolio-analytics";
 export const prerender = false;
 let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
-const knownMeasures = new Set<string>([overviewMeasure.key, ...measureChoices.map((m) => m.key)]);
+const knownMeasures = new Set<string>([
+  overviewMeasure.key,
+  ...measureChoices.map((choice) => choice.key),
+  ...modeMeasureChoices.map((choice) => choice.key)
+]);
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const format = url.searchParams.get("format") ?? "landscape",
