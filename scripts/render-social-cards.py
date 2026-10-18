@@ -21,7 +21,7 @@ WORKSHOP_CARDS = {
     "woodhouse": ("One human.", "Many worlds."),
     "factory": ("Made here.", "Used together."),
     "dispatches/your-game-its-own-soundtrack": ("Your game.", "Its soundtrack."),
-    "dispatches/your-apps-should-get-along": ("App Composer.", "Built to come apart."),
+    "dispatches/your-apps-should-get-along": ("App Composer.", "Build your own web app."),
 }
 CARDS = {
     "dispatches/take-a-useful-piece": ("", "", "", "18 October 2026"),
