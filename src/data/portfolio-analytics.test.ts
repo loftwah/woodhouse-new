@@ -15,11 +15,15 @@ import {
   type ProjectAnalytics
 } from "./portfolio-analytics.ts";
 import { readPortfolioReport, createPortfolioReport, projectReport } from "./portfolio-reports.ts";
+import { dateDays } from "./analytics-workbench.ts";
 import { reportSvg, reportFormats } from "./portfolio-card.ts";
-function database() {
+function database(modeRollup = true) {
   const sqlite = new DatabaseSync(":memory:");
   sqlite.exec(readFileSync("migrations/0001-portfolio-analytics.sql", "utf8"));
   sqlite.exec(readFileSync("migrations/0002-analytics-browser-returns.sql", "utf8"));
+  // `false` reproduces the state before the mode split existed, which is what a
+  // migration that adds a durable counter has to be tested against.
+  if (modeRollup) sqlite.exec(readFileSync("migrations/0003-analytics-mode-rollup.sql", "utf8"));
   const db = {
     prepare(sql: string) {
       let values: unknown[] = [];
@@ -818,4 +822,433 @@ test("a current Melbourne review is frozen without moving its observed date or U
     [],
     "observations after the selected UTC end remain omitted"
   );
+});
+
+/* --------------------------------------------- Protocol 11 mode subtotals */
+
+const protocol11Origin = "https://protocol11.loftwah.com";
+const playModes = ["classic", "journey", "private_room", "public_matchmaking"] as const;
+const gameEvent = (event: string, mode: string, extra: Record<string, unknown> = {}) =>
+  payload(event, { project: "protocol-11", mode, ...extra });
+const gameRequest = (body: unknown, headers: Record<string, string> = {}) =>
+  request(body, { origin: protocol11Origin, ...headers });
+const modeMetric = (report: ProjectAnalytics, key: string) =>
+  report.metrics.find((metric) => metric.key === key);
+const dailyOf = (report: ProjectAnalytics, key: string) => modeMetric(report, key)?.daily ?? [];
+const windowOf = (from: string, to: string) =>
+  parseReportingWindow(new URLSearchParams({ from, to }), now)!;
+
+test("each reported play mode gets its own additive gameplay subtotal and excluded traffic gets none", async () => {
+  const { db, sqlite } = database();
+  for (const mode of playModes)
+    assert.equal(
+      (await collectEngagement(gameRequest(gameEvent("game_start", mode)), db, now)).status,
+      204,
+      mode
+    );
+  // Visits and engaged sessions are tab-session markers: they are accepted, and
+  // they are deliberately never split by mode.
+  assert.equal(
+    (await collectEngagement(gameRequest(gameEvent("visit", "classic")), db, now + 1000)).status,
+    204
+  );
+  assert.equal(
+    (await collectEngagement(gameRequest(gameEvent("engaged", "classic")), db, now + 2000)).status,
+    204
+  );
+  // QA, DNT, GPC, automation and an unlisted mode must not create a subtotal either.
+  for (const headers of [
+    { dnt: "1" },
+    { "sec-gpc": "1" },
+    { "x-analytics-test": "1" },
+    { "user-agent": "Playwright headless" }
+  ])
+    assert.equal(
+      (
+        await collectEngagement(
+          gameRequest(gameEvent("game_start", "classic"), headers),
+          db,
+          now + 3000
+        )
+      ).status,
+      204
+    );
+  assert.equal(
+    (await collectEngagement(gameRequest(gameEvent("game_start", "practice")), db, now + 3000))
+      .status,
+    400
+  );
+  const report = await localAnalytics(db, "protocol-11", 7, now + 3000);
+  for (const mode of playModes) {
+    const metric = modeMetric(report, `game_starts_${mode}`)!;
+    assert.equal(metric.value, 1, mode);
+    assert.equal(metric.unit, "count");
+    assert.match(metric.definition, /Additive with Game starts/);
+    assert.match(metric.definition, /does not mean distinct people/);
+    assert.deepEqual(metric.daily, [{ date: "2026-10-15", value: 1 }], mode);
+  }
+  assert.equal(modeMetric(report, "game_starts")?.value, 4);
+  assert.equal(
+    playModes.reduce((sum, mode) => sum + modeMetric(report, `game_starts_${mode}`)!.value!, 0),
+    4,
+    "the four mode subtotals sum exactly to the overall measure"
+  );
+  assert.equal(
+    sqlite
+      .prepare("SELECT COUNT(*) AS n FROM wh_analytics_events WHERE project='protocol-11'")
+      .get()!.n,
+    6,
+    "four starts plus the visit and engaged markers"
+  );
+  assert.equal(
+    sqlite
+      .prepare(
+        "SELECT SUM(value) AS n FROM wh_analytics_daily WHERE project='protocol-11' AND metric LIKE 'game\\_start\\_%' ESCAPE '\\'"
+      )
+      .get()!.n,
+    4
+  );
+  for (const kind of ["visit", "engaged"])
+    assert.equal(
+      sqlite
+        .prepare(
+          "SELECT COUNT(*) AS n FROM wh_analytics_daily WHERE project='protocol-11' AND metric LIKE ? ESCAPE '\\'"
+        )
+        .get(`${kind}\\_%`)!.n,
+      0,
+      `${kind} is a session marker and is never split by mode`
+    );
+});
+
+test("duplicate and re-reported gameplay events increment the mode subtotal exactly once", async () => {
+  const { db } = database();
+  const start = gameEvent("game_start", "classic");
+  await collectEngagement(gameRequest(start), db, now);
+  // A retried HTTP attempt carries the same event id, and must not be a second start.
+  await collectEngagement(gameRequest(start), db, now + 1000);
+  const completion = gameEvent("game_complete", "private_room");
+  await collectEngagement(gameRequest(completion), db, now + 2000);
+  // A restored save re-reports the same observed completion under its own id.
+  await collectEngagement(gameRequest(completion), db, now + 3000);
+  let report = await localAnalytics(db, "protocol-11", 7, now + 3000);
+  assert.equal(modeMetric(report, "game_starts_classic")?.value, 1);
+  assert.equal(modeMetric(report, "game_starts")?.value, 1);
+  assert.equal(modeMetric(report, "game_completions_private_room")?.value, 1);
+  assert.equal(modeMetric(report, "game_completions")?.value, 1);
+  // Deduplication is by accepted event id, not by shape: a genuinely new action
+  // with a new id is a second accepted event, and the subtotal follows it.
+  await collectEngagement(
+    gameRequest(gameEvent("game_start", "classic", { eventId: crypto.randomUUID() })),
+    db,
+    now + 4000
+  );
+  report = await localAnalytics(db, "protocol-11", 7, now + 4000);
+  assert.equal(modeMetric(report, "game_starts_classic")?.value, 2);
+  assert.equal(modeMetric(report, "game_starts")?.value, 2);
+});
+
+test("mode subtotals reconcile exactly with their overall measure across a day boundary and at the coverage edges", async () => {
+  const { db } = database();
+  const day = (date: string, offsetSeconds = 0) =>
+    Date.parse(`${date}T09:00:00Z`) + offsetSeconds * 1000;
+  const sessions = {
+    day1: crypto.randomUUID(),
+    day2: crypto.randomUUID(),
+    day3: crypto.randomUUID()
+  };
+  const play = async (event: string, mode: string, at: number, sessionId: string, seconds = 0) =>
+    collectEngagement(
+      gameRequest(gameEvent(event, mode, { sessionId, ...(seconds ? { seconds } : {}) })),
+      db,
+      at
+    );
+  await play("game_start", "classic", day("2026-10-10"), sessions.day1);
+  await play("game_start", "classic", day("2026-10-10", 1), sessions.day1);
+  await play("game_start", "journey", day("2026-10-10", 2), sessions.day1);
+  await play("active_time", "classic", day("2026-10-10", 21), sessions.day1, 20);
+  await play("active_time", "journey", day("2026-10-10", 42), sessions.day1, 20);
+  await play("game_start", "private_room", day("2026-10-11"), sessions.day2);
+  await play("game_start", "public_matchmaking", day("2026-10-11", 1), sessions.day2);
+  await play("active_time", "private_room", day("2026-10-11", 31), sessions.day2, 30);
+  await play("active_time", "public_matchmaking", day("2026-10-11", 62), sessions.day2, 30);
+  await play("game_start", "classic", day("2026-10-12"), sessions.day3);
+  await play("game_replay", "classic", day("2026-10-12", 1), sessions.day3);
+  await play("game_complete", "classic", day("2026-10-12", 2), sessions.day3);
+  await play("active_time", "classic", day("2026-10-12", 21), sessions.day3, 20);
+
+  const complete = windowOf("2026-10-10", "2026-10-15");
+  const report = await localAnalytics(db, "protocol-11", complete.days, now, complete);
+  const expected: Record<string, Record<string, number>> = {
+    game_starts: { classic: 3, journey: 1, private_room: 1, public_matchmaking: 1 },
+    game_replays: { classic: 1, journey: 0, private_room: 0, public_matchmaking: 0 },
+    game_completions: { classic: 1, journey: 0, private_room: 0, public_matchmaking: 0 },
+    active_seconds: { classic: 40, journey: 20, private_room: 30, public_matchmaking: 30 }
+  };
+  for (const [parent, parts] of Object.entries(expected)) {
+    const total = modeMetric(report, parent)!;
+    const totalExpected = Object.values(parts).reduce((sum, value) => sum + value, 0);
+    assert.equal(total.value, totalExpected, parent);
+    let windowSum = 0;
+    for (const [mode, value] of Object.entries(parts)) {
+      const metric = modeMetric(report, `${parent}_${mode}`)!;
+      assert.equal(metric.value, value, `${parent}_${mode}`);
+      assert.equal(metric.unit, total.unit);
+      assert.equal(metric.quality, "exact", `${parent}_${mode} covers the whole window`);
+      windowSum += metric.value!;
+    }
+    // The subtotals of the window are the overall figure, not a second measurement.
+    assert.equal(windowSum, total.value, `${parent} window reconciliation`);
+    // Every UTC day reconciles too, including the empty days after the last event
+    // and the day the first events landed on.
+    for (const date of dateDays(complete)) {
+      const dayParts = playModes.map(
+        (mode) => dailyOf(report, `${parent}_${mode}`).find((point) => point.date === date)?.value
+      );
+      assert(
+        dayParts.every((value) => value !== undefined),
+        `${parent}_* is zero-filled from the split's own start, not before it`
+      );
+      assert.equal(
+        dayParts.reduce((sum, value) => sum + value!, 0),
+        total.daily.find((point) => point.date === date)!.value,
+        `${parent} reconciles on ${date}`
+      );
+    }
+  }
+  assert.deepEqual(dailyOf(report, "game_starts_journey"), [
+    { date: "2026-10-10", value: 1 },
+    { date: "2026-10-11", value: 0 },
+    { date: "2026-10-12", value: 0 },
+    { date: "2026-10-13", value: 0 },
+    { date: "2026-10-14", value: 0 },
+    { date: "2026-10-15", value: 0 }
+  ]);
+  assert.deepEqual(
+    dailyOf(report, "active_seconds_public_matchmaking").map((point) => [point.date, point.value]),
+    [
+      ["2026-10-10", 0],
+      ["2026-10-11", 30],
+      ["2026-10-12", 0],
+      ["2026-10-13", 0],
+      ["2026-10-14", 0],
+      ["2026-10-15", 0]
+    ]
+  );
+  // A mode that received no event at all is a measured zero from the day the split
+  // exists, and its parent is zero on the same days: the partition stays exact.
+  assert.deepEqual(
+    dailyOf(report, "game_completions_journey").map((point) => [point.date, point.value]),
+    [
+      ["2026-10-10", 0],
+      ["2026-10-11", 0],
+      ["2026-10-12", 0],
+      ["2026-10-13", 0],
+      ["2026-10-14", 0],
+      ["2026-10-15", 0]
+    ]
+  );
+  assert.deepEqual(
+    dailyOf(report, "game_completions").map((point) => [point.date, point.value]),
+    [
+      ["2026-10-10", 0],
+      ["2026-10-11", 0],
+      ["2026-10-12", 1],
+      ["2026-10-13", 0],
+      ["2026-10-14", 0],
+      ["2026-10-15", 0]
+    ]
+  );
+  // The window's own start is a boundary: a window that reaches back before the
+  // split keeps the covered days and refuses to total the uncovered ones.
+  const partialWindow = windowOf("2026-10-09", "2026-10-15");
+  const partial = await localAnalytics(db, "protocol-11", partialWindow.days, now, partialWindow);
+  const partialClassic = modeMetric(partial, "game_starts_classic")!;
+  assert.equal(partialClassic.quality, "partial");
+  assert.equal(partialClassic.daily[0]!.date, "2026-10-10");
+  assert.equal(partialClassic.daily.length, 6);
+  assert.equal(partialClassic.value, 3);
+  // The project's own counter and its split share the same first day, so a window
+  // that starts earlier keeps both partial and they still reconcile over the days
+  // they cover.
+  const partialStarts = modeMetric(partial, "game_starts")!;
+  assert.equal(partialStarts.daily.length, 6);
+  assert.equal(partialStarts.daily[0]!.date, "2026-10-10");
+  assert.equal(partialStarts.value, 6);
+  assert.equal(
+    playModes.reduce((sum, mode) => sum + modeMetric(partial, `game_starts_${mode}`)!.value!, 0),
+    6
+  );
+  // A window entirely before the split is unavailable, never thirty days of zero.
+  const before = windowOf("2026-10-01", "2026-10-05");
+  const early = await localAnalytics(db, "protocol-11", before.days, now, before);
+  for (const parent of Object.keys(expected))
+    for (const mode of playModes) {
+      const metric = modeMetric(early, `${parent}_${mode}`)!;
+      assert.equal(metric.value, null, `${parent}_${mode}`);
+      assert.equal(metric.quality, "unavailable", `${parent}_${mode}`);
+      assert.deepEqual(metric.daily, [], `${parent}_${mode}`);
+    }
+  assert(parseProjectAnalytics(report, "protocol-11", complete.days, now, complete));
+});
+
+test("a mode split that begins after its overall counter renders gaps, not zero-filled history", async () => {
+  const { db, sqlite } = database(false);
+  // Durable daily counters outlive the raw events they were built from, so a
+  // project can hold aggregate history that no mode split can be reconstructed for.
+  sqlite
+    .prepare("INSERT INTO wh_analytics_daily(project,day,metric,value) VALUES(?,?,?,?)")
+    .run("protocol-11", "2026-06-01", "game_start", 3);
+  await collectEngagement(gameRequest(gameEvent("game_start", "classic")), db, now);
+  sqlite.exec(readFileSync("migrations/0003-analytics-mode-rollup.sql", "utf8"));
+  const window = windowOf("2026-07-18", "2026-10-15");
+  const report = await localAnalytics(db, "protocol-11", window.days, now, window);
+  const total = modeMetric(report, "game_starts")!;
+  const classic = modeMetric(report, "game_starts_classic")!;
+  // The overall counter starts with the project and keeps its full window.
+  assert.equal(total.value, 1);
+  assert.equal(total.daily.length, 90);
+  // The split starts on the day it could first be observed, and the 89 days before
+  // it are gaps rather than zeroes.
+  assert.deepEqual(classic.daily, [{ date: "2026-10-15", value: 1 }]);
+  assert.equal(classic.value, 1);
+  assert.equal(classic.quality, "partial");
+  assert.equal(
+    classic.daily.filter((point) => point.value === 0).length,
+    0,
+    "no zero is claimed for the days the split did not exist"
+  );
+  for (const mode of playModes) {
+    const metric = modeMetric(report, `game_starts_${mode}`)!;
+    assert(
+      metric.daily.every((point) => point.date >= "2026-10-15"),
+      mode
+    );
+  }
+  assert.equal(
+    sqlite
+      .prepare(
+        "SELECT COUNT(*) AS n FROM wh_analytics_daily WHERE day='2026-06-01' AND metric LIKE 'game\\_start\\_%' ESCAPE '\\'"
+      )
+      .get()!.n,
+    0,
+    "expired history is not guessed from the overall counter"
+  );
+});
+
+test("a project with no accepted gameplay publishes no mode metric and no false zero", async () => {
+  const { db, sqlite } = database();
+  assert.equal(
+    (await collectEngagement(gameRequest(gameEvent("visit", "classic")), db, now)).status,
+    204
+  );
+  const report = await localAnalytics(db, "protocol-11", 30, now);
+  assert.deepEqual(
+    report.metrics.filter((metric) =>
+      /^(game_starts|game_completions|game_replays|active_seconds)_/.test(metric.key)
+    ),
+    [],
+    "a session marker is not gameplay, and no mode subtotal is invented for it"
+  );
+  assert.equal(report.coverage.startedAt, "2026-10-15T00:00:00.000Z");
+  assert.equal(
+    sqlite
+      .prepare("SELECT COUNT(*) AS n FROM wh_analytics_daily WHERE project='protocol-11'")
+      .get()!.n,
+    1,
+    "the visit is the only durable counter"
+  );
+  const empty = await localAnalytics(db, "shoalshot", 30, now);
+  assert.deepEqual(
+    empty.metrics.filter((metric) => metric.key.startsWith("game_starts_")),
+    []
+  );
+  assert.equal(empty.coverage.startedAt, null);
+});
+
+test("the mode backfill covers only complete retained days and re-runs without double-counting", () => {
+  const { sqlite } = database(false);
+  const insert = (date: string, eventId: string, mode: string) =>
+    sqlite
+      .prepare(
+        "INSERT INTO wh_analytics_events(project,event_id,session_hash,kind,seconds,mode,day,received_at) VALUES(?,?,?,?,?,?,?,?)"
+      )
+      .run(
+        "protocol-11",
+        eventId,
+        `session-${eventId}`,
+        "game_start",
+        0,
+        mode,
+        date,
+        Math.floor(Date.parse(`${date}T10:00:00Z`) / 1000)
+      );
+  const expired = new Date(Date.now() - 200 * 86400000).toISOString().slice(0, 10);
+  const retained = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  insert(expired, "expired-1", "classic");
+  insert(retained, "retained-1", "journey");
+  const counter = (metric: string, date: string) =>
+    sqlite
+      .prepare(
+        "SELECT value FROM wh_analytics_daily WHERE project='protocol-11' AND metric=? AND day=?"
+      )
+      .get(metric, date)?.value ?? null;
+  assert.equal(counter("game_start", expired), 1, "the pre-migration overall counter exists");
+  sqlite.exec(readFileSync("migrations/0003-analytics-mode-rollup.sql", "utf8"));
+  assert.equal(counter("game_start_journey", retained), 1);
+  // A day whose events have already been trimmed is a gap, not a partial guess.
+  assert.equal(counter("game_start_classic", expired), null);
+  assert.equal(counter("game_start", expired), 1, "the overall counter is untouched");
+  // Re-running the forward SQL is a replace, never an increment.
+  sqlite.exec(readFileSync("migrations/0003-analytics-mode-rollup.sql", "utf8"));
+  assert.equal(counter("game_start_journey", retained), 1);
+  assert.equal(
+    counter("game_start", retained),
+    1,
+    "the existing rollup is additive with itself and unchanged by this migration"
+  );
+});
+
+test("the forward mode rollup is idempotent and leaves existing schema and rollups intact", () => {
+  const { sqlite } = database();
+  sqlite.exec(
+    "CREATE TABLE core_migrations (version TEXT); INSERT INTO core_migrations VALUES ('existing');"
+  );
+  const before = sqlite
+    .prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_rollup'")
+    .get();
+  const modeBefore = sqlite
+    .prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_mode_rollup'")
+    .get();
+  sqlite.exec(readFileSync("migrations/0003-analytics-mode-rollup.sql", "utf8"));
+  assert.deepEqual(
+    sqlite.prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_rollup'").get(),
+    before
+  );
+  assert.deepEqual(
+    sqlite.prepare("SELECT sql FROM sqlite_schema WHERE name='wh_analytics_mode_rollup'").get(),
+    modeBefore
+  );
+  assert.equal(sqlite.prepare("SELECT version FROM core_migrations").get()!.version, "existing");
+});
+
+test("every object the publication gate requires is created by the reviewed migrations", () => {
+  const { sqlite } = database();
+  // The gate runs its own SELECT against production D1 before a release. Reading
+  // its list from the script keeps this check honest: an object that a migration
+  // creates but the gate does not name could be missing in production, and a name
+  // the gate requires that no migration creates would fail a real deployment.
+  const gate = readFileSync("scripts/deploy-publication.mjs", "utf8");
+  const required = [...gate.matchAll(/"wh_analytics_[a-z_]+"/g)].map((match) =>
+    match[0].slice(1, -1)
+  );
+  assert(required.length >= 9, "the gate names the reviewed analytics objects");
+  assert(required.includes("wh_analytics_mode_rollup"));
+  const present = new Set(
+    sqlite
+      .prepare("SELECT name FROM sqlite_master")
+      .all()
+      .map((row) => row.name as string)
+  );
+  for (const name of required)
+    assert(present.has(name), `${name} is required before publication but no migration creates it`);
 });

@@ -8,6 +8,19 @@ import {
   type ProjectAnalytics,
   type ReportingWindow
 } from "./portfolio-analytics.ts";
+import {
+  gameplayKindMeasures,
+  gameplayModes,
+  gameplayModeDefinition,
+  modeGroups,
+  modesInGroup,
+  modeMeasureKey,
+  modeMeasureLabel,
+  type GameplayMode,
+  type ModeGroup,
+  type ModeMeasureKey,
+  type ModeMeasureParent
+} from "./mode-measures.ts";
 export const projectColours: Record<string, string> = {
   fighter: "#ff887e",
   bubbles: "#79d8ff",
@@ -127,7 +140,37 @@ export const measureChoices = [
       "Recorded outbound project-open actions from Woodhouse. A click shows discovery intent; it does not establish downstream use or acquisition."
   }
 ] as const;
-type MeasureKey = (typeof measureChoices)[number]["key"];
+type MeasureKey = (typeof measureChoices)[number]["key"] | ModeMeasureKey;
+type ModeMeasureChoice = { key: ModeMeasureKey; label: string; meaning: string };
+type MeasureChoice = (typeof measureChoices)[number] | ModeMeasureChoice;
+/**
+ * Protocol 11's mode subtotals as selectable measures. The definition is the same
+ * four-part sentence the aggregate endpoint publishes, so the source register and
+ * the interpretation column cannot describe the same counter differently.
+ */
+export const modeMeasureChoices: ModeMeasureChoice[] = gameplayKindMeasures.flatMap((kind) =>
+  gameplayModes.map((mode) => ({
+    key: modeMeasureKey(kind.parent, mode.key),
+    label: modeMeasureLabel(kind, mode.key),
+    meaning: gameplayModeDefinition(kind, mode.key)
+  }))
+);
+const choicesByKey = new Map<string, MeasureChoice>(
+  [...measureChoices, ...modeMeasureChoices].map((choice) => [choice.key, choice])
+);
+/**
+ * The local-versus-online grouping of the mode measures: local is Classic plus
+ * Journey, online is Private room plus Public matchmaking. Every accepted gameplay
+ * event belongs to exactly one mode, so these totals are additive with the overall
+ * measure. Session measures are deliberately absent: a tab session can span modes.
+ */
+export const modeMeasureGroups = modeGroups.map((group) => ({
+  label: group.label,
+  definition: group.definition,
+  keys: gameplayKindMeasures.flatMap((kind) =>
+    modesInGroup(group.key).map((mode) => modeMeasureKey(kind.parent, mode.key))
+  )
+}));
 const gameMeasures: MeasureKey[] = [
   "game_starts",
   "game_completions",
@@ -154,6 +197,19 @@ const gameView: ProductView = {
   headlines: ["game_starts", "game_completions", "active_seconds"],
   description:
     "Explore recorded gameplay starts, completions, active play and return signals, with source-specific coverage and explicit measurement limits."
+};
+// Protocol 11's client reports four play modes, so its view adds the mode
+// subtotals and the local/online grouping. The other games keep `gameView`: they
+// do not report a mode split, and offering one would render their real measures as
+// missing gameplay.
+const protocol11View: ProductView = {
+  family: "game",
+  label: "Play & engagement by mode",
+  defaultMeasure: "game_starts",
+  keys: [...gameMeasures, ...modeMeasureChoices.map((choice) => choice.key)],
+  headlines: ["game_starts", "game_completions", "active_seconds"],
+  description:
+    "Explore recorded gameplay starts, completions, active play and return signals, with the local and online modes the Protocol 11 client reports and explicit measurement limits."
 };
 const productViews: Record<AnalyticsProject, ProductView> = {
   "app-composer": {
@@ -196,7 +252,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
   },
   fighter: gameView,
   bubbles: gameView,
-  "protocol-11": gameView,
+  "protocol-11": protocol11View,
   shoalshot: gameView
 };
 export function productView(project: AnalyticsProject | null) {
@@ -221,8 +277,11 @@ export const overviewMeasure = {
 } as const;
 export function measuresFor(project: AnalyticsProject | null) {
   const keys = productView(project)?.keys;
-  if (keys) return keys.map((key) => measureChoices.find((m) => m.key === key)!);
-  return [overviewMeasure, ...measureChoices];
+  if (keys) return keys.map((key) => choicesByKey.get(key)!);
+  // All projects keeps every addressable measure, so a mode drill-down shared from
+  // Protocol 11 still resolves to the same measure instead of quietly becoming the
+  // mixed overview.
+  return [overviewMeasure, ...measureChoices, ...modeMeasureChoices];
 }
 export function resolveMeasure(project: AnalyticsProject | null, requested?: string | null) {
   const choices = measuresFor(project);
@@ -232,7 +291,7 @@ export function resolveMeasure(project: AnalyticsProject | null, requested?: str
   )
     return overviewMeasure;
   const canonical = requested === "replays" ? "game_replays" : requested;
-  const known = measureChoices.find((m) => m.key === canonical);
+  const known = canonical ? choicesByKey.get(canonical) : undefined;
   return (
     (known && choices.some((m) => m.key === known.key) ? known : undefined) ??
     choices.find((m) => m.key === productView(project)?.defaultMeasure) ??
@@ -376,7 +435,7 @@ export type OverviewRow = {
   project: AnalyticsProject;
   family: ProductView["family"];
   label: string;
-  measure: (typeof measureChoices)[number];
+  measure: MeasureChoice;
   metric: Metric | undefined;
 };
 /**
@@ -466,6 +525,126 @@ export function dailyStatus(
   return "clean";
 }
 type DiscoveryCoverage = "observed" | "partial" | "unavailable";
+/**
+ * The local-versus-online breakdown of Protocol 11's additive gameplay counters.
+ *
+ * Every accepted gameplay event carries exactly one mode, so for the days a split
+ * covers, the mode subtotals sum exactly to their overall measure. That is the
+ * whole point of showing them together, and it is checked rather than assumed: a
+ * split that does not reconcile is stated as incomplete instead of rendered as if
+ * it agreed.
+ *
+ * Coverage is per measure. A window that reaches back before a split's first
+ * retained day has gaps there, never zeroes, so a measure that began yesterday
+ * cannot look like a month of silence. Session measures are deliberately absent:
+ * one tab session can span several modes, so per-mode sessions would overlap and
+ * double-count.
+ */
+type ModeBreakdownMode = {
+  key: GameplayMode;
+  label: string;
+  measure: ModeMeasureKey;
+  value: number | null;
+  metric: Metric | undefined;
+};
+type ModeBreakdownGroup = {
+  key: ModeGroup;
+  label: string;
+  definition: string;
+  value: number | null;
+  modes: ModeBreakdownMode[];
+};
+export type ModeBreakdown = {
+  key: ModeMeasureParent;
+  label: string;
+  unit: Metric["unit"];
+  total: number | null;
+  totalMetric: Metric | undefined;
+  groups: ModeBreakdownGroup[];
+  from: string | null;
+  coversWindow: boolean;
+  reconciles: boolean | null;
+};
+export function modeBreakdowns(
+  metrics: Metric[] | undefined,
+  period: ReportingWindow
+): ModeBreakdown[] {
+  const list = metrics ?? [];
+  const rows: ModeBreakdown[] = [];
+  for (const kind of gameplayKindMeasures) {
+    const total = list.find((metric) => metric.key === kind.parent);
+    const modes = gameplayModes.map((mode) => ({
+      ...mode,
+      measure: modeMeasureKey(kind.parent, mode.key),
+      metric: list.find((metric) => metric.key === modeMeasureKey(kind.parent, mode.key))
+    }));
+    const present = modes.filter((mode) => mode.metric && mode.metric.daily.length);
+    // No split published for this measure: the source never wrote a mode row, so
+    // there is nothing to show and nothing to infer from the parent alone.
+    if (!present.length) continue;
+    const from = present.map((mode) => mode.metric!.daily[0]!.date).sort()[0]!;
+    const groups: ModeBreakdownGroup[] = modeGroups.map((group) => {
+      const members = modes.filter((mode) => mode.group === group.key);
+      const measured = members.filter((mode) => mode.metric?.value !== null && mode.metric);
+      return {
+        key: group.key,
+        label: group.label,
+        definition: group.definition,
+        value:
+          measured.length === members.length
+            ? members.reduce((sum, mode) => sum + (mode.metric!.value ?? 0), 0)
+            : null,
+        modes: members.map((mode) => ({
+          key: mode.key,
+          label: mode.label,
+          measure: mode.measure,
+          value: mode.metric?.value ?? null,
+          metric: mode.metric
+        }))
+      };
+    });
+    const coveredTotal =
+      total && total.value !== null
+        ? total.daily
+            .filter((point) => point.date >= from)
+            .reduce((sum, point) => sum + point.value, 0)
+        : null;
+    rows.push({
+      key: kind.parent,
+      label: kind.label,
+      unit: kind.unit,
+      total: total?.value ?? null,
+      totalMetric: total,
+      groups,
+      from,
+      coversWindow: from === period.from,
+      reconciles:
+        coveredTotal !== null && groups.every((group) => group.value !== null)
+          ? groups.reduce((sum, group) => sum + (group.value ?? 0), 0) === coveredTotal
+          : null
+    });
+  }
+  return rows;
+}
+/**
+ * The one sentence a reader needs under the mode split. Kept here rather than in
+ * the page so the three states — covered, partially covered and not reconciling —
+ * are testable and cannot drift from the arithmetic the rows were built from.
+ */
+export function modeSplitNote(rows: ModeBreakdown[]): string {
+  if (!rows.length) return "";
+  const sessions =
+    "Visits and engaged sessions are not split by mode: one tab session can span several modes, so per-mode session counts would overlap.";
+  const incomplete = rows.filter((row) => row.reconciles === false);
+  if (incomplete.length)
+    return `${incomplete.map((row) => row.label).join(", ")} currently ${
+      incomplete.length === 1 ? "does" : "do"
+    } not add up to the overall figure, so the split is incomplete for these dates. ${sessions}`;
+  if (rows.every((row) => row.coversWindow))
+    return `Every split covers this whole window, and the mode subtotals sum to the overall figure above them. ${sessions}`;
+  const from = [...new Set(rows.map((row) => row.from).filter(Boolean))].sort();
+  return `The split begins inside this window (${from.join(", ")}), so earlier days are gaps rather than zeroes and the subtotals only add up over the days they cover. ${sessions}`;
+}
 export type DiscoveryReferral = {
   slug: string;
   name: string;
@@ -560,7 +739,7 @@ export type WeeklyHighlight = {
   project: AnalyticsProject;
   name: string;
   family: ProductView["family"];
-  measure: (typeof measureChoices)[number];
+  measure: MeasureChoice;
   unit: Metric["unit"];
   from: string;
   to: string;
