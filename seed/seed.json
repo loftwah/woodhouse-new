@@ -2230,6 +2230,19 @@
           "editorial_notes": "The working examples make reuse easier to discover and try. Browser playback is separate from human listening, physical-device acceptance and independent customer adoption. Public examples and publication guards establish no audience growth, demand, licensing grant or completed migration.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-19",
+        "slug": "2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "The work the games leave behind · 19 October 2026",
+          "reviewed_at": "2026-10-19",
+          "source_description": "Current public production pages, live game builds, published album pages, exact owning release records and reviewed source observed on 19 October 2026. Public-safe derived conclusions only.",
+          "scope": "New review of LoftwahFM's game soundtracks as public albums, Protocol 11's delivered campaign pack, Bubbles' replay-checked Fewest Shots competition, Pirates' source-backed playable slice, SHOALSHOT's card artwork and shipped save repair, and App Composer's independent mini-apps and small WordPress lab. Projects without new evidence keep their earlier records and dates.",
+          "editorial_notes": "Every record remains a dated observation. Published albums, films, artwork and records establish what exists and can be tried; they do not establish listeners, players, buyers, demand or independent adoption. Pirates has no accepted physical-device or source-complete release, SHOALSHOT's card release still needs its own verification, and App Composer's WordPress work remains a small lab rather than a migration service.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3046,6 +3059,120 @@
           "next_proof": "Observe another creator preparing and operating their own app through the existing Get Ready and Init flow. The separate WordPress migration programme must prove content, URLs, editing and replacement before a migration claim is made.",
           "proof_boundary": "Reviewed production source aa1b884 contains the guard and the current creator work. A working reference is not one-click customer onboarding, a completed WordPress migration or validated commercial demand. Owner actions retain their existing access boundaries.",
           "reviewed_at": "2026-10-18",
+          "sort_order": 10,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-pirates-2026-10-19",
+        "slug": "pirates-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-19",
+          "state": "Source-backed playable slice · parity gates still closed.",
+          "state_tone": "amber",
+          "current": "The reconstruction now runs a connected playable sequence built from the original game's own evidence: Free Mode, the Moostyn port and economy, sailing, encounters, naval combat, a frame-2 victory, continuation and save/load. Recent work used decoded source geometry for battle, projectile paths and NPC movement, along with port services, story systems, interface frames and original audio. The original game remains the authority; the accepted parity baseline and any extension work come later.",
+          "next_proof": "Complete the remaining source comparisons and pass the project's own parity and physical-device gates. MP's real-device play acceptance is a separate observation, and no extension work should start before it.",
+          "proof_boundary": "Reviewed repository documentation and source on 19 October 2026; no public hosted build or device acceptance was verified. A playable slice is not a completed reconstruction, and no original executable or asset is redistributed by this record.",
+          "reviewed_at": "2026-10-19",
+          "sort_order": 6,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-bubbles-2026-10-19",
+        "slug": "bubbles-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-19",
+          "state": "Replay-checked competition, rebuilt presentation.",
+          "state_tone": "active",
+          "current": "Fewest Shots is live as a second competitive mode: one board, no shot limit, cleared in as few shots as possible. Submitted runs are replayed on the server to derive the result, so a record cannot come from a browser's unverified claim, and a genuine long clear stays eligible. The same work corrected an advertised 30-shot objective that did not match the real scoring. The live build also carries the promoted Bubblecap mascot and reworked presentation from the same window.",
+          "next_proof": "Watch whether the new mode produces repeat attempts and honest records from players beyond factory testing, and finish the held product work. Physical-phone and final visual acceptance remain separate observations.",
+          "proof_boundary": "The deployed game build contains Fewest Shots and the replay verifier is reviewed source; this record did not complete a fresh human playthrough. A working competition mode is not a player community, an audience or evidence of demand, and record persistence depends on the game's own service.",
+          "reviewed_at": "2026-10-19",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-19",
+        "slug": "loftwahfm-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-19",
+          "state": "The games' music is now a catalogue release.",
+          "state_tone": "active",
+          "current": "Three game soundtracks are public albums on LoftwahFM: Protocol 11's twelve Jukebox tracks, the Loftwah Fighter soundtrack and the SHOALSHOT soundtrack. Each has its own album page and cover, and the catalogue's readiness record keeps the provenance notes with the release. The games keep their own controls, effects and fallback, and the public quick-start still shows a builder how to connect the versioned player.",
+          "next_proof": "Observe a builder taking the quick-start into their own game. Keep the radio's editorial state honest: unattended topic ingestion, scripting and synthesis are not running, and the public pages must not imply otherwise.",
+          "proof_boundary": "Album pages and catalogue records were read on 19 October 2026; listening figures, catalogue totals and demand were not measured. These are public listening releases, not a licensing grant, a venue service or customer adoption.",
+          "reviewed_at": "2026-10-19",
+          "sort_order": 7,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-protocol-11-2026-10-19",
+        "slug": "protocol-11-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-19",
+          "state": "The refusal answers; three films delivered.",
+          "state_tone": "active",
+          "current": "An illegal desktop drop now refuses visibly instead of silently doing nothing: the destination answers with a marked refusal, ownership and the turn stay unchanged, and a legal drop still works. The same delivery reworked Wild placement and hand sorting, gave Journey stages distinct configurations, and corrected the production mix on three campaign films. The climax, decision short and rival-threat short are public with a press page and source records, and Woodhouse keeps an account-free download of the pack.",
+          "next_proof": "Play long hands and four-seat tables on real devices and finish the remaining Wild-ranking reconciliation before the game is called finished. Physical play acceptance stays separate.",
+          "proof_boundary": "The films, press page and pack are public and were reachable on 19 October 2026; the refusal and sorting changes were observed through the game's own automated checks, not a fresh human session here. A four-seat table and campaign films establish no external players or commercial demand.",
+          "reviewed_at": "2026-10-19",
+          "sort_order": 4,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-shoalshot-2026-10-19",
+        "slug": "shoalshot-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-19",
+          "state": "Card artwork in, save repair shipped, release acceptance open.",
+          "state_tone": "amber",
+          "current": "Ten non-species achievement cards now carry original front artwork, joined by earned-card receipts and an ordered reveal after a catch. Two new authored encounter patterns and launcher-specific fire signatures landed in the same window. The multi-tab save-revert repair has shipped; the remaining task is the project's final acceptance reconciliation, not the fix.",
+          "next_proof": "Qualify and verify the combined release at an exact source, then observe phone play, sound and long-session behaviour. Whether earning a card leads to playing for another is a player question.",
+          "proof_boundary": "Reviewed source and repository records. The live game was serving an earlier verified release when this was written, so the card fronts are not yet a verified production claim; physical acceptance and a real audience remain separate.",
+          "reviewed_at": "2026-10-19",
+          "sort_order": 3,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-19",
+        "slug": "app-composer-2026-10-19",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-19",
+          "state": "Independent apps, a creator studio and a small real migration.",
+          "state_tone": "active",
+          "current": "Five independently maintained mini-applications now sit under Composer — Here / there, Linkarooie, Link Check, Hello World and Carry / forward — each keeping its own source, data and public address while the native studio composes them. The guestbook-to-collection path was exercised end to end, including source revocation. A small WordPress publisher was migrated in a lab with 11 entries and three original attachments, and the destination stayed editable after the source WordPress was stopped; image descriptions and a category parent needed manual repair, and the wider migration path is still open.",
+          "next_proof": "Watch a creator outside the factory prepare and operate their own app through the existing Get Ready and Init flow. Keep the WordPress work labelled as a small lab until a real site's cutover, URLs and editing are proven.",
+          "proof_boundary": "The apps and studio are public; the migration figures come from the project's own lab record. Published example stacks remain deliberately fictional, and five independent apps are not five customers or evidence of demand.",
+          "reviewed_at": "2026-10-19",
           "sort_order": 10,
           "public_safe": true
         }
@@ -4821,6 +4948,136 @@
           "revision": "152a886b1eb7de3768613a0429c38fe2713fea40",
           "public_safe": true,
           "proof_boundary": "This demonstrates the available configuration and handoff, not a new creator deploying a production collection or independent adoption. Source pins, privacy and owning release gates remain in force. Browser QA must use the supported verification header; bounded open counts can include unmarked inspection and are not demand evidence."
+        }
+      },
+      {
+        "id": "evidence-pirates-source-playable-2026-10-19",
+        "slug": "pirates-source-playable-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "A playable sequence built from the original game's own evidence",
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "pirates",
+          "snapshot_key": "2026-10-19",
+          "claim": "Pirates now runs a connected playable slice — Free Mode, port and economy, sailing, encounters, naval combat, victory, continuation and save/load — in a modern web runtime, with the original game still treated as the authority.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-19",
+          "reviewed_at": "2026-10-19",
+          "summary": "The current phase reaches source-backed Free Mode → Moostyn port/economy → sail → encounter → naval combat → frame-2 victory → continuation → save/load. Recent work used decoded source geometry for battle, projectile paths and NPC movement, plus port services, story systems, interface frames and original audio. Full original-executable parity, rare-state reconciliation and the project's device acceptance remain outstanding.",
+          "source_label": "Reviewed repository documentation and source",
+          "proof_boundary": "Reviewed from the project's own documentation and source record; no public hosted build or physical-device acceptance was verified here. The original game's assets and executable are not redistributed by this record.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-bubbles-fewest-shots-2026-10-19",
+        "slug": "bubbles-fewest-shots-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "An online record that is checked by replaying the run",
+          "project": "$ref:project-bubbles",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "bubbles",
+          "snapshot_key": "2026-10-19",
+          "claim": "Bubbles' Fewest Shots mode is live, and its online records are verified by replaying the submitted Classic run rather than trusting the result a browser claims.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-19",
+          "reviewed_at": "2026-10-19",
+          "summary": "One board, no shot limit: clear it in as few shots as possible. The server re-walks the submitted run and derives the completion, shot count and score; the earlier arcade validator had accepted the client's claimed outcome without replaying. The same work corrected an advertised 30-shot objective that did not match actual scoring, and the deployed game build carries the mode with the promoted Bubblecap mascot from the same window.",
+          "source_label": "Deployed Bubbles build and reviewed cloud verifier source",
+          "source_url": "https://bubbles.loftwah.com/",
+          "proof_boundary": "The deployed bundle contains the mode and the replay verifier is reviewed source; this record did not complete a fresh human playthrough and does not establish a player community, an audience or record permanence.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-game-soundtracks-2026-10-19",
+        "slug": "loftwahfm-game-soundtracks-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "Three game soundtracks released as albums",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-19",
+          "claim": "The Protocol 11, Fighter and SHOALSHOT soundtracks now exist as public albums on LoftwahFM with their own pages, covers and catalogue records.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-18",
+          "reviewed_at": "2026-10-19",
+          "summary": "Protocol 11's album carries the twelve Jukebox tracks written for the game; the Loftwah Fighter and Shoalshot Original Soundtracks sit beside it in the same catalogue, each with a public album page and cover. Provenance notes travel with the catalogue's business-readiness record. The games keep their own audio controls, effects and fallback; the album is a separate release.",
+          "source_label": "Published LoftwahFM album pages and catalogue records",
+          "source_url": "https://fm.loftwah.com/album/protocol-11-original-soundtrack",
+          "proof_boundary": "Album pages answered on 19 October 2026; listening figures, catalogue totals and demand were not measured. These are public listening releases, not a licensing grant, a venue service or customer adoption.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-protocol-11-campaign-pack-2026-10-19",
+        "slug": "protocol-11-campaign-pack-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "A campaign pack published beside the game",
+          "project": "$ref:project-protocol-11",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "protocol-11",
+          "snapshot_key": "2026-10-19",
+          "claim": "Protocol 11's corrected climax, decision short and rival-threat short are delivered as a public, account-free campaign pack with a press page and source records.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-18",
+          "reviewed_at": "2026-10-19",
+          "summary": "Films were captured frame-stepped against the production game; the game's own press page carries the posters, a combined contact sheet and each film's source record, and Woodhouse keeps a direct download of the pack without an account. The same release made an illegal desktop drop answer with a visible refusal instead of doing nothing silently, with ownership and the turn unchanged.",
+          "source_label": "Public campaign page, pack download and owning release record",
+          "source_url": "https://protocol11.loftwah.com/press/campaign-2026-10-19/",
+          "proof_boundary": "The public pages and pack were reachable on 19 October 2026; the gameplay refusal was observed through the game's own automated checks, not a fresh human session here. Films and a press pack establish no audience, press pickup or commercial demand.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-shoalshot-card-art-2026-10-19",
+        "slug": "shoalshot-card-art-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "Original front artwork for ten achievement cards",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-19",
+          "claim": "SHOALSHOT's non-species achievement cards now carry original front artwork, with earned-card receipts and an ordered reveal.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-18",
+          "reviewed_at": "2026-10-19",
+          "summary": "Ten card fronts have mastered sources, prompts and reviewed model records, wired into the achievement projection; earned cards produce a receipt and a bounded post-impact sequence. Two new authored encounter patterns and launcher-specific fire signatures landed in the same window. The multi-tab save-revert repair is shipped, with final acceptance reconciliation still to do.",
+          "source_label": "Reviewed source and repository records",
+          "proof_boundary": "The live game was serving an earlier verified release when this was written, so the card fronts are not yet a verified production claim; phone play and the project's own release qualification remain open.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-app-composer-five-apps-2026-10-19",
+        "slug": "app-composer-five-apps-2026-10-19",
+        "status": "published",
+        "data": {
+          "title": "Five independent apps under one composition studio",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-19",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-19",
+          "claim": "App Composer now spans five independently maintained mini-applications and a working creator studio, and its WordPress lab reconciled a small publisher's content with the manual repairs recorded.",
+          "evidence_kind": "implementation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-18",
+          "reviewed_at": "2026-10-19",
+          "summary": "Here / there, Linkarooie, Link Check, Hello World and Carry / forward each keep their own public source and address; the studio composes them through their data and actions. The guestbook-to-collection path was exercised end to end, including source revocation. In the WordPress lab, 11 entries and three original attachments were imported and the destination stayed editable with WordPress stopped; image descriptions and a category parent needed manual repair, and the broader migration path is unproven.",
+          "source_label": "Public apps, studio pages and the project's own migration lab record",
+          "source_url": "https://composer.loftwah.com/",
+          "proof_boundary": "Public apps and studio pages are live; the migration figures come from the project's own lab record. Published examples remain deliberately fictional. Five apps, a creator studio and a small migration lab are not external customers, demand or a general migration service.",
+          "public_safe": true
         }
       }
     ],
@@ -10924,6 +11181,338 @@
                     {
                       "_type": "span",
                       "text": "Physical phone play, human listening, customer adoption and commercial permissions keep their own evidence. Other games and experiments retain the dates and limits in their existing records.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-the-work-the-games-leave-behind",
+        "slug": "the-work-the-games-leave-behind",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations"
+          ]
+        },
+        "data": {
+          "title": "The work the games leave behind.",
+          "kind": "Portfolio report",
+          "deck": "Three soundtracks are albums you can play anywhere. A card game has three films you can watch and download. And a Bubbles record is now checked by replaying the run.",
+          "review_date": "2026-10-19",
+          "source_reference": "Public album pages, the delivered campaign pack and press page, the deployed Bubbles build, exact owning release records and reviewed source observed on 19 October 2026. This focused review preserves other projects' earlier evidence and dates.",
+          "lead": "A game can be worth making for what it leaves behind as well as what it does.",
+          "lesson": "Publish the by-product and it can stand on its own.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-loftwahfm",
+            "$ref:project-protocol-11",
+            "$ref:project-bubbles"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "music",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "music-h",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Take the music with you.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "music-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Twelve jukebox tracks were written for Protocol 11's table. They now live on LoftwahFM as an album you can play on its own, beside the Fighter and SHOALSHOT soundtracks. The games keep their own controls, effects and fallback; each album is a separate release with its own page and cover.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "music-link-1",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/album/protocol-11-original-soundtrack"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Listen to the Protocol 11 soundtrack",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "music-link-2",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://fm.loftwah.com/album/shoalshot-original-soundtrack"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Hear the SHOALSHOT soundtrack",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "music-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A builder can still take the versioned player into their own game from the public quick-start, so the same catalogue works as listening and as a component.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "loftwahfm-game-soundtracks-2026-10-19",
+              "_version": 1,
+              "evidence_key": "loftwahfm-game-soundtracks-2026-10-19",
+              "label": "Game soundtracks as catalogue releases",
+              "context": "Reviewed 19 October 2026; listening figures and demand were not measured."
+            },
+            {
+              "_type": "prose",
+              "_key": "films",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "films-h",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Watch the campaign, then play the game.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "films-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Protocol 11's three campaign films are delivered: a corrected 27.5-second climax, a 17.5-second decision short and an 11.5-second rival-threat short, all captured frame-stepped against the production game. The pack carries posters, a combined contact sheet and each film's source record, and Woodhouse keeps a direct download that needs no account.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "films-link-1",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://protocol11.loftwah.com/press/campaign-2026-10-19/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the campaign page",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "films-link-2",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://woodhouse.loftwah.com/share/protocol-11/protocol11-campaign-2026-10-19.zip"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Download the pack",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "films-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The same release made an illegal desktop drop answer with a visible refusal instead of doing nothing silently, with ownership and the turn left unchanged.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "protocol-11-campaign-pack-2026-10-19",
+              "_version": 1,
+              "evidence_key": "protocol-11-campaign-pack-2026-10-19",
+              "label": "The delivered campaign pack",
+              "context": "Reviewed 19 October 2026; press pickup and audience were not measured."
+            },
+            {
+              "_type": "prose",
+              "_key": "records",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "records-h",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A record that was checked.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "records-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Bubbles' Fewest Shots is one board with no shot limit: clear it in as few shots as possible. When a run is submitted, the server replays it and derives the completion, shot count and score, so a record does not rest on what a browser claims. The same release corrected an advertised 30-shot objective that did not match the real scoring.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "records-link-1",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://bubbles.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Play Fewest Shots",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "evidence_link",
+              "_key": "bubbles-fewest-shots-2026-10-19",
+              "_version": 1,
+              "evidence_key": "bubbles-fewest-shots-2026-10-19",
+              "label": "A run replayed before it counts",
+              "context": "Reviewed 19 October 2026; no fresh human playthrough and no community claim."
+            },
+            {
+              "_type": "prose",
+              "_key": "next",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "next-h",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What this does and doesn't prove.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The albums, films and verified records exist and can be used. None of that establishes listeners, players, buyers, demand or an audience, and some published examples remain deliberately fictional. Pirates' source-complete parity, SHOALSHOT's release verification and physical-phone acceptance around the games are separate, unfinished observations.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "next-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Pick one of these and use it. The factory's next interesting question is what someone outside it does with the work.",
                       "marks": []
                     }
                   ]
