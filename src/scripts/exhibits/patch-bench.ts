@@ -213,7 +213,7 @@ class PatchBench {
   private readonly layers = new Map<LayerKey, Layer>();
   private readonly order: LayerKey[] = [];
   private readonly meters = new Map<string, HTMLElement>();
-  private levelBuffer: Uint8Array | null = null;
+  private levelBuffer: Uint8Array<ArrayBuffer> | null = null;
 
   private readonly separation = new Spring(0, 120, 21);
   private readonly openAmount = new Spring(0, 90, 17);
@@ -1532,7 +1532,7 @@ class PatchBench {
     if (!analyser) return 0;
     // One buffer, reused. This runs on every frame of the exhibit.
     if (!this.levelBuffer || this.levelBuffer.length !== analyser.fftSize) {
-      this.levelBuffer = new Uint8Array(analyser.fftSize);
+      this.levelBuffer = new Uint8Array(new ArrayBuffer(analyser.fftSize));
     }
     const data = this.levelBuffer;
     analyser.getByteTimeDomainData(data);
