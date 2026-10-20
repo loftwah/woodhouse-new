@@ -144,7 +144,11 @@ if (isPreview) {
       <section class="container dispatch-bench" aria-labelledby="dispatch-bench-title">
         <div class="dispatch-bench__head">
           <p class="micro-label">Show me</p>
-          <h2 id="dispatch-bench-title">Pull the claim apart</h2>
+          <h2 id="dispatch-bench-title">
+            {slug === "shared-music-independent-games"
+              ? "What independent actually means here"
+              : "Pull the claim apart"}
+          </h2>
           <p>
             This is the working bench, not an illustration of it. Choose a state and the bench shows
             it; change the controls and it shows you something else.
