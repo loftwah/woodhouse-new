@@ -696,11 +696,14 @@ class PatchBench {
     const layer = request.layer && this.layers.has(request.layer) ? request.layer : null;
     const music = request.music !== false;
     this.quiet = true;
-    this.setOpened(open);
-    this.setSeparation(separation);
-    this.setFocus(layer);
-    this.setMusicConnected(music);
-    this.quiet = false;
+    try {
+      this.setOpened(open);
+      this.setSeparation(separation);
+      this.setFocus(layer);
+      this.setMusicConnected(music);
+    } finally {
+      this.quiet = false;
+    }
     this.say(request.message ?? "Showing a particular state. Change it with the controls above.");
     this.syncUrl();
   }
