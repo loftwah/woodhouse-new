@@ -4,6 +4,7 @@ import EditorialBlocks from "../../components/EditorialBlocks.astro";
 import PatchBench from "../../components/exhibits/PatchBench.astro";
 import { Image } from "emdash/ui";
 import { decodeEditorialSlug, getEditorialDispatch } from "../../content/repository";
+import { benchShowStates } from "../../data/bench-state";
 import { validReviewDay } from "../../data/dispatch-dates";
 import { formatReviewDate } from "../../data/review-date";
 import { dispatchSocialCard } from "../../data/social-cards";
@@ -155,18 +156,11 @@ if (isPreview) {
           </p>
         </div>
         <div class="dispatch-bench__controls" role="group" aria-label="Show a state of the bench">
-          <button type="button" data-bench-show='{"open":true,"separation":1}'>
-            The three layers apart
-          </button>
-          <button type="button" data-bench-show='{"open":true,"layer":"music","music":false}'>
-            The music disconnected
-          </button>
-          <button type="button" data-bench-show='{"open":true,"layer":"effects"}'>
-            The effects bus on its own
-          </button>
-          <button type="button" data-bench-show='{"open":true,"layer":"run"}'>
-            The run on its own
-          </button>
+          {benchShowStates.map((state) => (
+            <button type="button" data-bench-show={JSON.stringify(state.request)}>
+              {state.label}
+            </button>
+          ))}
         </div>
         <PatchBench
           variant="full"
@@ -196,6 +190,7 @@ if (isPreview) {
   // The "Show me" controls ask the bench for a state. The bench owns the
   // change; this only names it.
   const bench = document.querySelector<HTMLElement>("[data-patch-bench]");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   for (const button of document.querySelectorAll<HTMLButtonElement>("[data-bench-show]")) {
     button.addEventListener("click", () => {
       if (!bench) return;
@@ -206,7 +201,7 @@ if (isPreview) {
         return;
       }
       bench.dispatchEvent(new CustomEvent("woodhouse:bench", { detail: request }));
-      bench.scrollIntoView({ behavior: "smooth", block: "center" });
+      bench.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
     });
   }
 </script>}

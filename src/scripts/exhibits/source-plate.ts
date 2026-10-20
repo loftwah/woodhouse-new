@@ -176,7 +176,12 @@ class SourcePlate {
       if (sourceImage) sourceImage.removeAttribute("src");
       if (sourceTitle) sourceTitle.textContent = "No contribution available.";
       if (composedCardElement) composedCardElement.hidden = true;
-      if (composedEmpty) composedEmpty.hidden = false;
+      if (composedEmpty) {
+        composedEmpty.hidden = false;
+        // The plate must say why it is empty. An unexplained empty frame
+        // reads as a broken exhibit rather than an honest one.
+        composedEmpty.textContent = composedReason("missing");
+      }
       return;
     }
 
