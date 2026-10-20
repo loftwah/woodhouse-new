@@ -50,6 +50,9 @@ const {
     <button type="button" data-device-share hidden>
       Share
     </button>
+    <button type="button" data-retry-download hidden>
+      Try the download again
+    </button>
   </div>
   <p role="status" data-status></p>
   <details>
@@ -108,6 +111,7 @@ const {
 
     let settled: boolean | undefined;
     let settling: Promise<void> | undefined;
+    let resolution: "pending" | "ready" | "failed" = "pending";
     const resolveImage = () => {
       if (settling) return settling;
       settling = (
@@ -119,10 +123,17 @@ const {
                 resolvedSource = fallback;
                 return probe(fallback);
               })
-              .catch(() => {})
+              .catch(() => {
+                // Neither the project image nor the reviewed fallback answered.
+                // The control must not claim a usable file it does not have.
+                resolution = "failed";
+                const retry = root.querySelector<HTMLButtonElement>("[data-retry-download]");
+                if (retry) retry.hidden = false;
+              })
       ).then(() => {
         settled = true;
         if (!download) return;
+        if (resolution === "failed") return;
         download.href = resolvedImage;
         download.setAttribute(
           "download",
@@ -157,7 +168,51 @@ const {
         // primary asset has been checked waits for that check first.
         if (settled) return;
         event.preventDefault();
-        resolveImage().then(() => download.click());
+        // One owner for the pending download: a second click joins the first
+        // instead of queueing another file write.
+        if (download.dataset.pending === "true") {
+          say("Still preparing the file. It will download once it is ready.");
+          return;
+        }
+        download.dataset.pending = "true";
+        download.setAttribute("aria-busy", "true");
+        say("Preparing the file…");
+        resolveImage()
+          .then(() => {
+            if (resolution === "failed") {
+              say("That image could not be prepared. Open the source link and save it from there.");
+              return;
+            }
+            download.click();
+          })
+          .finally(() => {
+            delete download.dataset.pending;
+            download.removeAttribute("aria-busy");
+          });
+      });
+    root
+      .querySelector<HTMLButtonElement>("[data-retry-download]")
+      ?.addEventListener("click", () => {
+        resolution = "pending";
+        settled = undefined;
+        settling = undefined;
+        promises.original = undefined;
+        const retry = root.querySelector<HTMLButtonElement>("[data-retry-download]");
+        if (retry) retry.hidden = true;
+        say("Checking the image again…");
+        resolveImage()
+          .then(() => {
+            if (resolution === "failed") {
+              say("That image still could not be prepared.");
+              if (retry) retry.hidden = false;
+              return;
+            }
+            say("The file is ready. Choose Download.");
+          })
+          .catch(() => {
+            say("That image could not be prepared.");
+            if (retry) retry.hidden = false;
+          });
       });
     if (copy && navigator.clipboard?.writeText) {
       copy.hidden = false;
@@ -230,7 +285,12 @@ const {
       };
       copyImage.hidden = false;
       copyImage.addEventListener("click", async () => {
+        if (copyImage.disabled) return;
         copyImage.disabled = true;
+        copyImage.dataset.state = "preparing";
+        const idleLabel = copyImage.textContent ?? "Copy image";
+        copyImage.textContent = "Preparing image…";
+        say("Preparing the image for the clipboard…");
         try {
           // Start the clipboard handoff during the click, retaining WebKit activation.
           const imagePromise = png();
@@ -241,11 +301,19 @@ const {
           const width = size.getUint32(0),
             height = size.getUint32(4);
           root.dataset.copiedDimensions = `${width}x${height}`;
+          copyImage.dataset.state = "copied";
+          copyImage.textContent = "Image copied";
           say(`Image copied · ${width} × ${height}. Paste it into your post.`);
         } catch {
+          copyImage.dataset.state = "failed";
+          copyImage.textContent = "Copy image";
           say("Image copy unavailable here. Use Download.");
         } finally {
           copyImage.disabled = false;
+          delete copyImage.dataset.state;
+          window.setTimeout(() => {
+            if (copyImage.textContent === "Image copied") copyImage.textContent = idleLabel;
+          }, 4000);
         }
       });
     }

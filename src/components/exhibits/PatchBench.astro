@@ -1,0 +1,1014 @@
+---
+/* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- The run is a keyboard-operated region: it must be focusable so the arrow keys steer the plug. */
+/**
+ * The patch bench — Woodhouse's working exhibit.
+ *
+ * The scene is real HTML in a CSS 3D space: the modules keep their own focus,
+ * their own controls and their own text. Only the run is drawn on a canvas.
+ */
+type Props = {
+  /** `entry` is the closed discovery object; `full` is the working bench. */
+  variant?: "entry" | "full";
+  /** Shared links shown under the bench. */
+  recipeHref?: string;
+  recipeLabel?: string;
+};
+const {
+  variant = "full",
+  recipeHref = "/dispatches/your-game-its-own-soundtrack/",
+  recipeLabel = "Read the story behind it"
+} = Astro.props;
+---
+
+<div
+  class:list={["patch-bench", variant === "entry" && "patch-bench--entry"]}
+  data-patch-bench
+  data-bench-open="false"
+  data-music="connected"
+>
+  <div class="patch-bench__stage" data-bench-stage>
+    <svg
+      class="patch-bench__links"
+      data-bench-links
+      aria-hidden="true"
+      focusable="false"
+      preserveAspectRatio="none"
+    >
+      <path class="link" data-link="effects" d="" />
+      <path class="link link--music" data-link="music" d="" />
+      <g class="plug" data-plug="effects" data-strength="1">
+        <circle r="7" />
+        <circle class="plug__core" r="2.5" />
+      </g>
+      <g class="plug plug--music" data-plug="music" data-strength="1">
+        <circle r="7" />
+        <circle class="plug__core" r="2.5" />
+      </g>
+    </svg>
+
+    <div class="patch-bench__world">
+      <article
+        class="module module--effects"
+        data-module="effects"
+        data-title="The effects"
+        data-shown="false"
+      >
+        <header class="module__head">
+          <span class="module__index">02</span>
+          <h3 class="module__title">Effects</h3>
+          <p class="module__sub">The sound the game owns</p>
+        </header>
+        <div class="module__body">
+          <div class="meter" data-meter="effects" style="--level: 0">
+            <span class="meter__label">Effects bus</span>
+            <span class="meter__track">
+              <i></i>
+            </span>
+          </div>
+          <p class="module__figure">
+            Generated in the browser with oscillators, on a bus of the game’s own. Muting it never
+            touches the soundtrack.
+          </p>
+          <dl class="facts">
+            <div>
+              <dt>Owner</dt>
+              <dd>The game</dd>
+            </div>
+            <div>
+              <dt>Source</dt>
+              <dd>Local oscillators</dd>
+            </div>
+            <div>
+              <dt>Breaks with</dt>
+              <dd>The browser only</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="module__controls">
+          <button type="button" data-fire-effect>
+            Fire an effect
+          </button>
+          <button type="button" data-effects-mute aria-pressed="false">
+            Mute the effects
+          </button>
+        </div>
+        <p class="module__note" data-module-note data-shown="false">
+          The game’s effects are its own. They are generated on the spot, they answer to the game’s
+          mute, and they would keep working with the music service completely unreachable.
+        </p>
+      </article>
+
+      <article class="module module--run" data-module="run" data-title="The run" data-shown="false">
+        <header class="module__head">
+          <span class="module__index">01</span>
+          <h3 class="module__title">The run</h3>
+          <p class="module__sub">A small game that routes signals</p>
+        </header>
+        <div class="module__body">
+          <div
+            class="game"
+            data-game
+            tabindex="0"
+            role="group"
+            aria-label="Patch run. Move the plug between the effects socket, the open rail and the music socket with the arrow keys."
+          >
+            <canvas
+              data-game-canvas
+              role="img"
+              aria-label="Signals fall towards three sockets: a cyan ring belongs in the effects socket, a lime bar in the music socket, and a coral cross must be let past on the open rail."
+            ></canvas>
+          </div>
+          <p class="game__hud">
+            <span>
+              <strong data-game-score>0</strong> points
+            </span>
+            <span>
+              streak <strong data-game-streak>0</strong>
+            </span>
+            <span class="game__lives" data-game-lives aria-label="3 of 3 runs left">
+              ●●●
+            </span>
+          </p>
+          <p class="game__status" data-game-status role="status"></p>
+        </div>
+        <div class="module__controls module__controls--pad">
+          <div class="plug-pad" role="group" aria-label="Plug position">
+            <button type="button" data-plug-left data-plug-position="0" aria-pressed="false">
+              Effects
+            </button>
+            <button type="button" data-plug-out data-plug-position="1" aria-pressed="true">
+              Out
+            </button>
+            <button type="button" data-plug-right data-plug-position="2" aria-pressed="false">
+              Music
+            </button>
+          </div>
+          <button type="button" data-new-run>
+            New run
+          </button>
+        </div>
+        <p class="module__note" data-module-note data-shown="false">
+          The run is a real game with a real score. It owns its scene, its rules and its effects. It
+          never asks the music service for permission to exist.
+        </p>
+      </article>
+
+      <article
+        class="module module--music"
+        data-module="music"
+        data-title="The music"
+        data-shown="false"
+      >
+        <header class="module__head">
+          <span class="module__index">03</span>
+          <h3 class="module__title">Music</h3>
+          <p class="module__sub">Streamed from LoftwahFM</p>
+        </header>
+        <div class="module__body">
+          <label class="field">
+            Station
+            <select data-station>
+              <option value="night-signal">Night Signal</option>
+            </select>
+          </label>
+          <p class="module__track" data-music-title>
+            No track yet
+          </p>
+          <p class="module__phase" data-music-phase>
+            idle
+          </p>
+          <div class="meter meter--music" data-meter="music" style="--level: 0">
+            <span class="meter__label">Music bus</span>
+            <span class="meter__track">
+              <i></i>
+            </span>
+          </div>
+          <p class="module__message" data-music-message role="status">
+            Preparing the station…
+          </p>
+          <dl class="facts">
+            <div>
+              <dt>Owner</dt>
+              <dd>LoftwahFM</dd>
+            </div>
+            <div>
+              <dt>Transport</dt>
+              <dd>One media element</dd>
+            </div>
+            <div>
+              <dt>Breaks with</dt>
+              <dd>The network only</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="module__controls">
+          <button type="button" data-music-play disabled>
+            Play the music
+          </button>
+          <button type="button" data-music-pause disabled>
+            Pause
+          </button>
+          <button type="button" data-music-mute disabled>
+            Mute
+          </button>
+          <button type="button" data-music-retry hidden>
+            Retry
+          </button>
+        </div>
+        <p class="module__note" data-module-note data-shown="false">
+          A real public LoftwahFM station, played through the supported client. Pull the link and
+          the soundtrack stops while the run carries on.
+        </p>
+      </article>
+    </div>
+
+    <div class="patch-bench__case" data-bench-case>
+      <p class="case__eyebrow">Woodhouse working exhibit</p>
+      <h3 class="case__title">The patch bench</h3>
+      <p class="case__copy">
+        A game, the sounds it owns, and a soundtrack streamed from somewhere else. Open the bench,
+        then take it apart.
+      </p>
+      <button type="button" class="case__open" data-open-bench>
+        Open the bench
+      </button>
+    </div>
+  </div>
+
+  <div
+    class="patch-bench__grip"
+    data-bench-grip
+    role="slider"
+    tabindex="0"
+    aria-label="Take the bench apart"
+    aria-valuemin="0"
+    aria-valuemax="1"
+    aria-valuenow="0"
+    aria-valuetext="Closed up"
+  >
+    <span class="grip__label">Pull to take it apart</span>
+    <span class="grip__track" data-grip-track>
+      <span class="grip__knob"></span>
+    </span>
+  </div>
+
+  <div class="patch-bench__toolbar">
+    <button type="button" class="bench-action" data-toggle-apart data-state="together">
+      Take it apart
+    </button>
+    <div class="bench-layers" role="group" aria-label="Bring a layer forward">
+      <button type="button" data-focus="run" aria-pressed="false">
+        The run
+      </button>
+      <button type="button" data-focus="effects" aria-pressed="false">
+        Effects
+      </button>
+      <button type="button" data-focus="music" aria-pressed="false">
+        Music
+      </button>
+    </div>
+    <button
+      type="button"
+      class="bench-action"
+      data-music-link
+      data-state="connected"
+      aria-pressed="false"
+    >
+      Disconnect the music
+    </button>
+    <button type="button" class="bench-action bench-action--quiet" data-reset>
+      Reset
+    </button>
+    <button type="button" class="bench-action bench-action--quiet" data-copy-link>
+      Copy link to this state
+    </button>
+  </div>
+
+  <p class="patch-bench__status" role="status" data-bench-status></p>
+
+  <div class="patch-bench__notes" data-bench-notes data-active="">
+    <div data-note="">
+      <h3>Three layers, one working system</h3>
+      <p>
+        The run, its effects and the soundtrack are three separate owners. The bench shows what
+        happens when you pull them apart: the game keeps its score, the effects keep their own
+        sound, and the music stops and starts without either of them noticing.
+      </p>
+      <p class="patch-bench__outbound">
+        <a href={recipeHref}>
+          {recipeLabel} <span aria-hidden="true">↗</span>
+        </a>
+        <a href="https://fm.loftwah.com/game-music">
+          Get the integration recipe <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </div>
+    <div data-note="run" hidden>
+      <h3>The run</h3>
+      <p>
+        A small arcade game about routing signals. A cyan ring belongs in the effects socket, a lime
+        bar belongs in the music socket, and a coral cross must be let past on the open rail. Catch
+        one in the wrong place and the run loses a life.
+      </p>
+      <p>
+        It is here to make one point: the game is a first-class owner of its own audio. It scores,
+        it makes its own sounds, and it keeps working when the music service is unreachable.
+      </p>
+    </div>
+    <div data-note="effects" hidden>
+      <h3>The effects</h3>
+      <p>
+        Every effect you hear in the run is generated by an oscillator in this page, on a bus the
+        game owns. Muting that bus changes nothing else. The soundtrack is not routed through it and
+        the game does not ask it for permission.
+      </p>
+      <p>
+        This is the difference the separation buys: a failure in one owner cannot take the other
+        owner down with it.
+      </p>
+    </div>
+    <div data-note="music" hidden>
+      <h3>The music</h3>
+      <p>
+        A real public LoftwahFM station, streamed through LoftwahFM’s own versioned browser client.
+        The music bus carries the stream, so the run can duck it on impact by moving one gain —
+        never by touching play or pause.
+      </p>
+      <p>
+        Disconnect the link and the soundtrack stops on the spot. The run keeps its score and its
+        effects. Reconnect it and the same client resumes the same station: one transport, no second
+        audio engine, no lost game state.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import "../../scripts/exhibits/patch-bench";
+</script>
+
+<style>
+  .patch-bench {
+    --bench-face: #111c30;
+    --bench-face-deep: #0b1524;
+    --bench-edge: rgba(218, 231, 255, 0.26);
+    --separation: 0;
+    --stage-h: 620px;
+    --module-h: 460px;
+    position: relative;
+    margin-block: 1.5rem;
+  }
+  .patch-bench--entry {
+    --stage-h: 520px;
+    --module-h: 380px;
+  }
+
+  .patch-bench__stage {
+    position: relative;
+    height: var(--stage-h);
+    perspective: 1100px;
+    perspective-origin: 50% 46%;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(130% 90% at 50% -10%, rgba(121, 216, 255, 0.12), transparent 62%),
+      radial-gradient(80% 60% at 50% 118%, rgba(233, 255, 73, 0.06), transparent 72%),
+      linear-gradient(180deg, #0a1120 0%, #06090f 100%);
+  }
+  .patch-bench__stage::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 34%;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(121, 216, 255, 0.05));
+  }
+
+  .patch-bench__links {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .link {
+    fill: none;
+    stroke: var(--accent-link);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.72;
+    transition:
+      opacity 180ms ease-out,
+      stroke 180ms ease-out;
+  }
+  .link--music {
+    stroke: var(--acid);
+  }
+  .link[data-strength="0"] {
+    opacity: 0.16;
+    stroke-dasharray: 5 7;
+  }
+  .plug {
+    opacity: 0.85;
+    transition: opacity 180ms ease-out;
+  }
+  .plug circle {
+    fill: var(--ink);
+    stroke: var(--accent-link);
+    stroke-width: 2;
+  }
+  .plug .plug__core {
+    fill: var(--accent-link);
+    stroke: none;
+  }
+  .plug--music circle {
+    stroke: var(--acid);
+  }
+  .plug--music .plug__core {
+    fill: var(--acid);
+  }
+  .plug[data-strength="0"] {
+    opacity: 0.25;
+  }
+
+  .patch-bench__world {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    z-index: 2;
+  }
+
+  .module {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: var(--module-h);
+    padding: 0.85rem 0.95rem 0.75rem;
+    border: 1px solid var(--bench-edge);
+    background: linear-gradient(180deg, #14223a 0%, var(--bench-face-deep) 100%);
+    box-shadow:
+      0 34px 60px -34px rgba(0, 0, 0, 0.95),
+      0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    will-change: transform, opacity;
+  }
+  .module--effects {
+    width: 20%;
+  }
+  .module--run {
+    width: 34%;
+    border-color: rgba(233, 255, 73, 0.32);
+  }
+  .module--music {
+    width: 24%;
+  }
+  .patch-bench[data-bench-open="false"] .patch-bench__world {
+    pointer-events: none;
+  }
+  /* A closed case has one invitation. The bench controls appear when it opens. */
+  .patch-bench[data-bench-open="false"] .patch-bench__grip,
+  .patch-bench[data-bench-open="false"] .patch-bench__toolbar,
+  .patch-bench[data-bench-open="false"] .patch-bench__status {
+    display: none;
+  }
+  .patch-bench__grip,
+  .patch-bench__toolbar {
+    animation: bench-reveal 260ms ease-out both;
+  }
+  @keyframes bench-reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .module.is-focused {
+    border-color: var(--acid);
+    box-shadow:
+      0 44px 80px -30px rgba(0, 0, 0, 0.95),
+      0 0 0 1px rgba(233, 255, 73, 0.22),
+      0 1px 0 rgba(255, 255, 255, 0.07) inset;
+  }
+  .module.is-dimmed {
+    filter: saturate(0.55);
+  }
+  .module.is-open {
+    border-style: dashed;
+    border-color: rgba(255, 116, 106, 0.55);
+  }
+
+  .module__head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .module__index {
+    font: 600 0.68rem/1 var(--mono);
+    letter-spacing: 0.14em;
+    color: var(--acid);
+  }
+  .module__title {
+    margin: 0;
+    font: 700 1.05rem/1.1 var(--display);
+    letter-spacing: -0.02em;
+  }
+  .module__sub {
+    grid-column: 2;
+    margin: 0.15rem 0 0;
+    font-size: 0.74rem;
+    color: var(--copy-soft);
+  }
+  .module--effects .module__index {
+    color: var(--cyan);
+  }
+  .module--music .module__index {
+    color: var(--acid);
+  }
+
+  .module__body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-block: 0.6rem;
+  }
+  .module__figure {
+    margin: 0;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--copy-soft);
+  }
+  .module__track {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: var(--paper);
+  }
+  .module__phase {
+    margin: 0;
+    font: 500 0.66rem/1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .module__message {
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: var(--copy-soft);
+    min-height: 2.6em;
+  }
+
+  .facts {
+    margin: auto 0 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 0.16rem;
+  }
+  .facts dt {
+    font: 500 0.62rem/1.5 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .facts dd {
+    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: var(--paper);
+    text-align: right;
+  }
+
+  .field {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .field select {
+    display: block;
+    width: 100%;
+    min-height: 40px;
+    margin-top: 0.3rem;
+    padding: 0.35rem 0.5rem;
+    font: inherit;
+    font-size: 0.82rem;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--paper);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+
+  .meter {
+    --level: 0;
+    display: block;
+  }
+  .meter__label {
+    display: block;
+    font: 500 0.62rem/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+    margin-bottom: 0.3rem;
+  }
+  .meter__track {
+    display: block;
+    position: relative;
+    height: 8px;
+    background: rgba(218, 231, 255, 0.08);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .meter__track i {
+    position: absolute;
+    inset-block: 0;
+    left: 0;
+    width: calc(var(--level) * 100%);
+    background: var(--cyan);
+    transition: width 80ms linear;
+  }
+  .meter--music .meter__track i {
+    background: var(--acid);
+  }
+
+  .module__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--line);
+  }
+  .module__controls button,
+  .bench-action,
+  .bench-layers button,
+  .plug-pad button,
+  .case__open {
+    font: inherit;
+    font-size: 0.76rem;
+    color: var(--paper);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.6rem;
+    min-height: 38px;
+    cursor: pointer;
+    transition:
+      background-color 140ms ease-out,
+      border-color 140ms ease-out,
+      color 140ms ease-out,
+      transform 90ms ease-out;
+  }
+  .module__controls button:hover,
+  .bench-action:hover,
+  .bench-layers button:hover,
+  .plug-pad button:hover {
+    border-color: var(--acid);
+    color: var(--acid);
+  }
+  .module__controls button:active,
+  .bench-action:active,
+  .bench-layers button:active,
+  .plug-pad button:active,
+  .case__open:active {
+    transform: translateY(1px);
+  }
+  .module__controls button:disabled,
+  .bench-action:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .module__controls button:focus-visible,
+  .bench-action:focus-visible,
+  .bench-layers button:focus-visible,
+  .plug-pad button:focus-visible,
+  .case__open:focus-visible,
+  .patch-bench__grip:focus-visible,
+  .game:focus-visible {
+    outline: 3px solid var(--acid);
+    outline-offset: 2px;
+  }
+  .plug-pad {
+    display: flex;
+    gap: 0.25rem;
+    flex: 1;
+  }
+  .plug-pad button {
+    flex: 1;
+    padding-inline: 0.3rem;
+  }
+  .plug-pad button[aria-pressed="true"] {
+    border-color: var(--acid);
+    color: var(--acid);
+    background: rgba(233, 255, 73, 0.08);
+  }
+
+  .module__note {
+    margin: 0.5rem 0 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--copy-soft);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 180ms ease-out,
+      visibility 180ms step-end;
+  }
+  .module__note[data-shown="true"] {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 180ms ease-out,
+      visibility 180ms step-start;
+  }
+
+  /* The game */
+  .game {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #070c16;
+    cursor: crosshair;
+  }
+  .game canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .game__hud {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--copy-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .game__hud strong {
+    color: var(--paper);
+    font-size: 0.9rem;
+  }
+  .game__lives {
+    color: var(--acid);
+    letter-spacing: 0.12em;
+  }
+  .game__status {
+    margin: 0;
+    min-height: 2.4em;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: var(--copy-soft);
+  }
+
+  /* The closed bench */
+  .patch-bench__case {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%) translateY(var(--case-shift, 0px));
+    z-index: 4;
+    width: min(520px, 88%);
+    padding: 1.1rem 1.3rem 1.2rem;
+    border: 1px solid var(--line-dark);
+    border-bottom: 0;
+    background: linear-gradient(180deg, rgba(17, 28, 48, 0.97), rgba(9, 15, 26, 0.99));
+    text-align: left;
+  }
+  .case__eyebrow {
+    margin: 0;
+    font: 600 0.64rem/1 var(--mono);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--acid);
+  }
+  .case__title {
+    margin: 0.4rem 0 0.5rem;
+    font: 800 clamp(1.5rem, 2.6vw, 2.1rem)/1 var(--display);
+    letter-spacing: -0.03em;
+  }
+  .case__copy {
+    margin: 0 0 0.9rem;
+    max-width: 44ch;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--copy);
+  }
+  .case__open {
+    border-color: var(--acid);
+    background: var(--acid);
+    color: var(--ink);
+    font-weight: 700;
+    min-height: 44px;
+    padding-inline: 1rem;
+  }
+  .case__open:hover {
+    background: transparent;
+    color: var(--acid);
+  }
+
+  /* The grip */
+  .patch-bench__grip {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: -1px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line);
+    border-top: 0;
+    background: var(--surface);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+  .patch-bench__grip[data-dragging="true"] {
+    cursor: grabbing;
+    border-color: var(--acid);
+  }
+  .grip__label {
+    font: 600 0.68rem/1 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+    white-space: nowrap;
+  }
+  .grip__track {
+    position: relative;
+    flex: 1;
+    height: 6px;
+    background: rgba(218, 231, 255, 0.1);
+    border: 1px solid var(--line);
+  }
+  .grip__knob {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--separation) * 100%);
+    width: 16px;
+    height: 26px;
+    transform: translate(-50%, -50%);
+    background: var(--acid);
+    box-shadow: 0 0 14px rgba(233, 255, 73, 0.4);
+  }
+
+  /* The toolbar */
+  .patch-bench__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: 1rem;
+  }
+  .bench-action {
+    min-height: 44px;
+    padding-inline: 0.9rem;
+  }
+  .bench-action[data-toggle-apart][data-state="apart"] {
+    border-color: var(--acid);
+    color: var(--acid);
+  }
+  .bench-action[data-music-link][data-state="open"] {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+  .bench-action--quiet {
+    color: var(--copy-soft);
+  }
+  .bench-layers {
+    display: flex;
+    border: 1px solid var(--line);
+  }
+  .bench-layers button {
+    border: 0;
+    border-right: 1px solid var(--line);
+    min-height: 44px;
+  }
+  .bench-layers button:last-child {
+    border-right: 0;
+  }
+  .bench-layers button[aria-pressed="true"] {
+    background: var(--acid);
+    color: var(--ink);
+  }
+
+  .patch-bench__status {
+    margin: 0.85rem 0 0;
+    min-height: 1.4em;
+    font-size: 0.85rem;
+    color: var(--copy);
+  }
+
+  .patch-bench__notes {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line);
+  }
+  /* The discovery entry carries the bench itself; the full reading lives on the
+     exhibit's own page. */
+  .patch-bench--entry .patch-bench__notes {
+    display: none;
+  }
+  .patch-bench__notes h3 {
+    margin: 0 0 0.6rem;
+    font: 700 1.25rem/1.15 var(--display);
+    letter-spacing: -0.02em;
+  }
+  .patch-bench__notes p {
+    margin: 0 0 0.7rem;
+    max-width: 66ch;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--copy);
+  }
+  .patch-bench__outbound {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.88rem;
+  }
+
+  @media (max-width: 879px) {
+    .patch-bench__stage {
+      height: 520px;
+      perspective-origin: 50% 50%;
+    }
+    /* On a phone the rack reads downwards and the signal path runs behind it. */
+    .patch-bench__links {
+      z-index: 1;
+    }
+    .module {
+      width: 90%;
+      padding: 0.7rem 0.8rem 0.6rem;
+    }
+    .module--run {
+      height: 320px;
+    }
+    .module--effects {
+      height: 225px;
+    }
+    .module--music {
+      height: 305px;
+    }
+    .facts {
+      display: none;
+    }
+    .module__message {
+      min-height: 2.2em;
+    }
+    .module__title {
+      font-size: 0.95rem;
+    }
+    .module__figure {
+      font-size: 0.68rem;
+    }
+    .module__note {
+      display: none;
+    }
+    .game {
+      min-height: 130px;
+    }
+    .patch-bench__case {
+      width: 92%;
+      padding: 0.9rem 1rem 1rem;
+    }
+    .grip__label {
+      font-size: 0.6rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .module,
+    .link,
+    .plug,
+    .meter__track i,
+    .module__controls button,
+    .bench-action,
+    .bench-layers button,
+    .plug-pad button,
+    .case__open,
+    .module__note,
+    .patch-bench__case,
+    .patch-bench__grip,
+    .patch-bench__toolbar {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>

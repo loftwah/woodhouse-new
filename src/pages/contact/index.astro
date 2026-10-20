@@ -56,7 +56,7 @@ const error = Astro.url.searchParams.get("error");
             </p>
           </div>
           {submitted && (
-            <p class="callout" role="status">
+            <p class="callout" role="status" data-submitted>
               <strong>Thanks. Your note reached the Woodhouse inbox.</strong> Dean can reply if you
               left a reply address.
             </p>
@@ -71,6 +71,7 @@ const error = Astro.url.searchParams.get("error");
               Some details did not pass validation. Check the form and try again.
             </p>
           )}
+          <p class="source-note" data-contact-note role="status"></p>
           <form
             class="contact-form"
             action="/_emdash/api/plugins/woodhouse-enquiries/submit"
@@ -141,7 +142,7 @@ const error = Astro.url.searchParams.get("error");
                 </small>
               </label>
             </div>
-            <button class="button" type="submit">
+            <button class="button" type="submit" data-contact-send>
               Send enquiry <span aria-hidden="true">↗</span>
             </button>
           </form>
@@ -154,3 +155,84 @@ const error = Astro.url.searchParams.get("error");
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // The form stays a native form: this only acknowledges the press, keeps the
+  // visitor's words if the server sends them back, and never blocks a send.
+  const form = document.querySelector<HTMLFormElement>(".contact-form");
+  const send = document.querySelector<HTMLButtonElement>("[data-contact-send]");
+  const note = document.querySelector<HTMLElement>("[data-contact-note]");
+  const draftKey = "woodhouse:contact-draft";
+  const fields = ["name", "reply", "topic", "kind", "message"] as const;
+
+  const saveDraft = () => {
+    if (!form) return;
+    const draft: Record<string, string> = {};
+    for (const field of fields) {
+      const element = form.elements.namedItem(field);
+      if (
+        element instanceof HTMLInputElement ||
+        element instanceof HTMLSelectElement ||
+        element instanceof HTMLTextAreaElement
+      ) {
+        draft[field] = element.value;
+      }
+    }
+    try {
+      sessionStorage.setItem(draftKey, JSON.stringify(draft));
+    } catch {
+      /* A blocked session store must not stop the form working. */
+    }
+  };
+
+  const restoreDraft = () => {
+    if (!form) return false;
+    let draft: Record<string, string> | null;
+    try {
+      const stored = sessionStorage.getItem(draftKey);
+      draft = stored ? (JSON.parse(stored) as Record<string, string>) : null;
+    } catch {
+      draft = null;
+    }
+    if (!draft) return false;
+    let restored = 0;
+    for (const field of fields) {
+      const element = form.elements.namedItem(field);
+      const value = draft[field];
+      if (!value) continue;
+      if (
+        element instanceof HTMLInputElement ||
+        element instanceof HTMLSelectElement ||
+        element instanceof HTMLTextAreaElement
+      ) {
+        element.value = value;
+        restored += 1;
+      }
+    }
+    return restored > 0;
+  };
+
+  if (form) {
+    form.addEventListener("input", saveDraft);
+    form.addEventListener("change", saveDraft);
+    form.addEventListener("submit", () => {
+      if (send) {
+        send.disabled = true;
+        send.setAttribute("aria-busy", "true");
+        send.textContent = "Sending…";
+      }
+      if (note) note.textContent = "Sending your enquiry…";
+      saveDraft();
+    });
+
+    const problem = new URLSearchParams(window.location.search).get("error");
+    if (problem === "invalid" || problem === "rate-limit") {
+      if (restoreDraft() && note) {
+        note.textContent =
+          "Your message was kept. Check the highlighted details and send it again when you are ready.";
+      }
+    } else if (note && !document.querySelector("[data-submitted]")) {
+      note.textContent = "";
+    }
+  }
+</script>

@@ -51,6 +51,9 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
         allow="autoplay"
         referrerpolicy="strict-origin-when-cross-origin"
       />
+      <p class="fm-listening__state" data-fm-state role="status">
+        The player loads when this panel opens.
+      </p>
       <p class="fm-listening__help">
         Press Play in the player. Closing this panel stops playback.{" "}
         <a href={stationUrl} data-fm-open>
@@ -91,9 +94,21 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
     const frame = panel.querySelector<HTMLIFrameElement>("iframe");
     const select = panel.querySelector("select");
     const link = panel.querySelector<HTMLAnchorElement>("[data-fm-open]");
+    const state = panel.querySelector<HTMLElement>("[data-fm-state]");
     if (!frame || !select || !link) continue;
     frame.hidden = false;
     select.disabled = false;
+    // The host cannot hear the frame, so it reports its own loading and
+    // failure. A loaded frame is not proof that audio is playing: only the
+    // supported FM player can say that.
+    let timer = 0;
+    const say = (message: string) => {
+      if (state) state.textContent = message;
+    };
+    const clearTimer = () => {
+      if (timer) window.clearTimeout(timer);
+      timer = 0;
+    };
     const sync = () => {
       const source = new URL(frame.dataset.fmSource!);
       source.searchParams.set("station", select.value);
@@ -102,8 +117,30 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
       link.href = player.href;
       // Loading on intent avoids a player request on every portfolio page.
       // Unloading the frame also releases FM's audio transport on close.
-      frame.src = panel.open ? source.href : "about:blank";
+      if (panel.open) {
+        clearTimer();
+        say("Loading the player…");
+        timer = window.setTimeout(() => {
+          say(
+            "The player is taking longer than expected. Open the station on FM if it does not appear."
+          );
+        }, 12000);
+        frame.src = source.href;
+      } else {
+        clearTimer();
+        frame.src = "about:blank";
+        say("The player loads when this panel opens.");
+      }
     };
+    frame.addEventListener("load", () => {
+      if (!panel.open) return;
+      clearTimer();
+      say("The player is loaded. Press Play inside it to start the station.");
+    });
+    frame.addEventListener("error", () => {
+      clearTimer();
+      say("The player could not be loaded. Open the station on FM instead.");
+    });
     panel.addEventListener("toggle", sync);
     select.addEventListener("change", sync);
     window.addEventListener("pagehide", () => {
@@ -180,6 +217,15 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
   .fm-listening__help {
     font-size: 0.8125rem;
     line-height: 1.6;
+  }
+  .fm-listening__state {
+    margin: 0.75rem 0 0;
+    padding: 0.55rem 0.7rem;
+    border-left: 2px solid var(--accent-link);
+    background: rgba(121, 216, 255, 0.07);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--copy);
   }
   .fm-listening__handoff {
     margin-block: 1.5rem 0;

@@ -1,0 +1,32 @@
+{
+  "contract": 1,
+  "provider": "guestbook",
+  "capturedAt": "2026-10-20",
+  "note": "Checked-in copy of the public Here / there contract, used when the live provider cannot be reached. The live contract is the source of truth.",
+  "items": [
+    {
+      "contract": 1,
+      "provider": "guestbook",
+      "id": "faf5889d-69f1-47d9-8e78-a51ac7218aa1",
+      "revision": 2,
+      "title": "The tide lighthouse, slow moon · fictional demo postcard",
+      "description": "App Composer demo",
+      "visibility": "public",
+      "url": "https://guestbook.loftwah.com/item/faf5889d-69f1-47d9-8e78-a51ac7218aa1",
+      "image": "https://guestbook.loftwah.com/media/faf5889d-69f1-47d9-8e78-a51ac7218aa1",
+      "synthetic": false
+    },
+    {
+      "contract": 1,
+      "provider": "guestbook",
+      "id": "5b4cf3ad-b3c1-4b56-8099-8e3e6d6d39bd",
+      "revision": 2,
+      "title": "Signal check at the ring market · fictional demo postcard",
+      "description": "App Composer demo",
+      "visibility": "public",
+      "url": "https://guestbook.loftwah.com/item/5b4cf3ad-b3c1-4b56-8099-8e3e6d6d39bd",
+      "image": "https://guestbook.loftwah.com/media/5b4cf3ad-b3c1-4b56-8099-8e3e6d6d39bd",
+      "synthetic": false
+    }
+  ]
+}

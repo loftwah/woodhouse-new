@@ -42,6 +42,22 @@ Current source and tests establish observed behaviour. MP's current intent and a
 - Do not add issue counts, percentages, event totals or timestamps unless they have a source in the public-safe snapshot.
 - A test is evidence for a requirement, not the requirement itself. When a gate conflicts with current product intent, investigate the gate before changing the product to satisfy it. Delete or rewrite a gate that no longer describes a real requirement, and record what it used to protect.
 
+## Working exhibits — reviewed 20 October 2026
+
+Issue #85 authorised a small set of working exhibits: bounded interactive islands on this site that show a real capability with its parts visible. `/exhibits/patch-bench/` separates a game, its own sound effects and a real LoftwahFM station; `/exhibits/source-plate/` separates a contribution from the card composed from it through a published contract.
+
+Rules that apply to any exhibit:
+
+- Read the exhibit rules in [DESIGN.md](DESIGN.md#working-exhibits--authorised-expansion-reviewed-20-october-2026) before changing one. The narrow "motion is small and purposeful" reading was explicitly widened for these; lighting and material are allowed when they do the work a drawing could not.
+- One audio owner per exhibit. Never build a second transport to change state, and never start sound before a deliberate gesture.
+- Motion must be interruptible. Positions are springs, so a reversed action follows the new intention.
+- Reduced motion keeps the whole experience, not a reduced one.
+- Keep text, links, status and focus outside the canvas.
+- State what an exhibit does not claim. A demonstration is not an adoption, a copy is not a licence, and a simulation says it is one.
+- Use the existing read-only route for a sibling's public contract rather than adding a service, a registry or a second model. `/api/guestbook-items.json` is the pattern.
+
+The interaction contract in [DESIGN.md](DESIGN.md#interaction-contract-for-feedback--reviewed-20-october-2026) applies to exhibits as well as to the rest of the site.
+
 ## Cloudflare platform decisions
 
 Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It records what the platform offers, what this factory actually uses, and the decision already taken on each capability that is not in use, with sources and a re-check trigger.
