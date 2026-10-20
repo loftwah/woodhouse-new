@@ -91,6 +91,9 @@ class SourcePlate {
     } catch {
       this.source = "unavailable";
       if (status) status.textContent = "The published contract could not be read.";
+      this.say(
+        "The published contract could not be read, so the plates show the checked-in copy or nothing at all."
+      );
       this.render();
       return;
     }
@@ -110,21 +113,32 @@ class SourcePlate {
   private renderChoices() {
     const list = pick<HTMLElement>(this.root, "[data-plate-choices]");
     if (!list) return;
-    list.innerHTML = "";
-    for (const [position, item] of this.items.entries()) {
-      const button = document.createElement("button");
-      button.type = "button";
+    // The buttons are updated in place. Rebuilding them would destroy the
+    // control a keyboard visitor just activated and throw their focus away.
+    const existing = Array.from(list.querySelectorAll<HTMLButtonElement>("button"));
+    if (existing.length !== this.items.length) {
+      list.innerHTML = "";
+      for (const [position, item] of this.items.entries()) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = item.title.replace(/ · fictional demo postcard$/, "");
+        button.addEventListener("click", () => {
+          this.index = position;
+          this.render();
+          this.renderChoices();
+          this.say(`Source changed. The composition followed it: ${item.title}.`);
+          this.syncUrl();
+        });
+        list.appendChild(button);
+      }
+    }
+    const buttons = Array.from(list.querySelectorAll<HTMLButtonElement>("button"));
+    buttons.forEach((button, position) => {
+      const item = this.items[position];
+      if (!item) return;
       button.textContent = item.title.replace(/ · fictional demo postcard$/, "");
       button.setAttribute("aria-pressed", String(position === this.index));
-      button.addEventListener("click", () => {
-        this.index = position;
-        this.render();
-        this.renderChoices();
-        this.say(`Source changed. The composition followed it: ${item.title}.`);
-        this.syncUrl();
-      });
-      list.appendChild(button);
-    }
+    });
   }
 
   private get current(): ContractItem | undefined {
@@ -305,10 +319,7 @@ class SourcePlate {
     const hide = pick<HTMLButtonElement>(this.root, "[data-plate-hide]");
     hide?.addEventListener("click", () => {
       this.hidden = !this.hidden;
-      hide.setAttribute("aria-pressed", String(this.hidden));
-      hide.textContent = this.hidden
-        ? "Show the source again"
-        : "Hide the source (demonstration only)";
+      this.renderHideControl();
       this.render();
       this.say(
         this.hidden
@@ -317,6 +328,9 @@ class SourcePlate {
       );
       this.syncUrl();
     });
+    // A link that opens the plates already hidden must show a control that
+    // agrees with the page, not one that says it will hide a visible source.
+    this.renderHideControl();
 
     pick<HTMLButtonElement>(this.root, "[data-plate-copy]")?.addEventListener("click", async () => {
       try {
@@ -332,12 +346,19 @@ class SourcePlate {
 
   private onResize = () => this.paint();
 
+  private renderHideControl() {
+    const hide = pick<HTMLButtonElement>(this.root, "[data-plate-hide]");
+    if (!hide) return;
+    hide.setAttribute("aria-pressed", String(this.hidden));
+    hide.textContent = this.hidden
+      ? "Show the source again"
+      : "Hide the source (demonstration only)";
+  }
+
   private readDeepLink() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("hidden") === "1") this.hidden = true;
-    const apart = params.get("apart");
-    if (apart === "1") this.separation.target = 1;
-    if (params.get("bench") === "open") this.separation.target = 1;
+    if (params.get("apart") === "1") this.separation.target = 1;
   }
 
   private syncUrl() {

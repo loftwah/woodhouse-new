@@ -16,7 +16,7 @@
  *
  * Nothing here starts sound on load. Audio is created from a deliberate gesture.
  */
-import { benchStateFromParams, benchStateToParams } from "../../data/bench-state";
+import { benchStateFromParams, benchStateLink } from "../../data/bench-state";
 
 /* ── Types ──────────────────────────────────────────────────────────────────── */
 
@@ -205,6 +205,7 @@ const splitQuadratic = (
 class PatchBench {
   private readonly root: HTMLElement;
   private readonly stage!: HTMLElement;
+  private readonly world!: HTMLElement;
   private readonly links!: SVGElement;
   private readonly grip!: HTMLElement;
   private readonly casePlate!: HTMLElement;
@@ -259,17 +260,20 @@ class PatchBench {
   private gameOver = false;
   private shake = 0;
   private pulses = [0, 0, 0];
+  private lastGameMessage = 0;
 
   constructor(root: HTMLElement) {
     this.root = root;
     const stage = pick<HTMLElement>(root, "[data-bench-stage]");
+    const world = pick<HTMLElement>(root, "[data-bench-world]");
     const links = pick<SVGElement>(root, "[data-bench-links]");
     const grip = pick<HTMLElement>(root, "[data-bench-grip]");
     const casePlate = pick<HTMLElement>(root, "[data-bench-case]");
     const status = pick<HTMLElement>(root, "[data-bench-status]");
     const notes = pick<HTMLElement>(root, "[data-bench-notes]");
-    if (!stage || !links || !grip || !casePlate || !status || !notes) return;
+    if (!stage || !world || !links || !grip || !casePlate || !status || !notes) return;
     this.stage = stage;
+    this.world = world;
     this.links = links;
     this.grip = grip;
     this.casePlate = casePlate;
@@ -371,6 +375,8 @@ class PatchBench {
   private closedHeight = 400;
   private openHeight = 900;
   private stageHeight = 0;
+  private viewBoxWidth = 0;
+  private viewBoxHeight = 0;
 
   private applyStageHeight(value: number) {
     const next = Math.round(value);
@@ -404,6 +410,13 @@ class PatchBench {
     }
     const width = this.stage.clientWidth;
     const height = this.stage.clientHeight;
+    // The drawn signal path must track the bench as it grows, or the cables
+    // drift away from the modules they reach.
+    if (width !== this.viewBoxWidth || height !== this.viewBoxHeight) {
+      this.viewBoxWidth = width;
+      this.viewBoxHeight = height;
+      this.links.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    }
     const separation = this.separation.value;
     const open = this.openAmount.value;
     const effects = this.layers.get("effects")!;
@@ -491,6 +504,9 @@ class PatchBench {
 
   private apply() {
     this.root.style.setProperty("--separation", this.separation.value.toFixed(3));
+    // A closed case is a resting object: its controls are not reachable until
+    // the bench opens, so the mouse and the keyboard agree.
+    if (this.world) this.world.inert = !this.opened;
     for (const layer of this.layers.values()) {
       const focus = this.focusSprings.get(layer.key)!.value;
       const dimmed = this.focused !== null && this.focused !== layer.key;
@@ -611,7 +627,9 @@ class PatchBench {
     for (const spring of this.focusSprings.values()) spring.step(dt, instant);
     this.layout();
     this.apply();
-    this.stepGame(dt);
+    // The run only plays once the bench is open. A closed case is a resting
+    // object, not a game running behind a lid.
+    if (this.opened) this.stepGame(dt);
     this.paintMeters();
   }
 
@@ -621,6 +639,9 @@ class PatchBench {
     if (this.opened === open) return;
     this.opened = open;
     this.openAmount.set(open ? 1 : 0);
+    // The status region must be in the accessibility tree before it is written,
+    // or the announcement never happens.
+    this.root.dataset.benchOpen = String(open);
     if (open) {
       this.setSeparation(0.72);
       // The station is prepared while the bench opens, so a later Play is a
@@ -632,7 +653,6 @@ class PatchBench {
       this.setFocus(null);
       this.say("The bench is closed. Open it to start the run.");
     }
-    this.root.dataset.benchOpen = String(open);
     this.syncUrl();
   }
 
@@ -661,6 +681,8 @@ class PatchBench {
       this.openAmount.set(request.open ? 1 : 0);
       this.root.dataset.benchOpen = String(request.open);
       if (request.open && request.separation === undefined) this.setSeparation(0.72);
+      // An opened bench always has a prepared station, however it was opened.
+      if (request.open) void this.prepareMusic();
     }
     if (request.separation !== undefined) this.setSeparation(request.separation);
     if (request.layer !== undefined) this.setFocus(request.layer);
@@ -702,8 +724,17 @@ class PatchBench {
     this.status.textContent = message;
   }
 
-  /** The run reports its own events beside the run, not over the bench. */
-  private sayGame(message: string) {
+  /**
+   * The run reports its own events beside the run, not over the bench.
+   *
+   * A polite live region that fires every second would interrupt whatever the
+   * visitor is reading, so routine routing is throttled and only a mistake or
+   * the end of a run is always announced.
+   */
+  private sayGame(message: string, important = false) {
+    const now = performance.now();
+    if (!important && now - this.lastGameMessage < 2500) return;
+    this.lastGameMessage = now;
     const element = pick<HTMLElement>(this.root, "[data-game-status]");
     if (element) element.textContent = message;
   }
@@ -720,15 +751,18 @@ class PatchBench {
   }
 
   private syncUrl() {
-    const params = benchStateToParams({
-      open: this.opened,
-      apart: this.separation.target,
-      layer: this.focused,
-      music: this.musicConnected,
-      station: this.station === DEFAULT_STATION ? null : this.station
-    });
-    const query = params.toString();
-    const next = `${window.location.pathname}${query ? `?${query}` : ""}`;
+    // The bench must not destroy a campaign parameter the visitor arrived with.
+    const next = benchStateLink(
+      window.location.pathname,
+      {
+        open: this.opened,
+        apart: this.separation.target,
+        layer: this.focused,
+        music: this.musicConnected,
+        station: this.station === DEFAULT_STATION ? null : this.station
+      },
+      new URLSearchParams(window.location.search)
+    );
     if (next !== `${window.location.pathname}${window.location.search}`) {
       window.history.replaceState(null, "", next);
     }
@@ -1006,7 +1040,8 @@ class PatchBench {
         // The first few mistakes teach the sockets instead of ending the run.
         this.grace -= 1;
         this.sayGame(
-          `Not this one — ${CHIP_LABELS[chip.kind]} needed ${PLUG_NAMES[wanted]}. ${this.grace} free miss${this.grace === 1 ? "" : "es"} left.`
+          `Not this one — ${CHIP_LABELS[chip.kind]} needed ${PLUG_NAMES[wanted]}. ${this.grace} free miss${this.grace === 1 ? "" : "es"} left.`,
+          true
         );
         this.updateGameHud();
         return;
@@ -1015,7 +1050,7 @@ class PatchBench {
       this.sayGame(`Wrong socket. ${CHIP_LABELS[chip.kind]} needed ${PLUG_NAMES[wanted]}.`);
       if (this.lives <= 0) {
         this.gameOver = true;
-        this.sayGame(`Run over. ${this.score} points. Start a new run when you are ready.`);
+        this.sayGame(`Run over. ${this.score} points. Start a new run when you are ready.`, true);
       }
     }
     this.updateGameHud();
@@ -1373,8 +1408,9 @@ class PatchBench {
         this.radio.subscribe((snapshot) => this.renderMusic(snapshot));
       }
       await this.fillStations();
-      await this.selectStation();
-      this.radioReady = true;
+      // A station that could not be prepared must not be reported as ready.
+      const prepared = await this.selectStation();
+      this.radioReady = prepared;
       this.renderMusic();
     } catch {
       this.radioReady = false;
@@ -1387,43 +1423,50 @@ class PatchBench {
   private async fillStations(): Promise<void> {
     const select = pick<HTMLSelectElement>(this.root, "[data-station]");
     if (!select) return;
-    if (select.options.length === 0) {
-      let stations = FALLBACK_STATIONS;
-      try {
-        const response = await fetch(STATIONS_URL, { signal: AbortSignal.timeout(8000) });
-        if (response.ok) {
-          const body = (await response.json()) as {
-            stations?: { id: string; name: string }[];
-          };
-          if (Array.isArray(body.stations) && body.stations.length) {
-            stations = body.stations.map((entry) => ({ id: entry.id, name: entry.name }));
-          }
+    let stations = FALLBACK_STATIONS;
+    try {
+      const response = await fetch(STATIONS_URL, { signal: AbortSignal.timeout(8000) });
+      if (response.ok) {
+        const body = (await response.json()) as {
+          stations?: { id: string; name: string }[];
+        };
+        if (Array.isArray(body.stations) && body.stations.length) {
+          stations = body.stations.map((entry) => ({ id: entry.id, name: entry.name }));
         }
-      } catch {
-        /* The documented list is used instead; no station is invented. */
       }
-      select.innerHTML = "";
-      for (const station of stations) {
-        const option = document.createElement("option");
-        option.value = station.id;
-        option.textContent = station.name;
-        select.appendChild(option);
-      }
+    } catch {
+      /* The documented list is used instead; no station is invented. */
     }
-    select.value = this.station;
+    // The catalogue is always read, so the picker offers the real stations
+    // rather than the one option the markup ships with.
+    const previous = select.value;
+    select.innerHTML = "";
+    for (const station of stations) {
+      const option = document.createElement("option");
+      option.value = station.id;
+      option.textContent = station.name;
+      select.appendChild(option);
+    }
+    const wanted = stations.some((station) => station.id === this.station)
+      ? this.station
+      : previous;
+    this.station = wanted;
+    select.value = wanted;
   }
 
-  private async selectStation(): Promise<void> {
-    if (!this.radio) return;
+  private async selectStation(): Promise<boolean> {
+    if (!this.radio) return false;
     const manifest = `${STATION_MANIFEST}/${this.station}/current`;
     try {
       await this.radio.selectStation(manifest, this.station);
       this.radioReady = true;
       this.renderMusic();
+      return true;
     } catch {
       this.radioReady = false;
       this.setMusicMessage("That station could not be prepared. The run keeps working.");
       this.renderMusic();
+      return false;
     }
   }
 
@@ -1459,8 +1502,10 @@ class PatchBench {
     this.musicConnected = connected;
     const button = pick<HTMLButtonElement>(this.root, "[data-music-link]");
     if (button) {
+      // The label states the action, so the control is a command rather than a
+      // toggle with a pressed state that could contradict its own name.
       button.textContent = connected ? "Disconnect the music" : "Reconnect the music";
-      button.setAttribute("aria-pressed", String(!connected));
+      button.removeAttribute("aria-pressed");
       button.dataset.state = connected ? "connected" : "open";
     }
     this.root.dataset.music = connected ? "connected" : "open";
@@ -1573,6 +1618,15 @@ class PatchBench {
   private onPageHide = () => {
     this.stop();
     this.radio?.suspend();
+    // The exhibit owns the audio graph it created, so it releases it. The
+    // client's own teardown removes its nodes; the context belongs to this page.
+    try {
+      this.radio?.dispose();
+    } catch {
+      /* A client that is already gone needs no disposal. */
+    }
+    this.radio = null;
+    this.radioReady = false;
   };
 
   /** Apply a deep-linked state once the scene exists. */
@@ -1582,6 +1636,9 @@ class PatchBench {
       this.openAmount.value = 1;
       this.openAmount.set(1);
       this.root.dataset.benchOpen = "true";
+      // A bench opened from a link prepares its station exactly like one the
+      // visitor opened by hand.
+      void this.prepareMusic();
     }
     if (!this.musicConnected) this.setMusicConnected(false, { silent: true });
     this.setSeparation(this.pendingApart ?? (this.pendingOpen ? 0.72 : 0));

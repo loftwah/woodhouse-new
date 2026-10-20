@@ -184,6 +184,7 @@ const {
               return;
             }
             download.click();
+            say("The file was handed to your browser to save.");
           })
           .finally(() => {
             delete download.dataset.pending;
@@ -284,11 +285,13 @@ const {
         }
       };
       copyImage.hidden = false;
+      // The idle label is captured once, so a second copy inside the restore
+      // window cannot leave the button reading "Image copied" for ever.
+      const idleLabel = copyImage.textContent ?? "Copy image";
       copyImage.addEventListener("click", async () => {
         if (copyImage.disabled) return;
         copyImage.disabled = true;
         copyImage.dataset.state = "preparing";
-        const idleLabel = copyImage.textContent ?? "Copy image";
         copyImage.textContent = "Preparing image…";
         say("Preparing the image for the clipboard…");
         try {
@@ -306,7 +309,7 @@ const {
           say(`Image copied · ${width} × ${height}. Paste it into your post.`);
         } catch {
           copyImage.dataset.state = "failed";
-          copyImage.textContent = "Copy image";
+          copyImage.textContent = idleLabel;
           say("Image copy unavailable here. Use Download.");
         } finally {
           copyImage.disabled = false;

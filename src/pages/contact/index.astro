@@ -212,6 +212,14 @@ const error = Astro.url.searchParams.get("error");
     return restored > 0;
   };
 
+  const clearDraft = () => {
+    try {
+      sessionStorage.removeItem(draftKey);
+    } catch {
+      /* A blocked session store must not stop the form working. */
+    }
+  };
+
   if (form) {
     form.addEventListener("input", saveDraft);
     form.addEventListener("change", saveDraft);
@@ -223,13 +231,29 @@ const error = Astro.url.searchParams.get("error");
       }
       if (note) note.textContent = "Sending your enquiry…";
       saveDraft();
+      // If the page never navigates, the visitor must not be left with a
+      // permanently disabled button.
+      window.setTimeout(() => {
+        if (!send || !send.disabled) return;
+        send.disabled = false;
+        send.removeAttribute("aria-busy");
+        send.textContent = "Send enquiry ↗";
+        if (note) note.textContent = "The send did not complete. Try again.";
+      }, 12000);
     });
 
-    const problem = new URLSearchParams(window.location.search).get("error");
-    if (problem === "invalid" || problem === "rate-limit") {
+    const params = new URLSearchParams(window.location.search);
+    const problem = params.get("error");
+    if (params.get("submitted") === "1") {
+      // The enquiry reached the inbox; the draft has served its purpose.
+      clearDraft();
+      if (note) note.textContent = "";
+    } else if (problem === "invalid" || problem === "rate-limit") {
       if (restoreDraft() && note) {
         note.textContent =
-          "Your message was kept. Check the highlighted details and send it again when you are ready.";
+          problem === "invalid"
+            ? "Your message was kept. Check the message and the reply address, then send it again."
+            : "Your message was kept. The form is busy for now; try again in a little while.";
       }
     } else if (note && !document.querySelector("[data-submitted]")) {
       note.textContent = "";
