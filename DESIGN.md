@@ -64,6 +64,7 @@ The rules for exhibits:
 - **Motion must be interruptible.** Every position in an exhibit is a spring, not a timeline. A visitor who reverses a pull halfway through sees the scene follow the new intention. A canned animation that cannot be reversed is not an exhibit.
 - **Reduced motion keeps the whole experience.** The springs snap instead of travelling, the idle movement stops, and every function, control and explanation stays.
 - **Sound begins through deliberate action.** No exhibit creates an audio context on load or starts sound without a gesture.
+- **A simulation waits for its player.** A run, a timer or a score that advances while nobody is playing it will have ended before the visitor has read the copy, and it empties the state the exhibit claims to hold. The bench's run waits for the visitor's first deliberate decision and says that it is waiting.
 - **One audio owner.** An exhibit owns one audio context, one effects bus and one music bus. A second transport is never created to change state.
 - **Text, links and focus stay outside the canvas.** A canvas may draw a scene; it may not hold the only copy of a control or a status.
 - **The exhibit states what it does not claim.** A demonstration is not an adoption, a copy is not a licence, and a simulation says it is one.
