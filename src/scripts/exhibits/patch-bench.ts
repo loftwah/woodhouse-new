@@ -212,6 +212,8 @@ class PatchBench {
   private readonly notes!: HTMLElement;
   private readonly layers = new Map<LayerKey, Layer>();
   private readonly order: LayerKey[] = [];
+  private readonly meters = new Map<string, HTMLElement>();
+  private levelBuffer: Uint8Array | null = null;
 
   private readonly separation = new Spring(0, 120, 21);
   private readonly openAmount = new Spring(0, 90, 17);
@@ -1528,7 +1530,11 @@ class PatchBench {
 
   private readLevel(analyser: AnalyserNode | null): number {
     if (!analyser) return 0;
-    const data = new Uint8Array(analyser.fftSize);
+    // One buffer, reused. This runs on every frame of the exhibit.
+    if (!this.levelBuffer || this.levelBuffer.length !== analyser.fftSize) {
+      this.levelBuffer = new Uint8Array(analyser.fftSize);
+    }
+    const data = this.levelBuffer;
     analyser.getByteTimeDomainData(data);
     let sum = 0;
     for (const value of data) {
@@ -1539,8 +1545,14 @@ class PatchBench {
   }
 
   private setMeter(id: string, value: number) {
-    const meter = pick<HTMLElement>(this.root, `[data-meter="${id}"]`);
-    if (meter) meter.style.setProperty("--level", value.toFixed(3));
+    let meter = this.meters.get(id);
+    if (!meter) {
+      const found = pick<HTMLElement>(this.root, `[data-meter="${id}"]`);
+      if (!found) return;
+      meter = found;
+      this.meters.set(id, meter);
+    }
+    meter.style.setProperty("--level", value.toFixed(3));
   }
 
   /* ── Lifecycle ────────────────────────────────────────────────────────────── */
