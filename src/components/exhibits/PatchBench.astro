@@ -966,6 +966,12 @@ const {
     .module__message {
       min-height: 2.2em;
     }
+    /* The plug pad is the way a phone plays the run, so it gets a full-size
+       touch target rather than the desktop control height. */
+    .module__controls button,
+    .plug-pad button {
+      min-height: 44px;
+    }
     .module__title {
       font-size: 0.95rem;
     }

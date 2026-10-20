@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { benchStateFromParams, benchStateLink, benchStateToParams } from "./bench-state.ts";
+import {
+  benchShowStates,
+  benchStateFromParams,
+  benchStateLink,
+  benchStateToParams
+} from "./bench-state.ts";
 
 test("a resting bench has no shareable parameters", () => {
   const state = benchStateFromParams(new URLSearchParams());
@@ -47,7 +52,7 @@ test("the separation survives a round trip", () => {
   assert.equal(benchStateFromParams(params).apart, 1);
 });
 
-test("a closed bench does not carry a separation", () => {
+test("an open bench carries its separation, even at zero", () => {
   const params = benchStateToParams({
     open: true,
     apart: 0,
@@ -57,6 +62,26 @@ test("a closed bench does not carry a separation", () => {
   });
   assert.equal(params.get("apart"), "0.00");
   assert.equal(benchStateFromParams(params).apart, 0);
+});
+
+test("a closed bench carries no separation, or its own link reopens it open", () => {
+  const params = benchStateToParams({
+    open: false,
+    apart: 0,
+    layer: null,
+    music: true,
+    station: null
+  });
+  assert.equal(params.get("apart"), null);
+  const link = benchStateLink("/exhibits/patch-bench/", {
+    open: false,
+    apart: 0,
+    layer: null,
+    music: true,
+    station: null
+  });
+  assert.equal(link, "/exhibits/patch-bench/");
+  assert.equal(benchStateFromParams(new URLSearchParams()).open, false);
 });
 
 test("a layer or separation implies the bench is open", () => {
@@ -117,7 +142,39 @@ test("a shared link does not keep a bench parameter that no longer applies", () 
   const link = benchStateLink(
     "/exhibits/patch-bench/",
     { open: false, apart: 0, layer: null, music: true, station: null },
-    new URLSearchParams("bench=open&layer=music&music=off")
+    new URLSearchParams("bench=open&layer=music&music=off&apart=1.00")
   );
-  assert.equal(link, "/exhibits/patch-bench/?apart=0.00");
+  assert.equal(link, "/exhibits/patch-bench/");
+});
+
+test("a closed bench's own link reopens it closed", () => {
+  const link = benchStateLink("/exhibits/patch-bench/", {
+    open: false,
+    apart: 0,
+    layer: null,
+    music: true,
+    station: null
+  });
+  const query = link.includes("?") ? link.slice(link.indexOf("?") + 1) : "";
+  const state = benchStateFromParams(new URLSearchParams(query));
+  assert.equal(state.open, false);
+  assert.equal(state.layer, null);
+});
+
+test("every named demonstration state is complete, so it cannot inherit the last one", () => {
+  assert.ok(benchShowStates.length >= 4);
+  for (const state of benchShowStates) {
+    assert.equal(typeof state.request.open, "boolean", state.label);
+    assert.equal(typeof state.request.music, "boolean", state.label);
+    assert.ok("layer" in state.request, state.label);
+  }
+});
+
+test("the states on their own name the music condition, because 'on its own' means it", () => {
+  const effects = benchShowStates.find((state) => state.label === "The effects bus on its own");
+  const run = benchShowStates.find((state) => state.label === "The run on its own");
+  assert.equal(effects?.request.music, false);
+  assert.equal(run?.request.music, false);
+  assert.equal(effects?.request.layer, "effects");
+  assert.equal(run?.request.layer, "run");
 });

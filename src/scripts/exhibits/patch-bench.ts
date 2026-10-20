@@ -16,7 +16,7 @@
  *
  * Nothing here starts sound on load. Audio is created from a deliberate gesture.
  */
-import { benchStateFromParams, benchStateLink } from "../../data/bench-state";
+import { benchStateFromParams, benchStateLink, type BenchRequest } from "../../data/bench-state";
 
 /* ── Types ──────────────────────────────────────────────────────────────────── */
 
@@ -70,14 +70,6 @@ type Chip = {
 };
 
 type PlugPosition = 0 | 1 | 2;
-/** A demonstrative state a reader can ask the bench for. */
-type BenchRequest = {
-  open?: boolean;
-  separation?: number;
-  layer?: LayerKey | null;
-  music?: boolean;
-  message?: string;
-};
 
 declare global {
   var __loftwahFmSdk: RadioModule | undefined;
@@ -233,6 +225,16 @@ class PatchBench {
   private pendingFocus: LayerKey | null = null;
   private pendingApart: number | null = null;
   private pendingOpen = false;
+  /**
+   * The run has not been started by the visitor yet.
+   *
+   * An unattended run would play itself to a loss before anyone had read the
+   * copy, and it would empty the score the exhibit keeps claiming it holds.
+   * The run waits for the visitor's first deliberate plug decision.
+   */
+  private waiting = true;
+  /** A state being applied in one go, so only its own message is announced. */
+  private quiet = false;
 
   /* Audio */
   private context: AudioContext | null = null;
@@ -627,9 +629,13 @@ class PatchBench {
     for (const spring of this.focusSprings.values()) spring.step(dt, instant);
     this.layout();
     this.apply();
-    // The run only plays once the bench is open. A closed case is a resting
-    // object, not a game running behind a lid.
-    if (this.opened) this.stepGame(dt);
+    // The run only plays once the bench is open and the visitor has taken a
+    // turn. A closed case is a resting object, not a game running under a lid,
+    // and an unattended run would play itself to a loss.
+    if (this.opened) {
+      if (this.waiting) this.paintGame();
+      else this.stepGame(dt);
+    }
     this.paintMeters();
   }
 
@@ -647,6 +653,7 @@ class PatchBench {
       // The station is prepared while the bench opens, so a later Play is a
       // direct call inside the visitor's gesture.
       void this.prepareMusic();
+      if (this.waiting) this.announceWaiting();
       this.say("The bench is open. Take it apart to separate the run, its effects and the music.");
     } else {
       this.setSeparation(0);
@@ -673,22 +680,27 @@ class PatchBench {
     this.syncUrl();
   }
 
-  /** Apply a demonstrative state without a page change. */
+  /**
+   * Apply a demonstrative state without a page change.
+   *
+   * A request is a whole state, not a patch. The reader asked for a named
+   * moment, so the bench fills in whatever the request left out rather than
+   * inheriting what the last request left behind: the same button always
+   * shows the same thing, whichever button came before it.
+   */
   private show(request: BenchRequest) {
     this.ensureRunning();
-    if (request.open !== undefined) {
-      this.opened = request.open;
-      this.openAmount.set(request.open ? 1 : 0);
-      this.root.dataset.benchOpen = String(request.open);
-      if (request.open && request.separation === undefined) this.setSeparation(0.72);
-      // An opened bench always has a prepared station, however it was opened.
-      if (request.open) void this.prepareMusic();
-    }
-    if (request.separation !== undefined) this.setSeparation(request.separation);
-    if (request.layer !== undefined) this.setFocus(request.layer);
-    if (request.music !== undefined && request.music !== this.musicConnected) {
-      this.setMusicConnected(request.music);
-    }
+    const open = request.open !== false;
+    const separation =
+      typeof request.separation === "number" ? request.separation : open ? 0.72 : 0;
+    const layer = request.layer && this.layers.has(request.layer) ? request.layer : null;
+    const music = request.music !== false;
+    this.quiet = true;
+    this.setOpened(open);
+    this.setSeparation(separation);
+    this.setFocus(layer);
+    this.setMusicConnected(music);
+    this.quiet = false;
     this.say(request.message ?? "Showing a particular state. Change it with the controls above.");
     this.syncUrl();
   }
@@ -721,6 +733,7 @@ class PatchBench {
   }
 
   private say(message: string) {
+    if (this.quiet) return;
     this.status.textContent = message;
   }
 
@@ -927,6 +940,8 @@ class PatchBench {
     const move = (position: PlugPosition) => {
       this.plugTarget = position;
       this.updateGameHint();
+      // A deliberate plug decision is what starts the run.
+      this.startRun();
     };
     pick<HTMLButtonElement>(this.root, "[data-plug-left]")?.addEventListener("click", () =>
       move(0)
@@ -952,14 +967,14 @@ class PatchBench {
       event.preventDefault();
     });
     pick<HTMLButtonElement>(this.root, "[data-new-run]")?.addEventListener("click", () => {
-      this.newRun();
+      this.newRun(true);
       this.say("New run. The score resets; the bench is untouched.");
     });
   }
 
   /* ── The game ─────────────────────────────────────────────────────────────── */
 
-  private newRun() {
+  private newRun(started = false) {
     this.chips = [];
     this.score = 0;
     this.streak = 0;
@@ -971,8 +986,26 @@ class PatchBench {
     this.gameOver = false;
     this.plug = 1;
     this.plugTarget = 1;
+    this.waiting = !started;
     this.updateGameHud();
     this.updateGameHint();
+    if (!started) this.announceWaiting();
+  }
+
+  /**
+   * The run waits for the visitor. The invitation is only made once the bench
+   * is open, because a closed case has not been asked for anything yet.
+   */
+  private announceWaiting() {
+    if (!this.opened) return;
+    this.sayGame("Move the plug to start the run.", true);
+  }
+
+  /** The visitor's first deliberate decision starts the run. */
+  private startRun() {
+    if (!this.waiting) return;
+    this.waiting = false;
+    this.sayGame("The run is live. Route each signal into the socket it belongs to.", true);
   }
 
   private stepGame(dt: number) {
@@ -1206,6 +1239,16 @@ class PatchBench {
       context.fillStyle = "#a9b8d0";
       context.font = "400 13px system-ui, sans-serif";
       context.fillText(`${this.score} points · start a new run`, width / 2, height / 2 + 18);
+    } else if (this.waiting) {
+      // The run has not started. Saying so on the canvas keeps the waiting
+      // state from reading as a broken or frozen game.
+      context.fillStyle = "#f4f7fd";
+      context.font = "600 19px Bricolage Grotesque, system-ui, sans-serif";
+      context.textAlign = "center";
+      context.fillText("Ready", width / 2, height / 2 - 4);
+      context.fillStyle = "#a9b8d0";
+      context.font = "400 12px system-ui, sans-serif";
+      context.fillText("move the plug to start the run", width / 2, height / 2 + 16);
     }
     context.restore();
   }
@@ -1632,13 +1675,10 @@ class PatchBench {
   /** Apply a deep-linked state once the scene exists. */
   begin() {
     if (this.pendingOpen) {
-      this.opened = true;
+      // A bench opened from a link is opened exactly like one the visitor
+      // opened by hand: same announcement, same prepared station.
       this.openAmount.value = 1;
-      this.openAmount.set(1);
-      this.root.dataset.benchOpen = "true";
-      // A bench opened from a link prepares its station exactly like one the
-      // visitor opened by hand.
-      void this.prepareMusic();
+      this.setOpened(true);
     }
     if (!this.musicConnected) this.setMusicConnected(false, { silent: true });
     this.setSeparation(this.pendingApart ?? (this.pendingOpen ? 0.72 : 0));
