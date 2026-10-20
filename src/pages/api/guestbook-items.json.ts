@@ -16,9 +16,9 @@ export const prerender = false;
 
 const PROVIDER = "https://guestbook.loftwah.com/api/items";
 const SNAPSHOT = "/exhibits/guestbook-items.json";
+const SITE = "https://woodhouse.loftwah.com";
 
-export const GET: APIRoute = async ({ site }) => {
-  const origin = new URL(site ?? "https://woodhouse.loftwah.com").origin;
+export const GET: APIRoute = async () => {
   try {
     const response = await fetch(PROVIDER, {
       headers: { accept: "application/json" },
@@ -33,7 +33,11 @@ export const GET: APIRoute = async ({ site }) => {
     );
   } catch {
     try {
-      const response = await fetch(new URL(SNAPSHOT, origin));
+      // The checked-in copy is read from the deployment itself, so it needs a
+      // deadline like any other request.
+      const response = await fetch(new URL(SNAPSHOT, import.meta.env.SITE ?? SITE), {
+        signal: AbortSignal.timeout(5000)
+      });
       const snapshot = normaliseContract(await response.json());
       if (!snapshot) throw new Error("snapshot shape");
       return Response.json(

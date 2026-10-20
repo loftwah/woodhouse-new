@@ -46,7 +46,7 @@ const {
       </g>
     </svg>
 
-    <div class="patch-bench__world">
+    <div class="patch-bench__world" data-bench-world inert>
       <article
         class="module module--effects"
         data-module="effects"
@@ -267,13 +267,7 @@ const {
         Music
       </button>
     </div>
-    <button
-      type="button"
-      class="bench-action"
-      data-music-link
-      data-state="connected"
-      aria-pressed="false"
-    >
+    <button type="button" class="bench-action" data-music-link data-state="connected">
       Disconnect the music
     </button>
     <button type="button" class="bench-action bench-action--quiet" data-reset>
