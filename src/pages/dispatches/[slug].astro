@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import EditorialBlocks from "../../components/EditorialBlocks.astro";
+import PatchBench from "../../components/exhibits/PatchBench.astro";
 import { Image } from "emdash/ui";
 import { decodeEditorialSlug, getEditorialDispatch } from "../../content/repository";
 import { validReviewDay } from "../../data/dispatch-dates";
 import { formatReviewDate } from "../../data/review-date";
 import { dispatchSocialCard } from "../../data/social-cards";
-
 export const prerender = false;
 
 const slug = decodeEditorialSlug(Astro.params.slug);
@@ -29,6 +29,10 @@ const isPreview = result?.isPreview === true;
 const socialCard = dispatchSocialCard(slug);
 const isFoundingEssay = slug === "i-didnt-mean-to-build-a-software-factory";
 const hasFeatureArt = isFoundingEssay && editorial?.content[0]?._type === "image_plate";
+// The game-music story carries the working bench, so a reader can stop at the
+// decisive moment instead of taking the claim on trust.
+const hasBench =
+  slug === "your-game-its-own-soundtrack" || slug === "shared-music-independent-games";
 if (slug && !editorial) Astro.response.status = 404;
 if (isPreview) {
   Astro.cache?.set(false);
@@ -136,6 +140,41 @@ if (isPreview) {
         </div>
       </section>
     </section>
+    {hasBench && (
+      <section class="container dispatch-bench" aria-labelledby="dispatch-bench-title">
+        <div class="dispatch-bench__head">
+          <p class="micro-label">Show me</p>
+          <h2 id="dispatch-bench-title">
+            {slug === "shared-music-independent-games"
+              ? "What independent actually means here"
+              : "Pull the claim apart"}
+          </h2>
+          <p>
+            This is the working bench, not an illustration of it. Choose a state and the bench shows
+            it; change the controls and it shows you something else.
+          </p>
+        </div>
+        <div class="dispatch-bench__controls" role="group" aria-label="Show a state of the bench">
+          <button type="button" data-bench-show='{"open":true,"separation":1}'>
+            The three layers apart
+          </button>
+          <button type="button" data-bench-show='{"open":true,"layer":"music","music":false}'>
+            The music disconnected
+          </button>
+          <button type="button" data-bench-show='{"open":true,"layer":"effects"}'>
+            The effects bus on its own
+          </button>
+          <button type="button" data-bench-show='{"open":true,"layer":"run"}'>
+            The run on its own
+          </button>
+        </div>
+        <PatchBench
+          variant="full"
+          recipeHref="/exhibits/patch-bench/"
+          recipeLabel="Open the full bench"
+        />
+      </section>
+    )}
   </BaseLayout>
 ) : (
   <BaseLayout
@@ -152,3 +191,72 @@ if (isPreview) {
     </section>
   </BaseLayout>
 )}
+
+{hasBench && <script>
+  // The "Show me" controls ask the bench for a state. The bench owns the
+  // change; this only names it.
+  const bench = document.querySelector<HTMLElement>("[data-patch-bench]");
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-bench-show]")) {
+    button.addEventListener("click", () => {
+      if (!bench) return;
+      let request: Record<string, unknown>;
+      try {
+        request = JSON.parse(button.dataset.benchShow ?? "{}") as Record<string, unknown>;
+      } catch {
+        return;
+      }
+      bench.dispatchEvent(new CustomEvent("woodhouse:bench", { detail: request }));
+      bench.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }
+</script>}
+
+<style>
+  .dispatch-bench {
+    padding-block: 2rem 4rem;
+    border-top: 1px solid var(--line);
+  }
+  .dispatch-bench__head {
+    max-width: 62ch;
+    margin-bottom: 1.25rem;
+  }
+  .dispatch-bench__head h2 {
+    margin: 0.5rem 0 0.6rem;
+    font: 750 clamp(1.7rem, 3vw, 2.4rem)/1.1 var(--display);
+    letter-spacing: -0.03em;
+  }
+  .dispatch-bench__head p:last-child {
+    margin: 0;
+    color: var(--copy);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .dispatch-bench__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .dispatch-bench__controls button {
+    font: inherit;
+    font-size: 0.82rem;
+    color: var(--paper);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.85rem;
+    min-height: 44px;
+    cursor: pointer;
+    transition:
+      border-color 140ms ease-out,
+      color 140ms ease-out,
+      filter 120ms ease-out;
+  }
+  .dispatch-bench__controls button:hover {
+    border-color: var(--acid);
+    color: var(--acid);
+  }
+  .dispatch-bench__controls button:focus-visible {
+    outline: 3px solid var(--acid);
+    outline-offset: 2px;
+  }
+</style>

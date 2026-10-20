@@ -120,4 +120,14 @@ Reviewed 16 October 2026: Woodhouse adds a separate, default-off choice for reco
 
 ## Public reuse demonstrations — reviewed 18 October 2026
 
-MP authorised the practical public game-music demonstration and the ownership-first composition story. Factory and the corresponding project pages should let a builder try the connection and reach the existing provider’s recipe. Public streaming proof does not wait for speculative commercial packaging; it makes no redistribution, licensing, customer adoption or demand claim. App Composer’s working photo pair demonstrates composition and source ownership; WordPress migration claims still require the separate owning programme’s evidence.
+MP authorised the practical public game-music demonstration and the ownership-first composition story. Factory and the corresponding project pages should let a builder try the connection and reach the existing provider's recipe. Public streaming proof does not wait for speculative commercial packaging; it makes no redistribution, licensing, customer adoption or demand claim. App Composer’s working photo pair demonstrates composition and source ownership; WordPress migration claims still require the separate owning programme’s evidence.
+
+## Working exhibits — reviewed 20 October 2026
+
+An exhibit is a working artifact hosted on this site, not an illustration of one. Two exist under `/exhibits/`.
+
+**The patch bench** is the first. A playable run, the sound effects it owns and a real LoftwahFM station are wired the way a game actually wires them, and the visitor can pull them apart: isolate a layer, disconnect the music, watch the soundtrack stop while the run and its effects carry on, and reconnect on the same client without a second audio engine or a lost run. It is the same demonstration the plain `/lab/game-music.html` page has always made, with the parts left visible.
+
+**The source plate** is the second and deliberately different. It reads the published Here / there contract and shows a contribution beside the card composed from it. Change the source and the composed card changes with it, because the composition reads the contract rather than keeping a copy. Hiding the source removes the card, as the contract says it would. The switch changes the demonstration only; nothing is sent to the provider and no contribution is hidden.
+
+The exhibits are discovered from Home, from Factory and from the game-music dispatch, which carries a "Show me" control so a reader can stop at the decisive moment and change the condition being explained. Each states what it does not claim: no customer adopted this, no audio is bundled or relicensed, and a simulation says it is one. MP's acceptance of the visual direction and of each exhibit remains separate from technical verification.

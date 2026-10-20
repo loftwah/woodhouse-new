@@ -49,6 +49,40 @@ Corrections must preserve the diagrams' real meaning, editable D2 sources, usefu
 - The Woodhouse index is searchable from the keyboard with `⌘K` or `Ctrl+K`, and from the phone's House Index.
 - Motion is small and purposeful. Respect `prefers-reduced-motion`; do not animate every section into view.
 
+## Working exhibits — authorised expansion, reviewed 20 October 2026
+
+Issue #85 authorised a purposeful exception to the small-motion rule above. The narrow reading — that motion is small and purposeful — did not describe the work the issue asked for, and it did not describe what the site now contains.
+
+A **working exhibit** is a bounded interactive island that runs on this site and shows a real capability of the factory with its parts left visible. There are two, each with its own visual language:
+
+- `/exhibits/patch-bench/` — **The patch bench.** A dark workshop bench in CSS 3D space. Three modules — a playable run, the sound effects it owns, and a real LoftwahFM station — sit on the bench joined by a drawn signal path. The visitor opens the case, pulls the bench apart, isolates a layer, and disconnects the music. The scene is real HTML so focus, text and controls stay usable; only the run is drawn on a canvas.
+- `/exhibits/source-plate/` — **The source plate.** Two flat plates on a registration table: the contribution that owns a photo and the card composed from it through a published contract. Deliberately different from the bench — printed, flat and registered rather than three-dimensional and machined.
+
+The rules for exhibits:
+
+- **Lighting and material are allowed.** The ban on gradients for decoration does not apply to a lit surface, a bevelled edge or a lamp pool, because in an exhibit those are the material and the light. They are still not decoration: every gradient in an exhibit does a job a drawing could not.
+- **Motion must be interruptible.** Every position in an exhibit is a spring, not a timeline. A visitor who reverses a pull halfway through sees the scene follow the new intention. A canned animation that cannot be reversed is not an exhibit.
+- **Reduced motion keeps the whole experience.** The springs snap instead of travelling, the idle movement stops, and every function, control and explanation stays.
+- **Sound begins through deliberate action.** No exhibit creates an audio context on load or starts sound without a gesture.
+- **One audio owner.** An exhibit owns one audio context, one effects bus and one music bus. A second transport is never created to change state.
+- **Text, links and focus stay outside the canvas.** A canvas may draw a scene; it may not hold the only copy of a control or a status.
+- **The exhibit states what it does not claim.** A demonstration is not an adoption, a copy is not a licence, and a simulation says it is one.
+
+## Interaction contract for feedback — reviewed 20 October 2026
+
+Issue #86 asks for the visibility-of-system-status standard across the portfolio. The expectations are recorded here so new controls inherit them:
+
+1. Acknowledge input immediately: a changed object, a selected state or a visible pending label. Aim for a response within roughly 100 ms.
+2. Name the work near its control while it runs: "Preparing image…", "Sending…", "Loading the player…". Determinate progress only when the progress is real.
+3. Report the real outcome and its scope. Distinguish a local save from a cloud sync, a request received from work completed, and a browser download requested from a file saved.
+4. Keep unavailable actions understandable, and keep recovery, retry and navigation available.
+5. Keep failure recoverable: say what failed, keep the person's input, and offer a relevant next step.
+6. Associate status with the operation that produced it. A late response must never overwrite a newer intent, and repeated activation must not duplicate work.
+7. Make the same meaning available to everyone: keyboard operation, non-colour cues and a readable status beside the action.
+8. Author the response. A press should feel deliberate. The shared treatment darkens and settles rather than moving the control, so a pressed target stays under the finger.
+
+This contract applies to the exhibits as well as to the rest of the site.
+
 ## Responsive and accessibility rules
 
 - Design the narrow reading order deliberately. On the homepage, place the lead artwork and its credit before the story text on phones. Stack register identity, state and review date within the same linked row. Keep source artwork at its original aspect ratio and show the phone-specific D2 SVG at phone widths.

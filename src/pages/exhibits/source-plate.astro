@@ -1,0 +1,210 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SourcePlate from "../../components/exhibits/SourcePlate.astro";
+export const prerender = false;
+---
+
+<BaseLayout
+  title="The source plate"
+  description="A working exhibit: a contribution collected by one independently owned app, and the card composed from it by another. Separate the plates, change the source, hide it."
+  path="/exhibits/source-plate/"
+  currentPath="/exhibits/"
+  image="/og/woodhouse-workshop-20261018.jpg"
+>
+  <section class="container exhibit-intro">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">WOODHOUSE</a>
+      <span>/</span>
+      <a href="/exhibits/">Exhibits</a>
+      <span>/</span>
+      <span>The source plate</span>
+    </nav>
+    <div class="exhibit-intro__grid">
+      <div>
+        <p class="micro-label">Working exhibit · App Composer</p>
+        <h1 class="page-title">
+          One photo.
+          <br />
+          <em>Two apps. One owner.</em>
+        </h1>
+      </div>
+      <div class="exhibit-intro__aside">
+        <p>
+          Here / there collects photos. The owner approves them. Linkarooie features approved ones
+          beside their own links. The second app does not own the photo, and it never keeps a copy.
+        </p>
+        <p>
+          Below is the real published contract, read live, with both sides of it on screen. Change
+          the source and the composed card changes with it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container exhibit-stage">
+    <SourcePlate />
+  </section>
+
+  <section class="container exhibit-body">
+    <div class="exhibit-body__grid">
+      <div class="exhibit-prose">
+        <h2>Why the second app has nothing of its own</h2>
+        <p>
+          A guestbook and a showcase could have been one app with two screens. They are not, and the
+          difference is the whole point. They have separate repositories, separate deployments,
+          separate storage and separate owners. The only thing that crosses between them is a
+          versioned contract: a list of approved items, each with its own address, its own revision
+          and its own visibility.
+        </p>
+        <p>
+          Because the showcase reads that contract rather than copying from it, one rule does the
+          work. If the contribution is hidden or removed at the source, the feature disappears from
+          the showcase on the next request. There is nothing to clean up in a second place, because
+          there is no second copy.
+        </p>
+        <h2>What to take from it</h2>
+        <p>If you are building a small system out of apps you already own:</p>
+        <ul>
+          <li>
+            <strong>Publish a contract, not a database.</strong> One versioned read model, with an
+            item identifier, a revision and a visibility, is enough for a second app to compose
+            from.
+          </li>
+          <li>
+            <strong>Keep the ownership honest.</strong> The feature is a reference, not a copy. The
+            card leads back to the original contribution, and the original keeps its own address.
+          </li>
+          <li>
+            <strong>Let the source decide.</strong> Approval, hiding and removal happen in one
+            place. Everything downstream reads the consequence.
+          </li>
+          <li>
+            <strong>Expect the honest limit.</strong> A photo that has already been downloaded
+            cannot be recalled. The contract controls what the apps publish, not what a person has
+            already kept.
+          </li>
+        </ul>
+        <p class="exhibit-prose__actions">
+          <a class="home-action" href="https://composer.loftwah.com/demo">
+            See the live pair <span aria-hidden="true">↗</span>
+          </a>
+          <a class="text-link" href="/dispatches/your-apps-should-get-along/">
+            Read the story behind it <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      </div>
+      <aside class="exhibit-margin" aria-label="About this exhibit">
+        <div class="exhibit-margin__block">
+          <span class="micro-label">What you are looking at</span>
+          <p>
+            The published Here / there contract, read through this site’s own read-only route. The
+            photo is served by the guestbook; the card beside it is composed here, from the same
+            record.
+          </p>
+        </div>
+        <div class="exhibit-margin__block">
+          <span class="micro-label">What it does not claim</span>
+          <p>
+            The visibility switch changes the demonstration only. Nothing is sent to the guestbook,
+            no contribution is hidden, and nothing is deleted. The postcards are labelled fictional
+            demo material by the source app itself.
+          </p>
+        </div>
+        <div class="exhibit-margin__block">
+          <span class="micro-label">Reviewed</span>
+          <p>20 October 2026. Contract version 1, as published by the guestbook.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .exhibit-intro {
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+  }
+  .exhibit-intro__grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 2.5rem 4rem;
+    align-items: end;
+    padding-block: 1.5rem 2rem;
+  }
+  .exhibit-intro .page-title {
+    margin: 0.5rem 0 0;
+  }
+  .exhibit-intro__aside p {
+    margin: 0 0 1rem;
+    max-width: 46ch;
+    color: var(--copy);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .exhibit-stage {
+    padding-bottom: 1rem;
+  }
+  .exhibit-body {
+    padding-block: 2.5rem 4rem;
+  }
+  .exhibit-body__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 3rem 4rem;
+    border-top: 1px solid var(--line);
+    padding-top: 2rem;
+  }
+  .exhibit-prose h2 {
+    margin: 0 0 0.8rem;
+    font: 700 clamp(1.5rem, 2.6vw, 2rem)/1.15 var(--display);
+    letter-spacing: -0.025em;
+  }
+  .exhibit-prose h2 + p {
+    margin-top: 0;
+  }
+  .exhibit-prose p {
+    max-width: 66ch;
+    color: var(--copy);
+    line-height: 1.7;
+  }
+  .exhibit-prose ul {
+    max-width: 66ch;
+    padding-left: 1.1rem;
+    color: var(--copy);
+    line-height: 1.65;
+  }
+  .exhibit-prose li {
+    margin-bottom: 0.6rem;
+  }
+  .exhibit-prose strong {
+    color: var(--paper);
+  }
+  .exhibit-prose__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .exhibit-margin {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .exhibit-margin__block {
+    border-top: 1px solid var(--line);
+    padding-top: 0.85rem;
+  }
+  .exhibit-margin__block p {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--copy-soft);
+  }
+  @media (max-width: 860px) {
+    .exhibit-intro__grid,
+    .exhibit-body__grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

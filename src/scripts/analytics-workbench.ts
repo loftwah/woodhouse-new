@@ -306,29 +306,59 @@ if (sharePayload) {
   });
   const button = document.querySelector<HTMLButtonElement>("[data-report-share]");
   let file: File | null = null;
-  let preparing = false;
+  // Request identity: a later request owns the result, so a slow earlier
+  // preparation cannot publish a stale file over a newer one.
+  let request = 0;
   const panel = document.querySelector<HTMLDetailsElement>("[data-share-panel]");
+  const prepare = async () => {
+    if (!panel?.open || !button || !navigator.canShare || !navigator.share) return;
+    const id = ++request;
+    file = null;
+    button.hidden = true;
+    button.dataset.state = "preparing";
+    if (status) status.textContent = "Preparing the report image…";
+    try {
+      const response = await fetch(image, { signal: AbortSignal.timeout(15000) });
+      if (!response.ok) throw Error("image unavailable");
+      const blob = await response.blob();
+      if (!blob.type.startsWith("image/")) throw Error("image unavailable");
+      const prepared = new File([blob], "woodhouse-report.png", { type: "image/png" });
+      if (id !== request) return;
+      file = prepared;
+      if (navigator.canShare({ files: [prepared] })) {
+        button.hidden = false;
+        button.dataset.state = "ready";
+        if (status) status.textContent = "The report image is ready to share.";
+      } else if (status) {
+        status.textContent = "This device cannot share the image directly. Use a PNG download.";
+      }
+    } catch {
+      if (id !== request) return;
+      button.hidden = true;
+      delete button.dataset.state;
+      if (status) status.textContent = "Image preview unavailable. Try a PNG download.";
+    }
+  };
   panel?.addEventListener("toggle", () => {
-    if (!panel.open || preparing || !button || !navigator.canShare || !navigator.share) return;
-    preparing = true;
-    fetch(image)
-      .then(async (response) => {
-        if (!response.ok) throw Error("image unavailable");
-        file = new File([await response.blob()], "woodhouse-report.png", { type: "image/png" });
-        if (navigator.canShare({ files: [file] })) button.hidden = false;
-      })
-      .catch(() => {
-        preparing = false;
-        if (status) status.textContent = "Image preview unavailable. Try a PNG download.";
-      });
+    if (!panel.open) {
+      request += 1;
+      file = null;
+      return;
+    }
+    void prepare();
   });
   button?.addEventListener("click", async () => {
     if (!file) return;
+    if (status) status.textContent = "Opening your device's share options…";
     try {
       await navigator.share({ files: [file], text: caption });
+      if (status) status.textContent = "Handed to your device's share options.";
     } catch (error) {
-      if (error instanceof Error && error.name !== "AbortError" && status)
-        status.textContent = "Image sharing unavailable. Use a PNG download.";
+      if (error instanceof Error && error.name === "AbortError") {
+        if (status) status.textContent = "Sharing cancelled. The report image is still ready.";
+        return;
+      }
+      if (status) status.textContent = "Image sharing unavailable. Use a PNG download.";
     }
   });
 }

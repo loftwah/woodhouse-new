@@ -89,6 +89,22 @@ summary {
   outline-color: var(--focus);
 }
 
+/* An authored press. The hit target never moves: the control darkens and
+   settles instead of sliding, so a pressed button stays under the finger. */
+:where(button, summary, [role="button"]):active {
+  filter: brightness(0.86);
+}
+:where(a.home-action, a.start-card__action, .button):active {
+  filter: brightness(0.86);
+}
+:where(button, summary, [role="button"], a.home-action, .start-card__action, .button) {
+  transition:
+    filter 120ms ease-out,
+    background-color 140ms ease-out,
+    border-color 140ms ease-out,
+    color 140ms ease-out;
+}
+
 .skip-link {
   position: fixed;
   z-index: 100;

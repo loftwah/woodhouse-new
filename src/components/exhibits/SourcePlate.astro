@@ -1,0 +1,475 @@
+---
+/**
+ * The source plate — the App Composer exhibit.
+ *
+ * Two flat plates on a registration table: the contribution that owns the
+ * photo, and the card composed from it. The visual language is deliberately
+ * different from the patch bench — printed, flat and registered rather than
+ * three-dimensional and machined.
+ */
+type Props = {
+  recipeHref?: string;
+  recipeLabel?: string;
+};
+const {
+  recipeHref = "/dispatches/your-apps-should-get-along/",
+  recipeLabel = "Read the story behind it"
+} = Astro.props;
+---
+
+<div class="plate-field" data-source-plate data-plate-field data-hidden="false">
+  <div class="plate-field__marks" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <svg class="plate-field__tether" data-visible="false" aria-hidden="true" focusable="false">
+    <path data-tether-path d="" />
+  </svg>
+
+  <article class="plate plate--source" data-plate="source">
+    <header class="plate__head">
+      <span class="plate__index">Plate 01</span>
+      <h3 class="plate__title">The contribution</h3>
+      <p class="plate__sub">Here / there · owns the photo</p>
+    </header>
+    <div class="plate__frame">
+      <img data-source-image alt="" loading="lazy" decoding="async" />
+      <span class="plate__register" data-tether-source aria-hidden="true"></span>
+    </div>
+    <p class="plate__caption" data-source-title>
+      Reading the published contract…
+    </p>
+    <dl class="plate__facts">
+      <div>
+        <dt>Contract</dt>
+        <dd data-source-contract>—</dd>
+      </div>
+      <div>
+        <dt>Revision</dt>
+        <dd data-source-revision>—</dd>
+      </div>
+      <div>
+        <dt>Visibility</dt>
+        <dd data-source-visibility>—</dd>
+      </div>
+    </dl>
+    <p class="plate__state" data-source-state>
+      Reading the published contract…
+    </p>
+  </article>
+
+  <article class="plate plate--composed" data-plate="composed">
+    <header class="plate__head">
+      <span class="plate__index">Plate 02</span>
+      <h3 class="plate__title">The composition</h3>
+      <p class="plate__sub">Linkarooie · borrows the same photo</p>
+    </header>
+    <div class="plate__card" data-composed-card>
+      <img data-composed-image alt="" loading="lazy" decoding="async" />
+      <p class="plate__card-title" data-composed-title>
+        —
+      </p>
+      <a class="plate__card-link" data-composed-link href="https://guestbook.loftwah.com/">
+        <span data-tether-target aria-hidden="true"></span>
+        Open the original contribution
+      </a>
+    </div>
+    <p class="plate__empty" data-composed-empty hidden></p>
+    <p class="plate__state">
+      The card is not a copy of the photo. It is composed from the contribution, through the
+      published contract.
+    </p>
+  </article>
+
+  <div class="plate-field__controls">
+    <button type="button" class="plate-action" data-plate-apart>
+      Take the plates apart
+    </button>
+    <button
+      type="button"
+      class="plate-action plate-action--quiet"
+      data-plate-hide
+      aria-pressed="false"
+    >
+      Hide the source (demonstration only)
+    </button>
+    <button type="button" class="plate-action plate-action--quiet" data-plate-copy>
+      Copy link to this state
+    </button>
+  </div>
+
+  <div class="plate-field__sources">
+    <span class="plate-field__label">Source contribution</span>
+    <div
+      class="plate-choices"
+      data-plate-choices
+      role="group"
+      aria-label="Choose the source contribution"
+    ></div>
+  </div>
+
+  <p class="plate-field__status" role="status" data-plate-status></p>
+  <p class="plate-field__loading" data-plate-loading>
+    Reading the published contract…
+  </p>
+  <p class="plate-field__provenance">
+    <span data-plate-provenance>Reading the published contract…</span>{" "}
+    <a href={recipeHref}>
+      {recipeLabel} <span aria-hidden="true">↗</span>
+    </a>
+  </p>
+</div>
+
+<script>
+  import "../../scripts/exhibits/source-plate";
+</script>
+
+<style>
+  .plate-field {
+    --plate-separation: 0;
+    position: relative;
+    margin-block: 1.5rem;
+    padding: clamp(1.1rem, 2.4vw, 2rem);
+    border: 1px solid var(--line);
+    background:
+      repeating-linear-gradient(90deg, rgba(218, 231, 255, 0.035) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(0deg, rgba(218, 231, 255, 0.035) 0 1px, transparent 1px 64px),
+      linear-gradient(180deg, #0a1020 0%, #070b14 100%);
+  }
+  .plate-field__marks span {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 0 solid rgba(233, 255, 73, 0.5);
+  }
+  .plate-field__marks span:nth-child(1) {
+    top: 10px;
+    left: 10px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+  .plate-field__marks span:nth-child(2) {
+    top: 10px;
+    right: 10px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+  .plate-field__marks span:nth-child(3) {
+    bottom: 10px;
+    left: 10px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+  .plate-field__marks span:nth-child(4) {
+    bottom: 10px;
+    right: 10px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .plate-field__tether {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .plate-field__tether path {
+    fill: none;
+    stroke: var(--acid);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 5;
+    opacity: 0;
+    transition: opacity 200ms ease-out;
+  }
+  .plate-field__tether[data-visible="true"] path {
+    opacity: 0.8;
+  }
+
+  .plate {
+    position: relative;
+    width: min(420px, 46%);
+    padding: 0.9rem 1rem 1rem;
+    border: 1px solid var(--line-dark);
+    background: linear-gradient(180deg, #101a2c 0%, #0a1220 100%);
+    transform: translateX(var(--slide, 0%));
+    transition: border-color 180ms ease-out;
+    will-change: transform;
+  }
+  .plate--source {
+    z-index: 1;
+  }
+  .plate--composed {
+    z-index: 2;
+    margin-top: -3.5rem;
+    margin-left: 52%;
+    border-color: rgba(233, 255, 73, 0.28);
+  }
+  .plate--source.is-hidden {
+    border-color: rgba(255, 116, 106, 0.55);
+    border-style: dashed;
+  }
+  .plate--composed.is-empty {
+    border-style: dashed;
+    border-color: rgba(255, 116, 106, 0.4);
+  }
+
+  .plate__head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    column-gap: 0.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .plate__index {
+    font: 600 0.64rem/1 var(--mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--acid);
+  }
+  .plate__title {
+    margin: 0;
+    font: 700 1.05rem/1.1 var(--display);
+    letter-spacing: -0.02em;
+  }
+  .plate__sub {
+    grid-column: 2;
+    margin: 0.15rem 0 0;
+    font-size: 0.74rem;
+    color: var(--copy-soft);
+  }
+  .plate--source .plate__index {
+    color: var(--accent-link);
+  }
+
+  .plate__frame {
+    position: relative;
+    margin-top: 0.75rem;
+    border: 1px solid var(--line);
+    background: #070c16;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+  .plate__frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .plate__register {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--acid);
+    border-radius: 50%;
+  }
+  .plate__register::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: var(--acid);
+    border-radius: 50%;
+  }
+
+  .plate__caption {
+    margin: 0.6rem 0 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--paper);
+  }
+  .plate__facts {
+    margin: 0.6rem 0 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .plate__facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 0.12rem;
+  }
+  .plate__facts dt {
+    font: 500 0.6rem/1.6 var(--mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .plate__facts dd {
+    margin: 0;
+    font-size: 0.72rem;
+    color: var(--paper);
+  }
+  .plate__state {
+    margin: 0.6rem 0 0;
+    font-size: 0.7rem;
+    line-height: 1.45;
+    color: var(--copy-soft);
+  }
+  .plate__state[data-state="hidden"] {
+    color: var(--signal);
+  }
+
+  .plate__card {
+    margin-top: 0.75rem;
+    border: 1px solid var(--line);
+    background: #070c16;
+  }
+  .plate__card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .plate__card-title {
+    margin: 0;
+    padding: 0.6rem 0.7rem 0.2rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--paper);
+  }
+  .plate__card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.7rem 0.7rem;
+    font-size: 0.76rem;
+    color: var(--accent-link);
+  }
+  .plate__card-link span {
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--acid);
+    border-radius: 50%;
+    flex: none;
+  }
+  .plate__empty {
+    margin: 0.75rem 0 0;
+    padding: 1.1rem 0.9rem;
+    border: 1px dashed rgba(255, 116, 106, 0.4);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--copy-soft);
+  }
+
+  .plate-field__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .plate-action {
+    font: inherit;
+    font-size: 0.8rem;
+    color: var(--paper);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.8rem;
+    min-height: 44px;
+    cursor: pointer;
+    transition:
+      border-color 140ms ease-out,
+      color 140ms ease-out,
+      transform 90ms ease-out;
+  }
+  .plate-action:hover {
+    border-color: var(--acid);
+    color: var(--acid);
+  }
+  .plate-action:active {
+    transform: translateY(1px);
+  }
+  .plate-action:focus-visible {
+    outline: 3px solid var(--acid);
+    outline-offset: 2px;
+  }
+  .plate-action[aria-pressed="true"] {
+    border-color: var(--signal);
+    color: var(--signal);
+  }
+  .plate-action--quiet {
+    color: var(--copy-soft);
+  }
+
+  .plate-field__sources {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.9rem;
+    margin-top: 1.25rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+  .plate-field__label {
+    font: 600 0.64rem/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .plate-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .plate-choices button {
+    font: inherit;
+    font-size: 0.76rem;
+    color: var(--paper);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.45rem 0.7rem;
+    min-height: 40px;
+    cursor: pointer;
+  }
+  .plate-choices button[aria-pressed="true"] {
+    border-color: var(--acid);
+    color: var(--acid);
+    background: rgba(233, 255, 73, 0.08);
+  }
+  .plate-choices button:focus-visible {
+    outline: 3px solid var(--acid);
+    outline-offset: 2px;
+  }
+
+  .plate-field__status {
+    margin: 1rem 0 0;
+    min-height: 1.4em;
+    font-size: 0.85rem;
+    color: var(--copy);
+  }
+  .plate-field__loading {
+    margin: 0.4rem 0 0;
+    font-size: 0.78rem;
+    color: var(--copy-soft);
+  }
+  .plate-field__provenance {
+    margin: 0.4rem 0 0;
+    font-size: 0.78rem;
+    color: var(--copy-soft);
+  }
+
+  @media (max-width: 720px) {
+    .plate {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0;
+    }
+    .plate--composed {
+      margin-top: 1rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plate,
+    .plate-field__tether path,
+    .plate-action {
+      transition: none !important;
+    }
+  }
+</style>
