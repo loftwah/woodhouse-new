@@ -22,6 +22,38 @@ Reviewed 16 October 2026. Start at [AGENTS.md](../AGENTS.md); this index routes 
 | Reader journey | Drive the actual route and native controls with available browser tools. Check phone/desktop when visuals change. For discovery, follow a dossier's source link into its product; for activity, change a product/date/measure and inspect unavailable states. Use the existing `?analytics=off` measurement exclusion before automated interaction; do not manufacture public activity. `audit:pages -- <origin>` proves page structure/privacy, not visual quality or physical sharing. |
 | Retain and clean | Store bounded private logs, screenshots and exact source/environment identity under ignored `output/` or `.release/`. Stop only servers/browser sessions created by this run, remove owned scratch fixtures, and confirm the evidence survives. Preserve other worktrees, captures and browser/session data. |
 
+## Shared local validation capacity
+
+`pnpm run verify` reserves the same private host/user capacity slot used by other
+participating validation entrypoints. The public-safe implementation lives in
+`scripts/host-validation.py`; consumers vendor identical bytes rather than build
+another scheduler. Python 3 with POSIX `fcntl` is required; no package or service
+is installed. Ordinary editing and focused unit checks remain independent.
+
+FIFO kernel-locked tickets establish order. Owner/project, operation, source,
+heartbeat and generation are stored only under
+`~/.local/state/loftwah/validation-v1/` with private permissions. A waiter names
+the holder and stops after one hour; expiration never steals live ownership.
+The persistent lock inode must not be removed. Admission and source/release
+checks remain each project's responsibility after acquisition.
+
+Participating commands must own their subprocess lifetime and call
+`completeHostValidation()` after cleanup, including failure/cancellation paths.
+Descendants must preserve the inherited `LOFTWAH_VALIDATION_LINEAGE` UUID chain.
+This finds owned jobs across detach, reparenting and supervisor crashes; unrelated
+processes are excluded. Only the marker is extracted in memory, never raw
+arguments or environment variables in diagnostics. Missing acknowledgements,
+corrupt journals or surviving owned children block handover. Pre-launch identities
+persist for crash recovery. Fatal cleanup uncertainty quarantines capacity rather
+than killing unrelated processes or guessing from a stale heartbeat. This is a
+cooperative contract, not a sandbox for hostile commands clearing their markers.
+Do not nest reservations.
+Direct commands, interactive browsers and nonparticipating tools remain outside
+the reservation; normal safety measurements are still required. Run
+`pnpm run test:host-reservation` for real process-race/cancellation/crash tests.
+Issue #91 owns adoption and handover evidence; its duplicate #92 is reconciled.
+Private project diagnostics must never enter this public repository or issue.
+
 ## Handoff and continuation
 
 Use the existing owning issue/PR as the durable handoff: goal, repository, expected base, writable branch/worktree, bounded scope, required context, acceptance, returned head SHA, commands/results and next exact step. One writer owns each branch/worktree; the coordinator inspects the returned artefact and integrates it. MP is not a relay for routine details.
