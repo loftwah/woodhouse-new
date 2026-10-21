@@ -9,7 +9,8 @@
     "src/scripts/analytics-workbench.ts",
     "public/exhibits/fm-sdk-loader.js",
     "scripts/render-illustrated-plates.mjs",
-    "scripts/verify.mjs"
+    "scripts/verify.mjs",
+    "scripts/host-validation-complete.mjs"
   ],
   "ignoreDependencies": ["cloudflare"],
   "ignoreBinaries": ["magick"]
