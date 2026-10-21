@@ -8,7 +8,8 @@
     "src/plugins/resend-email-env.ts",
     "src/scripts/analytics-workbench.ts",
     "public/exhibits/fm-sdk-loader.js",
-    "scripts/render-illustrated-plates.mjs"
+    "scripts/render-illustrated-plates.mjs",
+    "scripts/verify.mjs"
   ],
   "ignoreDependencies": ["cloudflare"],
   "ignoreBinaries": ["magick"]

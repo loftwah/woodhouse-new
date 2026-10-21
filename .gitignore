@@ -24,3 +24,7 @@ conversation.md
 LOFTWAH.md
 
 .emdash/UPGRADE.md
+
+# Python stdlib validation caches are generated locally.
+__pycache__/
+*.py[cod]
