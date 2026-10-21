@@ -39,12 +39,15 @@ checks remain each project's responsibility after acquisition.
 
 Participating commands must own their subprocess lifetime and call
 `completeHostValidation()` after cleanup, including failure/cancellation paths.
-This is an explicit cooperative contract, not arbitrary process containment.
-Missing acknowledgements, corrupt journals, newly unattributable orphans or
-surviving recorded children block handover. Pre-launch process identities persist
-for crash recovery; verified immutable `/System/Library/` and `/usr/libexec/` services are outside this
-participating validation-workload check. Fatal cleanup uncertainty quarantines capacity rather than killing
-unrelated processes or guessing from a stale heartbeat. Do not nest reservations.
+Descendants must preserve the inherited `LOFTWAH_VALIDATION_LINEAGE` UUID chain.
+This finds owned jobs across detach, reparenting and supervisor crashes; unrelated
+processes are excluded. Only the marker is extracted in memory, never raw
+arguments or environment variables in diagnostics. Missing acknowledgements,
+corrupt journals or surviving owned children block handover. Pre-launch identities
+persist for crash recovery. Fatal cleanup uncertainty quarantines capacity rather
+than killing unrelated processes or guessing from a stale heartbeat. This is a
+cooperative contract, not a sandbox for hostile commands clearing their markers.
+Do not nest reservations.
 Direct commands, interactive browsers and nonparticipating tools remain outside
 the reservation; normal safety measurements are still required. Run
 `pnpm run test:host-reservation` for real process-race/cancellation/crash tests.

@@ -6,10 +6,10 @@ use the same per-user host directory. Kernel locks, never heartbeat age or PID
 alone, establish ownership. Keep diagnostics local; admission remains project-owned.
 """
 import argparse
-import ctypes
 import fcntl
 import json
 import os
+import re
 from pathlib import Path
 import signal
 import subprocess
@@ -20,14 +20,14 @@ from contextlib import contextmanager
 
 
 def processes():
-    text = subprocess.check_output(["ps", "-axo", "pid,ppid,lstart,stat,comm"], text=True, timeout=5)
+    text = subprocess.check_output(["ps", "-axo", "pid,ppid,lstart,stat,uid,comm"], text=True, timeout=5)
     result = {}
     for line in text.splitlines()[1:]:
-        fields = line.split(None, 8)
-        if len(fields) < 9:
+        fields = line.split(None, 9)
+        if len(fields) < 10:
             raise RuntimeError("Cannot establish process ownership")
         if "Z" not in fields[7]:
-            result[int(fields[0])] = {"pid": int(fields[0]), "parent": int(fields[1]), "start": " ".join(fields[2:7]), "executable": fields[8]}
+            result[int(fields[0])] = {"pid": int(fields[0]), "parent": int(fields[1]), "start": " ".join(fields[2:7]), "uid": int(fields[8]), "executable": fields[9]}
     return result
 
 
@@ -56,27 +56,48 @@ def queue_mutex(root):
         yield
 
 
-def unattributed(live, baseline):
-    unknown = []
-    for record in live.values():
-        if record["parent"] != 1 or same(record, baseline):
-            continue
-        executable = record["executable"]
-        if sys.platform == "darwin" and not executable.startswith("/"):
-            # ps sometimes returns only a daemon basename. Resolve through
-            # libproc instead of exempting an executable by its name.
-            library = ctypes.CDLL("/usr/lib/libproc.dylib")
-            buffer = ctypes.create_string_buffer(4096)
-            if library.proc_pidpath(record["pid"], buffer, len(buffer)) <= 0:
-                # Exit during sampling is harmless; a still-live unresolved
-                # identity remains unknown and cannot bypass quarantine.
+def process_markers(record):
+    """Extract only the non-secret job marker. Never retain/log raw environments.
+
+    Cooperating jobs preserve this marker in child environments. This is job
+    lifetime identification, not a sandbox against hostile same-user programs.
+    """
+    try:
+        if sys.platform.startswith("linux"):
+            entries = Path(f"/proc/{record['pid']}/environ").read_bytes().split(b"\0")
+            value = next((entry.split(b"=", 1)[1] for entry in entries
+                          if entry.startswith(b"LOFTWAH_VALIDATION_LINEAGE=")), b"")
+        else:
+            result = subprocess.run(["ps", "eww", "-p", str(record["pid"]), "-o", "command="],
+                                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=5)
+            if result.returncode:
                 if not same(record, processes()):
-                    continue
-            else:
-                executable = buffer.value.decode()
-        if not executable.startswith(("/System/Library/", "/usr/libexec/")):
-            unknown.append({**record, "executable": executable})
-    return unknown
+                    return set()
+                raise RuntimeError("Cannot read live validation ownership marker")
+            # ps output is used only in memory; arguments/other environment
+            # variables must never appear in diagnostics or receipts.
+            match = re.search(rb"(?:^|\s)LOFTWAH_VALIDATION_LINEAGE=([a-f0-9:]+)(?:\s|$)", result.stdout)
+            value = match[1] if match else b""
+        return set(value.decode().split(":")) if value else set()
+    except (FileNotFoundError, ProcessLookupError):
+        return set()
+    except (PermissionError, subprocess.TimeoutExpired):
+        if not same(record, processes()):
+            return set()
+        raise RuntimeError("Cannot verify live process ownership marker") from None
+
+
+def marked_processes(live, baseline, generation, cache):
+    marked = {}
+    for pid, record in live.items():
+        if record["uid"] != os.getuid() or same(record, baseline):
+            continue
+        identity = (pid, record["start"])
+        if identity not in cache:
+            cache[identity] = generation in process_markers(record)
+        if cache[identity]:
+            marked[pid] = record
+    return marked
 
 
 def run():
@@ -110,10 +131,12 @@ def run():
     permitted = False
     owned = {}
     admission_processes = {}
+    marker_cache = {}
+    result_code = 75
     started = time.monotonic()
     generation = uuid.uuid4().hex
     metadata = {"generation": generation, "version": 1, "project": args.project, "operation": args.operation,
-                "owner": processes()[os.getpid()], "cwd": str(Path.cwd()),
+                "ownershipPolicy": "inherited-lineage/2", "owner": processes()[os.getpid()], "cwd": str(Path.cwd()),
                 "source": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
                 "created": time.time(), "heartbeat": time.time(), "children": []}
 
@@ -124,10 +147,13 @@ def run():
         completion = root / ("complete-" + identifier + ".json")
         if not completion.exists():
             return False
-        return json.loads(completion.read_text()) == {"version": 1, "generation": identifier, "cleanup": "complete"}
+        value = json.loads(completion.read_text())
+        return value == {"version": 1, "generation": identifier, "cleanup": "complete"}
 
     def observe():
         live = processes()
+        if child:
+            owned.update(marked_processes(live, admission_processes, generation, marker_cache))
         seeds = {pid for pid, record in owned.items() if same(record, live)}
         if child and child.poll() is None and child.pid in live:
             seeds.add(child.pid)
@@ -143,6 +169,19 @@ def run():
         remaining = {pid: record for pid, record in owned.items() if same(record, live)}
         owned.clear(); owned.update(remaining)
         return remaining
+
+    def outcome(state):
+        value = {"version": 1, "generation": generation, "policy": "inherited-lineage/2",
+                 "head": metadata["source"], "state": state, "exitCode": result_code,
+                 "cleanup": state == "released", "project": args.project, "operation": args.operation}
+        write_json(root / ("outcome-" + generation + ".json"), value)
+        registration = root / ("register-" + generation + ".json")
+        if registration.exists():
+            registered = json.loads(registration.read_text())
+            destination = Path(registered["evidenceDirectory"])
+            if registered.get("version") != 1 or registered.get("generation") != generation or not destination.is_absolute() or not destination.is_dir() or destination.is_symlink():
+                raise RuntimeError("Invalid validation evidence registration")
+            write_json(destination / "reservation.json", value)
 
     def journal(state):
         metadata.update(heartbeat=time.time(), children=list(owned.values()), state=state)
@@ -194,13 +233,15 @@ def run():
                         # A crashed supervisor's recorded detached children still reserve
                         # capacity. Never kill them or steal based on an expired heartbeat.
                         remaining = [r for r in (old or {}).get("children", []) if same(r, live)]
-                        old_unknown = []
+                        old_marked = {}
                         if old and old["state"] == "running":
                             baseline = json.loads((root / ("baseline-" + old["generation"] + ".json")).read_text())
                             if not isinstance(baseline, list) or any(not isinstance(r.get("pid"), int) or not isinstance(r.get("start"), str) for r in baseline):
                                 raise RuntimeError("Invalid crash-recovery process baseline")
-                            old_unknown = unattributed(live, {r["pid"]: r for r in baseline})
-                        if old and (old["state"] == "uncertain" or remaining or old_unknown or (old["state"] != "starting" and not completed(old))):
+                            if old.get("ownershipPolicy") != "inherited-lineage/2":
+                                raise RuntimeError("Older interrupted reservation needs verified recovery")
+                            old_marked = marked_processes(live, {r["pid"]: r for r in baseline}, old["generation"], {})
+                        if old and (old["state"] == "uncertain" or remaining or old_marked or (old["state"] != "starting" and not completed(old))):
                             reason = "previous cleanup unresolved"
                         else:
                             acquired = True
@@ -227,7 +268,8 @@ def run():
             child = subprocess.Popen([sys.executable, __file__, "--gated-child", str(gate_read), *command],
                                      pass_fds=(ticket.fileno(), lease.fileno(), gate_read),
                                      env={**os.environ, "LOFTWAH_VALIDATION_COMPLETION": str(root / ("complete-" + generation + ".json")),
-                                          "LOFTWAH_VALIDATION_GENERATION": generation})
+                                          "LOFTWAH_VALIDATION_GENERATION": generation,
+                                          "LOFTWAH_VALIDATION_LINEAGE": ":".join(filter(None, [os.environ.get("LOFTWAH_VALIDATION_LINEAGE", ""), generation]))})
             observe(); journal("running")
             if cancelled:
                 return 130
@@ -239,50 +281,53 @@ def run():
         while child.poll() is None and not cancelled:
             observe(); journal("running")
             time.sleep(0.2)
-        code = child.poll()
-        return 130 if cancelled else code
+        result_code = 130 if cancelled else child.poll()
+        return result_code
     finally:
         if acquired:
             try:
                 remaining = observe()
                 deadline = time.monotonic() + 12
+                signalled = set()
                 while remaining:
                     for pid, record in remaining.items():
                         # Refresh identity immediately before each signal; never use
                         # names, stale PIDs, or an unrelated process group.
                         if same(record, processes()):
-                            try:
-                                os.kill(pid, signal.SIGKILL if time.monotonic() >= deadline else signal.SIGTERM)
-                            except ProcessLookupError:
-                                pass
+                            if generation not in process_markers(record):
+                                if not same(record, processes()):
+                                    continue
+                                raise RuntimeError("Owned process lost its inherited marker; cleanup quarantined")
+                            which = signal.SIGKILL if time.monotonic() >= deadline else signal.SIGTERM
+                            identity_signal = (pid, record["start"], which)
+                            if identity_signal not in signalled:
+                                try:
+                                    os.kill(pid, which)
+                                    signalled.add(identity_signal)
+                                except ProcessLookupError:
+                                    pass
                     if time.monotonic() > deadline + 5:
                         raise RuntimeError("Owned descendants did not exit; capacity quarantined")
                     time.sleep(0.1)
                     remaining = observe()
                 if child:
                     child.wait(timeout=5)
-                if permitted:
-                    # An unknown new orphan can be a descendant that detached
-                    # between ancestry samples. Never infer its ownership or kill
-                    # it. Refuse handover even if a command acknowledged early.
-                    unknown = unattributed(processes(), admission_processes)
-                    if unknown:
-                        metadata["unattributed"] = unknown
-                        raise RuntimeError("New unattributed orphan process during workload; capacity quarantined")
                 if permitted and not completed(metadata):
                     journal("uncertain")
                     raise RuntimeError("No workload cleanup acknowledgement; capacity quarantined")
                 journal("released" if permitted else "starting")
+                outcome("released" if permitted else "cancelled-before-start")
                 print(f"CAPACITY RELEASED {args.project}; owned cleanup complete; elapsed {time.monotonic()-started:.2f}s", flush=True)
             except BaseException:
                 journal("uncertain")
+                outcome("failed")
                 raise
         if acquired and completed(metadata):
             # Keep the active generation's completion for crash recovery. Older
             # generations can only be retired while holding the capacity lock.
-            for pattern in ("complete-*.json", "baseline-*.json"):
+            for pattern in ("complete-*.json", "baseline-*.json", "outcome-*.json", "register-*.json"):
                 for previous in root.glob(pattern):
-                    if previous.name not in ("complete-" + generation + ".json", "baseline-" + generation + ".json"):
+                    if generation not in previous.name:
                         previous.unlink()
         if ticket:
             # No deletion of the shared lock inode. Only this exact queue ticket.

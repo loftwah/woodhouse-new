@@ -79,6 +79,22 @@ class Reservation(unittest.TestCase):
             self.assertEqual(job.wait(timeout=15), 0)
         self.assertEqual(event.read_text().splitlines()[1:], [str(p.resolve()) for p in directories])
 
+    def test_registered_evidence_distinguishes_inner_success_from_outer_cleanup(self):
+        for name, cooperative, expected in [("clean", True, "released"), ("missing-ack", False, "failed")]:
+            evidence = self.root / name; evidence.mkdir()
+            code = ("import os,json; from pathlib import Path; "
+                    "generation=os.environ['LOFTWAH_VALIDATION_GENERATION']; "
+                    "registration=Path(os.environ['LOFTWAH_VALIDATION_COMPLETION']).with_name('register-'+generation+'.json'); "
+                    f"registration.write_text(json.dumps(dict(version=1,generation=generation,evidenceDirectory={str(evidence)!r}))); "
+                    f"Path({str(evidence / 'inner-passed')!r}).touch()")
+            job = self.launch(name, code, cooperative=cooperative)
+            self.assertEqual(job.wait(timeout=8) == 0, cooperative)
+            result = json.loads((evidence / "reservation.json").read_text())
+            self.assertEqual(result["state"], expected)
+            self.assertEqual(result["cleanup"], cooperative)
+            self.assertEqual(result["generation"], json.loads((self.state / "holder.json").read_text())["generation"])
+            self.assertTrue((evidence / "inner-passed").exists())
+
     def test_cancelled_waiter_never_starts_and_next_waiter_hands_over(self):
         holder = self.hold("holder")
         marker = self.root / "should-not-start"
@@ -135,7 +151,7 @@ class Reservation(unittest.TestCase):
         (self.state / "holder.json").write_text(json.dumps(metadata))
         self.assertEqual(self.launch("quarantined", "raise RuntimeError('unsafe')", wait=.1).wait(timeout=5), 75)
 
-    def test_short_detached_escape_even_with_early_acknowledgement_quarantines(self):
+    def test_short_detached_descendant_is_cleaned_even_after_early_acknowledgement(self):
         marker = self.root / "escaped"
         code = ("import subprocess,time; time.sleep(.05); "
                 f"p=subprocess.Popen(['{sys.executable}','-c','import time; time.sleep(30)'],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); "
@@ -144,8 +160,11 @@ class Reservation(unittest.TestCase):
         self.until(marker.exists)
         pid = int(marker.read_text())
         try:
-            self.assertNotEqual(job.wait(timeout=20), 0)
-            self.assertEqual(self.launch("blocked", "raise RuntimeError('overlap')", wait=.1).wait(timeout=5), 75)
+            self.assertEqual(job.wait(timeout=20), 0)
+            # The inherited marker finds a detached child regardless of its
+            # current parent (including Linux subreaper adoption).
+            self.until(lambda: not self.alive(pid))
+            self.assertEqual(self.launch("next", "pass").wait(timeout=5), 0)
         finally:
             try:
                 os.kill(pid, signal.SIGTERM)
@@ -215,29 +234,25 @@ class Reservation(unittest.TestCase):
             try: os.kill(child["pid"],signal.SIGTERM)
             except ProcessLookupError: pass
 
-    def test_system_service_exclusion_uses_resolved_paths_not_basenames(self):
-        import importlib.util
-        import types
-        spec = importlib.util.spec_from_file_location("host_validation", SCRIPT)
-        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
-        module.sys = types.SimpleNamespace(platform="darwin")
-        resolved = "/usr/libexec/trustevaluationagent"
-        class Library:
-            def proc_pidpath(self, pid, buffer, size):
-                buffer.value = resolved.encode()
-                return len(buffer.value)
-        original = module.ctypes.CDLL
-        module.ctypes.CDLL = lambda _: Library()
-        record = {"pid":123,"parent":1,"start":"fixture","executable":"trustevaluationagent"}
+    def alive(self, pid):
+        result = subprocess.run(["ps", "-p", str(pid), "-o", "stat="], capture_output=True, text=True)
+        return result.returncode == 0 and "Z" not in result.stdout
+
+    def test_new_unrelated_orphan_keeps_running_during_handover(self):
+        holder = self.hold("holder")
+        # Born after admission, same uid/executable, but outside this job's
+        # inherited lineage. It must neither block release nor receive a signal.
+        code = ("import subprocess; "
+                f"p=subprocess.Popen(['{sys.executable}','-c','import time; time.sleep(30)'],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); print(p.pid)")
+        pid = int(subprocess.check_output([sys.executable,"-c",code],text=True).strip())
         try:
-            self.assertEqual(module.unattributed({123:record},{}),[])
-            resolved = "/tmp/System/Library/trustevaluationagent"
-            self.assertEqual(len(module.unattributed({123:record},{})),1)
-            resolved = "/tmp/validation-child"
-            self.assertEqual(len(module.unattributed({123:record},{})),1)
-            self.assertEqual(module.unattributed({123:record},{123:record}),[])
+            holder.terminate(); self.assertEqual(holder.wait(timeout=20),130)
+            self.assertTrue(self.alive(pid))
+            self.assertEqual(self.launch("next","pass").wait(timeout=5),0)
+            self.assertTrue(self.alive(pid))
         finally:
-            module.ctypes.CDLL = original
+            try: os.kill(pid,signal.SIGTERM)
+            except ProcessLookupError: pass
 
     def test_corrupt_journal_is_not_stale_ownership(self):
         self.state.mkdir(mode=0o700)
