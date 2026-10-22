@@ -295,6 +295,13 @@ const sharePayload = document.querySelector("#report-sharing");
 if (sharePayload) {
   const { image, caption } = JSON.parse(sharePayload.textContent ?? "{}");
   const status = document.querySelector<HTMLElement>("[data-report-status]");
+  // A missing preview is reported as a missing image, not left as a broken
+  // frame inside the share panel. The downloads and the caption still work.
+  const preview = document.querySelector<HTMLImageElement>("[data-report-preview]");
+  preview?.addEventListener("error", () => {
+    preview.hidden = true;
+    if (status) status.textContent = "The shared image preview is unavailable. Try a PNG download.";
+  });
   document.querySelector("[data-report-copy]")?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(caption);

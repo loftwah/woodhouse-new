@@ -6,11 +6,13 @@ import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
 import {
+  isOverviewMeasure,
   measureChoices,
   modeMeasureChoices,
-  overviewMeasure
+  overviewMeasure,
+  resolveMeasure
 } from "../../data/analytics-workbench";
-import type { AnalyticsProject } from "../../data/portfolio-analytics";
+import { discoveryProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
 export const prerender = false;
 let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
@@ -27,13 +29,26 @@ export const GET: APIRoute = async ({ url, cache }) => {
     measure = url.searchParams.get("measure"),
     week = /^\d{4}-\d{2}-\d{2}$/.test(url.searchParams.get("week") ?? "")
       ? url.searchParams.get("week")!
+      : null,
+    destination = /^[a-z0-9-]{1,40}$/.test(url.searchParams.get("destination") ?? "")
+      ? url.searchParams.get("destination")!
       : null;
   if (
     !id ||
     (measure !== null && measure !== "replays" && !knownMeasures.has(measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
-      (k) => !["format", "report", "project", "download", "audit", "measure", "week"].includes(k)
+      (k) =>
+        ![
+          "format",
+          "report",
+          "project",
+          "download",
+          "audit",
+          "measure",
+          "week",
+          "destination"
+        ].includes(k)
     )
   )
     return new Response("Invalid report image.", {
@@ -47,8 +62,20 @@ export const GET: APIRoute = async ({ url, cache }) => {
       headers: { "cache-control": "no-store" }
     });
   const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
+  const publishedDestinationSlugs = new Set(
+    identities.projects
+      .filter(
+        (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
+      )
+      .map((p) => p.slug)
+  );
   if (selected && !publicIds.has(selected))
     return new Response("Project unavailable.", { status: 404 });
+  // A destination must be a currently published discovery project with a site
+  // address. An unknown value is a bad request rather than a silent fallback to
+  // the portfolio composition.
+  if (destination && !publishedDestinationSlugs.has(destination))
+    return new Response("Destination unavailable.", { status: 404 });
   try {
     const stored = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
     if (!stored)
@@ -58,6 +85,22 @@ export const GET: APIRoute = async ({ url, cache }) => {
       });
     const report = projectReport(stored, selected as AnalyticsProject | null, publicIds);
     if (!report.projects.length) return new Response("Report unavailable.", { status: 404 });
+    // A destination story only exists in the discovery scope. Resolve the measure
+    // the renderer will actually use for this report, not just the raw parameter,
+    // so an edited link cannot return a visits/gameplay composition under a
+    // discovery label or a Woodhouse-to-Woodhouse story.
+    if (destination) {
+      const renderProject = report.projects.length === 1 ? report.projects[0]!.project : null;
+      const resolved = resolveMeasure(renderProject, measure);
+      if (
+        (selected !== null && selected !== "woodhouse") ||
+        (!isOverviewMeasure(resolved) && resolved.key !== "project_opens")
+      )
+        return new Response("Destination story unavailable for this scope.", {
+          status: 400,
+          headers: { "cache-control": "no-store" }
+        });
+    }
     initialized ??= initWasm(wasm);
     await initialized;
     fonts ??= Promise.all(
@@ -84,7 +127,9 @@ export const GET: APIRoute = async ({ url, cache }) => {
         format as ReportFormat,
         measure ?? undefined,
         url.origin,
-        week ?? undefined
+        week ?? undefined,
+        destination ?? undefined,
+        publishedDestinationSlugs
       ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }

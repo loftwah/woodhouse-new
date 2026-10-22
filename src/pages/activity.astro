@@ -50,6 +50,9 @@ import {
   browserReturnSignals
 } from "../data/analytics-context";
 import { analyticsObservations } from "../data/analytics-observations";
+import { discoveryCaption, discoveryStory } from "../data/analytics-story";
+import DiscoveryStoryPanel from "../components/DiscoveryStoryPanel.astro";
+import ReportShare from "../components/ReportShare.astro";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -286,22 +289,87 @@ const discoveryTotal =
   allRows
     .find((r) => r.project === "woodhouse")
     ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
-const requestedDestination = Astro.url.searchParams.get("destination");
-const destinationSlug = /^[a-z0-9-]{1,40}$/.test(requestedDestination ?? "")
-  ? requestedDestination
-  : null;
+const destinationParams = Astro.url.searchParams.getAll("destination");
+const requestedDestination = destinationParams[0] ?? null;
+// A duplicated parameter is the exact legacy shape the old rail produced. Keep
+// the first value and drop the rest so the address cannot carry two selections.
+if (destinationParams.length > 1) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("destination");
+  if (requestedDestination) corrected.searchParams.set("destination", requestedDestination);
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
+// One predicate for the measured destination subset: a public discovery project
+// with a site address. The opening finding, destination rail, story ranking and
+// image API all read this same set instead of inferring it from a display map.
+const publishedDestinations = identities.projects.filter(
+  (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
+);
+const publishedDestinationSlugs = new Set(publishedDestinations.map((p) => p.slug));
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
-  publicIds,
+  publishedDestinationSlugs,
   names,
   new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
   window
 );
 // The discovery journey keeps its selected destination in the URL so a shared
-// or reloaded link describes the same hand-off, and an unknown value falls back
-// to the busiest measured destination rather than inventing one.
-const destination =
-  discovery.find((entry) => entry.slug === requestedDestination) ?? discovery[0] ?? null;
+// or reloaded link describes the same hand-off. Selection is resolved here, once:
+// a published destination keeps its own story even when this report retained no
+// clicks for it; an unknown slug falls back to the busiest measured destination.
+const requestedDestinationEntry = requestedDestination
+  ? publishedDestinations.find((p) => p.slug === requestedDestination)
+  : undefined;
+const topDestination = discovery[0]
+  ? publishedDestinations.find((p) => p.slug === discovery[0]!.slug)
+  : undefined;
+const destinationEntry = requestedDestinationEntry ?? topDestination ?? publishedDestinations[0];
+const destinationStory = destinationEntry
+  ? discoveryStory({
+      report,
+      slug: destinationEntry.slug as AnalyticsProject,
+      name: destinationEntry.name,
+      siteUrl: destinationEntry.siteUrl ?? null,
+      period: window,
+      published: publishedDestinationSlugs
+    })
+  : null;
+const destinationSlug = destinationStory?.slug ?? null;
+// The destination rail stays complete for the measured subset: a project with
+// no retained counter is part of the honest list and can be inspected, rather
+// than disappearing as if it were never measured.
+const referralMetrics = new Map(
+  (
+    allRows
+      .find((r) => r.project === "woodhouse")
+      ?.data?.metrics.filter((m) => m.key.startsWith("referral_")) ?? []
+  ).map((m) => [m.key.slice("referral_".length).replaceAll("_", "-"), m] as const)
+);
+const destinationChoices = publishedDestinations
+  .map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    siteUrl: p.siteUrl,
+    colour: projectColours[p.slug] ?? "#b4c0d2",
+    // A retained zero is a measured zero; an absent counter is missing history.
+    value: referralMetrics.get(p.slug)?.value ?? null
+  }))
+  .sort((a, b) => (b.value ?? -1) - (a.value ?? -1) || a.name.localeCompare(b.name));
+const explicitDestination = Boolean(
+  requestedDestination && publishedDestinations.some((p) => p.slug === requestedDestination)
+);
+// The fallback story is displayed inline, but it is not a selection the URL
+// should claim. Only an explicit, published destination becomes share scope.
+const selectedDestinationSlug = explicitDestination ? destinationSlug : null;
+// The destination belongs to the discovery view only. An old or hand-edited
+// link that carries it onto another measure would leave the URL claiming a
+// selection the page never shows, so it is normalised once at the route.
+const discoveryView = overview || selected === "woodhouse";
+if (requestedDestination && (!discoveryView || !explicitDestination)) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("destination");
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
 // publishes no mode subtotal shows no breakdown, and nothing is inferred from the
@@ -327,10 +395,14 @@ function pageLink(
     to?: string;
     week?: string;
     destination?: string | null;
+    /** Freeze this exact report instead of recomputing a window. */
+    report?: string | null;
   } = {}
 ) {
   const q = new URLSearchParams();
-  if (changes.from && changes.to) {
+  if (changes.report) {
+    q.set("report", changes.report);
+  } else if (changes.from && changes.to) {
     q.set("from", changes.from);
     q.set("to", changes.to);
   } else if (
@@ -350,24 +422,63 @@ function pageLink(
   } else q.set("days", String(window.days));
   const project = changes.project === undefined ? selected : changes.project;
   if (project) q.set("project", project);
-  q.set(
-    "measure",
+  const measureKey =
     changes.project !== undefined
       ? measureForProjectSwitch(selected, project ?? null, measure.key, changes.measure).key
-      : resolveMeasure(project ?? null, changes.measure ?? measure.key).key
-  );
+      : resolveMeasure(project ?? null, changes.measure ?? measure.key).key;
+  q.set("measure", measureKey);
   if (changes.week !== undefined) {
     if (changes.week) q.set("week", changes.week);
   } else if (week) q.set("week", week.from);
-  const keepDestination = changes.destination === undefined ? destinationSlug : changes.destination;
+  // A destination only describes the discovery view. Carrying it onto a project
+  // or measure that does not render that view would make the URL claim a scope
+  // the page does not show, so it is dropped at this one boundary.
+  const discoveryVisible =
+    project === "woodhouse" || (project === null && isOverviewMeasure({ key: measureKey }));
+  const keepDestination =
+    changes.destination === undefined
+      ? discoveryVisible
+        ? selectedDestinationSlug
+        : null
+      : changes.destination;
   if (keepDestination) q.set("destination", keepDestination);
   if (qaOff) q.set("analytics", "off");
   if (qaValue !== null) q.set("qa", qaValue || "1");
   return `/activity/?${q}`;
 }
-const title = selected ? `${names.get(selected)} analytics` : "Portfolio analytics";
+// Only the discovery scope earns the destination story in the shared link,
+// image and caption. A visits page can still show the discovery section, but its
+// saved report describes the visits selection rather than a different story.
+const storyShare = Boolean(
+  explicitDestination && destinationStory && (overview || measure.key === "project_opens")
+);
+// A destination click lands on the focus panel when this scope supports it;
+// otherwise it lands on the inline story in the discovery section.
+const destinationAnchor =
+  overview || measure.key === "project_opens"
+    ? "discovery-story"
+    : "discovery-story-inline-heading";
+const storyFocus = Boolean(explicitDestination && storyShare);
+const storyScopeLink =
+  destinationStory && report
+    ? `${pageLink({
+        project: "woodhouse",
+        measure: "project_opens",
+        destination: destinationStory.slug,
+        report: report.id
+      })}#discovery-story`
+    : undefined;
+const title =
+  storyShare && destinationStory
+    ? `Woodhouse → ${destinationStory.name}: project discovery`
+    : selected
+      ? `${names.get(selected)} analytics`
+      : "Portfolio analytics";
+const shareDestination = storyShare ? selectedDestinationSlug : null;
 const link = report
-  ? `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
+  ? storyShare
+    ? `${reportLink(report.id, "woodhouse").replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
+    : `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
   : `https://woodhouse.loftwah.com/activity/`;
 // The visible permalink keeps a measurement exclusion; the canonical `link`
 // published in page metadata and the shared caption must not carry a QA
@@ -383,7 +494,9 @@ const shareLink = (() => {
   }
 })();
 const image = report
-  ? `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}` : ""}`
+  ? storyShare
+    ? `/api/portfolio-card.png?report=${report.id}&project=woodhouse&measure=project_opens${week ? `&week=${week.from}` : ""}&destination=${shareDestination}`
+    : `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}` : ""}`
   : "/og/woodhouse-workshop-20261018.jpg";
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString("en-AU", {
@@ -393,32 +506,34 @@ const dateLabel = (date: string) =>
     year: "numeric"
   });
 const caption = report
-  ? reportCaption(
-      metricRows.map((r) => ({
-        name: r.name,
-        metric: r.metric,
-        overviewMeasure: r.overviewMeasure,
-        report: r.data
-      })),
-      measure,
-      window,
-      link,
-      dateLabel,
-      week
-        ? {
-            name: week.name,
-            project: week.project,
-            from: week.from,
-            to: week.to,
-            value: week.value,
-            previous: week.previous,
-            unit: week.unit,
-            changePercent: week.changePercent,
-            newBest: week.newBest,
-            comparedWeeks: week.comparedWeeks
-          }
-        : undefined
-    )
+  ? storyShare && destinationStory
+    ? discoveryCaption(destinationStory, link, dateLabel)
+    : reportCaption(
+        metricRows.map((r) => ({
+          name: r.name,
+          metric: r.metric,
+          overviewMeasure: r.overviewMeasure,
+          report: r.data
+        })),
+        measure,
+        window,
+        link,
+        dateLabel,
+        week
+          ? {
+              name: week.name,
+              project: week.project,
+              from: week.from,
+              to: week.to,
+              value: week.value,
+              previous: week.previous,
+              unit: week.unit,
+              changePercent: week.changePercent,
+              newBest: week.newBest,
+              comparedWeeks: week.comparedWeeks
+            }
+          : undefined
+      )
   : "";
 /**
  * The opening board. It reads only what this report already established and
@@ -442,7 +557,12 @@ const opening = analyticsObservations({
       `${pageLink({ project, measure: weekMeasure, week: from })}#week-focus`,
     project: (project, projectMeasure) => pageLink({ project, measure: projectMeasure }),
     discovery: () =>
-      `${pageLink({ project: "woodhouse", measure: "project_opens" })}#discovery-heading`
+      `${pageLink({
+        project: "woodhouse",
+        measure: "project_opens",
+        destination: discovery[0]?.slug ?? null,
+        report: report?.id ?? null
+      })}#discovery-story`
   },
   dateLabel
 });
@@ -464,13 +584,21 @@ const dataPayload = {
 <BaseLayout
   title={title}
   description={
-    view?.description ??
-    "How the portfolio is being used: each project's own measure, with dated charts, custom UTC dates and clear source coverage."
+    storyShare && destinationStory
+      ? destinationStory.headline
+      : (view?.description ??
+        "How the portfolio is being used: each project's own measure, with dated charts, custom UTC dates and clear source coverage.")
   }
   path={frozen ? link.replace(Astro.url.origin, "") : "/activity/"}
   currentPath="/activity/"
   image={image}
-  imageAlt={`${title}: dated ${overview ? "mixed-measure project overview" : measure.label.toLowerCase()} report`}
+  imageAlt={
+    storyShare && destinationStory
+      ? destinationStory.value === null
+        ? destinationStory.headline
+        : `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
+      : `${title}: dated ${overview ? "mixed-measure project overview" : measure.label.toLowerCase()} report`
+  }
   analyticsWorkbench
 >
   <div class="analytics-workbench">
@@ -572,6 +700,29 @@ const dataPayload = {
           </svg>
         </a>
       </header>
+      {storyFocus && destinationStory && (
+        <DiscoveryStoryPanel
+          story={destinationStory}
+          variant="focus"
+          shareHref={report ? "#share-report" : undefined}
+        />
+      )}
+      {storyFocus && destinationStory && report && (
+        <ReportShare
+          image={image}
+          caption={caption}
+          link={shareLink}
+          jsonHref={`/api/portfolio-report.json?report=${report.id}`}
+          heading={`Share the ${destinationStory.name} discovery story`}
+          note="The page, caption and all three images describe the same selected destination, measure, dates and frozen snapshot."
+          alt={
+            destinationStory.value === null
+              ? destinationStory.headline
+              : `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
+          }
+          focus
+        />
+      )}
       {overview && (
         <section class="opening" aria-labelledby="opening-heading">
           <div class="opening__head">
@@ -1057,100 +1208,43 @@ const dataPayload = {
                 {unmeasuredDestinations.length > 0 &&
                   ` Other published projects (${unmeasuredDestinations.map((p) => p.name).join(", ")}) are outside this measured subset; their missing clicks are not zeroes.`}
               </p>
-              {discovery.length === 0 && (
-                <p class="overview-note">
-                  {discoveryTotal === null
-                    ? "Discovery counts are unavailable for these dates."
-                    : "No positive destination counts were recorded for this measured subset in these dates."}
-                </p>
+              {discoveryTotal === null && (
+                <p class="overview-note">Discovery counts are unavailable for these dates.</p>
               )}
-              {requestedDestination && !discovery.some((d) => d.slug === requestedDestination) && (
-                <p class="overview-note">
-                  No recorded clicks to that destination in these dates, so the busiest one is shown
-                  instead.
-                </p>
-              )}
-              {discovery.length > 0 && (
+              {destinationChoices.length > 0 ? (
                 <div class="discovery-journey">
                   <nav class="discovery-nav" aria-label="Measured destinations">
-                    {discovery.map((d) => (
+                    {destinationChoices.map((d) => (
                       <a
-                        href={`${pageLink({})}&destination=${d.slug}#discovery-heading`}
-                        aria-current={destination?.slug === d.slug ? "true" : undefined}
+                        href={`${pageLink({ destination: d.slug })}#${destinationAnchor}`}
+                        aria-current={selectedDestinationSlug === d.slug ? "true" : undefined}
                       >
-                        <i
-                          class="source-dot"
-                          style={`--source:${projectColours[d.slug] ?? "#b4c0d2"}`}
-                          aria-hidden="true"
-                        />
+                        <i class="source-dot" style={`--source:${d.colour}`} aria-hidden="true" />
                         <span class="discovery-name">{d.name}</span>
-                        <span class="discovery-count">{d.value.toLocaleString("en-AU")}</span>
+                        <span class="discovery-count">
+                          {d.value === null ? "—" : d.value.toLocaleString("en-AU")}
+                        </span>
                       </a>
                     ))}
                   </nav>
-                  {destination && (
-                    <div class="discovery-detail">
-                      <h3>{destination.name}</h3>
-                      <dl>
-                        <div>
-                          <dt>Recorded clicks, these dates</dt>
-                          <dd>{destination.value.toLocaleString("en-AU")}</dd>
-                        </div>
-                        <div>
-                          <dt>
-                            Most recent seven days ({dateLabel(destination.recentFrom)}–
-                            {dateLabel(destination.recentTo)})
-                          </dt>
-                          <dd>
-                            {destination.recent.toLocaleString("en-AU")}
-                            <small>
-                              {destination.recentCoverage === "observed"
-                                ? "all seven days observed"
-                                : destination.recentCoverage === "partial"
-                                  ? "partial coverage"
-                                  : "coverage unavailable"}
-                            </small>
-                          </dd>
-                        </div>
-                        <div>
-                          <dt>Comparison</dt>
-                          <dd>
-                            {destination.hasTrend
-                              ? destination.prior.toLocaleString("en-AU")
-                              : "Not claimed"}
-                            <small>
-                              {destination.hasTrend
-                                ? `Earlier seven days (${dateLabel(destination.priorFrom)}–${dateLabel(destination.priorTo)}), seven of seven observed`
-                                : window.days < 14
-                                  ? "These dates are shorter than the two weeks a comparison needs."
-                                  : `${destination.priorObservedDays} of the earlier seven days recorded, so no comparison is claimed`}
-                            </small>
-                          </dd>
-                        </div>
-                      </dl>
-                      <p class="discovery-boundary">
-                        <strong>What this establishes.</strong> Someone on Woodhouse deliberately
-                        opened {destination.name} from a link on this site, and the collector
-                        accepted that click.
-                      </p>
-                      <p class="discovery-boundary">
-                        <strong>What it does not.</strong> Whether they played, tried, subscribed or
-                        came back. Woodhouse and {destination.name} report separately; joining the
-                        two would turn aggregate counts into a person-level funnel nobody measured.
-                      </p>
-                      <p class="discovery-actions">
-                        <a href={`/projects/${destination.slug}/`}>
-                          Read the {destination.name} dossier <span aria-hidden="true">↗</span>
-                        </a>
-                        {destination.siteUrl && (
-                          <a href={destination.siteUrl} rel="noopener">
-                            Open {destination.name} <span aria-hidden="true">↗</span>
-                          </a>
-                        )}
-                      </p>
-                    </div>
+                  {!storyFocus && destinationStory && (
+                    <DiscoveryStoryPanel
+                      story={destinationStory}
+                      variant="inline"
+                      shareHref={storyScopeLink}
+                    />
+                  )}
+                  {storyFocus && (
+                    <p class="discovery-detail__jump">
+                      The selected story is open at the top of the report.{" "}
+                      <a href="#discovery-story">Return to {destinationStory?.name}</a>
+                    </p>
                   )}
                 </div>
+              ) : (
+                <p class="overview-note">
+                  No published project with a site address is in the measured destination subset.
+                </p>
               )}
               <p class="overview-note">
                 Counts come from the same anonymous collection as Visits. Opt-out, blocked
@@ -1533,52 +1627,21 @@ const dataPayload = {
             </p>
             <a href="/projects/">Read the product dossiers</a>
           </section>
-          <section id="share-report">
-            <h2>Take the evidence with you</h2>
-            <p>
-              A dated snapshot, with the same measures and coverage. Refreshing a saved link never
-              changes its figures.
-            </p>
-            {report ? (
-              <details class="share-panel" data-share-panel>
-                <summary>
-                  Share report{" "}
-                  <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
-                    <path
-                      d="M10 13V2m0 0L6 6m4-4 4 4M4 10v7h12v-7"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    />
-                  </svg>
-                </summary>
-                <div class="share-actions">
-                  <a href={`${image}&download=1`} download>
-                    Download landscape PNG
-                  </a>
-                  <a href={`${image}&format=square&download=1`} download>
-                    Download square PNG
-                  </a>
-                  <a href={`${image}&format=portrait&download=1`} download>
-                    Download portrait PNG
-                  </a>
-                  <button data-report-share type="button" hidden>
-                    Share image
-                  </button>
-                  <button data-report-copy type="button">
-                    Copy caption + link
-                  </button>
-                  <a href={shareLink}>Open frozen permalink</a>
-                  <a href={`/api/portfolio-report.json?report=${report.id}`}>
-                    Download public JSON
-                  </a>
-                  <p data-report-status role="status"></p>
-                </div>
-              </details>
+          {!(storyFocus && destinationStory && report) &&
+            (report ? (
+              <ReportShare
+                image={image}
+                caption={caption}
+                link={shareLink}
+                jsonHref={`/api/portfolio-report.json?report=${report.id}`}
+                alt={`${title}: dated ${overview ? "mixed-measure project overview" : measure.label.toLowerCase()} report`}
+              />
             ) : (
-              <p>Sharing is unavailable until a source report can be saved.</p>
-            )}
-          </section>
+              <section id="share-report">
+                <h2>Take the evidence with you</h2>
+                <p>Sharing is unavailable until a source report can be saved.</p>
+              </section>
+            ))}
           <section class="report-provenance">
             <h2>Report details</h2>
             <dl>

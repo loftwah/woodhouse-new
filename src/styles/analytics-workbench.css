@@ -1762,6 +1762,19 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
+.discovery-detail__jump {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-soft, #17233a);
+  color: var(--copy-soft);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.discovery-detail__jump a {
+  color: var(--acid);
+  font-weight: 600;
+}
 @media (max-width: 900px) {
   .discovery-journey {
     grid-template-columns: minmax(0, 1fr);
@@ -1776,4 +1789,24 @@
   .observation + .observation {
     border-top: 1px solid var(--line, #26344f);
   }
+}
+
+/* The selected discovery story is the page's primary action. Align its card
+   with the workbench heading instead of running past the interpretation rail,
+   and leave the lower share control outlined so two full-width primaries do not
+   compete. */
+@media (min-width: 1001px) {
+  .workbench-body > .discovery-story.is-focus {
+    margin-inline: 1.5rem;
+  }
+}
+@media (max-width: 1000px) {
+  .workbench-body > .discovery-story.is-focus {
+    margin-inline: 1rem;
+  }
+}
+.share-report--focus .share-panel > summary {
+  background: transparent;
+  color: var(--acid);
+  border: 1px solid var(--acid);
 }

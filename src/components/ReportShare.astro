@@ -1,0 +1,134 @@
+---
+type Props = {
+  image: string;
+  caption: string;
+  link: string;
+  jsonHref: string;
+  heading?: string;
+  note?: string;
+  alt: string;
+  focus?: boolean;
+};
+const {
+  image,
+  caption,
+  link,
+  jsonHref,
+  heading = "Take the evidence with you",
+  note = "A dated snapshot, with the same measures and coverage. Refreshing a saved link never changes its figures.",
+  alt,
+  focus = false
+} = Astro.props;
+---
+
+<section
+  id="share-report"
+  class:list={["share-report", { "share-report--focus": focus }]}
+  aria-labelledby="share-report-heading"
+>
+  <h2 id="share-report-heading">{heading}</h2>
+  <p class="share-report__note">{note}</p>
+  {caption ? (
+    <details class="share-panel" data-share-panel>
+      <summary>
+        Share report
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+          <path
+            d="M10 13V2m0 0L6 6m4-4 4 4M4 10v7h12v-7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+        </svg>
+      </summary>
+      <figure class="share-preview">
+        <img
+          src={image}
+          width="1200"
+          height="630"
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          data-report-preview
+        />
+        <figcaption>
+          Landscape 1200 × 630, generated from snapshot{" "}
+          {link.match(/report=([a-f0-9]+)/)?.[1] ?? "—"}. Square and portrait compositions are
+          downloads below.
+        </figcaption>
+      </figure>
+      <div class="share-actions">
+        <a href={`${image}&download=1`} download>
+          Download landscape PNG
+        </a>
+        <a href={`${image}&format=square&download=1`} download>
+          Download square PNG
+        </a>
+        <a href={`${image}&format=portrait&download=1`} download>
+          Download portrait PNG
+        </a>
+        <button data-report-share type="button" hidden>
+          Share image
+        </button>
+        <button data-report-copy type="button">
+          Copy caption + link
+        </button>
+        <a href={link}>Open frozen permalink</a>
+        <a href={jsonHref}>Download public JSON</a>
+        <p data-report-status role="status"></p>
+      </div>
+      <details class="share-caption">
+        <summary>Caption and link</summary>
+        <pre>{caption}</pre>
+      </details>
+    </details>
+  ) : (
+    <p>Sharing is unavailable until a source report can be saved.</p>
+  )}
+</section>
+
+<style>
+  .share-report--focus {
+    margin: 0 1.5rem 1.75rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    background: var(--surface, #0f182a);
+  }
+  @media (max-width: 1000px) {
+    .share-report--focus {
+      margin-inline: 1rem;
+    }
+  }
+  .share-report__note {
+    max-width: 62ch;
+    margin: 0 0 0.8rem;
+    color: var(--copy-soft);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+  .share-preview {
+    margin: 0.8rem 0 1rem;
+  }
+  .share-preview img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+  }
+  .share-preview figcaption {
+    margin-top: 0.4rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.5;
+  }
+  .share-caption pre {
+    margin: 0.5rem 0 0;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--paper);
+    font: 400 0.75rem/1.55 var(--mono);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+</style>

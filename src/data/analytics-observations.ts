@@ -173,7 +173,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       doesNotEstablish:
         "That anyone played, tried or kept using it: this counts the outbound action on this origin, not what happened at the destination.",
       href: input.links.discovery(),
-      linkLabel: "See every destination"
+      linkLabel: "Open this discovery story"
     });
   } else {
     notes.push({
