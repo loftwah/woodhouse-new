@@ -92,7 +92,6 @@ existing game integrations retain their current owning issues.
 
 MP authorised shareable analytics and suitable leaderboards. `/activity/` extends the journal with a separate public aggregate listening view and links to native Bubbles boards. The reviewed portfolio remains dated evidence, not telemetry. Listening is reported audible seconds and playback starts over 30 days; neither is a unique person or game popularity. Missing, stale and partial coverage must stay visible; no synthetic public podium. Accounts, score verification and raw events remain with each project. Woodhouse adds no identity service or collector. #18 owns this discovery surface; consumer work stays with existing spoke issues.
 
-
 Reviewed 12 October 2026: MP prioritises the four further-along games and LoftwahFM. Sharing must supply a finished image, caption and dated/result link without manual cropping or score transcription. The hub features the supported publisher snapshot image with native download and progressive file sharing; it does not become a game-result validator or shared account system. The existing project brief owns the shopping list; native results and richer reporting remain each project's work.
 
 Reviewed 12 October 2026: `/share/` is the public share desk. The observed failure is requiring MP to hunt across sites for existing promotional assets and captions. Priority projects lead; every published project has an image/post resource where available. Original downloads, editable ready posts, public play/story links, FM's authored formats, factory artwork and published social accounts belong together here. Native download/copy prepares a post; it never posts on MP's behalf. Global navigation, phone index, search and the activity page make the desk discoverable.
@@ -101,11 +100,17 @@ Reviewed 12 October 2026: MP rejected the selector-and-reading share desk. `/sha
 
 Reviewed 12 October 2026: the SHOALSHOT gallery kit follows its later generated-art release: current social artwork, transparent wordmark and emblem replace historical SVG branding. Originals remain WebP downloads; image copying produces a PNG without requiring MP to convert a file.
 
-
 Reviewed 12 October 2026: MP rejected an OG-only interpretation of the gallery. Actual gameplay screenshots, finished promotional films and social variants, native result-card examples, character/game artwork and public album covers belong here alongside link previews. Current interfaces lead; archival footage remains visibly dated. Media previews and original downloads are immediately available, images have clipboard/caption actions, clips have native playback and downloads, and image packs remove file-by-file hunting. Private captures and unfinished or rejected creative candidates are excluded; no project-specific account is invented.
 
-
 Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after the assets were collected. The share gallery must now browse by project and asset type, with six previews per page and native previous/next links at both ends. The overview shows the priority projects together. This replaces the earlier requirement to render every asset in one page; all approved assets remain reachable, directly copyable and downloadable, with no reading prerequisite or mandatory setup.
+
+## Reading the analytics — reviewed 23 October 2026
+
+`/activity/` opens on findings, not controls. Up to three observations are derived from the report already on the page: the largest complete-week movement with a real baseline, the busiest measured hand-off from Woodhouse, a source that began reporting inside the selected dates, then Woodhouse's own reading traffic. Each names its figure, its period, what it establishes and what it does not. A kind that produces nothing says why. Nothing is filled in to complete the set.
+
+The discovery section is a journey rather than a list: a destination is selected in the URL, and the panel states the recorded action, the recent and earlier seven-day windows, their observed-day coverage, and the boundary that a recorded click is intent on this origin and not downstream use.
+
+One selected scope still governs the story, chart, breakdown and export. A finding never compares units, never treats a missing day as zero, and never asserts that a nearby release caused a movement.
 
 ## Portfolio analytics — reviewed 15 October 2026
 
@@ -115,12 +120,19 @@ MP's #34 mission extends activity to Woodhouse, App Composer, Fighter, SHOALSHOT
 
 `/activity/` reports 7/30/90-day product windows, explicit collection coverage and unavailable metrics. Radio remains separate at `/activity/listening/`. A saved report freezes aggregate figures for its permalink, caption and three PNG compositions. Exact received events do not establish unique people; returning audiences remain unavailable for tab-only sources. Complete-week records require exact daily history and comparable complete periods, and never manufacture history. Physical iPhone sharing still needs MP's hardware observation.
 
-
 Reviewed 16 October 2026: Woodhouse adds a separate, default-off choice for recognising returning browsers on its own origin, using the existing event pipeline. Anonymous reporting and product use do not require it. Counts are distinct opt-in browser identifiers over retained history, including returns in different tab sessions on the same day; they are partial observations, not unique people or cohort retention. Cross-product identity remains prohibited. Protocol 11 and SHOALSHOT remain tab-only until their own reviewed consumer releases adopt this optional contract. Old history cannot be reconstructed and expired identity windows remain unavailable.
 
 ## Public reuse demonstrations — reviewed 18 October 2026
 
 MP authorised the practical public game-music demonstration and the ownership-first composition story. Factory and the corresponding project pages should let a builder try the connection and reach the existing provider's recipe. Public streaming proof does not wait for speculative commercial packaging; it makes no redistribution, licensing, customer adoption or demand claim. App Composer’s working photo pair demonstrates composition and source ownership; WordPress migration claims still require the separate owning programme’s evidence.
+
+## Home signature — reviewed 23 October 2026
+
+Home's first impression is one artwork the site owns: a lens of tensioned fibres, twisted, lit once and drawn live by the browser. It exists because the portfolio's opening said what the factory is without showing what it can make.
+
+The work is a demonstration, not a product claim. It does not report traffic, prove a technology choice, or adopt anything from another project. A visitor can brush through it; the page's heading, links and actions stay ordinary HTML and work before the artwork loads. What it does not claim: that the reference techniques are original to someone else's implementation (they are not), that the fibres are simulated material, or that the effect stands in for a product.
+
+The patch bench and source plate remain the site's working exhibits with their own routes. Home links to both; the bench is no longer embedded there, because the signature now owns that focal position.
 
 ## Working exhibits — reviewed 20 October 2026
 
