@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PatchBench from "../../components/exhibits/PatchBench.astro";
+import ExhibitExplorer from "../../components/exhibits/ExhibitExplorer.astro";
 export const prerender = false;
 ---
 
@@ -48,6 +49,10 @@ export const prerender = false;
       recipeHref="/dispatches/your-game-its-own-soundtrack/"
       recipeLabel="Read the story behind it"
     />
+  </section>
+
+  <section class="container exhibit-explorer-band">
+    <ExhibitExplorer />
   </section>
 
   <section class="container exhibit-body">
