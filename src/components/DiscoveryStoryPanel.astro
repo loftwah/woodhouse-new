@@ -70,10 +70,12 @@ const headingId =
         {story.coverageLabel}
         <small>
           {story.coverage === "partial" && story.firstObserved
-            ? `Collection began ${dateLabel(story.firstObserved)}. Earlier days are missing, not zero.`
+            ? `Collection began ${dateLabel(story.firstObserved)}`
             : story.coverage === "unavailable"
-              ? "No retained referral counter for this destination in these dates."
-              : "Every day in these dates has an observed referral counter."}
+              ? story.reason.startsWith("Woodhouse did not supply")
+                ? "No Woodhouse report"
+                : "No retained counter"
+              : "Every day observed"}
         </small>
       </dd>
     </div>
@@ -85,7 +87,7 @@ const headingId =
           : (story.recent.value?.toLocaleString("en-AU") ?? "—")}
         <small>
           {story.value === null
-            ? "No retained referral counter for this destination"
+            ? "Not observed"
             : `${dateLabel(story.recent.from)}–${dateLabel(story.recent.to)} · ${story.recent.observedDays} of 7 days observed`}
         </small>
       </dd>
@@ -99,7 +101,11 @@ const headingId =
         <small>
           {story.comparison.eligible
             ? `${dateLabel(story.prior.from)}–${dateLabel(story.prior.to)} · ${story.comparison.change === 0 ? "level" : `${story.comparison.change! > 0 ? "up" : "down"} ${Math.abs(story.comparison.change!).toLocaleString("en-AU")}`} ${story.comparison.percent === null ? "clicks" : `(${Math.abs(story.comparison.percent)}%)`}`
-            : story.comparison.reason}
+            : story.period.days < 14
+              ? "Window too short"
+              : story.prior.observedDays < 7
+                ? "Earlier week incomplete"
+                : "Not comparable"}
         </small>
       </dd>
     </div>
@@ -257,8 +263,10 @@ const headingId =
     text-underline-offset: 0.2em;
   }
   .discovery-story__share {
-    padding: 0.35rem 0.65rem;
+    padding: 0.4rem 0.7rem;
     border: 1px solid var(--acid);
+    background: var(--acid);
+    color: var(--ink) !important;
   }
   @media (max-width: 880px) {
     .discovery-story__facts {

@@ -289,7 +289,16 @@ const discoveryTotal =
   allRows
     .find((r) => r.project === "woodhouse")
     ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
-const requestedDestination = Astro.url.searchParams.get("destination");
+const destinationParams = Astro.url.searchParams.getAll("destination");
+const requestedDestination = destinationParams[0] ?? null;
+// A duplicated parameter is the exact legacy shape the old rail produced. Keep
+// the first value and drop the rest so the address cannot carry two selections.
+if (destinationParams.length > 1) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("destination");
+  if (requestedDestination) corrected.searchParams.set("destination", requestedDestination);
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
   publicIds,
@@ -308,7 +317,7 @@ const requestedDestinationEntry = requestedDestination
   ? publishedDestinations.find((p) => p.slug === requestedDestination)
   : undefined;
 const topDestination = discovery[0]
-  ? identities.projects.find((p) => p.slug === discovery[0]!.slug)
+  ? publishedDestinations.find((p) => p.slug === discovery[0]!.slug)
   : undefined;
 const destinationEntry = requestedDestinationEntry ?? topDestination ?? publishedDestinations[0];
 const destinationStory = destinationEntry
@@ -317,7 +326,8 @@ const destinationStory = destinationEntry
       slug: destinationEntry.slug as AnalyticsProject,
       name: destinationEntry.name,
       siteUrl: destinationEntry.siteUrl ?? null,
-      period: window
+      period: window,
+      published: new Set(publishedDestinations.map((p) => p.slug))
     })
   : null;
 const destinationSlug = destinationStory?.slug ?? null;
@@ -344,11 +354,14 @@ const destinationChoices = publishedDestinations
 const explicitDestination = Boolean(
   requestedDestination && publishedDestinations.some((p) => p.slug === requestedDestination)
 );
+// The fallback story is displayed inline, but it is not a selection the URL
+// should claim. Only an explicit, published destination becomes share scope.
+const selectedDestinationSlug = explicitDestination ? destinationSlug : null;
 // The destination belongs to the discovery view only. An old or hand-edited
 // link that carries it onto another measure would leave the URL claiming a
 // selection the page never shows, so it is normalised once at the route.
 const discoveryView = overview || selected === "woodhouse";
-if (!discoveryView && requestedDestination) {
+if (requestedDestination && (!discoveryView || !explicitDestination)) {
   const corrected = new URL(Astro.url);
   corrected.searchParams.delete("destination");
   return Astro.redirect(corrected.pathname + corrected.search, 302);
@@ -421,7 +434,7 @@ function pageLink(
   const keepDestination =
     changes.destination === undefined
       ? discoveryVisible
-        ? destinationSlug
+        ? selectedDestinationSlug
         : null
       : changes.destination;
   if (keepDestination) q.set("destination", keepDestination);
@@ -432,7 +445,15 @@ function pageLink(
 // Only the discovery scope earns the destination story in the shared link,
 // image and caption. A visits page can still show the discovery section, but its
 // saved report describes the visits selection rather than a different story.
-const storyShare = Boolean(destinationStory && (overview || measure.key === "project_opens"));
+const storyShare = Boolean(
+  explicitDestination && destinationStory && (overview || measure.key === "project_opens")
+);
+// A destination click lands on the focus panel when this scope supports it;
+// otherwise it lands on the inline story in the discovery section.
+const destinationAnchor =
+  overview || measure.key === "project_opens"
+    ? "discovery-story"
+    : "discovery-story-inline-heading";
 const storyFocus = Boolean(explicitDestination && storyShare);
 const storyScopeLink =
   destinationStory && report
@@ -449,7 +470,7 @@ const title =
     : selected
       ? `${names.get(selected)} analytics`
       : "Portfolio analytics";
-const shareDestination = storyShare ? destinationSlug : null;
+const shareDestination = storyShare ? selectedDestinationSlug : null;
 const link = report
   ? storyShare
     ? `${reportLink(report.id, "woodhouse").replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
@@ -1185,8 +1206,8 @@ const dataPayload = {
                   <nav class="discovery-nav" aria-label="Measured destinations">
                     {destinationChoices.map((d) => (
                       <a
-                        href={`${pageLink({ destination: d.slug })}#discovery-story`}
-                        aria-current={destinationSlug === d.slug ? "true" : undefined}
+                        href={`${pageLink({ destination: d.slug })}#${destinationAnchor}`}
+                        aria-current={selectedDestinationSlug === d.slug ? "true" : undefined}
                       >
                         <i class="source-dot" style={`--source:${d.colour}`} aria-hidden="true" />
                         <span class="discovery-name">{d.name}</span>

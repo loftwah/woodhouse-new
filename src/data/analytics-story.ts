@@ -54,6 +54,7 @@ export type DiscoveryStory = {
   comparison: { eligible: boolean; change: number | null; percent: number | null; reason: string };
   /** 1-based place among destinations with a positive recorded count. */
   rank: number | null;
+  tiedAtTop: boolean;
   measuredDestinations: number;
   headline: string;
   kicker: string;
@@ -97,7 +98,10 @@ function windowSlice(metric: Metric | undefined, dates: string[]): StoryWindow {
  * descending order the discovery section uses. A zero counter is a measured
  * zero; an absent counter is missing history.
  */
-function referralCounts(report: ProjectAnalytics | null | undefined) {
+function referralCounts(
+  report: ProjectAnalytics | null | undefined,
+  published?: ReadonlySet<string>
+) {
   return (report?.metrics ?? [])
     .filter((metric) => metric.key.startsWith("referral_"))
     .map((metric) => ({
@@ -105,7 +109,8 @@ function referralCounts(report: ProjectAnalytics | null | undefined) {
       value: metric.value
     }))
     .filter(
-      (entry): entry is { slug: string; value: number } => entry.value !== null && entry.value > 0
+      (entry): entry is { slug: string; value: number } =>
+        entry.value !== null && entry.value > 0 && (!published || published.has(entry.slug))
     )
     .sort((a, b) => b.value - a.value);
 }
@@ -117,6 +122,8 @@ export function discoveryStory(input: {
   siteUrl?: string | null;
   period: ReportingWindow;
   colour?: string;
+  /** Published destinations the page can actually show. */
+  published?: ReadonlySet<string>;
 }): DiscoveryStory {
   const { report, slug, name, period } = input;
   const source = report?.projects.find((entry) => entry.project === "woodhouse")?.report ?? null;
@@ -138,7 +145,9 @@ export function discoveryStory(input: {
     value === null
       ? "Coverage unavailable"
       : coverage === "observed"
-        ? `Full coverage · ${plural(observedDays, "day", "days")} observed`
+        ? period.complete
+          ? `Full coverage · ${plural(observedDays, "day", "days")} observed`
+          : `All days observed · current UTC day partial`
         : `Partial coverage · ${observedDays} of ${dates.length} days observed`;
   const recent = windowSlice(metric, dates.slice(-7));
   const prior = windowSlice(metric, dates.slice(-14, -7));
@@ -148,11 +157,12 @@ export function discoveryStory(input: {
     prior.days === 7 &&
     prior.observedDays === 7 &&
     recent.days === 7 &&
-    recent.observedDays === 7;
+    recent.observedDays === 7 &&
+    period.complete;
   const change =
     eligible && prior.value !== null && recent.value !== null ? recent.value - prior.value : null;
   const percent = change !== null && prior.value ? Math.round((change / prior.value) * 100) : null;
-  const ranked = referralCounts(source);
+  const ranked = referralCounts(source, input.published);
   const place = ranked.findIndex((entry) => entry.slug === slug);
   const rank = place >= 0 ? place + 1 : null;
   const topValue = ranked[0]?.value ?? null;
@@ -167,7 +177,7 @@ export function discoveryStory(input: {
         : "";
   const comparisonReason =
     value === null
-      ? "No retained referral counter for this destination, so no comparison is claimed."
+      ? "No retained referral counter, so no comparison is claimed."
       : !eligible
         ? period.days < 14
           ? "These dates are shorter than the two weeks a comparison needs."
@@ -185,7 +195,9 @@ export function discoveryStory(input: {
       : ".";
   const headline =
     value === null
-      ? `No recorded clicks to ${name} in the retained history for these dates.`
+      ? source
+        ? `No retained referral counter for ${name} in these dates.`
+        : `Woodhouse did not supply a discovery report for ${name} in these dates.`
       : value === 0
         ? `No recorded clicks to ${name} across the ${plural(observedDays, "observed day", "observed days")}.`
         : rank === 1 && !tiedAtTop
@@ -216,6 +228,7 @@ export function discoveryStory(input: {
     prior,
     comparison: { eligible, change, percent, reason: comparisonReason },
     rank,
+    tiedAtTop,
     measuredDestinations: ranked.length,
     headline,
     kicker:
@@ -241,7 +254,11 @@ export function discoveryCaption(
     `${story.value === null ? "No recorded project opens" : `${story.valueLabel} recorded project opens`} · ${dateLabel(story.period.from)} – ${dateLabel(story.period.to)} (UTC)`
   ];
   if (story.value !== null && story.rank === 1)
-    lines.push("The busiest measured hand-off in this report.");
+    lines.push(
+      story.tiedAtTop
+        ? "A joint busiest measured hand-off in this report."
+        : "The busiest measured hand-off in this report."
+    );
   if (story.value === null) lines.push(story.reason);
   else if (story.coverage === "partial" && story.firstObserved)
     lines.push(
@@ -252,7 +269,7 @@ export function discoveryCaption(
   if (story.comparison.reason) lines.push(story.comparison.reason);
   lines.push(
     `${story.coverageLabel} · ${story.period.complete ? "closed calendar window" : "current UTC day is partial"}.`,
-    story.doesNotEstablish,
+    `It does not establish ${story.doesNotEstablish.charAt(0).toLowerCase()}${story.doesNotEstablish.slice(1)}`,
     link
   );
   return lines.join("\n");

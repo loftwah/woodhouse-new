@@ -95,7 +95,7 @@ test("a complete earlier week earns a comparison and states its direction", () =
     report: report([referral("referral_bubbles", 28, "2026-10-09", values)]),
     slug: "bubbles",
     name: "Bubbles",
-    period: { ...period, from: "2026-10-09", days: 14 }
+    period: { ...period, from: "2026-10-09", days: 14, complete: true }
   });
   assert.equal(story.comparison.eligible, true);
   assert.equal(story.comparison.change, 14);
@@ -207,6 +207,83 @@ test("a destination with no retained counter still gets an honest card", async (
     "fighter"
   );
   assert.match(svg, /Fighter/);
-  assert.match(svg, /No retained referral counter|No report supplied/);
+  assert.match(svg, /No retained clicks for Fighter|No Woodhouse discovery report/);
   assert.doesNotMatch(svg, />0<\/text>/);
+});
+
+test("withdrawn destinations do not win the busiest-hand-off ranking", () => {
+  const story = discoveryStory({
+    report: report([referral("referral_bubbles", 6), referral("referral_loftwahfm", 4)]),
+    slug: "loftwahfm",
+    name: "LoftwahFM",
+    period,
+    published: new Set(["loftwahfm"])
+  });
+  assert.equal(story.rank, 1);
+  assert.equal(story.measuredDestinations, 1);
+  assert.match(story.headline, /busiest measured hand-off/);
+});
+
+test("a partial recent week is labelled in the shared caption", () => {
+  const story = discoveryStory({
+    report: report([referral("referral_bubbles", 2, "2026-10-20", [1, 1, 0])]),
+    slug: "bubbles",
+    name: "Bubbles",
+    period
+  });
+  assert.equal(story.recent.observedDays, 3);
+  assert.equal(story.comparison.eligible, false);
+  const caption = discoveryCaption(
+    story,
+    "https://example.test/activity/?report=x",
+    (date) => date
+  );
+  assert.match(caption, /No retained referral counter|Partial coverage/);
+});
+
+test("a tie is described as joint in the caption, not as an outright winner", () => {
+  const story = discoveryStory({
+    report: report([referral("referral_bubbles", 6), referral("referral_loftwahfm", 6)]),
+    slug: "bubbles",
+    name: "Bubbles",
+    period
+  });
+  assert.equal(story.tiedAtTop, true);
+  const caption = discoveryCaption(
+    story,
+    "https://example.test/activity/?report=x",
+    (date) => date
+  );
+  assert.match(caption, /A joint busiest measured hand-off/);
+  assert.doesNotMatch(caption, /^The busiest/m);
+});
+
+test("a complete, fully observed window can claim coverage and a comparison", () => {
+  const values = Array.from({ length: 14 }, (_, index) => (index < 7 ? 1 : 2));
+  const story = discoveryStory({
+    report: report([referral("referral_bubbles", 21, "2026-10-09", values)]),
+    slug: "bubbles",
+    name: "Bubbles",
+    period: { ...period, from: "2026-10-09", days: 14, complete: true }
+  });
+  assert.equal(story.coverageLabel, "Full coverage · 14 days observed");
+  assert.equal(story.comparison.eligible, true);
+  const caption = discoveryCaption(
+    story,
+    "https://example.test/activity/?report=x",
+    (date) => date
+  );
+  assert.match(caption, /It does not establish that anyone played/);
+});
+
+test("an open window never presents an observed day as full coverage", () => {
+  const values = Array.from({ length: 30 }, () => 1);
+  const story = discoveryStory({
+    report: report([referral("referral_bubbles", 30, "2026-09-23", values)]),
+    slug: "bubbles",
+    name: "Bubbles",
+    period
+  });
+  assert.equal(story.coverageLabel, "All days observed · current UTC day partial");
+  assert.equal(story.comparison.eligible, false);
 });

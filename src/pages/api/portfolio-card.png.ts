@@ -6,11 +6,13 @@ import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
 import {
+  isOverviewMeasure,
   measureChoices,
   modeMeasureChoices,
-  overviewMeasure
+  overviewMeasure,
+  resolveMeasure
 } from "../../data/analytics-workbench";
-import type { AnalyticsProject } from "../../data/portfolio-analytics";
+import { discoveryProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
 export const prerender = false;
 let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
@@ -66,14 +68,22 @@ export const GET: APIRoute = async ({ url, cache }) => {
   // bad request rather than a silent fallback to the portfolio composition.
   if (destination && !publicIds.has(destination))
     return new Response("Destination unavailable.", { status: 404 });
-  // A destination story only exists in the discovery scope. Refuse a URL that
-  // would otherwise return a visits or gameplay composition under a discovery
-  // label, so an old or edited link cannot disagree with its own image.
-  if (destination && measure && measure !== "overview" && measure !== "project_opens")
-    return new Response("Destination story unavailable for this measure.", {
-      status: 400,
-      headers: { "cache-control": "no-store" }
-    });
+  // A destination story only exists in the discovery scope. Validate the
+  // measure the renderer will actually resolve, not just the raw parameter, so
+  // an edited link cannot return a visits/gameplay composition under a
+  // discovery label or a Woodhouse-to-Woodhouse story.
+  if (destination) {
+    const resolved = resolveMeasure(selected as AnalyticsProject | null, measure);
+    if (
+      !discoveryProjects.includes(destination as (typeof discoveryProjects)[number]) ||
+      (selected !== null && selected !== "woodhouse") ||
+      (!isOverviewMeasure(resolved) && resolved.key !== "project_opens")
+    )
+      return new Response("Destination story unavailable for this scope.", {
+        status: 400,
+        headers: { "cache-control": "no-store" }
+      });
+  }
   try {
     const stored = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
     if (!stored)

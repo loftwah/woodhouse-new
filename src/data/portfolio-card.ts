@@ -87,6 +87,7 @@ export function reportSvg(
       slug: destination as AnalyticsProject,
       name: names.get(destination) ?? destination,
       period,
+      published: new Set(names.keys()),
       ...(projectColours[destination] ? { colour: projectColours[destination] } : {})
     });
     return discoveryCard(report, story, format, origin, w, h, pad);
@@ -235,8 +236,8 @@ export function reportSvg(
           ? 300
           : 250,
     chartH = landscape ? 217 : portrait ? 620 : 430;
-  if (report.projects.length === 1 && !landscape && !focus)
-    svg += text(pad, landscape ? 204 : 237, measure.label, landscape ? 22 : 28, "#79d8ff", 500);
+  if ((report.projects.length === 1 || single) && !landscape && !focus)
+    svg += text(pad, 237, measure.label, 28, "#79d8ff", 500);
   if (overview && !landscape && !focus)
     svg += text(pad, landscape ? 204 : 237, "One relevant measure per project", 26, "#79d8ff", 500);
   if (landscape) {
@@ -280,7 +281,7 @@ export function reportSvg(
       const figureY = 300;
       svg +=
         `<circle cx="${pad + 6}" cy="${figureY - 74}" r="6" fill="${r.colour}"/>` +
-        text(pad, figureY - 68, measure.label, 22, "#a9b8d0", 500) +
+        text(pad + 20, figureY - 68, measure.label, 22, "#a9b8d0", 500) +
         text(pad, figureY, r.metric ? formatMetric(r.metric) : "—", 96, r.colour, 700) +
         text(pad, figureY + 34, qualifier(r), 19, "#f4f7fd") +
         text(
@@ -322,6 +323,37 @@ export function reportSvg(
       });
     }
   }
+  if (!landscape && single) {
+    // A single-source export keeps a real chart in every format. The landscape
+    // composition puts it beside the figure; square and portrait give it the
+    // full width and keep the source detail underneath.
+    const singleChartY = portrait ? 320 : 285;
+    const singleChartH = portrait ? 560 : 380;
+    const plot = svgPlot(series, period, w - pad * 2, singleChartH)
+      .replace(
+        "<svg ",
+        `<svg x="${pad}" y="${singleChartY}" width="${w - pad * 2}" height="${singleChartH}" `
+      )
+      .replace('font-family="system-ui,sans-serif"', 'font-family="Bricolage Grotesque"')
+      .replace('font-size="12"', 'font-size="16"');
+    svg += plot;
+    if (!series.some((s) => s.values.some((v) => v !== null)))
+      svg += text(
+        pad + 70,
+        singleChartY + singleChartH / 2,
+        "Daily measurements unavailable",
+        32,
+        "#a9b8d0"
+      );
+    const r = shown[0]!;
+    const y = singleChartY + singleChartH + 40;
+    svg +=
+      line(y) +
+      `<circle cx="${pad + 5}" cy="${y + 27}" r="5" fill="${r.colour}"/>` +
+      text(pad + 22, y + 32, r.name, 24, "#f4f7fd", 500) +
+      text(portrait ? 520 : 500, y + 32, qualifier(r), 17, "#a9b8d0") +
+      text(w - pad - 190, y + 32, r.metric ? formatMetric(r.metric) : "—", 27, r.colour, 700);
+  }
   if (!overview && !single) {
     const plot = svgPlot(series, period, w - pad * 2, chartH)
       .replace("<svg ", `<svg x="${pad}" y="${chartY}" width="${w - pad * 2}" height="${chartH}" `)
@@ -337,7 +369,7 @@ export function reportSvg(
         "#a9b8d0"
       );
   }
-  if (!landscape) {
+  if (!landscape && !single) {
     const top = overview
         ? portrait
           ? 340
@@ -487,8 +519,6 @@ function discoveryCard(
   const figure = empty ? "No data" : story.valueLabel;
   const figureFont = empty ? (landscape ? 64 : portrait ? 96 : 80) : figureSize;
   const metaSize = landscape ? 20 : portrait ? 28 : 26;
-  const chartLabel =
-    story.value === null ? "No retained referral counter" : "Daily recorded clicks";
   // --- shared chart: bars, not an invented trend line. Missing days have no bar.
   const chart = (x: number, y: number, width: number, height: number) => {
     const points = story.daily;
@@ -499,76 +529,81 @@ function discoveryCard(
     const max = Math.max(1, ...values.map((point) => point.value));
     const slot = width / Math.max(1, points.length);
     const bar = Math.max(2, slot * 0.66);
-    let out = text(x, y - 26, chartLabel, landscape ? 17 : 22, "#a9b8d0", 500);
+    const axisY = y + height + (landscape ? 26 : 34);
+    let out = text(x, y - 26, "Daily recorded clicks", landscape ? 17 : 22, "#a9b8d0", 500);
     out += rule(y + height, x, width);
-    if (!values.length) {
-      out += text(
-        x + 8,
-        y + height / 2,
-        story.reason.startsWith("Woodhouse did not supply")
-          ? "No Woodhouse report supplied for these dates"
-          : "No retained referral counter for this destination",
-        landscape ? 22 : 28,
-        "#a9b8d0"
-      );
-      return out;
-    }
-    // Two restrained grid lines keep small counts readable without implying a
-    // precise scale. A zero still gets a visible baseline tick.
-    for (const fraction of max > 2 ? [0.5, 1] : [1]) {
-      const yy = y + height - height * fraction;
-      out += `<path d="M${x} ${yy}H${x + width}" stroke="#1b293d"/>`;
-      out += text(
-        x - 10,
-        yy + 5,
-        String(Math.round(max * fraction)),
-        landscape ? 13 : 16,
-        "#7f8ea8"
-      );
-    }
-    points.forEach((point, index) => {
-      if (point.value === null) return;
-      const barHeight = point.value === 0 ? 2 : Math.max(4, (point.value / max) * height);
-      out += `<rect x="${(x + index * slot + (slot - bar) / 2).toFixed(1)}" y="${(y + height - barHeight).toFixed(1)}" width="${bar.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="1" fill="${story.colour}"/>`;
-    });
-    if (story.firstObserved) {
-      const index = points.findIndex((point) => point.date === story.firstObserved);
-      if (index > 0) {
-        const xx = x + index * slot;
-        out += `<path d="M${xx} ${y - 2}V${y + height}" stroke="#e9ff49" stroke-dasharray="4 5" opacity="0.55"/>`;
-        out += text(
-          xx + 8,
-          y - 8,
-          `collection began ${day(story.firstObserved)}`,
-          landscape ? 14 : 17,
-          "#e9ff49"
-        );
-        if (index > 3)
-          out += text(
-            x + 8,
-            y + height / 2,
-            "No retained referral counter before collection began",
-            landscape ? 15 : 19,
-            "#6f7f99"
-          );
-      }
-    }
-    out += text(
-      x,
-      y + height + (landscape ? 26 : 34),
-      longDay(story.period.from),
-      landscape ? 15 : 19,
-      "#a9b8d0"
-    );
+    out += text(x, axisY, longDay(story.period.from), landscape ? 15 : 19, "#a9b8d0");
     out += text(
       x + width,
-      y + height + (landscape ? 26 : 34),
+      axisY,
       longDay(story.period.to),
       landscape ? 15 : 19,
       "#a9b8d0",
       400,
       "end"
     );
+    if (!values.length) {
+      out += text(
+        x + 8,
+        y + height / 2,
+        story.reason.startsWith("Woodhouse did not supply")
+          ? "No Woodhouse discovery report for these dates"
+          : `No retained clicks for ${story.name} in these dates`,
+        landscape ? 20 : 26,
+        "#a9b8d0"
+      );
+      return out;
+    }
+    // Restrained grid lines keep small counts readable without implying a
+    // precise scale. The label is placed on the value it names, so a half line
+    // never claims a rounded number that its bars do not sit on.
+    for (const fraction of max > 2 ? [0.5, 1] : [1]) {
+      const tick = max * fraction;
+      const yy = y + height - (tick / max) * height;
+      out += `<path d="M${x} ${yy}H${x + width}" stroke="#1b293d"/>`;
+      out += text(
+        x - 10,
+        yy + 5,
+        Number.isInteger(tick) ? String(tick) : tick.toFixed(1),
+        landscape ? 13 : 16,
+        "#7f8ea8"
+      );
+    }
+    out += text(x - 10, y + height + 5, "0", landscape ? 13 : 16, "#7f8ea8", 400, "end");
+    points.forEach((point, index) => {
+      if (point.value === null) return;
+      const barHeight = point.value === 0 ? 4 : Math.max(4, (point.value / max) * height);
+      out += `<rect x="${(x + index * slot + (slot - bar) / 2).toFixed(1)}" y="${(y + height - barHeight).toFixed(1)}" width="${bar.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="1" fill="${story.colour}"/>`;
+    });
+    if (story.firstObserved) {
+      const index = points.findIndex((point) => point.date === story.firstObserved);
+      if (index > 0) {
+        const xx = x + index * slot;
+        const marker = `collection began ${day(story.firstObserved)}`;
+        const markerSize = landscape ? 14 : 17;
+        const markerWidth = marker.length * markerSize * 0.56;
+        out += `<path d="M${xx} ${y - 2}V${y + height}" stroke="#e9ff49" stroke-dasharray="4 5" opacity="0.55"/>`;
+        out += text(
+          xx + markerWidth + 20 > x + width ? xx - 8 : xx + 8,
+          y - 8,
+          marker,
+          markerSize,
+          "#e9ff49",
+          400,
+          xx + markerWidth + 20 > x + width ? "end" : undefined
+        );
+        // The gap note is only drawn when the pre-collection area can hold it
+        // without crossing the first bar or the mid gridline.
+        if (index > 12)
+          out += text(
+            x + 8,
+            y + height / 2,
+            `No counter retained before ${day(story.firstObserved)}`,
+            landscape ? 14 : 18,
+            "#6f7f99"
+          );
+      }
+    }
     return out;
   };
   const recentLines = (() => {
@@ -604,7 +639,7 @@ function discoveryCard(
     const figureY = y + (nameLines.length > 1 ? 90 : 150);
     svg += `<circle cx="${pad + 250}" cy="${figureY - figureSize / 2.6}" r="210" fill="url(#glow)"/>`;
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    svg += text(pad, figureY + 40, "recorded project opens", 24, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 40, "recorded project opens", 24, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 74,
@@ -646,9 +681,9 @@ function discoveryCard(
     );
     svg += text(
       w - pad,
-      572,
+      596,
       retrievalLabel,
-      Math.min(12, 520 / (retrievalLabel.length * 0.56)),
+      Math.min(13, 760 / (retrievalLabel.length * 0.56)),
       "#a9b8d0",
       400,
       "end"
@@ -665,7 +700,7 @@ function discoveryCard(
     svg += `<circle cx="${w - 160}" cy="${y - 60}" r="300" fill="url(#glow)"/>`;
     const figureY = y + (nameLines.length > 1 ? 150 : 230);
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    svg += text(pad, figureY + 58, "recorded project opens", 34, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 58, "recorded project opens", 34, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 106,
@@ -685,7 +720,7 @@ function discoveryCard(
     wrap(story.headline, 44).forEach((line, index) => {
       svg += text(pad, 740 + index * 42, line, 30, "#f4f7fd", 500);
     });
-    svg += chart(pad + 20, 900, w - pad * 2 - 40, 340);
+    svg += chart(pad + 20, 880, w - pad * 2 - 40, 340);
     recentLines.forEach((value, index) => {
       svg += text(
         pad,
@@ -696,11 +731,11 @@ function discoveryCard(
         index === 0 ? 500 : 400
       );
     });
-    svg += rule(1420);
+    svg += rule(1380);
     // The boundary wraps to a readable measure rather than one long line.
     const words = boundary.split(" ");
     let line = "",
-      ly = 1468;
+      ly = 1428;
     for (const word of words) {
       if ((line + " " + word).trim().length > 54) {
         svg += text(pad, ly, line, 24, "#a9b8d0");
@@ -709,9 +744,9 @@ function discoveryCard(
       } else line = (line + " " + word).trim();
     }
     if (line) svg += text(pad, ly, line, 24, "#a9b8d0");
-    svg += text(pad, 1810, `Snapshot ${report.id}`, 19, "#7f8ea8");
+    svg += text(pad, 1560, `Snapshot ${report.id}`, 19, "#7f8ea8");
     retrievalRows.forEach((value, index) => {
-      svg += text(pad, 1844 + index * 30, value, 18, "#a9b8d0");
+      svg += text(pad, 1594 + index * 30, value, 18, "#a9b8d0");
     });
   } else {
     svg += header(76, 26);
@@ -725,7 +760,7 @@ function discoveryCard(
     svg += `<circle cx="${w - 200}" cy="${y - 40}" r="280" fill="url(#glow)"/>`;
     const figureY = y + (nameLines.length > 1 ? 110 : 170);
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    svg += text(pad, figureY + 50, "recorded project opens", 30, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 50, "recorded project opens", 30, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 92,
