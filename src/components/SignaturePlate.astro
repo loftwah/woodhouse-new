@@ -1,0 +1,243 @@
+---
+import { LOOM_STRANDS } from "../scripts/signature/loom";
+
+/**
+ * The homepage signature plate: one still image for every failure path, one
+ * canvas for the live loom, and the pause control outside the artwork so focus,
+ * text and the canvas never compete.
+ */
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+---
+
+<figure class:list={["signature-plate", className]} data-signature-plate>
+  <div class="signature-plate__stage" data-signature-stage>
+    <picture>
+      <source media="(max-width: 760px)" srcset="/signature/loom-phone.jpg" />
+      <img
+        class="signature-plate__poster"
+        src="/signature/loom-wide.jpg"
+        width="1600"
+        height="900"
+        alt="A twisted lens of pale blue, cyan and lime fibres gathered to a point at each end, lit from the upper left against dark ink."
+        decoding="async"
+        fetchpriority="high"
+      />
+    </picture>
+    <canvas class="signature-plate__canvas" data-signature-canvas aria-hidden="true"></canvas>
+    <span class="signature-plate__control">
+      <button type="button" data-signature-toggle hidden>
+        Freeze motion
+      </button>
+    </span>
+  </div>
+  <figcaption>
+    <span class="signature-plate__title">The loom</span>
+    <span class="signature-plate__note">
+      {LOOM_STRANDS} tensioned fibres, one raking light, drawn by the browser. Move across the plate
+      and brush through them.
+    </span>
+    <span class="signature-plate__status" role="status" data-signature-status></span>
+  </figcaption>
+</figure>
+
+<style>
+  .signature-plate {
+    margin: 0;
+    position: relative;
+  }
+  .signature-plate__stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+    background: #080d19;
+    aspect-ratio: 4 / 3;
+    isolation: isolate;
+  }
+  .signature-plate__stage::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 50% 50%, transparent 46%, rgba(8, 13, 25, 0.72) 100%),
+      linear-gradient(
+        90deg,
+        rgba(8, 13, 25, 0.55),
+        transparent 22%,
+        transparent 78%,
+        rgba(8, 13, 25, 0.55)
+      );
+    z-index: 2;
+  }
+  .signature-plate__poster,
+  .signature-plate__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .signature-plate__poster {
+    object-fit: cover;
+    z-index: 0;
+  }
+  .signature-plate__canvas {
+    z-index: 1;
+    pointer-events: none;
+    touch-action: pan-y;
+  }
+  .signature-plate__stage[data-lost="true"] .signature-plate__canvas {
+    visibility: hidden;
+  }
+  .signature-plate__control {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.9rem;
+    z-index: 3;
+  }
+  .signature-plate__control button {
+    appearance: none;
+    border: 1px solid rgba(218, 231, 255, 0.34);
+    background: rgba(8, 13, 25, 0.72);
+    color: var(--paper-muted, #a9b8d0);
+    font:
+      500 0.7rem/1 var(--sans, system-ui),
+      sans-serif;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition:
+      color 160ms ease,
+      border-color 160ms ease,
+      background 160ms ease;
+  }
+  .signature-plate__control button:hover,
+  .signature-plate__control button:focus-visible {
+    color: var(--acid, #e9ff49);
+    border-color: rgba(233, 255, 73, 0.7);
+    background: rgba(8, 13, 25, 0.9);
+  }
+  .signature-plate__control button:focus-visible {
+    outline: 2px solid var(--focus, #e9ff49);
+    outline-offset: 3px;
+  }
+  figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.85rem;
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--line, rgba(218, 231, 255, 0.2));
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--copy-soft, #a9b8d0);
+  }
+  .signature-plate__title {
+    color: var(--paper, #f4f7fd);
+    font: 600 0.72rem/1 var(--mono, monospace);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .signature-plate__note {
+    flex: 1 1 15rem;
+    max-width: 42ch;
+  }
+  .signature-plate__status {
+    flex: 1 1 100%;
+    min-height: 1.5em;
+    color: var(--acid, #e9ff49);
+  }
+  @media (max-width: 760px) {
+    .signature-plate__stage {
+      aspect-ratio: 1 / 1;
+    }
+    .signature-plate__control {
+      right: 0.7rem;
+      bottom: 0.7rem;
+    }
+    /* The plate bleeds to the viewport edge on phones; the caption must not. */
+    .signature-plate figcaption {
+      padding-inline: var(--gutter, 1.25rem);
+    }
+  }
+</style>
+
+<script>
+  import { createLoom, type Loom, type LoomStatus } from "../scripts/signature/loom";
+
+  const plate = document.querySelector<HTMLElement>("[data-signature-plate]");
+  const stage = plate?.querySelector<HTMLElement>("[data-signature-stage]");
+  const canvas = plate?.querySelector<HTMLCanvasElement>("[data-signature-canvas]");
+  const toggle = plate?.querySelector<HTMLButtonElement>("[data-signature-toggle]");
+  const status = plate?.querySelector<HTMLElement>("[data-signature-status]");
+  const host = plate?.closest<HTMLElement>("[data-signature]") ?? plate;
+
+  if (plate && stage && canvas && toggle && status && host) {
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let pausedByVisitor = false;
+
+    const messages: Record<LoomStatus, string> = {
+      running: "",
+      paused: "Motion frozen. The scene still responds if you resume it.",
+      still:
+        "Ambient motion is off for your reduced-motion setting. Move across the plate to disturb the fibres.",
+      unsupported: "This browser cannot draw the live scene, so the still image stays.",
+      lost: "The live scene stopped to protect the page. The still image stays."
+    };
+
+    // One owner for the visible state: the renderer reports where it is, and this
+    // function writes the caption and the control's label from that one report.
+    const describe = (next: LoomStatus) => {
+      status.textContent = messages[next];
+      stage.dataset.lost = String(next === "lost" || next === "unsupported");
+      toggle.hidden = next === "unsupported" || next === "lost" || next === "still";
+      toggle.textContent = pausedByVisitor ? "Resume motion" : "Freeze motion";
+    };
+
+    const loom: Loom | null = createLoom({
+      canvas,
+      pointerHost: host,
+      reducedMotion: motionQuery.matches,
+      onFirstFrame: () => {
+        toggle.hidden = motionQuery.matches;
+      },
+      onStatusChange: describe
+    });
+
+    if (!loom) {
+      describe("unsupported");
+    } else {
+      const instance = loom;
+      toggle.addEventListener("click", () => {
+        pausedByVisitor = !pausedByVisitor;
+        instance.setPaused(pausedByVisitor);
+        // The renderer only reports a change, so a repeat press still has to
+        // update its own label.
+        toggle.textContent = pausedByVisitor ? "Resume motion" : "Freeze motion";
+      });
+
+      // A live preference change is not the visitor pausing: it must not clear
+      // their choice, and the renderer always reports where the scene now is.
+      const onMotionPreference = (event: MediaQueryListEvent) => {
+        instance.setReducedMotion(event.matches);
+      };
+      motionQuery.addEventListener("change", onMotionPreference);
+
+      // `pagehide` also fires when the page enters the back/forward cache. Only a
+      // real unload should tear the scene down, or Back returns to a dead canvas
+      // behind a control that still says it can freeze motion.
+      const onPageHide = (event: PageTransitionEvent) => {
+        if (!event.persisted) instance.destroy();
+      };
+      window.addEventListener("pagehide", onPageHide);
+    }
+  }
+</script>
