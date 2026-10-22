@@ -12,7 +12,7 @@ import {
 import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 import FMListening from "../components/FMListening.astro";
-import PatchBench from "../components/exhibits/PatchBench.astro";
+import SignaturePlate from "../components/SignaturePlate.astro";
 
 const [projectResult, dispatchResult, capabilityResult] = await Promise.all([
   listProjectRecords(),
@@ -79,19 +79,20 @@ export const prerender = false;
     })}
   />
   <div class="container publication">
-    <section class="publication-intro" aria-labelledby="home-title">
-      <h1 id="home-title">
-        A software factory.
-        <br />
-        <em>Judged by what ships.</em>
-      </h1>
-      <div class="publication-intro__copy">
-        <p>
+    <section class="signature-hero" data-signature aria-labelledby="home-title">
+      <div class="signature-hero__copy">
+        <p class="signature-hero__eyebrow">The Loftwah software factory</p>
+        <h1 id="home-title">
+          A software factory.
+          <br />
+          <em>Judged by what ships.</em>
+        </h1>
+        <p class="signature-hero__intro">
           I’m Dean. I run a small software factory with the coding agents I direct:{" "}
           {projects.length} real projects, brought together here. There are games you can play right
           now, a music service you can listen to, a couple of tools and a few experiments.
         </p>
-        <p class="publication-intro__actions">
+        <p class="signature-hero__actions">
           <a class="home-action" href="/projects/">
             Play, listen or try something <span aria-hidden="true">↗</span>
           </a>
@@ -99,6 +100,9 @@ export const prerender = false;
             About Dean <span aria-hidden="true">↗</span>
           </a>
         </p>
+      </div>
+      <div class="signature-hero__plate">
+        <SignaturePlate />
       </div>
     </section>
     <div class="publication-dateline">
@@ -171,31 +175,31 @@ export const prerender = false;
       </div>
     </section>
 
-    <section class="bench-band" aria-labelledby="bench-band-title">
+    <section class="exhibits-band" aria-labelledby="exhibits-band-title">
       <div class="publication-heading">
-        <h2 id="bench-band-title">
-          Take one apart.
+        <h2 id="exhibits-band-title">
+          Two things to pull apart.
           <br />
-          See who owns what.
+          Every part visible.
         </h2>
         <p>
-          A working bench, not a picture of one. Play the run, hear its own effects, switch on a
-          real LoftwahFM station — then pull the music out and watch exactly what stops.
+          Working exhibits, not screenshots of them. Open a playable run with its own sound effects
+          and a real radio station wired the way a game wires one, or compose a card from a
+          contribution through a published contract.
         </p>
       </div>
-      <PatchBench variant="entry" />
-      <p class="bench-band__links">
+      <p class="exhibits-band__links">
         <a class="home-action" href="/exhibits/patch-bench/">
-          Open the full bench <span aria-hidden="true">↗</span>
+          Open the patch bench <span aria-hidden="true">↗</span>
+        </a>
+        <a class="text-link" href="/exhibits/source-plate/">
+          Open the source plate <span aria-hidden="true">↗</span>
         </a>
         <a class="text-link" href="/dispatches/your-game-its-own-soundtrack/">
           Read the story behind it <span aria-hidden="true">↗</span>
         </a>
         <a class="text-link" href="/exhibits/">
           See both exhibits <span aria-hidden="true">↗</span>
-        </a>
-        <a class="text-link" href="https://fm.loftwah.com/game-music">
-          Get the integration recipe <span aria-hidden="true">↗</span>
         </a>
       </p>
     </section>
@@ -383,13 +387,6 @@ export const prerender = false;
     background: transparent;
     color: var(--acid);
   }
-  .publication-intro__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1.5rem;
-    margin: 0;
-  }
   .home-fm {
     display: grid;
     grid-template-columns: 1.15fr 1fr;
@@ -421,29 +418,61 @@ export const prerender = false;
   .publication {
     padding-top: clamp(2.5rem, 5vw, 4.5rem);
   }
-  .publication-intro {
+  .signature-hero {
     display: grid;
-    grid-template-columns: 1.65fr 1fr;
-    gap: 3rem;
-    align-items: end;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+    gap: clamp(1.5rem, 3.5vw, 3.5rem);
+    align-items: center;
     padding-bottom: 2.5rem;
   }
-  .publication-intro h1 {
+  .signature-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    max-width: 36rem;
+  }
+  .signature-hero__eyebrow {
     margin: 0;
-    font: 800 clamp(2.8rem, 4.6vw, 4.6rem)/1.02 var(--display);
+    font: 600 0.72rem/1 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .signature-hero h1 {
+    margin: 0;
+    font: 800 clamp(2.7rem, 4.4vw, 4.5rem)/1.02 var(--display);
     letter-spacing: -0.04em;
     text-wrap: balance;
   }
-  .publication-intro h1 em {
+  .signature-hero h1 em {
     color: var(--acid);
     font-style: normal;
   }
-  .publication-intro__copy p {
-    margin: 0 0 1rem;
-    max-width: 39ch;
+  .signature-hero__intro {
+    margin: 0;
+    max-width: 38ch;
     color: var(--copy);
-    font-size: 1rem;
-    line-height: 1.65;
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+  .signature-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    margin: 0.35rem 0 0;
+  }
+  .signature-hero__plate {
+    position: relative;
+    min-width: 0;
+  }
+  .signature-hero__plate::before {
+    content: "";
+    position: absolute;
+    inset: -12% -18% -12% -6%;
+    background: radial-gradient(60% 55% at 55% 55%, rgba(80, 150, 255, 0.09), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
   }
   .publication-dateline {
     display: flex;
@@ -653,17 +682,17 @@ export const prerender = false;
     border-top: 1px solid var(--line);
     padding-top: 1.5rem;
   }
-  .bench-band {
+  .exhibits-band {
     padding-top: clamp(3.5rem, 7vw, 6rem);
   }
-  .bench-band__links {
+  .exhibits-band__links {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem 1.5rem;
     margin: 1.25rem 0 0;
   }
-  .bench-band__links .home-action {
+  .exhibits-band__links .home-action {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -676,11 +705,11 @@ export const prerender = false;
     font-weight: 650;
     text-decoration: none;
   }
-  .bench-band__links .home-action:hover {
+  .exhibits-band__links .home-action:hover {
     background: transparent;
     color: var(--acid);
   }
-  .bench-band__links .text-link {
+  .exhibits-band__links .text-link {
     font-size: 0.88rem;
   }
   .publication-notes__meta {
@@ -729,9 +758,9 @@ export const prerender = false;
     margin-block: 3rem 4rem;
   }
   @media (max-width: 1000px) {
-    .publication-intro {
-      grid-template-columns: 1.3fr 1fr;
-      gap: 2rem;
+    .signature-hero {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.75rem;
     }
     .start-here__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -756,20 +785,23 @@ export const prerender = false;
     .publication {
       padding-top: 2rem;
     }
-    .publication-intro,
+    .signature-hero,
     .report-feature,
     .publication-close {
       grid-template-columns: 1fr;
       gap: 1.5rem;
     }
-    .publication-intro {
+    .signature-hero {
       padding-bottom: 1.75rem;
     }
-    .publication-intro h1 {
-      font-size: clamp(2.8rem, 7.8vw, 3.5rem);
-    }
-    .publication-intro__copy p {
+    .signature-hero__copy {
       max-width: 55ch;
+    }
+    .signature-hero h1 {
+      font-size: clamp(2.6rem, 8.4vw, 3.4rem);
+    }
+    .signature-hero__plate {
+      margin-inline: calc(-1 * var(--gutter));
     }
     .publication-dateline {
       flex-direction: column;
