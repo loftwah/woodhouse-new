@@ -88,11 +88,11 @@
     "height": 1024
   },
   "same-prompt-twice-mobile": {
-    "width": 306,
-    "height": 1014
+    "width": 552,
+    "height": 1105
   },
   "same-prompt-twice": {
-    "width": 768,
+    "width": 811,
     "height": 1093
   }
 }

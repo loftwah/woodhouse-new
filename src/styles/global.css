@@ -998,6 +998,9 @@ a.project-row__image {
   min-height: 0;
   width: 100%;
   max-width: 35rem;
+  /* The UA figure margin is outside the 100% width and pushed the chart past
+     the phone column. Keep the plate inside the prose measure. */
+  margin: 1.5rem 0;
   border-color: rgba(121, 216, 255, 0.3);
   background: #0b1220;
 }

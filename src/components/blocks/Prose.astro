@@ -4,3 +4,26 @@ const { value } = Astro.props;
 ---
 
 <PortableText value={value.content} />
+
+<style>
+  /* Long reproduced prompts must wrap rather than hide their right-hand side.
+     The text stays verbatim; only the presentation wraps it. */
+  :global(.emdash-code pre) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    background: #0f182a;
+    border: 1px solid #1e2c46;
+    border-radius: 0.5rem;
+  }
+
+  :global(.emdash-code-filename) {
+    background: #12203a;
+    color: #b7c7df;
+    border: 1px solid #1e2c46;
+    border-bottom: 0;
+  }
+
+  :global(.emdash-code code) {
+    color: #eaf0fa;
+  }
+</style>

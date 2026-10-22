@@ -11543,9 +11543,9 @@
           "kind": "Case study",
           "deck": "Run a first pass to completion, then run the exact same prompt again against what it produced. On one task it found a real defect the first pass had tested and missed. On another it found nothing at all.",
           "review_date": "2026-10-22",
-          "source_reference": "Two sequential passes of one unchanged prompt on two bounded repository tasks, run 22 October 2026 in isolated git worktrees from the same base commit. Measurements and limitations are recorded in the article. Published primary sources are linked in the text. No private repository body, issue comment or conversation is reproduced.",
-          "lead": "The second pass is not a review. It is the same instructions, executed again against a finished artefact, and it is worth knowing when that is a waste of a pass.",
-          "lesson": "A repeated pass pays when the brief holds more requirements than one pass can keep in view at once. It costs a full pass, and sometimes it finds nothing.",
+          "source_reference": "Two sequential passes of one unchanged prompt on two bounded repository tasks, run 22 October 2026 from commit 7c0bf22 in isolated worktrees, each pass a fresh default agent session on deepseek-v4.1-flash through opencode-go (max variant). The exact prompts are printed in the article and recorded with the measurements. No private repository body, issue comment or conversation is reproduced.",
+          "lead": "The second pass is not a review. It is the same instructions, executed again against a finished artefact, and it can be queued behind the first.",
+          "lesson": "In one small task, a repeated pass caught and repaired a defect the first pass and its tests missed. In another it found nothing. It costs a full pass.",
           "public_safe": true,
           "content": [
             {
@@ -11627,6 +11627,18 @@
                   "children": [
                     {
                       "_type": "span",
+                      "text": "The repeat can be queued before the first pass finishes. When the first job completes, the second starts from the committed artefact; nobody has to watch for the finish and schedule it by hand. A stop gate between the passes is optional, not part of the definition.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
                       "text": "Three things make it what it is. The passes are sequential, so the second one starts after the first has stopped. The prompt is unchanged, character for character, including its awkward bits. And the first pass has to be finished, not paused: the second pass needs a real artefact to read, not a half-built one it can carry on from.",
                       "marks": []
                     }
@@ -11682,7 +11694,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Double prompting adds neither critique nor criteria. It adds the finished artefact and the original words, and nothing else. That is the mechanism, and it is also the weakness: if the artefact looks plausible and the brief is vague, the second pass has no new information to work from and will agree with the first.",
+                      "text": "Double prompting adds neither critique nor criteria. It adds the finished artefact and the original words, and nothing else. That is the mechanism, and it is also the weakness: if the artefact looks plausible and the brief is vague, the second pass may find nothing in the new state that contradicts the first. Repeating the words does not make them unambiguous.",
                       "marks": []
                     }
                   ]
@@ -11695,8 +11707,8 @@
               "_key": "sequence",
               "diagram_id": "same-prompt-twice",
               "title": "The same prompt, twice",
-              "description": "A sequence diagram with three participants — operator, agent and working tree. The operator sends the task brief once. The agent runs a first pass that plans, implements and self-tests, then commits artefact A and reports the pass complete. The operator holds a stop gate where the work can be accepted, stopped or continued. If continued, the operator sends the same brief verbatim. The agent reads that brief against artefact A, finds omissions and defects, repairs them and adds a regression test, then reports a verified result.",
-              "caption": "Sequential by construction. The second pass reads the brief against a committed artefact, not the first pass's plan.",
+              "description": "A sequence diagram with three participants — operator, agent and working tree. The operator sends the task brief once. The agent runs a first pass that plans, implements and self-tests, then commits artefact A and reports the pass complete. The same brief is queued to start after pass one; an optional stop gate can interrupt the queue. The agent reads the brief against artefact A, finds omissions and defects, repairs them and adds a regression test, then reports a verified result.",
+              "caption": "Sequential by construction. The second pass can be queued in advance; a stop gate is optional.",
               "transcript": [
                 {
                   "_type": "block",
@@ -11705,7 +11717,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "1. Operator sends the task brief once. 2. Agent runs pass one: plan, implement, self-test. 3. Agent commits artefact A and reports pass one complete. 4. Operator holds a stop gate: accept, stop, or continue. 5. Operator sends the same brief, verbatim. 6. Agent runs pass two, reading the brief against artefact A. 7. Agent repairs omissions or defects and adds a regression test. 8. Operator verifies the result.",
+                      "text": "1. Operator sends the task brief once. 2. Agent runs pass one: plan, implement, self-test. 3. Agent commits artefact A and reports pass one complete. 4. The same brief is queued to start after pass one. An optional stop gate can accept, stop or continue before it runs. 5. Agent runs pass two, reading the brief against artefact A. 6. Agent repairs omissions or defects and adds a regression test. 7. Operator verifies the result.",
                       "marks": []
                     }
                   ]
@@ -11736,7 +11748,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Two small repository tasks ran on 22 October 2026. Each had its own git worktree from the same base commit, and nothing else touched that worktree between passes. Each pass was given the same prompt text, character for character, and was asked to run its own tests. The default agent configuration in use here handled both passes; model choice was not a variable in this experiment.",
+                      "text": "Two small repository tasks ran on 22 October 2026. Each had its own git worktree from commit 7c0bf22, and nothing else touched that worktree between passes. Each pass was a fresh default agent session on deepseek-v4.1-flash through opencode-go, max variant; model choice was not a variable. The exact prompt for each task is printed below.",
                       "marks": []
                     }
                   ]
@@ -11827,7 +11839,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The defect was not exotic. It was exactly the kind of thing a first pass cannot see, because the first pass is still deciding what the code should be. Pass one had tested the JSON shape and the failure path — the things the brief made explicit — and had written its own word counter without a test that pinned down what a word was.",
+                      "text": "This one was not exotic, but the first pass did not see it. The first pass was still deciding what the code should be; it tested the JSON shape and the failure path — the things the brief made explicit — and wrote its own word counter without a test that pinned down what a word was.",
                       "marks": []
                     }
                   ]
@@ -11841,11 +11853,11 @@
               "image": {
                 "id": "chart",
                 "src": "/images/experiments/same-prompt-twice-comparison.svg",
-                "alt": "Horizontal bars comparing lines added by a first and second pass of the same prompt on two tasks: 313 then 56 for the dispatch inventory script, 66 then 0 for the review-age date helper. Pass 2 found a counting defect in 8 of 19 dispatches, by up to 14 words each.",
+                "alt": "Comparison of what each pass left behind. The dispatch inventory first pass had passing tests but still counted formatting marks as words; the second pass repaired eight of nineteen counts and added a regression test. The review-age helper passed on the first pass; the second pass rechecked it and changed nothing.",
                 "width": 560,
-                "height": 940
+                "height": 816
               },
-              "caption": "Measured 22 October 2026. Lines added by each pass, from the committed diffs. Two tasks cannot establish a rate, and neither pass was timed against a control.",
+              "caption": "Measured 22 October 2026. What each pass left behind, with the recorded elapsed times where they exist. Two tasks cannot establish a rate.",
               "variant": "inline"
             },
             {
@@ -11905,6 +11917,85 @@
             },
             {
               "_type": "prose",
+              "_key": "prompts",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The briefs, verbatim",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Both passes received this text character for character. The worktree path is replaced with <worktree>; every other instruction is as sent.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "code",
+                  "_key": "prompt-task-one",
+                  "_version": 1,
+                  "code": "You are a subagent spawned by another session.\nWork in <worktree>. This is an isolated git worktree on branch exp/double-prompt-a. Commit your work there with `git -C <worktree> commit`.\n\nTask: add a dispatch inventory script.\n\nCreate `scripts/dispatch-inventory.mjs` (ESM, Node built-ins only, no new dependencies) that reads `seed/seed.json` and prints one line per published dispatch in review-date order, newest first:\n\n  <review_date>  <slug>  <blocks> blocks  <words> words\n\nwhere `words` counts whitespace-separated words in the dispatch's portable-text content and `blocks` counts top-level editorial blocks.\n\nRequirements:\n1. `--json` prints a JSON array of objects with exactly the keys `slug`, `reviewDate`, `blocks`, `words` instead of the table.\n2. Exit code 1, with a message on stderr naming the slugs, if any published dispatch has an empty `lesson` or an empty `source_reference`. Otherwise exit 0.\n3. Add `scripts/dispatch-inventory.test.mjs` using `node:test` that covers the JSON shape and the exit-code-1 path using a temporary fixture file, not the real seed.\n4. The script must accept an optional first argument that overrides the seed path, so the test can pass a fixture.\n5. Add one row to the \"Launch, doctor, drive, evidence, cleanup\" table in `docs/AGENT_INDEX.md` describing the command.\n6. Do not modify any other file.\n\nRun `node --test scripts/dispatch-inventory.test.mjs` and include the output in your final message. Do not run `pnpm install`, `pnpm run verify`, or any build. Finish the work; do not ask questions.\n",
+                  "language": "text",
+                  "filename": "Task one — dispatch inventory"
+                },
+                {
+                  "_type": "code",
+                  "_key": "prompt-task-two",
+                  "_version": 1,
+                  "code": "You are a subagent spawned by another session.\nWork in <worktree>. This is an isolated git worktree on branch exp/double-prompt-b. Commit your work there with `git -C <worktree> commit`.\n\nTask: add one small pure date helper.\n\nCreate `src/data/review-age.ts` exporting exactly one function:\n\n  export function reviewAgeDays(reviewDate: string, today: string): number\n\nIt returns whole days from `reviewDate` to `today`, where both are `YYYY-MM-DD` strings. The result is negative when `today` is earlier than `reviewDate`, and zero for the same day. It throws a `RangeError` when either argument is not a valid `YYYY-MM-DD` date.\n\nAdd `src/data/review-age.test.ts` using `node:test` and `node:assert/strict`, covering a positive case, a zero case, a negative case and the throw.\n\nRun `node --experimental-strip-types --test src/data/review-age.test.ts` and include the output in your final message. Change nothing else. Do not run `pnpm install`, `pnpm run verify`, or any build. Finish the work; do not ask questions.\n",
+                  "language": "text",
+                  "filename": "Task two — review-age helper"
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The tailored review prompt is reproduced in the observation record, along with the commits, timings and limitations.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "obs",
+                      "href": "https://github.com/loftwah/woodhouse-new/blob/main/src/data/same-prompt-twice.json"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Observation record for this article",
+                      "marks": [
+                        "obs"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
               "_key": "comparison",
               "_version": 1,
               "content": [
@@ -11915,7 +12006,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "A reviewer would have found it too",
+                      "text": "A pointed review found it too",
                       "marks": []
                     }
                   ]
@@ -11927,7 +12018,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "To test whether the identical prompt is doing something special, a third run audited the first pass's code in a fresh context with a tailored review prompt instead. It was asked to check each requirement and to answer one pointed question about formatting marks. It found the same defect, reproduced it with a two-line fixture, and reported the real impact — in 186 seconds, with no changes to the repository, because it was asked only to report.",
+                      "text": "To test whether the identical prompt is doing something special, a third run audited the first pass's code in a fresh context with a tailored review prompt. It was asked to check each requirement, to answer one pointed question about formatting marks, and to report rather than repair. It found the same defect, reproduced it with a two-line fixture, and reported the real impact — in 186 seconds, with no changes to the repository.",
                       "marks": []
                     }
                   ]
@@ -11939,7 +12030,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "So the identical prompt is not magic. A reviewer with the right question reaches the same finding. The difference is what each leaves behind: a review produces a description of the problem, and a repeated pass produces the fix, the regression test and a commit. It also cannot drift from the brief, because the brief is the prompt.",
+                      "text": "That is not an equivalent comparison. The reviewer was told where to look, and it was told not to fix what it found. Finding the defect shows that a reviewer with the right question can identify it; it does not show that an unprompted review would, and the absence of a repair follows from the instruction. The repeated pass had no such hint, but it was asked to finish the work, which is why it left a fix and a regression test behind.",
                       "marks": []
                     }
                   ]
@@ -11951,7 +12042,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "If you only need to know whether a change is sound, a review prompt is the cheaper instrument. If you want the work finished, send the work again.",
+                      "text": "The recorded elapsed times were 186 seconds for the review and 144 seconds for the repeated pass. Those figures support no general cost advantage in either direction; this article does not claim one. A review prompt is the right instrument when you want a report. A repeated pass is the right instrument when you want the work finished.",
                       "marks": []
                     }
                   ]
@@ -12176,7 +12267,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The cost is a full pass. Pass two on task one took 144 seconds against a first pass that was not separately timed; pass two on task two took under 24 seconds and produced nothing. Token and cost figures were not available for these runs and are not estimated here.",
+                      "text": "The cost is a full pass. Pass two on task one took 144 seconds against a first pass that was not separately timed; pass two on task two took under 24 seconds and produced nothing. The observation record does not include token or cost figures, and this article does not estimate them.",
                       "marks": []
                     }
                   ]
@@ -12207,7 +12298,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "1. Write the brief as the thing you want, including the awkward constraints. The second pass reads this text and nothing else, so anything you left out of it is left out of the second pass too.",
+                      "text": "1. Write the brief as the thing you want, including the awkward constraints. The second pass reads this text against the artefact, so anything you left out of the brief is unlikely to be recovered.",
                       "marks": []
                     }
                   ]
@@ -12231,7 +12322,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "3. Stop and read the result yourself. This is the gate that decides whether a second pass is worth its cost, and it is the only place a human decision is required.",
+                      "text": "3. Queue the same text to run after the first pass completes. You can queue it in advance; the repeat does not need someone to watch the first job and start the second. If you want a decision point, put an optional stop gate before it runs. Existing cancellation, validation and permission boundaries still apply.",
                       "marks": []
                     }
                   ]
@@ -12298,7 +12389,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Stop when the brief has one requirement, or when its requirements are already independent checks that run on every change. Task two had nothing left to find because the brief was one sentence and the test encoded it exactly.",
+                      "text": "Task two suggests that a second pass can be wasted on a small, fully specified change. One task cannot turn that into a rule. A brief with a single requirement can still conceal substantial complexity, so judge the artefact and the uncertainty around it, not the requirement count.",
                       "marks": []
                     }
                   ]
@@ -12310,7 +12401,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Stop when the second pass starts rewriting prose instead of code. Cosmetic churn in a diff is a sign that the artefact already satisfies the brief and the pass is filling time.",
+                      "text": "Stop when the second pass changes things the brief did not ask for. Prose changes are not automatically churn: if the task is to improve the prose, that may be the work. The test is whether the diff serves the brief, whatever kind of change it is.",
                       "marks": []
                     }
                   ]
@@ -12353,7 +12444,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "If this belongs in a workflow at all, it belongs there as a dependent job: pass two is created only after pass one is committed and someone has passed the gate. It must be sequential. Two passes on one working tree race on the same files, and the loser's work is discarded without anyone noticing.",
+                      "text": "If this belongs in a workflow at all, it can be a dependent job queued behind pass one, with the same cancellation, validation and permission boundaries as any other job. It must be sequential. Two passes on one working tree race on the same files, and the loser's work is discarded without anyone noticing.",
                       "marks": []
                     }
                   ]
@@ -12365,7 +12456,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "It also has to be cancellable at the gate, because the interesting decision — is this worth another pass — is made between the passes, not before the first one. And it counts against the same workload budget as any other job. A repeated pass is not free capacity, it is the same capacity spent twice.",
+                      "text": "A stop gate is useful when someone wants to decide between the passes. It is not required: a pre-authorised repeat can start as soon as the first pass commits. Either way, the second pass is a deliberate choice made once, when the work is dispatched, not a loop.",
                       "marks": []
                     }
                   ]
@@ -12377,7 +12468,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Whether that deserves to be automated is a separate question with its own cost. Running every task twice by default doubles the work to fix a problem that appeared on one of two tasks tested here. A gate that makes the second pass a deliberate choice costs nothing and captures most of the value.",
+                      "text": "It also counts against the same workload budget as any other job. A repeated pass is not free capacity, it is the same capacity spent twice. Whether it deserves to be automated by default is a separate question: running every task twice doubles the work to fix a problem that appeared on one of two tasks tested here.",
                       "marks": []
                     }
                   ]
@@ -12408,7 +12499,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Two tasks, one repeat each. One improvement, one no-change. One comparison against a tailored review prompt. That is enough to describe a mechanism and not enough to predict a rate.",
+                      "text": "Two tasks, one repeat each. One improvement, one no-change. One comparison against a tailored review prompt that was pointed at the defect and told not to repair it. That is enough to describe a mechanism and not enough to predict a rate.",
                       "marks": []
                     }
                   ]
@@ -12432,7 +12523,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Pass one of the first task was not separately timed, so the cost comparison for that task is incomplete. Token and cost figures were not available. The model and configuration were held constant, which means this experiment says nothing about whether a different model on the second pass would do better or worse than the same prompt again.",
+                      "text": "Pass one of the first task was not separately timed, so the cost comparison for that task is incomplete. The observation record does not include token or cost figures, and this article does not estimate them. The model and configuration were held constant, which means this experiment says nothing about whether a different model on the second pass would do better or worse than the same prompt again.",
                       "marks": []
                     }
                   ]
@@ -12444,7 +12535,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "The measurements and limitations are recorded with the figures, and the figures are rendered from that record so the numbers in this article and the numbers in the chart cannot drift apart.",
+                      "text": "The narrow finding is the one the evidence supports: in one small task, repeating the original prompt caught and repaired a defect that the first implementation and its tests missed. The second task found nothing. Neither result establishes a rule about requirement counts, prose changes or which approach costs less.",
                       "marks": []
                     }
                   ]
@@ -12456,7 +12547,7 @@
               "_version": 1,
               "_key": "boundary",
               "title": "What this is",
-              "body": "One small experiment on two bounded tasks, reported with its commands, diffs and timings. It is not a benchmark, not a claim about models in general, and not a recommendation to run everything twice.",
+              "body": "One small experiment on two bounded tasks, reported with its prompts, diffs and timings. It is not a benchmark, not a claim about models in general, and not a recommendation to run everything twice.",
               "kind": "boundary"
             }
           ]
