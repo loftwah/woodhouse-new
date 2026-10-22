@@ -100,22 +100,77 @@ def marked_processes(live, baseline, generation, cache):
     return marked
 
 
+def private_root(directory):
+    directory.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if directory.is_symlink() or directory.stat().st_uid != os.getuid() or directory.stat().st_mode & 0o077:
+        raise RuntimeError("Reservation state must be a private, owned directory")
+    return directory
+
+
+def recover(root):
+    """Clear a quarantine only when ownership and cleanup are proved.
+
+    A free capacity lock means no supervisor is running. The recorded children
+    and the inherited lineage marker then have to agree that nothing survives;
+    either one still live is ownership, not staleness.
+    """
+    root = private_root(root)
+    with queue_mutex(root):
+        lease = (root / "capacity.lock").open("a+")
+        try:
+            if locked(lease):
+                print("RECOVERY REFUSED: a live reservation holds the slot", flush=True)
+                return 75
+            journal = root / "holder.json"
+            if not journal.exists():
+                print("RECOVERY NOT NEEDED: no reservation journal", flush=True)
+                return 0
+            metadata = json.loads(journal.read_text())
+            generation = metadata.get("generation", "")
+            if len(generation) != 32 or any(c not in "0123456789abcdef" for c in generation):
+                raise RuntimeError("Invalid reservation journal; recover by inspection")
+            if metadata.get("state") == "released":
+                print("RECOVERY NOT NEEDED: the journal is already released", flush=True)
+                return 0
+            children = metadata.get("children", [])
+            if not isinstance(children, list) or any(
+                    not isinstance(r, dict) or not isinstance(r.get("pid"), int) or not isinstance(r.get("start"), str)
+                    for r in children):
+                raise RuntimeError("Invalid reservation journal; recover by inspection")
+            live = processes()
+            remaining = [r for r in children if same(r, live)]
+            marked = marked_processes(live, {}, generation, {})
+            if remaining or marked:
+                print(f"RECOVERY REFUSED: {len(remaining)} recorded and {len(marked)} marked processes "
+                      f"still belong to generation {generation[:8]}", flush=True)
+                return 75
+            write_json(root / ("complete-" + generation + ".json"),
+                       {"version": 1, "generation": generation, "cleanup": "complete"})
+            metadata.update(state="released", recovered=time.time())
+            write_json(journal, metadata)
+            print(f"RECOVERY COMPLETE: generation {generation[:8]} has no live owned work", flush=True)
+            return 0
+        finally:
+            lease.close()
+
+
 def run():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--project", required=True)
-    parser.add_argument("--operation", required=True)
+    parser.add_argument("--project")
+    parser.add_argument("--operation")
+    parser.add_argument("--recover", action="store_true",
+                        help="clear a quarantine after proving no owned work survives")
     parser.add_argument("--wait-seconds", type=float, default=3600)
     parser.add_argument("--state-dir", type=Path, default=Path.home() / ".local/state/loftwah/validation-v1")
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    if args.recover:
+        return recover(args.state_dir)
     command = args.command[1:] if args.command[:1] == ["--"] else args.command
-    if not command or not 0 <= args.wait_seconds <= 86400:
-        parser.error("supply a command after -- and a bounded wait (0..86400 seconds)")
+    if not args.project or not args.operation or not command or not 0 <= args.wait_seconds <= 86400:
+        parser.error("supply --project, --operation, a command after -- and a bounded wait (0..86400 seconds)")
     os.umask(0o077)
-    root = args.state_dir
-    root.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if root.is_symlink() or root.stat().st_uid != os.getuid() or root.stat().st_mode & 0o077:
-        raise RuntimeError("Reservation state must be a private, owned directory")
+    root = private_root(args.state_dir)
     cancelled = False
 
     def cancel(_signal, _frame):
@@ -242,7 +297,10 @@ def run():
                                 raise RuntimeError("Older interrupted reservation needs verified recovery")
                             old_marked = marked_processes(live, {r["pid"]: r for r in baseline}, old["generation"], {})
                         if old and (old["state"] == "uncertain" or remaining or old_marked or (old["state"] != "starting" and not completed(old))):
-                            reason = "previous cleanup unresolved"
+                            reason = (f"previous cleanup unresolved (generation {old['generation'][:8]}: "
+                                      f"{len(remaining)} recorded children live, {len(old_marked)} lineage processes live, "
+                                      f"completion {'present' if completed(old) else 'missing'}); "
+                                      "prove no owned work survives, then run --recover")
                         else:
                             acquired = True
                             break

@@ -259,6 +259,48 @@ class Reservation(unittest.TestCase):
         (self.state / "holder.json").write_text('{"version":99,"state":"released"}')
         self.assertNotEqual(self.launch("corrupt", "raise RuntimeError('unsafe')").wait(timeout=5), 0)
 
+    def recover(self):
+        return subprocess.run([sys.executable, str(SCRIPT), "--recover", "--state-dir", str(self.state)],
+                              capture_output=True, text=True, timeout=30)
+
+    def journal(self, generation, state, children):
+        self.state.mkdir(mode=0o700, exist_ok=True)
+        (self.state / "holder.json").write_text(json.dumps(
+            {"version": 1, "generation": generation, "state": state, "children": children}))
+
+    def test_recovery_needs_proof_that_no_owned_work_survives(self):
+        generation = "c" * 32
+        live = subprocess.check_output(["ps", "-p", str(os.getpid()), "-o", "lstart="], text=True).strip()
+        self.journal(generation, "uncertain", [{"pid": os.getpid(), "start": live}])
+        refused = self.recover()
+        self.assertEqual(refused.returncode, 75, refused.stdout)
+        self.assertIn("RECOVERY REFUSED", refused.stdout)
+        self.assertEqual(json.loads((self.state / "holder.json").read_text())["state"], "uncertain")
+        # A reused PID with a different start identity is not the recorded child.
+        self.journal(generation, "uncertain", [{"pid": os.getpid(), "start": "old incarnation"}])
+        self.assertEqual(self.recover().returncode, 0)
+        self.assertEqual(json.loads((self.state / ("complete-" + generation + ".json")).read_text()),
+                         {"version": 1, "generation": generation, "cleanup": "complete"})
+        self.assertEqual(json.loads((self.state / "holder.json").read_text())["state"], "released")
+        self.assertEqual(self.launch("after-recovery", "pass").wait(timeout=8), 0)
+
+    def test_recovery_never_takes_capacity_from_a_live_reservation(self):
+        holder = self.hold("holder")
+        refused = self.recover()
+        self.assertEqual(refused.returncode, 75, refused.stdout)
+        self.assertIn("live reservation", refused.stdout)
+        holder.terminate()
+        self.assertEqual(holder.wait(timeout=20), 130)
+
+    def test_quarantine_diagnostic_names_the_blocking_state(self):
+        generation = "d" * 32
+        self.journal(generation, "uncertain", [])
+        self.assertEqual(self.launch("blocked", "raise RuntimeError('unsafe')", wait=.2).wait(timeout=5), 75)
+        text = Path(self.logs[-1].name).read_text()
+        self.assertIn("previous cleanup unresolved", text)
+        self.assertIn(generation[:8], text)
+        self.assertIn("--recover", text)
+
 
 if __name__ == "__main__":
     unittest.main()
