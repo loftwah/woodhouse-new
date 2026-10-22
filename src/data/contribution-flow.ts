@@ -64,11 +64,11 @@ export const contributionSteps: ContributionStep[] = [
     phase: "Invitation",
     action: "The visitor meets the guestbook invitation",
     result:
-      "Linkarooie reads the exact Guestbook resource and shows “Leave a note” only when the invitation says open.",
+      "Linkarooie reads the exact Guestbook resource and shows the send action only when the invitation says open. Paused, closed, full or unavailable states keep the panel and explain the state.",
     because:
       "Guestbook owns acceptance. Linkarooie owns the public invitation, and a malformed, redirected, foreign or partial answer becomes unavailable — never open.",
     guestbook: "Publishes the active invitation state, form path and limits.",
-    linkarooie: "Renders a send action only for a validated open state.",
+    linkarooie: "Renders the send action and form link only for a validated open state.",
     state: "open",
     source: {
       label: "Guestbook manifest · Linkarooie invitation reader",
@@ -81,16 +81,16 @@ export const contributionSteps: ContributionStep[] = [
     phase: "Contribution",
     action: "A visitor sends a short note",
     result:
-      "Guestbook accepts a text postcard and generates its PNG. The new record is pending and private, not a public item.",
+      "The visitor's browser renders the postcard PNG; Guestbook validates and stores it as a pending private record, not a public item.",
     because:
       "The visitor's words and media belong to Guestbook. Linkarooie never receives the guest code and never keeps a copy of the note.",
-    guestbook: "Stores a pending private record and its generated media.",
+    guestbook: "Validates and stores the pending record and its generated media.",
     linkarooie: "Shows the invitation only; it has no pending record to feature.",
     state: "pending",
     source: {
-      label: "Guestbook submission path",
-      url: guestbook("src/guest.ts"),
-      note: "Closed and full intake are refused; accepted postcards start pending."
+      label: "Guestbook resource contribution route",
+      url: guestbook("src/resource-public.ts"),
+      note: "The resource route validates the postcard and starts it pending."
     }
   },
   {
@@ -113,11 +113,11 @@ export const contributionSteps: ContributionStep[] = [
   {
     id: "approval",
     phase: "Review",
-    action: "The source owner approves it",
+    action: "The source owner approves and publishes it",
     result:
-      "Guestbook publishes the approved item at its own address. Approval makes the source eligible; it does not put anything on the Linkarooie profile.",
+      "Guestbook makes the approved item public at its own address. The Linkarooie profile is still unchanged.",
     because:
-      "Guestbook owns moderation, the item revision and the media. The approved item can now be collected, but curation is still a separate choice.",
+      "Guestbook owns moderation, publication, the item revision and the media. Approval is the source's publication decision; featuring remains a separate Linkarooie choice.",
     guestbook: "Publishes the approved item and serves its media.",
     linkarooie: "Sees an eligible source item; the profile is unchanged.",
     state: "approved",
@@ -132,11 +132,12 @@ export const contributionSteps: ContributionStep[] = [
     phase: "Featuring",
     action: "The curator features that exact source item",
     result:
-      "Linkarooie collects the approved source into the profile's featured section. The card references the item; it does not copy the text or media.",
+      "Linkarooie collects the approved source into the profile. If the owner also pins it, the card appears in the Featured row. The card references the item; it does not copy the text or media.",
     because:
-      "Curation belongs to Linkarooie. The saved reference is the exact resource and configuration, so a later reviewable configuration advance does not silently point at another note.",
+      "Curation belongs to Linkarooie. The saved reference is the exact resource and configuration, so a later reviewable configuration advance does not silently point at another note. Collecting and pinning are separate owner choices.",
     guestbook: "Serves the approved item and its media at the source.",
-    linkarooie: "Stores the exact reference and composes the public card.",
+    linkarooie:
+      "Stores the exact reference and composes the card; pinning is a separate profile choice.",
     state: "featured",
     source: {
       label: "Linkarooie explicit collection",
@@ -156,9 +157,9 @@ export const contributionSteps: ContributionStep[] = [
     linkarooie: "Rechecks the source and removes the dependent card.",
     state: "removed",
     source: {
-      label: "Linkarooie curated profile",
-      url: linkarooie("src/creator-profile.ts"),
-      note: "Featured cards are a view over currently eligible source items."
+      label: "Guestbook public visibility",
+      url: guestbook("src/resource-public.ts"),
+      note: "Hidden items and media return 404; Linkarooie rechecks the source on render."
     }
   },
   {
@@ -214,7 +215,7 @@ export const invitationStates: {
     label: "Full",
     accepts: false,
     panel: "The review queue is full; approved notes remain linked.",
-    boundary: "The limit covers 16 pending notes or 200 non-deleted items."
+    boundary: "The limit covers 16 pending notes or 200 non-deleted items per linked resource."
   },
   {
     state: "unavailable",

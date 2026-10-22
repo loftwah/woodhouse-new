@@ -1564,7 +1564,9 @@ class PatchBench {
         this.say("Music disconnected. The soundtrack stopped; the run and its effects carry on.");
       }
     } else if (!options.silent) {
-      this.say("Music link restored. The run kept going; press Play to start the soundtrack.");
+      this.say(
+        "Music link restored. The link did not pause or reset the run; press Play to start the soundtrack."
+      );
     }
     this.renderMusic();
     this.syncUrl();

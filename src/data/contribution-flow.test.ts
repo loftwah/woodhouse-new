@@ -28,15 +28,22 @@ test("the walkthrough keeps one step per state and the journey order", () => {
   }
 });
 
-test("approval, publication and featuring stay distinct", () => {
+test("source approval publishes; featuring remains a separate Linkarooie choice", () => {
   const approval = contributionSteps.find((step) => step.id === "approval");
   const featuring = contributionSteps.find((step) => step.id === "featuring");
   assert.ok(approval && featuring);
   assert.match(
-    `${approval.result} ${approval.because}`,
-    /does not put anything on the Linkarooie profile|separate/i
+    `${approval.action} ${approval.result}`,
+    /approves and publishes|makes the approved item public/i
   );
-  assert.match(`${featuring.result} ${featuring.because}`, /exact source|does not copy/i);
+  assert.match(
+    `${approval.because} ${approval.result}`,
+    /Linkarooie profile is still unchanged|separate Linkarooie choice/i
+  );
+  assert.match(
+    `${featuring.result} ${featuring.because}`,
+    /exact source|does not copy|separate owner choices/i
+  );
   assert.notEqual(approval.state, featuring.state);
   assert.equal(featuring.state, "featured");
   assert.equal(approval.state, "approved");

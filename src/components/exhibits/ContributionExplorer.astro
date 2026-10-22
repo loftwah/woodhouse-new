@@ -22,9 +22,9 @@ const stateLabel = (state: string) =>
     <p class="micro-label">Second flow · App Composer</p>
     <h2 id="contribution-flow-title">From a private note to a featured card — and back.</h2>
     <p>
-      Approval, publication and featuring are three different decisions. This walkthrough follows
-      one note through the published Here / there contract, then removes it at the source. It is a
-      model of the contract, not a production control.
+      A visitor note, an approved public item and a featured card are three different states. This
+      walkthrough follows one note through the published Here / there contract, then removes it at
+      the source. It is a model of the contract, not a production control.
     </p>
     <p class="contribution-flow__provenance">
       Reviewed <time datetime={contributionReview.reviewedAt}>23 October 2026</time> against{" "}
@@ -201,6 +201,7 @@ const stateLabel = (state: string) =>
       if (readout.linkarooie) readout.linkarooie.textContent = linkarooie;
       if (controls.back) controls.back.disabled = current === 0;
       if (controls.next) controls.next.disabled = current === steps.length - 1;
+      if (controls.restart) controls.restart.disabled = current === 0;
     };
     controls.back?.addEventListener("click", () => render(current - 1));
     controls.next?.addEventListener("click", () => render(current + 1));
@@ -291,7 +292,8 @@ const stateLabel = (state: string) =>
   .flow-contract::before,
   .flow-contract::after {
     content: "";
-    flex: 1;
+    flex: 1 0 1rem;
+    min-width: 1rem;
     border-top: 1px dashed var(--line-dark);
   }
   .flow-contract span {
@@ -324,7 +326,7 @@ const stateLabel = (state: string) =>
   .contribution-flow__action {
     margin: 0;
     color: var(--paper);
-    font-size: 0.9rem;
+    font: 700 1.08rem/1.3 var(--display);
   }
   .contribution-flow__controls {
     display: flex;
@@ -354,6 +356,17 @@ const stateLabel = (state: string) =>
   .contribution-flow__controls button:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+  }
+  .contribution-flow__controls button[data-flow-restart] {
+    margin-left: auto;
+    border-color: transparent;
+    color: var(--copy-soft);
+  }
+  .contribution-flow__control-note {
+    margin: -0.7rem 0 1.3rem;
+    color: var(--copy-soft);
+    font-size: 0.78rem;
+    line-height: 1.5;
   }
   .contribution-flow__steps {
     display: grid;
@@ -385,6 +398,9 @@ const stateLabel = (state: string) =>
   .contribution-flow__steps h3 {
     margin: 0;
     font: 700 1.08rem/1.3 var(--display);
+  }
+  .contribution-flow__steps .contribution-flow__step-index {
+    color: var(--copy-soft);
   }
   .contribution-flow__steps p {
     margin: 0;
@@ -419,6 +435,9 @@ const stateLabel = (state: string) =>
     font-size: 0.76rem !important;
     overflow-wrap: anywhere;
   }
+  .contribution-flow__source .micro-label {
+    margin-inline-end: 0.4rem;
+  }
   .contribution-flow__source a {
     color: var(--paper);
   }
@@ -445,6 +464,11 @@ const stateLabel = (state: string) =>
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+  @media (min-width: 1100px) {
+    .contribution-flow__states ul {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
   .contribution-flow__states li {
     padding: 0.8rem;
@@ -487,6 +511,9 @@ const stateLabel = (state: string) =>
     font-size: 0.8rem;
     line-height: 1.6;
   }
+  .contribution-flow__foot p {
+    max-width: 72ch;
+  }
   .contribution-flow__links {
     display: flex;
     flex-wrap: wrap;
@@ -516,6 +543,10 @@ const stateLabel = (state: string) =>
     }
     .contribution-flow__sides {
       grid-template-columns: minmax(0, 1fr);
+      row-gap: 0.75rem;
+    }
+    .contribution-flow__controls button[data-flow-restart] {
+      margin-left: 0;
     }
   }
 </style>

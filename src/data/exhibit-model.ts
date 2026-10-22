@@ -42,7 +42,7 @@ export const exhibitReview = {
   sourceUrl:
     "https://github.com/loftwah/woodhouse-new/blob/361aae0fbfe3498feab758c4ab17b34dd55e8b57/src/scripts/exhibits/patch-bench.ts",
   contract:
-    "Reconnect restores the audio link only. The run keeps advancing independently, and a deliberate Play starts the soundtrack again."
+    "Reconnect restores the audio link only. The link never pauses or resets the run, whose own state may be waiting, playing or over. A deliberate Play starts the soundtrack again."
 } as const;
 
 export const exhibitSteps: ExhibitStep[] = [
@@ -120,16 +120,17 @@ export const exhibitSteps: ExhibitStep[] = [
     id: "reconnect",
     action: "You reconnect it",
     result:
-      "“Music link restored. The run kept going; press Play to start the soundtrack.” The link is back, but the music is not playing yet.",
+      "“Music link restored. The link did not pause or reset the run; press Play to start the soundtrack.” The music is not playing yet.",
     because:
-      "The page kept its transport; reconnecting restores the connection, not the playback. The run advanced while the music was disconnected, so its score is not where you left it. Play is a separate, deliberate action.",
+      "The page kept its transport; reconnecting restores the connection, not the playback. Disconnecting never paused or reset the run, so it is in whatever state its own play left it. Play is a separate, deliberate action.",
     state: {
-      run: "Playing, advanced since the disconnect",
+      run: "Its own state: waiting, playing or over; the link did not change it",
       music: "Link restored; ready for a deliberate Play"
     },
     source: {
       path: CODE,
-      anchor: "Music link restored. The run kept going; press Play to start the soundtrack.",
+      anchor:
+        "Music link restored. The link did not pause or reset the run; press Play to start the soundtrack.",
       note: "the reconnect message"
     }
   },

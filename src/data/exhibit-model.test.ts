@@ -68,7 +68,10 @@ test("reconnect restores the link, not the playback or the run's clock", async (
   // future edit makes reconnect autoplay, this fixture fails instead of the
   // walkthrough quietly claiming a transition that no longer happens.
   assert.doesNotMatch(reconnect, /startMusic\s*\(|\.play\s*\(/);
-  assert.match(reconnect, /Music link restored\. The run kept going; press Play/);
+  assert.match(
+    reconnect,
+    /Music link restored\. The link did not pause or reset the run; press Play/
+  );
   assert.doesNotMatch(reconnect, /resum|playing again|same station/i);
   assert.match(source, /Ready\. Press play to start the soundtrack\./);
   const playWiring = source.slice(
@@ -84,7 +87,7 @@ test("the walkthrough states the same reconnect contract as the runtime", () => 
   const text = `${step.result} ${step.because} ${step.state.run} ${step.state.music}`;
   assert.match(text, /link is restored|link restored/i);
   assert.match(text, /press Play|deliberate Play|separate, deliberate action/i);
-  assert.match(text, /run (kept|continued|advanced)/i);
+  assert.match(text, /link did not (pause|reset)|own state/i);
   assert.doesNotMatch(text, /exactly where you left|resumes the same station|playing again/i);
 });
 
