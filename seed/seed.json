@@ -2257,6 +2257,19 @@
           "editorial_notes": "The producer's live homepage, build identity and image bytes are the evidence. A new mark and share card are an identity delivery, not customer adoption, a completed migration, physical-device acceptance or demand.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-23",
+        "slug": "2026-10-23",
+        "status": "published",
+        "data": {
+          "title": "The build story and the contribution contract · 23 October 2026",
+          "reviewed_at": "2026-10-23",
+          "source_description": "App Composer's public build story, Guestbook's versioned contribution invitation and Linkarooie's validation, reviewed 23 October 2026. Public-safe derived conclusions only; the local fictional run is not a hosted deployment.",
+          "scope": "App Composer's build story and the Guestbook-to-Linkarooie contribution contract are adopted in Woodhouse's project status and evidence. The 22 October identity snapshot remains the record of that release.",
+          "editorial_notes": "The producer's public build story, Guestbook commit 019ce0d and Linkarooie commit 20ef9a5 are the evidence. The local fictional run is not a hosted deployment or a live owner configuration. Approval and featuring are separate; no adoption or demand is claimed.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3202,11 +3215,30 @@
           "snapshot_key": "2026-10-22",
           "state": "A recognisable identity, live",
           "state_tone": "active",
-          "current": "App Composer's approved orange merging-block mark, icon family and product-focused 1200×630 share card are live. The previous assembly-scene crop and interlocking-squares art are retired from the active identity. Its public build story now documents a real brief → Init specification → local Worker run, and Guestbook publishes the versioned contribution invitation Linkarooie validates: open, paused, closed or full, with approval and featuring kept separate. The composition studio, five independent mini-apps and the small WordPress lab remain as reviewed on 19 October.",
+          "current": "App Composer's approved orange merging-block mark, icon family and product-focused 1200×630 share card are live. The previous assembly-scene crop and interlocking-squares art are retired from the active identity. The composition studio, five independent mini-apps and the small WordPress lab remain as reviewed on 19 October.",
           "next_proof": "Observe a creator outside the factory prepare and operate their own app through Get Ready and Init. Keep the WordPress work labelled as a small lab until a real site's cutover, URLs and editing are proven.",
-          "proof_boundary": "The producer's live metadata and image bytes establish the current identity and share card. The build story's local fictional run is not a hosted deployment or adoption evidence, and the contribution invitation is a producer contract, not proof of a live owner configuration. Woodhouse's adoption is a reviewed reference, not proof that every external platform cache has refreshed or that the artwork earned customer demand.",
+          "proof_boundary": "The producer's live metadata and image bytes establish the current identity and share card. Woodhouse's adoption is a reviewed reference, not proof that every external platform cache has refreshed, that every downstream consumer outside the producer uses the new mark, or that the artwork earned customer demand.",
           "reviewed_at": "2026-10-22",
           "sort_order": 10,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-23",
+        "slug": "app-composer-2026-10-23",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-23",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-23",
+          "state": "A build story and a contribution contract, live",
+          "state_tone": "active",
+          "current": "App Composer's public build story documents a real brief → Init specification → local Worker run. Guestbook publishes the versioned contribution invitation Linkarooie validates: open, paused, closed or full, with approval and featuring kept separate. The identity release, composition studio, five independent mini-apps and small WordPress lab remain as previously reviewed.",
+          "next_proof": "Observe a live owner invitation configuration and a real visitor contribution through the hosted pair. The local fictional run is not that evidence. Keep the WordPress work labelled as a small lab until a real site's cutover, URLs and editing are proven.",
+          "proof_boundary": "The producer's public build story, source commits and live Guestbook build identity establish the documented contract and the local fictional run. They do not establish a hosted deployment of the contribution flow, a live owner configuration, a real visitor journey, approval/featuring adoption or demand. Woodhouse's flow is a model, not a production control.",
+          "reviewed_at": "2026-10-23",
+          "sort_order": 11,
           "public_safe": true
         }
       }
@@ -5137,20 +5169,20 @@
         }
       },
       {
-        "id": "evidence-app-composer-building-2026-10-22",
-        "slug": "app-composer-building-2026-10-22",
+        "id": "evidence-app-composer-building-2026-10-23",
+        "slug": "app-composer-building-2026-10-23",
         "status": "published",
         "data": {
           "title": "The build story and the contribution invitation are live",
           "project": "$ref:project-app-composer",
-          "snapshot": "$ref:snapshot-2026-10-22",
+          "snapshot": "$ref:snapshot-2026-10-23",
           "project_key": "app-composer",
-          "snapshot_key": "2026-10-22",
+          "snapshot_key": "2026-10-23",
           "claim": "App Composer published its build story and Guestbook published the versioned contribution invitation used by Linkarooie on 22 October 2026.",
           "evidence_kind": "production verification",
           "evidence_state": "reviewed",
           "occurred_at": "2026-10-22",
-          "reviewed_at": "2026-10-22",
+          "reviewed_at": "2026-10-23",
           "summary": "The live /building article documents a real brief → Init specification → local Worker run, with real captures and editable diagrams. Guestbook commit 019ce0d117f9f89e472a5c7642d51d85301f7fcd publishes GET /r/:resource/api/invitation with open, paused, closed and full states, exact form paths and postcard limits; Linkarooie commit 20ef9a50c19c7a3419dc06fdae020c6a677ed5cf validates the contract and treats a malformed, redirected, foreign or partial response as unavailable. Approval and featuring remain separate. Woodhouse's source plate and contribution flow explain the same contract.",
           "source_label": "App Composer build story and the maintained contribution contract",
           "source_url": "https://composer.loftwah.com/building",
