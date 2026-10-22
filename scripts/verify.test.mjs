@@ -81,6 +81,7 @@ test("a busy host slot stops the heavy lane instead of starting it", async () =>
     ],
     { cwd: root, stdio: "ignore" }
   );
+  const exited = new Promise((done) => holder.on("close", done));
   const collected = (args, options = {}) =>
     new Promise((resolveRun) => {
       const child = spawn(process.execPath, args, { cwd: root, ...options });
@@ -119,6 +120,31 @@ test("a busy host slot stops the heavy lane instead of starting it", async () =>
     assert.match(heavy.text, /CAPACITY WAIT EXPIRED/);
     assert.doesNotMatch(heavy.text, /Astro and TypeScript/);
 
+    // A single reserved stage takes the same route, so the split cannot leave
+    // one mutating stage running outside the slot.
+    const single = await collected([
+      verify,
+      "--stage",
+      "build",
+      "--state-dir",
+      state,
+      "--wait-seconds",
+      "0.3"
+    ]);
+    assert.equal(single.status, 75, single.text);
+    assert.doesNotMatch(single.text, /production build and privacy scan/);
+
+    // An invented or stale environment pair is not a reservation.
+    const invented = await collected([verify, "--reserved", "--stage", "typecheck"], {
+      env: {
+        ...process.env,
+        LOFTWAH_VALIDATION_COMPLETION: "/tmp/complete.json",
+        LOFTWAH_VALIDATION_GENERATION: "e".repeat(32)
+      }
+    });
+    assert.notEqual(invented.status, 0, invented.text);
+    assert.match(invented.text, /runs only inside a host reservation/);
+
     // The reserved payload refuses to run with no reservation at all. (Inside an
     // outer reservation the inherited contract still means a slot is held.)
     const bare = { ...process.env };
@@ -130,7 +156,7 @@ test("a busy host slot stops the heavy lane instead of starting it", async () =>
     assert.doesNotMatch(unreserved.text, /Astro and TypeScript/);
   } finally {
     holder.kill("SIGTERM");
-    await new Promise((done) => holder.on("close", done));
+    await exited;
     rmSync(directory, { recursive: true, force: true });
   }
 });

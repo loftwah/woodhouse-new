@@ -292,6 +292,28 @@ class Reservation(unittest.TestCase):
         holder.terminate()
         self.assertEqual(holder.wait(timeout=20), 130)
 
+    def test_recovery_restores_a_released_journal_missing_its_completion(self):
+        generation = "e" * 32
+        self.journal(generation, "released", [])
+        self.assertEqual(self.recover().returncode, 0)
+        self.assertEqual(json.loads((self.state / ("complete-" + generation + ".json")).read_text()),
+                         {"version": 1, "generation": generation, "cleanup": "complete"})
+        self.assertEqual(self.launch("after-repair", "pass").wait(timeout=8), 0)
+
+    def test_recovery_refuses_journals_it_cannot_trust(self):
+        self.state.mkdir(mode=0o700, exist_ok=True)
+        (self.state / "holder.json").write_text("{not json")
+        refused = self.recover()
+        self.assertNotEqual(refused.returncode, 0)
+        self.assertIn("recover by inspection", refused.stderr)
+        self.journal("f" * 32, "running", [])
+        metadata = json.loads((self.state / "holder.json").read_text())
+        metadata["version"] = 99
+        (self.state / "holder.json").write_text(json.dumps(metadata))
+        refused = self.recover()
+        self.assertNotEqual(refused.returncode, 0)
+        self.assertIn("recover by inspection", refused.stderr)
+
     def test_quarantine_diagnostic_names_the_blocking_state(self):
         generation = "d" * 32
         self.journal(generation, "uncertain", [])

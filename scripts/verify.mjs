@@ -9,7 +9,7 @@
 // not a substitute for the release scripts' clean-tree/main/origin checks. One
 // writer per worktree still owns integration and deployment.
 import { spawn } from "node:child_process";
-import { dirname, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { completeHostValidation } from "./host-validation-complete.mjs";
 
@@ -52,6 +52,10 @@ function spawnOwned(binary, args) {
     const child = spawn(binary, args, {
       cwd: root,
       stdio: "inherit",
+      // POSIX: own process group, so cancellation reaches grandchildren too.
+      // The previous supervisor tracked descendants explicitly; without this a
+      // Ctrl-C during a light stage left its grandchildren running untracked.
+      detached: process.platform !== "win32",
       shell: process.platform === "win32" && !process.env.npm_execpath
     });
     activeChild = child;
@@ -61,6 +65,17 @@ function spawnOwned(binary, args) {
       resolveRun(cancelled ? 130 : (status ?? 1));
     });
   });
+}
+
+function stopActiveChild() {
+  const child = activeChild;
+  if (!child) return;
+  try {
+    if (process.platform === "win32") child.kill("SIGTERM");
+    else process.kill(-child.pid, "SIGTERM");
+  } catch (error) {
+    if (error.code !== "ESRCH") child.kill("SIGTERM");
+  }
 }
 
 function runStage([label, script]) {
@@ -107,7 +122,12 @@ function heavyLane(options) {
  * the acknowledgement is missing, so skipping it would punish a clean stop.
  */
 async function runReserved(options) {
-  if (!process.env.LOFTWAH_VALIDATION_COMPLETION || !process.env.LOFTWAH_VALIDATION_GENERATION)
+  // Shape check, not proof of ownership: the supervisor holds the lock. This
+  // only stops a stale or invented environment pair from starting a build with
+  // no reservation behind it.
+  const completion = process.env.LOFTWAH_VALIDATION_COMPLETION ?? "";
+  const generation = process.env.LOFTWAH_VALIDATION_GENERATION ?? "";
+  if (!/^[a-f0-9]{32}$/.test(generation) || basename(completion) !== `complete-${generation}.json`)
     throw new Error("The reserved heavy lane runs only inside a host reservation");
   const list = options.stage ? [stageFor(options.stage)] : heavyStages;
   try {
@@ -137,7 +157,7 @@ export async function main(argv) {
   const options = parseArguments(argv);
   const interrupt = () => {
     cancelled = true;
-    activeChild?.kill("SIGTERM");
+    stopActiveChild();
   };
   process.on("SIGINT", interrupt);
   process.on("SIGTERM", interrupt);

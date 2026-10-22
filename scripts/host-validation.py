@@ -125,12 +125,25 @@ def recover(root):
             if not journal.exists():
                 print("RECOVERY NOT NEEDED: no reservation journal", flush=True)
                 return 0
-            metadata = json.loads(journal.read_text())
+            try:
+                metadata = json.loads(journal.read_text())
+            except (OSError, ValueError):
+                raise RuntimeError("Invalid reservation journal; recover by inspection") from None
+            if not isinstance(metadata, dict) or metadata.get("version") != 1:
+                raise RuntimeError("Invalid reservation journal; recover by inspection")
             generation = metadata.get("generation", "")
             if len(generation) != 32 or any(c not in "0123456789abcdef" for c in generation):
                 raise RuntimeError("Invalid reservation journal; recover by inspection")
+            completion = root / ("complete-" + generation + ".json")
             if metadata.get("state") == "released":
-                print("RECOVERY NOT NEEDED: the journal is already released", flush=True)
+                if completion.exists():
+                    print("RECOVERY NOT NEEDED: the journal is already released", flush=True)
+                    return 0
+                # A released journal with no completion record still blocks every
+                # later waiter; restore the record instead of dead-ending them.
+                write_json(completion, {"version": 1, "generation": generation, "cleanup": "complete"})
+                print(f"RECOVERY COMPLETE: restored the missing completion record for {generation[:8]}",
+                      flush=True)
                 return 0
             children = metadata.get("children", [])
             if not isinstance(children, list) or any(
@@ -144,8 +157,7 @@ def recover(root):
                 print(f"RECOVERY REFUSED: {len(remaining)} recorded and {len(marked)} marked processes "
                       f"still belong to generation {generation[:8]}", flush=True)
                 return 75
-            write_json(root / ("complete-" + generation + ".json"),
-                       {"version": 1, "generation": generation, "cleanup": "complete"})
+            write_json(completion, {"version": 1, "generation": generation, "cleanup": "complete"})
             metadata.update(state="released", recovered=time.time())
             write_json(journal, metadata)
             print(f"RECOVERY COMPLETE: generation {generation[:8]} has no live owned work", flush=True)
