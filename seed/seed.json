@@ -11815,7 +11815,7 @@
                   "children": [
                     {
                       "_type": "span",
-                      "text": "Ten of the nineteen published dispatches carry formatting marks. Eight of them had a non-empty mark array, so eight word counts were wrong: fifty-three words too high in total, by as much as fourteen on a single dispatch. Pass two made the walk carry the owning field through arrays, added a regression test that fails when a mark is counted as a word, and left the rest alone. Two files changed.",
+                      "text": "At the time of the experiment, ten of the nineteen published dispatches carried formatting marks. Eight of them had a non-empty mark array, so eight word counts were wrong: fifty-three words too high in total, by as much as fourteen on a single dispatch. Pass two made the walk carry the owning field through arrays, added a regression test that fails when a mark is counted as a word, and left the rest alone. Two files changed.",
                       "marks": []
                     }
                   ]
