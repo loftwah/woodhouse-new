@@ -16,7 +16,7 @@
 
 import { createProgram, hash, mat4, type Program } from "./gl-kit";
 
-const LOOM_STRANDS = 640;
+export const LOOM_STRANDS = 640;
 const LOOM_SEGMENTS = 58;
 
 const FIBRE_TEXTURE_WIDTH = 1024;
@@ -522,11 +522,22 @@ export function createLoom(options: LoomOptions) {
       state.tier += 1;
       state.badWindows = 0;
       resize();
-    } else if (state.goodWindows >= 4 && state.tier > 0) {
+    } else if (state.goodWindows >= 8 && state.tier > 0) {
+      // Eight good windows, not four: demoting lowers the cost, which earns the
+      // upgrade, which restores it. A short symmetry made a mid-range device
+      // soften and sharpen on a loop.
       state.tier -= 1;
       state.goodWindows = 0;
       resize();
     }
+  }
+
+  let firstFrameSeen = false;
+
+  function announceFirstFrame() {
+    if (firstFrameSeen) return;
+    firstFrameSeen = true;
+    options.onFirstFrame?.();
   }
 
   function frame(timestamp: number) {
@@ -537,6 +548,10 @@ export function createLoom(options: LoomOptions) {
     state.phase += delta / 1000;
     step(delta);
     draw(timestamp);
+    // A tab loaded in the background never ran the bootstrap callback, so the
+    // control would stay hidden for the whole session. Claim the first frame
+    // from the first draw that actually happened.
+    announceFirstFrame();
     trackQuality(delta);
   }
 
@@ -626,16 +641,15 @@ export function createLoom(options: LoomOptions) {
     setStatus("lost");
   }
 
+  /**
+   * A restored context has no shaders, texture or vertex array. Rebuilding them
+   * is not free and a partial rebuild would be worse than none, so the scene
+   * stays on its still image and keeps saying so rather than claiming a recovery
+   * it cannot draw.
+   */
   function onContextRestored() {
-    state.tier = Math.min(TIERS.length - 1, state.tier + 1);
-    resize();
-    if (state.reducedMotion) {
-      drawStill();
-      setStatus("still");
-    } else {
-      start();
-      setStatus(state.paused ? "paused" : "running");
-    }
+    stop();
+    setStatus("lost");
   }
   canvas.addEventListener("webglcontextlost", onContextLost as EventListener, false);
   canvas.addEventListener("webglcontextrestored", onContextRestored as EventListener, false);
@@ -646,13 +660,7 @@ export function createLoom(options: LoomOptions) {
     setStatus("still");
     options.onFirstFrame?.();
   } else {
-    state.raf = requestAnimationFrame((timestamp) => {
-      if (state.destroyed) return;
-      state.raf = requestAnimationFrame(frame);
-      state.lastTimestamp = timestamp;
-      draw(timestamp);
-      options.onFirstFrame?.();
-    });
+    start();
     setStatus("running");
   }
 
@@ -684,9 +692,9 @@ export function createLoom(options: LoomOptions) {
         state.intro = 1;
         draw(0);
         setStatus("still");
-      } else if (!state.paused) {
+      } else {
         start();
-        setStatus("running");
+        setStatus(state.paused ? "paused" : "running");
       }
     },
     destroy() {

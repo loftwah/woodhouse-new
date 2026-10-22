@@ -86,6 +86,7 @@ This contract applies to the exhibits as well as to the rest of the site.
 
 ## Responsive and accessibility rules
 
+- Homepage signature — reviewed 23 October 2026. The small-motion rule is narrowed for this one artwork the same way the exhibit rule was: the loom is the page's signature, so it moves. The phone exception below is deliberately inverted for it, because the artwork is decorative: the `h1`, the introduction and the primary action lead the narrow reading order, and the plate follows them at full bleed with its own caption. A decorative plate before the page's only `h1` would delay the page naming itself. The still/reduced-motion presentation is the same composition, so no reader loses the artwork.
 - Design the narrow reading order deliberately. On the homepage, place the lead artwork and its credit before the story text on phones. Stack register identity, state and review date within the same linked row. Keep source artwork at its original aspect ratio and show the phone-specific D2 SVG at phone widths.
 - Nothing depends on hover. Do not hide diagrams on phones; include a text transcript for detail and assistive technology.
 - Preserve readable contrast, visible focus, useful image text and clear link purpose. Keep the page free of horizontal overflow.
@@ -145,7 +146,6 @@ Wide editions use bounded reading fields rather than an automatic line of nested
 The founding essay alternates a readable prose measure with full-width plates, the existing conceptual workshop illustration and dated public product captures. Its historical account stays tied to 28 September; the editorial expansion has its own 18 October review. The continuation leads to the working Factory examples. Product-first Home and Factory reading orders are retained.
 
 These describe the rebuilt edition. Independent agent review and publication verification are evidence about that edition, not MP’s taste acceptance. MP’s rejection of the former edition remains recorded above.
-
 
 ### MP rejection of the second edition — 18 October 2026
 

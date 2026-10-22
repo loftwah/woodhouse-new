@@ -1,4 +1,6 @@
 ---
+import { LOOM_STRANDS } from "../scripts/signature/loom";
+
 /**
  * The homepage signature plate: one still image for every failure path, one
  * canvas for the live loom, and the pause control outside the artwork so focus,
@@ -27,7 +29,7 @@ const { class: className } = Astro.props;
     </picture>
     <canvas class="signature-plate__canvas" data-signature-canvas aria-hidden="true"></canvas>
     <span class="signature-plate__control">
-      <button type="button" data-signature-toggle hidden aria-pressed="false">
+      <button type="button" data-signature-toggle hidden>
         Freeze motion
       </button>
     </span>
@@ -35,8 +37,8 @@ const { class: className } = Astro.props;
   <figcaption>
     <span class="signature-plate__title">The loom</span>
     <span class="signature-plate__note">
-      Four hundred and forty-eight tensioned fibres, one raking light, drawn by the browser. Move
-      across the plate and brush through them.
+      {LOOM_STRANDS} tensioned fibres, one raking light, drawn by the browser. Move across the plate
+      and brush through them.
     </span>
     <span class="signature-plate__status" role="status" data-signature-status></span>
   </figcaption>
@@ -161,6 +163,10 @@ const { class: className } = Astro.props;
       right: 0.7rem;
       bottom: 0.7rem;
     }
+    /* The plate bleeds to the viewport edge on phones; the caption must not. */
+    .signature-plate figcaption {
+      padding-inline: var(--gutter, 1.25rem);
+    }
   }
 </style>
 
@@ -187,12 +193,13 @@ const { class: className } = Astro.props;
       lost: "The live scene stopped to protect the page. The still image stays."
     };
 
+    // One owner for the visible state: the renderer reports where it is, and this
+    // function writes the caption and the control's label from that one report.
     const describe = (next: LoomStatus) => {
       status.textContent = messages[next];
       stage.dataset.lost = String(next === "lost" || next === "unsupported");
       toggle.hidden = next === "unsupported" || next === "lost" || next === "still";
       toggle.textContent = pausedByVisitor ? "Resume motion" : "Freeze motion";
-      toggle.setAttribute("aria-pressed", String(pausedByVisitor));
     };
 
     const loom: Loom | null = createLoom({
@@ -212,22 +219,25 @@ const { class: className } = Astro.props;
       toggle.addEventListener("click", () => {
         pausedByVisitor = !pausedByVisitor;
         instance.setPaused(pausedByVisitor);
+        // The renderer only reports a change, so a repeat press still has to
+        // update its own label.
         toggle.textContent = pausedByVisitor ? "Resume motion" : "Freeze motion";
-        toggle.setAttribute("aria-pressed", String(pausedByVisitor));
-        if (pausedByVisitor) status.textContent = "Motion frozen.";
       });
 
+      // A live preference change is not the visitor pausing: it must not clear
+      // their choice, and the renderer always reports where the scene now is.
       const onMotionPreference = (event: MediaQueryListEvent) => {
         instance.setReducedMotion(event.matches);
-        pausedByVisitor = false;
-        toggle.textContent = "Freeze motion";
-        toggle.setAttribute("aria-pressed", "false");
-        if (event.matches) status.textContent = messages.still;
       };
       motionQuery.addEventListener("change", onMotionPreference);
 
-      const onPageHide = () => instance.destroy();
-      window.addEventListener("pagehide", onPageHide, { once: true });
+      // `pagehide` also fires when the page enters the back/forward cache. Only a
+      // real unload should tear the scene down, or Back returns to a dead canvas
+      // behind a control that still says it can freeze motion.
+      const onPageHide = (event: PageTransitionEvent) => {
+        if (!event.persisted) instance.destroy();
+      };
+      window.addEventListener("pagehide", onPageHide);
     }
   }
 </script>
