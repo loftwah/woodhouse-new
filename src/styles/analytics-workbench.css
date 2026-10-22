@@ -1762,6 +1762,19 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
+.discovery-detail__jump {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-soft, #17233a);
+  color: var(--copy-soft);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.discovery-detail__jump a {
+  color: var(--acid);
+  font-weight: 600;
+}
 @media (max-width: 900px) {
   .discovery-journey {
     grid-template-columns: minmax(0, 1fr);

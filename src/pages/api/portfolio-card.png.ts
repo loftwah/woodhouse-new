@@ -27,13 +27,26 @@ export const GET: APIRoute = async ({ url, cache }) => {
     measure = url.searchParams.get("measure"),
     week = /^\d{4}-\d{2}-\d{2}$/.test(url.searchParams.get("week") ?? "")
       ? url.searchParams.get("week")!
+      : null,
+    destination = /^[a-z0-9-]{1,40}$/.test(url.searchParams.get("destination") ?? "")
+      ? url.searchParams.get("destination")!
       : null;
   if (
     !id ||
     (measure !== null && measure !== "replays" && !knownMeasures.has(measure)) ||
     !Object.hasOwn(reportFormats, format) ||
     [...url.searchParams.keys()].some(
-      (k) => !["format", "report", "project", "download", "audit", "measure", "week"].includes(k)
+      (k) =>
+        ![
+          "format",
+          "report",
+          "project",
+          "download",
+          "audit",
+          "measure",
+          "week",
+          "destination"
+        ].includes(k)
     )
   )
     return new Response("Invalid report image.", {
@@ -49,6 +62,18 @@ export const GET: APIRoute = async ({ url, cache }) => {
   const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
   if (selected && !publicIds.has(selected))
     return new Response("Project unavailable.", { status: 404 });
+  // A destination must be a currently published project. An unknown value is a
+  // bad request rather than a silent fallback to the portfolio composition.
+  if (destination && !publicIds.has(destination))
+    return new Response("Destination unavailable.", { status: 404 });
+  // A destination story only exists in the discovery scope. Refuse a URL that
+  // would otherwise return a visits or gameplay composition under a discovery
+  // label, so an old or edited link cannot disagree with its own image.
+  if (destination && measure && measure !== "overview" && measure !== "project_opens")
+    return new Response("Destination story unavailable for this measure.", {
+      status: 400,
+      headers: { "cache-control": "no-store" }
+    });
   try {
     const stored = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
     if (!stored)
@@ -84,7 +109,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
         format as ReportFormat,
         measure ?? undefined,
         url.origin,
-        week ?? undefined
+        week ?? undefined,
+        destination ?? undefined
       ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }

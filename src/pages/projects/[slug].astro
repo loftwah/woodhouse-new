@@ -13,7 +13,11 @@ import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
-import { analyticsProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
+import {
+  analyticsProjects,
+  discoveryProjects,
+  type AnalyticsProject
+} from "../../data/portfolio-analytics";
 import { productView } from "../../data/analytics-workbench";
 
 export const prerender = false;
@@ -153,6 +157,16 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
             href={`/activity/?project=${project.slug}&measure=${productView(project.slug as AnalyticsProject)!.defaultMeasure}`}
           >
             See what {project.name} records <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      )}
+      {discoveryProjects.includes(project.slug as (typeof discoveryProjects)[number]) && (
+        <p class="dossier-hero__analytics">
+          <a
+            class="text-link"
+            href={`/activity/?project=woodhouse&measure=project_opens&destination=${project.slug}#discovery-story`}
+          >
+            See how Woodhouse readers find {project.name} <span aria-hidden="true">↗</span>
           </a>
         </p>
       )}
