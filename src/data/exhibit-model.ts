@@ -31,6 +31,20 @@ export type ExhibitStep = {
 
 const CODE = "src/scripts/exhibits/patch-bench.ts";
 
+/**
+ * The reviewed source and date the walkthrough describes. A later behavioural
+ * change must update this note and re-run the drift fixture; the date is not a
+ * substitute for the check.
+ */
+export const exhibitReview = {
+  reviewedAt: "2026-10-23",
+  sourceRevision: "27f26996504201ea0905a4ec571ccc66138a8107",
+  sourceUrl:
+    "https://github.com/loftwah/woodhouse-new/blob/27f26996504201ea0905a4ec571ccc66138a8107/src/scripts/exhibits/patch-bench.ts",
+  contract:
+    "Reconnect restores the audio link only. The link never pauses or resets the run, whose own state may be waiting, playing or over. A deliberate Play starts the soundtrack again."
+} as const;
+
 export const exhibitSteps: ExhibitStep[] = [
   {
     id: "waiting",
@@ -106,14 +120,19 @@ export const exhibitSteps: ExhibitStep[] = [
     id: "reconnect",
     action: "You reconnect it",
     result:
-      "The same client resumes the same station. The run state and score are exactly where you left them.",
+      "“Music link restored. The link did not pause or reset the run; press Play to start the soundtrack.” The music is not playing yet.",
     because:
-      "The page kept its transport; it closed a connection rather than destroying the client. Resetting the bench is a separate, deliberate action.",
+      "The page kept its transport; reconnecting restores the connection, not the playback. Disconnecting never paused or reset the run, so it is in whatever state its own play left it. Play is a separate, deliberate action.",
     state: {
-      run: "Playing, unchanged",
-      music: "Playing again on the same client"
+      run: "Its own state: waiting, playing or over; the link did not change it",
+      music: "Link restored; ready for a deliberate Play"
     },
-    source: { path: CODE, anchor: "data-music-link", note: "the link control the bench reuses" }
+    source: {
+      path: CODE,
+      anchor:
+        "Music link restored. The link did not pause or reset the run; press Play to start the soundtrack.",
+      note: "the reconnect message"
+    }
   },
   {
     id: "failure",

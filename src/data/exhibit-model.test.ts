@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-import { exhibitAnchors, exhibitSteps } from "./exhibit-model.ts";
+import { exhibitAnchors, exhibitReview, exhibitSteps } from "./exhibit-model.ts";
 
 /**
  * The drift check for the patch bench explanation.
@@ -53,4 +53,47 @@ test("the explanation never claims the run stops when the music does", () => {
       assert.match(text, /run (keeps|continues|is|state)/, `${step.id} must say what the run does`);
     }
   }
+});
+
+test("reconnect restores the link, not the playback or the run's clock", async () => {
+  const source = await readFile(
+    path.join(process.cwd(), "src/scripts/exhibits/patch-bench.ts"),
+    "utf8"
+  );
+  const start = source.indexOf("private setMusicConnected(");
+  const end = source.indexOf("private setMusicMessage(", start);
+  assert.ok(start > 0 && end > start, "the reconnect handler is still present");
+  const reconnect = source.slice(start, end);
+  // The deliberate Play path is the only thing that starts the stream. If a
+  // future edit makes reconnect autoplay, this fixture fails instead of the
+  // walkthrough quietly claiming a transition that no longer happens.
+  assert.doesNotMatch(reconnect, /startMusic\s*\(|\.play\s*\(/);
+  assert.match(
+    reconnect,
+    /Music link restored\. The link did not pause or reset the run; press Play/
+  );
+  assert.doesNotMatch(reconnect, /resum|playing again|same station/i);
+  assert.match(source, /Ready\. Press play to start the soundtrack\./);
+  const playWiring = source.slice(
+    source.indexOf('"[data-music-play]"'),
+    source.indexOf('"[data-music-pause]"')
+  );
+  assert.match(playWiring, /startMusic\s*\(/, "Play is the explicit start control");
+});
+
+test("the walkthrough states the same reconnect contract as the runtime", () => {
+  const step = exhibitSteps.find((entry) => entry.id === "reconnect");
+  assert.ok(step);
+  const text = `${step.result} ${step.because} ${step.state.run} ${step.state.music}`;
+  assert.match(text, /link is restored|link restored/i);
+  assert.match(text, /press Play|deliberate Play|separate, deliberate action/i);
+  assert.match(text, /link did not (pause|reset)|own state/i);
+  assert.doesNotMatch(text, /exactly where you left|resumes the same station|playing again/i);
+});
+
+test("the walkthrough records its review date and exact source revision", () => {
+  assert.match(exhibitReview.reviewedAt, /^\d{4}-\d{2}-\d{2}$/);
+  assert.match(exhibitReview.sourceRevision, /^[a-f0-9]{40}$/);
+  assert.match(exhibitReview.sourceUrl, /^https:\/\/github\.com\/loftwah\/woodhouse-new\/blob\//);
+  assert.ok(exhibitReview.contract.length > 40);
 });

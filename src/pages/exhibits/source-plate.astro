@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SourcePlate from "../../components/exhibits/SourcePlate.astro";
+import ContributionExplorer from "../../components/exhibits/ContributionExplorer.astro";
 export const prerender = false;
 ---
 
@@ -45,6 +46,9 @@ export const prerender = false;
     <SourcePlate />
   </section>
 
+  <section class="container">
+    <ContributionExplorer />
+  </section>
   <section class="container exhibit-body">
     <div class="exhibit-body__grid">
       <div class="exhibit-prose">
@@ -112,7 +116,10 @@ export const prerender = false;
         </div>
         <div class="exhibit-margin__block">
           <span class="micro-label">Reviewed</span>
-          <p>20 October 2026. Contract version 1, as published by the guestbook.</p>
+          <p>
+            Source plate 20 October 2026. Contribution flow 23 October 2026. Contract version 1, as
+            published by the guestbook.
+          </p>
         </div>
       </aside>
     </div>

@@ -1,0 +1,555 @@
+---
+import {
+  contributionReview,
+  contributionSteps,
+  invitationStates
+} from "../../data/contribution-flow";
+
+const stateLabel = (state: string) =>
+  state.charAt(0).toUpperCase() + state.slice(1).replaceAll("-", " ");
+
+/**
+ * A source-backed walkthrough of the contribution contract.
+ *
+ * The whole journey is server-rendered, so it reads without JavaScript. The
+ * controls move a highlight and a live status only; they never operate a
+ * production guestbook or reveal a private record.
+ */
+---
+
+<section class="contribution-flow" id="contribution-flow" aria-labelledby="contribution-flow-title">
+  <header class="contribution-flow__head">
+    <p class="micro-label">Second flow · App Composer</p>
+    <h2 id="contribution-flow-title">From a private note to a featured card — and back.</h2>
+    <p>
+      A visitor note, an approved public item and a featured card are three different states. This
+      walkthrough follows one note through the published Here / there contract, then removes it at
+      the source. It is a model of the contract, not a production control.
+    </p>
+    <p class="contribution-flow__provenance">
+      Reviewed <time datetime={contributionReview.reviewedAt}>23 October 2026</time> against{" "}
+      <a href={contributionReview.documentation.url}>the maintained contract</a>,{" "}
+      <a
+        href={`https://github.com/loftwah/app-composer-guestbook/commit/${contributionReview.guestbookCommit}`}
+      >
+        Guestbook {contributionReview.guestbookCommit.slice(0, 7)}
+      </a>{" "}
+      and{" "}
+      <a
+        href={`https://github.com/loftwah/app-composer-showcase/commit/${contributionReview.linkarooieCommit}`}
+      >
+        Linkarooie {contributionReview.linkarooieCommit.slice(0, 7)}
+      </a>
+      .
+    </p>
+  </header>
+
+  <div class="contribution-flow__lanes" data-flow-lanes>
+    <article class="flow-lane flow-lane--guestbook" data-flow-lane="guestbook">
+      <header>
+        <span class="flow-lane__index">01</span>
+        <h3>Guestbook</h3>
+        <p>Owns the note, moderation and media.</p>
+      </header>
+      <p class="flow-lane__state" data-flow-guestbook>
+        {contributionSteps[0]?.guestbook}
+      </p>
+    </article>
+    <div class="flow-contract" aria-hidden="true">
+      <span>exact source reference</span>
+    </div>
+    <article class="flow-lane flow-lane--linkarooie" data-flow-lane="linkarooie">
+      <header>
+        <span class="flow-lane__index">02</span>
+        <h3>Linkarooie</h3>
+        <p>Owns curation and the featured card.</p>
+      </header>
+      <p class="flow-lane__state" data-flow-linkarooie>
+        {contributionSteps[0]?.linkarooie}
+      </p>
+    </article>
+  </div>
+
+  <div class="contribution-flow__readout" aria-live="polite" data-flow-readout>
+    <p class="contribution-flow__position" data-flow-position>
+      Step 1 of {contributionSteps.length}
+    </p>
+    <p class="contribution-flow__state" data-flow-state>
+      State: {stateLabel(contributionSteps[0]?.state ?? "")}
+    </p>
+    <p class="contribution-flow__action" data-flow-action>
+      {contributionSteps[0]?.action}
+    </p>
+  </div>
+
+  <div class="contribution-flow__controls">
+    <button type="button" data-flow-back disabled>
+      Back
+    </button>
+    <button type="button" data-flow-next>
+      Next step
+    </button>
+    <button type="button" data-flow-restart disabled>
+      Start again
+    </button>
+  </div>
+  <p class="contribution-flow__control-note">
+    These controls move the explanation only. The source plate above is the working exhibit.
+  </p>
+
+  <ol class="contribution-flow__steps" data-flow-steps>
+    {contributionSteps.map((step, index) => (
+      <li
+        id={`flow-${step.id}`}
+        data-flow-step={index}
+        data-state={step.state}
+        aria-current={index === 0 ? "step" : undefined}
+      >
+        <p class="contribution-flow__step-index" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")} · {step.phase}
+        </p>
+        <h3>{step.action}</h3>
+        <p>{step.result}</p>
+        <p class="contribution-flow__because">{step.because}</p>
+        <dl class="contribution-flow__sides">
+          <div>
+            <dt>Guestbook</dt>
+            <dd data-side="guestbook">{step.guestbook}</dd>
+          </div>
+          <div>
+            <dt>Linkarooie</dt>
+            <dd data-side="linkarooie">{step.linkarooie}</dd>
+          </div>
+        </dl>
+        <p class="contribution-flow__source">
+          <span class="micro-label">Source</span>
+          <a href={step.source.url}>{step.source.label}</a> — {step.source.note}
+        </p>
+      </li>
+    ))}
+  </ol>
+
+  <section class="contribution-flow__states" aria-labelledby="invitation-states-title">
+    <h3 id="invitation-states-title">The five public invitation states, and no source</h3>
+    <p>
+      Acceptance follows the source's current active configuration. A state is not a guess about
+      what a form might do; it is what the contract returned.
+    </p>
+    <ul>
+      {invitationStates.map((entry) => (
+        <li data-invitation-state={entry.state}>
+          <span class="invitation-state">{entry.label}</span>
+          <span class={entry.accepts ? "invitation-accepts" : "invitation-refuses"}>
+            {entry.accepts ? "Accepts a postcard" : "No send action"}
+          </span>
+          <p>{entry.panel}</p>
+          <p class="contribution-flow__small">{entry.boundary}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <footer class="contribution-flow__foot">
+    <p>{contributionReview.owner}</p>
+    <p>{contributionReview.boundary}</p>
+    <p class="contribution-flow__links">
+      <a href={contributionReview.documentation.url}>
+        Read the maintained contract <span aria-hidden="true">↗</span>
+      </a>
+      <a href={contributionReview.building.url}>
+        Read the App Composer build story <span aria-hidden="true">↗</span>
+      </a>
+      <a href="/projects/app-composer/">
+        Open the App Composer dossier <span aria-hidden="true">↗</span>
+      </a>
+    </p>
+  </footer>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>(".contribution-flow");
+  if (root) {
+    const steps = [...root.querySelectorAll<HTMLElement>("[data-flow-step]")];
+    const readout = {
+      position: root.querySelector<HTMLElement>("[data-flow-position]"),
+      state: root.querySelector<HTMLElement>("[data-flow-state]"),
+      action: root.querySelector<HTMLElement>("[data-flow-action]"),
+      guestbook: root.querySelector<HTMLElement>("[data-flow-guestbook]"),
+      linkarooie: root.querySelector<HTMLElement>("[data-flow-linkarooie]")
+    };
+    const controls = {
+      back: root.querySelector<HTMLButtonElement>("[data-flow-back]"),
+      next: root.querySelector<HTMLButtonElement>("[data-flow-next]"),
+      restart: root.querySelector<HTMLButtonElement>("[data-flow-restart]")
+    };
+    let current = 0;
+    const render = (index: number) => {
+      current = Math.max(0, Math.min(steps.length - 1, index));
+      steps.forEach((step, stepIndex) => {
+        if (stepIndex === current) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      });
+      const step = steps[current];
+      if (!step) return;
+      const state = step.dataset.state ?? "";
+      const guestbook =
+        step.querySelector<HTMLElement>("[data-side='guestbook']")?.textContent ?? "";
+      const linkarooie =
+        step.querySelector<HTMLElement>("[data-side='linkarooie']")?.textContent ?? "";
+      if (readout.position) readout.position.textContent = `Step ${current + 1} of ${steps.length}`;
+      if (readout.state)
+        readout.state.textContent = `State: ${state.charAt(0).toUpperCase()}${state.slice(1).replaceAll("-", " ")}`;
+      if (readout.action) readout.action.textContent = step.querySelector("h3")?.textContent ?? "";
+      if (readout.guestbook) readout.guestbook.textContent = guestbook;
+      if (readout.linkarooie) readout.linkarooie.textContent = linkarooie;
+      if (controls.back) controls.back.disabled = current === 0;
+      if (controls.next) controls.next.disabled = current === steps.length - 1;
+      if (controls.restart) controls.restart.disabled = current === 0;
+    };
+    controls.back?.addEventListener("click", () => render(current - 1));
+    controls.next?.addEventListener("click", () => render(current + 1));
+    controls.restart?.addEventListener("click", () => render(0));
+    render(0);
+  }
+</script>
+
+<style>
+  .contribution-flow {
+    --flow-acid: var(--acid, #e9ff49);
+    margin-block: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-dark);
+  }
+  .contribution-flow__head {
+    max-width: 72ch;
+  }
+  .contribution-flow__head h2 {
+    margin: 0.5rem 0 0.7rem;
+    font: 750 clamp(1.6rem, 2.8vw, 2.3rem) / 1.08 var(--display);
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .contribution-flow__head p:not(.micro-label) {
+    margin: 0.4rem 0;
+    color: var(--copy);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .contribution-flow__provenance {
+    color: var(--copy-soft) !important;
+    font-size: 0.8rem !important;
+  }
+  .contribution-flow__provenance a {
+    color: var(--flow-acid);
+  }
+  .contribution-flow__lanes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 9rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+    margin: 1.5rem 0 0;
+  }
+  .flow-lane {
+    padding: 1rem;
+    border: 1px solid var(--line-dark);
+    background: var(--surface, #0f182a);
+  }
+  .flow-lane header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.2rem 0.6rem;
+    align-items: baseline;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .flow-lane__index {
+    grid-row: 1 / span 2;
+    color: var(--flow-acid);
+    font: 600 0.7rem/1.4 var(--mono);
+  }
+  .flow-lane h3 {
+    margin: 0;
+    font: 700 1.05rem/1.2 var(--display);
+  }
+  .flow-lane header p {
+    margin: 0;
+    color: var(--copy-soft);
+    font-size: 0.75rem;
+  }
+  .flow-lane__state {
+    margin: 0.7rem 0 0;
+    color: var(--paper);
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+  .flow-contract {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--copy-soft);
+    font: 600 0.62rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .flow-contract::before,
+  .flow-contract::after {
+    content: "";
+    flex: 1 0 1rem;
+    min-width: 1rem;
+    border-top: 1px dashed var(--line-dark);
+  }
+  .flow-contract span {
+    padding: 0 0.5rem;
+  }
+  .contribution-flow__readout {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 0.35rem 1rem;
+    margin: 1rem 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--line);
+    background: var(--surface, #0f182a);
+  }
+  .contribution-flow__position {
+    grid-row: 1 / span 2;
+    margin: 0;
+    color: var(--flow-acid);
+    font: 600 0.7rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .contribution-flow__state {
+    margin: 0;
+    color: var(--copy-soft);
+    font: 600 0.68rem/1.4 var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .contribution-flow__action {
+    margin: 0;
+    color: var(--paper);
+    font: 700 1.08rem/1.3 var(--display);
+  }
+  .contribution-flow__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.3rem;
+  }
+  .contribution-flow__controls button {
+    appearance: none;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line-dark);
+    background: transparent;
+    color: var(--paper);
+    font: 600 0.82rem/1 var(--sans);
+    cursor: pointer;
+  }
+  .contribution-flow__controls button[data-flow-next] {
+    border-color: var(--flow-acid);
+    background: var(--flow-acid);
+    color: var(--ink);
+  }
+  .contribution-flow__controls button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .contribution-flow__controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .contribution-flow__controls button[data-flow-restart] {
+    margin-left: auto;
+    border-color: transparent;
+    color: var(--copy-soft);
+  }
+  .contribution-flow__control-note {
+    margin: -0.7rem 0 1.3rem;
+    color: var(--copy-soft);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .contribution-flow__steps {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .contribution-flow__steps li {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem 1rem 1rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+    border-left: 2px solid transparent;
+    scroll-margin-top: 6rem;
+  }
+  .contribution-flow__steps li[aria-current="step"] {
+    border-left-color: var(--flow-acid);
+    background: rgba(233, 255, 73, 0.05);
+  }
+  .contribution-flow__step-index {
+    margin: 0;
+    color: var(--copy-soft);
+    font: 600 0.66rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .contribution-flow__steps h3 {
+    margin: 0;
+    font: 700 1.08rem/1.3 var(--display);
+  }
+  .contribution-flow__steps .contribution-flow__step-index {
+    color: var(--copy-soft);
+  }
+  .contribution-flow__steps p {
+    margin: 0;
+    color: var(--copy);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    max-width: 74ch;
+  }
+  .contribution-flow__because {
+    color: var(--copy-soft) !important;
+  }
+  .contribution-flow__sides {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 1.25rem;
+    margin: 0.25rem 0;
+  }
+  .contribution-flow__sides dt {
+    color: var(--flow-acid);
+    font: 600 0.62rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .contribution-flow__sides dd {
+    margin: 0.1rem 0 0;
+    color: var(--copy);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .contribution-flow__source {
+    color: var(--copy-soft) !important;
+    font-size: 0.76rem !important;
+    overflow-wrap: anywhere;
+  }
+  .contribution-flow__source .micro-label {
+    margin-inline-end: 0.4rem;
+  }
+  .contribution-flow__source a {
+    color: var(--paper);
+  }
+  .contribution-flow__states {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .contribution-flow__states h3 {
+    margin: 0 0 0.4rem;
+    font: 700 1.15rem/1.25 var(--display);
+  }
+  .contribution-flow__states > p {
+    max-width: 70ch;
+    margin: 0 0 0.8rem;
+    color: var(--copy-soft);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+  .contribution-flow__states ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 1100px) {
+    .contribution-flow__states ul {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .contribution-flow__states li {
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    background: var(--surface, #0f182a);
+  }
+  .invitation-state {
+    display: inline-block;
+    margin-right: 0.5rem;
+    color: var(--paper);
+    font: 600 0.82rem/1.2 var(--display);
+  }
+  .invitation-accepts,
+  .invitation-refuses {
+    font: 600 0.6rem/1.2 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .invitation-accepts {
+    color: var(--flow-acid);
+  }
+  .invitation-refuses {
+    color: var(--copy-soft);
+  }
+  .contribution-flow__states p {
+    margin: 0.35rem 0 0;
+    color: var(--copy);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .contribution-flow__small {
+    color: var(--copy-soft) !important;
+    font-size: 0.72rem !important;
+  }
+  .contribution-flow__foot {
+    margin-top: 1.4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--copy-soft);
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+  .contribution-flow__foot p {
+    max-width: 72ch;
+  }
+  .contribution-flow__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.2rem;
+  }
+  .contribution-flow__links a {
+    color: var(--flow-acid);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  @media (max-width: 760px) {
+    .contribution-flow__lanes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .flow-contract {
+      min-height: 2rem;
+    }
+    .flow-contract::before,
+    .flow-contract::after {
+      display: none;
+    }
+    .contribution-flow__readout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .contribution-flow__position {
+      grid-row: auto;
+    }
+    .contribution-flow__sides {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 0.75rem;
+    }
+    .contribution-flow__controls button[data-flow-restart] {
+      margin-left: 0;
+    }
+  }
+</style>
