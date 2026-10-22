@@ -14,6 +14,7 @@ import { projectAction, projectActionHref, projectActionLabel } from "../../data
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
 import { analyticsProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
+import { productView } from "../../data/analytics-workbench";
 
 export const prerender = false;
 const slug = Astro.params.slug;
@@ -145,6 +146,16 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           {project.index} / {allProjects.projects.length}
         </dd>
       </dl>
+      {analyticsProjects.includes(project.slug as AnalyticsProject) && (
+        <p class="dossier-hero__analytics">
+          <a
+            class="text-link"
+            href={`/activity/?project=${project.slug}&measure=${productView(project.slug as AnalyticsProject)!.defaultMeasure}`}
+          >
+            See what {project.name} records <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      )}
     </div>
   </section>
   <figure
