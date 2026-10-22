@@ -38,9 +38,9 @@ const CODE = "src/scripts/exhibits/patch-bench.ts";
  */
 export const exhibitReview = {
   reviewedAt: "2026-10-23",
-  sourceRevision: "57b64e614145c9ad7824267278290a0dec14179c",
+  sourceRevision: "361aae0fbfe3498feab758c4ab17b34dd55e8b57",
   sourceUrl:
-    "https://github.com/loftwah/woodhouse-new/blob/57b64e614145c9ad7824267278290a0dec14179c/src/scripts/exhibits/patch-bench.ts",
+    "https://github.com/loftwah/woodhouse-new/blob/361aae0fbfe3498feab758c4ab17b34dd55e8b57/src/scripts/exhibits/patch-bench.ts",
   contract:
     "Reconnect restores the audio link only. The run keeps advancing independently, and a deliberate Play starts the soundtrack again."
 } as const;
