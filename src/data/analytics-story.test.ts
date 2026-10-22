@@ -86,7 +86,7 @@ test("a partial destination story keeps missing days distinct from zero", () => 
   assert.equal(story.daily.at(-8)?.value, 0);
   assert.match(story.reason, /missing rather than zero/);
   assert.equal(story.comparison.eligible, false);
-  assert.match(story.comparison.reason, /only 1 of 7/);
+  assert.match(story.comparison.reason, /current UTC day is partial/);
 });
 
 test("a complete earlier week earns a comparison and states its direction", () => {
@@ -207,7 +207,7 @@ test("a destination with no retained counter still gets an honest card", async (
     "fighter"
   );
   assert.match(svg, /Fighter/);
-  assert.match(svg, /No retained clicks for Fighter|No Woodhouse discovery report/);
+  assert.match(svg, /No retained referral counter for Fighter|No Woodhouse discovery report/);
   assert.doesNotMatch(svg, />0<\/text>/);
 });
 
@@ -286,4 +286,56 @@ test("an open window never presents an observed day as full coverage", () => {
   });
   assert.equal(story.coverageLabel, "All days observed · current UTC day partial");
   assert.equal(story.comparison.eligible, false);
+});
+
+test("the shared image labels a partial recent week", async () => {
+  const { reportSvg } = await import("./portfolio-card.ts");
+  const partial = report([referral("referral_bubbles", 2, "2026-10-20", [1, 1, 0])]);
+  const svg = reportSvg(
+    partial,
+    new Map([["bubbles", "Bubbles"]]),
+    "landscape",
+    "project_opens",
+    "https://preview.example",
+    undefined,
+    "bubbles"
+  );
+  assert.match(svg, /3 of 7 days observed/);
+  assert.doesNotMatch(svg, /Most recent seven days 2<\/text>/);
+});
+
+test("a single-project report keeps its chart and measure label in every format", async () => {
+  const { reportSvg } = await import("./portfolio-card.ts");
+  const single = {
+    schema: "woodhouse.portfolio-report/1" as const,
+    id: "b".repeat(24),
+    createdAt: "2026-10-22T16:25:49.548Z",
+    days: 30,
+    period: { ...period, complete: true },
+    projects: [
+      {
+        project: "bubbles" as const,
+        report: {
+          ...woodhouseReport([
+            {
+              ...referral(
+                "game_starts",
+                42,
+                "2026-10-01",
+                [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
+              )
+            }
+          ]),
+          project: "bubbles" as const
+        }
+      }
+    ]
+  };
+  for (const format of ["landscape", "square", "portrait"] as const) {
+    const svg = reportSvg(single, new Map([["bubbles", "Bubbles"]]), format, "game_starts");
+    assert.match(svg, /Bubbles/);
+    assert.match(svg, /game_starts|Game starts/);
+    assert.match(svg, /Daily activity chart/);
+    assert.match(svg, />42<\/text>/);
+  }
 });

@@ -63,7 +63,8 @@ export function reportSvg(
   requestedMeasure?: string,
   origin = "https://woodhouse.loftwah.com",
   highlightedWeek?: string,
-  destination?: string
+  destination?: string,
+  published?: ReadonlySet<string>
 ) {
   const { width: w, height: h } = reportFormats[format];
   const landscape = format === "landscape",
@@ -87,7 +88,7 @@ export function reportSvg(
       slug: destination as AnalyticsProject,
       name: names.get(destination) ?? destination,
       period,
-      published: new Set(names.keys()),
+      published: published ?? new Set(names.keys()),
       ...(projectColours[destination] ? { colour: projectColours[destination] } : {})
     });
     return discoveryCard(report, story, format, origin, w, h, pad);
@@ -548,7 +549,7 @@ function discoveryCard(
         y + height / 2,
         story.reason.startsWith("Woodhouse did not supply")
           ? "No Woodhouse discovery report for these dates"
-          : `No retained clicks for ${story.name} in these dates`,
+          : `No retained referral counter for ${story.name} in these dates`,
         landscape ? 20 : 26,
         "#a9b8d0"
       );
@@ -566,7 +567,9 @@ function discoveryCard(
         yy + 5,
         Number.isInteger(tick) ? String(tick) : tick.toFixed(1),
         landscape ? 13 : 16,
-        "#7f8ea8"
+        "#7f8ea8",
+        400,
+        "end"
       );
     }
     out += text(x - 10, y + height + 5, "0", landscape ? 13 : 16, "#7f8ea8", 400, "end");
@@ -594,21 +597,19 @@ function discoveryCard(
         );
         // The gap note is only drawn when the pre-collection area can hold it
         // without crossing the first bar or the mid gridline.
-        if (index > 12)
-          out += text(
-            x + 8,
-            y + height / 2,
-            `No counter retained before ${day(story.firstObserved)}`,
-            landscape ? 14 : 18,
-            "#6f7f99"
-          );
+        const note = `No counter retained before ${day(story.firstObserved)}`;
+        const noteWidth = note.length * (landscape ? 14 : 18) * 0.56;
+        if (index * slot > noteWidth + 24)
+          out += text(x + 8, y + height / 2, note, landscape ? 14 : 18, "#6f7f99");
       }
     }
     return out;
   };
   const recentLines = (() => {
     if (story.value === null) return ["No comparison available"];
-    const recent = `Most recent seven days ${story.recent.value?.toLocaleString("en-AU") ?? "—"}`;
+    const observed =
+      story.recent.observedDays < 7 ? ` · ${story.recent.observedDays} of 7 days observed` : "";
+    const recent = `Most recent seven days ${story.recent.value?.toLocaleString("en-AU") ?? "—"}${observed}`;
     if (story.comparison.eligible && story.comparison.change !== null) {
       const direction =
         story.comparison.change === 0

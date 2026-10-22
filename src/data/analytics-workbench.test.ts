@@ -810,7 +810,7 @@ test("the discovery breakdown keeps only published destinations and reports a tr
   assert.equal(entries[0]!.value, 48);
   assert.equal(entries[0]!.recent, 21);
   assert.equal(entries[0]!.prior, 21);
-  assert.equal(entries[0]!.hasTrend, true);
+  assert.equal(entries[0]!.hasTrend, false, "an open period does not claim a complete-week trend");
   // A zero-referral destination is not shown as a discovery.
   assert.deepEqual(
     discoveryReferrals(

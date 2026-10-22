@@ -722,9 +722,10 @@ export function discoveryReferrals(
             ? "unavailable"
             : "partial") as DiscoveryCoverage,
         priorObservedDays: priorObserved,
-        // The current week may still be in progress; that is shown as a caveat,
-        // never used to invent history.
-        hasTrend: priorComplete
+        // Both complete weeks and a closed period are required. The current week
+        // may still be in progress; that is shown as a caveat, never used to
+        // invent history.
+        hasTrend: priorComplete && recentObserved === 7 && period.complete
       };
     })
     .filter((entry) => published.has(entry.slug) && entry.value > 0)

@@ -179,11 +179,15 @@ export function discoveryStory(input: {
     value === null
       ? "No retained referral counter, so no comparison is claimed."
       : !eligible
-        ? period.days < 14
-          ? "These dates are shorter than the two weeks a comparison needs."
-          : prior.observedDays < 7
-            ? `The earlier seven days recorded only ${prior.observedDays} of 7, so no comparison is claimed.`
-            : "The source does not supply an exact daily counter for both complete weeks."
+        ? !period.complete
+          ? "The current UTC day is partial, so the most recent seven days are not a complete week."
+          : period.days < 14
+            ? "These dates are shorter than the two weeks a comparison needs."
+            : prior.observedDays < 7
+              ? `The earlier seven days recorded only ${prior.observedDays} of 7, so no comparison is claimed.`
+              : recent.observedDays < 7
+                ? `The most recent seven days recorded only ${recent.observedDays} of 7, so no comparison is claimed.`
+                : "The source does not supply an exact daily counter for both complete weeks."
         : percent === null
           ? `There was no baseline in the earlier seven days (${formatMetric({ value: prior.value ?? 0, unit: "count" })}), so the change is stated as a count, not a percentage.`
           : "";
@@ -251,7 +255,7 @@ export function discoveryCaption(
 ) {
   const lines = [
     `Woodhouse → ${story.name}`,
-    `${story.value === null ? "No recorded project opens" : `${story.valueLabel} recorded project opens`} · ${dateLabel(story.period.from)} – ${dateLabel(story.period.to)} (UTC)`
+    `${story.value === null ? `No retained referral counter for ${story.name}` : `${story.valueLabel} recorded project opens`} · ${dateLabel(story.period.from)} – ${dateLabel(story.period.to)} (UTC)`
   ];
   if (story.value !== null && story.rank === 1)
     lines.push(
@@ -268,7 +272,7 @@ export function discoveryCaption(
     lines.push(`No recorded clicks to ${story.name} across the observed days.`);
   if (story.comparison.reason) lines.push(story.comparison.reason);
   lines.push(
-    `${story.coverageLabel} · ${story.period.complete ? "closed calendar window" : "current UTC day is partial"}.`,
+    `${story.coverageLabel}.`,
     `It does not establish ${story.doesNotEstablish.charAt(0).toLowerCase()}${story.doesNotEstablish.slice(1)}`,
     link
   );

@@ -75,7 +75,9 @@ const headingId =
               ? story.reason.startsWith("Woodhouse did not supply")
                 ? "No Woodhouse report"
                 : "No retained counter"
-              : "Every day observed"}
+              : story.period.complete
+                ? "Every day observed"
+                : "Current UTC day partial"}
         </small>
       </dd>
     </div>

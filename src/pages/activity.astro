@@ -299,9 +299,16 @@ if (destinationParams.length > 1) {
   if (requestedDestination) corrected.searchParams.set("destination", requestedDestination);
   return Astro.redirect(corrected.pathname + corrected.search, 302);
 }
+// One predicate for the measured destination subset: a public discovery project
+// with a site address. The opening finding, destination rail, story ranking and
+// image API all read this same set instead of inferring it from a display map.
+const publishedDestinations = identities.projects.filter(
+  (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
+);
+const publishedDestinationSlugs = new Set(publishedDestinations.map((p) => p.slug));
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
-  publicIds,
+  publishedDestinationSlugs,
   names,
   new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
   window
@@ -310,9 +317,6 @@ const discovery = discoveryReferrals(
 // or reloaded link describes the same hand-off. Selection is resolved here, once:
 // a published destination keeps its own story even when this report retained no
 // clicks for it; an unknown slug falls back to the busiest measured destination.
-const publishedDestinations = identities.projects.filter(
-  (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
-);
 const requestedDestinationEntry = requestedDestination
   ? publishedDestinations.find((p) => p.slug === requestedDestination)
   : undefined;
@@ -327,7 +331,7 @@ const destinationStory = destinationEntry
       name: destinationEntry.name,
       siteUrl: destinationEntry.siteUrl ?? null,
       period: window,
-      published: new Set(publishedDestinations.map((p) => p.slug))
+      published: publishedDestinationSlugs
     })
   : null;
 const destinationSlug = destinationStory?.slug ?? null;
@@ -590,7 +594,9 @@ const dataPayload = {
   image={image}
   imageAlt={
     storyShare && destinationStory
-      ? `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
+      ? destinationStory.value === null
+        ? destinationStory.headline
+        : `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
       : `${title}: dated ${overview ? "mixed-measure project overview" : measure.label.toLowerCase()} report`
   }
   analyticsWorkbench
@@ -709,7 +715,11 @@ const dataPayload = {
           jsonHref={`/api/portfolio-report.json?report=${report.id}`}
           heading={`Share the ${destinationStory.name} discovery story`}
           note="The page, caption and all three images describe the same selected destination, measure, dates and frozen snapshot."
-          alt={`Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`}
+          alt={
+            destinationStory.value === null
+              ? destinationStory.headline
+              : `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
+          }
           focus
         />
       )}

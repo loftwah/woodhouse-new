@@ -62,28 +62,20 @@ export const GET: APIRoute = async ({ url, cache }) => {
       headers: { "cache-control": "no-store" }
     });
   const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
+  const publishedDestinationSlugs = new Set(
+    identities.projects
+      .filter(
+        (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
+      )
+      .map((p) => p.slug)
+  );
   if (selected && !publicIds.has(selected))
     return new Response("Project unavailable.", { status: 404 });
-  // A destination must be a currently published project. An unknown value is a
-  // bad request rather than a silent fallback to the portfolio composition.
-  if (destination && !publicIds.has(destination))
+  // A destination must be a currently published discovery project with a site
+  // address. An unknown value is a bad request rather than a silent fallback to
+  // the portfolio composition.
+  if (destination && !publishedDestinationSlugs.has(destination))
     return new Response("Destination unavailable.", { status: 404 });
-  // A destination story only exists in the discovery scope. Validate the
-  // measure the renderer will actually resolve, not just the raw parameter, so
-  // an edited link cannot return a visits/gameplay composition under a
-  // discovery label or a Woodhouse-to-Woodhouse story.
-  if (destination) {
-    const resolved = resolveMeasure(selected as AnalyticsProject | null, measure);
-    if (
-      !discoveryProjects.includes(destination as (typeof discoveryProjects)[number]) ||
-      (selected !== null && selected !== "woodhouse") ||
-      (!isOverviewMeasure(resolved) && resolved.key !== "project_opens")
-    )
-      return new Response("Destination story unavailable for this scope.", {
-        status: 400,
-        headers: { "cache-control": "no-store" }
-      });
-  }
   try {
     const stored = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
     if (!stored)
@@ -93,6 +85,22 @@ export const GET: APIRoute = async ({ url, cache }) => {
       });
     const report = projectReport(stored, selected as AnalyticsProject | null, publicIds);
     if (!report.projects.length) return new Response("Report unavailable.", { status: 404 });
+    // A destination story only exists in the discovery scope. Resolve the measure
+    // the renderer will actually use for this report, not just the raw parameter,
+    // so an edited link cannot return a visits/gameplay composition under a
+    // discovery label or a Woodhouse-to-Woodhouse story.
+    if (destination) {
+      const renderProject = report.projects.length === 1 ? report.projects[0]!.project : null;
+      const resolved = resolveMeasure(renderProject, measure);
+      if (
+        (selected !== null && selected !== "woodhouse") ||
+        (!isOverviewMeasure(resolved) && resolved.key !== "project_opens")
+      )
+        return new Response("Destination story unavailable for this scope.", {
+          status: 400,
+          headers: { "cache-control": "no-store" }
+        });
+    }
     initialized ??= initWasm(wasm);
     await initialized;
     fonts ??= Promise.all(
@@ -120,7 +128,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
         measure ?? undefined,
         url.origin,
         week ?? undefined,
-        destination ?? undefined
+        destination ?? undefined,
+        publishedDestinationSlugs
       ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
