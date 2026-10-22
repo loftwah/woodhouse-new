@@ -287,6 +287,9 @@ const discoveryTotal =
     .find((r) => r.project === "woodhouse")
     ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
 const requestedDestination = Astro.url.searchParams.get("destination");
+const destinationSlug = /^[a-z0-9-]{1,40}$/.test(requestedDestination ?? "")
+  ? requestedDestination
+  : null;
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
   publicIds,
@@ -323,6 +326,7 @@ function pageLink(
     from?: string;
     to?: string;
     week?: string;
+    destination?: string | null;
   } = {}
 ) {
   const q = new URLSearchParams();
@@ -355,6 +359,8 @@ function pageLink(
   if (changes.week !== undefined) {
     if (changes.week) q.set("week", changes.week);
   } else if (week) q.set("week", week.from);
+  const keepDestination = changes.destination === undefined ? destinationSlug : changes.destination;
+  if (keepDestination) q.set("destination", keepDestination);
   if (qaOff) q.set("analytics", "off");
   if (qaValue !== null) q.set("qa", qaValue || "1");
   return `/activity/?${q}`;
@@ -573,7 +579,7 @@ const dataPayload = {
             <h2 id="opening-heading">
               {opening.observations.length === 0
                 ? "Nothing cleared the bar."
-                : `${opening.observations.length} ${opening.observations.length === 1 ? "finding" : "findings"} from these dates.`}
+                : `${opening.observations.length} ${opening.observations.length === 1 ? "finding" : "findings"} from this report.`}
             </h2>
             <p class="opening__method">
               Chosen from this report only: the strongest complete-week movement, the busiest
@@ -628,7 +634,7 @@ const dataPayload = {
         </section>
       )}
       {week && (
-        <section class="week-focus" aria-labelledby="week-focus-title">
+        <section id="week-focus" class="week-focus" aria-labelledby="week-focus-title">
           <div class="week-focus__head">
             <span class="week-focus__label">Week in focus</span>
             <h2 id="week-focus-title">
@@ -1058,12 +1064,18 @@ const dataPayload = {
                     : "No positive destination counts were recorded for this measured subset in these dates."}
                 </p>
               )}
+              {requestedDestination && !discovery.some((d) => d.slug === requestedDestination) && (
+                <p class="overview-note">
+                  No recorded clicks to that destination in these dates, so the busiest one is shown
+                  instead.
+                </p>
+              )}
               {discovery.length > 0 && (
                 <div class="discovery-journey">
                   <nav class="discovery-nav" aria-label="Measured destinations">
                     {discovery.map((d) => (
                       <a
-                        href={`${pageLink({ project: "woodhouse", measure: "project_opens" })}&destination=${d.slug}#discovery-heading`}
+                        href={`${pageLink({})}&destination=${d.slug}#discovery-heading`}
                         aria-current={destination?.slug === d.slug ? "true" : undefined}
                       >
                         <i
@@ -1101,18 +1113,17 @@ const dataPayload = {
                           </dd>
                         </div>
                         <div>
-                          <dt>
-                            Earlier seven days ({dateLabel(destination.priorFrom)}–
-                            {dateLabel(destination.priorTo)})
-                          </dt>
+                          <dt>Comparison</dt>
                           <dd>
                             {destination.hasTrend
                               ? destination.prior.toLocaleString("en-AU")
-                              : "Not comparable"}
+                              : "Not claimed"}
                             <small>
                               {destination.hasTrend
-                                ? "seven of seven days observed"
-                                : `${destination.priorObservedDays} of 7 days recorded, so no comparison is claimed`}
+                                ? `Earlier seven days (${dateLabel(destination.priorFrom)}–${dateLabel(destination.priorTo)}), seven of seven observed`
+                                : window.days < 14
+                                  ? "These dates are shorter than the two weeks a comparison needs."
+                                  : `${destination.priorObservedDays} of the earlier seven days recorded, so no comparison is claimed`}
                             </small>
                           </dd>
                         </div>

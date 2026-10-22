@@ -93,11 +93,16 @@ function coverageDay(value: string | null | undefined): string | null {
 function pickWeek(weekly: WeeklyHighlight[]): WeeklyHighlight | null {
   // A comparison needs two complete adjacent weeks. A record with no baseline is
   // still not a movement, so it is reported by the week-focus section instead.
-  return (
-    weekly.find((highlight) => highlight.newBest && highlight.changePercent !== null) ??
-    weekly.find((highlight) => highlight.changePercent !== null && highlight.comparedWeeks >= 2) ??
-    null
+  // Among real comparisons the largest movement leads, because the opening
+  // claims "the largest complete-week movement", not the first project in order.
+  const comparable = weekly.filter(
+    (highlight) => highlight.changePercent !== null && highlight.comparedWeeks >= 2
   );
+  if (comparable.length === 0) return null;
+  const byMovement = [...comparable].sort(
+    (a, b) => Math.abs(b.changePercent ?? 0) - Math.abs(a.changePercent ?? 0)
+  );
+  return byMovement.find((highlight) => highlight.newBest) ?? byMovement[0] ?? null;
 }
 
 export function analyticsObservations(input: ObservationInput): ObservationResult {
@@ -107,7 +112,8 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   const periodLabel = `${dateLabel(window.from)}–${dateLabel(window.to)}`;
 
   const week = pickWeek(input.weekly);
-  if (week) {
+  const weekInsideWindow = week ? week.to >= window.from : false;
+  if (week && weekInsideWindow) {
     const previous = formatMetric({ value: week.previous, unit: week.unit });
     const movement =
       week.changePercent === null
@@ -136,8 +142,9 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   } else {
     notes.push({
       kind: "week",
-      reason:
-        input.weekly.length > 0
+      reason: week
+        ? `The last complete week (${dateLabel(week.from)}–${dateLabel(week.to)}) sits outside the selected dates and is reported below instead.`
+        : input.weekly.length > 0
           ? "A complete week is reported below, but it has no earlier comparable week to compare against."
           : "No two adjacent complete weeks are available in retained history for these dates."
     });
@@ -147,9 +154,11 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   if (topDestination) {
     const comparison = topDestination.hasTrend
       ? `${topDestination.recent} in ${dateLabel(topDestination.recentFrom)}–${dateLabel(topDestination.recentTo)}, against ${topDestination.prior} in the earlier seven days.`
-      : topDestination.priorCoverage === "partial"
-        ? `${topDestination.recent} in the most recent seven days. The earlier seven days recorded only ${topDestination.priorObservedDays} of 7, so no comparison is claimed.`
-        : `${topDestination.recent} in the most recent seven days. No earlier retained history exists to compare.`;
+      : window.days < 14
+        ? `${topDestination.recent} in the most recent seven days. These dates are shorter than the two weeks a comparison needs, so none is claimed.`
+        : topDestination.priorCoverage === "partial"
+          ? `${topDestination.recent} in the most recent seven days. The earlier seven days recorded only ${topDestination.priorObservedDays} of 7, so no comparison is claimed.`
+          : `${topDestination.recent} in the most recent seven days. No earlier retained history exists to compare.`;
     observations.push({
       kind: "discovery",
       project: "woodhouse",
@@ -158,7 +167,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       kicker: `Discovery · ${topDestination.name}`,
       headline: `The busiest measured hand-off from Woodhouse went to ${topDestination.name}.`,
       figure: topDestination.value.toLocaleString("en-AU"),
-      unitLabel: "recorded clicks through",
+      unitLabel: "recorded clicks",
       period: periodLabel,
       establishes: comparison,
       doesNotEstablish:
@@ -183,7 +192,11 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   });
   const startedDay = coverageDay(startedInside?.data?.coverage.startedAt);
   if (startedInside && startedDay) {
-    const throughDay = coverageDay(startedInside.data?.coverage.through) ?? window.to;
+    // `coverage.through` is the capture time, not the end of the selected window.
+    // Counting to it would report a seven-day window as fifty days of history and
+    // change the figure tomorrow from the same URL.
+    const captured = coverageDay(startedInside.data?.coverage.through) ?? window.to;
+    const throughDay = captured < window.to ? captured : window.to;
     const days = Math.max(
       1,
       Math.round((Date.parse(throughDay) - Date.parse(startedDay)) / 86400000) + 1
@@ -248,7 +261,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
     notes,
     emptyReason:
       observations.length === 0
-        ? `No project, discovery or audience finding cleared the bar for ${periodLabel}. The measurements below are still complete.`
+        ? `No project, discovery or audience finding cleared the bar for ${periodLabel}. The measurements below still report exactly what was collected, with their coverage stated.`
         : null
   };
 }

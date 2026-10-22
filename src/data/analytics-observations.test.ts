@@ -149,7 +149,7 @@ test("discovery counts clicks and refuses to claim downstream use", () => {
   const { observations } = analyticsObservations(input({ weekly: [] }));
   const discovery = observations.find((observation) => observation.kind === "discovery");
   assert.equal(discovery?.figure, "42");
-  assert.equal(discovery?.unitLabel, "recorded clicks through");
+  assert.equal(discovery?.unitLabel, "recorded clicks");
   assert.match(discovery?.establishes ?? "", /21 in .* against 14/);
   assert.match(discovery?.doesNotEstablish ?? "", /not what happened at the destination/);
 });
@@ -251,6 +251,77 @@ test("missing sources produce reasons rather than an invented finding", () => {
   );
   assert.equal(observations.length, 0);
   assert.match(emptyReason ?? "", /cleared the bar/);
+});
+
+test("a complete week outside the selected dates is not presented as a finding", () => {
+  const { observations, notes } = analyticsObservations(
+    input({
+      window: { from: "2026-10-17", to: "2026-10-23", days: 7, complete: false },
+      discovery: [],
+      weekly: [week({ from: "2026-10-06", to: "2026-10-12" })]
+    })
+  );
+  assert.equal(
+    observations.some((observation) => observation.kind === "week"),
+    false
+  );
+  assert.match(
+    notes.find((note) => note.kind === "week")?.reason ?? "",
+    /outside the selected dates/
+  );
+});
+
+test("a seven-day window explains that two weeks are needed, not that history is missing", () => {
+  const { observations } = analyticsObservations(
+    input({
+      window: { from: "2026-10-17", to: "2026-10-23", days: 7, complete: false },
+      weekly: [],
+      discovery: [referral({ hasTrend: false, priorCoverage: "unavailable" })]
+    })
+  );
+  const discovery = observations.find((observation) => observation.kind === "discovery");
+  assert.match(discovery?.establishes ?? "", /shorter than the two weeks a comparison needs/);
+  assert.equal(/No earlier retained history/.test(discovery?.establishes ?? ""), false);
+});
+
+test("the day count stops at the window end, not at the capture time", () => {
+  const { observations } = analyticsObservations(
+    input({
+      window: { from: "2026-09-01", to: "2026-09-07", days: 7, complete: true },
+      weekly: [],
+      discovery: [],
+      rows: [
+        {
+          project: "fighter",
+          name: "Fighter",
+          defaultMeasure: "game_starts",
+          data: {
+            coverage: {
+              startedAt: "2026-09-05T00:00:00.000Z",
+              through: "2026-10-23T09:00:00.000Z",
+              quality: "exact"
+            },
+            metrics: []
+          }
+        }
+      ]
+    })
+  );
+  const first = observations.find((observation) => observation.kind === "first");
+  assert.equal(first?.figure, "3", "5–7 September is three recorded days, not fifty");
+});
+
+test("the largest movement leads, not the first project in report order", () => {
+  const { observations } = analyticsObservations(
+    input({
+      discovery: [],
+      weekly: [
+        week({ project: "bubbles", name: "Bubbles", changePercent: 4 }),
+        week({ project: "shoalshot", name: "SHOALSHOT", changePercent: -63 })
+      ]
+    })
+  );
+  assert.match(observations[0]?.headline ?? "", /SHOALSHOT fell 63%/);
 });
 
 test("the opening holds at most three observations", () => {
