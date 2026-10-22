@@ -110,7 +110,9 @@ export const prerender = false;
         Newest portfolio review{" "}
         <time datetime={readout.reviewDate ?? undefined}>{reviewDateLabel}</time>
       </span>
-      <span>A public journal of work and evidence</span>
+      <a class="text-link" href="/activity/">
+        See what the activity shows <span aria-hidden="true">↗</span>
+      </a>
     </div>
 
     <section class="start-here" aria-labelledby="start-title">
@@ -799,9 +801,6 @@ export const prerender = false;
       flex-direction: column;
       gap: 0.3rem;
       font-size: 0.69rem;
-    }
-    .publication-dateline > span:last-child {
-      display: none;
     }
     .start-here__grid {
       grid-template-columns: 1fr;

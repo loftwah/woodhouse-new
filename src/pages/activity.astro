@@ -49,6 +49,7 @@ import {
   activityTimeline,
   browserReturnSignals
 } from "../data/analytics-context";
+import { analyticsObservations } from "../data/analytics-observations";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -285,6 +286,10 @@ const discoveryTotal =
   allRows
     .find((r) => r.project === "woodhouse")
     ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
+const requestedDestination = Astro.url.searchParams.get("destination");
+const destinationSlug = /^[a-z0-9-]{1,40}$/.test(requestedDestination ?? "")
+  ? requestedDestination
+  : null;
 const discovery = discoveryReferrals(
   allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
   publicIds,
@@ -292,6 +297,11 @@ const discovery = discoveryReferrals(
   new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
   window
 );
+// The discovery journey keeps its selected destination in the URL so a shared
+// or reloaded link describes the same hand-off, and an unknown value falls back
+// to the busiest measured destination rather than inventing one.
+const destination =
+  discovery.find((entry) => entry.slug === requestedDestination) ?? discovery[0] ?? null;
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
 // publishes no mode subtotal shows no breakdown, and nothing is inferred from the
@@ -316,6 +326,7 @@ function pageLink(
     from?: string;
     to?: string;
     week?: string;
+    destination?: string | null;
   } = {}
 ) {
   const q = new URLSearchParams();
@@ -348,6 +359,8 @@ function pageLink(
   if (changes.week !== undefined) {
     if (changes.week) q.set("week", changes.week);
   } else if (week) q.set("week", week.from);
+  const keepDestination = changes.destination === undefined ? destinationSlug : changes.destination;
+  if (keepDestination) q.set("destination", keepDestination);
   if (qaOff) q.set("analytics", "off");
   if (qaValue !== null) q.set("qa", qaValue || "1");
   return `/activity/?${q}`;
@@ -407,6 +420,32 @@ const caption = report
         : undefined
     )
   : "";
+/**
+ * The opening board. It reads only what this report already established and
+ * names its own limits, so a finding cannot appear here that the rest of the
+ * page contradicts.
+ */
+const opening = analyticsObservations({
+  window,
+  colours: projectColours,
+  weekly: weekly.highlights,
+  discovery,
+  discoveryTotal,
+  rows: allRows.map((row) => ({
+    project: row.project,
+    name: row.name,
+    data: row.data,
+    defaultMeasure: productView(row.project)!.defaultMeasure
+  })),
+  links: {
+    week: (project, weekMeasure, from) =>
+      `${pageLink({ project, measure: weekMeasure, week: from })}#week-focus`,
+    project: (project, projectMeasure) => pageLink({ project, measure: projectMeasure }),
+    discovery: () =>
+      `${pageLink({ project: "woodhouse", measure: "project_opens" })}#discovery-heading`
+  },
+  dateLabel
+});
 const dataPayload = {
   period: window,
   measure: measure.label,
@@ -533,8 +572,69 @@ const dataPayload = {
           </svg>
         </a>
       </header>
+      {overview && (
+        <section class="opening" aria-labelledby="opening-heading">
+          <div class="opening__head">
+            <p class="opening__kicker">What we noticed</p>
+            <h2 id="opening-heading">
+              {opening.observations.length === 0
+                ? "Nothing cleared the bar."
+                : `${opening.observations.length} ${opening.observations.length === 1 ? "finding" : "findings"} from this report.`}
+            </h2>
+            <p class="opening__method">
+              Chosen from this report only: the strongest complete-week movement, the busiest
+              measured hand-off from Woodhouse, a source that started reporting inside these dates,
+              then Woodhouse's own reading traffic.{" "}
+              <a href="#sources-heading">Where every number comes from</a>.
+            </p>
+          </div>
+          {opening.emptyReason ? (
+            <p class="opening__empty">{opening.emptyReason}</p>
+          ) : (
+            <ol class="opening__list">
+              {opening.observations.map((observation) => (
+                <li class="observation" style={`--source:${observation.colour}`}>
+                  <p class="observation__kicker">
+                    <span class="source-dot" aria-hidden="true" />
+                    {observation.kicker}
+                  </p>
+                  <p class="observation__figure">
+                    {observation.figure}
+                    <span>{observation.unitLabel}</span>
+                  </p>
+                  <h3>{observation.headline}</h3>
+                  <p class="observation__period">{observation.period}</p>
+                  <dl class="observation__limits">
+                    <div>
+                      <dt>What this establishes</dt>
+                      <dd>{observation.establishes}</dd>
+                    </div>
+                    <div>
+                      <dt>What it does not</dt>
+                      <dd>{observation.doesNotEstablish}</dd>
+                    </div>
+                  </dl>
+                  <a class="observation__link" href={observation.href}>
+                    {observation.linkLabel} <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )}
+          {opening.notes.length > 0 && (
+            <details class="opening__notes">
+              <summary>What this report cannot show yet</summary>
+              <ul>
+                {opening.notes.map((note) => (
+                  <li>{note.reason}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </section>
+      )}
       {week && (
-        <section class="week-focus" aria-labelledby="week-focus-title">
+        <section id="week-focus" class="week-focus" aria-labelledby="week-focus-title">
           <div class="week-focus__head">
             <span class="week-focus__label">Week in focus</span>
             <h2 id="week-focus-title">
@@ -964,38 +1064,94 @@ const dataPayload = {
                     : "No positive destination counts were recorded for this measured subset in these dates."}
                 </p>
               )}
-              <ul class="discovery-list">
-                {discovery.map((d) => (
-                  <li>
-                    <i
-                      class="source-dot"
-                      style={`--source:${projectColours[d.slug] ?? "#b4c0d2"}`}
-                      aria-hidden="true"
-                    />
-                    <span class="discovery-name">{d.name}</span>
-                    <span class="discovery-count">{d.value.toLocaleString("en-AU")}</span>
-                    <span class="discovery-trend">
-                      {d.hasTrend
-                        ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")}${
-                            d.recentCoverage === "observed" ? "" : " (week in progress)"
-                          } · ${d.priorFrom}–${d.priorTo}: ${d.prior.toLocaleString("en-AU")}`
-                        : d.priorCoverage === "unavailable"
-                          ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")} · no earlier retained history to compare`
-                          : d.priorCoverage === "partial"
-                            ? `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")} · earlier week incomplete (${d.priorObservedDays}/7 days recorded)`
-                            : `${d.recentFrom}–${d.recentTo}: ${d.recent.toLocaleString("en-AU")}`}
-                    </span>
-                    <span class="discovery-links">
-                      <a href={`/projects/${d.slug}/`}>Dossier</a>
-                      {d.siteUrl && (
-                        <a href={d.siteUrl} rel="noopener">
-                          Open project
+              {requestedDestination && !discovery.some((d) => d.slug === requestedDestination) && (
+                <p class="overview-note">
+                  No recorded clicks to that destination in these dates, so the busiest one is shown
+                  instead.
+                </p>
+              )}
+              {discovery.length > 0 && (
+                <div class="discovery-journey">
+                  <nav class="discovery-nav" aria-label="Measured destinations">
+                    {discovery.map((d) => (
+                      <a
+                        href={`${pageLink({})}&destination=${d.slug}#discovery-heading`}
+                        aria-current={destination?.slug === d.slug ? "true" : undefined}
+                      >
+                        <i
+                          class="source-dot"
+                          style={`--source:${projectColours[d.slug] ?? "#b4c0d2"}`}
+                          aria-hidden="true"
+                        />
+                        <span class="discovery-name">{d.name}</span>
+                        <span class="discovery-count">{d.value.toLocaleString("en-AU")}</span>
+                      </a>
+                    ))}
+                  </nav>
+                  {destination && (
+                    <div class="discovery-detail">
+                      <h3>{destination.name}</h3>
+                      <dl>
+                        <div>
+                          <dt>Recorded clicks, these dates</dt>
+                          <dd>{destination.value.toLocaleString("en-AU")}</dd>
+                        </div>
+                        <div>
+                          <dt>
+                            Most recent seven days ({dateLabel(destination.recentFrom)}–
+                            {dateLabel(destination.recentTo)})
+                          </dt>
+                          <dd>
+                            {destination.recent.toLocaleString("en-AU")}
+                            <small>
+                              {destination.recentCoverage === "observed"
+                                ? "all seven days observed"
+                                : destination.recentCoverage === "partial"
+                                  ? "partial coverage"
+                                  : "coverage unavailable"}
+                            </small>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Comparison</dt>
+                          <dd>
+                            {destination.hasTrend
+                              ? destination.prior.toLocaleString("en-AU")
+                              : "Not claimed"}
+                            <small>
+                              {destination.hasTrend
+                                ? `Earlier seven days (${dateLabel(destination.priorFrom)}–${dateLabel(destination.priorTo)}), seven of seven observed`
+                                : window.days < 14
+                                  ? "These dates are shorter than the two weeks a comparison needs."
+                                  : `${destination.priorObservedDays} of the earlier seven days recorded, so no comparison is claimed`}
+                            </small>
+                          </dd>
+                        </div>
+                      </dl>
+                      <p class="discovery-boundary">
+                        <strong>What this establishes.</strong> Someone on Woodhouse deliberately
+                        opened {destination.name} from a link on this site, and the collector
+                        accepted that click.
+                      </p>
+                      <p class="discovery-boundary">
+                        <strong>What it does not.</strong> Whether they played, tried, subscribed or
+                        came back. Woodhouse and {destination.name} report separately; joining the
+                        two would turn aggregate counts into a person-level funnel nobody measured.
+                      </p>
+                      <p class="discovery-actions">
+                        <a href={`/projects/${destination.slug}/`}>
+                          Read the {destination.name} dossier <span aria-hidden="true">↗</span>
                         </a>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                        {destination.siteUrl && (
+                          <a href={destination.siteUrl} rel="noopener">
+                            Open {destination.name} <span aria-hidden="true">↗</span>
+                          </a>
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
               <p class="overview-note">
                 Counts come from the same anonymous collection as Visits. Opt-out, blocked
                 measurement and QA exclusion make them partial, and they do not show whether the
