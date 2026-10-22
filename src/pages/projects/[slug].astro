@@ -147,7 +147,56 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       </dl>
     </div>
   </section>
-  {studioFilm ? (
+  <figure
+    class="container dossier-preview"
+    aria-label={`Source artwork for ${project.name}`}
+    data-project-artwork
+    {...projectEntry?.edit.site_og_image}
+  >
+    <img
+      src={siteMeta?.image ?? placeholder}
+      width="1200"
+      height="630"
+      alt={
+        siteMeta
+          ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
+          : artworkFallback.alt
+      }
+      loading="eager"
+      decoding="async"
+      data-fallback-src={siteMeta ? placeholder : undefined}
+      data-fallback-alt={siteMeta ? artworkFallback.alt : undefined}
+      data-fallback-credit={siteMeta ? artworkFallback.credit : undefined}
+    />
+    <figcaption>
+      <span>
+        <strong data-artwork-status>
+          {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE ILLUSTRATION"}
+        </strong>
+        {siteMeta ? (
+          <>
+            <span class="dossier-preview__title" data-artwork-source-metadata>
+              {siteMeta.title}
+            </span>
+            <span class="dossier-preview__description" data-artwork-source-metadata>
+              {siteMeta.description}
+            </span>
+            <span class="dossier-preview__caption" data-artwork-source-metadata>
+              {project.previewCaption ?? "Artwork displayed directly from the project site."}
+            </span>
+          </>
+        ) : (
+          <span class="dossier-preview__description">Made for this record.</span>
+        )}
+      </span>
+      {project.siteUrl && (
+        <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
+          Open {project.name} <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </figcaption>
+  </figure>
+  {studioFilm && (
     <section class="container dossier-film" aria-label={`${project.name} product film`}>
       <h2 class="dossier-media__heading">Watch {project.name}</h2>
       <GameMedia asset={studioFilm} destination={project.siteUrl ?? `/projects/${project.slug}/`} />
@@ -161,56 +210,6 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         <a href={studioFilm.file.replace(/\.mp4$/, ".credits.txt")}>Film credits</a>
       </p>
     </section>
-  ) : (
-    <figure
-      class="container dossier-preview"
-      aria-label={`Source artwork for ${project.name}`}
-      data-project-artwork
-      {...projectEntry?.edit.site_og_image}
-    >
-      <img
-        src={siteMeta?.image ?? placeholder}
-        width="1200"
-        height="630"
-        alt={
-          siteMeta
-            ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
-            : artworkFallback.alt
-        }
-        loading="eager"
-        decoding="async"
-        data-fallback-src={siteMeta ? placeholder : undefined}
-        data-fallback-alt={siteMeta ? artworkFallback.alt : undefined}
-        data-fallback-credit={siteMeta ? artworkFallback.credit : undefined}
-      />
-      <figcaption>
-        <span>
-          <strong data-artwork-status>
-            {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE ILLUSTRATION"}
-          </strong>
-          {siteMeta ? (
-            <>
-              <span class="dossier-preview__title" data-artwork-source-metadata>
-                {siteMeta.title}
-              </span>
-              <span class="dossier-preview__description" data-artwork-source-metadata>
-                {siteMeta.description}
-              </span>
-              <span class="dossier-preview__caption" data-artwork-source-metadata>
-                {project.previewCaption ?? "Artwork displayed directly from the project site."}
-              </span>
-            </>
-          ) : (
-            <span class="dossier-preview__description">Made for this record.</span>
-          )}
-        </span>
-        {project.siteUrl && (
-          <a href={project.siteUrl} target="_blank" rel="noopener noreferrer">
-            Open {project.name} <span aria-hidden="true">↗</span>
-          </a>
-        )}
-      </figcaption>
-    </figure>
   )}
   {project.slug === "pirates" && (
     <section class="container project-visual" aria-label="Pirates reconstruction path">

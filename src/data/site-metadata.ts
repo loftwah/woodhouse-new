@@ -11,8 +11,8 @@ export function getArtworkFallback(project: WoodhouseProject) {
   return project.slug === "app-composer"
     ? {
         image: "/og/projects/app-composer.jpg",
-        alt: "Original generated App Composer artwork, preserved locally.",
-        credit: "ORIGINAL APP COMPOSER ARTWORK"
+        alt: "App Composer's orange merging-block mark and the line “Make software. Keep it yours.” on a flat orange field.",
+        credit: "APPROVED APP COMPOSER ARTWORK"
       }
     : {
         image: `/og/projects/${project.slug}.svg`,

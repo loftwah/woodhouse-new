@@ -2091,12 +2091,12 @@
           "why": "You bring the idea and keep the source in your own project. Get Ready handles supported setup, Init makes the brief concrete, and an agent builds the app around the content and features you need. EmDash provides editing and administration; your selected cloud account runs the result.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
-          "site_og_image": "https://composer.loftwah.com/brand/share-composer-20261017.jpg",
+          "site_og_image": "https://composer.loftwah.com/brand/campaign/product-og-20261022b.jpg",
           "site_og_title": "Make software. Keep it yours. · App Composer",
           "site_og_description": "App Composer is an agent-operated studio for building applications with EmDash and Cloudflare. Get Ready prepares the environment, Init captures what the app should do, and independently maintained mini-apps connect through their data and actions.",
-          "site_favicon": "https://composer.loftwah.com/brand/mark.svg",
-          "preview_alt": "App Composer’s illustrated assembly hall, where separate modules combine into one working system.",
-          "preview_caption": "Original generated artwork published by App Composer",
+          "site_favicon": "https://composer.loftwah.com/brand/composer-icon-tile-20261022b.svg",
+          "preview_alt": "App Composer's orange merging-block mark, the line “Make software. Keep it yours.” and the composer.loftwah.com address on a flat orange field.",
+          "preview_caption": "Approved App Composer identity, published 22 October 2026",
           "public_safe": true
         }
       }
@@ -2242,6 +2242,19 @@
           "source_description": "Current public production pages, live game builds, published album pages, exact owning release records and reviewed source observed on 19 October 2026. Public-safe derived conclusions only.",
           "scope": "New review of LoftwahFM's game soundtracks as public albums, Protocol 11's delivered campaign pack, Bubbles' replay-checked Fewest Shots competition, Pirates' source-backed playable slice, SHOALSHOT's card artwork and shipped save repair, and App Composer's independent mini-apps and small WordPress lab. Projects without new evidence keep their earlier records and dates.",
           "editorial_notes": "Every record remains a dated observation. Published albums, films, artwork and records establish what exists and can be tried; they do not establish listeners, players, buyers, demand or independent adoption. Pirates has no accepted physical-device or source-complete release, SHOALSHOT's card release still needs its own verification, and App Composer's WordPress work remains a small lab rather than a migration service.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-22",
+        "slug": "2026-10-22",
+        "status": "published",
+        "data": {
+          "title": "The approved mark reaches the hub · 22 October 2026",
+          "reviewed_at": "2026-10-22",
+          "source_description": "App Composer's live 22 October 2026 identity release, its public metadata and image bytes, and the current Woodhouse project record, reviewed 22 October 2026. Public-safe derived conclusions only.",
+          "scope": "App Composer's approved orange merging-block identity and product share card are adopted in Woodhouse's portfolio references. Other project records retain their earlier review dates.",
+          "editorial_notes": "The producer's live homepage, build identity and image bytes are the evidence. A new mark and share card are an identity delivery, not customer adoption, a completed migration, physical-device acceptance or demand.",
           "public_safe": true
         }
       }
@@ -3174,6 +3187,25 @@
           "next_proof": "Watch a creator outside the factory prepare and operate their own app through the existing Get Ready and Init flow. Keep the WordPress work labelled as a small lab until a real site's cutover, URLs and editing are proven.",
           "proof_boundary": "The apps and studio are public; the migration figures come from the project's own lab record. Published example stacks remain deliberately fictional, and five independent apps are not five customers or evidence of demand.",
           "reviewed_at": "2026-10-19",
+          "sort_order": 10,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-22",
+        "slug": "app-composer-2026-10-22",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-22",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-22",
+          "state": "A recognisable identity, live",
+          "state_tone": "active",
+          "current": "App Composer's approved orange merging-block mark, icon family and product-focused 1200×630 share card are live. The previous assembly-scene crop and interlocking-squares art are retired from the active identity. The composition studio, five independent mini-apps and the small WordPress lab remain as reviewed on 19 October.",
+          "next_proof": "Observe a creator outside the factory prepare and operate their own app through Get Ready and Init. Keep the WordPress work labelled as a small lab until a real site's cutover, URLs and editing are proven.",
+          "proof_boundary": "The producer's live metadata and image bytes establish the current identity and share card. Woodhouse's adoption is a reviewed reference, not proof that every external platform cache has refreshed, that every downstream consumer outside the producer uses the new mark, or that the artwork earned customer demand.",
+          "reviewed_at": "2026-10-22",
           "sort_order": 10,
           "public_safe": true
         }
@@ -5079,6 +5111,29 @@
           "source_url": "https://composer.loftwah.com/",
           "proof_boundary": "Public apps and studio pages are live; the migration figures come from the project's own lab record. Published examples remain deliberately fictional. Five apps, a creator studio and a small migration lab are not external customers, demand or a general migration service.",
           "public_safe": true
+        }
+      },
+      {
+        "id": "evidence-app-composer-identity-2026-10-22",
+        "slug": "app-composer-identity-2026-10-22",
+        "status": "published",
+        "data": {
+          "title": "The approved Composer mark and share card are live",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-22",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-22",
+          "claim": "App Composer's approved orange merging-block identity and 1200×630 share card are published, and Woodhouse references the current producer assets.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-22",
+          "reviewed_at": "2026-10-22",
+          "summary": "The live App Composer homepage declares product-og-20261022b.jpg at 1200×630 and the 20261022b icon set; its build identity is 41d488383031169ead44aab3be4d53b5abbf9096. The image was fetched and inspected (SHA-256 0ed47d3fea0628308dec42db8e294bd462c1d82b9092905a5b207df61b31afad). Woodhouse's project record, dossier, portfolio tile and share-image path now use the current image, tile SVG and describing alt text. Social-platform unfurl rendering remains externally unverified.",
+          "source_label": "App Composer live build identity, homepage metadata and brand provenance",
+          "source_url": "https://composer.loftwah.com/build.json",
+          "revision": "41d488383031169ead44aab3be4d53b5abbf9096",
+          "public_safe": true,
+          "proof_boundary": "The producer's live metadata and image bytes are verified. Woodhouse's adoption is a reviewed reference, not proof that every external social platform has refreshed its cache, that every consumer outside the producer uses the new mark, or that the identity earned customer demand."
         }
       }
     ],
