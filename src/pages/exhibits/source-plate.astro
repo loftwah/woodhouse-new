@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import SourcePlate from "../../components/exhibits/SourcePlate.astro";
+import ContributionExplorer from "../../components/exhibits/ContributionExplorer.astro";
 export const prerender = false;
 ---
 
@@ -45,6 +46,9 @@ export const prerender = false;
     <SourcePlate />
   </section>
 
+  <section class="container">
+    <ContributionExplorer />
+  </section>
   <section class="container exhibit-body">
     <div class="exhibit-body__grid">
       <div class="exhibit-prose">

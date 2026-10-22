@@ -31,6 +31,20 @@ export type ExhibitStep = {
 
 const CODE = "src/scripts/exhibits/patch-bench.ts";
 
+/**
+ * The reviewed source and date the walkthrough describes. A later behavioural
+ * change must update this note and re-run the drift fixture; the date is not a
+ * substitute for the check.
+ */
+export const exhibitReview = {
+  reviewedAt: "2026-10-23",
+  sourceRevision: "57b64e614145c9ad7824267278290a0dec14179c",
+  sourceUrl:
+    "https://github.com/loftwah/woodhouse-new/blob/57b64e614145c9ad7824267278290a0dec14179c/src/scripts/exhibits/patch-bench.ts",
+  contract:
+    "Reconnect restores the audio link only. The run keeps advancing independently, and a deliberate Play starts the soundtrack again."
+} as const;
+
 export const exhibitSteps: ExhibitStep[] = [
   {
     id: "waiting",
@@ -106,14 +120,18 @@ export const exhibitSteps: ExhibitStep[] = [
     id: "reconnect",
     action: "You reconnect it",
     result:
-      "The same client resumes the same station. The run state and score are exactly where you left them.",
+      "“Music link restored. The run kept going; press Play to start the soundtrack.” The link is back, but the music is not playing yet.",
     because:
-      "The page kept its transport; it closed a connection rather than destroying the client. Resetting the bench is a separate, deliberate action.",
+      "The page kept its transport; reconnecting restores the connection, not the playback. The run advanced while the music was disconnected, so its score is not where you left it. Play is a separate, deliberate action.",
     state: {
-      run: "Playing, unchanged",
-      music: "Playing again on the same client"
+      run: "Playing, advanced since the disconnect",
+      music: "Link restored; ready for a deliberate Play"
     },
-    source: { path: CODE, anchor: "data-music-link", note: "the link control the bench reuses" }
+    source: {
+      path: CODE,
+      anchor: "Music link restored. The run kept going; press Play to start the soundtrack.",
+      note: "the reconnect message"
+    }
   },
   {
     id: "failure",

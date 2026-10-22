@@ -1,5 +1,5 @@
 ---
-import { exhibitSteps } from "../../data/exhibit-model";
+import { exhibitReview, exhibitSteps } from "../../data/exhibit-model";
 
 /**
  * A stepper over a complete transcript.
@@ -14,10 +14,15 @@ import { exhibitSteps } from "../../data/exhibit-model";
 <section class="exhibit-explorer" aria-labelledby="explorer-heading">
   <div class="exhibit-explorer__head">
     <p class="micro-label">Follow the mechanism</p>
-    <h2 id="explorer-heading">Seven moves, and the run never goes quiet with the music.</h2>
+    <h2 id="explorer-heading">Seven moves, and the run keeps its own clock.</h2>
     <p>
       Each step is a real state of this bench, not an illustration of one. The run, its effects and
       the soundtrack are three owners; the point of the walkthrough is where each one stops.
+    </p>
+    <p class="exhibit-explorer__provenance">
+      These controls move the explanation only. The bench above is the working exhibit. Reviewed{" "}
+      <time datetime={exhibitReview.reviewedAt}>23 October 2026</time> against{" "}
+      <a href={exhibitReview.sourceUrl}>source {exhibitReview.sourceRevision.slice(0, 7)}</a>.
     </p>
   </div>
 
@@ -95,6 +100,14 @@ import { exhibitSteps } from "../../data/exhibit-model";
     color: var(--copy);
     font-size: 0.95rem;
     line-height: 1.65;
+  }
+  .exhibit-explorer__provenance {
+    margin-top: 0.7rem !important;
+    color: var(--copy-soft) !important;
+    font-size: 0.78rem !important;
+  }
+  .exhibit-explorer__provenance a {
+    color: var(--acid);
   }
   .exhibit-explorer__readout {
     display: grid;

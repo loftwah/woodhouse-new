@@ -11094,6 +11094,26 @@
                 {
                   "_type": "block",
                   "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "contribution-flow-link",
+                      "href": "/exhibits/source-plate/#contribution-flow"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Walk the five contribution states",
+                      "marks": [
+                        "contribution-flow-link"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
                   "markDefs": [],
                   "children": [
                     {
