@@ -40,7 +40,7 @@ const stateLabel = (state: string) =>
       >
         Linkarooie {contributionReview.linkarooieCommit.slice(0, 7)}
       </a>
-      . These controls move the explanation only.
+      .
     </p>
   </header>
 
@@ -89,10 +89,13 @@ const stateLabel = (state: string) =>
     <button type="button" data-flow-next>
       Next step
     </button>
-    <button type="button" data-flow-restart>
+    <button type="button" data-flow-restart disabled>
       Start again
     </button>
   </div>
+  <p class="contribution-flow__control-note">
+    These controls move the explanation only. The source plate above is the working exhibit.
+  </p>
 
   <ol class="contribution-flow__steps" data-flow-steps>
     {contributionSteps.map((step, index) => (
@@ -241,7 +244,7 @@ const stateLabel = (state: string) =>
   }
   .contribution-flow__lanes {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 7rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) 9rem minmax(0, 1fr);
     gap: 1rem;
     align-items: stretch;
     margin: 1.5rem 0 0;
