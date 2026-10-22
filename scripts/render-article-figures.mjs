@@ -33,58 +33,83 @@ const font = async (name) =>
 const regular = await font("bricolage-report-400.ttf");
 const bold = await font("bricolage-report-700.ttf");
 
+function wrap(text, max = 38) {
+  const lines = [];
+  let line = "";
+  for (const word of text.split(/\s+/)) {
+    if (!line) line = word;
+    else if (`${line} ${word}`.length <= max) line += ` ${word}`;
+    else {
+      lines.push(line);
+      line = word;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function elapsed(seconds) {
+  if (seconds == null) return "not separately timed";
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  return minutes ? `${minutes}m ${String(rest).padStart(2, "0")}s` : `${rest}s`;
+}
+
 function chart() {
   const [multi, single] = observations.tasks;
-  const rows = [
-    { label: multi.title, pass: "pass 1", value: multi.passes[0].addedLines, tone: "#647DFF" },
-    { label: multi.title, pass: "pass 2", value: multi.passes[1].addedLines, tone: "#E9FF49" },
-    { label: single.title, pass: "pass 1", value: single.passes[0].addedLines, tone: "#647DFF" },
-    { label: single.title, pass: "pass 2", value: single.passes[1].addedLines, tone: "#E9FF49" }
-  ];
-  const max = 340;
-  const left = 40;
-  const track = 230;
-  const top = 346;
-  const rowHeight = 112;
-  const scale = (value) => Math.max((value / max) * track, value === 0 ? 4 : 0);
-  const bars = rows
-    .map((row, index) => {
-      const base = top + index * rowHeight;
-      const width = scale(row.value);
-      return (
-        `<text x="${left}" y="${base}" fill="#B7C7DF" font-size="20">${escape(row.label)}</text>` +
-        `<text x="${left}" y="${base + 28}" fill="#8FA3C4" font-size="18">${escape(row.pass)}</text>` +
-        `<rect x="${left}" y="${base + 40}" width="${track}" height="28" fill="#12203A"/>` +
-        `<rect x="${left}" y="${base + 40}" width="${width}" height="28" fill="${row.tone}"/>` +
-        `<text x="${left + track + 12}" y="${base + 63}" fill="#EAF0FA" font-size="26" font-weight="700">${row.value}</text>`
-      );
+  const defect = multi.defect;
+  let top = 206;
+  const panels = [multi, single]
+    .map((task) => {
+      const first = wrap(task.outcome.firstPass);
+      const second = wrap(task.outcome.secondPass);
+      const titleY = top + 38;
+      const metaY = top + 62;
+      const firstLabelY = top + 96;
+      const firstBodyY = top + 122;
+      const secondLabelY = firstBodyY + first.length * 22 + 20;
+      const secondBodyY = secondLabelY + 26;
+      const bottom = secondBodyY + (second.length - 1) * 22 + 24;
+      const panel = `<rect x="24" y="${top}" width="512" height="${bottom - top}" rx="16" fill="#0F182A" stroke="#1E2C46"/>
+  <text x="44" y="${titleY}" fill="#EAF0FA" font-size="21" font-weight="700">${escape(task.title)}</text>
+  <text x="44" y="${metaY}" fill="#8FA3C4" font-size="14">${escape(task.chartMeta)}</text>
+  <text x="44" y="${firstLabelY}" fill="#8FA3C4" font-size="12" letter-spacing="1.5">FIRST PASS</text>
+  <text x="516" y="${firstLabelY}" fill="#8FA3C4" font-size="13" text-anchor="end">${elapsed(task.passes[0].seconds)}</text>
+  ${first.map((line, index) => `<text x="44" y="${firstBodyY + index * 22}" fill="#B7C7DF" font-size="16">${escape(line)}</text>`).join("\n  ")}
+  <text x="44" y="${secondLabelY}" fill="#E9FF49" font-size="12" letter-spacing="1.5">SECOND PASS</text>
+  <text x="516" y="${secondLabelY}" fill="#E9FF49" font-size="13" text-anchor="end">${elapsed(task.passes[1].seconds)}</text>
+  ${second.map((line, index) => `<text x="44" y="${secondBodyY + index * 22}" fill="#EAF0FA" font-size="16" font-weight="700">${escape(line)}</text>`).join("\n  ")}`;
+      top = bottom + 18;
+      return panel;
     })
     .join("\n  ");
-  const defect = observations.tasks[0].defect;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="560" height="940" viewBox="0 0 560 940" role="img" aria-labelledby="t d">
-  <title id="t">Lines added by each pass of the same prompt</title>
-  <desc id="d">${escape(observations.source)} ${escape(
-    `Multi-requirement task: pass 1 added ${multi.passes[0].addedLines} lines, pass 2 added ${multi.passes[1].addedLines} and replaced ${multi.passes[1].removedLines}. Single-requirement task: pass 1 added ${single.passes[0].addedLines}, pass 2 added nothing. Pass 2 of the multi-requirement task also found a counting defect affecting ${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches, by up to ${defect.largestOvercount} words each.`
+  const footerY = top + 38;
+  const reviewed = new Date(`${observations.reviewed}T00:00:00Z`).toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  });
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="560" height="${footerY + 64}" viewBox="0 0 560 ${footerY + 64}" role="img" aria-labelledby="t d">
+  <title id="t">What the second pass changed</title>
+  <desc id="d">${escape(
+    `Comparison of what each pass left behind. ${multi.title}: first pass — ${multi.outcome.firstPass} Second pass — ${multi.outcome.secondPass} ${single.title}: first pass — ${single.outcome.firstPass} Second pass — ${single.outcome.secondPass} The second pass of the dispatch inventory repaired a counting defect affecting ${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches, by up to ${defect.largestOvercount} words each.`
   )}</desc>
   <style>
     @font-face { font-family: "Bricolage Report"; font-weight: 400; src: url(data:font/ttf;base64,${regular}) format("truetype"); }
     @font-face { font-family: "Bricolage Report"; font-weight: 700; src: url(data:font/ttf;base64,${bold}) format("truetype"); }
     text { font-family: "Bricolage Report", system-ui, sans-serif; }
   </style>
-  <rect width="560" height="940" fill="#080D19"/>
+  <rect width="560" height="${footerY + 64}" fill="#080D19"/>
   <rect width="560" height="8" fill="#E9FF49"/>
-  <text x="40" y="80" fill="#EAF0FA" font-size="34" font-weight="700">Lines added</text>
-  <text x="40" y="120" fill="#EAF0FA" font-size="34" font-weight="700">by each pass</text>
-  <text x="40" y="158" fill="#B7C7DF" font-size="19">Two tasks, two sequential</text>
-  <text x="40" y="184" fill="#B7C7DF" font-size="19">passes each. The second is</text>
-  <text x="40" y="210" fill="#B7C7DF" font-size="19">the same prompt, verbatim.</text>
-  <text x="40" y="250" fill="#E9FF49" font-size="19">Pass 2 found a counting</text>
-  <text x="40" y="276" fill="#E9FF49" font-size="19">defect in ${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches,</text>
-  <text x="40" y="302" fill="#E9FF49" font-size="19">by up to ${defect.largestOvercount} words each.</text>
-  ${bars}
-  <text x="40" y="850" fill="#8FA3C4" font-size="16">Measured ${escape(observations.reviewed)}. Two tasks cannot</text>
-  <text x="40" y="876" fill="#8FA3C4" font-size="16">establish a rate, and neither pass was</text>
-  <text x="40" y="902" fill="#8FA3C4" font-size="16">timed against a control.</text>
+  <text x="40" y="78" fill="#EAF0FA" font-size="34" font-weight="700">What the second pass</text>
+  <text x="40" y="116" fill="#EAF0FA" font-size="34" font-weight="700">changed</text>
+  <text x="40" y="154" fill="#B7C7DF" font-size="18">Same prompt, run again after the</text>
+  <text x="40" y="178" fill="#B7C7DF" font-size="18">first pass committed.</text>
+  ${panels}
+  <text x="40" y="${footerY}" fill="#8FA3C4" font-size="15">Recorded ${escape(reviewed)} from commit ${escape(observations.baseCommit.slice(0, 7))}.</text>
+  <text x="40" y="${footerY + 24}" fill="#8FA3C4" font-size="15">One repeat per task. Times are the recorded</text>
+  <text x="40" y="${footerY + 48}" fill="#8FA3C4" font-size="15">observations, not a controlled benchmark.</text>
 </svg>
 `;
 }

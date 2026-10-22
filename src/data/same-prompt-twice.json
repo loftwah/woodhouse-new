@@ -1,11 +1,11 @@
 {
   "reviewed": "2026-10-22",
-  "source": "Woodhouse issue #98. Two sequential passes of one prompt per task, one task per isolated worktree, default agent session model, no other work on the worktree between passes.",
+  "source": "Woodhouse issue #98. Two sequential passes of one prompt per task, one task per isolated worktree from commit 7c0bf22fd46c45dc94a71b7159232127478e506f, with no other work on the worktree between passes. Each pass was a fresh default agent session on deepseek-v4.1-flash through opencode-go, max variant. Four experiment sessions plus one tailored review session.",
   "tasks": [
     {
       "key": "multi-requirement",
       "title": "Dispatch inventory script",
-      "summary": "One script, four explicit requirements, a test file and an operator-index row.",
+      "summary": "One script, six explicit requirements, a test file and an operator-index row.",
       "passes": [
         {
           "pass": 1,
@@ -34,7 +34,14 @@
         "largestOvercount": 14,
         "totalOvercount": 53,
         "regressionTestAdded": true
-      }
+      },
+      "prompt": "You are a subagent spawned by another session.\nWork in <worktree>. This is an isolated git worktree on branch exp/double-prompt-a. Commit your work there with `git -C <worktree> commit`.\n\nTask: add a dispatch inventory script.\n\nCreate `scripts/dispatch-inventory.mjs` (ESM, Node built-ins only, no new dependencies) that reads `seed/seed.json` and prints one line per published dispatch in review-date order, newest first:\n\n  <review_date>  <slug>  <blocks> blocks  <words> words\n\nwhere `words` counts whitespace-separated words in the dispatch's portable-text content and `blocks` counts top-level editorial blocks.\n\nRequirements:\n1. `--json` prints a JSON array of objects with exactly the keys `slug`, `reviewDate`, `blocks`, `words` instead of the table.\n2. Exit code 1, with a message on stderr naming the slugs, if any published dispatch has an empty `lesson` or an empty `source_reference`. Otherwise exit 0.\n3. Add `scripts/dispatch-inventory.test.mjs` using `node:test` that covers the JSON shape and the exit-code-1 path using a temporary fixture file, not the real seed.\n4. The script must accept an optional first argument that overrides the seed path, so the test can pass a fixture.\n5. Add one row to the \"Launch, doctor, drive, evidence, cleanup\" table in `docs/AGENT_INDEX.md` describing the command.\n6. Do not modify any other file.\n\nRun `node --test scripts/dispatch-inventory.test.mjs` and include the output in your final message. Do not run `pnpm install`, `pnpm run verify`, or any build. Finish the work; do not ask questions.",
+      "outcome": {
+        "firstPass": "Tests green. The counting defect remained.",
+        "secondPass": "Eight of nineteen counts repaired. A regression test was added."
+      },
+      "requirements": 6,
+      "chartMeta": "6 requirements · one script and its tests"
     },
     {
       "key": "single-requirement",
@@ -60,7 +67,14 @@
           "seconds": 24
         }
       ],
-      "defect": null
+      "defect": null,
+      "prompt": "You are a subagent spawned by another session.\nWork in <worktree>. This is an isolated git worktree on branch exp/double-prompt-b. Commit your work there with `git -C <worktree> commit`.\n\nTask: add one small pure date helper.\n\nCreate `src/data/review-age.ts` exporting exactly one function:\n\n  export function reviewAgeDays(reviewDate: string, today: string): number\n\nIt returns whole days from `reviewDate` to `today`, where both are `YYYY-MM-DD` strings. The result is negative when `today` is earlier than `reviewDate`, and zero for the same day. It throws a `RangeError` when either argument is not a valid `YYYY-MM-DD` date.\n\nAdd `src/data/review-age.test.ts` using `node:test` and `node:assert/strict`, covering a positive case, a zero case, a negative case and the throw.\n\nRun `node --experimental-strip-types --test src/data/review-age.test.ts` and include the output in your final message. Change nothing else. Do not run `pnpm install`, `pnpm run verify`, or any build. Finish the work; do not ask questions.",
+      "outcome": {
+        "firstPass": "The required behaviour passed.",
+        "secondPass": "Rechecked. No change needed."
+      },
+      "requirements": 1,
+      "chartMeta": "1 requirement · one pure function"
     }
   ],
   "comparison": {
@@ -70,13 +84,26 @@
     "seconds": 186,
     "foundSameDefect": true,
     "producedRepair": false,
-    "changedFiles": 0
+    "changedFiles": 0,
+    "prompt": "You are a subagent spawned by another session.\nRead-only review. Do NOT edit, create or commit any file. Work in <worktree>.\n\nSomeone was given this brief:\n\n---\nCreate `scripts/dispatch-inventory.mjs` (ESM, Node built-ins only, no new dependencies) that reads `seed/seed.json` and prints one line per published dispatch in review-date order, newest first:\n\n  <review_date>  <slug>  <blocks> blocks  <words> words\n\nwhere `words` counts whitespace-separated words in the dispatch's portable-text content and `blocks` counts top-level editorial blocks.\n\nRequirements:\n1. `--json` prints a JSON array of objects with exactly the keys `slug`, `reviewDate`, `blocks`, `words` instead of the table.\n2. Exit code 1, with a message on stderr naming the slugs, if any published dispatch has an empty `lesson` or an empty `source_reference`. Otherwise exit 0.\n3. Add `scripts/dispatch-inventory.test.mjs` using `node:test` that covers the JSON shape and the exit-code-1 path using a temporary fixture file, not the real seed.\n4. The script must accept an optional first argument that overrides the seed path, so the test can pass a fixture.\n5. Add one row to the \"Launch, doctor, drive, evidence, cleanup\" table in `docs/AGENT_INDEX.md` describing the command.\n6. Do not modify any other file.\n---\n\nThe result is in this worktree. Audit the result against that brief and report, for each requirement, whether it is met, with the exact command you ran and its output as evidence. Then list every defect you can prove with a reproducible check, and for each one state the smallest command that shows it. Do not propose a rewrite and do not list style preferences.\n\nAnswer one specific question explicitly: is the `words` figure correct for a dispatch whose content contains `\"marks\": [\"strong\"]`? Prove your answer with a command.\n\nKeep the report under 500 words.",
+    "pointedAt": "formatting marks",
+    "instruction": "Report defects; do not edit, create or commit any file."
   },
   "limitations": [
     "One task per shape. Two tasks cannot establish a rate.",
     "Pass 1 of the multi-requirement task was not separately timed.",
-    "Token and cost figures were not available and are not estimated.",
+    "Token and cost figures are not part of this observation record and are not estimated.",
     "Both tasks are small repository scripts, not product features.",
-    "The same model and the same session defaults ran both passes."
-  ]
+    "The same model and the same session defaults ran both passes.",
+    "The tailored review was pointed at formatting marks and instructed to report rather than repair, so it is not an equivalent comparison.",
+    "The recorded review time (186s) was longer than the repeated pass (144s); neither figure establishes a general cost advantage."
+  ],
+  "revised": "2026-10-22",
+  "baseCommit": "7c0bf22fd46c45dc94a71b7159232127478e506f",
+  "model": {
+    "agent": "default",
+    "id": "deepseek-v4.1-flash",
+    "provider": "opencode-go",
+    "variant": "max"
+  }
 }

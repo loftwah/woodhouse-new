@@ -13,13 +13,13 @@ style.fill: "#080D19"
 (* -> *)[*].style.font-color: "#EAF0FA"
 brief: "1. The task brief\nOne prompt, once" {}
 pass1: "2. Pass 1\nPlan, implement, self-test\nCommit artefact A" {}
-gate: "3. Stop gate\nAccept, stop or continue" {}
-pass2: "4. The same brief\nVerbatim, against artefact A" {}
+gate: "3. Optional stop gate\nAccept, stop or continue" {}
+pass2: "4. The same brief\nQueued after pass 1, verbatim" {}
 fix: "5. Pass 2\nRepair, add a regression test" {}
 check: "6. Verification\nTests, review, release gate" {}
 brief -> pass1: ""
-pass1 -> gate: ""
-gate -> pass2: "Continue"
+pass1 -> gate: "Pass 1 committed"
+gate -> pass2: "Continue, or already queued"
 pass2 -> fix: ""
 fix -> check: ""
-note: "Sequential. Never two passes on one tree." {shape: text; near: bottom-center; style.font-size: 14}
+note: "The repeat can be queued in advance. Sequential: never two passes on one tree." {shape: text; near: bottom-center; style.font-size: 14}

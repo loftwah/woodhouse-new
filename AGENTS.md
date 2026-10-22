@@ -73,6 +73,12 @@ Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It reco
 - Do not create process, tooling, architecture or abstraction without naming the observed failure it prevents. "It may be useful later" is not a failure.
 - Solve the smallest material discrepancy blocking the owning outcome. Do not widen the task because adjacent work is visible.
 
+## Active work budget — reviewed 22 October 2026
+
+- The work-in-progress limit counts **active implementation outcomes**, not outcomes completed in a session. When an outcome is merged or genuinely blocked, its slot is free: take the next ready outcome from the current brief and continue.
+- Do not stop because a session has completed a count of outcomes, and do not treat a completed task as evidence that the authorised brief is exhausted. A concrete execution limit or blocker can justify stopping; the budget alone cannot.
+- A review, taste acceptance or other open gate holds only the work it actually blocks. Continue independent work that does not depend on it.
+
 ## Implementation
 
 - Prefer static Astro pages and native browser behaviour.
