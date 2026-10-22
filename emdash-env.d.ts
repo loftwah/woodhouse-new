@@ -73,7 +73,7 @@ export interface DispatchContentDiagramPlateV1Block {
   _type: "diagram_plate";
   _version: 1;
   _key: string;
-  "diagram_id": "lineage" | "pirates-parity";
+  "diagram_id": "lineage" | "pirates-parity" | "same-prompt-twice";
   "title": string;
   "description": string;
   "caption": string;

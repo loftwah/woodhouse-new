@@ -191,7 +191,8 @@
               "validation": {
                 "options": [
                   "lineage",
-                  "pirates-parity"
+                  "pirates-parity",
+                  "same-prompt-twice"
                 ]
               }
             },
@@ -11518,6 +11519,944 @@
                   ]
                 }
               ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-the-same-prompt-twice",
+        "slug": "the-same-prompt-twice",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "agent-operations",
+            "qualification"
+          ]
+        },
+        "data": {
+          "title": "The same prompt, twice.",
+          "kind": "Case study",
+          "deck": "Run a first pass to completion, then run the exact same prompt again against what it produced. On one task it found a real defect the first pass had tested and missed. On another it found nothing at all.",
+          "review_date": "2026-10-22",
+          "source_reference": "Two sequential passes of one unchanged prompt on two bounded repository tasks, run 22 October 2026 in isolated git worktrees from the same base commit. Measurements and limitations are recorded in the article. Published primary sources are linked in the text. No private repository body, issue comment or conversation is reproduced.",
+          "lead": "The second pass is not a review. It is the same instructions, executed again against a finished artefact, and it is worth knowing when that is a waste of a pass.",
+          "lesson": "A repeated pass pays when the brief holds more requirements than one pass can keep in view at once. It costs a full pass, and sometimes it finds nothing.",
+          "public_safe": true,
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "observation",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The observation",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Dean noticed it while running work through agents here. When the same request was queued a second time after the first run had finished, the result often came back better. Not merely different. Better against the words that were originally asked for.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That is a strange thing for a system to do. The second run has no new instruction, no reviewer, no hint about what went wrong. It has the brief it already answered and the work that answering it produced.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "definition",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What the technique actually is",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Run the first pass to completion. Commit it. Then send the exact same prompt again, against the state it produced.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Three things make it what it is. The passes are sequential, so the second one starts after the first has stopped. The prompt is unchanged, character for character, including its awkward bits. And the first pass has to be finished, not paused: the second pass needs a real artefact to read, not a half-built one it can carry on from.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "It is not a retry after an error, which assumes the first run failed. It is not a loop, which has no reason to stop. It is not two agents reviewing each other, which needs a second set of instructions and produces a second opinion rather than a second attempt. And it is never two runs on the same working tree at the same time.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "mechanism",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The only new input is the artefact",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Published work on improving a first answer usually adds something the first run did not have. Self-Refine has the model critique its own output and revise from that critique. Reflexion turns failures into written reflections that inform later attempts. An evaluator-optimizer pair gives a second model the first model's output plus explicit criteria.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Double prompting adds neither critique nor criteria. It adds the finished artefact and the original words, and nothing else. That is the mechanism, and it is also the weakness: if the artefact looks plausible and the brief is vague, the second pass has no new information to work from and will agree with the first.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "diagram_plate",
+              "_version": 1,
+              "_key": "sequence",
+              "diagram_id": "same-prompt-twice",
+              "title": "The same prompt, twice",
+              "description": "A sequence diagram with three participants — operator, agent and working tree. The operator sends the task brief once. The agent runs a first pass that plans, implements and self-tests, then commits artefact A and reports the pass complete. The operator holds a stop gate where the work can be accepted, stopped or continued. If continued, the operator sends the same brief verbatim. The agent reads that brief against artefact A, finds omissions and defects, repairs them and adds a regression test, then reports a verified result.",
+              "caption": "Sequential by construction. The second pass reads the brief against a committed artefact, not the first pass's plan.",
+              "transcript": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "1. Operator sends the task brief once. 2. Agent runs pass one: plan, implement, self-test. 3. Agent commits artefact A and reports pass one complete. 4. Operator holds a stop gate: accept, stop, or continue. 5. Operator sends the same brief, verbatim. 6. Agent runs pass two, reading the brief against artefact A. 7. Agent repairs omissions or defects and adds a regression test. 8. Operator verifies the result.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "setup",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Two tasks, one prompt each",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Two small repository tasks ran on 22 October 2026. Each had its own git worktree from the same base commit, and nothing else touched that worktree between passes. Each pass was given the same prompt text, character for character, and was asked to run its own tests. The default agent configuration in use here handled both passes; model choice was not a variable in this experiment.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The first task carried six requirements. The second carried one. The repeated pass had something to do on the first and nothing on the second.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "task-one",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Task one: a script with six requirements",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The brief asked for a small script that reads the published dispatches from the content model and prints one line each: review date, slug, block count and word count. It named five further requirements — a JSON mode with four exact keys, a non-zero exit that names any published dispatch missing a lesson or a source reference, a test file using a temporary fixture rather than the real content, an optional path argument so the test could pass that fixture, and one new row in the operator index. Then: change nothing else.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Pass one returned all six. The script worked, the JSON keys were exact, the exit path named the right slugs, the fixture argument existed, the test file covered the shape and the failure, and the index row was there. Its three tests passed. By the ordinary test of a finished task — tests green, every named requirement visibly present — the work was done.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Pass two read the same brief against that code and found a counting bug. The word counter walked the portable-text tree and added up every string it met. Inside an object it only descended into reader-visible fields, which kept most structural noise out. Inside an array it carried no field name at all, so every element counted. Formatting marks such as bold live in arrays of bare strings. A dispatch with fourteen bold or italic runs therefore reported fourteen words that no reader would ever read.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Ten of the nineteen published dispatches carry formatting marks. Eight of them had a non-empty mark array, so eight word counts were wrong: fifty-three words too high in total, by as much as fourteen on a single dispatch. Pass two made the walk carry the owning field through arrays, added a regression test that fails when a mark is counted as a word, and left the rest alone. Two files changed.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The defect was not exotic. It was exactly the kind of thing a first pass cannot see, because the first pass is still deciding what the code should be. Pass one had tested the JSON shape and the failure path — the things the brief made explicit — and had written its own word counter without a test that pinned down what a word was.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "image_plate",
+              "_version": 1,
+              "_key": "chart",
+              "image": {
+                "id": "chart",
+                "src": "/images/experiments/same-prompt-twice-comparison.svg",
+                "alt": "Horizontal bars comparing lines added by a first and second pass of the same prompt on two tasks: 313 then 56 for the dispatch inventory script, 66 then 0 for the review-age date helper. Pass 2 found a counting defect in 8 of 19 dispatches, by up to 14 words each.",
+                "width": 760,
+                "height": 900
+              },
+              "caption": "Measured 22 October 2026. Lines added by each pass, from the committed diffs. Two tasks cannot establish a rate, and neither pass was timed against a control."
+            },
+            {
+              "_type": "prose",
+              "_key": "task-two",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Task two: nothing to do",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The second brief asked for one pure date function returning whole days between two ISO dates, with a range error on an invalid date, and a test covering a positive case, a zero case, a negative case and the throw. One requirement, one behaviour, one test file.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Pass one did the work in twenty-seven seconds. Pass two read the code against the brief, re-ran the tests, checked the timezone handling and the rejection of impossible dates such as 30 February, and changed nothing. It also declined to commit an empty change, which is the right call and worth stating: a second pass that produces no diff should say so, not manufacture one to look busy.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "That is the honest other half. A repeated pass is not free improvement. Sometimes it is a confirmation, and a confirmation costs the same as a repair.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "comparison",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A reviewer would have found it too",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "To test whether the identical prompt is doing something special, a third run audited the first pass's code in a fresh context with a tailored review prompt instead. It was asked to check each requirement and to answer one pointed question about formatting marks. It found the same defect, reproduced it with a two-line fixture, and reported the real impact — in 186 seconds, with no changes to the repository, because it was asked only to report.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "So the identical prompt is not magic. A reviewer with the right question reaches the same finding. The difference is what each leaves behind: a review produces a description of the problem, and a repeated pass produces the fix, the regression test and a commit. It also cannot drift from the brief, because the brief is the prompt.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "If you only need to know whether a change is sound, a review prompt is the cheaper instrument. If you want the work finished, send the work again.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "research",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What published work does and does not establish",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "c0",
+                      "href": "https://arxiv.org/abs/2303.17651"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Self-Refine reports",
+                      "marks": [
+                        "c0"
+                      ]
+                    },
+                    {
+                      "_type": "span",
+                      "text": " about a twenty per cent absolute average improvement across seven tasks when one model generates, critiques and revises its own output. That is iterative refinement with feedback, not repetition: the critique is new input, and it is the reason the method works.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "c0",
+                      "href": "https://arxiv.org/abs/2303.11366"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Reflexion",
+                      "marks": [
+                        "c0"
+                      ]
+                    },
+                    {
+                      "_type": "span",
+                      "text": " goes further and stores written reflections in memory between attempts, reaching 91% pass@1 on HumanEval against the 80% reported for GPT-4 at the time. Again the improvement is attributed to the reflection, which is deliberately kept and reused.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "c0",
+                      "href": "https://arxiv.org/abs/2310.01798"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The cautionary result is blunter. Huang and colleagues ",
+                      "marks": []
+                    },
+                    {
+                      "_type": "span",
+                      "text": "found",
+                      "marks": [
+                        "c0"
+                      ]
+                    },
+                    {
+                      "_type": "span",
+                      "text": " that models struggle to correct their own reasoning without external feedback, and that performance sometimes degrades after self-correction. Their setting is reasoning tasks with no external signal. An artefact with tests is a kind of external signal, which may be why repetition helped here and may also be why it would not help on a task with nothing checkable in it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "c0",
+                      "href": "https://www.anthropic.com/engineering/building-effective-agents"
+                    },
+                    {
+                      "_type": "link",
+                      "_key": "c1",
+                      "href": "https://www.anthropic.com/research/effective-harnesses-for-long-running-agents"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Anthropic's ",
+                      "marks": []
+                    },
+                    {
+                      "_type": "span",
+                      "text": "evaluator-optimizer",
+                      "marks": [
+                        "c0"
+                      ]
+                    },
+                    {
+                      "_type": "span",
+                      "text": " guidance names the conditions plainly: clear evaluation criteria, and iterative refinement that demonstrably adds value. Its ",
+                      "marks": []
+                    },
+                    {
+                      "_type": "span",
+                      "text": "long-running-agent work",
+                      "marks": [
+                        "c1"
+                      ]
+                    },
+                    {
+                      "_type": "span",
+                      "text": " is closer to what this article describes. It observes that each new session begins with no memory of the last, that agents tend to attempt too much at once, and that a later agent will look around, see progress, and declare the job done. The second pass here is a fresh session with the same brief, so it inherits that failure mode as well as the benefit.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "I did not find a published study of this exact procedure — one prompt, twice, no other input. Treat the numbers here as one small experiment rather than a result about models in general. The four papers and two engineering notes named above are the closest published work I found, and none of them tests this procedure.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "failure",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Where it goes wrong",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The documented failure mode is declaring victory. A second agent looks at a plausible artefact, sees that work has happened, and concludes the work is finished. In task two that conclusion was correct. In a task left half-done it is the most expensive mistake available, because it converts an incomplete first pass into a confident final one.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The second pass can also inherit the first pass's blind spots. Both runs share a model, a brief and now an artefact; if the brief is ambiguous in the same place for both, the ambiguity survives. The tailored review run found the same defect as the identical pass, which is reassuring for this defect and no evidence at all for the next one.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Nothing observed here produced a regression, and that is not evidence that repetitions are safe. A second pass that believes it has found a problem will change code, and a change made to satisfy an imagined requirement is a regression with a confident commit message. The mitigation is the same as for any change: the first pass must be committed and tests must exist before the second pass runs.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The cost is a full pass. Pass two on task one took 144 seconds against a first pass that was not separately timed; pass two on task two took under 24 seconds and produced nothing. Token and cost figures were not available for these runs and are not estimated here.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "recipe",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The recipe",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "1. Write the brief as the thing you want, including the awkward constraints. The second pass reads this text and nothing else, so anything you left out of it is left out of the second pass too.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "2. Let the first pass finish and commit. A second pass against uncommitted work has no clean baseline and no way to throw the second attempt away.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "3. Stop and read the result yourself. This is the gate that decides whether a second pass is worth its cost, and it is the only place a human decision is required.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "4. Send the same text again. Not a summary, not a review request, not a list of what you think is wrong. The technique is the repetition, so changing the prompt changes the experiment.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "5. Require the work, not a report. Ask for the fix and a test that would have caught the defect. A second pass that only describes problems has spent a pass to become a reviewer.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "6. Compare the two commits. If the second pass changed nothing, say so and stop. If it changed something, the diff is the evidence and the tests are the check.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "stop",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "When to stop",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Stop when the brief has one requirement, or when its requirements are already independent checks that run on every change. Task two had nothing left to find because the brief was one sentence and the test encoded it exactly.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Stop when the second pass starts rewriting prose instead of code. Cosmetic churn in a diff is a sign that the artefact already satisfies the brief and the pass is filling time.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Stop after one repeat unless you have a specific reason for a third. This experiment says nothing about three passes, and every extra pass costs another full run.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "scheduling",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What it means for scheduling",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "If this belongs in a workflow at all, it belongs there as a dependent job: pass two is created only after pass one is committed and someone has passed the gate. It must be sequential. Two passes on one working tree race on the same files, and the loser's work is discarded without anyone noticing.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "It also has to be cancellable at the gate, because the interesting decision — is this worth another pass — is made between the passes, not before the first one. And it counts against the same workload budget as any other job. A repeated pass is not free capacity, it is the same capacity spent twice.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Whether that deserves to be automated is a separate question with its own cost. Running every task twice by default doubles the work to fix a problem that appeared on one of two tasks tested here. A gate that makes the second pass a deliberate choice costs nothing and captures most of the value.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "limits",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "What this does not establish",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Two tasks, one repeat each. One improvement, one no-change. One comparison against a tailored review prompt. That is enough to describe a mechanism and not enough to predict a rate.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Both tasks were small repository scripts with checkable outputs and no users. Nothing here tested a feature with a design question in it, a change that touches several systems, or work where the definition of finished is contested. Those are the cases where a second pass is most likely to be confidently wrong.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Pass one of the first task was not separately timed, so the cost comparison for that task is incomplete. Token and cost figures were not available. The model and configuration were held constant, which means this experiment says nothing about whether a different model on the second pass would do better or worse than the same prompt again.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The measurements and limitations are recorded with the figures, and the figures are rendered from that record so the numbers in this article and the numbers in the chart cannot drift apart.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "callout",
+              "_version": 1,
+              "_key": "boundary",
+              "title": "What this is",
+              "body": "One small experiment on two bounded tasks, reported with its commands, diffs and timings. It is not a benchmark, not a claim about models in general, and not a recommendation to run everything twice.",
+              "kind": "boundary"
             }
           ]
         }

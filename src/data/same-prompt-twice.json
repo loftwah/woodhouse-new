@@ -1,0 +1,82 @@
+{
+  "reviewed": "2026-10-22",
+  "source": "Woodhouse issue #98. Two sequential passes of one prompt per task, one task per isolated worktree, default agent session model, no other work on the worktree between passes.",
+  "tasks": [
+    {
+      "key": "multi-requirement",
+      "title": "Dispatch inventory script",
+      "summary": "One script, four explicit requirements, a test file and an operator-index row.",
+      "passes": [
+        {
+          "pass": 1,
+          "commit": "94953a3",
+          "changedFiles": 3,
+          "addedLines": 313,
+          "removedLines": 0,
+          "testsRun": 3,
+          "seconds": null
+        },
+        {
+          "pass": 2,
+          "commit": "0103a06",
+          "changedFiles": 2,
+          "addedLines": 56,
+          "removedLines": 15,
+          "testsRun": 4,
+          "seconds": 144
+        }
+      ],
+      "defect": {
+        "foundInPass": 2,
+        "description": "The word counter recursed into arrays without carrying the owning key, so formatting marks such as marks: [\"strong\"] were counted as prose.",
+        "dispatchesAffected": 8,
+        "dispatchesTotal": 19,
+        "largestOvercount": 14,
+        "totalOvercount": 53,
+        "regressionTestAdded": true
+      }
+    },
+    {
+      "key": "single-requirement",
+      "title": "Review-age date helper",
+      "summary": "One pure function, one behaviour spec, one test file.",
+      "passes": [
+        {
+          "pass": 1,
+          "commit": "abdb123",
+          "changedFiles": 2,
+          "addedLines": 66,
+          "removedLines": 0,
+          "testsRun": 4,
+          "seconds": 27
+        },
+        {
+          "pass": 2,
+          "commit": null,
+          "changedFiles": 0,
+          "addedLines": 0,
+          "removedLines": 0,
+          "testsRun": 4,
+          "seconds": 24
+        }
+      ],
+      "defect": null
+    }
+  ],
+  "comparison": {
+    "key": "tailored-review-prompt",
+    "title": "Tailored review prompt, fresh context",
+    "against": "multi-requirement pass 1",
+    "seconds": 186,
+    "foundSameDefect": true,
+    "producedRepair": false,
+    "changedFiles": 0
+  },
+  "limitations": [
+    "One task per shape. Two tasks cannot establish a rate.",
+    "Pass 1 of the multi-requirement task was not separately timed.",
+    "Token and cost figures were not available and are not estimated.",
+    "Both tasks are small repository scripts, not product features.",
+    "The same model and the same session defaults ran both passes."
+  ]
+}
