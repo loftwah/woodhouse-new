@@ -24,11 +24,26 @@ Reviewed 16 October 2026. Start at [AGENTS.md](../AGENTS.md); this index routes 
 
 ## Shared local validation capacity
 
-`pnpm run verify` reserves the same private host/user capacity slot used by other
-participating validation entrypoints. The public-safe implementation lives in
-`scripts/host-validation.py`; consumers vendor identical bytes rather than build
-another scheduler. Python 3 with POSIX `fcntl` is required; no package or service
-is installed. Ordinary editing and focused unit checks remain independent.
+`pnpm run verify` takes the same private host/user capacity slot used by other
+participating validation entrypoints, but only for the stages that need it. On
+22 October 2026 the measured split on the maintainer's host was: `typecheck` and
+`build` (~26s of a ~62s pipeline) rewrite `dist/` and `.astro/` and dominate CPU,
+so they hold the slot; the other thirteen stages only read the tree and run
+before the slot is requested. A foreign reservation therefore no longer blocks a
+format, lint or unit check. `pnpm run verify -- --heavy` re-runs just the
+reserved pair, and `pnpm run verify -- --stage <script>` runs one named stage in
+its correct lane. Re-measure before claiming a speedup, and keep the receipts in
+ignored `output/`.
+
+The slot is host resource arbitration, not repository ownership. It does not
+make two builds in one worktree safe: one writer still owns integration and
+deployment, and `pnpm run build` or a release script must not run beside
+`pnpm run verify` in the same worktree.
+
+The public-safe implementation lives in `scripts/host-validation.py`; consumers
+vendor identical bytes rather than build another scheduler. Python 3 with POSIX
+`fcntl` is required; no package or service is installed. Ordinary editing and
+focused unit checks remain independent.
 
 FIFO kernel-locked tickets establish order. Owner/project, operation, source,
 heartbeat and generation are stored only under
@@ -36,6 +51,14 @@ heartbeat and generation are stored only under
 the holder and stops after one hour; expiration never steals live ownership.
 The persistent lock inode must not be removed. Admission and source/release
 checks remain each project's responsibility after acquisition.
+
+A quarantine blocks handover until ownership is proved. The wait diagnostic
+names the generation, how many recorded or lineage-marked processes survive and
+whether the completion record exists. `python3 scripts/host-validation.py
+--recover` clears it only when the capacity lock is free and nothing from that
+generation survives; otherwise it refuses and reports what is still live. Never
+delete `capacity.lock` or `queue.lock`, never kill an unrelated process, and
+never relabel a live reservation.
 
 Participating commands must own their subprocess lifetime and call
 `completeHostValidation()` after cleanup, including failure/cancellation paths.
