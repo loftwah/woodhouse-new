@@ -27,6 +27,7 @@ CARDS = {
     "dispatches/take-a-useful-piece": ("", "", "", "18 October 2026"),
     "dispatches/your-game-its-own-soundtrack": ("", "", "", "18 October 2026"),
     "dispatches/your-apps-should-get-along": ("", "", "", "18 October 2026"),
+    "dispatches/the-same-prompt-twice": ("FIELD EXPERIMENT", "The same prompt, twice.", "What a second identical pass changed, and what it did not.", "22 October 2026"),
     "dispatches/playing-the-work": ("PORTFOLIO REPORT", "The factory is learning to play its own work.", "Protocol 11 leads the 7 October review.", "7 October 2026"),
     "woodhouse": ("THE LOFTWAH SOFTWARE FACTORY", "Keeping the machinery running.", "{n} projects. One human operator.", "17 October 2026"),
     "factory": ("THE FACTORY FLOOR", "{n} projects.", "{n} kinds of proof.", "17 October 2026"),

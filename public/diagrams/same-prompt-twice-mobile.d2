@@ -1,0 +1,25 @@
+# Editable Woodhouse system model. Reviewed 22 October 2026.
+# Phone composition of the same sequence: lifelines do not fit 360 source pixels,
+# so the phone edition carries the order and the decision as a vertical flow.
+# Rendered deterministically by scripts/render-article-figures.mjs.
+vars: {d2-config: {layout-engine: elk; theme-id: 4; pad: 16}}
+direction: down
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 16
+(* -> *)[*].style.stroke: "#79D8FF"
+(* -> *)[*].style.font-color: "#EAF0FA"
+brief: "1. The task brief\nOne prompt, once" {}
+pass1: "2. Pass 1\nPlan, implement, self-test\nCommit artefact A" {}
+gate: "3. Stop gate\nAccept, stop or continue" {}
+pass2: "4. The same brief\nVerbatim, against artefact A" {}
+fix: "5. Pass 2\nRepair, add a regression test" {}
+check: "6. Verification\nTests, review, release gate" {}
+brief -> pass1: ""
+pass1 -> gate: ""
+gate -> pass2: "Continue"
+pass2 -> fix: ""
+fix -> check: ""
+note: "Sequential. Never two passes on one tree." {shape: text; near: bottom-center; style.font-size: 14}

@@ -991,6 +991,36 @@ a.project-row__image {
   text-transform: uppercase;
 }
 
+/* An inline plate carries a figure, not hero art. The absolute cover crop and
+   the two graded overlays above belong to full-bleed plates only: applied to a
+   chart they cut off its labels and dimmed the numbers that make it evidence. */
+.image-plate--inline {
+  min-height: 0;
+  width: 100%;
+  max-width: 35rem;
+  border-color: rgba(121, 216, 255, 0.3);
+  background: #0b1220;
+}
+.image-plate--inline img {
+  position: static;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.image-plate--inline::after {
+  content: none;
+}
+.image-plate--inline figcaption {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-top: 1px solid rgba(121, 216, 255, 0.18);
+  color: var(--copy-soft);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+}
+
 .split-section {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.8fr);

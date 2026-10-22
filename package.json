@@ -54,6 +54,8 @@
     "share-previews": "node --experimental-strip-types scripts/render-share-previews.mjs",
     "share-previews:check": "node --experimental-strip-types scripts/render-share-previews.mjs --check",
     "diagrams": "bash scripts/render-diagrams.sh",
+    "figures": "node scripts/render-article-figures.mjs",
+    "figures:check": "node scripts/render-article-figures.mjs --check",
     "deploy:publication": "node scripts/deploy-publication.mjs"
   },
   "emdash": {

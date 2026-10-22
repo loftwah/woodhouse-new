@@ -19,6 +19,7 @@ const DISPATCH_SOCIAL_CARDS: readonly string[] = [
   "prove-which-build-is-live",
   "software-is-not-the-walker",
   "take-a-useful-piece",
+  "the-same-prompt-twice",
   "the-tests-passed",
   "your-apps-should-get-along",
   "your-game-its-own-soundtrack"

@@ -1,0 +1,26 @@
+# Editable Woodhouse system model. Reviewed 22 October 2026.
+# This is a sequence diagram, not an illustrated plate: the final illustration and
+# the editable system model are different artifacts and this file is the model.
+# Rendered deterministically by scripts/render-article-figures.mjs.
+vars: {d2-config: {layout-engine: elk; theme-id: 4; pad: 20}}
+shape: sequence_diagram
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 17
+(* -> *)[*].style.stroke: "#79D8FF"
+(* -> *)[*].style.font-color: "#EAF0FA"
+operator: "Operator"
+agent: "Agent"
+tree: "Working tree"
+operator -> agent: "1. The task brief, once"
+agent -> tree: "2. Pass 1: plan, implement, self-test"
+tree -> agent: "artefact A, committed"
+agent -> operator: "3. Pass 1 reported complete"
+operator -> operator: "4. Stop gate: accept, stop or continue"
+operator -> agent: "5. The same brief, verbatim"
+agent -> tree: "6. Pass 2: read the brief against artefact A"
+tree -> agent: "omissions and defects"
+agent -> tree: "7. Repair, add a regression test"
+agent -> operator: "8. Verified result"
