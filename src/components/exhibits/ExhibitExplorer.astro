@@ -1,0 +1,290 @@
+---
+import { exhibitSteps } from "../../data/exhibit-model";
+
+/**
+ * A stepper over a complete transcript.
+ *
+ * The whole walkthrough is rendered as one ordered list, so it reads without
+ * JavaScript and screen readers get every step. The controls only move a
+ * highlight and a live status: they never reveal or hide a claim, and there is
+ * no animation to reverse, pause or reduce.
+ */
+---
+
+<section class="exhibit-explorer" aria-labelledby="explorer-heading">
+  <div class="exhibit-explorer__head">
+    <p class="micro-label">Follow the mechanism</p>
+    <h2 id="explorer-heading">Seven moves, and the run never goes quiet with the music.</h2>
+    <p>
+      Each step is a real state of this bench, not an illustration of one. The run, its effects and
+      the soundtrack are three owners; the point of the walkthrough is where each one stops.
+    </p>
+  </div>
+
+  <div class="exhibit-explorer__readout" aria-live="polite" data-explorer-readout>
+    <p class="exhibit-explorer__position" data-explorer-position>
+      Step 1 of {exhibitSteps.length}
+    </p>
+    <dl>
+      <div>
+        <dt>The run</dt>
+        <dd data-explorer-run>{exhibitSteps[0]?.state.run}</dd>
+      </div>
+      <div>
+        <dt>The music</dt>
+        <dd data-explorer-music>{exhibitSteps[0]?.state.music}</dd>
+      </div>
+    </dl>
+  </div>
+
+  <div class="exhibit-explorer__controls">
+    <button type="button" data-explorer-back disabled>
+      Back
+    </button>
+    <button type="button" data-explorer-next>
+      Next move
+    </button>
+    <button type="button" data-explorer-restart>
+      Start again
+    </button>
+  </div>
+
+  <ol class="exhibit-explorer__steps" data-explorer-steps>
+    {exhibitSteps.map((step, index) => (
+      <li id={`step-${step.id}`} data-step={index} aria-current={index === 0 ? "step" : undefined}>
+        <p class="exhibit-explorer__index" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </p>
+        <h3>{step.action}</h3>
+        <p>{step.result}</p>
+        <p class="exhibit-explorer__because">{step.because}</p>
+        <p class="exhibit-explorer__state">
+          <span>
+            The run: <strong data-state-run>{step.state.run}</strong>
+          </span>
+          <span>
+            The music: <strong data-state-music>{step.state.music}</strong>
+          </span>
+        </p>
+        <p class="exhibit-explorer__source">
+          <span class="micro-label">Source</span> <code>{step.source.path}</code> —{" "}
+          {step.source.note}
+        </p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .exhibit-explorer {
+    margin-block: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-dark);
+  }
+  .exhibit-explorer__head {
+    max-width: 62ch;
+  }
+  .exhibit-explorer__head h2 {
+    margin: 0.5rem 0 0.75rem;
+    font: 750 clamp(1.6rem, 2.6vw, 2.2rem) / 1.1 var(--display);
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .exhibit-explorer__head p:not(.micro-label) {
+    margin: 0;
+    color: var(--copy);
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+  .exhibit-explorer__readout {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    gap: 1rem 2rem;
+    align-items: start;
+    margin: 1.5rem 0 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--line);
+    background: var(--surface, #0f182a);
+  }
+  .exhibit-explorer__position {
+    margin: 0;
+    font: 600 0.7rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--acid);
+  }
+  .exhibit-explorer__readout dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 2rem;
+    margin: 0;
+  }
+  .exhibit-explorer__readout dt {
+    font: 600 0.66rem/1.4 var(--mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .exhibit-explorer__readout dd {
+    margin: 0.15rem 0 0;
+    color: var(--paper);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+  .exhibit-explorer__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .exhibit-explorer__controls button {
+    appearance: none;
+    min-height: 44px;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--line-dark);
+    background: transparent;
+    color: var(--paper);
+    font: 600 0.82rem/1 var(--sans);
+    cursor: pointer;
+  }
+  .exhibit-explorer__controls button[data-explorer-next] {
+    border-color: var(--acid);
+    background: var(--acid);
+    color: var(--ink);
+  }
+  .exhibit-explorer__controls button:hover:not(:disabled) {
+    border-color: var(--acid);
+    color: var(--acid);
+    background: transparent;
+  }
+  .exhibit-explorer__controls button:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .exhibit-explorer__controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .exhibit-explorer__steps {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .exhibit-explorer__steps li {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 0.2rem 1rem;
+    padding: 1rem 1rem 1rem 0;
+    border-bottom: 1px solid var(--line);
+    border-left: 2px solid transparent;
+    scroll-margin-top: 6rem;
+  }
+  .exhibit-explorer__steps li[aria-current="step"] {
+    border-left-color: var(--acid);
+    background: rgba(233, 255, 73, 0.05);
+  }
+  .exhibit-explorer__index {
+    grid-row: 1 / span 5;
+    margin: 0;
+    font: 600 0.78rem/1.5 var(--mono);
+    color: var(--copy-soft);
+  }
+  .exhibit-explorer__steps li[aria-current="step"] .exhibit-explorer__index {
+    color: var(--acid);
+  }
+  .exhibit-explorer__steps h3 {
+    margin: 0;
+    font: 700 1.1rem/1.3 var(--display);
+    letter-spacing: -0.01em;
+  }
+  .exhibit-explorer__steps p {
+    margin: 0;
+    color: var(--copy);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 68ch;
+  }
+  .exhibit-explorer__because {
+    color: var(--copy-soft) !important;
+  }
+  .exhibit-explorer__state {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    font-size: 0.8rem !important;
+    color: var(--copy-soft) !important;
+  }
+  .exhibit-explorer__state strong {
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .exhibit-explorer__source {
+    font-size: 0.76rem !important;
+    color: var(--copy-soft) !important;
+  }
+  .exhibit-explorer__source code {
+    font-family: var(--mono);
+    font-size: 0.95em;
+    color: var(--paper-muted);
+    overflow-wrap: anywhere;
+  }
+  .exhibit-explorer__source .micro-label {
+    margin-right: 0.35rem;
+    color: var(--acid);
+  }
+  @media (max-width: 720px) {
+    .exhibit-explorer__readout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .exhibit-explorer__readout dl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .exhibit-explorer__steps li {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      padding-right: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>(".exhibit-explorer");
+  if (root) {
+    const steps = [...root.querySelectorAll<HTMLElement>("[data-step]")];
+    const readout = {
+      position: root.querySelector<HTMLElement>("[data-explorer-position]"),
+      run: root.querySelector<HTMLElement>("[data-explorer-run]"),
+      music: root.querySelector<HTMLElement>("[data-explorer-music]")
+    };
+    const controls = {
+      back: root.querySelector<HTMLButtonElement>("[data-explorer-back]"),
+      next: root.querySelector<HTMLButtonElement>("[data-explorer-next]"),
+      restart: root.querySelector<HTMLButtonElement>("[data-explorer-restart]")
+    };
+    let current = 0;
+
+    const render = (index: number) => {
+      current = Math.max(0, Math.min(steps.length - 1, index));
+      steps.forEach((step, stepIndex) => {
+        if (stepIndex === current) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      });
+      const step = steps[current];
+      if (!step) return;
+      if (readout.position) readout.position.textContent = `Step ${current + 1} of ${steps.length}`;
+      const run = step.querySelector<HTMLElement>("[data-state-run]")?.textContent ?? "";
+      const music = step.querySelector<HTMLElement>("[data-state-music]")?.textContent ?? "";
+      if (readout.run) readout.run.textContent = run;
+      if (readout.music) readout.music.textContent = music;
+      if (controls.back) controls.back.disabled = current === 0;
+      if (controls.next) controls.next.disabled = current === steps.length - 1;
+    };
+
+    controls.back?.addEventListener("click", () => render(current - 1));
+    controls.next?.addEventListener("click", () => render(current + 1));
+    controls.restart?.addEventListener("click", () => render(0));
+    render(0);
+  }
+</script>
