@@ -42,26 +42,26 @@ function chart() {
     { label: single.title, pass: "pass 2", value: single.passes[1].addedLines, tone: "#E9FF49" }
   ];
   const max = 340;
-  const left = 60;
-  const track = 300;
-  const top = 300;
-  const rowHeight = 118;
+  const left = 40;
+  const track = 230;
+  const top = 346;
+  const rowHeight = 112;
   const scale = (value) => Math.max((value / max) * track, value === 0 ? 4 : 0);
   const bars = rows
     .map((row, index) => {
       const base = top + index * rowHeight;
       const width = scale(row.value);
       return (
-        `<text x="${left}" y="${base}" fill="#B7C7DF" font-size="21">${escape(row.label)}</text>` +
-        `<text x="${left}" y="${base + 30}" fill="#8FA3C4" font-size="19">${escape(row.pass)}</text>` +
-        `<rect x="${left}" y="${base + 44}" width="${track}" height="30" fill="#12203A"/>` +
-        `<rect x="${left}" y="${base + 44}" width="${width}" height="30" fill="${row.tone}"/>` +
-        `<text x="${left + track + 16}" y="${base + 68}" fill="#EAF0FA" font-size="26" font-weight="700">${row.value}</text>`
+        `<text x="${left}" y="${base}" fill="#B7C7DF" font-size="20">${escape(row.label)}</text>` +
+        `<text x="${left}" y="${base + 28}" fill="#8FA3C4" font-size="18">${escape(row.pass)}</text>` +
+        `<rect x="${left}" y="${base + 40}" width="${track}" height="28" fill="#12203A"/>` +
+        `<rect x="${left}" y="${base + 40}" width="${width}" height="28" fill="${row.tone}"/>` +
+        `<text x="${left + track + 12}" y="${base + 63}" fill="#EAF0FA" font-size="26" font-weight="700">${row.value}</text>`
       );
     })
     .join("\n  ");
   const defect = observations.tasks[0].defect;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="760" height="900" viewBox="0 0 760 900" role="img" aria-labelledby="t d">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="560" height="940" viewBox="0 0 560 940" role="img" aria-labelledby="t d">
   <title id="t">Lines added by each pass of the same prompt</title>
   <desc id="d">${escape(observations.source)} ${escape(
     `Multi-requirement task: pass 1 added ${multi.passes[0].addedLines} lines, pass 2 added ${multi.passes[1].addedLines} and replaced ${multi.passes[1].removedLines}. Single-requirement task: pass 1 added ${single.passes[0].addedLines}, pass 2 added nothing. Pass 2 of the multi-requirement task also found a counting defect affecting ${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches, by up to ${defect.largestOvercount} words each.`
@@ -71,18 +71,20 @@ function chart() {
     @font-face { font-family: "Bricolage Report"; font-weight: 700; src: url(data:font/ttf;base64,${bold}) format("truetype"); }
     text { font-family: "Bricolage Report", system-ui, sans-serif; }
   </style>
-  <rect width="760" height="900" fill="#080D19"/>
-  <rect width="760" height="8" fill="#E9FF49"/>
-  <text x="60" y="86" fill="#EAF0FA" font-size="34" font-weight="700">Lines added by each pass</text>
-  <text x="60" y="126" fill="#B7C7DF" font-size="20">Two tasks, two sequential passes each.</text>
-  <text x="60" y="154" fill="#B7C7DF" font-size="20">The second pass is the same prompt, verbatim.</text>
-  <text x="60" y="206" fill="#E9FF49" font-size="20">Pass 2 found a counting defect in</text>
-  <text x="60" y="234" fill="#E9FF49" font-size="20">${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches, by up to</text>
-  <text x="60" y="262" fill="#E9FF49" font-size="20">${defect.largestOvercount} words each.</text>
+  <rect width="560" height="940" fill="#080D19"/>
+  <rect width="560" height="8" fill="#E9FF49"/>
+  <text x="40" y="80" fill="#EAF0FA" font-size="34" font-weight="700">Lines added</text>
+  <text x="40" y="120" fill="#EAF0FA" font-size="34" font-weight="700">by each pass</text>
+  <text x="40" y="158" fill="#B7C7DF" font-size="19">Two tasks, two sequential</text>
+  <text x="40" y="184" fill="#B7C7DF" font-size="19">passes each. The second is</text>
+  <text x="40" y="210" fill="#B7C7DF" font-size="19">the same prompt, verbatim.</text>
+  <text x="40" y="250" fill="#E9FF49" font-size="19">Pass 2 found a counting</text>
+  <text x="40" y="276" fill="#E9FF49" font-size="19">defect in ${defect.dispatchesAffected} of ${defect.dispatchesTotal} dispatches,</text>
+  <text x="40" y="302" fill="#E9FF49" font-size="19">by up to ${defect.largestOvercount} words each.</text>
   ${bars}
-  <text x="60" y="836" fill="#8FA3C4" font-size="17">Measured ${escape(observations.reviewed)}. Two tasks cannot</text>
-  <text x="60" y="862" fill="#8FA3C4" font-size="17">establish a rate, and neither pass was timed</text>
-  <text x="60" y="888" fill="#8FA3C4" font-size="17">against a control.</text>
+  <text x="40" y="850" fill="#8FA3C4" font-size="16">Measured ${escape(observations.reviewed)}. Two tasks cannot</text>
+  <text x="40" y="876" fill="#8FA3C4" font-size="16">establish a rate, and neither pass was</text>
+  <text x="40" y="902" fill="#8FA3C4" font-size="16">timed against a control.</text>
 </svg>
 `;
 }

@@ -11842,10 +11842,11 @@
                 "id": "chart",
                 "src": "/images/experiments/same-prompt-twice-comparison.svg",
                 "alt": "Horizontal bars comparing lines added by a first and second pass of the same prompt on two tasks: 313 then 56 for the dispatch inventory script, 66 then 0 for the review-age date helper. Pass 2 found a counting defect in 8 of 19 dispatches, by up to 14 words each.",
-                "width": 760,
-                "height": 900
+                "width": 560,
+                "height": 940
               },
-              "caption": "Measured 22 October 2026. Lines added by each pass, from the committed diffs. Two tasks cannot establish a rate, and neither pass was timed against a control."
+              "caption": "Measured 22 October 2026. Lines added by each pass, from the committed diffs. Two tasks cannot establish a rate, and neither pass was timed against a control.",
+              "variant": "inline"
             },
             {
               "_type": "prose",
