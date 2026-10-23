@@ -47,46 +47,49 @@ const {
           />
         </svg>
       </summary>
-      <figure class="share-preview">
-        <img
-          src={image}
-          width="1200"
-          height="630"
-          alt={alt}
-          loading="lazy"
-          decoding="async"
-          data-report-preview
-        />
-        <figcaption>
-          Landscape 1200 × 630, generated from snapshot{" "}
-          {link.match(/report=([a-f0-9]+)/)?.[1] ?? "—"}. Square and portrait compositions are
-          downloads below.
-        </figcaption>
-      </figure>
-      <div class="share-actions">
-        <a href={`${image}&download=1`} download>
-          Download landscape PNG
-        </a>
-        <a href={`${image}&format=square&download=1`} download>
-          Download square PNG
-        </a>
-        <a href={`${image}&format=portrait&download=1`} download>
-          Download portrait PNG
-        </a>
-        <button data-report-share type="button" hidden>
-          Share image
-        </button>
-        <button data-report-copy type="button">
-          Copy caption + link
-        </button>
-        <a href={link}>Open frozen permalink</a>
-        <a href={jsonHref}>Download public JSON</a>
-        <p data-report-status role="status"></p>
+      <div class="share-layout">
+        <figure class="share-preview">
+          <img
+            src={image}
+            width="1200"
+            height="630"
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+            data-report-preview
+          />
+          <figcaption>
+            Landscape 1200 × 630, generated from snapshot{" "}
+            {link.match(/report=([a-f0-9]+)/)?.[1] ?? "—"}. Square and portrait compositions are
+            downloads below.
+          </figcaption>
+        </figure>
+        <div class="share-actions">
+          <button data-report-copy type="button">
+            Copy caption + link
+          </button>
+
+          <a href={`${image}&download=1`} download>
+            Download landscape PNG
+          </a>
+          <a href={`${image}&format=square&download=1`} download>
+            Download square PNG
+          </a>
+          <a href={`${image}&format=portrait&download=1`} download>
+            Download portrait PNG
+          </a>
+          <button data-report-share type="button" hidden>
+            Share image
+          </button>
+          <a href={link}>Open frozen permalink</a>
+          <a href={jsonHref}>Download public JSON</a>
+          <p data-report-status role="status"></p>
+        </div>
+        <details class="share-caption">
+          <summary>Caption and link</summary>
+          <pre>{caption}</pre>
+        </details>
       </div>
-      <details class="share-caption">
-        <summary>Caption and link</summary>
-        <pre>{caption}</pre>
-      </details>
     </details>
   ) : (
     <p>Sharing is unavailable until a source report can be saved.</p>

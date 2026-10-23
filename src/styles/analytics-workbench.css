@@ -2024,7 +2024,7 @@
 .report-content > .share-report {
   padding-top: 1rem;
 }
-.report-content .share-panel[open] {
+.report-content .share-panel[open] .share-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(230px, 1fr);
   gap: 0 1.5rem;
@@ -2037,7 +2037,7 @@
 }
 .report-content .share-actions {
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
   align-content: start;
   padding-top: 0.8rem;
 }
@@ -2115,7 +2115,7 @@
   .summary-table caption {
     font-size: 0.7rem;
   }
-  .report-content .share-panel[open] {
+  .report-content .share-panel[open] .share-layout {
     display: block;
   }
   .report-content .share-actions {
@@ -2227,7 +2227,7 @@
   .report-content .interactive-plot {
     height: 260px;
   }
-  .report-content .share-panel--expanded[open] {
+  .report-content .share-panel--expanded[open] .share-layout {
     display: flex;
     flex-direction: column;
   }
