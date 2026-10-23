@@ -12,5 +12,6 @@
     "scripts/host-validation-complete.mjs"
   ],
   "ignoreDependencies": ["cloudflare"],
-  "ignoreBinaries": ["magick", "d2"]
+  "ignoreBinaries": ["magick", "d2"],
+  "ignore": ["scripts/assets/edition-film/source.jsx"]
 }

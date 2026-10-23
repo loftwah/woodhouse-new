@@ -1,4 +1,5 @@
 ---
+import EditionShareKit from "../../components/EditionShareKit.astro";
 import EditionBuilder from "../../components/EditionBuilder.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ReportShare from "../../components/ReportShare.astro";
@@ -344,6 +345,9 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
         remains a separately scoped example, not customer adoption.
       </p>
     </section>
+    {["protocol-11", "shoalshot", "bubbles", "fighter", "loftwahfm", "app-composer"].every((id) =>
+      publicIds.has(id)
+    ) && <EditionShareKit />}
     <ReportShare
       image={image}
       caption={caption}

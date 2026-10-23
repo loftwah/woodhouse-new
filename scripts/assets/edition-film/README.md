@@ -8,7 +8,9 @@ The original journey recording stays untouched and remains verification evidence
 
 `source.jsx` is the Remotion 4.0.535 composition. Stage it in an ignored local
 workbench with React 19.2.3 and matching `remotion` / `@remotion/cli` packages.
-No runtime dependency is added to Woodhouse. Stage `public/` as follows:
+No runtime dependency is added to Woodhouse. The exact retained composition is excluded
+from Knip’s application graph because the documented external Remotion workbench
+loads it; the rest of the application remains covered. Stage `public/` as follows:
 
 - `share/`: the site's existing public/share directory (the source names are explicit in the composition).
 - `bold.ttf`, `regular.ttf`: public/fonts/bricolage-report-700.ttf and bricolage-report-400.ttf.
