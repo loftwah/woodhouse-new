@@ -150,7 +150,9 @@ The Factory, homepage, project pages and Analytics lead into `/connections/`.
 Visitors can inspect a completed Link Check story or hear how FM music travels
 into games, read the source-defined daily history, open the native tool/report,
 and share the selected frozen observation. The initial pair uses existing public
-aggregates; Composer's separate same-scope owner-to-public proof remains open.
+aggregates. Composer's separately linked owner-permitted report demonstrates
+recorded Open actions using explicitly fictional traffic; it does not establish
+customer adoption or join those actions to the Link Check inspection history.
 Missing, measured zero, bounded and partial coverage retain their meanings. An
 FM total includes all admitted sources; a separate game attribution figure never
 inherits that total. No person-level funnel or invented milestone is implied.
