@@ -1124,3 +1124,20 @@ test("mode measures are Protocol 11's alone and stay addressable by key", () => 
     []
   );
 });
+
+test("deliberate discovery scope selects its own counter without substituting overall totals", async () => {
+  const { discoveryMetric } = await import("./analytics-workbench.ts");
+  const overall = { ...metric, key: "project_opens", value: 18 };
+  const bubbles = { ...metric, key: "referral_bubbles", value: 4 };
+  assert.equal(discoveryMetric([overall, bubbles], "project_opens", "bubbles"), bubbles);
+  assert.equal(discoveryMetric([overall, bubbles], "project_opens", null), overall);
+  assert.equal(discoveryMetric([overall], "project_opens", "bubbles"), undefined);
+  const zero = { ...bubbles, value: 0, daily: [{ date: period.from, value: 0 }] };
+  assert.equal(discoveryMetric([overall, zero], "project_opens", "bubbles")?.value, 0);
+  const missing = { ...bubbles, value: null, quality: "unavailable" as const, daily: [] };
+  assert.deepEqual(
+    dailyPoints(discoveryMetric([overall, missing], "project_opens", "bubbles"), period),
+    [null, null, null]
+  );
+  assert.equal(discoveryMetric([overall, bubbles], "visits", "bubbles"), undefined);
+});

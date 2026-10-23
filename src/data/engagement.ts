@@ -1,3 +1,4 @@
+import { producerRevision } from "./build-identity.ts";
 import {
   analyticsSchema,
   discoveryProjects,
@@ -656,7 +657,7 @@ export async function localAnalytics(
     metrics,
     source: {
       endpoint: `https://woodhouse.loftwah.com/api/portfolio-analytics?project=${project}`,
-      revision: null
+      revision: producerRevision()
     }
   };
 }

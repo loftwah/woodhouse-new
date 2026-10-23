@@ -117,9 +117,9 @@ test("same-day current project reads agree across dossier and portfolio regardle
       };
       const composer = listing.projects.find((project) => project.slug === "app-composer")!;
       for (const project of [detail.project, composer]) {
-        assert.equal(project.statusId, "app-composer-" + focused);
-        assert.equal(project.snapshotId, focused);
-        assert.match(project.current, /approved note while new postcards are closed/);
+        assert.equal(project.statusId, "app-composer-2026-10-23-atlas-owner-v1");
+        assert.equal(project.snapshotId, "2026-10-23-atlas-owner-v1");
+        assert.match(project.current, /supported title update.*standing policy/);
       }
       assert.equal(
         listing.projects.find((project) => project.slug === "shoalshot")!.snapshotId,

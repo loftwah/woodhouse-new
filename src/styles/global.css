@@ -994,7 +994,8 @@ a.project-row__image {
 /* An inline plate carries a figure, not hero art. The absolute cover crop and
    the two graded overlays above belong to full-bleed plates only: applied to a
    chart they cut off its labels and dimmed the numbers that make it evidence. */
-.image-plate--inline {
+/* Keep inline figures above the phone hero plate's minimum-height rule too. */
+figure.image-plate--inline {
   min-height: 0;
   width: 100%;
   max-width: 35rem;

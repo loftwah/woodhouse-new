@@ -1455,3 +1455,23 @@ test("every object the publication gate requires is created by the reviewed migr
   for (const name of required)
     assert(present.has(name), `${name} is required before publication but no migration creates it`);
 });
+
+test("new captures do not reuse a previous producer revision and older reports remain immutable", async () => {
+  const { db, sqlite } = database();
+  const old = await createPortfolioReport(db, 7, new Set(["woodhouse"]), fetch, now);
+  const previous = structuredClone(old);
+  previous.projects[0]!.report!.source.revision = "a".repeat(40);
+  sqlite
+    .prepare("UPDATE wh_analytics_reports SET body=? WHERE id=?")
+    .run(JSON.stringify(previous), old.id);
+  const fresh = await createPortfolioReport(db, 7, new Set(["woodhouse"]), fetch, now + 1000);
+  assert.notEqual(fresh.id, old.id);
+  assert.equal(fresh.projects[0]!.report!.source.revision, null);
+  assert.equal(
+    (await readPortfolioReport(db, old.id))!.projects[0]!.report!.source.revision,
+    "a".repeat(40)
+  );
+  const reused = await createPortfolioReport(db, 7, new Set(["woodhouse"]), fetch, now + 2000);
+  assert.equal(reused.id, fresh.id);
+  sqlite.close();
+});
