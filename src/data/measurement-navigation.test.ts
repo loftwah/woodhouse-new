@@ -10,7 +10,9 @@ import type { D1Database } from "@cloudflare/workers-types";
 const scripts = await Promise.all(
   ["src/components/MeasurementNavigation.astro", "src/components/AudienceTelemetry.astro"].map(
     async (path) => {
-      const source = readFileSync(path, "utf8").match(/<script>([\s\S]*?)<\/script>/)?.[1];
+      const source = readFileSync(path, "utf8").match(
+        /<script(?: is:inline)?>([\s\S]*?)<\/script>/
+      )?.[1];
       assert(source);
       const bundled = await build({
         stdin: { contents: source, loader: "ts", resolveDir: dirname(resolve(path)) },
@@ -160,4 +162,13 @@ test("download/public artefacts and unrelated products retain canonical addresse
   const frozen =
     "https://woodhouse.loftwah.com/connections/?story=music&report=8496128e32ddfd0bddf8da66";
   assert.equal((await hop(current, frozen, false, true)).href, frozen);
+});
+
+// The browser replay caught early navigation before deferred modules ran. This
+// guard must be synchronous in head, independent of telemetry/module loading.
+test("navigation exclusion installs before links can be activated", () => {
+  const source = readFileSync("src/components/MeasurementNavigation.astro", "utf8");
+  assert.match(source, /<script is:inline>/);
+  const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+  assert(layout.indexOf("<MeasurementNavigation />") < layout.indexOf("</head>"));
 });

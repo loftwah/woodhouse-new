@@ -218,6 +218,7 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
         true
       );
     </script>
+    <MeasurementNavigation />
   </head>
   <body>
     {Astro.props.analyticsWorkbench && (
@@ -238,7 +239,6 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
       <slot />
     </main>
     <SiteFooter links={footerLinks} reviewDateLabel={footerReviewDate} />
-    <MeasurementNavigation />
     {!privateView && <AudienceTelemetry projects={projectResult.projects} />}
   </body>
 </html>
