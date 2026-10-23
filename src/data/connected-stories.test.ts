@@ -57,7 +57,7 @@ test("missing day, zero and bounded completed work remain distinct", () => {
   );
   assert.equal(e.display, "4");
   assert.deepEqual(e.statuses, ["bounded", "missing", "bounded"]);
-  assert.equal(e.definition, source.metrics[0].definition);
+  assert.equal(e.definition, source.metrics[0]!.definition);
 });
 test("missing source or metric never borrows app opens or invents a zero", () => {
   for (const input of [
@@ -67,7 +67,7 @@ test("missing source or metric never borrows app opens or invents a zero", () =>
       projects: [
         {
           project: story.project,
-          report: { ...source, metrics: [{ ...source.metrics[0], key: "app_opens", value: 900 }] }
+          report: { ...source, metrics: [{ ...source.metrics[0]!, key: "app_opens", value: 900 }] }
         }
       ]
     }
@@ -105,7 +105,7 @@ test("listening retains seconds without rounding a small observation into a minu
         report: {
           ...source,
           project: music.project,
-          metrics: [{ ...source.metrics[0], key: music.measure, unit: "seconds", value: 5 }]
+          metrics: [{ ...source.metrics[0]!, key: music.measure, unit: "seconds", value: 5 }]
         }
       }
     ]
