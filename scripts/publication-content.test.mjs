@@ -112,3 +112,20 @@ test("publication refuses stale adoption even when collection counts and dates m
   stale.capabilities[0].review.consumers[0].verified = true;
   assert.throws(() => assertPublicationContent(withCapability, build, stale), /adoption stages/);
 });
+
+test("a same-day later review wins by editorial order and stale facts fail publication", () => {
+  const revised = structuredClone(seed);
+  const later = structuredClone(revised.content.project_statuses[0]);
+  revised.content.project_statuses[0].data.sort_order = 11;
+  later.data.sort_order = 12;
+  later.data.current = "An approved fictional note remains after submissions pause.";
+  revised.content.project_statuses.push(later);
+  const build = structuredClone(identity);
+  build.content.counts.project_statuses = 2;
+  const updated = structuredClone(facts);
+  updated.projects[0].current = later.data.current;
+  assert.doesNotThrow(() => assertPublicationContent(revised, build, updated));
+  assert.throws(() => assertPublicationContent(revised, build, facts), /Served project facts/);
+  revised.content.project_statuses.reverse();
+  assert.doesNotThrow(() => assertPublicationContent(revised, build, updated));
+});

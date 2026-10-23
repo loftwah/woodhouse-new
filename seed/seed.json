@@ -2270,6 +2270,19 @@
           "editorial_notes": "The producer's public build story, Guestbook commit 019ce0d and Linkarooie commit 20ef9a5 are the evidence. The local fictional run is not a hosted deployment or a live owner configuration. Approval and featuring are separate; no adoption or demand is claimed.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-23-owner-journey-v1",
+        "slug": "2026-10-23-owner-journey-v1",
+        "status": "published",
+        "data": {
+          "title": "An approved note and the current encounter artwork · 23 October 2026",
+          "reviewed_at": "2026-10-23",
+          "source_description": "The public fictional Harbour Notes guestbook, its separately observed authenticated owner approval and settings changes at Composer source 29fc65c, and SHOALSHOT’s published v5 encounter image, reviewed 23 October 2026. Public-safe observations only.",
+          "scope": "A focused review of an existing owner’s fictional Guestbook result and Woodhouse’s adoption of SHOALSHOT’s current encounter artwork. Earlier build-story, contribution-contract, identity and gameplay records retain their own scope and dates.",
+          "editorial_notes": "The owner approved a pending fictional note, then paused new submissions while the approved note stayed public. This does not establish automatic app generation, fresh-customer onboarding, the broader Guestbook-to-Linkarooie hosted pair, featuring, adoption or demand. Public Open reports do not become moderation counts. The SHOALSHOT image update does not re-review gameplay. The original frozen edition report, images, captions and pack are unchanged.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3239,6 +3252,25 @@
           "proof_boundary": "The producer's public build story, source commits and live Guestbook build identity establish the documented contract and the local fictional run. They do not establish a hosted deployment of the contribution flow, a live owner configuration, a real visitor journey, approval/featuring adoption or demand. Woodhouse's flow is a model, not a production control.",
           "reviewed_at": "2026-10-23",
           "sort_order": 11,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-23-owner-journey-v1",
+        "slug": "app-composer-2026-10-23-owner-journey-v1",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-23-owner-journey-v1",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-23-owner-journey-v1",
+          "state": "An owner approves a note, then pauses new arrivals",
+          "state_tone": "green",
+          "current": "The fictional Harbour Notes guestbook now shows an approved note while new postcards are closed. An existing authenticated owner created the separate guestbook through supported Composer controls, received a pending note, approved it in native administration and then paused submissions without removing the published note. The public example and its owner controls belong to Composer; Woodhouse explains the observed result.",
+          "next_proof": "Observe a creator outside the factory prepare and operate their own app. The broader hosted Guestbook-to-Linkarooie contribution and featuring journey remains separate. Public reporting currently permits recorded Open actions; approval and other private outcomes are not included in that aggregate.",
+          "proof_boundary": "Existing-owner fictional configuration and moderation were observed at Composer source 29fc65c2983769f140bad3bdef298a20c0185b0e. Receiving, approving and featuring are separate operations; no featuring occurred. This is not automatic Init generation, fresh-customer acceptance, external adoption, a public approval-count report or demand. The earlier local build-story and contribution-contract review remains historical evidence with its own limits.",
+          "reviewed_at": "2026-10-23",
+          "sort_order": 12,
           "public_safe": true
         }
       }
@@ -5198,9 +5230,9 @@
         "data": {
           "title": "The underwater encounter replaces the menu preview",
           "project": "$ref:project-shoalshot",
-          "snapshot": "$ref:snapshot-2026-10-23",
+          "snapshot": "$ref:snapshot-2026-10-23-owner-journey-v1",
           "project_key": "shoalshot",
-          "snapshot_key": "2026-10-23",
+          "snapshot_key": "2026-10-23-owner-journey-v1",
           "claim": "SHOALSHOT’s published v5 artwork shows its original underwater creatures and pressure launcher; Woodhouse’s current project reference uses that encounter.",
           "evidence_kind": "production verification",
           "evidence_state": "reviewed",
@@ -5221,9 +5253,9 @@
         "data": {
           "title": "An owner approves a note, then pauses new arrivals",
           "project": "$ref:project-app-composer",
-          "snapshot": "$ref:snapshot-2026-10-23",
+          "snapshot": "$ref:snapshot-2026-10-23-owner-journey-v1",
           "project_key": "app-composer",
-          "snapshot_key": "2026-10-23",
+          "snapshot_key": "2026-10-23-owner-journey-v1",
           "claim": "The fictional Harbour Notes example uses a separate Guestbook resource: the owner approved a pending note in native administration, then paused submissions while retaining the approved note.",
           "evidence_kind": "production verification",
           "evidence_state": "reviewed",

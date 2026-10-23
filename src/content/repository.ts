@@ -250,7 +250,7 @@ export async function getProjectRecord(slug: string) {
     getEmDashCollection("project_statuses", {
       status: "published",
       where: { project_key: slug },
-      orderBy: { reviewed_at: "desc" },
+      orderBy: { reviewed_at: "desc", sort_order: "desc" },
       limit: 100
     })
   ]);
@@ -326,7 +326,7 @@ export async function listProjectRecords() {
     getEmDashCollection("projects", { status: "published", orderBy: { name: "asc" }, limit: 100 }),
     getEmDashCollection("project_statuses", {
       status: "published",
-      orderBy: { reviewed_at: "desc" },
+      orderBy: { reviewed_at: "desc", sort_order: "desc" },
       limit: 100
     }),
     getEmDashCollection("factory_snapshots", {
@@ -366,7 +366,7 @@ export async function listProjectRecords() {
 export async function listPublicStatusRecords() {
   const result = await getEmDashCollection("project_statuses", {
     status: "published",
-    orderBy: { reviewed_at: "desc" },
+    orderBy: { reviewed_at: "desc", sort_order: "desc" },
     limit: 100
   });
   return {

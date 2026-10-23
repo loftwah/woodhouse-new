@@ -56,7 +56,11 @@ export function assertPublicationContent(seed, identity, facts) {
     .map((entry) => {
       const status = published(seed, "project_statuses")
         .filter((item) => item.data.project_key === entry.slug)
-        .sort((a, b) => b.data.reviewed_at.localeCompare(a.data.reviewed_at))[0]?.data;
+        .sort(
+          (a, b) =>
+            b.data.reviewed_at.localeCompare(a.data.reviewed_at) ||
+            (b.data.sort_order ?? 0) - (a.data.sort_order ?? 0)
+        )[0]?.data;
       if (!status) throw new Error(`No reviewed status for ${entry.slug}.`);
       return {
         slug: entry.slug,
