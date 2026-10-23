@@ -85,7 +85,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Open the native game to explore its table history and rules. Native records describe their own modes and rules; this report counts accepted active seconds in Classic, not scores.",
     boundary:
-      "Classic mode only. Accepted active gameplay seconds are not completed hands, scores or unique players. Collection and mode history cover only part of this week; no weekly record is earned.",
+      "Classic mode only. Accepted active gameplay seconds are not completed hands, scores or unique players. Read the selected window’s source coverage before comparing periods.",
     mode: "Classic"
   },
   {
@@ -108,7 +108,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Open SHOALSHOT and use its native collection and results. The public aggregate counts completed runs; it does not expose catches or a comparable leaderboard.",
     boundary:
-      "Accepted run-completion events, including repeat runs. Partial collection and possible historical verification traffic prevent a player, catch or record claim."
+      "Accepted terminal game/result transitions, including repeat runs. Client-reported activity is not a validated competitive score, catch or unique player."
   },
   {
     key: "fighter",
@@ -129,7 +129,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Fighter’s native aggregate view has its own moving window. This completion count is not a player score or evidence that every mode or phone journey has passed its release gates.",
     boundary:
-      "Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. Early history may include verification. These are not wins or unique players; no comparative record is claimed."
+      "Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. These are not wins or unique players. Consult the selected source coverage for historical verification risk."
   },
   {
     nativeLabel: "Open the native global boards",
@@ -151,7 +151,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "The native global board owns eligible scores, ties and participants. Its scope differs from this dated aggregate of completion events.",
     boundary:
-      "Reported terminal runs across supported games within partial collection; not a count of successful board clears. Replay measurement is unavailable, not zero. Historical verification may be present; no popularity or best-score claim."
+      "Reported terminal runs across supported games, not a count of successful board clears. Replay measurement is unavailable in this source, not zero. These are not unique players or best scores."
   }
 ];
 export function storyFor(value: string | null | undefined) {
