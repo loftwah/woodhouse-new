@@ -670,8 +670,20 @@ test("story distribution uses real SQLite rollups, independent counts, bounded s
   );
   sqlite.close();
 });
-test("distribution coverage starts within the selected report and story, never unrelated earlier observations", async () => {
+test("distribution selection matches real rows within D1's 50-byte pattern limit and excludes earlier unrelated scopes", async () => {
   const { db, sqlite } = database();
+  // Local SQLite permits much larger patterns than deployed D1. Exercise real
+  // matching rows with D1's documented boundary imposed on both operators.
+  const matching = new DatabaseSync(":memory:");
+  for (const operator of ["glob", "like"]) {
+    sqlite.function(operator, (pattern, value) => {
+      if (typeof pattern !== "string" || Buffer.byteLength(pattern, "utf8") > 50)
+        throw new Error("LIKE or GLOB pattern too complex");
+      return Number(
+        matching.prepare(`SELECT ? ${operator} ? AS matched`).get(value, pattern)!.matched
+      );
+    });
+  }
   const firstReport = "a".repeat(24),
     selectedReport = "b".repeat(24);
   const insert = sqlite.prepare(
@@ -680,12 +692,19 @@ test("distribution coverage starts within the selected report and story, never u
   insert.run("2026-10-10", `distribution:one-more-round:music:${firstReport}:arrival`);
   insert.run("2026-10-12", `distribution:one-more-round:music:${selectedReport}:arrival`);
   insert.run("2026-10-14", `distribution:one-more-round:bubbles:${selectedReport}:arrival`);
+  assert.throws(
+    () =>
+      sqlite
+        .prepare("SELECT metric FROM wh_analytics_daily WHERE metric GLOB ?")
+        .all(`distribution:one-more-round:*:${selectedReport}:*`),
+    /LIKE or GLOB pattern too complex/
+  );
   const period = { from: "2026-10-10", to: "2026-10-15", days: 6, complete: false };
   const selected = { edition: "one-more-round" as const, report: selectedReport };
-  assert.equal(
-    (await loadStoryDistribution(db, period, selected, now)).startedAt,
-    "2026-10-12T00:00:00.000Z"
-  );
+  const selectedObservation = await loadStoryDistribution(db, period, selected, now);
+  assert.equal(selectedObservation.startedAt, "2026-10-12T00:00:00.000Z");
+  assert.equal(selectedObservation.stories.length, 2);
+  assert(selectedObservation.stories.every((story) => story.context.report === selectedReport));
   assert.equal(
     (await loadStoryDistribution(db, period, { ...selected, story: "bubbles" }, now)).startedAt,
     "2026-10-14T00:00:00.000Z"
@@ -702,6 +721,7 @@ test("distribution coverage starts within the selected report and story, never u
   assert.equal(beforeSelected.quality, "unavailable");
   assert.deepEqual(beforeSelected.stories, []);
   sqlite.close();
+  matching.close();
 });
 test("optional browser associations are project-scoped hashes, deduplicate sessions and preserve anonymous counts", async () => {
   const { db, sqlite } = database();
