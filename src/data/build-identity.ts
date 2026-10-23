@@ -17,3 +17,17 @@ export type BuildIdentity = {
   gitCommit: string | null;
   gitClean: boolean;
 };
+
+/** A dirty build has no exact serving commit. Never borrow a checkout identity. */
+export function producerRevision(
+  identity: Pick<
+    BuildIdentity,
+    "gitCommit" | "gitClean"
+  > | null = typeof __WOODHOUSE_BUILD_IDENTITY__ === "undefined"
+    ? null
+    : __WOODHOUSE_BUILD_IDENTITY__
+): string | null {
+  return identity?.gitClean === true && /^[a-f0-9]{40}$/.test(identity.gitCommit ?? "")
+    ? identity.gitCommit
+    : null;
+}

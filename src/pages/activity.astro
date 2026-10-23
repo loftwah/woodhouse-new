@@ -42,6 +42,7 @@ import {
   measureForProjectSwitch,
   weeklyHighlights,
   discoveryReferrals,
+  discoveryMetric,
   modeMeasureGroups,
   modeBreakdowns,
   modeSplitNote
@@ -161,6 +162,111 @@ const overviewRows = overview
         };
       })
   : [];
+// Woodhouse discovery referrals. The collector stores one counter per
+// destination; the page keeps only destinations that are still published and
+// links them, because a withdrawn project must not stay linked from here.
+const discoveryTotal =
+  allRows
+    .find((r) => r.project === "woodhouse")
+    ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
+const destinationParams = Astro.url.searchParams.getAll("destination");
+const requestedDestination = destinationParams[0] ?? null;
+// A duplicated parameter is the exact legacy shape the old rail produced. Keep
+// the first value and drop the rest so the address cannot carry two selections.
+if (destinationParams.length > 1) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("destination");
+  if (requestedDestination) corrected.searchParams.set("destination", requestedDestination);
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
+// One predicate for the measured destination subset: a public discovery project
+// with a site address. The opening finding, destination rail, story ranking and
+// image API all read this same set instead of inferring it from a display map.
+const publishedDestinations = identities.projects.filter(
+  (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
+);
+const publishedDestinationSlugs = new Set(publishedDestinations.map((p) => p.slug));
+const discovery = discoveryReferrals(
+  allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
+  publishedDestinationSlugs,
+  names,
+  new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
+  window
+);
+// The discovery journey keeps its selected destination in the URL so a shared
+// or reloaded link describes the same hand-off. Selection is resolved here, once:
+// a published destination keeps its own story even when this report retained no
+// clicks for it; unknown destinations are rejected below.
+const requestedDestinationEntry = requestedDestination
+  ? publishedDestinations.find((p) => p.slug === requestedDestination)
+  : undefined;
+const topDestination = discovery[0]
+  ? publishedDestinations.find((p) => p.slug === discovery[0]!.slug)
+  : undefined;
+const destinationEntry = requestedDestinationEntry ?? topDestination ?? publishedDestinations[0];
+const destinationStory = destinationEntry
+  ? discoveryStory({
+      report,
+      slug: destinationEntry.slug as AnalyticsProject,
+      name: destinationEntry.name,
+      siteUrl: destinationEntry.siteUrl ?? null,
+      period: window,
+      published: publishedDestinationSlugs
+    })
+  : null;
+const destinationSlug = destinationStory?.slug ?? null;
+// The destination rail stays complete for the measured subset: a project with
+// no retained counter is part of the honest list and can be inspected, rather
+// than disappearing as if it were never measured.
+const referralMetrics = new Map(
+  (
+    allRows
+      .find((r) => r.project === "woodhouse")
+      ?.data?.metrics.filter((m) => m.key.startsWith("referral_")) ?? []
+  ).map((m) => [m.key.slice("referral_".length).replaceAll("_", "-"), m] as const)
+);
+const destinationChoices = publishedDestinations
+  .map((p) => ({
+    slug: p.slug,
+    name: p.name,
+    siteUrl: p.siteUrl,
+    colour: projectColours[p.slug] ?? "#b4c0d2",
+    // A retained zero is a measured zero; an absent counter is missing history.
+    value: referralMetrics.get(p.slug)?.value ?? null
+  }))
+  .sort((a, b) => (b.value ?? -1) - (a.value ?? -1) || a.name.localeCompare(b.name));
+const explicitDestination = Boolean(
+  requestedDestination && publishedDestinations.some((p) => p.slug === requestedDestination)
+);
+// The fallback story is displayed inline, but it is not a selection the URL
+// should claim. Only an explicit, published destination becomes share scope.
+const selectedDestinationSlug = explicitDestination ? destinationSlug : null;
+// The destination belongs to the discovery view only. An old or hand-edited
+// link that carries it onto another measure would leave the URL claiming a
+// selection the page never shows, so it is normalised once at the route.
+const discoveryView = overview || selected === "woodhouse";
+if (requestedDestination && !explicitDestination)
+  return new Response(
+    "This discovery destination is unavailable. Return to /activity/ to choose a published destination.",
+    { status: 404 }
+  );
+// A whole-report weekly highlight is not a destination-specific comparison.
+if (requestedDestination && Astro.url.searchParams.has("week")) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("week");
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
+if (requestedDestination && overview) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.set("project", "woodhouse");
+  corrected.searchParams.set("measure", "project_opens");
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
+if (requestedDestination && (!discoveryView || measure.key !== "project_opens")) {
+  const corrected = new URL(Astro.url);
+  corrected.searchParams.delete("destination");
+  return Astro.redirect(corrected.pathname + corrected.search, 302);
+}
 const scopedProjects = new Set(
   measureScope(
     rows.map((r) => r.project),
@@ -173,7 +279,14 @@ const metricRows = overview
       .map((r) => ({
         ...r,
         overviewMeasure: null,
-        metric: reportMetric(r.project, r.data?.metrics, measure.key)
+        name:
+          selectedDestinationSlug && r.project === "woodhouse"
+            ? `Woodhouse → ${destinationStory!.name}`
+            : r.name,
+        metric:
+          selectedDestinationSlug && r.project === "woodhouse"
+            ? discoveryMetric(r.data?.metrics, measure.key, selectedDestinationSlug)
+            : reportMetric(r.project, r.data?.metrics, measure.key)
       }))
       // Applicability comes from the product view, not from whether the source
       // returned a metric object: a game whose whole report is missing, or whose
@@ -283,94 +396,6 @@ const week = requestedWeek
         (overview || highlight.measure.key === measure.key)
     ) ?? null)
   : null;
-// Woodhouse discovery referrals. The collector stores one counter per
-// destination; the page keeps only destinations that are still published and
-// links them, because a withdrawn project must not stay linked from here.
-const discoveryTotal =
-  allRows
-    .find((r) => r.project === "woodhouse")
-    ?.data?.metrics.find((m) => m.key === "project_opens")?.value ?? null;
-const destinationParams = Astro.url.searchParams.getAll("destination");
-const requestedDestination = destinationParams[0] ?? null;
-// A duplicated parameter is the exact legacy shape the old rail produced. Keep
-// the first value and drop the rest so the address cannot carry two selections.
-if (destinationParams.length > 1) {
-  const corrected = new URL(Astro.url);
-  corrected.searchParams.delete("destination");
-  if (requestedDestination) corrected.searchParams.set("destination", requestedDestination);
-  return Astro.redirect(corrected.pathname + corrected.search, 302);
-}
-// One predicate for the measured destination subset: a public discovery project
-// with a site address. The opening finding, destination rail, story ranking and
-// image API all read this same set instead of inferring it from a display map.
-const publishedDestinations = identities.projects.filter(
-  (p) => p.siteUrl && discoveryProjects.includes(p.slug as (typeof discoveryProjects)[number])
-);
-const publishedDestinationSlugs = new Set(publishedDestinations.map((p) => p.slug));
-const discovery = discoveryReferrals(
-  allRows.find((r) => r.project === "woodhouse")?.data?.metrics,
-  publishedDestinationSlugs,
-  names,
-  new Map(identities.projects.map((p) => [p.slug, p.siteUrl ?? null] as const)),
-  window
-);
-// The discovery journey keeps its selected destination in the URL so a shared
-// or reloaded link describes the same hand-off. Selection is resolved here, once:
-// a published destination keeps its own story even when this report retained no
-// clicks for it; an unknown slug falls back to the busiest measured destination.
-const requestedDestinationEntry = requestedDestination
-  ? publishedDestinations.find((p) => p.slug === requestedDestination)
-  : undefined;
-const topDestination = discovery[0]
-  ? publishedDestinations.find((p) => p.slug === discovery[0]!.slug)
-  : undefined;
-const destinationEntry = requestedDestinationEntry ?? topDestination ?? publishedDestinations[0];
-const destinationStory = destinationEntry
-  ? discoveryStory({
-      report,
-      slug: destinationEntry.slug as AnalyticsProject,
-      name: destinationEntry.name,
-      siteUrl: destinationEntry.siteUrl ?? null,
-      period: window,
-      published: publishedDestinationSlugs
-    })
-  : null;
-const destinationSlug = destinationStory?.slug ?? null;
-// The destination rail stays complete for the measured subset: a project with
-// no retained counter is part of the honest list and can be inspected, rather
-// than disappearing as if it were never measured.
-const referralMetrics = new Map(
-  (
-    allRows
-      .find((r) => r.project === "woodhouse")
-      ?.data?.metrics.filter((m) => m.key.startsWith("referral_")) ?? []
-  ).map((m) => [m.key.slice("referral_".length).replaceAll("_", "-"), m] as const)
-);
-const destinationChoices = publishedDestinations
-  .map((p) => ({
-    slug: p.slug,
-    name: p.name,
-    siteUrl: p.siteUrl,
-    colour: projectColours[p.slug] ?? "#b4c0d2",
-    // A retained zero is a measured zero; an absent counter is missing history.
-    value: referralMetrics.get(p.slug)?.value ?? null
-  }))
-  .sort((a, b) => (b.value ?? -1) - (a.value ?? -1) || a.name.localeCompare(b.name));
-const explicitDestination = Boolean(
-  requestedDestination && publishedDestinations.some((p) => p.slug === requestedDestination)
-);
-// The fallback story is displayed inline, but it is not a selection the URL
-// should claim. Only an explicit, published destination becomes share scope.
-const selectedDestinationSlug = explicitDestination ? destinationSlug : null;
-// The destination belongs to the discovery view only. An old or hand-edited
-// link that carries it onto another measure would leave the URL claiming a
-// selection the page never shows, so it is normalised once at the route.
-const discoveryView = overview || selected === "woodhouse";
-if (requestedDestination && (!discoveryView || !explicitDestination)) {
-  const corrected = new URL(Astro.url);
-  corrected.searchParams.delete("destination");
-  return Astro.redirect(corrected.pathname + corrected.search, 302);
-}
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
 // publishes no mode subtotal shows no breakdown, and nothing is inferred from the
@@ -430,13 +455,13 @@ function pageLink(
       : resolveMeasure(project ?? null, changes.measure ?? measure.key).key;
   q.set("measure", measureKey);
   if (changes.week !== undefined) {
-    if (changes.week) q.set("week", changes.week);
-  } else if (week) q.set("week", week.from);
+    if (changes.week && !selectedDestinationSlug && !changes.destination)
+      q.set("week", changes.week);
+  } else if (week && !selectedDestinationSlug && !changes.destination) q.set("week", week.from);
   // A destination only describes the discovery view. Carrying it onto a project
   // or measure that does not render that view would make the URL claim a scope
   // the page does not show, so it is dropped at this one boundary.
-  const discoveryVisible =
-    project === "woodhouse" || (project === null && isOverviewMeasure({ key: measureKey }));
+  const discoveryVisible = project === "woodhouse" && measureKey === "project_opens";
   const keepDestination =
     changes.destination === undefined
       ? discoveryVisible
@@ -459,10 +484,6 @@ const storyShare = Boolean(
 );
 // A destination click lands on the focus panel when this scope supports it;
 // otherwise it lands on the inline story in the discovery section.
-const destinationAnchor =
-  overview || measure.key === "project_opens"
-    ? "discovery-story"
-    : "discovery-story-inline-heading";
 const storyFocus = Boolean(explicitDestination && storyShare);
 const storyScopeLink =
   destinationStory && report
@@ -737,14 +758,11 @@ const dataPayload = {
           { key: "chart", label: overview ? "Overview" : "Chart" },
           { key: "data", label: "Data" },
           { key: "share", label: "Share" },
-          { key: "stories", label: "Stories" },
+          { key: "stories", label: "Portfolio stories" },
           { key: "notes", label: "Notes" }
         ].map((item) => (
           <a
-            href={pageLink({
-              view: item.key,
-              ...(item.key === "stories" ? { project: null, measure: "overview" } : {})
-            })}
+            href={pageLink({ view: item.key })}
             aria-current={activeView === item.key ? "page" : undefined}
           >
             {item.label}
@@ -828,12 +846,11 @@ const dataPayload = {
               </section>
             )}
 
-            {storyFocus && destinationStory && (
-              <DiscoveryStoryPanel
-                story={destinationStory}
-                variant="focus"
-                shareHref={report ? pageLink({ view: "share" }) : undefined}
-              />
+            {selectedDestinationSlug && (
+              <p class="data-note">
+                Showing openings from Woodhouse to {destinationStory!.name}.{" "}
+                <a href={pageLink({ destination: null })}>All destinations</a>
+              </p>
             )}
             <section class="main-chart" aria-labelledby="trend-heading">
               <div class:list={["chart-heading", { "chart-heading--overview": overview }]}>
@@ -841,7 +858,7 @@ const dataPayload = {
                   <h2 id="trend-heading">
                     {overview
                       ? measure.label
-                      : `${measure.label} · ${selected ? names.get(selected) : "Games"}`}
+                      : `${measure.label} · ${selectedDestinationSlug ? destinationStory!.name : selected ? names.get(selected) : "Games"}`}
                   </h2>
                   <p>
                     {overview
@@ -1056,13 +1073,29 @@ const dataPayload = {
                 <a href={pageLink({ view: "notes" })}>Coverage & definitions</a>
               </div>
             </section>
+            {storyFocus && destinationStory && (
+              <details class="chart-data">
+                <summary>{destinationStory.name} discovery story</summary>
+                <DiscoveryStoryPanel
+                  story={destinationStory}
+                  variant="focus"
+                  shareHref={report ? pageLink({ view: "share" }) : undefined}
+                />
+              </details>
+            )}
           </>
         )}
         {activeView === "data" && (
           <section class="daily-data" aria-labelledby="daily-data-heading">
             <div class="data-heading">
               <div>
-                <h2 id="daily-data-heading">Daily data</h2>
+                <h2 id="daily-data-heading">
+                  Daily data
+                  {selectedDestinationSlug ? ` · Woodhouse → ${destinationStory!.name}` : ""}
+                </h2>
+                {selectedDestinationSlug && (
+                  <a href={pageLink({ destination: null })}>All destinations</a>
+                )}
                 <p>
                   {overview ? "Each project's own measure" : measure.label} ·{" "}
                   {unit === "seconds" && !overview ? "seconds · " : ""}UTC · newest first
@@ -1146,17 +1179,21 @@ const dataPayload = {
         )}
         {activeView === "stories" && (
           <div class="report-stories">
-            {" "}
-            {overview && (
+            <h2>Portfolio stories</h2>
+            <p>
+              Findings across the portfolio for these saved dates. Your selected chart and measure
+              are kept in the other views.
+            </p>
+            {
               <OutcomeFindings
-                report={report}
+                report={snapshot ? projectReport(snapshot, null, publicIds) : null}
                 period={window}
                 published={publicIds}
                 excluded={qaOff}
                 qa={qaValue}
               />
-            )}
-            {overview && (
+            }
+            {
               <section class="opening" aria-labelledby="opening-heading">
                 <div class="opening__head">
                   <h2 id="opening-heading">
@@ -1218,7 +1255,7 @@ const dataPayload = {
                   </details>
                 )}
               </section>
-            )}
+            }
             <EditionInvitation />
           </div>
         )}
@@ -1324,7 +1361,7 @@ const dataPayload = {
                       <nav class="discovery-nav" aria-label="Measured destinations">
                         {destinationChoices.map((d) => (
                           <a
-                            href={`${pageLink({ destination: d.slug, view: overview || measure.key === "project_opens" ? "chart" : "notes" })}#${destinationAnchor}`}
+                            href={`${pageLink({ project: "woodhouse", measure: "project_opens", destination: d.slug, view: "chart" })}#trend-heading`}
                             aria-current={selectedDestinationSlug === d.slug ? "true" : undefined}
                           >
                             <i
@@ -1550,10 +1587,35 @@ const dataPayload = {
                             <dd>{r.data.coverage.comparableFrom ?? "Not established"}</dd>
                           </div>
                           <div>
-                            <dt>Source revision</dt>
-                            <dd>{r.data.source.revision ?? "Not supplied"}</dd>
+                            <dt>Report producer revision</dt>
+                            <dd>{r.data.source.revision ?? "Not supplied in this report"}</dd>
                           </div>
                         </dl>
+                        <p>
+                          This revision identifies the code producing this aggregate, not the client
+                          that emitted every event. Protocol 11 and SHOALSHOT use Woodhouse’s
+                          aggregate producer. It cannot recover missing historical client identity.
+                          Older saved reports keep their original provenance.
+                        </p>
+                        <p>
+                          <a
+                            href={
+                              new URL(
+                                r.project === "fighter"
+                                  ? "/fighter-release.json"
+                                  : r.project === "app-composer" || r.project === "bubbles"
+                                    ? "/healthz"
+                                    : r.project === "loftwahfm"
+                                      ? "/api/portfolio-analytics"
+                                      : "/build.json",
+                                r.data.source.endpoint
+                              ).href
+                            }
+                          >
+                            Current producer identity
+                          </a>{" "}
+                          (may be newer than this saved report).
+                        </p>
                         <ul>
                           {r.data.coverage.limitations.map((text) => (
                             <li>{text}</li>

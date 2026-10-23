@@ -645,6 +645,18 @@ export function modeSplitNote(rows: ModeBreakdown[]): string {
   const from = [...new Set(rows.map((row) => row.from).filter(Boolean))].sort();
   return `The split begins inside this window (${from.join(", ")}), so earlier days are gaps rather than zeroes and the subtotals only add up over the days they cover. ${sessions}`;
 }
+/** A selected destination owns the whole discovery export, including gaps. */
+export function discoveryMetric(
+  metrics: Metric[] | undefined,
+  measure: string,
+  destination: string | null
+): Metric | undefined {
+  const key =
+    measure === "project_opens" && destination
+      ? `referral_${destination.replaceAll("-", "_")}`
+      : measure;
+  return metrics?.find((metric) => metric.key === key);
+}
 export type DiscoveryReferral = {
   slug: string;
   name: string;

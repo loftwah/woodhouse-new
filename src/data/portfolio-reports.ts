@@ -1,3 +1,4 @@
+import { producerRevision } from "./build-identity.ts";
 import {
   analyticsProjects,
   loadProjectAnalytics,
@@ -165,7 +166,14 @@ export async function createPortfolioReport(
     .first<{ id: string }>();
   if (recent) {
     const report = await readPortfolioReport(db, recent.id);
-    if (report && (releaseNotes === undefined || report.releases !== undefined)) return report;
+    if (
+      report &&
+      (releaseNotes === undefined || report.releases !== undefined) &&
+      report.projects
+        .filter((entry) => ["woodhouse", "shoalshot", "protocol-11"].includes(entry.project))
+        .every((entry) => entry.report?.source.revision === producerRevision())
+    )
+      return report;
   }
   const members = analyticsProjects.filter((p) => publicIds.has(p));
   const load = async (

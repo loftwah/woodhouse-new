@@ -2283,6 +2283,19 @@
           "editorial_notes": "The owner approved a pending fictional note, then paused new submissions while the approved note stayed public. This does not establish automatic app generation, fresh-customer onboarding, the broader Guestbook-to-Linkarooie hosted pair, featuring, adoption or demand. Public Open reports do not become moderation counts. The SHOALSHOT image update does not re-review gameplay. The original frozen edition report, images, captions and pack are unchanged.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-23-atlas-owner-v1",
+        "slug": "2026-10-23-atlas-owner-v1",
+        "status": "published",
+        "data": {
+          "title": "A requested journal, then a change to the same app · 23 October 2026",
+          "reviewed_at": "2026-10-23",
+          "source_description": "Composer’s released producer identity, separately observed native owner completion and standing-policy title update, and the public fictional Atlas journal and mounted app, checked 23 October 2026. Public-safe derived observations only.",
+          "scope": "A bounded existing-owner request on the shared runtime and a supported title update to the retained resource.",
+          "editorial_notes": "One existing owner in a fictional workspace on the shared app runtime. New-customer admission, invited-member contributions, dedicated team infrastructure, incident recovery, restore and retirement are outside this proof. Public postcards remain closed. Public moderation sharing is unsupported; an approval is not an Open. Earlier Harbour Notes evidence and frozen portfolio edition assets remain unchanged.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3271,6 +3284,25 @@
           "proof_boundary": "Existing-owner fictional configuration and moderation were observed at Composer source 29fc65c2983769f140bad3bdef298a20c0185b0e. Receiving, approving and featuring are separate operations; no featuring occurred. This is not automatic Init generation, fresh-customer acceptance, external adoption, a public approval-count report or demand. The earlier local build-story and contribution-contract review remains historical evidence with its own limits.",
           "reviewed_at": "2026-10-23",
           "sort_order": 12,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-23-atlas-owner-v1",
+        "slug": "app-composer-2026-10-23-atlas-owner-v1",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-23-atlas-owner-v1",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-23-atlas-owner-v1",
+          "state": "A requested journal, then an update to the same app",
+          "state_tone": "green",
+          "current": "An existing owner’s guarded fictional journal request reached a published Guestbook on Composer’s shared runtime. A supported title update then completed under saved standing policy without a separate approval, retaining the same resource. Visitors can inspect the Fictional Atlas team journal and its mounted app; postcards are closed. The earlier Harbour Notes approval and pause example remains a separate proof.",
+          "next_proof": "Complete the native member and wider lifecycle requirements with their existing Composer owners. Public moderation sharing remains unsupported; no MP sign-in action is needed for the completed Harbour Notes slice.",
+          "proof_boundary": "One existing owner in a fictional workspace on the shared app runtime. New-customer admission, invited-member contributions, dedicated team infrastructure, incident recovery, restore and retirement are outside this proof. Public postcards remain closed. Public moderation sharing is unsupported; an approval is not an Open.",
+          "reviewed_at": "2026-10-23",
+          "sort_order": 13,
           "public_safe": true
         }
       }
@@ -5267,6 +5299,29 @@
           "revision": "29fc65c2983769f140bad3bdef298a20c0185b0e",
           "public_safe": true,
           "proof_boundary": "Existing-owner fictional demonstration, not fresh-customer acceptance, automatic app generation, external adoption or a conversion funnel. Receipt, approval and featuring are separate; no featuring is claimed. Public Open aggregates do not become approval counts. Private workspace identifiers and records remain with Composer."
+        }
+      },
+      {
+        "id": "evidence-app-composer-atlas-owner-2026-10-23",
+        "slug": "app-composer-atlas-owner-2026-10-23",
+        "status": "published",
+        "data": {
+          "title": "A requested journal and a policy-permitted title update",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-23-atlas-owner-v1",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-23-atlas-owner-v1",
+          "claim": "A guarded fictional owner request completed with a published journal; a supported title update under standing policy retained the same app resource.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-23",
+          "reviewed_at": "2026-10-23",
+          "summary": "The canonical native release receipt records request completion, then a title update under saved standing policy revision 1 without a separate approval. The public stack and its mounted configuration 3 both show Fictional Atlas team journal. The app retains the original resource and says guest postcards are closed; no published moments are claimed. The checked producer health identity is 0d887971d66455f51f49430d06fd4b99ac3d34a9.",
+          "source_label": "Public fictional Atlas journal and separately observed native owner release",
+          "source_url": "https://composer.loftwah.com/s/team-48b2f889-c5b0-4dc8-bbc7-965f07cce2bf",
+          "revision": "0d887971d66455f51f49430d06fd4b99ac3d34a9",
+          "public_safe": true,
+          "proof_boundary": "One existing owner in a fictional workspace on the shared app runtime. New-customer admission, invited-member contributions, dedicated team infrastructure, incident recovery, restore and retirement are outside this proof. Public postcards remain closed. Public moderation sharing is unsupported; an approval is not an Open."
         }
       }
     ],
@@ -13416,6 +13471,227 @@
                       "text": "Return to One more round",
                       "marks": [
                         "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-a-journal-you-can-change",
+        "slug": "a-journal-you-can-change",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "data": {
+          "title": "A journal you can ask to change",
+          "kind": "Field note",
+          "deck": "A fictional team asked for a journal. Composer published it, then changed its title under the owner’s saved policy while keeping the same app.",
+          "review_date": "2026-10-23",
+          "source_reference": "Composer’s canonical native release receipt and public producer health identity at released source 0d88797, followed by inspection of the fictional Atlas stack and mounted Guestbook on 23 October 2026. Public-safe derived observations; private request and moderation records remain with Composer.",
+          "lead": "The useful part of a small app starts after its first publication: being able to change it without losing the thing you made.",
+          "lesson": "A saved policy can permit a supported update while the app keeps its identity. The policy’s limits matter as much as the successful change.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-app-composer"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "result",
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "a",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A fictional team wanted a shared journal. An existing owner submitted the guarded request in Composer, and the supported path reached a published Guestbook on the shared app runtime. You can open the result and inspect the app itself.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "open",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "link",
+                      "href": "https://composer.loftwah.com/s/team-48b2f889-c5b0-4dc8-bbc7-965f07cce2bf"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the Fictional Atlas team journal.",
+                      "marks": [
+                        "link"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "image_plate",
+              "_version": 1,
+              "_key": "atlas-public-app",
+              "image": {
+                "id": "atlas-public-app-v1",
+                "src": "/share/app-composer/atlas-journal-owner-result-v1-20261023.png",
+                "alt": "The public Fictional Atlas team journal after its title update: guest postcards are closed and no published moments are claimed.",
+                "width": 1200,
+                "height": 414
+              },
+              "caption": "Actual public app, captured 23 October 2026 after the supported title update. The same resource remains; no visitor contribution or published moment is implied.",
+              "variant": "wide"
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "change",
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "h",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Change the name. Keep the app.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "b",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The follow-up changed its title to Fictional Atlas team journal. Composer completed that supported update under the owner’s saved standing policy, revision 1, without asking for a separate approval. It kept the original resource. This was an update to the same app rather than a second journal.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "c",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A policy is useful when it makes that boundary predictable. In the same native release review, a request requiring Australian-only placement stopped as unsupported and produced no service link. The shared runtime did not become an Australian-only deployment by implication.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "limits",
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "d",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "One existing owner in a fictional workspace on the shared app runtime. New-customer admission, invited-member contributions, dedicated team infrastructure, incident recovery, restore and retirement are outside this proof. Public postcards remain closed. Public moderation sharing is unsupported; an approval is not an Open.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "e",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The earlier Harbour Notes example answers a different question: an owner can approve a pending note and pause new arrivals while the approved note stays public. It remains available with its own dated evidence. Neither example supplies a public approval-count report.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "harbour",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "link",
+                      "href": "https://composer.loftwah.com/s/fictional-harbour-notes"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Inspect the separate Harbour Notes example.",
+                      "marks": [
+                        "link"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "start",
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "f",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The Atlas app currently has postcards closed and no published moments. Visitors can inspect the result; authoring and policy controls require the existing owner’s authorised account. Start from Composer’s practical introduction if you want to understand the broader build path.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "try",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "link",
+                      "href": "https://composer.loftwah.com/"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Explore App Composer.",
+                      "marks": [
+                        "link"
                       ]
                     }
                   ]
