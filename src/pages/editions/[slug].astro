@@ -72,7 +72,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
 ---
 
 <BaseLayout
-  title={edition.title}
+  title={`${edition.title} | Portfolio edition`}
   description={edition.deck}
   path={edition.href}
   currentPath="/projects/"
@@ -196,7 +196,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
           and sharing. No substitute snapshot is shown.
         </p>
       )}
-      <aside class="edition-method">
+      <div class="edition-method">
         <h3>A small observation needs its edges.</h3>
         <p>
           The reporting week is closed; the source coverage inside it is partial. Collection began
@@ -207,7 +207,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
         <a href={internal(`/activity/?report=${edition.reportId}`)}>
           Inspect the whole frozen report ↗
         </a>
-      </aside>
+      </div>
     </section>
     <section class="edition-connections" aria-label="Hear and make">
       {selections
