@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { gameMedia } from "./share-desk.ts";
 import {
+  shareNavigation,
   galleryMedia,
   galleryPage,
   galleryURL,
@@ -107,4 +108,28 @@ test("edition kit preserves bounded project browsing without replacing existing 
     "/share/?project=protocol-11&type=edition&page=2"
   );
   assert.equal(kitURL("app-composer", "edition"), "/share/?project=app-composer&type=edition");
+});
+
+test("gallery navigation retains exclusion and selected story without changing public share links", () => {
+  const query = new URLSearchParams("analytics=off&qa=1&type=edition&page=4");
+  assert.equal(
+    shareNavigation("/share/?project=bubbles&type=edition&page=2", query),
+    "/share/?project=bubbles&type=edition&page=2&analytics=off&qa=1"
+  );
+  const frozen =
+    "https://woodhouse.loftwah.com/connections/?story=bubbles&report=8496128e32ddfd0bddf8da66";
+  assert.equal(
+    shareNavigation(frozen, query),
+    "/connections/?story=bubbles&report=8496128e32ddfd0bddf8da66&analytics=off&qa=1#selected-story"
+  );
+  assert.equal(
+    shareNavigation(frozen, new URLSearchParams()),
+    "/connections/?story=bubbles&report=8496128e32ddfd0bddf8da66#selected-story"
+  );
+  assert.equal(
+    shareNavigation("https://composer.loftwah.com/demo", query),
+    "https://composer.loftwah.com/demo"
+  );
+  assert.equal(query.toString(), "analytics=off&qa=1&type=edition&page=4");
+  assert.equal(galleryURL("bubbles", "edition", 2), "/share/?project=bubbles&type=edition&page=2");
 });

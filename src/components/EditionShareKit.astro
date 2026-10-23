@@ -1,4 +1,5 @@
 ---
+import { shareNavigation } from "../data/share-browser";
 type Props = { compact?: boolean; availablePack?: boolean };
 const { compact = false, availablePack = true } = Astro.props;
 ---
@@ -18,7 +19,11 @@ const { compact = false, availablePack = true } = Astro.props;
           Download the edition pack
         </a>
       )}
-      {!compact && <a href="/share/?type=edition">Browse images & films</a>}
+      {!compact && (
+        <a href={shareNavigation("/share/?type=edition", Astro.url.searchParams)}>
+          Browse images & films
+        </a>
+      )}
     </div>
     <p class="kit-note">
       Campaign artwork and films make an invitation. Frozen report cards retain their 12–18 October

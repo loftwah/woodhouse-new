@@ -129,3 +129,14 @@ export function projectViewRedirect(
   if (availableProjectTypes(slug).includes(view as ProjectGalleryType)) return null;
   return defaultProjectType(slug);
 }
+
+/** Navigation keeps verification exclusion; copied/public links remain canonical. */
+export function shareNavigation(href: string, current: URLSearchParams): string {
+  const url = new URL(href, "https://woodhouse.loftwah.com");
+  if (url.origin !== "https://woodhouse.loftwah.com") return href;
+  if (url.pathname === "/connections/" && url.searchParams.has("story"))
+    url.hash = "selected-story";
+  if (current.get("analytics") === "off") url.searchParams.set("analytics", "off");
+  if (current.has("qa")) url.searchParams.set("qa", current.get("qa")!);
+  return url.pathname + url.search + url.hash;
+}

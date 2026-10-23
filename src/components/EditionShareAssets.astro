@@ -1,4 +1,5 @@
 ---
+import { shareNavigation } from "../data/share-browser";
 import ShareActions from "./ShareActions.astro";
 import type { EditionShareAsset } from "../data/edition-share-kit";
 type Props = { assets: EditionShareAsset[] };
@@ -53,7 +54,7 @@ const { assets } = Astro.props;
         link={asset.link}
         mediaType={asset.kind}
       />
-      <a class="story-link" href={asset.link}>
+      <a class="story-link" href={shareNavigation(asset.link, Astro.url.searchParams)}>
         {asset.id.startsWith("film") || asset.id.startsWith("invitation")
           ? "Open the edition"
           : "Open this frozen story"}
