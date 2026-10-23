@@ -270,6 +270,16 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
   )}
   {["loftwahfm", "app-composer"].includes(project.slug) && (
     <section class="container" aria-label="Try a working connection">
+      {["app-composer", "loftwahfm"].includes(project.slug) && (
+        <p class="container">
+          <a
+            class="text-link"
+            href={`/connections/?story=${project.slug === "app-composer" ? "link-check" : "music"}`}
+          >
+            Explore this product’s connected story ↗
+          </a>
+        </p>
+      )}
       <BuildExamples projects={[project]} only={project.slug} />
     </section>
   )}

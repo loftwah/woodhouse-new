@@ -7,7 +7,7 @@ test("page audit deduplicates reads while retaining broken-link findings and med
   const fixture = `
     import assert from 'node:assert/strict';
     const origin = 'https://audit.example';
-    const pages = ['/', '/factory/', '/share/', '/projects/', '/dispatches/', '/incidents/', '/evidence/', '/conversations/', '/architecture/', '/doctrine/', '/dean/', '/agents/', '/contact/'];
+    const pages = ['/', '/factory/', '/connections/', '/share/', '/projects/', '/dispatches/', '/incidents/', '/evidence/', '/conversations/', '/architecture/', '/doctrine/', '/dean/', '/agents/', '/contact/'];
     const streams = [];
     const requests = new Map();
     globalThis.fetch = async (url) => {
@@ -39,7 +39,7 @@ test("page audit deduplicates reads while retaining broken-link findings and med
     else
       assert.equal(
         (result.stderr.match(/links to \/film\.mp4, which returned HTTP 404/g) ?? []).length,
-        13,
+        14,
         "Retain a broken-link finding for every linking page"
       );
   }

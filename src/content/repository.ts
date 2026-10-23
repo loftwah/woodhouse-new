@@ -562,6 +562,13 @@ export async function listPublicSearchItems() {
         section: "Sharing"
       },
       {
+        title: "Connected products",
+        description:
+          "Explore completed Link Checks and music heard, then try the apps and share the evidence.",
+        href: "/connections/",
+        section: "Factory"
+      },
+      {
         title: "The factory floor",
         description: "Current reviewed project snapshot and next proof.",
         href: "/factory/",

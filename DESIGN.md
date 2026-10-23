@@ -156,3 +156,17 @@ The replacement uses commissioned-style generated illustrations with subject-spe
 ### Replacement direction — MP feedback, 18 October 2026
 
 MP positively received the illustrated replacement shown in the article's before/after comparison and asked for the family to be used fully. Carry the selected eleven illustrations and their readable phone editions through the existing pages and share gallery. Preserve the generated masters, prompts, editable system models and transcripts. This feedback establishes the shown visual direction; the earlier rejected editions remain rejected, and technical verification still belongs to each released format.
+
+## Connected portfolio — reviewed 23 October 2026
+
+`/connections/` extends the existing workshop identity. Two selectable paths lead
+from Woodhouse into a Link Check / Composer outcome and FM / game music. Product
+art stays recognisable: Composer orange, existing FM cover art. The same paths
+are available as a semantic description list. Native links open separately so
+selection, dates and scroll remain available on return; selection is native URL
+navigation, with no asynchronous state replacement to race.
+
+The opening leads with useful actions, then separates the recorded outcome from
+its relationship. FM's all-source listening never becomes game-attributed time.
+Frozen selection governs the page, caption, OG and three image formats. Native
+reports use supported rolling scopes, with differences stated beside each link.

@@ -295,19 +295,24 @@ const sharePayload = document.querySelector("#report-sharing");
 if (sharePayload) {
   const { image, caption } = JSON.parse(sharePayload.textContent ?? "{}");
   const status = document.querySelector<HTMLElement>("[data-report-status]");
+  // A later user action owns feedback. Image preparation can finish after copy.
+  let feedback = 0;
   // A missing preview is reported as a missing image, not left as a broken
   // frame inside the share panel. The downloads and the caption still work.
   const preview = document.querySelector<HTMLImageElement>("[data-report-preview]");
   preview?.addEventListener("error", () => {
     preview.hidden = true;
-    if (status) status.textContent = "The shared image preview is unavailable. Try a PNG download.";
+    if (status && feedback === 0)
+      status.textContent = "The shared image preview is unavailable. Try a PNG download.";
   });
   document.querySelector("[data-report-copy]")?.addEventListener("click", async () => {
+    const owner = ++feedback;
+    if (status) status.textContent = "Copying caption and report link…";
     try {
       await navigator.clipboard.writeText(caption);
-      if (status) status.textContent = "Caption and report link copied.";
+      if (status && owner === feedback) status.textContent = "Caption and report link copied.";
     } catch {
-      if (status)
+      if (status && owner === feedback)
         status.textContent = "Copy unavailable. Open the frozen permalink and share its address.";
     }
   });
@@ -320,6 +325,7 @@ if (sharePayload) {
   const prepare = async () => {
     if (!panel?.open || !button || !navigator.canShare || !navigator.share) return;
     const id = ++request;
+    const owner = feedback;
     file = null;
     button.hidden = true;
     button.dataset.state = "preparing";
@@ -335,15 +341,17 @@ if (sharePayload) {
       if (navigator.canShare({ files: [prepared] })) {
         button.hidden = false;
         button.dataset.state = "ready";
-        if (status) status.textContent = "The report image is ready to share.";
-      } else if (status) {
+        if (status && owner === feedback)
+          status.textContent = "The report image is ready to share.";
+      } else if (status && owner === feedback) {
         status.textContent = "This device cannot share the image directly. Use a PNG download.";
       }
     } catch {
       if (id !== request) return;
       button.hidden = true;
       delete button.dataset.state;
-      if (status) status.textContent = "Image preview unavailable. Try a PNG download.";
+      if (status && owner === feedback)
+        status.textContent = "Image preview unavailable. Try a PNG download.";
     }
   };
   panel?.addEventListener("toggle", () => {
@@ -356,16 +364,20 @@ if (sharePayload) {
   });
   button?.addEventListener("click", async () => {
     if (!file) return;
+    const owner = ++feedback;
     if (status) status.textContent = "Opening your device's share options…";
     try {
       await navigator.share({ files: [file], text: caption });
-      if (status) status.textContent = "Handed to your device's share options.";
+      if (status && owner === feedback)
+        status.textContent = "Handed to your device's share options.";
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
-        if (status) status.textContent = "Sharing cancelled. The report image is still ready.";
+        if (status && owner === feedback)
+          status.textContent = "Sharing cancelled. The report image is still ready.";
         return;
       }
-      if (status) status.textContent = "Image sharing unavailable. Use a PNG download.";
+      if (status && owner === feedback)
+        status.textContent = "Image sharing unavailable. Use a PNG download.";
     }
   });
 }

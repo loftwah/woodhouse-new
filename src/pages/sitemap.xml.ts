@@ -67,6 +67,7 @@ export const GET: APIRoute = async ({ cache }) => {
     ...[
       "/",
       "/factory/",
+      "/connections/",
       "/activity/",
       "/activity/listening/",
       "/activity/measurement/",

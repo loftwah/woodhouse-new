@@ -13,7 +13,10 @@ import {
   resolveMeasure
 } from "../../data/analytics-workbench";
 import { discoveryProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
+import { storyFor } from "../../data/connected-stories";
+import { outcomeCard } from "../../data/outcome-card";
 export const prerender = false;
+const artwork = new Map<string, Promise<string | undefined>>();
 let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
 const knownMeasures = new Set<string>([
@@ -23,6 +26,17 @@ const knownMeasures = new Set<string>([
 ]);
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
+  const outcome = storyFor(url.searchParams.get("story"));
+  if (url.searchParams.has("story") && (!outcome || selectedStoryMismatch()))
+    return new Response("Story scope unavailable.", { status: 400 });
+  function selectedStoryMismatch() {
+    return (
+      url.searchParams.get("project") !== outcome?.project ||
+      url.searchParams.get("measure") !== outcome?.measure ||
+      url.searchParams.has("destination") ||
+      url.searchParams.has("week")
+    );
+  }
   const format = url.searchParams.get("format") ?? "landscape",
     id = url.searchParams.get("report"),
     selected = url.searchParams.get("project"),
@@ -47,8 +61,9 @@ export const GET: APIRoute = async ({ url, cache }) => {
           "audit",
           "measure",
           "week",
-          "destination"
-        ].includes(k)
+          "destination",
+          "story"
+        ].includes(k) || url.searchParams.getAll(k).length !== 1
     )
   )
     return new Response("Invalid report image.", {
@@ -120,17 +135,46 @@ export const GET: APIRoute = async ({ url, cache }) => {
       ...[...identities.projects.map((p) => [p.slug, p.name] as const)],
       ["woodhouse", "Woodhouse"]
     ]);
+    let embedded: string | undefined;
+    if (outcome) {
+      const path =
+        outcome.key === "music" ? "/share/loftwahfm/this-is-loftwahfm.jpg" : outcome.artwork;
+      const key = url.origin + path;
+      if (!artwork.has(key))
+        artwork.set(
+          key,
+          (async () => {
+            const response = await fetch(key, {
+              redirect: "manual",
+              signal: AbortSignal.timeout(4000)
+            });
+            if (!response.ok || !response.headers.get("content-type")?.startsWith("image/"))
+              throw Error("art unavailable");
+            const bytes = new Uint8Array(await response.arrayBuffer());
+            if (bytes.length > 250000) throw Error("art too large");
+            let binary = "";
+            for (const byte of bytes) binary += String.fromCharCode(byte);
+            return `data:image/jpeg;base64,${btoa(binary)}`;
+          })().catch(() => {
+            artwork.delete(key);
+            return undefined;
+          })
+        );
+      embedded = await artwork.get(key);
+    }
     const renderer = new Resvg(
-      reportSvg(
-        report,
-        names,
-        format as ReportFormat,
-        measure ?? undefined,
-        url.origin,
-        week ?? undefined,
-        destination ?? undefined,
-        publishedDestinationSlugs
-      ),
+      outcome
+        ? outcomeCard(report, outcome, format as ReportFormat, url.origin, embedded)
+        : reportSvg(
+            report,
+            names,
+            format as ReportFormat,
+            measure ?? undefined,
+            url.origin,
+            week ?? undefined,
+            destination ?? undefined,
+            publishedDestinationSlugs
+          ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
       }
