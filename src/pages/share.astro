@@ -657,9 +657,8 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
       if (label && image.naturalWidth)
         label.textContent = `${image.naturalWidth} × ${image.naturalHeight}`;
     };
-    if (image.complete) describe();
-    else image.addEventListener("load", describe, { once: true });
-    image.addEventListener("error", () => {
+    image.addEventListener("load", describe);
+    const unavailable = () => {
       // A project's published artwork can move or disappear. Fall back once to the
       // reviewed artwork and its credit, rather than leaving a broken
       // image with the project's credit on it. The full-size link follows the
@@ -680,7 +679,14 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
         return;
       }
       if (label) label.textContent = "Open original image";
-    });
+    };
+    image.addEventListener("error", unavailable);
+    // An eager image may already have failed before this module attaches.
+    // The completed broken request will not emit another error for us.
+    if (image.complete) {
+      if (image.naturalWidth) describe();
+      else unavailable();
+    }
   }
 </script>
 <style>
