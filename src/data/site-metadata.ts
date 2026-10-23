@@ -8,6 +8,13 @@ export type SiteMetadata = {
 };
 
 export function getArtworkFallback(project: WoodhouseProject) {
+  if (project.slug === "fighter") {
+    return {
+      image: "/og/projects/fighter-duo-20261023.png",
+      alt: "Illustrated LOFTWAH FIGHTER poster: Dean/Loftwah reaches into a charged arena while Pippa, a stocky black bulldog, braces in front of him, under bold LOFTWAH FIGHTER lettering.",
+      credit: "FIGHTER PROMOTIONAL ARTWORK"
+    };
+  }
   return project.slug === "app-composer"
     ? {
         image: "/og/projects/app-composer.jpg",
