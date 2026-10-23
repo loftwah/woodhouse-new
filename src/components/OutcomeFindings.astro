@@ -1,6 +1,6 @@
 ---
 import type { PortfolioReport, ReportingWindow } from "../data/portfolio-analytics";
-import { outcomeStories, outcomeEvidence, storyLink } from "../data/connected-stories";
+import { outcomeFindings, storyLink } from "../data/connected-stories";
 interface Props {
   report: PortfolioReport | null;
   period: ReportingWindow;
@@ -9,12 +9,8 @@ interface Props {
   qa?: string | null;
 }
 const { report, period, published, excluded, qa } = Astro.props;
-// Editorial order, never a ranking of incompatible measures.
-const order = ["protocol-11", "shoalshot", "bubbles", "fighter", "music", "link-check"];
-const stories = outcomeStories
-  .filter((story) => published.has(story.project))
-  .toSorted((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
-const href = (story: (typeof stories)[number]) => {
+const findings = outcomeFindings(report, period, published);
+const href = (story: (typeof findings)[number]["story"]) => {
   const url = new URL(storyLink(story, report?.id));
   // If saving failed, keep the requested dates rather than silently opening 30 days.
   if (!report) {
@@ -42,8 +38,7 @@ const href = (story: (typeof stories)[number]) => {
     </p>
   </div>
   <ul class="outcome-findings__list">
-    {stories.map((story) => {
-      const observed = outcomeEvidence(report, story, period);
+    {findings.map(({ story, observed }) => {
       return (
         <li style={`--outcome-colour:${story.colour}`}>
           <a class="outcome-finding" href={href(story)}>
@@ -69,9 +64,10 @@ const href = (story: (typeof stories)[number]) => {
     })}
   </ul>
   <p class="outcome-findings__note">
-    An editorial selection of different measures, never a leaderboard or a combined total. Recorded
-    activity is not a count of people. A zero is measured; “Not measured” means no retained
-    evidence. Historical verification limits follow each result into its story and export.
+    Available observations lead; legacy/test history and missing measures follow. Editorial order
+    applies within each group, never the size of incompatible totals. Recorded activity is not a
+    count of people. A zero is measured; “Not measured” means no retained evidence. Historical
+    verification limits follow each result into its story and export.
   </p>
 </section>
 

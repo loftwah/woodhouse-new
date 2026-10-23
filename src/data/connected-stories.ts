@@ -190,6 +190,27 @@ export function outcomeEvidence(
     source: source?.source ?? null
   };
 }
+/** Surface usable observations before unqualified history or unavailable measures.
+ * Keep editorial order within each group; incompatible totals never compete.
+ */
+export function outcomeFindings(
+  report: PortfolioReport | null,
+  period: ReportingWindow,
+  published: ReadonlySet<string>
+) {
+  const order = ["protocol-11", "shoalshot", "bubbles", "fighter", "music", "link-check"];
+  const findings = outcomeStories
+    .filter((story) => published.has(story.project))
+    .map((story) => ({ story, observed: outcomeEvidence(report, story, period) }));
+  const group = ({ observed }: (typeof findings)[number]) => {
+    if (observed.value === null || observed.quality === "unavailable") return 3;
+    if (observed.statuses.includes("legacy")) return 2;
+    return observed.value > 0 ? 0 : 1;
+  };
+  return findings.toSorted(
+    (a, b) => group(a) - group(b) || order.indexOf(a.story.key) - order.indexOf(b.story.key)
+  );
+}
 export function storyLink(
   story: OutcomeStory,
   reportId?: string,

@@ -638,7 +638,6 @@ const dataPayload = {
       </div>
     </div>
     <div class="workbench-body">
-      <EditionInvitation />
       <header class="workbench-heading">
         <div>
           <h1>{selected ? `${names.get(selected)} analytics` : "Analytics"}</h1>
@@ -801,6 +800,7 @@ const dataPayload = {
           )}
         </section>
       )}
+      <EditionInvitation />
       {week && (
         <section id="week-focus" class="week-focus" aria-labelledby="week-focus-title">
           <div class="week-focus__head">
