@@ -1,0 +1,8 @@
+Read the tide. Place the shot.
+1 · Reported completed runs
+2026-10-12 to 2026-10-18 UTC · Partial coverage
+Accepted terminal game/result transitions. Client reported; not a validated competitive result. Multiplayer tabs report participations, not distinct tables.
+Accepted terminal game/result transitions, including repeat runs. Client-reported activity is not a validated competitive score, catch or unique player.
+Exact accepted event counters, not unique humans or anti-cheat proof. Blocking, opt-out, offline play and automated traffic affect coverage. DNT, GPC, designated QA and preview traffic are excluded. Production browser measurements start with this release; no historical backfill. Current UTC day and collection-start day may be partial. Cross-device retention, cohort retention and acquisition sources are not measured. Browser returns are unavailable until this product releases its own optional consent client.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/connections/?story=shoalshot&report=8496128e32ddfd0bddf8da66

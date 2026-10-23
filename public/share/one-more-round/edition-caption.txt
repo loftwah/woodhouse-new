@@ -1,0 +1,12 @@
+One more round.
+A changing card table, a carefully placed shot, an arcade board and a squad to build. Find your next short game, hear its possible soundtrack and take a useful story with you.
+Editorial review: 2026-10-23. Observations: 2026-10-12 to 2026-10-18 UTC. Partial source coverage; no weekly record or causal claim.
+Protocol 11: 0h 1m 34s · Classic active gameplay · Partial coverage
+SHOALSHOT: 1 · Reported completed runs · Partial coverage
+Bubbles: 0 · Reported completed runs · Partial coverage
+Fighter: 1 · Reported fight completions · Legacy/test risk
+LoftwahFM × games: 1h 34m 25s · All-source audible listening · Legacy/test risk
+Link Check × App Composer: 24 · Completed Link Checks · Bounded count
+Separate source measures, not unique people or a ranked competition. Definitions and limits accompany each story.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/editions/one-more-round/?report=8496128e32ddfd0bddf8da66

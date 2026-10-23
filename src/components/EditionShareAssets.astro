@@ -1,0 +1,123 @@
+---
+import ShareActions from "./ShareActions.astro";
+import type { EditionShareAsset } from "../data/edition-share-kit";
+type Props = { assets: EditionShareAsset[] };
+const { assets } = Astro.props;
+---
+
+<div class="edition-assets">
+  {assets.map((asset, index) => (
+    <figure id={asset.id}>
+      {asset.kind === "video" ? (
+        <video
+          controls
+          playsinline
+          preload="none"
+          poster={asset.poster}
+          width={asset.width}
+          height={asset.height}
+          aria-label={asset.alt}
+        >
+          <source src={asset.file} type="video/mp4" />
+          <track
+            kind="captions"
+            src="/share/one-more-round/one-more-round.vtt"
+            srclang="en"
+            label="English descriptions"
+          />
+          <a href={asset.file}>Download the film</a>
+        </video>
+      ) : (
+        <a class="original" href={asset.file} aria-label={`Open ${asset.title} original`}>
+          <img
+            src={asset.file}
+            alt={asset.alt}
+            width={asset.width}
+            height={asset.height}
+            loading={index < 3 ? "eager" : "lazy"}
+          />
+        </a>
+      )}
+      <figcaption>
+        <h3>{asset.title}</h3>
+        <p>
+          {asset.width} × {asset.height}{" "}
+          {asset.kind === "video" ? "MP4" : asset.file.endsWith(".png") ? "PNG" : "JPEG"}
+        </p>
+        <p>{asset.note}</p>
+      </figcaption>
+      <ShareActions
+        caption={asset.caption}
+        image={asset.file}
+        filename={asset.file.split("/").at(-1) ?? "one-more-round"}
+        link={asset.link}
+        mediaType={asset.kind}
+      />
+      <a class="story-link" href={asset.link}>
+        {asset.id.startsWith("film") || asset.id.startsWith("invitation")
+          ? "Open the edition"
+          : "Open this frozen story"}
+      </a>
+    </figure>
+  ))}
+</div>
+<style>
+  .edition-assets {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem 1.5rem;
+  }
+  figure {
+    min-width: 0;
+    margin: 0;
+  }
+  .original,
+  video {
+    display: block;
+    width: 100%;
+    height: 320px;
+    background: var(--ink);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  video {
+    object-fit: contain;
+  }
+  figcaption {
+    margin-top: 1rem;
+  }
+  h3 {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 1.15rem;
+  }
+  figcaption p {
+    margin: 0.4rem 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .story-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 1050px) {
+    .edition-assets {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 600px) {
+    .edition-assets {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .original,
+    video {
+      height: 360px;
+    }
+  }
+</style>

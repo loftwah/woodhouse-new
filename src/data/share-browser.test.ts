@@ -52,7 +52,7 @@ test("project and format views preserve selection across native page URLs", () =
 test("a project without game media opens on a category it actually has", () => {
   // App Composer has reviewed media (its studio film) but no screenshots; opening
   // it on "Images & screenshots" was the reported empty-grid defect.
-  assert.deepEqual(availableProjectTypes("app-composer"), ["clips", "cards"]);
+  assert.deepEqual(availableProjectTypes("app-composer"), ["clips", "cards", "edition"]);
   assert.equal(defaultProjectType("app-composer"), "clips");
   assert.notEqual(defaultProjectType("app-composer"), "images");
   // Every published project has a link card, so cards is the floor and no project
@@ -98,4 +98,13 @@ test("Link to this kit preserves the project and the category being viewed", () 
   assert.equal(kitURL("woodhouse", "radio"), "/share/?project=woodhouse&type=cards");
   // A bare project link is a separate behaviour: it opens the first real category.
   assert.equal(galleryURL("app-composer"), "/share/?project=app-composer");
+});
+
+test("edition kit preserves bounded project browsing without replacing existing media", () => {
+  assert.ok(availableProjectTypes("protocol-11").includes("edition"));
+  assert.equal(
+    galleryURL("protocol-11", "edition", 2),
+    "/share/?project=protocol-11&type=edition&page=2"
+  );
+  assert.equal(kitURL("app-composer", "edition"), "/share/?project=app-composer&type=edition");
 });

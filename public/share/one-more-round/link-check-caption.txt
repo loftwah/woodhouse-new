@@ -1,0 +1,8 @@
+Know where a link will take you.
+24 · Completed Link Checks
+2026-10-12 to 2026-10-18 UTC · Bounded count
+Link Check inspections counted by the owning app after completion; not clicks, deployment checks or unique users.
+Reported completed inspections, including repeat jobs. Bounded counters can omit activity. These are not unique people or proof of a composed owner workflow.
+Daily counters stop at 1000 per app/event/surface and shared per-location rate limits may drop events. The first recorded UTC day is 13 October 2026 and is partial; daily counts expire after 35 days. Missing earlier history is unavailable, not zero. Optional publishers can lose events during outages. Marked verification probes are excluded; reloads, unmarked automation and bots can count. No visitor identity, sessions, return rate, private creator activity or vault contents are collected. Today is partial; these are bounded recorded signals, never lifetime totals.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/connections/?story=link-check&report=8496128e32ddfd0bddf8da66
