@@ -106,11 +106,17 @@ Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after
 
 ## Reading the analytics — reviewed 23 October 2026
 
-`/activity/` opens on findings, not controls. Up to three observations are derived from the report already on the page: the largest complete-week movement with a real baseline, the busiest measured hand-off from Woodhouse, a source that began reporting inside the selected dates, then Woodhouse's own reading traffic. Each names its figure, its period, what it establishes and what it does not. A kind that produces nothing says why. Nothing is filled in to complete the set.
+MP rejected the long, text-heavy analytics page after using it. `/activity/` now
+opens on a compact project table with actual daily trend charts. The visitor can
+open a project's chart, inspect a paged daily table, or reach image downloads and
+a ready caption from the Share view. Project, measure, inclusive UTC dates and
+saved-report identity travel between these task views.
 
-The discovery section is a journey rather than a list: a destination is selected in the URL, and the panel states the recorded action, the recent and earlier seven-day windows, their observed-day coverage, and the boundary that a recorded click is intent on this origin and not downstream use.
-
-One selected scope still governs the story, chart, breakdown and export. A finding never compares units, never treats a missing day as zero, and never asserts that a nearby release caused a movement.
+Stories remain available from their own view; coverage, definitions, collection
+boundaries and release context live in labelled native disclosures under Notes.
+A short coverage label stays beside each number. Missing days stay gaps, a
+measured zero stays zero, and unlike product measures are never summed or ranked.
+The charts, table, caption and three image formats describe the same report.
 
 ## Portfolio analytics — reviewed 15 October 2026
 

@@ -93,7 +93,7 @@ This contract applies to the exhibits as well as to the rest of the site.
 
 ## Portfolio analytics boundary — reviewed 17 October 2026
 
-`/activity/` is an operational research workbench within the established Woodhouse world. It is called **Analytics** in desktop navigation, the phone Index and the page heading; `/activity/` stays the route. Its compact Bricolage heading, ink surfaces, cyan selection, acid share action, tabular figures and one-pixel seams inherit the site identity. The 190px project rail, dominant single-measure chart and adjacent interpretation column belong to this surface; they do not prescribe the journal, dossiers or share gallery. The approved composition and built-world detail live in `.impeccable/surfaces/src-pages-activity-astro.md`.
+`/activity/` is an operational research workbench within the established Woodhouse world. It is called **Analytics** in desktop navigation, the phone Index and the page heading; `/activity/` stays the route. Its compact Bricolage heading, ink surfaces, cyan selection, acid share action, tabular figures and one-pixel seams inherit the site identity. The 190px project rail and dominant single-measure chart belong to this surface; they do not prescribe the journal, dossiers or share gallery. The approved composition and built-world detail live in `.impeccable/surfaces/src-pages-activity-astro.md`.
 
 - Keep project, inclusive UTC dates and measure selection close to the chart. The portfolio selector groups 18 measures into gameplay, visits & returns, app usage and listening. **All projects opens on a mixed overview**, not on game starts: each admitted project shows the measure its own product view defines — the games on game starts, LoftwahFM on audible listening, App Composer on mini-app opens and Woodhouse on visits — with its value, unit, measure label and reporting context for one selected period. The overview adds no cross-product total, because the units and collection boundaries differ. Choosing a project or an explicit measure opens a single-scope drill-down; games start with game starts, App Composer with mini-app opens, Woodhouse with visits and LoftwahFM with audible listening. One chart carries one measure and one unit. Source colour identifies a named project, while text identifies measurement quality. A missing observation stays a gap; a reported zero stays zero.
 - Apply metric relevance once, everywhere. Applicability comes from the product view, not from whether a source returned data. A game that should report a gameplay measure but did not stays in that measure's scope as "Not measured"; a non-game is omitted from gameplay values, chart, table, coverage calendar and coverage denominator. Genuine zero and reported unavailability remain distinct. Overall source health stays separate from coverage of the selected measure. The page, caption, saved link, chart CSV, daily table, coverage calendar and landscape/square/portrait PNGs describe the same scope, measure, unit and period, including the mixed overview. A whole missing report and an omitted metric keep the applicable project in scope; the shared qualifier names "Source unavailable", "Not reported", "Not measured", "Bounded count", "Sampled estimate", "Coverage unavailable", "Partial coverage", "Legacy/test risk" or "Reported activity" beside the value on the overview card, the measure strip, the saved caption and all three PNGs, so a limitation cannot appear on one surface and vanish on another. Both documented measurement exclusions — `?analytics=off` and `?qa` — survive project, measure, date and frozen-report navigation.
@@ -189,3 +189,29 @@ limitations together. The builder spread separates the fictional on-device
 workbench, hosted Open report, protected owner administration and an Init build
 request. Contextual story links land at the selected story on a phone. The
 original frozen edition/report identities remain unchanged.
+
+## Analytics task views — MP correction, reviewed 23 October 2026
+
+The previous continuous document put stories and repeated interpretation before
+the useful charts and required excessive scrolling. This correction supersedes
+the findings-first opening and adjacent interpretation column. The dark identity,
+project colours, rail and chart interaction remain.
+
+Overview is a ruled semantic table: project and measure, total, actual daily
+trend, adjacent coverage label. Each trend uses its own zero-based scale and
+breaks at missing days. Project links open the full single-measure chart. Native
+URL navigation separates Overview/Chart, Data, Share, Stories and Notes. Data
+shows fourteen dates per page, newest first, with a keyboard-scrollable table and
+full-window CSV. Share opens its preview and download actions immediately.
+Stories have their own view. Notes groups coverage, discovery, browser returns,
+release context and definitions in native disclosures. No repeated business
+assessment precedes a chart or sharing action. Phone rows retain their coverage
+labels beside the project; the chart and table remain real, accessible data.
+
+
+The phone finish review keeps the selected chart's total and coverage beside its
+measure heading, then shows the plot. Related measures and the full counting
+definition follow in a closed disclosure. Saved-report status shares the compact
+date strip; its full capture metadata remains in Notes. Share actions precede
+the image preview on phones, so copying and downloading never require scrolling
+past a technical caption.

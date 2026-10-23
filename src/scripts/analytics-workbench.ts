@@ -1,3 +1,18 @@
+import { viewForFragment } from "../data/analytics-presentation";
+
+// Older saved links may target a section now housed in a dedicated view.
+const fragmentView = viewForFragment(location.hash, location.pathname);
+if (fragmentView && new URLSearchParams(location.search).get("view") !== fragmentView) {
+  const destination = new URL(location.href);
+  destination.searchParams.set("view", fragmentView);
+  location.replace(destination.href);
+}
+// Reveal the native disclosure containing an old section anchor.
+const anchor = document.getElementById(location.hash.slice(1));
+for (let parent = anchor?.parentElement; parent; parent = parent.parentElement) {
+  if (parent instanceof HTMLDetailsElement) parent.open = true;
+}
+
 import * as echarts from "echarts/core";
 import { LineChart, BarChart, type LineSeriesOption, type BarSeriesOption } from "echarts/charts";
 import {
@@ -362,6 +377,7 @@ if (sharePayload) {
     }
     void prepare();
   });
+  if (panel?.open) void prepare();
   button?.addEventListener("click", async () => {
     if (!file) return;
     const owner = ++feedback;
