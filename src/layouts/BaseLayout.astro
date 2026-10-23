@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import MeasurementNavigation from "../components/MeasurementNavigation.astro";
 import AudienceTelemetry from "../components/AudienceTelemetry.astro";
 import BrandMark from "../components/BrandMark.astro";
 import SiteHeader from "../components/SiteHeader.astro";
@@ -217,6 +218,7 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
         true
       );
     </script>
+    <MeasurementNavigation />
   </head>
   <body>
     {Astro.props.analyticsWorkbench && (

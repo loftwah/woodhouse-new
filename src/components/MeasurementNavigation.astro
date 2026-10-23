@@ -1,0 +1,28 @@
+<script is:inline>
+  // Install before the first link is parsed. A deferred module leaves an early
+  // ordinary click unguarded while the destination's scripts are still loading.
+  const preserveMeasurementExclusion = (event) => {
+    if (event.defaultPrevented || (event.type === "auxclick" && event.button !== 1)) return;
+    const query = new URLSearchParams(location.search);
+    if (query.get("analytics") !== "off" && !query.has("qa")) return;
+    const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!(anchor instanceof HTMLAnchorElement) || anchor.hasAttribute("download")) return;
+    const url = new URL(anchor.href);
+    if (
+      !/^https?:$/.test(url.protocol) ||
+      url.pathname.startsWith("/api/") ||
+      (/\.[a-z0-9]+$/i.test(url.pathname) && !/\.html?$/i.test(url.pathname))
+    )
+      return;
+    if (url.origin === location.origin) {
+      if (query.get("analytics") === "off") url.searchParams.set("analytics", "off");
+      if (query.has("qa")) url.searchParams.set("qa", query.get("qa"));
+    } else if (url.origin === "https://composer.loftwah.com") {
+      url.searchParams.set("analytics", "off");
+    } else return;
+    // Change only the activated navigation, never copied values or public media.
+    anchor.href = url.href;
+  };
+  document.addEventListener("click", preserveMeasurementExclusion, true);
+  document.addEventListener("auxclick", preserveMeasurementExclusion, true);
+</script>

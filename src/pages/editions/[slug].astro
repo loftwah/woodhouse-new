@@ -1,4 +1,5 @@
 ---
+import { shareNavigation } from "../../data/share-browser";
 import EditionShareKit from "../../components/EditionShareKit.astro";
 import EditionBuilder from "../../components/EditionBuilder.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -47,13 +48,7 @@ const titleLast = titleWords.pop();
 const image = `/api/portfolio-card.png?report=${edition.reportId}&edition=${edition.slug}`;
 const link = new URL(edition.href, Astro.url.origin).href;
 const caption = report ? editionCaption(edition, report, Astro.url.origin, publicIds) : "";
-const internal = (href: string) => {
-  const u = new URL(href, Astro.url.origin);
-  if (u.pathname === "/connections/" && u.searchParams.has("story")) u.hash = "selected-story";
-  if (query.get("analytics") === "off") u.searchParams.set("analytics", "off");
-  if (query.has("qa")) u.searchParams.set("qa", query.get("qa")!);
-  return u.pathname + u.search + u.hash;
-};
+const internal = (href: string) => shareNavigation(href, query, Astro.url.origin);
 const period = periodFor(7, Date.now());
 const distribution = await loadStoryDistribution(db, period, {
   edition: "one-more-round",
@@ -244,8 +239,8 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
       {!report && (
         <p role="status">
           The fixed report is unavailable here. The edition remains filed in{" "}
-          <a href={`/dispatches/${edition.slug}/`}>the editorial archive</a>; retry for its figures
-          and sharing. No substitute snapshot is shown.
+          <a href={internal(`/dispatches/${edition.slug}/`)}>the editorial archive</a>; retry for
+          its figures and sharing. No substitute snapshot is shown.
         </p>
       )}
       <div class="edition-method">
@@ -292,7 +287,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
               >
                 Hear the Protocol 11 soundtrack ↗
               </a>
-              <a href="/dispatches/your-game-its-own-soundtrack/">
+              <a href={internal("/dispatches/your-game-its-own-soundtrack/")}>
                 Read how game and music stay independent ↗
               </a>
             </div>
@@ -303,9 +298,9 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
             <div class="edition-actions">
               <a href={internal(href)}>Explore the story & share ↗</a>
               <a
-                href={
+                href={internal(
                   story.key === "music" ? "/exhibits/patch-bench/" : "https://composer.loftwah.com/"
-                }
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -321,6 +316,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
     {publicIds.has("app-composer") && (
       <EditionBuilder
         storyHref={internal(`/connections/?story=link-check&report=${edition.reportId}`)}
+        introductionHref={internal("/dispatches/your-apps-should-get-along/")}
         excluded={query.get("analytics") === "off" || query.has("qa")}
       />
     )}
@@ -332,11 +328,13 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
         show where to go next. It’s a development reviewed on {edition.reviewDate}, beside
         observations from an earlier week; it does not explain what caused those earlier figures.
       </p>
-      <a href={`/dispatches/${edition.slug}/`}>Read the editor’s note and sources ↗</a>
+      <a href={internal(`/dispatches/${edition.slug}/`)}>Read the editor’s note and sources ↗</a>
       <p>
         Composer’s{" "}
         <a
-          href="https://composer.loftwah.com/reports/r971f5140bbe0c84c8147a64b"
+          href={internal(
+            "https://composer.loftwah.com/reports/r971f5140bbe0c84c8147a64b?from=woodhouse-edition"
+          )}
           target="_blank"
           rel="noopener noreferrer"
         >

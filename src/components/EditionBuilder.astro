@@ -2,8 +2,9 @@
 interface Props {
   storyHref: string;
   excluded?: boolean;
+  introductionHref: string;
 }
-const { storyHref, excluded = false } = Astro.props;
+const { storyHref, introductionHref, excluded = false } = Astro.props;
 const composer = (path: string) => {
   const url = new URL(path, "https://composer.loftwah.com");
   url.searchParams.set("from", "woodhouse-edition");
@@ -21,6 +22,56 @@ const composer = (path: string) => {
       app’s own administration for everyday changes.
     </p>
   </header>
+  <div class="edition-builder__spread">
+    <figure>
+      <a href={composer("/s/fictional-harbour-notes")} target="_blank" rel="noopener noreferrer">
+        <img
+          src="/share/app-composer/harbour-notes-owner-result-v1-20261023.png"
+          alt="The fictional Harbour Notes guestbook shows that new postcards are closed while its approved lantern-and-tide note remains published."
+          width="1200"
+          height="1007"
+          loading="lazy"
+        />
+        <span>Open the hosted Harbour Notes example ↗</span>
+      </a>
+      <figcaption>
+        Hosted owner example v1 · reviewed 23 October 2026. Fictional content, approved in the app’s
+        own administration; new submissions are now paused.
+      </figcaption>
+    </figure>
+    <div>
+      <h3>Approve the note. Then close the book to new arrivals.</h3>
+      <p>
+        The request was simple: “Make a fictional harbour visitor book. Let me review notes before
+        they appear.” The owner set up a separate guestbook in Composer, received a pending note and
+        approved it in the protected owner tools. The approved note appeared in the owning app.
+      </p>
+      <p>
+        Then came a small change: “Pause new postcards, keep the approved note.” The app now says
+        submissions are closed, and the published note is still there. Existing content and the
+        owner’s permissions stayed in place.
+      </p>
+      <p class="edition-boundary">
+        This is an existing owner’s fictional demonstration using supported configuration and
+        controls. It does not establish automatic app generation, new-customer onboarding or a
+        public approval-count report. Receiving, approving and featuring a postcard are separate
+        operations; this example did not feature it.
+      </p>
+      <div class="edition-actions">
+        <a
+          class="home-action"
+          href={composer("/s/fictional-harbour-notes")}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Inspect the published result ↗
+        </a>
+        <a href={composer("/manage#analytics-proof")} target="_blank" rel="noopener noreferrer">
+          See how owner tools connect ↗
+        </a>
+      </div>
+    </div>
+  </div>
   <div class="edition-builder__spread">
     <figure>
       <a href={composer("/demo")} target="_blank" rel="noopener noreferrer">
@@ -49,7 +100,7 @@ const composer = (path: string) => {
         <a class="home-action" href={composer("/demo")} target="_blank" rel="noopener noreferrer">
           Try the composition ↗
         </a>
-        <a href="/dispatches/your-apps-should-get-along/">Read the practical introduction ↗</a>
+        <a href={introductionHref}>Read the practical introduction ↗</a>
       </div>
       <p class="edition-boundary">
         Independent apps also mean separate contracts and versions to maintain. Hiding a source

@@ -1937,12 +1937,12 @@
           "why": "Fishing games live or die on the feel of one cast, and this one keeps it simple: read the water, take the shot, see what you caught. It is designed phone-first, with a five-minute session in mind.",
           "teaches": "A release claim belongs to an exact build and a fresh observation. Old green evidence cannot qualify a newer head.",
           "site_url": "https://shoalshot.loftwah.com/",
-          "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v4.jpg",
+          "site_og_image": "https://shoalshot.loftwah.com/og-shoalshot-v5.jpg",
           "site_og_title": "Shoalshot — Read the tide. Place the shot.",
           "site_og_description": "A tactile browser arcade game of visible risk, careful aim and one-more-shot momentum. Play the Tide Pool vertical slice.",
           "site_favicon": "https://shoalshot.loftwah.com/ui/brand/shoalshot-emblem-20261012.webp",
-          "preview_alt": "SHOALSHOT Home screen with its layered Sunstruck Shelf aquarium and Dive action",
-          "preview_caption": "Promotional image from the SHOALSHOT site",
+          "preview_alt": "SHOALSHOT underwater encounter artwork: sea-glass Glimmerfin cross the sunlit shelf beneath a crowned jellyfish, with a winged Mirrorwing and pressure launcher in the foreground.",
+          "preview_caption": "Original SHOALSHOT encounter artwork, v5; producer publication reviewed 23 October 2026",
           "public_safe": true
         }
       },
@@ -5189,6 +5189,52 @@
           "revision": "019ce0d117f9f89e472a5c7642d51d85301f7fcd",
           "public_safe": true,
           "proof_boundary": "The local fictional run is not a hosted deployment, and the invitation is a producer contract, not proof of a live owner configuration or adoption. Woodhouse's flow is a model of the published contract, not a production control."
+        }
+      },
+      {
+        "id": "evidence-shoalshot-encounter-art-2026-10-23",
+        "slug": "shoalshot-encounter-art-2026-10-23",
+        "status": "published",
+        "data": {
+          "title": "The underwater encounter replaces the menu preview",
+          "project": "$ref:project-shoalshot",
+          "snapshot": "$ref:snapshot-2026-10-23",
+          "project_key": "shoalshot",
+          "snapshot_key": "2026-10-23",
+          "claim": "SHOALSHOT’s published v5 artwork shows its original underwater creatures and pressure launcher; Woodhouse’s current project reference uses that encounter.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-22",
+          "reviewed_at": "2026-10-23",
+          "summary": "The producer’s canonical metadata selects the 1200×630 JPEG. Its provenance records a generated Sunstruck Shelf backdrop composited with original runtime creatures, pressure launcher and commissioned wordmark. The current project image and alternative text describe this encounter; the original frozen edition images and pack remain unchanged.",
+          "source_label": "SHOALSHOT public metadata, selected producer artwork and retained provenance",
+          "source_url": "https://shoalshot.loftwah.com/og-shoalshot-v5.jpg",
+          "revision": "90b98b41b32dbe75b219b6eec289c9be30de1e41",
+          "public_safe": true,
+          "proof_boundary": "Artwork adoption does not re-date gameplay acceptance, establish a new player release or prove social-platform cache refresh. Small-preview taste and physical-device sharing remain separate observations."
+        }
+      },
+      {
+        "id": "evidence-app-composer-owner-notes-2026-10-23",
+        "slug": "app-composer-owner-notes-2026-10-23",
+        "status": "published",
+        "data": {
+          "title": "An owner approves a note, then pauses new arrivals",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-23",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-23",
+          "claim": "The fictional Harbour Notes example uses a separate Guestbook resource: the owner approved a pending note in native administration, then paused submissions while retaining the approved note.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-23",
+          "reviewed_at": "2026-10-23",
+          "summary": "The current authenticated owner created and published the fictional stack through supported native controls. A pending note stayed private until approval, then appeared in its owning public collection. A follow-up settings change closed new postcards while leaving the approved content published. The Woodhouse builder explanation links to the hosted result and shows an authentic public-app capture.",
+          "source_label": "Public fictional app and separately observed authenticated owner lifecycle",
+          "source_url": "https://composer.loftwah.com/s/fictional-harbour-notes",
+          "revision": "29fc65c2983769f140bad3bdef298a20c0185b0e",
+          "public_safe": true,
+          "proof_boundary": "Existing-owner fictional demonstration, not fresh-customer acceptance, automatic app generation, external adoption or a conversion funnel. Receipt, approval and featuring are separate; no featuring is claimed. Public Open aggregates do not become approval counts. Private workspace identifiers and records remain with Composer."
         }
       }
     ],

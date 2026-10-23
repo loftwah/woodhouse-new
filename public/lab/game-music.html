@@ -22,6 +22,23 @@
     #player{position:absolute;left:45%;top:82px;width:36px;height:36px;background:#79d8ff;border-radius:4px}
     #status{min-height:1.4em}a{color:#79d8ff}
   </style>
+<!-- This plain HTML exhibit also retains marked verification on its return. -->
+<script id="measurement-navigation">
+  function preserveLabExclusion(event) {
+    if (event.defaultPrevented || (event.type === "auxclick" && event.button !== 1)) return;
+    var query = new URLSearchParams(location.search);
+    if (query.get("analytics") !== "off" && !query.has("qa")) return;
+    var anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!(anchor instanceof HTMLAnchorElement) || anchor.hasAttribute("download")) return;
+    var url = new URL(anchor.href);
+    if (url.origin !== location.origin) return;
+    if (query.get("analytics") === "off") url.searchParams.set("analytics", "off");
+    if (query.has("qa")) url.searchParams.set("qa", query.get("qa"));
+    anchor.href = url.href;
+  }
+  document.addEventListener("click", preserveLabExclusion, true);
+  document.addEventListener("auxclick", preserveLabExclusion, true);
+</script>
 </head>
 <body>
 <main>
