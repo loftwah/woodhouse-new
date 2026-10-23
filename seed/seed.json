@@ -12682,6 +12682,234 @@
             }
           ]
         }
+      },
+      {
+        "id": "dispatch-one-more-round",
+        "slug": "one-more-round",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "data": {
+          "title": "One more round.",
+          "kind": "Portfolio report",
+          "deck": "A changing card table, a carefully placed shot, an arcade board and a squad to build. Find your next short game, hear its possible soundtrack and take a useful story with you.",
+          "review_date": "2026-10-23",
+          "source_reference": "Public project descriptions, approved product artwork and frozen public aggregate snapshot 8496128e32ddfd0bddf8da66 for 12–18 October 2026 UTC. Editorial composition reviewed 23 October 2026. Partial collection and historical verification limitations remain with each measure.",
+          "lead": "A good short game makes the next attempt feel possible. Choose a table, a shot, a board or a squad, and follow the experience to its own site.",
+          "lesson": "An invitation to play can be worthwhile before there is a large audience. A small observation earns context, not a manufactured record.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-protocol-11",
+            "$ref:project-shoalshot",
+            "$ref:project-bubbles",
+            "$ref:project-fighter",
+            "$ref:project-loftwahfm",
+            "$ref:project-app-composer"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "opening",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A good short game makes the next attempt feel possible. It might be a better angle on a board, a different hand at the table or a shot placed a little more carefully. This edition brings four different invitations together, with music to hear and a small tool you can use afterwards.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "play",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Choose the kind of round you want.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "table",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Protocol 11 makes the rules at the table part of the play. Its Classic observation counts active gameplay time, not completed hands. SHOALSHOT puts the decision into a shot: read the tide, aim and see the result. Its observation counts terminal results, not verified catches. Those measures tell different stories and do not make a competition.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "alternatives",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Bubbles offers a direct arcade invitation: line up the angle and clear the board, or try another native game. Fighter gives a short battle somewhere to lead, through characters and squad choices. Its completion signal counts non-tutorial fights ending in wins, losses, draws or forfeits; it does not establish character progress or mobile readiness.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "hear",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Hear a connection. Inspect a useful tool.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "connection",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "LoftwahFM supplies an authored listening catalogue and public stations. The patch bench lets you hear a station beside a game’s own effects and disconnect that music without ending the run. It is a demonstration, not a customer adoption. Link Check offers a different useful finish: inspect a link before passing it on. Composer brings independently hosted apps into a collection; the inspection count and its fictional Open demonstration remain separate.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "week",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "A week of observations, with its edges visible.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "boundary",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The reporting window is 12–18 October 2026 UTC. Collection started during that week for several games, and early history may include unmarked verification. No eligible complete-week record or comparison is established here. Newer editorial developments are reviewed on 23 October; they cannot explain activity in an earlier week by themselves.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "change",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "The new connection is the edition itself: four game stories now sit beside the existing music and Link Check stories, each with a daily history, a native action and a frozen share. Woodhouse’s prospective discovery observation counts arrivals, active exploration and deliberate product openings separately. It cannot tell whether someone played after leaving.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_version": 1,
+              "_key": "frozen-edition",
+              "content": [
+                {
+                  "_type": "block",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "edition",
+                      "href": "/editions/one-more-round/?report=8496128e32ddfd0bddf8da66"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "text": "Open the complete playable portfolio edition, with its frozen observations and share compositions.",
+                      "marks": [
+                        "edition"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       }
     ],
     "incidents": [

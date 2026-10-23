@@ -1,5 +1,6 @@
 ---
 import { projectAction } from "../../data/project-actions";
+import EditionInvitation from "../../components/EditionInvitation.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../../data/review-date";
 import { portfolioReadout } from "../../data/portfolio";
@@ -65,6 +66,9 @@ export const prerender = false;
       </div>
     </div>
   </section>
+  <div class="container">
+    <EditionInvitation />
+  </div>
   <section class="section paper-section">
     <div class="container">
       <nav class="project-choices" id="project-choices" aria-label="Find something to do">

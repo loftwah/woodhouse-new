@@ -13,6 +13,7 @@ const destinations = projects
   set:html={JSON.stringify(destinations).replace(/</g, "\\u003c")}
 />
 <script>
+  import { parseDistributionContext, type DistributionContext } from "../data/story-distribution";
   (() => {
     if (
       location.hostname !== "woodhouse.loftwah.com" ||
@@ -124,7 +125,18 @@ const destinations = projects
       if (browserReturnsDisabled)
         window.dispatchEvent(new Event("woodhouse:browser-returns-storage-failed"));
     });
-    const send = (event: string, extra: Record<string, string | number> = {}) => {
+    let distribution: DistributionContext | null = null;
+    try {
+      distribution = parseDistributionContext(
+        JSON.parse(document.querySelector("#story-distribution-context")?.textContent ?? "null")
+      );
+    } catch {
+      /* Only the resolved public page supplies story context. */
+    }
+    const send = (
+      event: string,
+      extra: Record<string, string | number | DistributionContext> = {}
+    ) => {
       // This runs again when pending active time flushes; no queued payload retains a token.
       if (disabled || excluded()) return;
       try {
@@ -151,6 +163,7 @@ const destinations = projects
       }).catch(() => {});
     };
     send("visit");
+    if (distribution) send("story_arrival", { distribution });
     let previous = performance.now(),
       lastInput = -Infinity,
       active = 0,
@@ -165,6 +178,7 @@ const destinations = projects
           pending = 0;
           engaged = false;
           send("visit");
+          if (distribution) send("story_arrival", { distribution });
         }
         lastActivity = Date.now();
         lastInput = performance.now();
@@ -187,7 +201,7 @@ const destinations = projects
         pending -= seconds;
       }
     };
-    const timer = window.setInterval(() => {
+    const tick = () => {
       const now = performance.now(),
         delta = Math.min(1, Math.max(0, (now - previous) / 1000));
       previous = now;
@@ -203,34 +217,52 @@ const destinations = projects
       if (active >= 10 && !engaged) {
         engaged = true;
         send("engaged");
+        if (distribution) send("story_explored", { distribution });
       }
       if (pending >= 15) flush();
-    }, 1000);
+    };
+    let timer = window.setInterval(tick, 1000);
     document.addEventListener("visibilitychange", () => {
       previous = performance.now();
       if (document.visibilityState !== "visible") flush();
     });
-    window.addEventListener(
-      "pagehide",
-      () => {
-        clearInterval(timer);
-        flush();
-      },
-      { once: true }
-    );
+    window.addEventListener("pagehide", () => {
+      clearInterval(timer);
+      flush();
+    });
+    window.addEventListener("pageshow", (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      previous = performance.now();
+      lastInput = -Infinity;
+      timer = window.setInterval(tick, 1000);
+    });
     const destinations = JSON.parse(
       document.querySelector("#audience-destinations")?.textContent ?? "[]"
     ) as { slug: string; origin: string }[];
-    document.addEventListener("click", (event) => {
-      if (!event.isTrusted) return;
+    const projectOpening = (event: MouseEvent) => {
+      if (
+        !event.isTrusted ||
+        event.defaultPrevented ||
+        (event.type === "auxclick" && event.button !== 1)
+      )
+        return;
       const anchor = event.target instanceof Element ? event.target.closest("a") : null;
       if (!anchor) return;
       try {
-        const target = destinations.find((p) => p.origin === new URL(anchor.href).origin);
-        if (target) send("project_open", { target: target.slug });
+        const origin = new URL(anchor.href).origin;
+        const target = destinations.find((p) => p.origin === origin);
+        // Link Check's native app is an independently hosted Composer story.
+        const slug =
+          target?.slug ??
+          (distribution?.story === "link-check" && origin === "https://share.loftwah.com"
+            ? "app-composer"
+            : null);
+        if (slug) send("project_open", { target: slug, ...(distribution ? { distribution } : {}) });
       } catch {
         /* Non-URL links are not project discoveries. */
       }
-    });
+    };
+    document.addEventListener("click", projectOpening);
+    document.addEventListener("auxclick", projectOpening);
   })();
 </script>

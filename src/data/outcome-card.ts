@@ -111,7 +111,7 @@ export function outcomeCard(
     const plotY = y + 48;
     const plotH = baseline - plotY;
     let out = block(
-      story.key === "music" ? "Daily all-source audible seconds" : "Daily completed inspections",
+      `Daily ${story.label.toLowerCase()}${evidence.unit === "seconds" ? " · seconds" : ""}`,
       x,
       y,
       width,
@@ -190,7 +190,12 @@ export function outcomeCard(
   svg += text(
     w - pad - (artwork ? artworkWidth + 28 : 0),
     landscape ? 48 : 66,
-    story.key === "music" ? "MUSIC HEARD" : "INSPECTION COMPLETED",
+    story.mode ??
+      (story.key === "music"
+        ? "MUSIC HEARD"
+        : story.project === "app-composer"
+          ? "INSPECTION COMPLETED"
+          : "GAMEPLAY OBSERVED"),
     landscape ? 15 : 19,
     colour,
     600,

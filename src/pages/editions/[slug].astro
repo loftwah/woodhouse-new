@@ -1,0 +1,385 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ReportShare from "../../components/ReportShare.astro";
+import { env } from "cloudflare:workers";
+import type { D1Database } from "@cloudflare/workers-types";
+import { listProjectRecords, listPublishedDispatches } from "../../content/repository";
+import { portfolioEdition, editionSelections, editionCaption } from "../../data/portfolio-edition";
+import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
+import { periodFor } from "../../data/portfolio-analytics";
+import { storyFor } from "../../data/connected-stories";
+import { loadStoryDistribution } from "../../data/story-distribution";
+import "../../styles/analytics-workbench.css";
+import "../../styles/portfolio-edition.css";
+export const prerender = false;
+Astro.cache.set(false);
+Astro.response.headers.set("cache-control", "private, no-store");
+const [dispatches, identities] = await Promise.all([
+  listPublishedDispatches(),
+  listProjectRecords()
+]);
+if (dispatches.error || identities.error)
+  return new Response("The edition is unavailable. Please retry.", { status: 503 });
+const edition = portfolioEdition(dispatches.dispatches);
+if (!edition || Astro.params.slug !== edition.slug)
+  return new Response("Edition not found.", { status: 404 });
+const query = Astro.url.searchParams;
+if (
+  [...query.keys()].some(
+    (k) => !["report", "analytics", "qa", "audit"].includes(k) || query.getAll(k).length !== 1
+  ) ||
+  (query.has("report") && query.get("report") !== edition.reportId)
+)
+  return new Response("This edition has a fixed snapshot. Open its published address.", {
+    status: 400
+  });
+const db = (env as unknown as { DB: D1Database }).DB;
+const stored = await readPortfolioReport(db, edition.reportId);
+const publicIds = new Set(identities.projects.map((p) => p.slug));
+const report = stored ? projectReport(stored, null, new Set(["woodhouse", ...publicIds])) : null;
+const selections = report
+  ? editionSelections(report).filter((s) => publicIds.has(s.story.project))
+  : [];
+const titleWords = edition.title.trim().split(/\s+/);
+const titleLast = titleWords.pop();
+const image = `/api/portfolio-card.png?report=${edition.reportId}&edition=${edition.slug}`;
+const link = new URL(edition.href, Astro.url.origin).href;
+const caption = report ? editionCaption(edition, report, Astro.url.origin, publicIds) : "";
+const internal = (href: string) => {
+  const u = new URL(href, Astro.url.origin);
+  if (query.get("analytics") === "off") u.searchParams.set("analytics", "off");
+  if (query.has("qa")) u.searchParams.set("qa", query.get("qa")!);
+  return u.pathname + u.search + u.hash;
+};
+const period = periodFor(7, Date.now());
+const distribution = await loadStoryDistribution(db, period, {
+  edition: "one-more-round",
+  report: edition.reportId
+}).catch(() => null);
+const visibleDistribution =
+  distribution?.stories
+    .filter(
+      (s) =>
+        s.context.story === "edition" || publicIds.has(storyFor(s.context.story)?.project ?? "")
+    )
+    .map((s) => {
+      const destinations = s.destinations.filter((d) => publicIds.has(d.target));
+      return { ...s, destinations, openings: destinations.reduce((sum, d) => sum + d.openings, 0) };
+    }) ?? [];
+const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) =>
+  publicIds.has(k)
+).length;
+---
+
+<BaseLayout
+  title={edition.title}
+  description={edition.deck}
+  path={edition.href}
+  currentPath="/projects/"
+  image={image}
+  imageAlt={`${edition.title} ${gameCount} different games, music and a useful tool. A dated Woodhouse portfolio edition.`}
+>
+  <div class="container edition">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">WOODHOUSE</a>
+      <span>/</span>
+      <a href="/dispatches/">Editions & stories</a>
+    </nav>
+    <header class="edition-cover">
+      <div class="edition-cover__words">
+        <h1>
+          {titleWords.join(" ")}
+          <br />
+          <em>{titleLast}</em>
+        </h1>
+        <p class="edition-deck">A different table. A better angle. A shot worth taking.</p>
+        <p>{edition.lead}</p>
+        <nav class="edition-choices" aria-label="Choose your way into the edition">
+          <a href="#play">I want to play</a>
+          {publicIds.has("loftwahfm") && (
+            <a href={report ? "#hear" : "/projects/loftwahfm/"}>I want to hear</a>
+          )}
+          {publicIds.has("app-composer") && (
+            <a href={report ? "#build" : "/projects/app-composer/"}>I want to make</a>
+          )}
+        </nav>
+        <p class="edition-dateline">
+          Edited {edition.reviewDate} · observations {report?.period?.from ?? "unavailable"}–
+          {report?.period?.to ?? "unavailable"} UTC
+        </p>
+      </div>
+      <div class="edition-cover__art">
+        {publicIds.has("protocol-11") && (
+          <a href={report ? "#protocol-11" : "/projects/protocol-11/"} class="edition-cover__table">
+            <img
+              src="/share/protocol-11/last-card-cover.jpg"
+              alt="Protocol 11’s published Last Card artwork."
+              width="1920"
+              height="1080"
+            />
+            <span>Take a seat at the table</span>
+          </a>
+        )}
+        {publicIds.has("shoalshot") && (
+          <a href={report ? "#shoalshot" : "/projects/shoalshot/"} class="edition-cover__shot">
+            <img
+              src="/share/shoalshot/showcase-still/tideglass-landscape-field.jpg"
+              alt="SHOALSHOT’s published Tideglass field."
+              width="1920"
+              height="1080"
+            />
+            <span>Read the tide. Place the shot.</span>
+          </a>
+        )}
+      </div>
+    </header>
+    <section id="play" class="edition-play" aria-labelledby="play-title">
+      <div class="edition-section-heading">
+        <h2 id="play-title">Choose your next round.</h2>
+        <p>
+          {gameCount} games with different reasons to return. Each opens on its own site, keeping
+          this edition here.
+        </p>
+      </div>
+      {selections
+        .filter((s) => ["protocol-11", "shoalshot", "bubbles", "fighter"].includes(s.story.key))
+        .map(({ story, evidence, href }, i) => (
+          <article
+            id={story.key}
+            class:list={[
+              "edition-feature",
+              i < 2 ? "edition-feature--lead" : "edition-feature--short"
+            ]}
+            style={`--product-colour:${story.colour}`}
+          >
+            <a class="edition-feature__art" href={internal(href)}>
+              <img
+                src={story.artwork}
+                alt={`${story.name} published artwork; inspect the dated story.`}
+                width="1200"
+                height="675"
+                loading="lazy"
+              />
+              <span>Explore {story.name}</span>
+            </a>
+            <div class="edition-feature__copy">
+              <h3>{story.title}</h3>
+              <p>{story.benefit}</p>
+              <p class="edition-observation">
+                <strong>{evidence.display}</strong> {story.label.toLowerCase()}
+                {story.mode ? ` · ${story.mode}` : ""}
+                <br />
+                <span>
+                  {evidence.coverage} · {evidence.daily.filter((d) => d.value !== null).length}/
+                  {report!.period!.days} days reported
+                </span>
+              </p>
+              <p class="edition-boundary">{story.boundary}</p>
+              <div class="edition-actions">
+                <a
+                  class="home-action"
+                  href={story.actionHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {story.actionLabel} ↗
+                </a>
+                <a href={internal(href)}>Daily history & frozen share ↗</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      {!report && (
+        <p role="status">
+          The fixed report is unavailable here. The edition remains filed in{" "}
+          <a href={`/dispatches/${edition.slug}/`}>the editorial archive</a>; retry for its figures
+          and sharing. No substitute snapshot is shown.
+        </p>
+      )}
+      <aside class="edition-method">
+        <h3>A small observation needs its edges.</h3>
+        <p>
+          The reporting week is closed; the source coverage inside it is partial. Collection began
+          during these dates for several games, and some early history can include unmarked
+          verification. None earns a complete-week record. These figures count different actions and
+          cannot rank the games or establish unique players.
+        </p>
+        <a href={internal(`/activity/?report=${edition.reportId}`)}>
+          Inspect the whole frozen report ↗
+        </a>
+      </aside>
+    </section>
+    <section class="edition-connections" aria-label="Hear and make">
+      {selections
+        .filter((s) => ["music", "link-check"].includes(s.story.key))
+        .map(({ story, evidence, href }) => (
+          <article
+            id={story.key === "music" ? "hear" : "build"}
+            style={`--product-colour:${story.colour}`}
+          >
+            <img
+              src={story.artwork}
+              alt={`${story.name} published artwork.`}
+              width="600"
+              height="400"
+              loading="lazy"
+            />
+            <h2>
+              {story.key === "music" ? "Give the round a soundtrack." : "Make something useful."}
+            </h2>
+            <p>{story.benefit}</p>
+            <p>
+              {evidence.display} · {story.label} · {evidence.coverage}
+            </p>
+            <p class="edition-boundary">{story.boundary}</p>
+            <div class="edition-actions">
+              <a href={internal(href)}>Explore the story & share ↗</a>
+              <a
+                href={
+                  story.key === "music" ? "/exhibits/patch-bench/" : "https://composer.loftwah.com/"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {story.key === "music"
+                  ? "Pull apart the working soundtrack"
+                  : "Explore App Composer"}{" "}
+                ↗
+              </a>
+            </div>
+          </article>
+        ))}
+    </section>
+    <section class="edition-development">
+      <h2>A new way through the work.</h2>
+      <p>
+        This edition joins four game stories to the existing music and Link Check stories. Each has
+        its own daily history, native destination and frozen share. It’s a development reviewed on{" "}
+        {edition.reviewDate}, beside observations from an earlier week; it does not explain what
+        caused those earlier figures.
+      </p>
+      <a href={`/dispatches/${edition.slug}/`}>Read the editor’s note and sources ↗</a>
+      <p>
+        Composer’s{" "}
+        <a
+          href="https://composer.loftwah.com/reports/r971f5140bbe0c84c8147a64b"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          owner-permitted fictional Open demonstration
+        </a>{" "}
+        remains a separately scoped example, not customer adoption.
+      </p>
+    </section>
+    <ReportShare
+      image={image}
+      caption={caption}
+      link={link}
+      jsonHref={`/api/portfolio-report.json?report=${edition.reportId}`}
+      heading="Take the edition with you."
+      note="An edition cover, matching caption and fixed story links. The source observations stay frozen; discovery below is a separate prospective view."
+      alt="One more round: the frozen Woodhouse portfolio edition."
+    />
+    <section id="distribution" class="edition-distribution" aria-labelledby="distribution-title">
+      <h2 id="distribution-title">What brings people further in?</h2>
+      <p>
+        Woodhouse can record an arrival here, ten active seconds exploring a story and a deliberate
+        opening of a native product. These are separate counts. An arrival cannot prove a shared
+        post caused it, and an opening cannot prove destination use.
+      </p>
+      <p>
+        {period.from}–{period.to} UTC · live prospective observation, separate from the edition’s
+        frozen week.
+      </p>
+      {distribution?.startedAt ? (
+        <>
+          <p>
+            First accepted attribution day for this scope: {distribution.startedAt.slice(0, 10)}.
+            First and current days may be partial.
+          </p>
+          {visibleDistribution.length === 0 && (
+            <p>
+              No accepted events for this edition snapshot in the selected dates. Earlier
+              attribution remains unavailable.
+            </p>
+          )}
+          <div class="edition-table">
+            <table>
+              <caption>Recorded story discovery for this edition snapshot</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Story</th>
+                  <th scope="col">Arrivals</th>
+                  <th scope="col">Explorations</th>
+                  <th scope="col">Native openings</th>
+                  <th scope="col">Destinations</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visibleDistribution.map((s) => (
+                  <tr>
+                    <th scope="row">{s.context.story}</th>
+                    <td>{s.arrivals}</td>
+                    <td>{s.explored}</td>
+                    <td>{s.openings}</td>
+                    <td>
+                      {s.destinations.map((d) => `${d.target}: ${d.openings}`).join(" · ") ||
+                        "None recorded"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      ) : (
+        <p class="edition-method">
+          {distribution
+            ? "No accepted story attribution has been recorded yet."
+            : "The discovery report is unavailable. Reload to retry; no zero is inferred."}{" "}
+          Historical attribution is unavailable. Automated verification is excluded; it will not
+          populate this view.
+        </p>
+      )}
+      <details>
+        <summary>Coverage, definitions and privacy</summary>
+        {(
+          distribution?.limitations ?? [
+            "The discovery store is unavailable. Retry to inspect prospective coverage."
+          ]
+        ).map((note) => (
+          <p>{note}</p>
+        ))}
+        <p>
+          No conversion rate is calculated: openings can repeat, markers are tab-scoped, and these
+          aggregates do not establish an ordered journey.
+        </p>
+      </details>
+    </section>
+    <footer class="edition-next">
+      <h2>Still have another round in you?</h2>
+      <a href={internal("/projects/?do=play")}>Find another game ↗</a>
+      <a href={internal("/connections/")}>Explore all product stories ↗</a>
+      <a href="/share/">Browse the artwork & films ↗</a>
+    </footer>
+  </div>
+  {report && (
+    <script
+      id="story-distribution-context"
+      type="application/json"
+      set:html={JSON.stringify({
+        edition: "one-more-round",
+        story: "edition",
+        report: report.id
+      }).replace(/</g, "\\u003c")}
+    />
+  )}
+  <script
+    id="report-sharing"
+    type="application/json"
+    set:html={JSON.stringify({ image, caption }).replace(/</g, "\\u003c")}
+  />
+  <script>
+    import "../../scripts/analytics-workbench";
+  </script>
+</BaseLayout>

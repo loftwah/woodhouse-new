@@ -1,0 +1,44 @@
+---
+import { listPublishedDispatches } from "../content/repository";
+import { portfolioEdition } from "../data/portfolio-edition";
+const result = await listPublishedDispatches();
+const edition = result.error ? null : portfolioEdition(result.dispatches);
+const href = edition ? new URL(edition.href, Astro.url.origin) : null;
+if (href && Astro.url.searchParams.get("analytics") === "off")
+  href.searchParams.set("analytics", "off");
+---
+
+{edition && href && (
+  <aside class="edition-invitation">
+    <a href={href.pathname + href.search}>
+      <strong>{edition.title}</strong> Find your next game, hear the music and take a story with you{" "}
+      <span aria-hidden="true">↗</span>
+    </a>
+    <a href={href.pathname + href.search + "#distribution"}>See recorded discovery</a>
+  </aside>
+)}
+<style>
+  .edition-invitation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem 2rem;
+    padding: 1.1rem 0;
+    margin-block: 1rem 2rem;
+    border-block: 1px solid var(--line);
+    font-size: 0.9rem;
+  }
+  .edition-invitation a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .edition-invitation strong {
+    color: var(--acid);
+    font-family: var(--display);
+    font-size: 1.15rem;
+  }
+</style>

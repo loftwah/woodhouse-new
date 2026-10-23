@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
-import { transform } from "esbuild";
+import { build } from "esbuild";
+import { dirname, resolve } from "node:path";
 
 test("actual browser scripts revoke collection before a failed opt-out storage write", async () => {
   const window = new EventTarget();
@@ -69,7 +70,13 @@ test("actual browser scripts revoke collection before a failed opt-out storage w
   ]) {
     const script = readFileSync(path, "utf8").match(/<script>([\s\S]*?)<\/script>/)?.[1];
     assert(script);
-    runInNewContext((await transform(script, { loader: "ts" })).code, context);
+    const bundled = await build({
+      stdin: { contents: script, loader: "ts", resolveDir: dirname(resolve(path)) },
+      bundle: true,
+      write: false,
+      format: "iife"
+    });
+    runInNewContext(bundled.outputFiles[0]!.text, context);
   }
   assert.equal(sent.length, 1, "Initial visit records before any opt-out");
   listeners.get("click")!({ isTrusted: true, target: new Element() });

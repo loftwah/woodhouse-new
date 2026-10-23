@@ -113,3 +113,86 @@ test("listening retains seconds without rounding a small observation into a minu
   assert.equal(outcomeEvidence(input, music, period).display, "0h 0m 5s");
   assert.equal(outcomeEvidence(input, story, period).value, null);
 });
+
+test("Classic story never substitutes another mode, overall gameplay or another game's completion", () => {
+  const classic = storyFor("protocol-11")!;
+  const shoalshot = storyFor("shoalshot")!;
+  const metric = {
+    ...source.metrics[0]!,
+    key: "active_seconds",
+    unit: "seconds" as const,
+    value: 999
+  };
+  const input: PortfolioReport = {
+    ...report,
+    projects: [
+      {
+        project: "protocol-11",
+        report: {
+          ...source,
+          project: "protocol-11",
+          metrics: [metric, { ...metric, key: "active_seconds_journey", value: 800 }]
+        }
+      },
+      {
+        project: "fighter",
+        report: {
+          ...source,
+          project: "fighter",
+          metrics: [{ ...source.metrics[0]!, key: "game_completions", value: 123 }]
+        }
+      }
+    ]
+  };
+  assert.equal(outcomeEvidence(input, classic, period).value, null);
+  assert.equal(outcomeEvidence(input, shoalshot, period).value, null);
+  input.projects[0]!.report!.metrics.push({
+    ...metric,
+    key: classic.measure,
+    value: 94,
+    daily: [{ date: "2026-10-22", value: 94 }]
+  });
+  const selected = outcomeEvidence(input, classic, period);
+  assert.equal(selected.unit, "seconds");
+  assert.equal(selected.display, "0h 1m 34s");
+  assert.deepEqual(
+    selected.daily.map((p) => p.value),
+    [null, null, 94]
+  );
+  const caption = outcomeCaption(input, classic);
+  assert.ok(caption.includes("Classic active gameplay"));
+  assert.ok(caption.includes("0h 1m 34s"));
+  assert.ok(!caption.includes("999"));
+  assert.ok(!caption.includes("800"));
+});
+
+test("completion stories retain their own terminal-result definitions and measured zero", () => {
+  for (const key of ["shoalshot", "fighter", "bubbles"]) {
+    const selected = storyFor(key)!;
+    const ownSource: ProjectAnalytics = {
+      ...source,
+      project: selected.project,
+      metrics: [
+        {
+          ...source.metrics[0]!,
+          key: selected.measure,
+          value: 0,
+          definition: `Terminal results for ${key}.`,
+          daily: [{ date: "2026-10-22", value: 0 }]
+        }
+      ]
+    };
+    const evidence = outcomeEvidence(
+      { ...report, projects: [{ project: selected.project, report: ownSource }] },
+      selected,
+      period
+    );
+    assert.equal(evidence.unit, "count");
+    assert.equal(evidence.display, "0");
+    assert.equal(evidence.definition, `Terminal results for ${key}.`);
+    assert.deepEqual(
+      evidence.daily.map((d) => d.value),
+      [null, null, 0]
+    );
+  }
+});

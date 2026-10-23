@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { initWasm, Resvg } from "@resvg/resvg-wasm";
 import wasm from "../../assets/resvg.wasm";
-import { listProjectRecords } from "../../content/repository";
+import { listProjectRecords, listPublishedDispatches } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
 import {
@@ -15,6 +15,9 @@ import {
 import { discoveryProjects, type AnalyticsProject } from "../../data/portfolio-analytics";
 import { storyFor } from "../../data/connected-stories";
 import { outcomeCard } from "../../data/outcome-card";
+import { portfolioEdition } from "../../data/portfolio-edition";
+import { editionCard } from "../../data/edition-card";
+import { outcomeStories } from "../../data/connected-stories";
 export const prerender = false;
 const artwork = new Map<string, Promise<string | undefined>>();
 let initialized: Promise<void> | undefined;
@@ -26,6 +29,13 @@ const knownMeasures = new Set<string>([
 ]);
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
+  const editionKey = url.searchParams.get("edition");
+  if (
+    editionKey &&
+    (editionKey !== "one-more-round" ||
+      ["project", "measure", "story", "destination", "week"].some((k) => url.searchParams.has(k)))
+  )
+    return new Response("Edition scope unavailable.", { status: 400 });
   const outcome = storyFor(url.searchParams.get("story"));
   if (url.searchParams.has("story") && (!outcome || selectedStoryMismatch()))
     return new Response("Story scope unavailable.", { status: 400 });
@@ -62,7 +72,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
           "measure",
           "week",
           "destination",
-          "story"
+          "story",
+          "edition"
         ].includes(k) || url.searchParams.getAll(k).length !== 1
     )
   )
@@ -135,6 +146,33 @@ export const GET: APIRoute = async ({ url, cache }) => {
       ...[...identities.projects.map((p) => [p.slug, p.name] as const)],
       ["woodhouse", "Woodhouse"]
     ]);
+    const publishedEditions = editionKey ? await listPublishedDispatches() : null;
+    const edition =
+      publishedEditions && !publishedEditions.error
+        ? portfolioEdition(publishedEditions.dispatches)
+        : null;
+    if (editionKey && (!edition || edition.reportId !== id))
+      return new Response("Edition snapshot unavailable.", { status: 404 });
+    const editionArt = new Map<string, string>();
+    if (edition) {
+      await Promise.all(
+        outcomeStories
+          .filter((s) => ["protocol-11", "shoalshot"].includes(s.key) && publicIds.has(s.project))
+          .map(async (s) => {
+            const response = await fetch(new URL(s.artwork, url.origin), {
+              signal: AbortSignal.timeout(4000),
+              redirect: "manual"
+            });
+            if (!response.ok || !response.headers.get("content-type")?.startsWith("image/jpeg"))
+              return;
+            const bytes = new Uint8Array(await response.arrayBuffer());
+            if (bytes.length > 500000) return;
+            let binary = "";
+            for (const b of bytes) binary += String.fromCharCode(b);
+            editionArt.set(s.key, `data:image/jpeg;base64,${btoa(binary)}`);
+          })
+      );
+    }
     let embedded: string | undefined;
     if (outcome) {
       const path =
@@ -151,7 +189,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
             if (!response.ok || !response.headers.get("content-type")?.startsWith("image/"))
               throw Error("art unavailable");
             const bytes = new Uint8Array(await response.arrayBuffer());
-            if (bytes.length > 250000) throw Error("art too large");
+            if (bytes.length > 500000) throw Error("art too large");
             let binary = "";
             for (const byte of bytes) binary += String.fromCharCode(byte);
             return `data:image/jpeg;base64,${btoa(binary)}`;
@@ -163,18 +201,20 @@ export const GET: APIRoute = async ({ url, cache }) => {
       embedded = await artwork.get(key);
     }
     const renderer = new Resvg(
-      outcome
-        ? outcomeCard(report, outcome, format as ReportFormat, url.origin, embedded)
-        : reportSvg(
-            report,
-            names,
-            format as ReportFormat,
-            measure ?? undefined,
-            url.origin,
-            week ?? undefined,
-            destination ?? undefined,
-            publishedDestinationSlugs
-          ),
+      edition
+        ? editionCard(edition, report, format as ReportFormat, url.origin, editionArt, publicIds)
+        : outcome
+          ? outcomeCard(report, outcome, format as ReportFormat, url.origin, embedded)
+          : reportSvg(
+              report,
+              names,
+              format as ReportFormat,
+              measure ?? undefined,
+              url.origin,
+              week ?? undefined,
+              destination ?? undefined,
+              publishedDestinationSlugs
+            ),
       {
         font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" }
       }

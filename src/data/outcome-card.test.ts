@@ -32,7 +32,7 @@ const frozen = (story: OutcomeStory, value: number | null = 7): PortfolioReport 
           {
             key: story.measure,
             label: story.label,
-            unit: story.key === "music" ? "seconds" : "count",
+            unit: story.measure.includes("seconds") ? "seconds" : "count",
             value,
             definition: "Accepted events from the published source; missing dates remain unknown.",
             quality: "bounded",
@@ -66,10 +66,10 @@ for (const story of outcomeStories) {
           `https://preview.example/connections/?story=${story.key}&amp;report=frozen-outcome`
         )
       );
-      assert.ok(svg.includes(story.key === "music" ? "0h 0m 7s" : ">7</text>"));
+      assert.ok(svg.includes(story.measure.includes("seconds") ? "0h 0m 7s" : ">7</text>"));
       assert.ok(
         svg.includes(
-          story.key === "music" ? "Daily all-source audible seconds" : "Daily completed inspections"
+          `Daily ${story.label.toLowerCase()}${story.measure.includes("seconds") ? " · seconds" : ""}`
         )
       );
       assert.match(svg, /<path data-day="2026-10-20" data-value="0"/);

@@ -174,3 +174,24 @@ Audio has one owner. The page creates one `AudioContext`, one effects bus and on
 Both exhibits keep their shareable state in the address bar through `src/data/bench-state.ts`, which is tested. A shared link reopens an exhibit in the state it describes and never claims an interaction that did not happen. The game-music dispatch carries the bench with a "Show me" control that asks the bench for a particular state, so a reader can stop at the decisive moment and change the condition being explained.
 
 `src/components/exhibits/PatchBench.astro` and `src/components/exhibits/SourcePlate.astro` hold the markup and the scene styles. The exhibits are pages under `/exhibits/`, discovered from Home, Factory and the relevant dispatch.
+
+## Portfolio edition and prospective discovery — reviewed 23 October 2026
+
+The published `one-more-round` EmDash dispatch binds its edition route to an
+existing immutable public report through a validated internal link. No new CMS
+collection or analytics store is added. The edition and image endpoint reject
+alternate snapshots; current public project admission still controls projections.
+Existing outcome stories now include all four priority games, including a
+Protocol 11 Classic subtotal. Producer units govern duration formatting.
+
+Resolved public pages supply only an allowlisted edition/story and stored report
+identity to the existing anonymous event client. The collector validates that
+report before accepting context and uses existing event/rollup storage and
+retention. Story arrivals and ten-second active exploration deduplicate within
+an anonymous tab session and context; native openings remain repeatable deliberate
+activations. Separate aggregate reads cannot establish a sequence or rate.
+No raw URL, referrer, cross-site identity or downstream-use observation is added.
+The first accepted attribution day remains partial and older attribution stays
+unavailable. The existing opt-out, DNT/GPC, preview and verification exclusions
+apply before collection. Returning from a native tab resumes the same page's
+active-time timer without inventing another session.

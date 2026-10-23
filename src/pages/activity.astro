@@ -1,5 +1,6 @@
 ---
 /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- Labelled overflow regions require keyboard scrolling. */
+import EditionInvitation from "../components/EditionInvitation.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/analytics-workbench.css";
 import { env } from "cloudflare:workers";
@@ -631,10 +632,12 @@ const dataPayload = {
         <a href="/activity/measurement/">Measurement & privacy</a>
         <a href="/activity/listening/">Games × Radio</a>
         <a href="/connections/">Explore connected products</a>
+        <a href="/editions/one-more-round/#distribution">Edition discovery</a>
         <a href="/projects/">Explore the projects</a>
       </div>
     </div>
     <div class="workbench-body">
+      <EditionInvitation />
       <header class="workbench-heading">
         <div>
           <h1>{selected ? `${names.get(selected)} analytics` : "Analytics"}</h1>
