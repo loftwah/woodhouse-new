@@ -11,7 +11,7 @@
     if (
       !/^https?:$/.test(url.protocol) ||
       url.pathname.startsWith("/api/") ||
-      /\.[a-z0-9]+$/i.test(url.pathname)
+      (/\.[a-z0-9]+$/i.test(url.pathname) && !/\.html?$/i.test(url.pathname))
     )
       return;
     if (url.origin === location.origin) {

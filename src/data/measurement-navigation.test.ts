@@ -8,21 +8,23 @@ import { collectEngagement } from "./engagement.ts";
 import type { D1Database } from "@cloudflare/workers-types";
 
 const scripts = await Promise.all(
-  ["src/components/MeasurementNavigation.astro", "src/components/AudienceTelemetry.astro"].map(
-    async (path) => {
-      const source = readFileSync(path, "utf8").match(
-        /<script(?: is:inline)?>([\s\S]*?)<\/script>/
-      )?.[1];
-      assert(source);
-      const bundled = await build({
-        stdin: { contents: source, loader: "ts", resolveDir: dirname(resolve(path)) },
-        bundle: true,
-        write: false,
-        format: "iife"
-      });
-      return bundled.outputFiles[0]!.text;
-    }
-  )
+  [
+    "src/components/MeasurementNavigation.astro",
+    "src/components/AudienceTelemetry.astro",
+    "public/lab/game-music.html"
+  ].map(async (path) => {
+    const source = readFileSync(path, "utf8").match(
+      /<script(?: is:inline| id="measurement-navigation")?>([\s\S]*?)<\/script>/
+    )?.[1];
+    assert(source);
+    const bundled = await build({
+      stdin: { contents: source, loader: "ts", resolveDir: dirname(resolve(path)) },
+      bundle: true,
+      write: false,
+      format: "iife"
+    });
+    return bundled.outputFiles[0]!.text;
+  })
 );
 
 // An ordinary manual browser: no webdriver, DNT/GPC, bot UA, persisted opt-out,
@@ -100,7 +102,10 @@ async function hop(href: string, destination: string, middle = false, download =
       return response;
     }
   };
-  for (const script of scripts) runInNewContext(script, context);
+  for (const script of location.pathname === "/lab/game-music.html"
+    ? [scripts[2]!]
+    : scripts.slice(0, 2))
+    runInNewContext(script, context);
   listeners.get(middle ? "auxclick" : "click")?.({
     target: anchor,
     button: middle ? 1 : 0,
@@ -119,6 +124,8 @@ test("manual editorial/exhibit hops cannot resume accepted public collection", a
     for (const [index, destination] of [
       "/dispatches/your-game-its-own-soundtrack/",
       "/exhibits/patch-bench/",
+      "/lab/game-music.html",
+      "/dispatches/your-game-its-own-soundtrack/",
       "/dispatches/your-apps-should-get-along/",
       "/dispatches/one-more-round/",
       "/connections/?story=music&report=8496128e32ddfd0bddf8da66#selected-story"
