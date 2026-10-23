@@ -1,0 +1,24 @@
+<script>
+  import { shareNavigation } from "../data/share-browser";
+  // Query exclusions belong to navigation, including pages where telemetry exits
+  // before installing listeners. Only activation changes a destination: public
+  // captions, clipboard values, downloads and canonical metadata stay untouched.
+  const preserveExclusion = (event: MouseEvent) => {
+    if (event.defaultPrevented || (event.type === "auxclick" && event.button !== 1)) return;
+    const query = new URLSearchParams(location.search);
+    if (query.get("analytics") !== "off" && !query.has("qa")) return;
+    const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!(anchor instanceof HTMLAnchorElement) || anchor.hasAttribute("download")) return;
+    const url = new URL(anchor.href);
+    // File/API destinations are copied/downloaded public artefacts, not pages.
+    if (
+      !/^https?:$/.test(url.protocol) ||
+      url.pathname.startsWith("/api/") ||
+      /\.[a-z0-9]+$/i.test(url.pathname)
+    )
+      return;
+    anchor.href = shareNavigation(url.href, query, location.origin);
+  };
+  document.addEventListener("click", preserveExclusion, true);
+  document.addEventListener("auxclick", preserveExclusion, true);
+</script>

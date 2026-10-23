@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import MeasurementNavigation from "../components/MeasurementNavigation.astro";
 import AudienceTelemetry from "../components/AudienceTelemetry.astro";
 import BrandMark from "../components/BrandMark.astro";
 import SiteHeader from "../components/SiteHeader.astro";
@@ -237,6 +238,7 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
       <slot />
     </main>
     <SiteFooter links={footerLinks} reviewDateLabel={footerReviewDate} />
+    <MeasurementNavigation />
     {!privateView && <AudienceTelemetry projects={projectResult.projects} />}
   </body>
 </html>

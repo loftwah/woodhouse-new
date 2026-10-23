@@ -95,6 +95,11 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
   path={"/projects/" + project.slug + "/"}
   currentPath="/projects/"
   image={siteMeta?.image ?? project.previewImage ?? socialPreview}
+  imageAlt={
+    siteMeta
+      ? (project.previewAlt ?? `Artwork for ${project.name}.`)
+      : `Woodhouse illustration for ${project.name}.`
+  }
   fallbackImage={siteMeta ? socialPreview : undefined}
   type="website"
   contentRef={{ collection: "projects", id: projectEntry?.id ?? project.slug, slug: project.slug }}

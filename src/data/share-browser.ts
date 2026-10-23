@@ -131,9 +131,19 @@ export function projectViewRedirect(
 }
 
 /** Navigation keeps verification exclusion; copied/public links remain canonical. */
-export function shareNavigation(href: string, current: URLSearchParams): string {
-  const url = new URL(href, "https://woodhouse.loftwah.com");
-  if (url.origin !== "https://woodhouse.loftwah.com") return href;
+export function shareNavigation(
+  href: string,
+  current: URLSearchParams,
+  origin = "https://woodhouse.loftwah.com"
+): string {
+  const url = new URL(href, origin);
+  if (url.origin === "https://composer.loftwah.com") {
+    // Composer supports analytics=off, rather than Woodhouse's QA marker.
+    if (current.get("analytics") === "off" || current.has("qa"))
+      url.searchParams.set("analytics", "off");
+    return url.href;
+  }
+  if (url.origin !== origin) return href;
   if (url.pathname === "/connections/" && url.searchParams.has("story"))
     url.hash = "selected-story";
   if (current.get("analytics") === "off") url.searchParams.set("analytics", "off");

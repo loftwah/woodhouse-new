@@ -128,7 +128,7 @@ test("gallery navigation retains exclusion and selected story without changing p
   );
   assert.equal(
     shareNavigation("https://composer.loftwah.com/demo", query),
-    "https://composer.loftwah.com/demo"
+    "https://composer.loftwah.com/demo?analytics=off"
   );
   assert.equal(query.toString(), "analytics=off&qa=1&type=edition&page=4");
   assert.equal(galleryURL("bubbles", "edition", 2), "/share/?project=bubbles&type=edition&page=2");

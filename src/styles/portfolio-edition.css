@@ -278,6 +278,9 @@
   gap: 3rem;
   align-items: start;
 }
+.edition-builder__spread + .edition-builder__spread {
+  margin-top: 3rem;
+}
 .edition-builder figure {
   margin: 0;
 }
