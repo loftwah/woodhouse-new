@@ -8,7 +8,11 @@ import ProjectRow from "../../components/ProjectRow.astro";
 import D2Diagram from "../../components/D2Diagram.astro";
 import GameMedia from "../../components/GameMedia.astro";
 import { featuredMediaFor } from "../../data/featured-media";
-import { listProjectRecords, getProjectRecord } from "../../content/repository";
+import {
+  listProjectRecords,
+  getProjectRecord,
+  getEditorialDispatch
+} from "../../content/repository";
 import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
@@ -57,6 +61,19 @@ const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const artworkFallback = getArtworkFallback(project);
 const placeholder = artworkFallback.image;
 const studioFilm = featuredMediaFor(project.slug);
+// These are individual editorial features in the existing article series.
+const featureSlug =
+  project.slug === "bubbles"
+    ? "a-better-second-attempt"
+    : project.slug === "app-composer"
+      ? "your-apps-should-get-along"
+      : project.slug === "loftwahfm"
+        ? "your-game-its-own-soundtrack"
+        : null;
+const featureResult = featureSlug ? await getEditorialDispatch(featureSlug) : null;
+const feature = featureResult?.dispatch;
+if (!isPreview && Astro.cache?.enabled && featureResult?.cacheHint)
+  Astro.cache.set(featureResult.cacheHint);
 const action = projectAction(project);
 const actionHref = projectActionHref(project);
 const actionLabel = projectActionLabel(project);
@@ -283,6 +300,15 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       <BuildExamples projects={[project]} only={project.slug} />
     </section>
   )}
+  {feature && (
+    <section class="container project-feature" aria-labelledby="project-feature-title">
+      <h2 id="project-feature-title">{feature.title}</h2>
+      <p>{feature.deck}</p>
+      <a class="home-action" href={`/dispatches/${feature.slug}/`}>
+        Read the feature ↗
+      </a>
+    </section>
+  )}
   <section class="container dossier-grid" id="where-the-work-stands">
     <article class="prose">
       <h2>Why you might care</h2>
@@ -386,6 +412,20 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
 </BaseLayout>
 
 <style>
+  .project-feature {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem 3rem;
+  }
+  .project-feature h2 {
+    font: 600 clamp(1.7rem, 3vw, 2.5rem)/1.15 var(--display);
+    margin-block: 0 1rem;
+  }
+  .project-feature p {
+    max-width: 65ch;
+    color: var(--copy-soft);
+    line-height: 1.65;
+  }
+
   .dossier-film {
     margin-bottom: clamp(3rem, 6vw, 6rem);
   }

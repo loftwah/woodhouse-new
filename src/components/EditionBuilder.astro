@@ -1,0 +1,112 @@
+---
+interface Props {
+  storyHref: string;
+  excluded?: boolean;
+}
+const { storyHref, excluded = false } = Astro.props;
+const composer = (path: string) => {
+  const url = new URL(path, "https://composer.loftwah.com");
+  url.searchParams.set("from", "woodhouse-edition");
+  if (excluded) url.searchParams.set("analytics", "off");
+  return url.href;
+};
+---
+
+<section id="build" class="edition-builder" aria-labelledby="builder-title">
+  <header>
+    <h2 id="builder-title">Make the parts work together.</h2>
+    <p>
+      App Composer is a studio for building web apps with a coding agent. Start with a creator page,
+      a photo guestbook or an app with editable content. Keep the source in your project; use the
+      app’s own administration for everyday changes.
+    </p>
+  </header>
+  <div class="edition-builder__spread">
+    <figure>
+      <a href={composer("/demo")} target="_blank" rel="noopener noreferrer">
+        <img
+          src="/share/app-composer/composition-workbench-20261023.png"
+          alt="Composer’s public workbench shows a guestbook source and a creator page side by side, with local demonstration controls."
+          width="1440"
+          height="1000"
+          loading="lazy"
+        />
+        <span>Open the working composition ↗</span>
+      </a>
+      <figcaption>
+        Public Composer demonstration, captured 23 October 2026. Fictional content and changes on
+        this device; these controls do not publish a real postcard.
+      </figcaption>
+    </figure>
+    <div>
+      <h3>A photo can appear in two places. Publication still belongs to its source.</h3>
+      <p>
+        In the workbench, publish the fictional postcard in the guestbook and feature it on the
+        creator page. Hide it at the source and see the controlled feature follow. A creator can
+        curate a page without taking over the guestbook’s content or editing tools.
+      </p>
+      <div class="edition-actions">
+        <a class="home-action" href={composer("/demo")} target="_blank" rel="noopener noreferrer">
+          Try the composition ↗
+        </a>
+        <a href="/dispatches/your-apps-should-get-along/">Read the practical introduction ↗</a>
+      </div>
+      <p class="edition-boundary">
+        Independent apps also mean separate contracts and versions to maintain. Hiding a source
+        controls future reads, not copies someone already downloaded.
+      </p>
+    </div>
+  </div>
+  <dl class="edition-builder__routes">
+    <div>
+      <dt>See what the hosted example records.</dt>
+      <dd>
+        <p>
+          The saved report contains fictional demo Open actions. An opening is not a successful
+          contribution, a published postcard or customer adoption. It is separate from the
+          workbench’s local state and from completed Link Checks.
+        </p>
+        <a
+          href={composer("/reports/r971f5140bbe0c84c8147a64b")}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Inspect the permitted report ↗
+        </a>
+      </dd>
+    </div>
+    <div>
+      <dt>Understand the owner’s next action.</dt>
+      <dd>
+        <p>
+          The management guide shows how supported app administration and reporting connect.
+          Existing owners use their protected instance admin; a public example does not grant those
+          permissions.
+        </p>
+        <a href={composer("/manage#analytics-proof")} target="_blank" rel="noopener noreferrer">
+          Explore management & reporting ↗
+        </a>
+      </dd>
+    </div>
+    <div>
+      <dt>Shape a version of your own.</dt>
+      <dd>
+        <p>
+          Init prepares the configuration and build request for your coding agent. You choose the
+          content and services. Exporting the request does not provision or publish an app.
+        </p>
+        <a href={composer("/init?start=composition")} target="_blank" rel="noopener noreferrer">
+          Configure a composition ↗
+        </a>
+      </dd>
+    </div>
+  </dl>
+  <p class="edition-builder__continuation">
+    Prefer a small standalone tool?{" "}
+    <a href={composer("/launch-kit/example/")} target="_blank" rel="noopener noreferrer">
+      Try Night Signal, the Launch Kit’s timer example ↗
+    </a>
+    <br />
+    <a href={storyHref}>Inspect the separate completed Link Check story ↗</a>
+  </p>
+</section>

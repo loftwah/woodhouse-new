@@ -10,6 +10,7 @@
  * `pnpm run verify` fails when the two disagree.
  */
 const DISPATCH_SOCIAL_CARDS: readonly string[] = [
+  "a-better-second-attempt",
   "a-gate-for-what-the-source-proves",
   "built-to-be-used",
   "eight-finish-lines",

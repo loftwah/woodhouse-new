@@ -10391,8 +10391,8 @@
           "title": "Build your own web app with App Composer",
           "kind": "Field note",
           "deck": "Prepare your tools, shape your content and work with a coding agent. A practical introduction to the studio, its reusable apps and Loftwah’s Linkarooie creator page.",
-          "review_date": "2026-10-18",
-          "source_reference": "App Composer’s public homepage, platform guide, Learn tutorial, Get Ready, Init, content-model builder and app library, plus Loftwah’s public Linkarooie profile, reviewed on 18 October 2026. Working browser tools, supported agent workflows and unfinished customer setup are distinguished. Examples of possible projects are illustrative; no private profile, account session or repository body is reproduced.",
+          "review_date": "2026-10-23",
+          "source_reference": "App Composer’s public homepage, platform guide, Learn tutorial, Get Ready, Init, content-model builder and app library, plus Loftwah’s public Linkarooie profile, reviewed on 18 October 2026. Working browser tools, supported agent workflows and unfinished customer setup are distinguished. Examples of possible projects are illustrative; no private profile, account session or repository body is reproduced. Updated 23 October 2026 against the public composition workbench, management explanation and owner-permitted fictional Open report. Local demonstration state and hosted records remain separate.",
           "lead": "App Composer is a studio for building and maintaining web applications with a coding agent. You decide what the app should do; the agent works in your project, builds it and verifies the result.",
           "lesson": "Use the browser to shape the brief, the coding agent to build the application and the app’s admin for everyday editing.",
           "public_safe": true,
@@ -10479,6 +10479,157 @@
                       "text": "Explore App Composer",
                       "marks": [
                         "product-4-link"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "composer-try-first",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s0",
+                      "text": "Try a connection before making your own.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s1",
+                      "text": "The public composition workbench lets you act as the guestbook publisher and the creator-page curator using fictional content on your device. Publish the postcard at its source, feature it on the creator page, then hide it at the source. The controlled feature follows that publication choice. The point is practical: the creator page does not need to own the guestbook’s editing or storage to show something from it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-2",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/demo?from=woodhouse-edition"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s2",
+                      "text": "Try the composition workbench",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s3",
+                      "text": "These switches change a local demonstration. They do not publish a real contribution. The hosted demonstration and its saved report supply a separate example of recorded Open actions. An app opening is a recorded action; it is not an accepted contribution, a published postcard or customer adoption.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-4",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/reports/r971f5140bbe0c84c8147a64b?from=woodhouse-edition"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s4",
+                      "text": "Inspect the owner-permitted fictional Open report",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-5",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s5",
+                      "text": "Composer’s management guide connects the public example to supported app administration. Existing owners enter the protected admin for their instance and permissions; the public guide cannot stand in for an authenticated owner session. For your own combination, Init can capture the configuration and prepare the request for your coding agent. Downloading that request still does not deploy an app.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-6",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/manage?from=woodhouse-edition#analytics-proof"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s6",
+                      "text": "See the management and reporting explanation",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "composer-try-first-7",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://composer.loftwah.com/init?start=composition&from=woodhouse-edition"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "composer-try-first-s7",
+                      "text": "Configure a composition in Init",
+                      "marks": [
+                        "target"
                       ]
                     }
                   ]
@@ -12902,6 +13053,291 @@
                       "text": "Open the complete playable portfolio edition, with its frozen observations and share compositions.",
                       "marks": [
                         "edition"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-a-better-second-attempt",
+        "slug": "a-better-second-attempt",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "taxonomies": {
+          "topic": [
+            "product-design"
+          ]
+        },
+        "data": {
+          "title": "Bubbles: a better second attempt.",
+          "kind": "Field note",
+          "deck": "One board, no shot limit. Fewest Shots gives the familiar bubble shooter a different reason to try again: improve the clear, rather than chase a bigger score.",
+          "review_date": "2026-10-23",
+          "source_reference": "Bubbles’ public Choose mode and Fewest Shots play screens, opened on 23 October 2026; its published Classic and challenge rules and existing reviewed game record. The illustration is a fresh public-game capture before a shot, not a submitted result. No player, score or audience achievement is asserted.",
+          "lead": "Bubbles gives the same aiming problem two different goals. In Classic, a large drop can be worth more than a quick clear. In Fewest Shots, clearing the board in fewer shots is the point. That changes which move is worth taking.",
+          "lesson": "A useful personal challenge starts with a goal a player can understand and a second attempt they can improve.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-bubbles"
+          ],
+          "content": [
+            {
+              "_type": "prose",
+              "_key": "familiar",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "familiar-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "familiar-s0",
+                      "text": "Start with one decision.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "familiar-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "familiar-s1",
+                      "text": "Bubbles is a browser bubble shooter. Aim, match three or more, and remove the bubbles holding the rest of the board up. The pleasure is in seeing an angle become an opening: a useful match can bring down more than the cluster you hit. You can play with a pointer or on a phone, without installing it.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "familiar-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "familiar-s2",
+                      "text": "Fewest Shots takes that familiar action and gives it a clear finish. There is one board and no shot limit. A slow clear still counts. Stopping after a few shots does not produce a better record than finishing; only a successful clear sets one.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "familiar-3",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://bubbles.loftwah.com/challenge?preset=fewest-shots"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "familiar-s3",
+                      "text": "Open the Fewest Shots board",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "image_plate",
+              "_version": 1,
+              "_key": "fewest-start",
+              "image": {
+                "id": "bubbles-fewest-20261023",
+                "src": "/share/bubbles/20261023/fewest-shots-start.png",
+                "alt": "Bubbles’ Fewest Shots board before the first shot. The objective says one board, no limit; Shots used is zero and the personal clear is not yet set.",
+                "width": 1440,
+                "height": 900
+              },
+              "caption": "Public Bubbles game, captured 23 October 2026. A starting board with no shot taken, not a player achievement or a submitted score.",
+              "variant": "wide"
+            },
+            {
+              "_type": "prose",
+              "_key": "goal",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "goal-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "goal-s0",
+                      "text": "The goal changes the shot.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "goal-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "goal-s1",
+                      "text": "Classic’s own mode description warns that big drops can outscore a quick clear. That is a reason to keep building towards a larger drop. Fewest Shots asks a different question of the same board: can you remove what is holding it up without spending as many shots?",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "goal-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "goal-s2",
+                      "text": "A spectacular score and an efficient clear are different accomplishments. Putting the shot count beside the board makes the second one visible while you play. The starting screen says “No clear yet — set one”. It gives the first player a useful target without pretending they have already beaten anyone.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "goal-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "goal-s3",
+                      "text": "There is a cost to that focus. If you like a rising score, a tight clock or a string of different goals, this may not be your round. Choose mode also offers Classic, Practice, Time Attack and puzzles. An efficiency challenge earns its place by making one objective legible, not by replacing every other kind of play.",
+                      "marks": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "_type": "prose",
+              "_key": "return",
+              "_version": 1,
+              "content": [
+                {
+                  "_type": "block",
+                  "_key": "return-0",
+                  "style": "h2",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s0",
+                      "text": "Make the next attempt specific.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "return-1",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s1",
+                      "text": "For a first visit, aim for a clear. On the next attempt, pay attention to shots that only add bubbles and shots that remove the support above a larger group. That is a practical way to look for improvement; it is not a guaranteed solution or a claim that every board takes the same number of shots.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "return-2",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s2",
+                      "text": "Read the scope beside a record. The catalogue can show a personal best across boards; that is different from improving a result on the same board. A local best, a submitted result and a global board have different meanings. Woodhouse’s aggregate completed-run count answers another question again: it does not tell you how efficiently someone cleared this challenge.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "return-3",
+                  "style": "normal",
+                  "markDefs": [],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s3",
+                      "text": "The game can therefore give you something worthwhile before there is a crowd to race. Learn the board, finish it, and decide whether you can see a shot you would change. That is enough of a reason for another round.",
+                      "marks": []
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "return-4",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "https://bubbles.loftwah.com/challenge?preset=fewest-shots"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s4",
+                      "text": "Try Fewest Shots in Bubbles",
+                      "marks": [
+                        "target"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "_type": "block",
+                  "_key": "return-5",
+                  "style": "normal",
+                  "markDefs": [
+                    {
+                      "_type": "link",
+                      "_key": "target",
+                      "href": "/editions/one-more-round/?report=8496128e32ddfd0bddf8da66#bubbles"
+                    }
+                  ],
+                  "children": [
+                    {
+                      "_type": "span",
+                      "_key": "return-s5",
+                      "text": "Return to One more round",
+                      "marks": [
+                        "target"
                       ]
                     }
                   ]
