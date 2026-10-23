@@ -101,6 +101,12 @@ Reviewed 18 October 2026. Keep these distinctions in future project stories:
 - The concrete downloaded-copy limit did its job. Commentary praising the promise's testability
   and the article's persuasiveness added nothing; the edit removed it and ended on an actual action.
 
+Reviewed 23 October 2026. A game feature needs a useful first attempt and a
+specific reason for a second. Fewest Shots makes efficiency distinct from Classic
+score; preserve that difference rather than turning every game into a generic
+invitation to beat a record. A starting-board capture shows the objective, not an
+achievement.
+
 The research informs these choices; it does not supply a universal template. These are close-reading
 judgements about why the articles work, not measured explanations of their reach:
 

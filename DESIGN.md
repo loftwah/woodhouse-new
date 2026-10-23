@@ -181,3 +181,11 @@ experiences open separately, preserving the frozen story and reading position.
 The edition cover is an editorial composition, never a ranked podium. Its fixed
 snapshot, caption, OG and landscape/square/portrait exports agree. Prospective
 Woodhouse discovery appears in its own labelled window beneath the frozen story.
+
+Reviewed 23 October 2026, second edition pass: product actions and a concrete
+starting moment precede the edition’s dated activity. Each game retains its own
+reason to return. The native evidence disclosure keeps the value, coverage and
+limitations together. The builder spread separates the fictional on-device
+workbench, hosted Open report, protected owner administration and an Init build
+request. Contextual story links land at the selected story on a phone. The
+original frozen edition/report identities remain unchanged.

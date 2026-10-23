@@ -1,0 +1,194 @@
+---
+import type { PortfolioReport, ReportingWindow } from "../data/portfolio-analytics";
+import { outcomeFindings, storyLink } from "../data/connected-stories";
+interface Props {
+  report: PortfolioReport | null;
+  period: ReportingWindow;
+  published: ReadonlySet<string>;
+  excluded?: boolean;
+  qa?: string | null;
+}
+const { report, period, published, excluded, qa } = Astro.props;
+const findings = outcomeFindings(report, period, published);
+const href = (story: (typeof findings)[number]["story"]) => {
+  const url = new URL(storyLink(story, report?.id));
+  // If saving failed, keep the requested dates rather than silently opening 30 days.
+  if (!report) {
+    url.searchParams.set("from", period.from);
+    url.searchParams.set("to", period.to);
+  }
+  if (excluded) url.searchParams.set("analytics", "off");
+  if (qa !== null && qa !== undefined) url.searchParams.set("qa", qa || "1");
+  url.hash = "selected-story";
+  return url.pathname + url.search + url.hash;
+};
+---
+
+<section class="outcome-findings" aria-labelledby="outcome-findings-heading">
+  <div class="outcome-findings__head">
+    <h2 id="outcome-findings-heading">Beyond the visit.</h2>
+    <p>
+      Rounds finished, music heard, links checked. Open a result to see its daily history, try the
+      product and share that exact story.
+    </p>
+    <p class="outcome-findings__period">
+      {period.from} to {period.to} UTC ·{" "}
+      {report ? "same saved report throughout" : "report unavailable"}
+      {period.complete ? "" : " · today is partial"}
+    </p>
+  </div>
+  <ul class="outcome-findings__list">
+    {findings.map(({ story, observed }) => {
+      return (
+        <li style={`--outcome-colour:${story.colour}`}>
+          <a class="outcome-finding" href={href(story)}>
+            <img src={story.artwork} width="160" height="120" alt="" />
+            <div>
+              <h3>{story.name}</h3>
+              <p class="outcome-finding__value">
+                <strong>{observed.display}</strong>
+                <span>{story.label}</span>
+              </p>
+              <p class="outcome-finding__coverage">{observed.coverage}</p>
+              <p class="outcome-finding__boundary">{story.boundary}</p>
+              <span class="outcome-finding__action">
+                {observed.value === null
+                  ? "Explore the product and missing coverage"
+                  : "Explore this result"}
+                <span aria-hidden="true"> ↗</span>
+              </span>
+            </div>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+  <p class="outcome-findings__note">
+    Available observations lead; legacy/test history and missing measures follow. Editorial order
+    applies within each group, never the size of incompatible totals. Recorded activity is not a
+    count of people. A zero is measured; “Not measured” means no retained evidence. Historical
+    verification limits follow each result into its story and export.
+  </p>
+</section>
+
+<style>
+  .outcome-findings {
+    padding: 1.8rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .outcome-findings__head {
+    max-width: 76ch;
+    margin-bottom: 1.4rem;
+  }
+  .outcome-findings__head h2 {
+    font-size: clamp(1.9rem, 3vw, 2.7rem);
+    line-height: 1.05;
+    margin-bottom: 0.8rem;
+  }
+  .outcome-findings__head p {
+    color: var(--copy-soft);
+  }
+  .outcome-findings__head .outcome-findings__period {
+    font-size: 0.78rem;
+    color: var(--copy);
+  }
+  .outcome-findings__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+  .outcome-findings__list li {
+    min-width: 0;
+    border-top: 1px solid var(--line);
+  }
+  .outcome-finding {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 1.3rem;
+    height: 100%;
+    color: var(--copy);
+    text-decoration: none;
+    transition: background-color 0.15s ease-out;
+  }
+  .outcome-finding img {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+  }
+  .outcome-finding h3 {
+    color: var(--outcome-colour);
+    font-size: 1rem;
+    margin: 0 0 0.6rem;
+  }
+  .outcome-finding .outcome-finding__value {
+    display: grid;
+    gap: 0.2rem;
+    margin-bottom: 0.6rem;
+  }
+  .outcome-finding__value strong {
+    font: 700 clamp(1.4rem, 2.4vw, 2rem)/1.1 var(--display);
+    color: var(--paper);
+    overflow-wrap: anywhere;
+  }
+  .outcome-finding__value span {
+    font-size: 0.8rem;
+  }
+  .outcome-finding .outcome-finding__coverage {
+    color: var(--paper);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .outcome-finding .outcome-finding__boundary {
+    color: var(--copy-soft);
+    font-size: 0.77rem;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+  }
+  .outcome-finding__action {
+    color: var(--acid);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .outcome-finding:hover,
+  .outcome-finding:active {
+    background: var(--surface);
+  }
+  .outcome-finding:focus-visible {
+    outline: 3px solid var(--acid);
+    outline-offset: 3px;
+  }
+  .outcome-findings .outcome-findings__note {
+    max-width: 90ch;
+    font-size: 0.75rem;
+    color: var(--copy-soft);
+    margin: 1rem 0 0;
+  }
+  @media (max-width: 1000px) {
+    .outcome-findings__list {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .outcome-findings {
+      padding: 1.5rem 1rem;
+    }
+    .outcome-finding {
+      grid-template-columns: 64px minmax(0, 1fr);
+      gap: 0.9rem;
+    }
+    .outcome-finding img {
+      width: 64px;
+      height: 80px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .outcome-finding {
+      transition: none;
+    }
+  }
+</style>

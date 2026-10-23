@@ -1,4 +1,6 @@
 ---
+import EditionShareKit from "../../components/EditionShareKit.astro";
+import EditionBuilder from "../../components/EditionBuilder.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ReportShare from "../../components/ReportShare.astro";
 import { env } from "cloudflare:workers";
@@ -47,6 +49,7 @@ const link = new URL(edition.href, Astro.url.origin).href;
 const caption = report ? editionCaption(edition, report, Astro.url.origin, publicIds) : "";
 const internal = (href: string) => {
   const u = new URL(href, Astro.url.origin);
+  if (u.pathname === "/connections/" && u.searchParams.has("story")) u.hash = "selected-story";
   if (query.get("analytics") === "off") u.searchParams.set("analytics", "off");
   if (query.has("qa")) u.searchParams.set("qa", query.get("qa")!);
   return u.pathname + u.search + u.hash;
@@ -66,6 +69,33 @@ const visibleDistribution =
       const destinations = s.destinations.filter((d) => publicIds.has(d.target));
       return { ...s, destinations, openings: destinations.reduce((sum, d) => sum + d.openings, 0) };
     }) ?? [];
+const invitations: Record<string, { moment: string; first: string; next: string }> = {
+  "protocol-11": {
+    moment:
+      "The Last Card artwork catches a table with one card left. The interesting decision is yours next: work towards the current Protocol while watching what the others can finish.",
+    first: "Choose Play Classic for a full table, or Quick start to choose the mode and length.",
+    next: "When you want a longer path, open Journey and explore the House Circuit."
+  },
+  shoalshot: {
+    moment:
+      "The Tideglass field puts the target and the water in view. Read the space, aim, then see what that shot changes; the next attempt gives you another angle to consider.",
+    first: "Open SHOALSHOT and choose Dive to enter its Tide Pool arcade slice.",
+    next: "Explore the game’s own collection and results after the run."
+  },
+  bubbles: {
+    moment:
+      "Try Fewest Shots: one board with no shot limit. Clear it first, then look for shots you could save. A failed or unfinished run cannot become a better clear.",
+    first: "The challenge link opens the actual Fewest Shots board.",
+    next: "Choose mode has Classic, Practice and puzzles when you want another kind of round."
+  },
+  fighter: {
+    moment:
+      "Pick a squad before committing moves on the shared Charge Strip. The fighters give the next match a different cast, rather than making every rematch the same encounter.",
+    first:
+      "Open Fighter and choose Quick Fight for a standalone matchup, or Story for a longer path.",
+    next: "Browse the character collection or continue the story in the native game. Phone play remains under its own release review."
+  }
+};
 const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) =>
   publicIds.has(k)
 ).length;
@@ -92,7 +122,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
           <br />
           <em>{titleLast}</em>
         </h1>
-        <p class="edition-deck">A different table. A better angle. A shot worth taking.</p>
+        <p class="edition-deck">Four games. Find the next one you’ll want to play.</p>
         <p>{edition.lead}</p>
         <nav class="edition-choices" aria-label="Choose your way into the edition">
           <a href="#play">I want to play</a>
@@ -165,27 +195,49 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
             <div class="edition-feature__copy">
               <h3>{story.title}</h3>
               <p>{story.benefit}</p>
-              <p class="edition-observation">
-                <strong>{evidence.display}</strong> {story.label.toLowerCase()}
-                {story.mode ? ` · ${story.mode}` : ""}
-                <br />
-                <span>
-                  {evidence.coverage} · {evidence.daily.filter((d) => d.value !== null).length}/
-                  {report!.period!.days} days reported
-                </span>
-              </p>
-              <p class="edition-boundary">{story.boundary}</p>
+              <p class="edition-moment">{invitations[story.key]?.moment}</p>
               <div class="edition-actions">
                 <a
                   class="home-action"
-                  href={story.actionHref}
+                  href={
+                    story.key === "bubbles"
+                      ? "https://bubbles.loftwah.com/challenge?preset=fewest-shots"
+                      : story.actionHref
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {story.actionLabel} ↗
+                  {story.key === "bubbles" ? "Try Fewest Shots" : story.actionLabel} ↗
                 </a>
-                <a href={internal(href)}>Daily history & frozen share ↗</a>
+                <a
+                  href={
+                    story.key === "bubbles"
+                      ? internal("/dispatches/a-better-second-attempt/")
+                      : internal(href)
+                  }
+                >
+                  {story.key === "bubbles"
+                    ? "Why this challenge is worth a round"
+                    : "Explore the game story"}{" "}
+                  ↗
+                </a>
               </div>
+              <p class="edition-first">{invitations[story.key]?.first}</p>
+              <p class="edition-next-step">{invitations[story.key]?.next}</p>
+              <details class="edition-evidence">
+                <summary>Recorded activity for this edition’s week</summary>
+                <p class="edition-observation">
+                  <strong>{evidence.display}</strong> {story.label.toLowerCase()}
+                  {story.mode ? ` · ${story.mode}` : ""}
+                  <br />
+                  <span>
+                    {evidence.coverage} · {evidence.daily.filter((d) => d.value !== null).length}/
+                    {report!.period!.days} days reported
+                  </span>
+                </p>
+                <p class="edition-boundary">{story.boundary}</p>
+                <a href={internal(href)}>Inspect daily history & frozen sharing ↗</a>
+              </details>
             </div>
           </article>
         ))}
@@ -209,9 +261,9 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
         </a>
       </div>
     </section>
-    <section class="edition-connections" aria-label="Hear and make">
+    <section class="edition-connections" aria-label="Hear a soundtrack">
       {selections
-        .filter((s) => ["music", "link-check"].includes(s.story.key))
+        .filter((s) => s.story.key === "music")
         .map(({ story, evidence, href }) => (
           <article
             id={story.key === "music" ? "hear" : "build"}
@@ -224,10 +276,26 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
               height="400"
               loading="lazy"
             />
-            <h2>
-              {story.key === "music" ? "Give the round a soundtrack." : "Make something useful."}
-            </h2>
+            <h2>Give the round a soundtrack.</h2>
             <p>{story.benefit}</p>
+            <p>
+              Start with Protocol 11’s original soundtrack: music written for the table, available
+              as its own album. Or open the Patch Bench, start the station deliberately and
+              disconnect it while the little game keeps running.
+            </p>
+            <div class="edition-actions">
+              <a
+                class="home-action"
+                href="https://fm.loftwah.com/album/protocol-11-original-soundtrack"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hear the Protocol 11 soundtrack ↗
+              </a>
+              <a href="/dispatches/your-game-its-own-soundtrack/">
+                Read how game and music stay independent ↗
+              </a>
+            </div>
             <p>
               {evidence.display} · {story.label} · {evidence.coverage}
             </p>
@@ -250,13 +318,19 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
           </article>
         ))}
     </section>
+    {publicIds.has("app-composer") && (
+      <EditionBuilder
+        storyHref={internal(`/connections/?story=link-check&report=${edition.reportId}`)}
+        excluded={query.get("analytics") === "off" || query.has("qa")}
+      />
+    )}
     <section class="edition-development">
       <h2>A new way through the work.</h2>
       <p>
-        This edition joins four game stories to the existing music and Link Check stories. Each has
-        its own daily history, native destination and frozen share. It’s a development reviewed on{" "}
-        {edition.reviewDate}, beside observations from an earlier week; it does not explain what
-        caused those earlier figures.
+        This edition brings four games together with music you can hear and apps you can try. The
+        frozen stories keep their own daily history and share formats; the practical introductions
+        show where to go next. It’s a development reviewed on {edition.reviewDate}, beside
+        observations from an earlier week; it does not explain what caused those earlier figures.
       </p>
       <a href={`/dispatches/${edition.slug}/`}>Read the editor’s note and sources ↗</a>
       <p>
@@ -271,6 +345,9 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
         remains a separately scoped example, not customer adoption.
       </p>
     </section>
+    {["protocol-11", "shoalshot", "bubbles", "fighter", "loftwahfm", "app-composer"].every((id) =>
+      publicIds.has(id)
+    ) && <EditionShareKit />}
     <ReportShare
       image={image}
       caption={caption}
@@ -360,7 +437,7 @@ const gameCount = ["protocol-11", "shoalshot", "bubbles", "fighter"].filter((k) 
       <h2>Still have another round in you?</h2>
       <a href={internal("/projects/?do=play")}>Find another game ↗</a>
       <a href={internal("/connections/")}>Explore all product stories ↗</a>
-      <a href="/share/">Browse the artwork & films ↗</a>
+      <a href={internal("/share/")}>Browse the artwork & films ↗</a>
     </footer>
   </div>
   {report && (

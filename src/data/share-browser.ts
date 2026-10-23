@@ -1,8 +1,10 @@
+import { editionShareAssets } from "./edition-share-kit.ts";
 import { gameMedia } from "./share-desk.ts";
 
 export const galleryTypes = [
   ["images", "Images & screenshots"],
   ["clips", "Clips"],
+  ["edition", "One more round kit"],
   ["artwork", "Artwork & covers"],
   ["cards", "Link cards"],
   ["radio", "Radio cards"],
@@ -57,7 +59,7 @@ export function galleryPage<T>(items: T[], requestedPage = 1) {
 }
 
 /** The gallery categories that belong to one project rather than the whole site. */
-export const projectGalleryTypes = ["images", "clips", "artwork", "cards"] as const;
+export const projectGalleryTypes = ["images", "clips", "artwork", "cards", "edition"] as const;
 export type ProjectGalleryType = (typeof projectGalleryTypes)[number];
 
 /**
@@ -75,6 +77,7 @@ export function availableProjectTypes(slug: string): ProjectGalleryType[] {
   if (assets.some((asset) => asset.kind === "video")) types.push("clips");
   if (assets.some((asset) => asset.category === "art")) types.push("artwork");
   types.push("cards");
+  if (editionShareAssets.some((asset) => asset.project === slug)) types.push("edition");
   return types;
 }
 
@@ -125,4 +128,15 @@ export function projectViewRedirect(
   if (!(projectGalleryTypes as readonly string[]).includes(view)) return null;
   if (availableProjectTypes(slug).includes(view as ProjectGalleryType)) return null;
   return defaultProjectType(slug);
+}
+
+/** Navigation keeps verification exclusion; copied/public links remain canonical. */
+export function shareNavigation(href: string, current: URLSearchParams): string {
+  const url = new URL(href, "https://woodhouse.loftwah.com");
+  if (url.origin !== "https://woodhouse.loftwah.com") return href;
+  if (url.pathname === "/connections/" && url.searchParams.has("story"))
+    url.hash = "selected-story";
+  if (current.get("analytics") === "off") url.searchParams.set("analytics", "off");
+  if (current.has("qa")) url.searchParams.set("qa", current.get("qa")!);
+  return url.pathname + url.search + url.hash;
 }

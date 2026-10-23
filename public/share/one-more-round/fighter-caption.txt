@@ -1,0 +1,8 @@
+A squad worth coming back to.
+1 · Reported fight completions
+2026-10-12 to 2026-10-18 UTC · Legacy/test risk
+Launched fights ending in win, loss, draw or forfeit, attributed to launch UTC day. Abandonment excluded; not a completion cohort rate.
+Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. These are not wins or unique players. Consult the selected source coverage for historical verification risk.
+Historical counts before 15 October 2026 include unmarked production QA that cannot be separated or subtracted. These are stored reports, not a clean audience cohort; exclude pre-comparableFrom history from growth comparisons and records. Requested windows may include partial coverage. Current UTC day is partial. Stored browser reports are subject to privacy opt-outs, network loss and abuse controls; they are not unique people. Launch/completion counters backfilled only from the raw rows retained at migration; earlier expired history is unavailable. Anonymous daily totals are retained durably thereafter. Visits, engagement, deliberate Quick Fight replay and optional browser cohort measurement start 2026-10-15T14:34:02.048Z; earlier values are unavailable. Browser cohort rows and raw tab sessions expire after 90 days; anonymous daily counters remain durable. Active-time collection starts 2026-10-15T12:02:46.571Z; earlier time is unavailable. Individual raw game and session facts still expire after 90 days.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/connections/?story=fighter&report=8496128e32ddfd0bddf8da66

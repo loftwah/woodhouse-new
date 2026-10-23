@@ -1,0 +1,8 @@
+A soundtrack with somewhere to go.
+1h 34m 25s · All-source audible listening
+2026-10-12 to 2026-10-18 UTC · Legacy/test risk
+Accepted forward audible progression bounded by server elapsed time; excludes pauses, seeking, muted and stalled playback. FM native audio can report while the page is hidden; game adapters exclude hidden playback. All admitted listening-v1 sources, not gameplay time.
+Accepted audible music time across all admitted sources. This is not gameplay time or unique listeners. History before 15 October may include unmarked verification.
+D1 counts are exact for accepted listening-v1 receipts, not independently audited people or exhaustive listening. Collection began 10 October 2026; aggregate history is retained for 185 days. Entirely pre-collection or expired windows are unavailable, never zero. Current UTC day and the first collection day are partial. Historical counts before 15 October 2026 may include unmarked production verification that cannot be separated or subtracted. Growth comparisons and records require complete dates after comparableFrom. Client delivery, opt-out, rate limits and uninstrumented/older clients may omit listening. Declared tests, preview, obvious bot/headless and DNT/GPC traffic are excluded. Legacy Analytics Engine milestones are excluded: that separate pipeline is adaptively sampled and retained for three months, so it cannot establish exact lifetime records. No browser identity is stored by listening-v1; distinct listeners, returning audience and retention are unavailable.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/connections/?story=music&report=8496128e32ddfd0bddf8da66

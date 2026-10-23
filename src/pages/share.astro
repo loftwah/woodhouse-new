@@ -1,4 +1,8 @@
 ---
+import EditionShareKit from "../components/EditionShareKit.astro";
+import EditionShareAssets from "../components/EditionShareAssets.astro";
+import { editionShareAssets } from "../data/edition-share-kit";
+import { portfolioEdition } from "../data/portfolio-edition";
 import EditionInvitation from "../components/EditionInvitation.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GameMedia from "../components/GameMedia.astro";
@@ -18,7 +22,8 @@ import { loadListeningReport, projectListeningReport } from "../data/activity";
 import { compositeIsPublic, cardFormats, type CardFormat } from "../data/activity-sharing";
 import {
   galleryTypes,
-  galleryURL,
+  galleryURL as canonicalGalleryURL,
+  shareNavigation,
   galleryMedia,
   galleryPage,
   availableProjectTypes,
@@ -44,6 +49,8 @@ if (result.error)
     headers: { "cache-control": "no-store" }
   });
 const projects = orderShareProjects(result.projects);
+const galleryURL = (...args: Parameters<typeof canonicalGalleryURL>) =>
+  shareNavigation(canonicalGalleryURL(...args), Astro.url.searchParams);
 const requested = Astro.url.searchParams.get("project");
 const explicitType = Astro.url.searchParams.has("type");
 const requestedType = Astro.url.searchParams.get("type") ?? "images";
@@ -177,14 +184,30 @@ const factoryItems = [
   ...houseImages.map((item) => ({ id: item.name })),
   ...stories.map((story) => ({ id: story.slug }))
 ];
+const edition = dispatches.error ? null : portfolioEdition(dispatches.dispatches);
+const editionCompositePublic = [
+  "protocol-11",
+  "shoalshot",
+  "bubbles",
+  "fighter",
+  "loftwahfm",
+  "app-composer"
+].every((slug) => publicIds.has(slug));
+const editionMedia = editionShareAssets.filter(
+  (asset) =>
+    (asset.project ? publicIds.has(asset.project) : editionCompositePublic) &&
+    (!selected || asset.project === selected.slug)
+);
 const collection =
-  view === "cards"
-    ? galleryPage(cardProjects, requestedPage)
-    : view === "factory"
-      ? galleryPage(factoryItems, requestedPage)
-      : view === "logos"
-        ? galleryPage(smallAssets, requestedPage)
-        : galleryPage(media, requestedPage);
+  view === "edition"
+    ? galleryPage(edition ? editionMedia : [], requestedPage)
+    : view === "cards"
+      ? galleryPage(cardProjects, requestedPage)
+      : view === "factory"
+        ? galleryPage(factoryItems, requestedPage)
+        : view === "logos"
+          ? galleryPage(smallAssets, requestedPage)
+          : galleryPage(media, requestedPage);
 const visibleMedia = galleryPage(media, requestedPage).items;
 const visibleProjects = galleryPage(cardProjects, requestedPage).items;
 const visibleFactoryIds = new Set(
@@ -194,7 +217,7 @@ const viewLabel = galleryTypes.find(([key]) => key === view)![1];
 const typeLabel = (key: GalleryType) => galleryTypes.find(([k]) => k === key)![1];
 const selectedTypes = selected ? availableProjectTypes(selected.slug) : [];
 const previewSet = new Set(sharePreviews);
-const pagePath = galleryURL(selected?.slug, view, collection.page);
+const pagePath = canonicalGalleryURL(selected?.slug, view, collection.page);
 const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.project === p.slug));
 ---
 
@@ -208,13 +231,28 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
   <div class="container share-gallery">
     <header class="gallery-intro">
       <div>
-        <h1>{selected?.name ?? "Share the work."}</h1>
-        <p>Screenshots, clips and artwork. Copy or download.</p>
+        <h1>{selected?.name ?? (view === "edition" ? "One more round." : "Share the work.")}</h1>
+        <p>
+          {view === "edition"
+            ? "The film, campaign artwork and frozen report images."
+            : "Screenshots, clips and artwork. Copy or download."}
+        </p>
       </div>
     </header>
-    <EditionInvitation />
+    {view !== "edition" && <EditionInvitation />}
+    {view !== "edition" && edition && (
+      <a class="edition-kit-link" href={galleryURL(undefined, "edition")}>
+        One more round: film, campaign artwork & frozen report images →
+      </a>
+    )}
     <div class="gallery-controls">
       <form method="get" action="/share/" class="mobile-filters" data-gallery-filters>
+        {Astro.url.searchParams.get("analytics") === "off" && (
+          <input type="hidden" name="analytics" value="off" />
+        )}
+        {Astro.url.searchParams.has("qa") && (
+          <input type="hidden" name="qa" value={Astro.url.searchParams.get("qa")!} />
+        )}
         <label>
           Project
           <select name="project">
@@ -282,6 +320,23 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
         page={collection.page}
         pages={collection.pages}
       />
+    )}
+    {view === "edition" && (
+      <section aria-labelledby="edition-kit-title">
+        {edition ? (
+          <>
+            <EditionShareKit compact availablePack={editionCompositePublic} />
+            <p class="result-count">
+              {collection.total
+                ? `${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${selected?.name ?? "Edition assets"}`
+                : "No edition assets for this project."}
+            </p>
+            <EditionShareAssets assets={galleryPage(editionMedia, requestedPage).items} />
+          </>
+        ) : (
+          <p>The edition kit is unavailable right now.</p>
+        )}
+      </section>
     )}
     {["images", "clips", "artwork"].includes(view) && (
       <section aria-label={`${selected?.name ?? "All projects"} ${viewLabel}`}>
@@ -627,6 +682,13 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
   }
 </script>
 <style>
+  .edition-kit-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 1.5rem;
+    color: var(--acid);
+  }
   .share-gallery {
     padding-block: 2.5rem 4rem;
   }

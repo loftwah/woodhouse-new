@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   outcomeStories,
+  outcomeFindings,
   outcomeEvidence,
   outcomeCaption,
   storyLink,
@@ -195,4 +196,46 @@ test("completion stories retain their own terminal-result definitions and measur
       [null, null, 0]
     );
   }
+});
+
+test("findings lead with usable observations without comparing incompatible totals", () => {
+  const published = new Set(outcomeStories.map((item) => item.project));
+  const projects = [
+    ["fighter", 900, "exact", "2026-10-22"],
+    ["bubbles", 0, "bounded", "2026-10-01"],
+    ["music", 9000, "bounded", "2026-10-01"],
+    ["link-check", 2, "bounded", "2026-10-01"]
+  ].map(([key, value, quality, comparableFrom]) => {
+    const selected = storyFor(String(key))!;
+    return {
+      project: selected.project,
+      report: {
+        ...source,
+        project: selected.project,
+        coverage: { ...source.coverage, quality, comparableFrom, through: "2026-10-23T00:00:00Z" },
+        metrics: [
+          {
+            ...source.metrics[0]!,
+            key: selected.measure,
+            value,
+            quality,
+            daily: [{ date: "2026-10-21", value }]
+          }
+        ]
+      }
+    };
+  }) as PortfolioReport["projects"];
+  const findings = outcomeFindings({ ...report, projects }, period, published);
+  assert.deepEqual(
+    findings.map(({ story }) => story.key),
+    ["music", "link-check", "bubbles", "fighter", "protocol-11", "shoalshot"]
+  );
+  assert.equal(findings[1]!.observed.value, 2);
+  assert(findings[3]!.observed.statuses.includes("legacy"));
+  assert.equal(findings[4]!.observed.value, null);
+  assert.equal(outcomeFindings(report, period, new Set()).length, 0);
+  assert.deepEqual(
+    outcomeFindings(null, period, published).map(({ story }) => story.key),
+    ["protocol-11", "shoalshot", "bubbles", "fighter", "music", "link-check"]
+  );
 });

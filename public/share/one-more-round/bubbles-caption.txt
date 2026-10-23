@@ -1,0 +1,8 @@
+Find the angle. Clear the board.
+0 · Reported completed runs
+2026-10-12 to 2026-10-18 UTC · Partial coverage
+Started runs reaching their actual game terminal result, attributed to launch UTC day. Quits and restarts excluded; not a completion cohort rate.
+Reported terminal runs across supported games, not a count of successful board clears. Replay measurement is unavailable in this source, not zero. These are not unique players or best scores.
+Selected UTC days are closed; this does not guarantee collection coverage. Stored browser reports are subject to privacy opt-outs, network loss and abuse controls; they are not unique people. Collection is opt-in and starts at this deployment. No historical gameplay is imported or invented. Anonymous daily totals are retained durably; pseudonymous run facts expire after 90 days. Active-time collection starts 2026-10-15T11:33:11.547Z; earlier time is unavailable. Raw gameplay run facts expire after 90 days.
+Snapshot 8496128e32ddfd0bddf8da66
+https://woodhouse.loftwah.com/connections/?story=bubbles&report=8496128e32ddfd0bddf8da66

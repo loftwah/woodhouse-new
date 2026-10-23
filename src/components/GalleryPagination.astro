@@ -1,5 +1,5 @@
 ---
-import { galleryURL, type GalleryType } from "../data/share-browser";
+import { shareNavigation, galleryURL, type GalleryType } from "../data/share-browser";
 type Props = {
   project?: string | undefined;
   type: GalleryType;
@@ -8,22 +8,16 @@ type Props = {
   end?: boolean;
 };
 const { project, type, page, pages, end = false } = Astro.props;
+const href = (page: number) =>
+  shareNavigation(galleryURL(project, type, page), Astro.url.searchParams);
 ---
 
 <nav aria-label={end ? "Gallery pages end" : "Gallery pages"} class:list={["pagination", { end }]}>
-  {page > 1 ? (
-    <a href={galleryURL(project, type, page - 1)}>Previous</a>
-  ) : (
-    <span aria-disabled="true">Previous</span>
-  )}
+  {page > 1 ? <a href={href(page - 1)}>Previous</a> : <span aria-disabled="true">Previous</span>}
   <span>
     Page {page} of {pages}
   </span>
-  {page < pages ? (
-    <a href={galleryURL(project, type, page + 1)}>Next</a>
-  ) : (
-    <span aria-disabled="true">Next</span>
-  )}
+  {page < pages ? <a href={href(page + 1)}>Next</a> : <span aria-disabled="true">Next</span>}
 </nav>
 <style>
   .pagination {

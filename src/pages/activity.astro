@@ -54,6 +54,7 @@ import { analyticsObservations } from "../data/analytics-observations";
 import { discoveryCaption, discoveryStory } from "../data/analytics-story";
 import DiscoveryStoryPanel from "../components/DiscoveryStoryPanel.astro";
 import ReportShare from "../components/ReportShare.astro";
+import OutcomeFindings from "../components/OutcomeFindings.astro";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -637,7 +638,6 @@ const dataPayload = {
       </div>
     </div>
     <div class="workbench-body">
-      <EditionInvitation />
       <header class="workbench-heading">
         <div>
           <h1>{selected ? `${names.get(selected)} analytics` : "Analytics"}</h1>
@@ -665,6 +665,9 @@ const dataPayload = {
             <form method="get" action="/activity/" class="custom-dates" data-date-form>
               {selected && <input type="hidden" name="project" value={selected} />}
               <input type="hidden" name="measure" value={measure.key} />
+              {explicitDestination && selectedDestinationSlug && (
+                <input type="hidden" name="destination" value={selectedDestinationSlug} />
+              )}
               {qaOff && <input type="hidden" name="analytics" value="off" />}
               {qaValue !== null && <input type="hidden" name="qa" value={qaValue || "1"} />}
               <label>
@@ -728,6 +731,15 @@ const dataPayload = {
         />
       )}
       {overview && (
+        <OutcomeFindings
+          report={report}
+          period={window}
+          published={publicIds}
+          excluded={qaOff}
+          qa={qaValue}
+        />
+      )}
+      {overview && (
         <section class="opening" aria-labelledby="opening-heading">
           <div class="opening__head">
             <p class="opening__kicker">What we noticed</p>
@@ -788,6 +800,7 @@ const dataPayload = {
           )}
         </section>
       )}
+      <EditionInvitation />
       {week && (
         <section id="week-focus" class="week-focus" aria-labelledby="week-focus-title">
           <div class="week-focus__head">
