@@ -118,3 +118,17 @@ Local qualification for this change: `pnpm run verify` passes (seed, generated t
 Browser verification used the isolated preview with `?qa` measurement exclusion at 390×844 and 1440×950. The mixed overview showed seven projects on their own measures, no horizontal overflow at either width, six overview cards inside the first phone viewport and an expanded phone Index listing **Analytics**. The gameplay view showed only Fighter, SHOALSHOT, Protocol 11 and Bubbles with a `2/4 reporting projects for this measure` denominator. Actual overview and gameplay CSV downloads and all three served PNG formats were inspected. Captures and files are in `.release/workbench-exports/overview-20261017/`.
 
 This record covers the working tree and isolated preview. Guarded merge, the reading-only production publication, live-host verification, physical-device sharing and the full editorial acceptance gate remain separate steps with their own evidence. The observed counts are recorded activity, not unique people or proof of demand.
+
+
+## Task views — reviewed 23 October 2026
+
+Current MP direction supersedes the findings-first opening and adjacent prose
+column: operate on the numbers first. The existing dark world and project rail
+remain. Overview uses a compact semantic project table with actual gap-preserving
+daily trends, separate units and adjacent coverage. Drill-down opens the existing
+single-measure ECharts chart. Native URL views expose Data (fourteen dates per
+page), Share (open image/download actions), Stories and Notes (native disclosures).
+Task switching freezes the currently displayed report; date/project/measure and
+measurement exclusions remain in scope. Historical review receipts above retain
+their original source and do not qualify this change. Production and physical
+share-sheet acceptance require their own current evidence.
