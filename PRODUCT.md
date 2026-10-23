@@ -143,3 +143,14 @@ An exhibit is a working artifact hosted on this site, not an illustration of one
 **The source plate** is the second and deliberately different. It reads the published Here / there contract and shows a contribution beside the card composed from it. Change the source and the composed card changes with it, because the composition reads the contract rather than keeping a copy. Hiding the source removes the card, as the contract says it would. The switch changes the demonstration only; nothing is sent to the provider and no contribution is hidden.
 
 The exhibits are discovered from Home, from Factory and from the game-music dispatch, which carries a "Show me" control so a reader can stop at the decisive moment and change the condition being explained. Each states what it does not claim: no customer adopted this, no audio is bundled or relicensed, and a simulation says it is one. MP's acceptance of the visual direction and of each exhibit remains separate from technical verification.
+
+## Connected product stories — reviewed 23 October 2026
+
+The Factory, homepage, project pages and Analytics lead into `/connections/`.
+Visitors can inspect a completed Link Check story or hear how FM music travels
+into games, read the source-defined daily history, open the native tool/report,
+and share the selected frozen observation. The initial pair uses existing public
+aggregates; Composer's separate same-scope owner-to-public proof remains open.
+Missing, measured zero, bounded and partial coverage retain their meanings. An
+FM total includes all admitted sources; a separate game attribution figure never
+inherits that total. No person-level funnel or invented milestone is implied.

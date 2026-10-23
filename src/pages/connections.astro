@@ -1,0 +1,470 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ReportShare from "../components/ReportShare.astro";
+import type { D1Database } from "@cloudflare/workers-types";
+import { env } from "cloudflare:workers";
+import {
+  listProjectRecords,
+  listPublicCapabilities,
+  listPublicEvidence
+} from "../content/repository";
+import { createPortfolioReport, readPortfolioReport } from "../data/portfolio-reports";
+import { parseReportingWindow, type PortfolioReport } from "../data/portfolio-analytics";
+import { releaseNotesFromEvidence } from "../data/analytics-context";
+import {
+  outcomeStories,
+  storyFor,
+  outcomeEvidence,
+  outcomeCaption,
+  storyLink
+} from "../data/connected-stories";
+import "../styles/analytics-workbench.css";
+import "../styles/connections.css";
+export const prerender = false;
+Astro.cache.set(false);
+Astro.response.headers.set("cache-control", "private, no-store");
+const query = Astro.url.searchParams;
+if (
+  [...query.keys()].some(
+    (k) =>
+      !["story", "report", "days", "from", "to", "analytics", "qa", "audit"].includes(k) ||
+      query.getAll(k).length !== 1
+  )
+)
+  return new Response("Invalid story selection.", { status: 400 });
+const requested = query.get("story");
+const picked = storyFor(requested);
+if (requested && !picked) return new Response("Story unavailable.", { status: 404 });
+const [identities, capabilities] = await Promise.all([
+  listProjectRecords(),
+  listPublicCapabilities()
+]);
+if (identities.error)
+  return new Response("Public projects are unavailable. Please retry.", { status: 503 });
+const publicIds = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
+const stories = outcomeStories.filter((s) => publicIds.has(s.project));
+const story = picked ?? stories[0];
+if (!story || !stories.includes(story)) return new Response("Story unavailable.", { status: 404 });
+const now = Date.now();
+const requestedPeriod = parseReportingWindow(query, now, 30);
+if (!requestedPeriod) return new Response("Choose valid dates, up to 90 days.", { status: 400 });
+let report: PortfolioReport | null = null;
+const frozen = query.has("report");
+try {
+  if (frozen)
+    report = await readPortfolioReport(
+      (env as unknown as { DB: D1Database }).DB,
+      query.get("report")!
+    );
+  else {
+    const evidence = await listPublicEvidence();
+    report = await createPortfolioReport(
+      (env as unknown as { DB: D1Database }).DB,
+      requestedPeriod.days,
+      publicIds,
+      fetch,
+      now,
+      requestedPeriod,
+      evidence.error ? undefined : releaseNotesFromEvidence(evidence.evidence, publicIds, now)
+    );
+  }
+} catch {
+  /* Keep capabilities usable while the report is unavailable. */
+}
+if (frozen && !report)
+  return new Response(
+    "This saved story is unavailable. Open /connections/ to try the latest report.",
+    { status: 404 }
+  );
+if (frozen && report && ["from", "to", "days"].some((k) => query.has(k))) {
+  const clean = new URL(storyLink(story, report.id));
+  for (const k of ["analytics", "qa"]) if (query.has(k)) clean.searchParams.set(k, query.get(k)!);
+  return Astro.redirect(clean.pathname + clean.search, 302);
+}
+const period = report?.period ?? requestedPeriod;
+const observed = outcomeEvidence(report, story, period);
+const canonical =
+  frozen && report
+    ? storyLink(story, report.id)
+    : (() => {
+        const url = new URL(storyLink(story));
+        url.searchParams.set("from", period.from);
+        url.searchParams.set("to", period.to);
+        return url.href;
+      })();
+const qa = query.get("analytics") === "off";
+const internal = (href: string) => {
+  const url = new URL(href, Astro.url.origin);
+  if (qa) url.searchParams.set("analytics", "off");
+  if (query.has("qa")) url.searchParams.set("qa", query.get("qa")!);
+  return url.pathname + url.search + url.hash;
+};
+const selectHref = (key: string) => {
+  const url = new URL(canonical);
+  url.searchParams.set("story", key);
+  url.hash = "selected-story";
+  return internal(url.href);
+};
+const image = report
+  ? `/api/portfolio-card.png?report=${report.id}&project=${story.project}&measure=${story.measure}&story=${story.key}`
+  : story.artwork;
+const link = report ? internal(storyLink(story, report.id)) : "";
+const caption = report ? outcomeCaption(report, story, Astro.url.origin) : "";
+const max = Math.max(1, ...observed.daily.map((p) => p.value ?? 0));
+const fm = report?.projects.find((p) => p.project === "loftwahfm")?.report;
+const gameListening = fm?.metrics.find((m) => m.key === "game_listening_seconds");
+const musicCapability = capabilities.error
+  ? null
+  : capabilities.capabilities.find((c) => c.provider.slug === "loftwahfm");
+const latestLink = internal(storyLink(story));
+---
+
+<BaseLayout
+  title={`${story.title} | Connected products`}
+  description={story.benefit}
+  path={canonical.replace("https://woodhouse.loftwah.com", "")}
+  currentPath="/factory/"
+  image={image}
+  imageAlt={`${story.name}: ${observed.display} · ${story.label}. ${period.from} to ${period.to} UTC.`}
+>
+  <section class="container connected-opening">
+    <nav aria-label="Breadcrumb" class="breadcrumb">
+      <a href="/factory/">Factory</a>
+      <span>/</span>
+      <a href="/activity/">Analytics</a>
+    </nav>
+    <div class="connected-title">
+      <h1>
+        Useful on their own.
+        <br />
+        <em>Better connected.</em>
+      </h1>
+      <p>
+        Check a link. Find your soundtrack. Follow a useful part from one product into another, then
+        see what actually happened.
+      </p>
+    </div>
+    <div class="connection-board" aria-label="Choose a product connection">
+      <div class="connection-board__origin">
+        <a href="/projects/">WOODHOUSE</a>
+        <span>Find something worth trying</span>
+      </div>
+      <ol class="connection-paths">
+        {stories.map((s) => {
+          const e = outcomeEvidence(report, s, period);
+          return (
+            <li style={`--connection-colour:${s.colour}`}>
+              <a
+                href={selectHref(s.key)}
+                aria-current={s.key === story.key ? "true" : undefined}
+                class="connection-choice"
+              >
+                <img src={s.artwork} alt="" width="240" height="150" />
+                <span>
+                  <strong>{s.name}</strong>
+                  <span>{s.title}</span>
+                  <small>
+                    {e.display} · {s.label.toLowerCase()}
+                  </small>
+                </span>
+                <span aria-hidden="true" class="connection-choice__arrow">
+                  ↗
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+    <p class="connection-board__note">
+      Choose a connection to explore. These are separate observations, never a tracked person moving
+      between products.
+    </p>
+  </section>
+  <section
+    id="selected-story"
+    class="container connected-story"
+    style={`--connection-colour:${story.colour}`}
+    aria-labelledby="outcome-title"
+  >
+    <div class="connected-story__art">
+      <img
+        src={story.artwork}
+        alt={
+          story.project === "app-composer"
+            ? "App Composer’s approved orange mark."
+            : "This Is LoftwahFM album artwork."
+        }
+        width="640"
+        height="640"
+      />
+      <a href={`/projects/${story.project}/`}>
+        Explore {story.project === "app-composer" ? "App Composer" : "LoftwahFM"} ↗
+      </a>
+    </div>
+    <div class="connected-story__body">
+      <h2 id="outcome-title">{story.title}</h2>
+      <p class="connected-benefit">{story.benefit}</p>
+      <p>{story.relationship}</p>
+      <div class="connected-actions">
+        <a class="home-action" href={story.actionHref} target="_blank" rel="noopener noreferrer">
+          {story.actionLabel} ↗
+        </a>
+        <a href="#share-report">Share this story ↓</a>
+      </div>
+      <p class="connected-handoff">Opens a new tab, keeping this story and its dates here.</p>
+      <details class="connected-why">
+        <summary>Why are these connected?</summary>
+        {story.key === "link-check" ? (
+          <>
+            <p>
+              Composer assembles independently owned apps. Link Check’s own completion signal
+              travels through its existing aggregate contract; Woodhouse reads that public report.
+            </p>
+            <a
+              href="https://composer.loftwah.com/building"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read Composer’s build story ↗
+            </a>
+            <p>
+              This does not prove one composed action through an owner report and permitted public
+              publication. That production proof remains unfinished.
+            </p>
+          </>
+        ) : (
+          <>
+            <p>
+              The same public station can play through FM’s client in a game. The game owns its
+              adapter, effects, mute and offline fallback.
+            </p>
+            <a href="/exhibits/patch-bench/" target="_blank" rel="noopener noreferrer">
+              Try the working patch bench ↗
+            </a>
+            <p>The bench is a demonstration. Choosing a connection here never starts audio.</p>
+            {musicCapability ? (
+              <>
+                <p>
+                  Capability reviewed {musicCapability.review.reviewed_at}.{" "}
+                  <a href={musicCapability.href}>Read the maintained capability record</a>.
+                </p>
+                <ul>
+                  {musicCapability.consumers.map((c) => (
+                    <li>
+                      <a href={c.evidenceHref}>{c.project.name}</a> ·{" "}
+                      {c.record.verified
+                        ? "browser evidence reviewed"
+                        : c.record.deployed
+                          ? "deployment recorded; browser proof pending"
+                          : "integration work recorded"}{" "}
+                      · {c.record.scope}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <p>The reviewed adoption record is unavailable; no new adoption is inferred.</p>
+            )}
+          </>
+        )}
+      </details>
+    </div>
+  </section>
+  <section class="container connected-evidence" aria-labelledby="evidence-title">
+    <div class="connected-evidence__heading">
+      <div>
+        <h2 id="evidence-title">What the source recorded</h2>
+        <p>
+          {period.from} to {period.to} · UTC {frozen ? "· saved snapshot" : "· latest saved report"}
+        </p>
+      </div>
+      <div>
+        <strong data-outcome-value>{observed.display}</strong>
+        <span>{story.label}</span>
+      </div>
+    </div>
+    <p class="connected-definition">{observed.definition}</p>
+    <p>
+      {observed.coverage}. {story.boundary}
+    </p>
+    {story.key === "music" && (
+      <p class="connected-scope">
+        <strong>Games are a smaller, separate part:</strong>{" "}
+        {gameListening?.value === null || gameListening?.value === undefined
+          ? "game-attributed listening is unavailable"
+          : `${gameListening.value.toLocaleString("en-AU")} accepted audible seconds attributed to games in these dates`}
+        . The headline above includes all admitted sources.{" "}
+        <a href="/activity/listening/" target="_blank" rel="noopener noreferrer">
+          Explore Games × Radio ↗
+        </a>
+      </p>
+    )}
+    <div
+      class="connected-chart"
+      role="img"
+      aria-label={`${story.label} per UTC day. Missing days have a gap; zero has a baseline. Full values follow in the daily history table.`}
+    >
+      {observed.daily.map((p, i) => (
+        <div
+          class:list={[
+            "connected-bar",
+            {
+              "connected-bar--missing": p.value === null,
+              "connected-bar--partial": observed.statuses[i] === "partial",
+              "connected-bar--zero": p.value === 0
+            }
+          ]}
+          title={`${p.date}: ${p.value === null ? "not measured" : p.value} ${story.measure === "listening_seconds" ? "seconds" : "inspections"} · ${observed.statuses[i]}`}
+        >
+          <span
+            style={`height:${p.value === null || p.value === 0 ? 0 : Math.max(1, (p.value / max) * 100)}%`}
+          ></span>
+        </div>
+      ))}
+    </div>
+    <div class="connected-chart-labels">
+      <span>{period.from}</span>
+      <span>
+        Daily {story.measure === "listening_seconds" ? "seconds" : "inspections"} · gaps are missing
+      </span>
+      <span>{period.to}</span>
+    </div>
+    <details>
+      <summary>Read every day and its coverage</summary>
+      <div class="connected-table">
+        <table>
+          <caption>{`${story.label} · ${period.from} to ${period.to} UTC`}</caption>
+          <thead>
+            <tr>
+              <th scope="col">UTC day</th>
+              <th scope="col">
+                {story.measure === "listening_seconds" ? "Seconds" : "Inspections"}
+              </th>
+              <th scope="col">Coverage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {observed.daily.map((p, i) => (
+              <tr>
+                <th scope="row">{p.date}</th>
+                <td>{p.value === null ? "Not measured" : p.value}</td>
+                <td>{observed.statuses[i]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <div class="connected-native">
+      <a class="text-link" href={story.reportHref} target="_blank" rel="noopener noreferrer">
+        Open the native report ↗
+      </a>
+      <p>{story.reportScope}</p>
+      <a
+        href={internal(
+          `/activity/?${report ? `report=${report.id}&` : ""}project=${story.project}&measure=${story.measure}`
+        )}
+      >
+        Inspect this measure in Woodhouse Analytics
+      </a>
+    </div>
+    <details>
+      <summary>Definitions, source and limits</summary>
+      <p>
+        Reviewed 23 October 2026. No growth or record is claimed: compatible complete comparison
+        history is not established for this story.
+      </p>
+      <ul>
+        {observed.limitations.map((note) => (
+          <li>{note}</li>
+        ))}
+      </ul>
+      <p>
+        Public contract endpoint (default window):{" "}
+        {observed.source ? (
+          <a href={observed.source.endpoint}>{observed.source.endpoint}</a>
+        ) : (
+          "Unavailable"
+        )}
+        . Revision <code>{observed.source?.revision ?? "not supplied"}</code>.
+      </p>
+      <p>
+        Snapshot <code>{report?.id ?? "unavailable"}</code>, saved{" "}
+        {report?.createdAt ?? "unavailable"}. Frozen reports preserve these public aggregate
+        observations; they do not retain private owner data.
+      </p>
+    </details>
+    <form class="connected-dates" data-date-form action="/connections/" method="get">
+      <input type="hidden" name="story" value={story.key} />
+      {qa && <input type="hidden" name="analytics" value="off" />}
+      {query.has("qa") && <input type="hidden" name="qa" value={query.get("qa")!} />}
+      <label>
+        From (UTC)
+        <input required type="date" name="from" value={period.from} />
+      </label>
+      <label>
+        To (UTC)
+        <input required type="date" name="to" value={period.to} />
+      </label>
+      <button type="submit">Explore these dates</button>
+      <a href={latestLink}>Latest 30 days</a>
+      <p>
+        Choose up to 90 days. Changing dates creates a fresh report; this snapshot stays available.
+      </p>
+    </form>
+  </section>
+  <div class="container connected-share">
+    {report ? (
+      <ReportShare
+        image={image}
+        caption={caption}
+        link={link}
+        jsonHref={`/api/portfolio-report.json?report=${report.id}`}
+        heading="Share this story"
+        note="The selected connection, measure, UTC dates and snapshot stay together in the permalink, caption and three image formats."
+        alt={`${story.name}: ${observed.display} · ${story.label}`}
+      />
+    ) : (
+      <p role="status">
+        The report could not be saved. You can still try the product; reload to retry reporting and
+        sharing.
+      </p>
+    )}
+  </div>
+  <section class="container connected-list">
+    <h2>The connections, in words</h2>
+    <p>
+      The same choices and destinations as the visual view. Each product keeps its own authority.
+    </p>
+    <dl>
+      {stories.map((s) => (
+        <div>
+          <dt>
+            <a href={selectHref(s.key)} aria-current={s.key === story.key ? "true" : undefined}>
+              {s.name}
+            </a>
+          </dt>
+          <dd>
+            <p>{s.relationship}</p>
+            <a href={s.actionHref} target="_blank" rel="noopener noreferrer">
+              {s.actionLabel} ↗
+            </a>{" "}
+            ·{" "}
+            <a href={s.reportHref} target="_blank" rel="noopener noreferrer">
+              Native report ↗
+            </a>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+  <script
+    id="report-sharing"
+    type="application/json"
+    set:html={JSON.stringify({ image, caption }).replace(/</g, "\\u003c")}
+  />
+  <script>
+    import "../scripts/analytics-workbench";
+  </script>
+</BaseLayout>

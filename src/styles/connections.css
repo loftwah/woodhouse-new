@@ -1,0 +1,423 @@
+.connected-opening {
+  padding-block: 2rem 3rem;
+}
+.connected-title {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  align-items: end;
+  gap: 3rem;
+  margin-block: 2rem;
+}
+.connected-title h1 {
+  font: 700 clamp(2.7rem, 5vw, 5rem)/1.02 var(--display);
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+.connected-title h1 em {
+  color: var(--acid);
+  font-style: normal;
+}
+.connected-title p {
+  max-width: 36ch;
+  font-size: 1.1rem;
+  color: var(--copy-soft);
+}
+.connection-board {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.connection-board__origin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.connection-board__origin a {
+  font: 700 1.6rem var(--display);
+  color: var(--acid);
+}
+.connection-board__origin span {
+  color: var(--copy-soft);
+}
+.connection-paths {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+  position: relative;
+}
+.connection-paths:before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: var(--line);
+}
+.connection-paths li {
+  position: relative;
+}
+.connection-paths li:before {
+  content: "";
+  position: absolute;
+  left: -1.5rem;
+  top: 50%;
+  width: 1.5rem;
+  height: 1px;
+  background: var(--line);
+}
+.connection-choice {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 1.3rem;
+  align-items: center;
+  min-height: 110px;
+  padding: 0.65rem;
+  text-decoration: none;
+  border: 1px solid var(--line);
+  transition: background-color 0.18s ease-out;
+}
+.connection-choice[aria-current="true"] {
+  border-color: var(--connection-colour);
+  background: var(--ink);
+}
+.connection-choice:hover {
+  background: var(--ink);
+}
+.connection-choice img {
+  width: 110px;
+  height: 90px;
+  object-fit: cover;
+}
+.connection-choice > span:nth-child(2) {
+  display: grid;
+  gap: 0.35rem;
+}
+.connection-choice strong {
+  color: var(--connection-colour);
+  font-size: 1.15rem;
+}
+.connection-choice small {
+  color: var(--copy-soft);
+}
+.connection-choice__arrow {
+  padding: 0.5rem;
+  color: var(--connection-colour);
+  font-size: 1.7rem;
+}
+.connection-board__note {
+  font-size: 0.86rem;
+  color: var(--copy-soft);
+  max-width: 85ch;
+}
+.connected-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 4rem;
+  padding-block: 3rem;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 1rem;
+}
+.connected-story__art img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+.connected-story__art > a {
+  display: block;
+  margin-top: 1rem;
+}
+.connected-story h2 {
+  font: 700 clamp(2rem, 4vw, 3.6rem)/1.08 var(--display);
+  letter-spacing: -0.03em;
+  margin: 0 0 1.5rem;
+  text-wrap: balance;
+}
+.connected-story p {
+  max-width: 65ch;
+  color: var(--copy-soft);
+  line-height: 1.65;
+}
+.connected-benefit {
+  font-size: 1.15rem;
+  color: var(--paper) !important;
+}
+.connected-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-block: 1.5rem 0;
+}
+.connected-handoff {
+  font-size: 0.8rem;
+}
+.connected-why {
+  margin-top: 1.5rem;
+}
+.connected-evidence {
+  border-top: 1px solid var(--line);
+  padding-block: 3rem;
+}
+.connected-evidence__heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: start;
+}
+.connected-evidence__heading h2 {
+  font: 700 clamp(1.6rem, 3vw, 2.5rem) var(--display);
+  margin: 0;
+}
+.connected-evidence__heading > div:last-child {
+  display: grid;
+  text-align: right;
+  gap: 0.3rem;
+}
+.connected-evidence__heading strong {
+  font: 700 clamp(2rem, 4vw, 3.5rem) var(--display);
+  font-variant-numeric: tabular-nums;
+}
+.connected-evidence__heading span {
+  color: var(--copy-soft);
+}
+.connected-definition {
+  font-size: 1.1rem;
+  max-width: 75ch;
+  line-height: 1.6;
+}
+.connected-evidence > p {
+  max-width: 80ch;
+  color: var(--copy-soft);
+}
+.connected-scope {
+  padding: 1rem;
+  background: var(--surface);
+}
+.connected-chart {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  height: 190px;
+  margin-top: 2rem;
+  border-bottom: 1px solid var(--line);
+}
+.connected-bar {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: end;
+}
+.connected-bar span {
+  width: 100%;
+  background: var(--acid);
+}
+.connected-bar--partial span {
+  opacity: 0.55;
+}
+.connected-bar--missing {
+  border-bottom: 2px dotted var(--muted);
+}
+.connected-chart-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--copy-soft);
+  margin: 0.6rem 0 1.5rem;
+}
+.connected-evidence details {
+  margin-block: 1.5rem;
+}
+.connected-evidence summary,
+.connected-why summary {
+  min-height: 44px;
+  padding-block: 0.65rem;
+  cursor: pointer;
+}
+.connected-table {
+  overflow-x: auto;
+}
+.connected-table table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 700px;
+}
+.connected-table th,
+.connected-table td {
+  text-align: left;
+  padding: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+.connected-native {
+  padding-block: 1.5rem;
+  border-block: 1px solid var(--line);
+  margin-block: 2rem;
+}
+.connected-native p {
+  font-size: 0.9rem;
+  max-width: 75ch;
+  color: var(--copy-soft);
+}
+.connected-dates {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: end;
+}
+.connected-dates label {
+  display: grid;
+  gap: 0.4rem;
+}
+.connected-dates input,
+.connected-dates button {
+  min-height: 44px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  padding: 0.65rem;
+  font: inherit;
+}
+.connected-dates button {
+  cursor: pointer;
+}
+.connected-dates p {
+  flex-basis: 100%;
+  color: var(--copy-soft);
+  font-size: 0.85rem;
+}
+.connected-share {
+  padding-block: 1rem 3rem;
+}
+.connected-list {
+  border-top: 1px solid var(--line);
+  padding-block: 2rem 4rem;
+}
+.connected-list dl > div {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.connected-list dt {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.connected-list dd {
+  margin: 0;
+}
+.connected-list dd p {
+  margin-top: 0;
+  max-width: 70ch;
+}
+.connected-opening a:focus-visible,
+.connected-story a:focus-visible,
+.connected-list a:focus-visible,
+.connected-evidence a:focus-visible {
+  outline: 3px solid var(--acid);
+  outline-offset: 4px;
+}
+.connected-evidence code {
+  overflow-wrap: anywhere;
+}
+.connected-share .share-report {
+  margin: 0;
+}
+.connected-share .share-preview {
+  max-width: 800px;
+}
+@media (max-width: 700px) {
+  .connected-title {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .connection-board {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+    padding: 1rem;
+  }
+  .connection-board__origin {
+    display: none;
+  }
+  .connection-paths:before,
+  .connection-paths li:before {
+    display: none;
+  }
+  .connection-choice {
+    grid-template-columns: 76px 1fr;
+    gap: 0.8rem;
+  }
+  .connection-choice img {
+    width: 76px;
+    height: 92px;
+  }
+  .connection-choice__arrow {
+    display: none;
+  }
+  .connection-choice strong {
+    font-size: 1rem;
+  }
+  .connection-choice small {
+    font-size: 0.75rem;
+  }
+  .connected-story {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-block: 2rem;
+  }
+  .connected-story__art img {
+    max-height: 240px;
+    width: 100%;
+    object-fit: cover;
+  }
+  .connected-evidence__heading {
+    display: grid;
+  }
+  .connected-evidence__heading > div:last-child {
+    text-align: left;
+  }
+  .connected-chart {
+    gap: 2px;
+    height: 140px;
+  }
+  .connected-chart-labels {
+    font-size: 0.65rem;
+  }
+  .connected-chart-labels span:nth-child(2) {
+    max-width: 15ch;
+    text-align: center;
+  }
+  .connected-list dl > div {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .connected-dates label {
+    width: calc(50% - 0.5rem);
+  }
+  .connected-dates input {
+    min-width: 0;
+    width: 100%;
+  }
+  .connected-title h1 {
+    font-size: 2.7rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .connection-choice {
+    transition: none;
+  }
+}
+
+.connected-bar--zero {
+  border-bottom: 2px solid var(--acid);
+}

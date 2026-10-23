@@ -22,6 +22,7 @@ if (!/^https?:\/\//.test(origin))
 const alwaysChecked = [
   "/",
   "/factory/",
+  "/connections/",
   "/share/",
   "/projects/",
   "/dispatches/",
