@@ -129,3 +129,30 @@ test("a same-day later review wins by editorial order and stale facts fail publi
   revised.content.project_statuses.reverse();
   assert.doesNotThrow(() => assertPublicationContent(revised, build, updated));
 });
+
+test("a later artwork snapshot preserves the independently dated gameplay status", () => {
+  const artworkReview = structuredClone(seed);
+  artworkReview.content.factory_snapshots.push({
+    status: "published",
+    data: {
+      public_safe: true,
+      reviewed_at: "2026-10-08",
+      scope: "New artwork only; the gameplay review is unchanged."
+    }
+  });
+  const build = structuredClone(identity);
+  build.content.counts.factory_snapshots = 2;
+  build.content.snapshotReviewed = "2026-10-08";
+  assert.doesNotThrow(() => assertPublicationContent(artworkReview, build, facts));
+  const falselyRedated = { ...facts, reviewed: "2026-10-08" };
+  assert.throws(
+    () => assertPublicationContent(artworkReview, build, falselyRedated),
+    /Served project facts/
+  );
+  const staleSnapshot = structuredClone(build);
+  staleSnapshot.content.snapshotReviewed = "2026-10-07";
+  assert.throws(
+    () => assertPublicationContent(artworkReview, staleSnapshot, facts),
+    /publication counts\/date/
+  );
+});

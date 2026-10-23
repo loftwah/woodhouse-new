@@ -403,7 +403,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                   class="image-link"
                   href={metadata.image}
                   data-fallback-href={fallback.image}
-                  data-fallback-label={`View the Woodhouse artwork for ${project.name} full size`}
+                  data-fallback-label={`View ${project.name} artwork full size`}
                   aria-label={`View ${project.name} image full size`}
                 >
                   <img
@@ -415,6 +415,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                     data-gallery-image
                     data-fallback-image={fallback.image}
                     data-fallback-alt={fallback.alt}
+                    data-fallback-credit={fallback.credit}
                   />
                 </a>
                 <figcaption>
@@ -660,7 +661,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
     else image.addEventListener("load", describe, { once: true });
     image.addEventListener("error", () => {
       // A project's published artwork can move or disappear. Fall back once to the
-      // reviewed Woodhouse illustration and say so, rather than leaving a broken
+      // reviewed artwork and its credit, rather than leaving a broken
       // image with the project's credit on it. The full-size link follows the
       // same resolved asset so preview and original never disagree.
       const fallback = image.dataset.fallbackImage;
@@ -674,7 +675,8 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
             link.setAttribute("aria-label", link.dataset.fallbackLabel);
         }
         const credit = image.closest("figure")?.querySelector("[data-image-credit]");
-        if (credit) credit.textContent = "Illustration by Woodhouse";
+        if (credit)
+          credit.textContent = image.dataset.fallbackCredit ?? "Illustration by Woodhouse";
         return;
       }
       if (label) label.textContent = "Open original image";

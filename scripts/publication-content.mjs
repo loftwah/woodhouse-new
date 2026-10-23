@@ -80,8 +80,15 @@ export function assertPublicationContent(seed, identity, facts) {
       Object.fromEntries(Object.keys(expected[0] ?? {}).map((key) => [key, entry[key]]))
     )
     .sort((a, b) => a.slug.localeCompare(b.slug));
+  // Project facts date their owning status reviews. A later artwork-only
+  // snapshot must not re-date gameplay to satisfy publication. The content
+  // identity above still requires the newest snapshot date and exact counts.
+  const projectsReviewed = expected
+    .map((entry) => entry.reviewed)
+    .sort()
+    .at(-1);
   if (
-    facts.reviewed !== reviewed ||
+    facts.reviewed !== projectsReviewed ||
     facts.projectCount !== expected.length ||
     !isDeepStrictEqual(actual, expected)
   )
