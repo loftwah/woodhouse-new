@@ -95,19 +95,23 @@ export async function loadStoryDistribution(
     (selection.report !== undefined && !/^[a-f0-9]{24}$/.test(selection.report))
   )
     throw new TypeError("Invalid distribution selection");
-  const prefix = `distribution:${selection.edition}:`;
-  const pattern = `${prefix}${selection.story ?? "*"}:${selection.report ?? "*"}:*`;
+  // D1 limits LIKE/GLOB patterns to 50 bytes. Fixed ASCII prefixes form a
+  // lexical range; the report is an exact colon-delimited token, not a pattern.
+  // https://developers.cloudflare.com/d1/platform/limits/ (23 October 2026).
+  const prefix = `distribution:${selection.edition}:${selection.story ? `${selection.story}:` : ""}`;
+  const upper = prefix + "~";
+  const reportToken = selection.report ? `:${selection.report}:` : "";
   const first = await db
     .prepare(
-      "SELECT MIN(day) AS day FROM wh_analytics_daily WHERE project='woodhouse' AND metric GLOB ?"
+      "SELECT MIN(day) AS day FROM wh_analytics_daily WHERE project='woodhouse' AND metric>=? AND metric<? AND instr(metric,?)>0"
     )
-    .bind(pattern)
+    .bind(prefix, upper, reportToken)
     .first<{ day: string | null }>();
   const rows = await db
     .prepare(
-      "SELECT metric,SUM(value) AS value FROM wh_analytics_daily WHERE project='woodhouse' AND day>=? AND day<=? AND metric GLOB ? GROUP BY metric"
+      "SELECT metric,SUM(value) AS value FROM wh_analytics_daily WHERE project='woodhouse' AND day>=? AND day<=? AND metric>=? AND metric<? AND instr(metric,?)>0 GROUP BY metric"
     )
-    .bind(period.from, period.to, pattern)
+    .bind(period.from, period.to, prefix, upper, reportToken)
     .all<{ metric: string; value: number }>();
   const stories: StoryDistribution["stories"] = [];
   for (const row of rows.results) {
