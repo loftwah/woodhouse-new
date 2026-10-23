@@ -286,7 +286,8 @@ const latestLink = internal(storyLink(story));
     </div>
     <p class="connected-definition">{observed.definition}</p>
     <p>
-      {observed.coverage}. {story.boundary}
+      {observed.coverage} · {observed.daily.filter((p) => p.value !== null).length} of {period.days}{" "}
+      days reported. {period.complete ? "" : "The current UTC day is partial."} {story.boundary}
     </p>
     {story.key === "music" && (
       <p class="connected-scope">
@@ -323,10 +324,14 @@ const latestLink = internal(storyLink(story));
         </div>
       ))}
     </div>
+    <p class="connected-chart-key">
+      Blank dates: not reported. Ticks at the baseline: measured zero.
+    </p>
     <div class="connected-chart-labels">
       <span>{period.from}</span>
       <span>
-        Daily {story.measure === "listening_seconds" ? "seconds" : "inspections"} · gaps are missing
+        Daily {story.measure === "listening_seconds" ? "all-source seconds" : "inspections"} · gaps
+        are missing
       </span>
       <span>{period.to}</span>
     </div>

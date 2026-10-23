@@ -52,7 +52,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     relationship:
       "Games can use FM’s versioned browser client and public stations. The listening history here includes every admitted FM source. Only the separately labelled game-attributed measure describes music reported by games.",
     measure: "listening_seconds",
-    label: "Audible listening",
+    label: "All-source audible listening",
     colour: "#a4d8ff",
     artwork: "/share/previews/fm-cover-this-is-loftwahfm.webp",
     actionHref: "https://fm.loftwah.com/radio",

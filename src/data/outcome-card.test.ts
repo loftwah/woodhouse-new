@@ -69,7 +69,7 @@ for (const story of outcomeStories) {
       assert.ok(svg.includes(story.key === "music" ? "0h 0m 7s" : ">7</text>"));
       assert.ok(
         svg.includes(
-          story.key === "music" ? "Daily audible seconds" : "Daily completed inspections"
+          story.key === "music" ? "Daily all-source audible seconds" : "Daily completed inspections"
         )
       );
       assert.match(svg, /<path data-day="2026-10-20" data-value="0"/);

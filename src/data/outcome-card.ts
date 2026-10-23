@@ -85,6 +85,18 @@ export function outcomeCard(
       size -= 0.5;
       lines = wrap(value, width, size);
     }
+    if (value === story.title && lines.length === 2) {
+      const words = value.split(/\s+/);
+      const limit = Math.floor(width / (size * 0.61));
+      const splits = words
+        .slice(1)
+        .map((_, i) => [words.slice(0, i + 1).join(" "), words.slice(i + 1).join(" ")])
+        .filter((pair) => pair.every((line) => line.length <= limit))
+        .sort(
+          (a, b) => Math.abs(a[0]!.length - a[1]!.length) - Math.abs(b[0]!.length - b[1]!.length)
+        );
+      if (splits[0]) lines = splits[0];
+    }
     return lines
       .map((line, index) => text(x, y + size + index * size * 1.3, line, size, fill, weight))
       .join("");
@@ -95,11 +107,11 @@ export function outcomeCard(
     const max = Math.max(1, ...available.map((point) => point.value!));
     const plotX = x + 42;
     const plotW = width - 50;
-    const baseline = y + height - 40;
+    const baseline = y + height - 54;
     const plotY = y + 48;
     const plotH = baseline - plotY;
     let out = block(
-      story.key === "music" ? "Daily audible seconds" : "Daily completed inspections",
+      story.key === "music" ? "Daily all-source audible seconds" : "Daily completed inspections",
       x,
       y,
       width,
@@ -117,6 +129,13 @@ export function outcomeCard(
       colours.muted,
       400,
       "end"
+    );
+    out += text(
+      plotX,
+      baseline + 49,
+      "Blank: not reported · baseline ticks: measured zero",
+      landscape ? 12 : portrait ? 19 : 16,
+      colours.muted
     );
     if (!available.length) {
       return (
@@ -252,13 +271,13 @@ export function outcomeCard(
       pad,
       portrait ? 1597 : 1033,
       wide,
-      portrait ? 123 : 80,
+      portrait ? 123 : 60,
       portrait ? 24 : 21
     );
     svg += block(
       `${capture} · ${windowLabel}`,
       pad,
-      portrait ? 1751 : 1125,
+      portrait ? 1751 : 1100,
       wide,
       portrait ? 48 : 28,
       portrait ? 20 : 13
@@ -266,7 +285,7 @@ export function outcomeCard(
     svg += block(
       provenance,
       pad,
-      portrait ? 1813 : 1155,
+      portrait ? 1813 : 1130,
       wide,
       portrait ? 34 : 20,
       portrait ? 18 : 14
@@ -274,7 +293,7 @@ export function outcomeCard(
     svg += block(
       retrieval.href,
       pad,
-      portrait ? 1861 : 1180,
+      portrait ? 1861 : 1160,
       wide,
       portrait ? 43 : 20,
       portrait ? 20 : 15,
