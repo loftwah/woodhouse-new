@@ -16,6 +16,12 @@ import {
   modeMetricName,
   type GameplayMode
 } from "./mode-measures.ts";
+import {
+  parseDistributionContext,
+  distributionMetric,
+  type DistributionContext
+} from "./story-distribution.ts";
+import { readPortfolioReport } from "./portfolio-reports.ts";
 const origins: Record<string, string> = {
   woodhouse: "https://woodhouse.loftwah.com",
   shoalshot: "https://shoalshot.loftwah.com",
@@ -33,7 +39,9 @@ const events = new Set([
   "game_start",
   "game_complete",
   "game_replay",
-  "active_time"
+  "active_time",
+  "story_arrival",
+  "story_explored"
 ]);
 const uuid = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 /**
@@ -58,6 +66,7 @@ export type EngagementEvent = {
   mode: string;
   target: string;
   browserToken?: string;
+  distribution?: DistributionContext;
 };
 function parseEngagement(raw: unknown): EngagementEvent | null {
   if (
@@ -82,7 +91,8 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
           "seconds",
           "mode",
           "target",
-          "browserToken"
+          "browserToken",
+          "distribution"
         ].includes(k)
     )
   )
@@ -124,6 +134,17 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
       ? raw.target
       : "";
   if (raw.event === "project_open" && !target) return null;
+  const distribution =
+    raw.distribution === undefined ? null : parseDistributionContext(raw.distribution);
+  const storyEvent = ["story_arrival", "story_explored"].includes(raw.event);
+  if (
+    (raw.distribution !== undefined &&
+      (!distribution ||
+        raw.project !== "woodhouse" ||
+        !["story_arrival", "story_explored", "project_open"].includes(raw.event))) ||
+    (storyEvent && (!distribution || raw.project !== "woodhouse"))
+  )
+    return null;
   return {
     schema: "woodhouse.engagement/1",
     project: raw.project,
@@ -133,6 +154,7 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
     seconds,
     mode,
     target,
+    ...(distribution ? { distribution } : {}),
     ...(typeof raw.browserToken === "string" ? { browserToken: raw.browserToken } : {})
   };
 }
@@ -223,10 +245,14 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
       status: 429,
       headers: { ...headers(origin), "retry-after": "60" }
     });
+  // Validate a snapshot only after volume admission. Arbitrary identifiers never
+  // become stored dimensions or cause unlimited report-body parsing.
+  if (event.distribution && !(await readPortfolioReport(db, event.distribution.report)))
+    return new Response(null, { status: 400, headers: headers(origin) });
   const session = await hash(`${event.project}:${event.sessionId}`);
   // A visit and engaged marker count once per tab session, regardless of client retries/event IDs.
   const eventId = await hash(
-    `${event.project}:${["visit", "engaged"].includes(event.event) ? `${event.sessionId}:${event.event}` : event.eventId}`
+    `${event.project}:${["visit", "engaged", "story_arrival", "story_explored"].includes(event.event) ? `${event.sessionId}:${event.event}${event.distribution ? `:${distributionMetric(event.distribution, event.event === "story_arrival" ? "arrival" : "explored")}` : ""}` : event.eventId}`
   );
   // Optional wire compatibility must not create identity history before a product's
   // reviewed consent client is enabled. Other products still count anonymously.
@@ -286,6 +312,31 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
               eventId + ":target",
               session,
               `referral_${event.target.replaceAll("-", "_")}`,
+              event.mode,
+              day,
+              timestamp
+            )
+        ]
+      : []),
+    ...(event.distribution
+      ? [
+          db
+            .prepare(
+              "INSERT OR IGNORE INTO wh_analytics_events(project,event_id,session_hash,kind,seconds,mode,day,received_at) VALUES(?,?,?,?,0,?,?,?)"
+            )
+            .bind(
+              event.project,
+              eventId + ":distribution",
+              session,
+              distributionMetric(
+                event.distribution,
+                event.event === "story_arrival"
+                  ? "arrival"
+                  : event.event === "story_explored"
+                    ? "explored"
+                    : "opening",
+                event.target
+              ),
               event.mode,
               day,
               timestamp

@@ -1,3 +1,4 @@
+import { portfolioEdition } from "../data/portfolio-edition";
 import type { APIRoute } from "astro";
 import {
   asText,
@@ -63,6 +64,7 @@ export const GET: APIRoute = async ({ cache }) => {
     conversationResult.cacheHint
   ])
     if (hint) cache.set(hint);
+  const edition = portfolioEdition(dispatchResult.dispatches);
   const urls: Array<{ path: string; lastmod?: string }> = [
     ...[
       "/",
@@ -83,6 +85,7 @@ export const GET: APIRoute = async ({ cache }) => {
       "/agents/",
       "/contact/"
     ].map((path) => ({ path })),
+    ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate

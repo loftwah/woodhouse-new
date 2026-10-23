@@ -3,8 +3,8 @@
 import { type PortfolioReport, type ReportingWindow } from "./portfolio-analytics.ts";
 import { dailyPoints, dailyStatus, reportQualifier } from "./analytics-workbench.ts";
 export type OutcomeStory = {
-  key: "link-check" | "music";
-  project: "app-composer" | "loftwahfm";
+  key: "link-check" | "music" | "bubbles" | "protocol-11" | "fighter" | "shoalshot";
+  project: "app-composer" | "loftwahfm" | "bubbles" | "protocol-11" | "fighter" | "shoalshot";
   name: string;
   title: string;
   benefit: string;
@@ -18,6 +18,8 @@ export type OutcomeStory = {
   reportHref: string;
   reportScope: string;
   boundary: string;
+  mode?: string;
+  nativeLabel?: string;
 };
 export const outcomeStories: readonly OutcomeStory[] = [
   {
@@ -62,6 +64,94 @@ export const outcomeStories: readonly OutcomeStory[] = [
       "FM’s native report opens its latest 30-day overview. It includes its own source filters; its moving window may differ from this frozen Woodhouse report.",
     boundary:
       "Accepted audible music time across all admitted sources. This is not gameplay time or unique listeners. History before 15 October may include unmarked verification."
+  },
+  {
+    nativeLabel: "Open the native game",
+    key: "protocol-11",
+    project: "protocol-11",
+    name: "Protocol 11",
+    title: "A different table every round.",
+    benefit:
+      "Play a changing card game solo or with friends. Each round brings another Protocol; the House Circuit gives a solo player a path through twelve stages.",
+    relationship:
+      "Classic, Journey, private rooms and public matchmaking are separate modes. This story selects reported active time in Classic only; it never borrows time from another mode.",
+    measure: "active_seconds_classic",
+    label: "Classic active gameplay",
+    colour: "#79d8ff",
+    artwork: "/share/protocol-11/last-card-cover.jpg",
+    actionHref: "https://protocol11.loftwah.com/",
+    actionLabel: "Play Protocol 11",
+    reportHref: "https://protocol11.loftwah.com/",
+    reportScope:
+      "Open the native game to explore its table history and rules. Native records describe their own modes and rules; this report counts accepted active seconds in Classic, not scores.",
+    boundary:
+      "Classic mode only. Accepted active gameplay seconds are not completed hands, scores or unique players. Collection and mode history cover only part of this week; no weekly record is earned.",
+    mode: "Classic"
+  },
+  {
+    nativeLabel: "Open the native game",
+    key: "shoalshot",
+    project: "shoalshot",
+    name: "SHOALSHOT",
+    title: "Read the tide. Place the shot.",
+    benefit:
+      "Read the tide, line up the target and place a pressure shot. SHOALSHOT puts the feel of that decision at the centre of its Tide Pool arcade slice on phone and desktop.",
+    relationship:
+      "A reported completion is a source-defined terminal game/result transition. The native game owns catches, collection, saves and rewards; a Woodhouse count never becomes a verified catch or leaderboard result.",
+    measure: "game_completions",
+    label: "Reported completed runs",
+    colour: "#64d6bd",
+    artwork: "/share/shoalshot/showcase-still/tideglass-landscape-field.jpg",
+    actionHref: "https://shoalshot.loftwah.com/",
+    actionLabel: "Play SHOALSHOT",
+    reportHref: "https://shoalshot.loftwah.com/",
+    reportScope:
+      "Open SHOALSHOT and use its native collection and results. The public aggregate counts completed runs; it does not expose catches or a comparable leaderboard.",
+    boundary:
+      "Accepted run-completion events, including repeat runs. Partial collection and possible historical verification traffic prevent a player, catch or record claim."
+  },
+  {
+    key: "fighter",
+    project: "fighter",
+    name: "Fighter",
+    title: "A squad worth coming back to.",
+    benefit:
+      "Collect fighters, build a squad and commit moves on a shared Charge Strip. A short battle leads into a collection of characters and a story to work through.",
+    relationship:
+      "The public contract counts launched non-tutorial fights ending in a win, loss, draw or forfeit. Only the separate replay measure is limited to Quick Fight. Native results and character progress remain with Fighter.",
+    measure: "game_completions",
+    label: "Reported fight completions",
+    colour: "#ff746a",
+    artwork: "/share/fighter/loftwah-fighter-showcase-1080p.jpg",
+    actionHref: "https://fighter.loftwah.com/",
+    actionLabel: "Open Fighter",
+    reportHref: "https://fighter.loftwah.com/?view=analytics",
+    reportScope:
+      "Fighter’s native aggregate view has its own moving window. This completion count is not a player score or evidence that every mode or phone journey has passed its release gates.",
+    boundary:
+      "Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. Early history may include verification. These are not wins or unique players; no comparative record is claimed."
+  },
+  {
+    nativeLabel: "Open the native global boards",
+    key: "bubbles",
+    project: "bubbles",
+    name: "Bubbles",
+    title: "Find the angle. Clear the board.",
+    benefit:
+      "Line up a shot, match three or more and clear the board. Bubbles puts an arcade round, saved progress and a native global board in a browser tab.",
+    relationship:
+      "Woodhouse reads the public gameplay aggregates. Bubbles keeps score verification, stars and its global board. A zero run-completion count for this window does not mean nobody played outside the observed coverage.",
+    measure: "game_completions",
+    label: "Reported completed runs",
+    colour: "#d8c2ff",
+    artwork: "/share/bubbles/classic-gameplay-desktop-20261012.jpg",
+    actionHref: "https://bubbles.loftwah.com/",
+    actionLabel: "Play Bubbles",
+    reportHref: "https://bubbles.loftwah.com/leaderboards?scope=global",
+    reportScope:
+      "The native global board owns eligible scores, ties and participants. Its scope differs from this dated aggregate of completion events.",
+    boundary:
+      "Reported terminal runs across supported games within partial collection; not a count of successful board clears. Replay measurement is unavailable, not zero. Historical verification may be present; no popularity or best-score claim."
   }
 ];
 export function storyFor(value: string | null | undefined) {
@@ -82,13 +172,14 @@ export function outcomeEvidence(
   const display =
     value === null
       ? "Not measured"
-      : story.measure === "listening_seconds"
+      : metric?.unit === "seconds"
         ? `${Math.floor(value / 3600)}h ${Math.floor((value % 3600) / 60)}m ${value % 60}s`
         : value.toLocaleString("en-AU");
   return {
     value,
     display,
     definition: metric?.definition ?? "The source has not supplied this measure for these dates.",
+    unit: metric?.unit ?? (story.measure.includes("seconds") ? "seconds" : "count"),
     quality: metric?.quality ?? "unavailable",
     coverage: reportQualifier(metric, source, period),
     daily,

@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
-import { transform } from "esbuild";
+import { build } from "esbuild";
+import { dirname, resolve } from "node:path";
 const consentKey = "woodhouse:analytics-browser-consent";
 const tokenKey = "woodhouse:analytics-browser-token";
 const token = "aabbccdd-1122-4333-8444-aabbccddeeff";
@@ -11,7 +12,13 @@ const scripts = await Promise.all(
     async (path) => {
       const source = readFileSync(path, "utf8").match(/<script>([\s\S]*?)<\/script>/)?.[1];
       assert(source);
-      return (await transform(source, { loader: "ts" })).code;
+      const bundled = await build({
+        stdin: { contents: source, loader: "ts", resolveDir: dirname(resolve(path)) },
+        bundle: true,
+        write: false,
+        format: "iife"
+      });
+      return bundled.outputFiles[0]!.text;
     }
   )
 );
@@ -22,6 +29,8 @@ async function browser(
     failWrites?: boolean;
     failRemovals?: boolean;
     privacy?: string;
+    distribution?: unknown;
+    href?: string;
   } = {}
 ) {
   let clock = Date.parse("2026-10-16T03:00:00Z"),
@@ -34,7 +43,8 @@ async function browser(
   const operations: string[] = [],
     sent: Record<string, unknown>[] = [];
   const listeners = new Map<string, (event?: unknown) => void>();
-  const timers: (() => void)[] = [];
+  const timers = new Map<number, () => void>();
+  let nextTimer = 0;
   const status = { textContent: "" },
     returnStatus = { textContent: "" };
   let choose: (() => void) | undefined, chooseReturn: (() => void) | undefined;
@@ -53,14 +63,21 @@ async function browser(
   };
   const window = Object.assign(new EventTarget(), {
     setInterval: (fn: () => void) => {
-      timers.push(fn);
-      return timers.length;
+      timers.set(++nextTimer, fn);
+      return nextTimer;
     },
-    clearInterval: () => {}
+    clearInterval: (id: number) => timers.delete(id)
+  });
+  const register = window.addEventListener.bind(window);
+  Object.assign(window, {
+    addEventListener(name: string, fn: EventListener, options?: AddEventListenerOptions | boolean) {
+      listeners.set(name, fn as (event?: unknown) => void);
+      register(name, fn, options);
+    }
   });
   class Element {
     closest() {
-      return { href: "https://fm.loftwah.com/" };
+      return { href: options.href ?? "https://fm.loftwah.com/" };
     }
   }
   const navigator = {
@@ -75,6 +92,9 @@ async function browser(
       ({
         "#audience-destinations": {
           textContent: JSON.stringify([{ slug: "loftwahfm", origin: "https://fm.loftwah.com" }])
+        },
+        "#story-distribution-context": {
+          textContent: JSON.stringify(options.distribution ?? null)
         },
         "[data-analytics-choice]": button,
         "[data-analytics-status]": status,
@@ -125,7 +145,7 @@ async function browser(
       }
     },
     sessionStorage: { getItem: () => null, setItem: () => {} },
-    clearInterval: () => {},
+    clearInterval: (id: number) => timers.delete(id),
     fetch: async (_: unknown, init: { body: string }) => {
       sent.push(JSON.parse(init.body));
       return new Response();
@@ -155,6 +175,15 @@ async function browser(
       chooseReturn();
     },
     clickProject: () => listeners.get("click")?.({ isTrusted: true, target: new Element() }),
+    untrustedInput: () => listeners.get("keydown")?.({ isTrusted: false }),
+    restore: () => window.dispatchEvent(Object.assign(new Event("pageshow"), { persisted: true })),
+    idleSeconds(seconds: number) {
+      for (let i = 0; i < seconds; i++) {
+        clock += 1000;
+        ticks += 1000;
+        timers.forEach((fn) => fn());
+      }
+    },
     activeSeconds(seconds: number) {
       listeners.get("keydown")?.({ isTrusted: true });
       for (let i = 0; i < seconds; i++) {
@@ -169,6 +198,46 @@ async function browser(
     }
   };
 }
+test("story page context follows arrival, active exploration and deliberate openings without creating an identity", async () => {
+  const distribution = { edition: "one-more-round", story: "music", report: "a".repeat(24) };
+  const page = await browser({ distribution });
+  assert.equal(page.sent.filter((event) => event.event === "story_arrival").length, 1);
+  page.untrustedInput();
+  page.idleSeconds(12);
+  assert(!page.sent.some((event) => event.event === "story_explored"));
+  page.activeSeconds(5);
+  assert(!page.sent.some((event) => event.event === "story_explored"));
+  page.window.dispatchEvent(new Event("pagehide"));
+  page.restore();
+  page.idleSeconds(12);
+  assert(!page.sent.some((event) => event.event === "story_explored"));
+  page.activeSeconds(5);
+  assert.equal(page.sent.filter((event) => event.event === "story_explored").length, 1);
+  page.clickProject();
+  assert.deepEqual(page.sent.at(-1)!.distribution, distribution);
+  assert.equal(page.sent.at(-1)!.target, "loftwahfm");
+  assert(page.sent.every((event) => !event.browserToken));
+  page.activeSeconds(12);
+  assert.equal(page.sent.filter((event) => event.event === "story_explored").length, 1);
+  for (const privacy of ["qa", "off", "webdriver", "dnt", "gpc", "preview"])
+    assert.equal((await browser({ distribution, privacy })).sent.length, 0);
+  const invalid = await browser({ distribution: { ...distribution, extra: "private" } });
+  invalid.activeSeconds(12);
+  assert(
+    !invalid.sent.some(
+      (event) => typeof event.event === "string" && event.event.startsWith("story_")
+    )
+  );
+  const native = await browser({
+    distribution: { ...distribution, story: "link-check" },
+    href: "https://share.loftwah.com/"
+  });
+  native.clickProject();
+  assert.equal(native.sent.at(-1)!.target, "app-composer");
+  const unrelated = await browser({ distribution, href: "https://share.loftwah.com/" });
+  unrelated.clickProject();
+  assert(!unrelated.sent.some((event) => event.event === "project_open"));
+});
 test("default off never creates or sends a browser token; consent persists before reload", async () => {
   const page = await browser();
   assert.equal(page.sent.length, 1);

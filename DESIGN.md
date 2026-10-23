@@ -170,3 +170,14 @@ The opening leads with useful actions, then separates the recorded outcome from
 its relationship. FM's all-source listening never becomes game-attributed time.
 Frozen selection governs the page, caption, OG and three image formats. Native
 reports use supported rolling scopes, with differences stated beside each link.
+
+## Portfolio edition — reviewed 23 October 2026
+
+One more round extends the ink/lime publication with an asymmetric cover and
+paired native product artwork. Protocol 11 and SHOALSHOT lead with different
+invitations; Bubbles and Fighter have shorter features. Music and making form a
+second spread. Phone composition stacks the same substance and actions. Native
+experiences open separately, preserving the frozen story and reading position.
+The edition cover is an editorial composition, never a ranked podium. Its fixed
+snapshot, caption, OG and landscape/square/portrait exports agree. Prospective
+Woodhouse discovery appears in its own labelled window beneath the frozen story.

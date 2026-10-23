@@ -1,4 +1,5 @@
 ---
+import EditionInvitation from "../components/EditionInvitation.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GameMedia from "../components/GameMedia.astro";
 import GalleryPagination from "../components/GalleryPagination.astro";
@@ -211,6 +212,7 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
         <p>Screenshots, clips and artwork. Copy or download.</p>
       </div>
     </header>
+    <EditionInvitation />
     <div class="gallery-controls">
       <form method="get" action="/share/" class="mobile-filters" data-gallery-filters>
         <label>

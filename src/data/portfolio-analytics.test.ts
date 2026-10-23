@@ -17,6 +17,7 @@ import {
 import { readPortfolioReport, createPortfolioReport, projectReport } from "./portfolio-reports.ts";
 import { dateDays } from "./analytics-workbench.ts";
 import { reportSvg, reportFormats } from "./portfolio-card.ts";
+import { loadStoryDistribution } from "./story-distribution.ts";
 function database(modeRollup = true) {
   const sqlite = new DatabaseSync(":memory:");
   sqlite.exec(readFileSync("migrations/0001-portfolio-analytics.sql", "utf8"));
@@ -520,6 +521,188 @@ function woodhouseVisit(extra = {}) {
   return payload("visit", { project: "woodhouse", mode: "site", browserToken, ...extra });
 }
 const woodhouseHeaders = { origin: "https://woodhouse.loftwah.com" };
+test("story distribution rejects uncontrolled context and unknown frozen reports without storing events", async () => {
+  const { db, sqlite } = database();
+  const distribution = { edition: "one-more-round", story: "bubbles", report: "a".repeat(24) };
+  for (const context of [
+    distribution,
+    { ...distribution, edition: "private@example.test" },
+    { ...distribution, story: "arbitrary" },
+    { ...distribution, report: "private@example.test" },
+    { ...distribution, campaign: "personal" }
+  ]) {
+    assert.equal(
+      (
+        await collectEngagement(
+          request(
+            woodhouseVisit({ event: "story_arrival", distribution: context }),
+            woodhouseHeaders
+          ),
+          db,
+          now
+        )
+      ).status,
+      400
+    );
+  }
+  assert.equal(
+    (
+      await collectEngagement(
+        request(woodhouseVisit({ event: "story_explored" }), woodhouseHeaders),
+        db,
+        now
+      )
+    ).status,
+    400
+  );
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM wh_analytics_events").get()!.n, 0);
+  sqlite.exec("UPDATE wh_analytics_limits SET attempts=120");
+  assert.equal(
+    (
+      await collectEngagement(
+        request(woodhouseVisit({ event: "story_arrival", distribution }), woodhouseHeaders),
+        db,
+        now
+      )
+    ).status,
+    429,
+    "Volume admission precedes snapshot-body lookup"
+  );
+  assert.equal(
+    (
+      await loadStoryDistribution(
+        db,
+        { from: "2026-10-15", to: "2026-10-15", days: 1, complete: false },
+        { edition: "one-more-round" },
+        now
+      )
+    ).quality,
+    "unavailable"
+  );
+  sqlite.close();
+});
+test("story distribution uses real SQLite rollups, independent counts, bounded snapshots and existing QA exclusions", async () => {
+  const { db, sqlite } = database();
+  const report = await createPortfolioReport(db, 7, new Set(["woodhouse"]), fetch, now);
+  assert(report);
+  const distribution = { edition: "one-more-round", story: "bubbles", report: report.id };
+  const send = (event: string, extra = {}, headers = woodhouseHeaders) =>
+    collectEngagement(request(woodhouseVisit({ event, distribution, ...extra }), headers), db, now);
+  for (const h of [
+    { "x-analytics-test": "1" },
+    { dnt: "1" },
+    { "sec-gpc": "1" },
+    { "user-agent": "Playwright" }
+  ]) {
+    assert.equal((await send("story_arrival", {}, { ...woodhouseHeaders, ...h })).status, 204);
+  }
+  assert.equal(
+    sqlite
+      .prepare("SELECT COUNT(*) AS n FROM wh_analytics_events WHERE kind LIKE 'distribution:%'")
+      .get()!.n,
+    0
+  );
+  assert.equal((await send("story_arrival")).status, 204);
+  await send("story_arrival");
+  await send("story_explored");
+  await send("story_explored");
+  await send("project_open", { target: "bubbles" });
+  await send("project_open", { target: "bubbles" });
+  await send("project_open", { target: "fighter" });
+  assert.equal((await send("visit")).status, 400);
+  assert.equal(
+    (await collectEngagement(request(payload("story_arrival", { distribution })), db, now)).status,
+    400
+  );
+  const period = { from: "2026-10-15", to: "2026-10-15", days: 1, complete: false };
+  const observed = await loadStoryDistribution(db, period, { edition: "one-more-round" }, now);
+  assert.equal(observed.startedAt, "2026-10-15T00:00:00.000Z");
+  assert.equal(observed.quality, "partial");
+  assert.deepEqual(observed.stories, [
+    {
+      context: distribution,
+      arrivals: 1,
+      explored: 1,
+      openings: 3,
+      destinations: [
+        { target: "bubbles", openings: 2 },
+        { target: "fighter", openings: 1 }
+      ]
+    }
+  ]);
+  assert.equal(
+    (await localAnalytics(db, "woodhouse", 7, now)).metrics.find((m) => m.key === "project_opens")
+      ?.value,
+    3
+  );
+  assert(!JSON.stringify(observed).includes(browserToken));
+  assert(!Object.keys(observed).some((key) => /rate|conversion/i.test(key)));
+  assert.equal(
+    (await loadStoryDistribution(db, period, { edition: "one-more-round", story: "music" }, now))
+      .stories.length,
+    0
+  );
+  const previous = await loadStoryDistribution(
+    db,
+    { ...period, from: "2026-10-14", to: "2026-10-14" },
+    { edition: "one-more-round" },
+    now
+  );
+  assert.equal(previous.quality, "unavailable");
+  await assert.rejects(
+    loadStoryDistribution(
+      db,
+      { ...period, from: "2025-01-01", days: 288 },
+      { edition: "one-more-round" },
+      now
+    ),
+    /Invalid distribution selection/
+  );
+  await assert.rejects(
+    loadStoryDistribution(db, period, { edition: "one-more-round", report: "*" }, now),
+    /Invalid distribution selection/
+  );
+  sqlite.exec("DELETE FROM wh_analytics_events");
+  assert.deepEqual(
+    (await loadStoryDistribution(db, period, { edition: "one-more-round", report: report.id }, now))
+      .stories,
+    observed.stories
+  );
+  sqlite.close();
+});
+test("distribution coverage starts within the selected report and story, never unrelated earlier observations", async () => {
+  const { db, sqlite } = database();
+  const firstReport = "a".repeat(24),
+    selectedReport = "b".repeat(24);
+  const insert = sqlite.prepare(
+    "INSERT INTO wh_analytics_daily(project,day,metric,value) VALUES('woodhouse',?,?,1)"
+  );
+  insert.run("2026-10-10", `distribution:one-more-round:music:${firstReport}:arrival`);
+  insert.run("2026-10-12", `distribution:one-more-round:music:${selectedReport}:arrival`);
+  insert.run("2026-10-14", `distribution:one-more-round:bubbles:${selectedReport}:arrival`);
+  const period = { from: "2026-10-10", to: "2026-10-15", days: 6, complete: false };
+  const selected = { edition: "one-more-round" as const, report: selectedReport };
+  assert.equal(
+    (await loadStoryDistribution(db, period, selected, now)).startedAt,
+    "2026-10-12T00:00:00.000Z"
+  );
+  assert.equal(
+    (await loadStoryDistribution(db, period, { ...selected, story: "bubbles" }, now)).startedAt,
+    "2026-10-14T00:00:00.000Z"
+  );
+  const missing = await loadStoryDistribution(db, period, { ...selected, story: "fighter" }, now);
+  assert.equal(missing.startedAt, null);
+  assert.equal(missing.quality, "unavailable");
+  const beforeSelected = await loadStoryDistribution(
+    db,
+    { from: "2026-10-11", to: "2026-10-11", days: 1, complete: true },
+    selected,
+    now
+  );
+  assert.equal(beforeSelected.quality, "unavailable");
+  assert.deepEqual(beforeSelected.stories, []);
+  sqlite.close();
+});
 test("optional browser associations are project-scoped hashes, deduplicate sessions and preserve anonymous counts", async () => {
   const { db, sqlite } = database();
   const visit = woodhouseVisit();

@@ -156,3 +156,17 @@ customer adoption or join those actions to the Link Check inspection history.
 Missing, measured zero, bounded and partial coverage retain their meanings. An
 FM total includes all admitted sources; a separate game attribution figure never
 inherits that total. No person-level funnel or invented milestone is implied.
+
+## Portfolio editions — reviewed 23 October 2026
+
+`/editions/one-more-round/` is the first current audience edition. Its existing
+EmDash portfolio dispatch owns the editorial text, date and fixed report link.
+The edition opens with different games to try, then music and a useful builder
+connection. Six source-specific stories share the existing daily-history and
+frozen export path. A closed reporting week does not make partial collection
+complete or earn a record. Historical dispatches and report bodies stay intact.
+
+The edition also exposes prospective Woodhouse-only story observations: arrivals,
+ten active foreground seconds and deliberate native openings as separate counts.
+They establish neither a shared-post referral, an ordered funnel, downstream use
+nor unique people. Measurement exclusions and privacy choices still dominate.

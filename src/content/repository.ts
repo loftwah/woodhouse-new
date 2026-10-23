@@ -552,7 +552,18 @@ export async function listPublicSearchItems() {
     listPublicConversations(),
     listPublicSnapshots()
   ]);
+  const edition = dispatchResult.dispatches.find((d) => d.slug === "one-more-round");
   const pages: PublicSearchItem[] = [
+    ...(edition
+      ? [
+          {
+            title: edition.title,
+            description: edition.deck,
+            href: "/editions/one-more-round/",
+            section: "Portfolio edition"
+          }
+        ]
+      : []),
     ...[
       {
         title: "Share desk",
@@ -564,7 +575,7 @@ export async function listPublicSearchItems() {
       {
         title: "Connected products",
         description:
-          "Explore completed Link Checks and music heard, then try the apps and share the evidence.",
+          "Explore game outcomes, completed Link Checks and music heard, then try the products and share a frozen story.",
         href: "/connections/",
         section: "Factory"
       },
