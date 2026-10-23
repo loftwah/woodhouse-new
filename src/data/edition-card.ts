@@ -80,7 +80,7 @@ export function editionCard(
         story.colour
       );
     });
-  const foot = landscape ? 550 : portrait ? 1510 : 1040;
+  const foot = landscape ? 535 : portrait ? 1510 : 1040;
   svg += text(
     p,
     foot,
@@ -89,18 +89,26 @@ export function editionCard(
   );
   svg += text(
     p,
-    foot + (portrait ? 54 : 32),
-    "Different actions, not a ranking or unique players. No weekly record.",
+    foot + (portrait ? 54 : 25),
+    "No ranking, unique people or weekly record. Early history may include verification.",
     landscape ? 17 : portrait ? 25 : 21
   );
   svg += text(
     p,
-    foot + (portrait ? 108 : 64),
+    foot + (portrait ? 108 : 50),
     `Edited ${edition.reviewDate} · snapshot ${report.id}`,
     landscape ? 16 : portrait ? 24 : 20,
     "#a9b8d0"
   );
   const url = new URL("/editions/one-more-round/", origin).href;
-  svg += text(p, h - (portrait ? 105 : 30), url, landscape ? 18 : portrait ? 27 : 23);
+  const urlSize = landscape ? 18 : portrait ? 27 : 23;
+  const urlLimit = Math.floor(wide / (urlSize * 0.62));
+  const urlLines = Array.from({ length: Math.ceil(url.length / urlLimit) }, (_, i) =>
+    url.slice(i * urlLimit, (i + 1) * urlLimit)
+  );
+  const urlY = landscape ? 612 : portrait ? 1800 : 1145;
+  urlLines.forEach((line, i) => {
+    svg += text(p, urlY + i * urlSize * 1.3, line, urlSize);
+  });
   return svg + "</g></svg>";
 }

@@ -168,6 +168,34 @@ test("caption binds the edition pin and rejects a different frozen snapshot", ()
 });
 
 for (const format of Object.keys(reportFormats) as ReportFormat[]) {
+  test(`${format} cover keeps a long preview address readable without colliding with provenance`, () => {
+    const edition = portfolioEdition([dispatch()])!;
+    const origin = "https://woodhouse-loftwah-preview.loftwah.workers.dev";
+    const svg = editionCard(edition, report(), format, origin, new Map(), new Set());
+    const lines = [
+      ...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)" font-size="([\d.]+)"[^>]*>([^<]*)<\/text>/g)
+    ].map((m) => ({ x: Number(m[1]), y: Number(m[2]), size: Number(m[3]), text: m[4]! }));
+    const footer = lines.slice(lines.findIndex((line) => line.text.startsWith("2026-10-12")));
+    for (let i = 1; i < footer.length; i++) {
+      const previous = footer[i - 1]!,
+        next = footer[i]!;
+      assert.ok(
+        next.y - next.size * 0.8 > previous.y + previous.size * 0.2,
+        "footer text must have separate readable baselines"
+      );
+    }
+    const address = footer.filter(
+      (line) =>
+        line.text.includes("https://") ||
+        line.y > footer.find((line) => line.text.includes("https://"))!.y
+    );
+    assert.equal(address.map((line) => line.text).join(""), origin + "/editions/one-more-round/");
+    for (const line of address)
+      assert.ok(
+        line.x + line.text.length * line.size * 0.62 <= reportFormats[format].width - 40,
+        "address must fit the image width"
+      );
+  });
   test(`${format} edition composition preserves selected measures, provenance and XML escaping`, () => {
     const edition = {
       ...portfolioEdition([dispatch()])!,
@@ -194,7 +222,7 @@ for (const format of Object.keys(reportFormats) as ReportFormat[]) {
     assert.ok(!svg.includes("999"));
     assert.ok(svg.includes("2026-10-12–2026-10-18 UTC"));
     assert.ok(svg.includes("snapshot " + id));
-    assert.ok(svg.includes("No weekly record."));
+    assert.ok(svg.includes("No ranking, unique people or weekly record."));
     for (const match of svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)"/g)) {
       assert.ok(Number(match[1]) <= width);
       assert.ok(Number(match[2]) <= height);
