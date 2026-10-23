@@ -54,6 +54,7 @@ import { analyticsObservations } from "../data/analytics-observations";
 import { discoveryCaption, discoveryStory } from "../data/analytics-story";
 import DiscoveryStoryPanel from "../components/DiscoveryStoryPanel.astro";
 import ReportShare from "../components/ReportShare.astro";
+import OutcomeFindings from "../components/OutcomeFindings.astro";
 export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -665,6 +666,9 @@ const dataPayload = {
             <form method="get" action="/activity/" class="custom-dates" data-date-form>
               {selected && <input type="hidden" name="project" value={selected} />}
               <input type="hidden" name="measure" value={measure.key} />
+              {explicitDestination && selectedDestinationSlug && (
+                <input type="hidden" name="destination" value={selectedDestinationSlug} />
+              )}
               {qaOff && <input type="hidden" name="analytics" value="off" />}
               {qaValue !== null && <input type="hidden" name="qa" value={qaValue || "1"} />}
               <label>
@@ -725,6 +729,15 @@ const dataPayload = {
               : `Woodhouse to ${destinationStory.name}: ${destinationStory.valueLabel} recorded project opens, ${window.from} to ${window.to} UTC`
           }
           focus
+        />
+      )}
+      {overview && (
+        <OutcomeFindings
+          report={report}
+          period={window}
+          published={publicIds}
+          excluded={qaOff}
+          qa={qaValue}
         />
       )}
       {overview && (
