@@ -260,9 +260,6 @@ const cleanDays = metricRows.map(
   (r) => days.filter((day) => dailyStatus(r.data, r.metric, day) === "clean").length
 );
 const longestClean = Math.max(0, ...cleanDays);
-const sourcesReporting = allRows.filter((r) =>
-  r.data?.metrics.some((m) => m.value !== null)
-).length;
 // The last complete week is evaluated against the frozen report's own capture
 // time, so a saved snapshot keeps describing the same weeks after it is reopened.
 // Retained lookback history is preferred, so a seven-day report can still show
@@ -666,7 +663,7 @@ const dataPayload = {
     <div class="workbench-body">
       <header class="workbench-heading">
         <div>
-          <h1>{selected ? `${names.get(selected)} analytics` : "Analytics"}</h1>
+          <h1>{selected ? names.get(selected) : "Analytics"}</h1>
           <p class="product-view-label">
             {view ? view.label : "Each project on its own relevant measure"}
           </p>
@@ -756,25 +753,19 @@ const dataPayload = {
       </nav>
       <div class="snapshot-line">
         <span>
-          {dateLabel(window.from)} – {dateLabel(window.to)} · {window.days}{" "}
-          {window.days === 1 ? "day" : "days"} ·{" "}
-          {window.complete ? "Closed calendar dates" : "Today is partial"}
+          {dateLabel(window.from)} – {dateLabel(window.to)} · UTC
         </span>
         <span>
-          {overview
-            ? `${available}/${applicable.length} projects report their measure · ${sourcesReporting}/${allRows.length} sources reporting`
-            : `${available}/${applicable.length} reporting projects for this measure · ${sourcesReporting}/${allRows.length} sources reporting`}{" "}
-          {frozen ? "· Saved snapshot" : ""}
+          {available}/{applicable.length} reporting ·{" "}
+          {window.complete ? "Closed dates" : "Today is partial"}
+          {frozen && (
+            <>
+              {" "}
+              · Saved · <a href={pageLink({ latest: true })}>Refresh</a>
+            </>
+          )}
         </span>
       </div>
-      {frozen && (
-        <p class="saved-report">
-          This report is frozen at {report?.createdAt.replace("T", " ").slice(0, 16)} UTC.{" "}
-          <a href={pageLink({ latest: true })}>Refresh these dates</a> ·{" "}
-          <a href={pageLink({ days: 30 })}>Latest 30 days</a>
-        </p>
-      )}
-
       {invalidWindow && (
         <p class="workbench-alert" role="alert">
           Choose real UTC dates in order, ending no later than today, with a maximum 90-day window.
@@ -858,6 +849,16 @@ const dataPayload = {
                       : `${unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · gaps mean unavailable`}
                   </p>
                 </div>
+                {!overview && selected && (
+                  <p class="selected-total">
+                    <strong>
+                      {metricRows[0]?.metric ? formatMetric(metricRows[0].metric) : "—"}
+                    </strong>
+                    <span>
+                      {reportQualifier(metricRows[0]?.metric, metricRows[0]?.data ?? null, window)}
+                    </span>
+                  </p>
+                )}
                 <form class="measure-picker" method="get" action="/activity/">
                   {[...new URL(pageLink(), Astro.url.origin).searchParams.entries()]
                     .filter(([key]) => key !== "measure")
@@ -896,7 +897,7 @@ const dataPayload = {
                   </button>
                 </div>
               </div>
-              {!overview && <p class="mobile-measure-reading">{measure.meaning}</p>}
+
               {overview ? (
                 <div class="summary-table-wrap">
                   <table class="summary-table">
@@ -963,22 +964,6 @@ const dataPayload = {
                 </div>
               ) : (
                 <>
-                  <dl class="metric-strip">
-                    {headlines.map((r) => (
-                      <div>
-                        <dt>
-                          <span
-                            class="source-dot"
-                            style={`--source:${r.colour}`}
-                            aria-hidden="true"
-                          ></span>
-                          {r.name}
-                        </dt>
-                        <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
-                        <small>{reportQualifier(r.metric, r.data, window)}</small>
-                      </div>
-                    ))}
-                  </dl>
                   {!hasDaily && (
                     <div class="chart-empty">
                       <strong>No daily measurements for this selection</strong>
@@ -1021,6 +1006,28 @@ const dataPayload = {
                     </button>
                   </div>
                 </>
+              )}
+              {!overview && (
+                <details class="chart-data">
+                  <summary>Related measures & what this counts</summary>
+                  <p>{measure.meaning}</p>{" "}
+                  <dl class="metric-strip">
+                    {headlines.map((r) => (
+                      <div>
+                        <dt>
+                          <span
+                            class="source-dot"
+                            style={`--source:${r.colour}`}
+                            aria-hidden="true"
+                          ></span>
+                          {r.name}
+                        </dt>
+                        <dd>{r.metric ? formatMetric(r.metric) : "—"}</dd>
+                        <small>{reportQualifier(r.metric, r.data, window)}</small>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
               )}
               {!overview && (
                 <details class="chart-data">
@@ -1132,7 +1139,7 @@ const dataPayload = {
             link={shareLink}
             jsonHref={`/api/portfolio-report.json?report=${report?.id ?? ""}`}
             heading="Share this report"
-            note="Download an image or copy a ready caption and link. Saved reports keep these exact figures and dates."
+            note="The same saved figures and dates in every format."
             alt={`${title}: ${measure.label}, ${window.from} to ${window.to} UTC`}
             expanded
           />

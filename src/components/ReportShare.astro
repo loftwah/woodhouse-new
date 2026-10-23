@@ -31,7 +31,11 @@ const {
   <h2 id="share-report-heading">{heading}</h2>
   <p class="share-report__note">{note}</p>
   {caption ? (
-    <details class="share-panel" open={expanded} data-share-panel>
+    <details
+      class:list={["share-panel", { "share-panel--expanded": expanded }]}
+      open={expanded}
+      data-share-panel
+    >
       <summary>
         {expanded ? "Image and downloads" : "Share report"}
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">

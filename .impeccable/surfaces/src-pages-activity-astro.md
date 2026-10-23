@@ -132,3 +132,8 @@ Task switching freezes the currently displayed report; date/project/measure and
 measurement exclusions remain in scope. Historical review receipts above retain
 their original source and do not qualify this change. Production and physical
 share-sheet acceptance require their own current evidence.
+
+
+Phone review correction: the selected plot precedes supporting headline measures
+and the full metric definition. A compact date/status strip replaces the repeated
+saved-report paragraph. Share download/copy actions precede the preview on phones.

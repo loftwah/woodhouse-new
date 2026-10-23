@@ -2153,3 +2153,95 @@
     padding-block: 0.5rem;
   }
 }
+
+/* Phone review: keep the plotted data and share actions ahead of supporting notes. */
+.selected-total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0 !important;
+}
+.selected-total strong {
+  font-size: 1.4rem;
+  color: var(--paper);
+}
+.selected-total span {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.report-content .share-panel--expanded > summary {
+  display: none;
+}
+.report-content .chart-data > p {
+  padding: 0.75rem 1rem 0;
+  max-width: 75ch;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+@media (max-width: 720px) {
+  .workbench-heading {
+    column-gap: 0.5rem;
+    padding-block: 0.75rem;
+  }
+  .workbench-heading h1 {
+    font-size: 1.5rem;
+  }
+  .workbench-heading > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+  .workbench-heading > .date-toolbar {
+    margin-top: 0;
+  }
+  .workbench-heading .share-jump {
+    font-size: 0.72rem;
+  }
+  .snapshot-line {
+    padding-block: 0.4rem;
+    font-size: 0.68rem;
+    line-height: 1.65;
+  }
+  .snapshot-line a {
+    color: var(--chart-cyan);
+  }
+  .report-content .chart-heading {
+    row-gap: 0.4rem;
+    padding-block: 0.75rem 0.4rem;
+  }
+  .report-content .chart-heading > div:first-child {
+    flex: 1;
+  }
+  .report-content .selected-total {
+    max-width: 105px;
+    display: grid;
+    gap: 0.1rem;
+    text-align: right;
+  }
+  .report-content .selected-total strong {
+    font-size: 1.25rem;
+  }
+  .report-content .selected-total span {
+    font-size: 0.65rem;
+  }
+  .report-content .interactive-plot {
+    height: 260px;
+  }
+  .report-content .share-panel--expanded[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .report-content .share-panel--expanded .share-actions {
+    order: 0;
+  }
+  .report-content .share-panel--expanded .share-preview {
+    order: 1;
+  }
+  .report-content .share-panel--expanded .share-caption {
+    order: 2;
+  }
+  .report-content .share-report__note {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+  }
+}

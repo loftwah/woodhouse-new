@@ -207,3 +207,11 @@ Stories have their own view. Notes groups coverage, discovery, browser returns,
 release context and definitions in native disclosures. No repeated business
 assessment precedes a chart or sharing action. Phone rows retain their coverage
 labels beside the project; the chart and table remain real, accessible data.
+
+
+The phone finish review keeps the selected chart's total and coverage beside its
+measure heading, then shows the plot. Related measures and the full counting
+definition follow in a closed disclosure. Saved-report status shares the compact
+date strip; its full capture metadata remains in Notes. Share actions precede
+the image preview on phones, so copying and downloading never require scrolling
+past a technical caption.
