@@ -125,9 +125,9 @@ export function activityTimeline(report: PortfolioReport): ActivityHistoryNote[]
         project,
         date: started,
         kind: "collection",
-        title: "Collection began",
+        title: "Counting began",
         detail:
-          "First source-reported collection date. Earlier activity is unavailable; the first day may be partial."
+          "The first date this project reported numbers. Earlier activity is missing; the first day may be part of a day."
       });
     const comparable = source.coverage.comparableFrom?.slice(0, 10);
     if (comparable && day(comparable) && comparable <= end)
@@ -135,9 +135,9 @@ export function activityTimeline(report: PortfolioReport): ActivityHistoryNote[]
         project,
         date: comparable,
         kind: "comparison",
-        title: "Comparison boundary",
+        title: "Full days from",
         detail:
-          "The source marks this cutover for comparable history. The first boundary day is excluded from complete-week records; later missing or partial days still matter."
+          "From this date the project has full days we can compare. The boundary day itself is left out of full-week records; missing or part days later still matter."
       });
   }
   for (const release of report.releases ?? []) {

@@ -75,7 +75,7 @@ if (payload) {
   const inspect = (index: number) => {
     const day = dates[index];
     if (!day || !output) return;
-    output.textContent = `${day} UTC · ${data.series.map((s) => `${s.name}: ${s.values[index] === null ? "not measured" : (s.values[index]?.toLocaleString("en-AU") ?? "not measured")}${s.values[index] !== null && data.unit === "seconds" ? " seconds" : ""} (${s.statuses[index]})`).join(" · ")}`;
+    output.textContent = `${day} UTC · ${data.series.map((s) => `${s.name}: ${s.values[index] === null ? "no data" : (s.values[index]?.toLocaleString("en-AU") ?? "no data")}${s.values[index] !== null && data.unit === "seconds" ? " seconds" : ""} (${s.statuses[index]})`).join(" · ")}`;
   };
   if (target) {
     document.querySelector<HTMLElement>("[data-day-inspector]")!.hidden = false;
@@ -95,7 +95,7 @@ if (payload) {
         aria: {
           enabled: true,
           label: {
-            description: `${data.measure} per UTC day, ${data.period.from} to ${data.period.to}. Missing days are gaps. The chart data table contains every value.`
+            description: `${data.measure} per UTC day, ${data.period.from} to ${data.period.to}. Days with no data are blank. The daily table contains every value.`
           },
           decal: { show: true }
         },
@@ -110,7 +110,7 @@ if (payload) {
           axisPointer: { type: "cross", lineStyle: { color: "#8ba2bf", type: "dashed" } },
           valueFormatter: (value) =>
             value === null || value === undefined
-              ? "Not measured"
+              ? "No data"
               : `${Number(value).toLocaleString("en-AU")}${data.unit === "seconds" ? " seconds" : ""}`
         },
         legend: {
@@ -238,7 +238,7 @@ if (payload) {
       const help = document.querySelector("[data-chart-help]");
       if (help)
         help.textContent =
-          "Interactive chart unavailable. Use the chart data table to inspect every value.";
+          "Interactive chart unavailable. Use the daily table to inspect every value.";
     }
   }
   const csvButton = document.querySelector<HTMLButtonElement>("[data-csv-download]");
@@ -249,14 +249,14 @@ if (payload) {
         `"${(/^[=+@\-\t\r]/.test(value) ? "'" + value : value).replace(/"/g, '""')}"`;
       const rows = [
         [
-          "Woodhouse frozen chart data",
+          "Woodhouse chart data",
           `${data.period.from} to ${data.period.to} UTC`,
           `Captured ${data.createdAt ?? "unavailable"}`
         ],
         [
           data.overview
-            ? "Reported activity, not unique people. Each project uses its own relevant measure and unit; values are not added together. Empty values mean unavailable. Coverage accompanies each value."
-            : "Reported activity, not unique people. Empty values mean unavailable. Coverage accompanies each value."
+            ? "Recorded activity, not unique people. Each project uses its own measure and unit; values are not added together. A blank value means no data. The coverage column says how complete each day is."
+            : "Recorded activity, not unique people. A blank value means no data. The coverage column says how complete each day is."
         ],
         [
           "UTC date",
@@ -264,7 +264,7 @@ if (payload) {
             data.overview
               ? `${s.name} · ${s.measure ?? data.measure} (${s.unit ?? data.unit})`
               : `${s.name} · ${data.measure} (${data.unit})`,
-            `${s.name} coverage`
+            `${s.name} data notes`
           ])
         ],
         ...dates.map((d, i) => [
@@ -328,7 +328,7 @@ if (sharePayload) {
       if (status && owner === feedback) status.textContent = "Caption and report link copied.";
     } catch {
       if (status && owner === feedback)
-        status.textContent = "Copy unavailable. Open the frozen permalink and share its address.";
+        status.textContent = "Copy unavailable. Open the saved report and share its address.";
     }
   });
   const button = document.querySelector<HTMLButtonElement>("[data-report-share]");
@@ -383,7 +383,9 @@ if (sharePayload) {
     const owner = ++feedback;
     if (status) status.textContent = "Opening your device's share options…";
     try {
-      await navigator.share({ files: [file], text: caption });
+      // Send only the image. The caption is a separate, editable copy action,
+      // so a native share sheet cannot turn a report into a text wall.
+      await navigator.share({ files: [file] });
       if (status && owner === feedback)
         status.textContent = "Handed to your device's share options.";
     } catch (error) {

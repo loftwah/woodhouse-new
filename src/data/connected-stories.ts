@@ -42,7 +42,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Composer’s native report covers the latest 30 UTC days, all connected route versions. It moves with time; this saved Woodhouse window stays fixed.",
     boundary:
-      "Reported completed inspections, including repeat jobs. Bounded counters can omit activity. These are not unique people or proof of a composed owner workflow."
+      "Reported completed inspections, including repeat jobs. A daily cap can leave some activity out. These are not unique people or proof of a composed owner workflow."
   },
   {
     key: "music",
@@ -63,7 +63,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "FM’s native report opens its latest 30-day overview. It includes its own source filters; its moving window may differ from this frozen Woodhouse report.",
     boundary:
-      "Accepted audible music time across all admitted sources. This is not gameplay time or unique listeners. History before 15 October may include unmarked verification."
+      "Accepted audible music time across all admitted sources. This is not gameplay time or unique listeners. History before 15 October may include unmarked test activity."
   },
   {
     nativeLabel: "Open the native game",
@@ -85,7 +85,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Open the native game to explore its table history and rules. Native records describe their own modes and rules; this report counts accepted active seconds in Classic, not scores.",
     boundary:
-      "Classic mode only. Accepted active gameplay seconds are not completed hands, scores or unique players. Read the selected window’s source coverage before comparing periods.",
+      "Classic mode only. Accepted active gameplay seconds are not completed hands, scores or unique players. Read the data notes for these dates before comparing periods.",
     mode: "Classic"
   },
   {
@@ -129,7 +129,7 @@ export const outcomeStories: readonly OutcomeStory[] = [
     reportScope:
       "Fighter’s native aggregate view has its own moving window. This completion count is not a player score or evidence that every mode or phone journey has passed its release gates.",
     boundary:
-      "Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. These are not wins or unique players. Consult the selected source coverage for historical verification risk."
+      "Accepted non-tutorial fight results: win, loss, draw or forfeit, attributed to launch day. These are not wins or unique players. Read the data notes for older test activity."
   },
   {
     nativeLabel: "Open the native global boards",
@@ -224,5 +224,5 @@ export function storyLink(
 export function outcomeCaption(report: PortfolioReport, story: OutcomeStory, origin?: string) {
   const period = report.period!;
   const evidence = outcomeEvidence(report, story, period);
-  return `${story.title}\n${evidence.display} · ${story.label}\n${period.from} to ${period.to} UTC · ${evidence.coverage}\n${evidence.definition}\n${story.boundary}\n${evidence.limitations.join(" ")}\nSnapshot ${report.id}\n${storyLink(story, report.id, origin)}`;
+  return `${story.title}\n${evidence.display} · ${story.label}\n${period.from} to ${period.to} UTC · ${evidence.coverage}\n${evidence.definition}\n${story.boundary}\n${evidence.limitations.join(" ")}\nReport ${report.id}\n${storyLink(story, report.id, origin)}`;
 }

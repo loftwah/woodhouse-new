@@ -8,9 +8,9 @@
  * the frozen report and the same period, and every surface reads it rather than
  * deriving its own version.
  *
- * A recorded click is discovery intent on this origin. It is not downstream
- * play, adoption, a unique person or evidence that the destination's own
- * reporting agrees.
+ * A recorded click is interest in opening a project on this origin. It is not
+ * downstream play, adoption, a unique person or evidence that the destination's
+ * own reporting agrees.
  */
 
 import {
@@ -69,7 +69,7 @@ const DISCOVERY_MEASURE = {
   label: "Project discovery",
   unit: "count" as const,
   meaning:
-    "Recorded outbound project-open actions from Woodhouse. A click shows discovery intent; it does not establish downstream use or acquisition."
+    "Recorded clicks from Woodhouse to a project. A click shows someone chose to open the project; it does not show what they did after."
 };
 
 const plural = (value: number, one: string, many: string) =>
@@ -143,12 +143,12 @@ export function discoveryStory(input: {
   const coverage = value === null ? "unavailable" : coverageState(observedDays, dates.length);
   const coverageLabel =
     value === null
-      ? "Coverage unavailable"
+      ? "No click count for these dates"
       : coverage === "observed"
         ? period.complete
-          ? `Full coverage · ${plural(observedDays, "day", "days")} observed`
-          : `All days observed · current UTC day partial`
-        : `Partial coverage · ${observedDays} of ${dates.length} days observed`;
+          ? `All ${dates.length} days counted`
+          : "All days so far counted; today is still being counted"
+        : `${observedDays} of ${dates.length} days counted; the rest are missing`;
   const recent = windowSlice(metric, dates.slice(-7));
   const prior = windowSlice(metric, dates.slice(-14, -7));
   const eligible =
@@ -170,26 +170,26 @@ export function discoveryStory(input: {
   const reason =
     value === null
       ? source
-        ? `The collector retained no referral counter for ${name} in these dates. That is an absence of recorded evidence, not a measured zero.`
-        : "Woodhouse did not supply a discovery report for these dates, so no click count can be claimed."
+        ? `No click count was kept for ${name} in these dates. That is missing evidence, not a measured zero.`
+        : "Woodhouse did not provide click numbers for these dates, so no count is claimed."
       : coverage === "partial"
-        ? `Collection began ${firstObserved}; ${observedDays} of ${dates.length} days were observed, so earlier days are missing rather than zero.`
+        ? `Counting began ${firstObserved}; ${observedDays} of ${dates.length} days have data, so earlier days are missing rather than zero.`
         : "";
   const comparisonReason =
     value === null
-      ? "No retained referral counter, so no comparison is claimed."
+      ? "No click count, so no comparison is claimed."
       : !eligible
         ? !period.complete
-          ? "The current UTC day is partial, so the most recent seven days are not a complete week."
+          ? "The current UTC day is not finished, so the last seven days are not a full week."
           : period.days < 14
             ? "These dates are shorter than the two weeks a comparison needs."
             : prior.observedDays < 7
-              ? `The earlier seven days recorded only ${prior.observedDays} of 7, so no comparison is claimed.`
+              ? `The earlier seven days have only ${prior.observedDays} of 7 days counted, so no comparison is claimed.`
               : recent.observedDays < 7
-                ? `The most recent seven days recorded only ${recent.observedDays} of 7, so no comparison is claimed.`
-                : "The source does not supply an exact daily counter for both complete weeks."
+                ? `The last seven days have only ${recent.observedDays} of 7 days counted, so no comparison is claimed.`
+                : "The project does not report a complete daily click count for both full weeks."
         : percent === null
-          ? `There was no baseline in the earlier seven days (${formatMetric({ value: prior.value ?? 0, unit: "count" })}), so the change is stated as a count, not a percentage.`
+          ? `The earlier seven days had no clicks (${formatMetric({ value: prior.value ?? 0, unit: "count" })}), so the change is stated as a count, not a percentage.`
           : "";
   const movement =
     eligible && change !== null
@@ -200,19 +200,19 @@ export function discoveryStory(input: {
   const headline =
     value === null
       ? source
-        ? `No retained referral counter for ${name} in these dates.`
-        : `Woodhouse did not supply a discovery report for ${name} in these dates.`
+        ? `No click count for ${name} in these dates.`
+        : `Woodhouse did not provide click numbers for ${name} in these dates.`
       : value === 0
-        ? `No recorded clicks to ${name} across the ${plural(observedDays, "observed day", "observed days")}.`
+        ? `No clicks from Woodhouse to ${name} in the ${plural(observedDays, "day", "days")} counted.`
         : rank === 1 && !tiedAtTop
-          ? `${name} was the busiest measured hand-off from Woodhouse: ${plural(value, "recorded click", "recorded clicks")}${movement}`
+          ? `${name} was opened most from Woodhouse: ${plural(value, "click", "clicks")}${movement}`
           : rank === 1 && tiedAtTop
-            ? `${name} shared the busiest measured hand-off from Woodhouse: ${plural(value, "recorded click", "recorded clicks")}${movement}`
-            : `${name} drew ${plural(value, "recorded click", "recorded clicks")} from Woodhouse${movement}`;
+            ? `${name} shared the most-opened spot from Woodhouse: ${plural(value, "click", "clicks")}${movement}`
+            : `${name} received ${plural(value, "click", "clicks")} from Woodhouse${movement}`;
   const establishes =
     value === null
       ? reason
-      : `${plural(value, "recorded outbound click", "recorded outbound clicks")} to ${name} between ${period.from} and ${period.to} UTC${coverage === "partial" ? `, across ${observedDays} of ${dates.length} observed days` : ""}.`;
+      : `${plural(value, "recorded click", "recorded clicks")} from Woodhouse to ${name} between ${period.from} and ${period.to} UTC${coverage === "partial" ? `, across ${observedDays} of ${dates.length} days with data` : ""}.`;
   return {
     slug,
     name,
@@ -238,12 +238,12 @@ export function discoveryStory(input: {
     kicker:
       value !== null && rank === 1
         ? tiedAtTop
-          ? "Discovery · joint busiest measured hand-off"
-          : "Discovery · busiest measured hand-off"
-        : "Discovery · measured hand-off",
+          ? "Project discovery · Joint most-opened"
+          : "Project discovery · Opened most"
+        : "Project discovery · Clicks to this project",
     establishes,
     doesNotEstablish:
-      "That anyone played, tried, subscribed or returned. A recorded click is discovery intent on this origin, not downstream use or a unique person.",
+      "That anyone played, tried, subscribed or came back. A click on Woodhouse shows interest in opening the project, not what happened after.",
     reason
   };
 }
@@ -254,26 +254,38 @@ export function discoveryCaption(
   dateLabel: (date: string) => string
 ) {
   const lines = [
-    `Woodhouse → ${story.name}`,
-    `${story.value === null ? `No retained referral counter for ${story.name}` : `${story.valueLabel} recorded project opens`} · ${dateLabel(story.period.from)} – ${dateLabel(story.period.to)} (UTC)`
+    story.value === null
+      ? `No click count from Woodhouse to ${story.name} for ${dateLabel(story.period.from)} – ${dateLabel(story.period.to)} (UTC).`
+      : `${story.name} received ${story.valueLabel} ${story.value === 1 ? "click" : "clicks"} from Woodhouse between ${dateLabel(story.period.from)} and ${dateLabel(story.period.to)} (UTC).`
   ];
   if (story.value !== null && story.rank === 1)
     lines.push(
       story.tiedAtTop
-        ? "A joint busiest measured hand-off in this report."
-        : "The busiest measured hand-off in this report."
+        ? "It shared the most-opened spot among the projects measured."
+        : "It was the project opened most from Woodhouse in this report."
     );
   if (story.value === null) lines.push(story.reason);
+  else if (story.value === 0)
+    lines.push(`No clicks were recorded in the ${story.observedDays} days counted.`);
   else if (story.coverage === "partial" && story.firstObserved)
     lines.push(
-      `Collection began ${dateLabel(story.firstObserved)}; ${story.observedDays} of ${story.period.days} days were observed, so earlier days are missing rather than zero.`
+      `Counting began ${dateLabel(story.firstObserved)}; ${story.observedDays} of ${story.period.days} days have data, so earlier days are missing rather than zero.`
     );
-  else if (story.value === 0)
-    lines.push(`No recorded clicks to ${story.name} across the observed days.`);
-  if (story.comparison.reason) lines.push(story.comparison.reason);
+  if (
+    story.comparison.eligible &&
+    story.comparison.change !== null &&
+    story.recent.value !== null &&
+    story.prior.value !== null
+  )
+    lines.push(
+      story.comparison.change === 0
+        ? `The last seven days had ${story.recent.value} clicks, level with the seven days before.`
+        : `The last seven days had ${story.recent.value} clicks, ${Math.abs(story.comparison.change).toLocaleString("en-AU")} ${story.comparison.change > 0 ? "more" : "fewer"} than the seven days before (${story.prior.value}).`
+    );
+  else if (story.comparison.reason) lines.push(story.comparison.reason);
+  if (story.value !== null) lines.push(`${story.coverageLabel}.`);
   lines.push(
-    `${story.coverageLabel}.`,
-    `It does not establish ${story.doesNotEstablish.charAt(0).toLowerCase()}${story.doesNotEstablish.slice(1)}`,
+    "A click shows interest in opening the project; it is not proof anyone played or stayed.",
     link
   );
   return lines.join("\n");
