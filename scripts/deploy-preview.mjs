@@ -1,3 +1,4 @@
+import { approvedWorkerSecrets, assertApprovedSecrets } from "./worker-secrets.mjs";
 import { spawnSync } from "node:child_process";
 import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -69,11 +70,10 @@ console.log(
 run("pnpm", ["run", "verify:content", "--", "preview"]);
 
 const localEnv = parseEnv(await readFile(path.join(root, ".env"), "utf8"));
-const allowedSecrets = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY"];
-for (const name of localEnv.keys()) {
-  if (/(?:key|token|secret)/i.test(name) && !allowedSecrets.includes(name))
-    throw new Error(`Refusing to upload unreviewed local secret ${name}.`);
-}
+const allowedSecrets = approvedWorkerSecrets.filter(
+  (name) => localEnv.has(name) || name !== "WOODHOUSE_GITHUB_TOKEN"
+);
+assertApprovedSecrets(localEnv);
 const secretEntries = allowedSecrets.map((name) => [name, localEnv.get(name)]);
 if (secretEntries.some(([, value]) => !value))
   throw new Error(

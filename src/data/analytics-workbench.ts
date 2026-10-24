@@ -196,7 +196,7 @@ const gameView: ProductView = {
   keys: gameMeasures,
   headlines: ["game_starts", "game_completions", "active_seconds"],
   description:
-    "Explore recorded gameplay starts, completions, active play and return signals, with source-specific coverage and explicit measurement limits."
+    "See games started, completed runs and time spent playing. Each chart shows which days were recorded."
 };
 // Protocol 11's client reports four play modes, so its view adds the mode
 // subtotals and the local/online grouping. The other games keep `gameView`: they
@@ -208,8 +208,7 @@ const protocol11View: ProductView = {
   defaultMeasure: "game_starts",
   keys: [...gameMeasures, ...modeMeasureChoices.map((choice) => choice.key)],
   headlines: ["game_starts", "game_completions", "active_seconds"],
-  description:
-    "Explore recorded gameplay starts, completions, active play and return signals, with the local and online modes the Protocol 11 client reports and explicit measurement limits."
+  description: "See games started and time spent playing, split between local and online play."
 };
 const productViews: Record<AnalyticsProject, ProductView> = {
   "app-composer": {
@@ -225,7 +224,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
     ],
     headlines: ["app_opens", "guest_postcards_received", "inspection_completed"],
     description:
-      "Inspect mini-app opens, pending guest postcard receipts, contribution views and completed Link Checks, with source coverage and clear limits on what each outcome means."
+      "See apps opened, postcards received and links checked. A received postcard may still be waiting for approval."
   },
   woodhouse: {
     family: "audience",
@@ -234,7 +233,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
     keys: ["visits", "engaged_sessions", "project_opens", "browsers", "returning_browsers"],
     headlines: ["visits", "engaged_sessions", "project_opens"],
     description:
-      "Explore Woodhouse visits, engaged sessions and deliberate project discovery, with dated charts and explicit audience measurement limits."
+      "See visits, visits with at least 10 seconds of activity and the projects readers chose to open."
   },
   loftwahfm: {
     family: "listening",
@@ -247,8 +246,7 @@ const productViews: Record<AnalyticsProject, ProductView> = {
       "game_listening_starts"
     ],
     headlines: ["listening_seconds", "listening_starts"],
-    description:
-      "Explore accepted audible listening and playback starts, with dated charts, source coverage and clear listening definitions."
+    description: "See how much music was heard and how often playback started."
   },
   fighter: gameView,
   bubbles: gameView,

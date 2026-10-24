@@ -172,6 +172,21 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           {project.index} / {allProjects.projects.length}
         </dd>
       </dl>
+      {[
+        "app-composer",
+        "fighter",
+        "shoalshot",
+        "protocol-11",
+        "loftwahfm",
+        "bubbles",
+        "asset-hunter"
+      ].includes(project.slug) && (
+        <p class="dossier-hero__analytics">
+          <a class="text-link" href={`/activity/leaderboards/?project=${project.slug}`}>
+            See how {project.name} is moving ↗
+          </a>
+        </p>
+      )}
       {analyticsProjects.includes(project.slug as AnalyticsProject) && (
         <p class="dossier-hero__analytics">
           <a

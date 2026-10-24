@@ -50,6 +50,21 @@ function run(binary, args, options = {}) {
 function json(output) {
   return JSON.parse(output.slice(output.search(/[[{]/)));
 }
+function verifySecretNames() {
+  const secrets = json(
+    run("pnpm", ["exec", "wrangler", "secret", "list", "--name", target.worker, "--format=json"])
+  );
+  const names = new Set(secrets.map((entry) => entry.name));
+  const expected = [
+    "RESEND_API_KEY",
+    "EMDASH_ENCRYPTION_KEY",
+    ...(environment === "production" ? ["WOODHOUSE_GITHUB_TOKEN"] : [])
+  ];
+  if (expected.some((name) => !names.has(name)))
+    throw Error("Required Worker secret names are missing.");
+  return [...names].sort();
+}
+const secretNamesBefore = verifySecretNames();
 const sourceDigest = await computeSourceDigest(root);
 const checks = [];
 const seed = JSON.parse(await readFile(path.join(root, "seed/seed.json"), "utf8"));
@@ -289,10 +304,13 @@ const manifest = {
   workerVersion,
   sourceDigest,
   gitCommit: identity.identity.gitCommit,
+  secretNames: verifySecretNames(),
   content: identity.identity.content,
   checks,
   deployedAt: new Date().toISOString()
 };
+if (secretNamesBefore.some((name) => !manifest.secretNames.includes(name)))
+  throw Error("A previously installed Worker secret is missing after deployment.");
 const receiptPath = path.join(directory, `publication-${environment}.json`);
 await writeFile(receiptPath, JSON.stringify(manifest, null, 2) + "\n", { mode: 0o600 });
 await chmod(receiptPath, 0o600);
