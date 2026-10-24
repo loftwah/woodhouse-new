@@ -14,14 +14,14 @@ const { class: className } = Astro.props;
 ---
 
 <figure class:list={["signature-plate", className]} data-signature-plate>
-  <div class="signature-plate__stage" data-signature-stage>
+  <div class="signature-plate__stage" data-signature-stage data-live="false">
     <picture>
       <source media="(max-width: 760px)" srcset="/signature/loom-phone.jpg" />
       <img
         class="signature-plate__poster"
         src="/signature/loom-wide.jpg"
         width="1600"
-        height="900"
+        height="1200"
         alt="A twisted lens of pale blue, cyan and lime fibres gathered to a point at each end, lit from the upper left against dark ink."
         decoding="async"
         fetchpriority="high"
@@ -89,9 +89,26 @@ const { class: className } = Astro.props;
     z-index: 1;
     pointer-events: none;
     touch-action: pan-y;
+    /* The authored still is the first painting surface. An opaque WebGL canvas
+       would otherwise cover it before the first draw, which can be a visible
+       black plate on a cold or slow load. */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 220ms ease;
+  }
+  .signature-plate__stage[data-live="true"] .signature-plate__canvas {
+    opacity: 1;
+    visibility: visible;
   }
   .signature-plate__stage[data-lost="true"] .signature-plate__canvas {
+    opacity: 0;
     visibility: hidden;
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .signature-plate__canvas {
+      transition: none;
+    }
   }
   .signature-plate__control {
     position: absolute;
@@ -186,7 +203,7 @@ const { class: className } = Astro.props;
 
     const messages: Record<LoomStatus, string> = {
       running: "",
-      paused: "Motion frozen. The scene still responds if you resume it.",
+      paused: "Motion frozen. Resume it to brush through the fibres again.",
       still:
         "Ambient motion is off for your reduced-motion setting. Move across the plate to disturb the fibres.",
       unsupported: "This browser cannot draw the live scene, so the still image stays.",
@@ -207,6 +224,9 @@ const { class: className } = Astro.props;
       pointerHost: host,
       reducedMotion: motionQuery.matches,
       onFirstFrame: () => {
+        // Reveal only after a real draw. Until then the authored still owns the
+        // plate, so a slow shader build never shows an empty canvas.
+        stage.dataset.live = "true";
         toggle.hidden = motionQuery.matches;
       },
       onStatusChange: describe

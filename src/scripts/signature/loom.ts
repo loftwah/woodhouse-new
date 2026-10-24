@@ -15,6 +15,7 @@
  */
 
 import { createProgram, hash, mat4, type Program } from "./gl-kit";
+import { activeFrameSeconds } from "./loom-timing";
 
 export const LOOM_STRANDS = 640;
 const LOOM_SEGMENTS = 58;
@@ -253,34 +254,55 @@ function clamp(value: number, min: number, max: number): number {
 
 export function createLoom(options: LoomOptions) {
   const { canvas, pointerHost } = options;
-  const context = canvas.getContext("webgl2", {
-    alpha: false,
-    antialias: false,
-    depth: false,
-    stencil: false,
-    desynchronized: true,
-    powerPreference: "high-performance",
-    preserveDrawingBuffer: false
-  });
+  let context: WebGL2RenderingContext | null = null;
+  try {
+    context = canvas.getContext("webgl2", {
+      alpha: false,
+      antialias: false,
+      depth: false,
+      stencil: false,
+      desynchronized: true,
+      powerPreference: "high-performance",
+      preserveDrawingBuffer: false
+    });
+  } catch (error) {
+    console.warn("Woodhouse signature: WebGL context unavailable", error);
+  }
   if (!context) {
     options.onStatusChange?.("unsupported");
     return null;
   }
   const gl: WebGL2RenderingContext = context;
 
-  let program: Program;
-  let ground: Program;
+  let program: Program | undefined;
+  let ground: Program | undefined;
   try {
     program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
     ground = createProgram(gl, GROUND_VERTEX, GROUND_FRAGMENT);
   } catch (error) {
+    if (program) gl.deleteProgram(program.program);
+    if (ground) gl.deleteProgram(ground.program);
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
     console.warn("Woodhouse signature: shader unavailable", error);
     options.onStatusChange?.("unsupported");
     return null;
   }
+  if (!program || !ground) {
+    options.onStatusChange?.("unsupported");
+    return null;
+  }
+  const mainProgram: Program = program;
+  const groundProgram: Program = ground;
 
-  const uniforms = program.uniforms;
+  const uniforms = mainProgram.uniforms;
   const fibreTexture = gl.createTexture();
+  if (!fibreTexture) {
+    gl.deleteProgram(mainProgram.program);
+    gl.deleteProgram(groundProgram.program);
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    options.onStatusChange?.("unsupported");
+    return null;
+  }
   gl.bindTexture(gl.TEXTURE_2D, fibreTexture);
   const fibres = new Float32Array(FIBRE_TEXTURE_WIDTH * 2 * 4);
   for (let index = 0; index < LOOM_STRANDS; index += 1) {
@@ -302,8 +324,16 @@ export function createLoom(options: LoomOptions) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
   const vertexArray = gl.createVertexArray();
+  if (!vertexArray) {
+    gl.deleteTexture(fibreTexture);
+    gl.deleteProgram(mainProgram.program);
+    gl.deleteProgram(groundProgram.program);
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    options.onStatusChange?.("unsupported");
+    return null;
+  }
   gl.bindVertexArray(vertexArray);
-  gl.useProgram(program.program);
+  gl.useProgram(mainProgram.program);
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE);
   gl.clearColor(INK[0], INK[1], INK[2], 1);
@@ -312,9 +342,13 @@ export function createLoom(options: LoomOptions) {
     reducedMotion: options.reducedMotion,
     paused: false,
     destroyed: false,
+    contextLost: false,
     status: "running" as LoomStatus,
     phase: 0,
-    intro: 0,
+    // The authored still is the first composed frame, so the live scene joins it
+    // fully lit. Fading up from black behind the still produced a visible dim
+    // dip during the handover.
+    intro: 1,
     lastTimestamp: 0,
     raf: 0,
     width: 0,
@@ -341,12 +375,15 @@ export function createLoom(options: LoomOptions) {
     options.onStatusChange?.(status);
   }
 
-  function orientation(now: number) {
+  function orientation() {
     const aspect = state.height > 0 ? state.width / state.height : 1;
     const portrait = clamp((1.42 - aspect) / 0.42, 0, 1);
     const roll = portrait * 1.24 - 0.075;
-    const yaw = 0.26 + Math.sin(now * 0.00011) * 0.11;
-    const pitch = -0.26 + Math.sin(now * 0.00007 + 1.7) * 0.05;
+    // Active scene time, not performance.now(): returning from a hidden tab or
+    // a frozen page must not rotate the sculpture to a different pose.
+    const clock = state.phase * 1000;
+    const yaw = 0.26 + Math.sin(clock * 0.00011) * 0.11;
+    const pitch = -0.26 + Math.sin(clock * 0.00007 + 1.7) * 0.05;
     const cy = Math.cos(yaw);
     const sy = Math.sin(yaw);
     const cp = Math.cos(pitch);
@@ -408,27 +445,30 @@ export function createLoom(options: LoomOptions) {
     state.pointer.targetY = clamp(-(((clientY - rect.top) / rect.height) * 2 - 1), -1.5, 1.5);
   }
 
-  function draw(now: number) {
-    if (state.destroyed) return;
-    const { model, aspect } = orientation(now);
+  function draw() {
+    if (state.destroyed || state.contextLost) return;
+    const { model, aspect } = orientation();
     const projection = mat4.perspective(FOV, aspect, 0.1, 60);
     const viewModel = mat4.multiply(mat4.translation(0, 0, -fitDistance(model, aspect)), model);
+    // Wakes decay against wall-clock time; the artwork's pose and waves use the
+    // accumulated scene phase above, so a resumed page does not jump.
+    const now = performance.now();
 
-    gl.useProgram(program.program);
+    gl.useProgram(mainProgram.program);
     gl.bindVertexArray(vertexArray);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, fibreTexture);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    gl.useProgram(ground.program);
-    gl.uniform1f(ground.uniforms.uAspect ?? null, aspect);
-    gl.uniform1f(ground.uniforms.uTime ?? null, state.phase);
-    gl.uniform1f(ground.uniforms.uIntro ?? null, state.intro);
+    gl.useProgram(groundProgram.program);
+    gl.uniform1f(groundProgram.uniforms.uAspect ?? null, aspect);
+    gl.uniform1f(groundProgram.uniforms.uTime ?? null, state.phase);
+    gl.uniform1f(groundProgram.uniforms.uIntro ?? null, state.intro);
     gl.disable(gl.BLEND);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.enable(gl.BLEND);
 
-    gl.useProgram(program.program);
+    gl.useProgram(mainProgram.program);
 
     for (let index = 0; index < 12; index += 1) wakeVec[index] = 0;
     state.wakes.forEach((wake, index) => {
@@ -470,8 +510,7 @@ export function createLoom(options: LoomOptions) {
   }
 
   function step(deltaMs: number) {
-    const dt = clamp(deltaMs / 1000, 0, 0.05);
-    state.intro = Math.min(1, state.intro + dt / 0.85);
+    const dt = activeFrameSeconds(deltaMs);
     const pointer = state.pointer;
     pointer.vx += (pointer.targetX - pointer.x) * 170 * dt;
     pointer.vy += (pointer.targetY - pointer.y) * 170 * dt;
@@ -541,13 +580,15 @@ export function createLoom(options: LoomOptions) {
   }
 
   function frame(timestamp: number) {
-    if (state.destroyed || state.paused) return;
+    if (state.destroyed || state.paused || state.contextLost) return;
     state.raf = requestAnimationFrame(frame);
     const delta = state.lastTimestamp ? timestamp - state.lastTimestamp : 16.7;
     state.lastTimestamp = timestamp;
-    state.phase += delta / 1000;
+    // Clamp the scene clock as well as the physics: a frozen or stalled page
+    // must resume where it stopped, not skip ahead by the wall-clock gap.
+    state.phase += activeFrameSeconds(delta);
     step(delta);
-    draw(timestamp);
+    draw();
     // A tab loaded in the background never ran the bootstrap callback, so the
     // control would stay hidden for the whole session. Claim the first frame
     // from the first draw that actually happened.
@@ -557,7 +598,7 @@ export function createLoom(options: LoomOptions) {
 
   function drawStill() {
     state.intro = 1;
-    draw(0);
+    draw();
   }
 
   function onPointerMove(event: PointerEvent) {
@@ -569,7 +610,7 @@ export function createLoom(options: LoomOptions) {
       state.strength.value = 1;
       state.pointer.x = state.pointer.targetX;
       state.pointer.y = state.pointer.targetY;
-      draw(0);
+      draw();
     }
   }
 
@@ -578,7 +619,7 @@ export function createLoom(options: LoomOptions) {
     state.strength.target = 0;
     if (state.reducedMotion && !state.paused) {
       state.strength.value = 0;
-      draw(0);
+      draw();
     }
   }
 
@@ -586,10 +627,22 @@ export function createLoom(options: LoomOptions) {
     state.inside = true;
     state.strength.target = 1.4;
     mapPointer(event.clientX, event.clientY);
+    // Without an animation loop, a press that does not move still deserves the
+    // same immediate response as the live scene.
+    if (state.reducedMotion && !state.paused) {
+      state.strength.value = 1.4;
+      state.pointer.x = state.pointer.targetX;
+      state.pointer.y = state.pointer.targetY;
+      draw();
+    }
   }
 
   function onPointerUp() {
     state.strength.target = state.inside ? 1 : 0;
+    if (state.reducedMotion && !state.paused) {
+      state.strength.value = state.strength.target;
+      draw();
+    }
   }
 
   const listeners: [EventTarget, string, EventListener][] = [
@@ -604,12 +657,21 @@ export function createLoom(options: LoomOptions) {
 
   const resizeObserver = new ResizeObserver(() => {
     resize();
+    if (state.contextLost) return;
     if (state.reducedMotion || state.paused) drawStill();
   });
   resizeObserver.observe(canvas);
 
   function start() {
-    if (state.destroyed || state.paused || state.reducedMotion) return;
+    if (
+      state.destroyed ||
+      state.paused ||
+      state.reducedMotion ||
+      state.contextLost ||
+      !state.visible ||
+      document.hidden
+    )
+      return;
     cancelAnimationFrame(state.raf);
     state.lastTimestamp = 0;
     state.raf = requestAnimationFrame(frame);
@@ -625,9 +687,25 @@ export function createLoom(options: LoomOptions) {
   }
   document.addEventListener("visibilitychange", onVisibility);
 
+  // A bfcached page keeps its timers and listeners but stops receiving frames.
+  // Restart from a fresh timestamp on the way back; the scene clock itself only
+  // advances while frames run, so the sculpture does not jump.
+  function onPageHide(event: PageTransitionEvent) {
+    if (event.persisted) stop();
+  }
+  function onPageShow(event: PageTransitionEvent) {
+    if (!event.persisted) return;
+    state.lastTimestamp = 0;
+    start();
+  }
+  window.addEventListener("pagehide", onPageHide);
+  window.addEventListener("pageshow", onPageShow);
+
   const intersection = new IntersectionObserver(
     (entries) => {
-      for (const entry of entries) state.visible = entry.isIntersecting;
+      const entry = entries[entries.length - 1];
+      if (!entry || state.visible === entry.isIntersecting) return;
+      state.visible = entry.isIntersecting;
       if (state.visible) start();
       else stop();
     },
@@ -637,6 +715,7 @@ export function createLoom(options: LoomOptions) {
 
   function onContextLost(event: Event) {
     event.preventDefault();
+    state.contextLost = true;
     stop();
     setStatus("lost");
   }
@@ -645,7 +724,8 @@ export function createLoom(options: LoomOptions) {
    * A restored context has no shaders, texture or vertex array. Rebuilding them
    * is not free and a partial rebuild would be worse than none, so the scene
    * stays on its still image and keeps saying so rather than claiming a recovery
-   * it cannot draw.
+   * it cannot draw. `contextLost` also blocks the observers from restarting a
+   * loop against the dead context.
    */
   function onContextRestored() {
     stop();
@@ -666,13 +746,13 @@ export function createLoom(options: LoomOptions) {
 
   return {
     setPaused(paused: boolean) {
-      if (state.destroyed) return;
+      if (state.destroyed || state.contextLost) return;
       state.paused = paused;
       if (paused) {
         stop();
         state.strength.target = 0;
         state.strength.value = 0;
-        draw(performance.now());
+        draw();
         setStatus("paused");
       } else {
         start();
@@ -682,6 +762,12 @@ export function createLoom(options: LoomOptions) {
     setReducedMotion(reduced: boolean) {
       if (state.destroyed || reduced === state.reducedMotion) return;
       state.reducedMotion = reduced;
+      // A dead context owns the still, whatever the motion preference now says.
+      // Letting this path report "running" would unhide a canvas that cannot draw.
+      if (state.contextLost) {
+        setStatus("lost");
+        return;
+      }
       if (reduced) {
         stop();
         state.pointer.x = 0;
@@ -690,7 +776,7 @@ export function createLoom(options: LoomOptions) {
         state.wakes = [];
         state.phase = 0;
         state.intro = 1;
-        draw(0);
+        draw();
         setStatus("still");
       } else {
         start();
@@ -703,14 +789,16 @@ export function createLoom(options: LoomOptions) {
       stop();
       for (const [target, type, handler] of listeners) target.removeEventListener(type, handler);
       document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("pageshow", onPageShow);
       resizeObserver.disconnect();
       intersection.disconnect();
       canvas.removeEventListener("webglcontextlost", onContextLost as EventListener);
       canvas.removeEventListener("webglcontextrestored", onContextRestored as EventListener);
       gl.deleteTexture(fibreTexture);
       gl.deleteVertexArray(vertexArray);
-      gl.deleteProgram(program.program);
-      gl.deleteProgram(ground.program);
+      gl.deleteProgram(mainProgram.program);
+      gl.deleteProgram(groundProgram.program);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     }
   };
