@@ -362,7 +362,7 @@ export function periodState(complete: boolean) {
  * distinction the raw statuses carry without exposing the collector's
  * vocabulary; the longer explanation stays in Notes.
  */
-export const dailyCoverageLabels = {
+const dailyCoverageLabels = {
   clean: "Full day",
   partial: "Part day",
   bounded: "Count may be capped",
