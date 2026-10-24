@@ -51,9 +51,12 @@ if (root) {
   root.querySelectorAll("[data-lb-caption]").forEach((button) =>
     button.addEventListener("click", async () => {
       const ticket = ++operation;
-      if (await copy(caption())) say("Caption copied.", ticket);
+      const copied = await copy(caption());
+      if (ticket !== operation) return;
+      if (copied) say("Caption copied.", ticket);
       else {
         showImages();
+        captionField?.focus({ preventScroll: true });
         captionField?.select();
         say("Select and copy your caption below.", ticket);
       }
