@@ -1736,6 +1736,11 @@
         },
         {
           "type": "custom",
+          "label": "Leaderboards",
+          "url": "/activity/leaderboards/"
+        },
+        {
+          "type": "custom",
           "label": "Share",
           "url": "/share/"
         },
