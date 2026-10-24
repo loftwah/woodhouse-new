@@ -7,6 +7,56 @@ export type SiteMetadata = {
   icon: string | null;
 };
 
+/**
+ * The card Woodhouse draws for itself when a project publishes no artwork of
+ * its own. It is a capture of the homepage signature, not an illustration of a
+ * product, and the provenance beside it says so.
+ */
+export const WOODHOUSE_SOCIAL_CARD = "/og/project-dossier-20261025.jpg";
+export const WOODHOUSE_SOCIAL_CARD_ALT =
+  "Woodhouse project dossier card: a lit lens of pale blue, cyan and lime fibres gathered to a point at each end, under the words “A project, in context.”";
+
+/**
+ * Only raster images unfurl. X, Facebook, LinkedIn, Slack and iMessage ignore an
+ * SVG `og:image`, so a project pointing at one shares with no picture at all.
+ * The share gallery still shows the original SVG in a browser; this guard is
+ * for social metadata only.
+ */
+export function isRasterImage(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const { pathname } = new URL(url, "https://woodhouse.loftwah.com");
+    return /\.(png|jpe?g|webp|avif)$/i.test(pathname);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * The single social image a page should advertise, with alt text that describes
+ * whichever image was actually chosen. A page must not carry two `og:image`
+ * tags: consumers disagree about which one wins, and the loser is invisible.
+ */
+export function socialCardFor(project: WoodhouseProject): {
+  image: string;
+  alt: string;
+  fromProduct: boolean;
+} {
+  const candidate = project.previewImage;
+  if (project.siteUrl && isRasterImage(candidate)) {
+    return {
+      image: candidate!,
+      alt: project.previewAlt ?? `Artwork from the ${project.name} site.`,
+      fromProduct: true
+    };
+  }
+  return {
+    image: WOODHOUSE_SOCIAL_CARD,
+    alt: WOODHOUSE_SOCIAL_CARD_ALT,
+    fromProduct: false
+  };
+}
+
 export function getArtworkFallback(project: WoodhouseProject) {
   if (project.slug === "fighter") {
     return {

@@ -1,0 +1,13 @@
+Current file: Woodhouse's own project-dossier social card, drawn 25 October 2026. 1200 x 630 JPEG, 118,116 bytes.
+
+This is not a generated illustration and not product artwork. The material is the signature the homepage already draws: a lens of tensioned fibres, twisted and lit once. It was captured from the live canvas at `/#signature` on 25 October 2026 by reshaping the signature stage to a wide crop and screenshotting only the canvas — no page chrome, no model, no third-party image service. The composition over it is typeset from the repository's own Bricolage Grotesque TTFs at real 1200 x 630 dimensions.
+
+Retained source: `scripts/assets/dossier/loom-master.png` (1600 x 1000 capture, exposure 2 of 3). Composition source: `scripts/render-dossier-preview.mjs`, which reads that master and writes this card. Both are checked in so the card can be re-derived exactly rather than re-guessed.
+
+Why it carries no count and no date. The card it replaces said "ONE HUMAN · EIGHT PROJECTS" over "REVIEWED 28 SEPTEMBER 2026". Both claims were true when they were drawn and both were wrong by October: the portfolio had ten published projects, and the review date named one document rather than the thing being shared. A social card outlives the page it was drawn for — it stays in other people's posts and cached unfurls for years. So this card makes no claim that can rot. It says what a dossier is, which does not change.
+
+What it does not claim. It is not an image of any product, and it is not evidence that anything shipped. The fibres are drawn, not photographed; the light is composed, not measured. Where a project publishes its own artwork, that artwork is used instead and this card is not shown.
+
+Cropping. Designed for 1.91:1, which is what X, Facebook, LinkedIn, Slack and iMessage ask for. It reads at 300 px wide, where only the headline survives. A centre-square crop takes part of the headline with it; the artwork alone still reads as a finished frame. No square variant is claimed.
+
+Superseded and deleted: `public/og/project-dossier-preview.jpg` (29 September 2026, 77,213 bytes), the process-card composition with the stale count and date. It had no retained source, which is why it could not be corrected — only redrawn.
