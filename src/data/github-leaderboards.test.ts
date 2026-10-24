@@ -86,6 +86,35 @@ test("GitHub counting excludes PR issues, deduplicates events and handles reopen
   assert.equal(rankedProjects(s, 28, "reduction").rows[0]!.value, 0);
   assert.doesNotMatch(JSON.stringify(s), /PRIVATE|private-author|pull_request|repo|token|fixture/);
 });
+test("each page is counted before requesting another private response", async () => {
+  let currentPage = 0;
+  const paged: typeof fetch = async (input, init) => {
+    const url = new URL(String(input));
+    const generation = ++currentPage;
+    if (url.pathname === "/repos/loftwah/woodhouse-new/issues") {
+      const page = Number(url.searchParams.get("page"));
+      const items =
+        page === 1
+          ? Array.from({ length: 100 }, (_, id) => ({
+              id,
+              updated_at: "2026-10-15T00:00:00Z",
+              get created_at() {
+                assert.equal(currentPage, generation, "previous response retained beyond its page");
+                return "2026-10-15T00:00:00Z";
+              }
+            }))
+          : [];
+      return { ok: true, json: async () => items } as Response;
+    }
+    return fixture(input, init);
+  };
+  const collected = await collectGitHub("fixture", paged, now);
+  assert.equal(
+    collected.projects[0]!.daily.reduce((sum, day) => sum + day.opened, 0),
+    100
+  );
+  assert.equal(collected.projects[0]!.issuesComplete, true);
+});
 test("stable shared ranks distinguish missing data and zero; incomplete peers suppress movement", async () => {
   const s = await snapshot();
   s.projects[1]!.pullsComplete = false;
