@@ -395,7 +395,7 @@ export function reportSvg(
         text(
           pad + 22,
           y + (portrait ? 36 : 32),
-          overview ? `${r.name} · ${r.measureLabel}` : r.name,
+          overview && portrait ? `${r.name} · ${r.measureLabel}` : r.name,
           portrait ? 28 : 24,
           "#f4f7fd",
           500
@@ -409,6 +409,7 @@ export function reportSvg(
           r.colour,
           700
         );
+      if (overview && !portrait) svg += text(pad + 22, y + 58, r.measureLabel, 17, "#a9b8d0");
       if (portrait) svg += text(pad + 22, y + 77, qualifier(r), 21, "#a9b8d0");
       if (overview)
         svg += sparkline(
