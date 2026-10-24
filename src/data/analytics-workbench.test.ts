@@ -1205,3 +1205,15 @@ test("a mixed overview caption can lead with one supported result", () => {
   assert.match(caption, /not a count of people/);
   assert.ok(caption.endsWith("https://example.test/activity/"));
 });
+
+test("a discovery caption uses clicks rather than the category label", () => {
+  const caption = reportCaption(
+    [{ name: "Woodhouse", metric: { ...metric, key: "project_opens" }, overviewMeasure: null }],
+    resolveMeasure("woodhouse", "project_opens"),
+    period,
+    "https://example.test/activity/",
+    (date) => date
+  );
+  assert.match(caption, /Woodhouse recorded 4 clicks to projects/);
+  assert.doesNotMatch(caption, /project discovery/i);
+});

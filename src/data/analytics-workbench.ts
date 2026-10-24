@@ -388,6 +388,10 @@ function qualifierSentence(label: string) {
   };
   return sentences[label] ?? label;
 }
+/** A count noun for the caption, not the category label. */
+function captionMeasureLabel(measure: { key: string; label: string }, fallback: string) {
+  return measure.key === "project_opens" ? "clicks to projects" : fallback.toLowerCase();
+}
 /** The lead finding a mixed caption explains instead of listing every project. */
 export type CaptionFinding = {
   headline: string;
@@ -443,9 +447,10 @@ export function reportCaption(
     ].join("\n");
   if (rows.length === 1) {
     const r = rows[0]!;
-    const label = (
+    const label = captionMeasureLabel(
+      measure,
       mixed && r.overviewMeasure ? r.overviewMeasure.label : measure.label
-    ).toLowerCase();
+    );
     const qualifier = reportQualifier(r.metric, r.report ?? null, window);
     return [
       r.metric && r.metric.value !== null
@@ -457,9 +462,10 @@ export function reportCaption(
     ].join("\n");
   }
   const values = rows.map((r) => {
-    const label = (
+    const label = captionMeasureLabel(
+      measure,
       mixed && r.overviewMeasure ? r.overviewMeasure.label : measure.label
-    ).toLowerCase();
+    );
     const qualifier = reportQualifier(r.metric, r.report ?? null, window);
     return r.metric && r.metric.value !== null
       ? `${r.name}: ${formatMetric(r.metric)} ${label} · ${qualifier}`
