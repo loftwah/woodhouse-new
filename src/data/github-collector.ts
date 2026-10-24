@@ -41,8 +41,11 @@ export async function collectGitHub(
     if (!response.ok) throw new Error(`GitHub read failed (${response.status})`);
     return response.json() as Promise<unknown>;
   }
-  async function pages(path: string, timestamp: "created_at" | "updated_at") {
-    const items: Item[] = [];
+  async function pages(
+    path: string,
+    timestamp: "created_at" | "updated_at",
+    count: (item: Item) => void
+  ) {
     const seen = new Set<number>();
     for (let page = 1; page <= maxPages; page++) {
       const body = await get(`${path}${path.includes("?") ? "&" : "?"}per_page=100&page=${page}`);
@@ -51,34 +54,24 @@ export async function collectGitHub(
       for (const item of body as Item[])
         if (!seen.has(item.id)) {
           seen.add(item.id);
-          items.push(item);
+          count(item);
         }
-      if (body.length === 100 && seen.size === previousSize) return { items, complete: false };
+      // Count a page immediately. Retaining private issue/PR bodies across pages
+      // exhausted the production Worker's memory on its first scheduled run.
+      if (body.length === 100 && seen.size === previousSize) return false;
       // Issues/pulls explicitly sort by update time. The events endpoint has no
       // documented sort parameter, so require its end rather than guess order.
       if (
         body.length < 100 ||
         (timestamp === "updated_at" && body.every((i: Item) => (i[timestamp] ?? "") < since))
       )
-        return { items, complete: true };
+        return true;
     }
-    return { items, complete: false };
+    return false;
   }
   const projects: ProjectCounts[] = [];
   for (const project of leaderboardProjects) {
     const prefix = `/repos/loftwah/${project.repo}`;
-    const issues = await pages(
-      `${prefix}/issues?state=all&sort=updated&direction=desc&since=${encodeURIComponent(since)}`,
-      "updated_at"
-    );
-    const pulls = await pages(
-      `${prefix}/pulls?state=closed&sort=updated&direction=desc`,
-      "updated_at"
-    );
-    const events = await pages(`${prefix}/issues/events`, "created_at");
-    const search = (await get(
-      `/search/issues?q=${encodeURIComponent(`repo:loftwah/${project.repo} is:issue is:open`)}&per_page=1`
-    )) as { total_count?: number; incomplete_results?: boolean };
     const daily = daysBetween(period.from, period.to).map((day) => ({
       day,
       merged: 0,
@@ -87,27 +80,40 @@ export async function collectGitHub(
       reopened: 0
     }));
     const byDay = new Map(daily.map((d) => [d.day, d]));
-    for (const issue of issues.items)
-      if (!issue.pull_request) {
-        const d = byDay.get(issue.created_at.slice(0, 10));
-        if (d) d.opened++;
+    const issuesComplete = await pages(
+      `${prefix}/issues?state=all&sort=updated&direction=desc&since=${encodeURIComponent(since)}`,
+      "updated_at",
+      (issue) => {
+        if (!issue.pull_request) {
+          const d = byDay.get(issue.created_at.slice(0, 10));
+          if (d) d.opened++;
+        }
       }
-    for (const pull of pulls.items)
-      if (pull.merged_at) {
-        const d = byDay.get(pull.merged_at.slice(0, 10));
-        if (d) d.merged++;
+    );
+    const pullsComplete = await pages(
+      `${prefix}/pulls?state=closed&sort=updated&direction=desc`,
+      "updated_at",
+      (pull) => {
+        if (pull.merged_at) {
+          const d = byDay.get(pull.merged_at.slice(0, 10));
+          if (d) d.merged++;
+        }
       }
-    for (const event of events.items) {
-      if (!event.issue || event.issue.pull_request) continue;
+    );
+    const eventsComplete = await pages(`${prefix}/issues/events`, "created_at", (event) => {
+      if (!event.issue || event.issue.pull_request) return;
       const d = byDay.get(event.created_at.slice(0, 10));
       if (d && (event.event === "closed" || event.event === "reopened")) d[event.event]++;
-    }
+    });
+    const search = (await get(
+      `/search/issues?q=${encodeURIComponent(`repo:loftwah/${project.repo} is:issue is:open`)}&per_page=1`
+    )) as { total_count?: number; incomplete_results?: boolean };
     projects.push({
       slug: project.slug,
       daily,
-      issuesComplete: issues.complete,
-      eventsComplete: events.complete,
-      pullsComplete: pulls.complete,
+      issuesComplete,
+      eventsComplete,
+      pullsComplete,
       openNow:
         Number.isSafeInteger(search.total_count) && !search.incomplete_results
           ? search.total_count!
