@@ -6,7 +6,10 @@ import {
   rankedProjects,
   parseSnapshot,
   leaderboardCaption,
-  leaderboardLink
+  leaderboardLink,
+  leaderboardDate,
+  leaderboardDateRange,
+  leaderboardShortDate
 } from "./github-leaderboards.ts";
 import { publishedLeaderboard, weeklyBarGeometry } from "./github-leaderboards.ts";
 import { leaderboardSvg, leaderboardFormats } from "./leaderboard-art.ts";
@@ -175,8 +178,19 @@ test("all image shapes and a project image use the exact saved ranking, caption 
     assert.match(svg, /Bubbles/);
     assert.doesNotMatch(svg, /PRIVATE|private-author/);
     assert.match(leaderboardSvg(s, 28, "merged", format, "bubbles"), /Bubbles/);
+    const current = leaderboardSvg(s, 28, "merged", format, undefined, 3);
+    assert.match(current, />Leaderboards<tspan/);
+    assert.match(current, /26 Sep – 23 Oct 2026 · 28 days/);
+    assert.match(current, /Asset Hunter/);
+    assert.doesNotMatch(current, /2026-09-26|2026-10-23/);
+    assert.match(current, />B<\/text>/, "Bubbles mark is drawn");
+    assert.match(current, />AC<\/text>/, "App Composer mark is drawn");
+    assert.doesNotMatch(current, /PRIVATE|private-author/);
   }
-  assert.match(leaderboardCaption(s, 28, "merged", "bubbles"), /Bubbles: 1/);
+  assert.match(
+    leaderboardCaption(s, 28, "merged", "bubbles"),
+    /Bubbles merged 1 pull request in the last 28 days/
+  );
   assert.match(
     leaderboardLink(s.id, 28, "merged", "bubbles"),
     /report=a{24}&days=28&measure=merged&project=bubbles/
@@ -212,24 +226,42 @@ test("a repeated full page fails closed; real pagination deduplicates overlap an
   assert.equal(complete.projects[0]!.pullsComplete, true);
   assert.equal(rankedProjects(complete, 28, "merged").rows[0]!.value, 101);
 });
-test("post captions use the real figures without canned headings, disclaimers or an automatic URL", async () => {
+test("dates read like a person wrote them, including across a year", () => {
+  assert.equal(leaderboardDateRange("2026-09-26", "2026-10-23"), "26 Sep – 23 Oct 2026");
+  assert.equal(leaderboardDateRange("2025-12-26", "2026-01-01"), "26 Dec 2025 – 1 Jan 2026");
+  assert.equal(leaderboardDate("2026-10-23"), "23 Oct 2026");
+  assert.equal(leaderboardShortDate("2026-10-23"), "23 Oct");
+});
+test("post captions use real figures in ordinary sentences without a query string or slogan", async () => {
   const s = await snapshot();
   const caption = leaderboardCaption(s, 28, "merged", "bubbles");
-  assert.equal(caption, "Bubbles: 1 merged PR in 28 days.\n\n26 Sept to 23 Oct 2026");
-  assert.doesNotMatch(
-    leaderboardCaption(s, 28, "merged"),
-    /https:|report=|Projects making moves|product quality| UTC/
+  assert.equal(
+    caption,
+    "Bubbles merged 1 pull request in the last 28 days, compared with 0 in the previous 28 days.\n\n26 Sep – 23 Oct 2026."
   );
+  const board = leaderboardCaption(s, 28, "merged");
+  assert.match(board, /^Woodhouse merged 1 pull request in the last 28 days, with /);
+  assert.match(board, /26 Sep – 23 Oct 2026\.$/);
+  assert.doesNotMatch(board, /https:|report=|Projects making moves|product quality| UTC|#1|:/);
+  assert.match(leaderboardCaption(s, 28, "reduction"), /each had no change in open issues/);
   s.projects[0]!.daily.find((day) => day.day === "2026-10-15")!.opened = 20;
   assert.match(leaderboardCaption(s, 28, "reduction", "woodhouse"), /19 more open issues/);
 });
-test("the new image copy is plain while existing PNG URLs retain their original artwork", async () => {
+test("each image revision keeps its published artwork while the current copy stays plain", async () => {
   const s = await snapshot();
   for (const format of Object.keys(leaderboardFormats) as (keyof typeof leaderboardFormats)[]) {
-    const current = leaderboardSvg(s, 28, "merged", format, undefined, 2);
-    assert.match(current, /GitHub leaderboards/);
-    assert.doesNotMatch(current, /Projects making moves|product quality is a separate question/);
-    assert.match(leaderboardSvg(s, 28, "merged", format), /Projects making moves/);
+    const current = leaderboardSvg(s, 28, "merged", format, undefined, 3);
+    assert.match(current, />Leaderboards<tspan/);
+    assert.match(current, /26 Sep – 23 Oct 2026/);
+    assert.match(current, /GitHub counts, including bots/);
+    assert.doesNotMatch(current, /product quality is a separate question/);
+    const previous = leaderboardSvg(s, 28, "merged", format, undefined, 2);
+    assert.match(previous, /GitHub leaderboards/);
+    assert.match(previous, /26 Sept to 23 Oct 2026/);
+    assert.doesNotMatch(previous, /product quality is a separate question/);
+    const original = leaderboardSvg(s, 28, "merged", format);
+    assert.match(original, /Projects making moves/);
+    assert.match(original, /2026-09-26/);
   }
 });
 test("closure counts stay available independently of issue creation history, while net movement does not", async () => {

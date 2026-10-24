@@ -13,7 +13,10 @@ import {
   selectedDays,
   safeProject,
   leaderboardLink,
-  leaderboardCaption
+  leaderboardCaption,
+  leaderboardDate,
+  leaderboardDateRange,
+  leaderboardShortDate
 } from "../../data/github-leaderboards";
 import { publishedLeaderboard, weeklyBarGeometry } from "../../data/github-leaderboards";
 import { leaderboardShareLink } from "../../data/leaderboard-links";
@@ -45,7 +48,7 @@ const link = snapshot
 const caption = snapshot ? leaderboardCaption(snapshot, days, measure, project) : "";
 const shareLink = snapshot ? leaderboardShareLink(snapshot.id, days, measure, project) : link;
 const image = snapshot
-  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "2", ...(project ? { project } : {}) })}`
+  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "3", ...(project ? { project } : {}) })}`
   : "";
 const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
 function href(updates: Record<string, string | null>) {
@@ -73,13 +76,32 @@ function outboundLink(value: string) {
 const fmt = (n: number | null | undefined) =>
   n === null || n === undefined ? "—" : n.toLocaleString("en-AU");
 const max = Math.max(1, ...(ranked?.rows.map((r) => Math.abs(r.value ?? 0)) ?? []));
-const date = (s: string) =>
-  new Date(s + "T00:00:00Z").toLocaleDateString("en-AU", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC"
-  });
+const date = (s: string) => leaderboardDate(s);
+const dateRange = ranked ? leaderboardDateRange(ranked.from, ranked.to) : "";
+const updatedAt = snapshot
+  ? new Date(snapshot.collectedAt).toLocaleString("en-AU", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZone: "UTC"
+    })
+  : "";
+function movementLabel(value: number | null) {
+  if (value === null) return "Earlier ranks unavailable";
+  if (value === 0) return "Same rank";
+  return `${value > 0 ? "Up" : "Down"} ${Math.abs(value)} ${Math.abs(value) === 1 ? "place" : "places"}`;
+}
+function previousLabel(value: number | null) {
+  if (value === null) return `No complete previous ${days} days`;
+  if (measure === "reduction") {
+    if (value === 0) return `No change in open issues in the previous ${days} days`;
+    const count = Math.abs(value).toLocaleString("en-AU");
+    return `${count} ${value > 0 ? "fewer" : "more"} open issue${Math.abs(value) === 1 ? "" : "s"} in the previous ${days} days`;
+  }
+  return `${fmt(value)} ${measure === "closed" ? "issues closed" : "changes merged"} in the previous ${days} days`;
+}
 const focusCounts = focused?.counts.daily.filter(
   (d) => d.day >= ranked!.from && d.day <= ranked!.to
 );
@@ -118,8 +140,12 @@ const plottedWeeks = weeks.map((w) => ({
 ---
 
 <BaseLayout
-  title={focused ? `${focused.name} · ${selected.label}` : "GitHub leaderboards"}
-  description={`${selected.label} across the Loftwah projects. Explore the rankings and share the same dated results.`}
+  title={focused ? `${focused.name} · ${selected.label}` : "Leaderboards"}
+  description={
+    focused
+      ? `${focused.name} ranked by ${selected.label.toLowerCase()} over the same complete days as the other Loftwah projects. Based on GitHub activity.`
+      : "The Loftwah projects making moves, ranked on GitHub activity over the same complete days. Pick a measure and share the exact view."
+  }
   path={link}
   {...(image ? { image } : {})}
   imageAlt={`${selected.label}: ranked projects for ${days} complete days`}
@@ -130,7 +156,7 @@ const plottedWeeks = weeks.map((w) => ({
     data-caption={caption}
     data-image={image}
     data-link={`https://woodhouse.loftwah.com${shareLink}`}
-    data-filename={`woodhouse-${project ?? "github-rankings"}-${days}days-${measure}.png`}
+    data-filename={`woodhouse-${project ?? "leaderboards"}-${days}days-${measure}.png`}
   >
     <nav class="lb-breadcrumb" aria-label="Breadcrumb">
       <a href="/activity/">Analytics</a>
@@ -147,36 +173,22 @@ const plottedWeeks = weeks.map((w) => ({
             </>
           ) : (
             <>
-              GitHub
-              <br />
-              leaderboards<span class="lb-title-dot">.</span>
+              Leaderboards<span class="lb-title-dot">.</span>
             </>
           )}
         </h1>
         <p class="lb-deck">
           {focused
-            ? "Merged PRs, issue closures and changes in open issues."
-            : "GitHub activity across the Loftwah projects."}
+            ? "This project's merged changes, closed issues and backlog over the selected period."
+            : "The Loftwah projects making moves, ranked over the same complete days."}
         </p>
       </div>
       <div class="lb-dates">
         {ranked ? (
           <>
-            <strong>
-              {date(ranked.from)} — {date(ranked.to)}
-            </strong>
-            <span>{days} complete days · UTC</span>
-            <span>
-              Last updated{" "}
-              {new Date(snapshot!.collectedAt).toLocaleString("en-AU", {
-                day: "numeric",
-                month: "short",
-                hour: "2-digit",
-                minute: "2-digit",
-                timeZone: "UTC"
-              })}{" "}
-              UTC
-            </span>
+            <strong>{dateRange}</strong>
+            <span>{days} complete days · today isn't counted yet</span>
+            <span>Last updated {updatedAt} UTC</span>
             {stale && <strong class="lb-stale">Update delayed · showing the last report</strong>}
           </>
         ) : (
@@ -185,27 +197,36 @@ const plottedWeeks = weeks.map((w) => ({
       </div>
     </header>
     <div class="lb-controls" id="rankings">
-      <nav aria-label="Rank by" class="lb-lenses">
-        {rankingMeasures.map((m) => (
-          <a href={href({ measure: m.key })} aria-current={measure === m.key ? "page" : undefined}>
-            {m.label}
-          </a>
-        ))}
-      </nav>
-      <nav aria-label="Reporting period" class="lb-periods">
-        {[7, 28, 90].map((d) => (
-          <a href={href({ days: String(d) })} aria-current={days === d ? "page" : undefined}>
-            {d} days
-          </a>
-        ))}
-      </nav>
+      <div class="lb-controls-row">
+        <nav aria-label="Rank by" class="lb-lenses">
+          {rankingMeasures.map((m) => (
+            <a
+              href={href({ measure: m.key })}
+              aria-current={measure === m.key ? "page" : undefined}
+            >
+              {m.label}
+            </a>
+          ))}
+        </nav>
+        <nav aria-label="Reporting period" class="lb-periods">
+          {[7, 28, 90].map((d) => (
+            <a href={href({ days: String(d) })} aria-current={days === d ? "page" : undefined}>
+              {d} days
+            </a>
+          ))}
+        </nav>
+      </div>
+      <p class="lb-helper">
+        {selected.detail} Movement compares with the previous {days} days when both periods are
+        complete.
+      </p>
     </div>
     {snapshot && (
       <div class="lb-sharebar" aria-label="Share this view">
         <button type="button" data-lb-share>
           Share image
         </button>
-        <a href={`${image}&download=1`} download>
+        <a href={`${image}&download=1`} download data-lb-save>
           Save PNG
         </a>
         <button type="button" data-lb-caption>
@@ -214,7 +235,9 @@ const plottedWeeks = weeks.map((w) => ({
         <button type="button" data-lb-link>
           Copy link
         </button>
-        <a href="#share-images">All image sizes</a>
+        <a href="#share-images" data-lb-images>
+          All image sizes
+        </a>
         <p role="status" data-lb-status></p>
       </div>
     )}
@@ -237,21 +260,18 @@ const plottedWeeks = weeks.map((w) => ({
                   {focused.rank === null
                     ? "History unavailable"
                     : `Rank ${focused.rank}${focused.tied ? " · tied" : ""} of ${ranked.rows.filter((r) => r.rank !== null).length}`}
+                  {focused.movement !== null && ` · ${movementLabel(focused.movement)}`}
                 </p>
-                <p>
-                  {focused.previous === null
-                    ? "Earlier period unavailable"
-                    : `${fmt(focused.previous)} in the previous ${days} days`}
-                </p>
+                <p>{previousLabel(focused.previous)}</p>
               </div>
             </div>
+            <p class="lb-breakdown-label">Also in this report</p>
             <dl class="lb-breakdown">
               {[
-                ["Changes merged", focused.counts.pullsComplete ? total("merged") : null],
                 ["Issues opened", focused.counts.issuesComplete ? total("opened") : null],
                 ["Issues closed", focused.counts.eventsComplete ? total("closed") : null],
                 ["Issues reopened", focused.counts.eventsComplete ? total("reopened") : null],
-                ["Open at last update", focused.counts.openNow]
+                ["Open issues at last update", focused.counts.openNow]
               ].map(([label, value]) => (
                 <div>
                   <dt>{label}</dt>
@@ -297,10 +317,22 @@ const plottedWeeks = weeks.map((w) => ({
                         {r.name}
                         <span aria-hidden="true"> ↗</span>
                       </h2>
-                      <p>
-                        {r.value === null
-                          ? "History unavailable"
-                          : `${r.tied ? "Tied · " : ""}${r.movement === null ? "Earlier ranks unavailable" : r.movement === 0 ? "Same rank" : `${r.movement > 0 ? "Up" : "Down"} ${Math.abs(r.movement)} ${Math.abs(r.movement) === 1 ? "place" : "places"}`}`}
+                      <p
+                        class:list={[
+                          "lb-movement",
+                          r.movement === null
+                            ? "lb-move-unknown"
+                            : r.movement > 0
+                              ? "lb-move-up"
+                              : r.movement < 0
+                                ? "lb-move-down"
+                                : "lb-move-same"
+                        ]}
+                      >
+                        {r.tied && "Tied · "}
+                        {r.movement === null
+                          ? "Earlier ranks unavailable"
+                          : movementLabel(r.movement)}
                       </p>
                     </div>
                     <strong class="lb-value">{fmt(r.value)}</strong>
@@ -316,7 +348,7 @@ const plottedWeeks = weeks.map((w) => ({
                         d={
                           measure === "reduction"
                             ? `M500 2h${r.value === null ? 0 : (r.value / max) * 500}`
-                            : `M0 2h${r.value === null ? 0 : Math.max(2, (r.value / max) * 1000)}`
+                            : `M0 2h${r.value === null || r.value === 0 ? 0 : Math.max(2, (r.value / max) * 1000)}`
                         }
                         stroke={
                           measure === "reduction" && r.value !== null && r.value < 0
@@ -332,7 +364,8 @@ const plottedWeeks = weeks.map((w) => ({
             </ol>
             <p class="lb-fine">
               GitHub activity includes bots. A merged change or closed issue doesn’t tell you how
-              good a product is.
+              good a product is. A dash means the history couldn’t be fully read, so that project
+              has no rank.
               {measure === "reduction" &&
                 " This shows recorded issue movement; transfers and deletions aren’t reconstructed."}
             </p>
@@ -340,25 +373,29 @@ const plottedWeeks = weeks.map((w) => ({
         )}
         <section class="lb-trends" aria-labelledby="lb-trend-title">
           <div>
-            <h2 id="lb-trend-title">{focused ? "How the work unfolded" : "The whole picture"}</h2>
+            <h2 id="lb-trend-title">{focused ? "Week by week" : "The whole picture"}</h2>
             <p>
               {selected.label} · {focused?.name ?? "all projects"}
             </p>
-            <strong class="lb-total">
-              {ranked.rows
-                .filter((r) => !project || r.slug === project)
-                .every((r) => r.value !== null)
-                ? fmt(
-                    ranked.rows
-                      .filter((r) => !project || r.slug === project)
-                      .reduce((n, r) => n + r.value!, 0)
-                  )
-                : "History incomplete"}
-            </strong>
+            {!focused && (
+              <strong class="lb-total">
+                {ranked.rows
+                  .filter((r) => !project || r.slug === project)
+                  .every((r) => r.value !== null)
+                  ? fmt(
+                      ranked.rows
+                        .filter((r) => !project || r.slug === project)
+                        .reduce((n, r) => n + r.value!, 0)
+                    )
+                  : "History incomplete"}
+              </strong>
+            )}
             <p>
               {weeks.length === 1
                 ? "Across the selected week."
-                : "Across the selected period, in blocks of up to seven days."}
+                : focused
+                  ? "Each block is up to seven days."
+                  : "Across the selected period, in blocks of up to seven days."}
             </p>
             {measure === "reduction" && <p>Above zero: fewer open issues. Below zero: more.</p>}
           </div>
@@ -368,21 +405,23 @@ const plottedWeeks = weeks.map((w) => ({
                 <svg
                   viewBox="0 0 100 150"
                   role="img"
-                  aria-label={`${w.from} to ${w.to}: ${fmt(w.value)} ${selected.label.toLowerCase()}`}
+                  aria-label={`${date(w.from)} to ${date(w.to)}: ${fmt(w.value)} ${selected.label.toLowerCase()}`}
                 >
                   <rect
                     x="8"
                     y={w.bar.y}
                     width="84"
                     height={w.bar.height}
-                    fill={w.value !== null && w.value < 0 ? "#ff746a" : "#e9ff49"}
+                    fill={
+                      w.value !== null && w.value < 0 ? "#ff746a" : (focused?.colour ?? "#e9ff49")
+                    }
                   />
                   <path d={`M0 ${w.bar.baseline}h100`} stroke="#607087" />
                   <text x="50" y="18" text-anchor="middle" fill="#f4f7fd" font-size="24">
                     {fmt(w.value)}
                   </text>
                 </svg>
-                <span>{date(w.from).replace(" 2026", "")}</span>
+                <span>{leaderboardShortDate(w.from)}</span>
               </div>
             ))}
           </div>
@@ -390,8 +429,10 @@ const plottedWeeks = weeks.map((w) => ({
         <section id="share-images" class="lb-exports">
           <div class="lb-export-intro">
             <h2>Share this leaderboard</h2>
-            <p>Copy the caption, then share the image. You can edit the text below.</p>
-            <a href={shareLink}>Open this saved view</a>
+            <p>Copy the caption, then share the image. Edit the text first if you like.</p>
+            <a href={shareLink} data-lb-saved-link>
+              Open this exact view
+            </a>
             <p role="status" data-lb-export-status></p>
           </div>
           <div class="lb-caption">
@@ -418,7 +459,7 @@ const plottedWeeks = weeks.map((w) => ({
                     src={`${image}&format=${f.format}`}
                     width={f.width}
                     height={f.height}
-                    alt={`${focused?.name ?? "Project rankings"} · ${selected.label} · ${f.label.toLowerCase()} share layout`}
+                    alt={`${focused?.name ?? "Project rankings"} · ${selected.label} · ${f.label.toLowerCase()} share card`}
                     loading="lazy"
                   />
                   <span>Save {f.label.toLowerCase()} PNG ↓</span>
@@ -469,7 +510,7 @@ const plottedWeeks = weeks.map((w) => ({
               GitHub issue-event definitions
             </a>
           </details>
-          <a href={href({ report: null })}>Check the latest report</a>
+          {requested && <a href={href({ report: null })}>Check the latest report</a>}
         </section>
       </>
     )}
