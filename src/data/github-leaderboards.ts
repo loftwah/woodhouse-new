@@ -22,9 +22,22 @@ export const leaderboardProjects = [
   }
 ] as const;
 export const rankingMeasures = [
-  { key: "merged", label: "Changes merged", detail: "Pull requests merged on GitHub" },
-  { key: "closed", label: "Issues closed", detail: "Issue closures, including repeat closures" },
-  { key: "reduction", label: "Fewer open issues", detail: "Closures minus new and reopened issues" }
+  {
+    key: "merged",
+    label: "Changes merged",
+    detail: "Pull requests merged on GitHub, counted by merge date."
+  },
+  {
+    key: "closed",
+    label: "Issues closed",
+    detail: "Issues closed in the period, including a second close after reopening."
+  },
+  {
+    key: "reduction",
+    label: "Fewer open issues",
+    detail:
+      "The drop in open issues: closures minus new and reopened issues. A negative number means the list grew."
+  }
 ] as const;
 export type RankingMeasure = (typeof rankingMeasures)[number]["key"];
 type DayCounts = {
@@ -143,6 +156,45 @@ export function leaderboardLink(
   if (project) params.set("project", project);
   return `/activity/leaderboards/?${params}`;
 }
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function dayParts(day: string) {
+  const [year = 0, month = 1, date = 1] = day.split("-").map(Number);
+  return { year, month, date };
+}
+/** Human dates for the page, caption and images. No locale-dependent month names. */
+export function leaderboardDateRange(from: string, to: string) {
+  const start = dayParts(from);
+  const end = dayParts(to);
+  const startYear = start.year === end.year ? "" : ` ${start.year}`;
+  return `${start.date} ${MONTHS[start.month - 1]}${startYear} – ${end.date} ${MONTHS[end.month - 1]} ${end.year}`;
+}
+export function leaderboardDate(day: string) {
+  const { year, month, date } = dayParts(day);
+  return `${date} ${MONTHS[month - 1]} ${year}`;
+}
+export function leaderboardShortDate(day: string) {
+  const { month, date } = dayParts(day);
+  return `${date} ${MONTHS[month - 1]}`;
+}
+function openIssues(value: number) {
+  const count = Math.abs(value).toLocaleString("en-AU");
+  if (value === 0) return "no change in open issues";
+  return `${count} ${value > 0 ? "fewer" : "more"} open issue${Math.abs(value) === 1 ? "" : "s"}`;
+}
+function previousPhrase(value: number | null, key: RankingMeasure, days: number) {
+  if (value === null) return "";
+  if (key === "reduction") {
+    if (value === 0) return `, unchanged from the previous ${days} days`;
+    return `, compared with ${Math.abs(value).toLocaleString("en-AU")} ${value > 0 ? "fewer" : "more"} in the previous ${days} days`;
+  }
+  return `, compared with ${value.toLocaleString("en-AU")} in the previous ${days} days`;
+}
+function measureSentence(name: string, value: number, key: RankingMeasure, days: number) {
+  if (key === "reduction") return `${name} had ${openIssues(value)} over the last ${days} days`;
+  if (key === "closed")
+    return `${name} closed ${value.toLocaleString("en-AU")} issue${value === 1 ? "" : "s"} in the last ${days} days`;
+  return `${name} merged ${value.toLocaleString("en-AU")} pull request${value === 1 ? "" : "s"} in the last ${days} days`;
+}
 export function leaderboardCaption(
   snapshot: LeaderboardSnapshot,
   days: number,
@@ -150,28 +202,30 @@ export function leaderboardCaption(
   project?: string
 ) {
   const ranked = rankedProjects(snapshot, days, key);
+  const range = leaderboardDateRange(ranked.from, ranked.to);
   const rows = project
     ? ranked.rows.filter((r) => r.slug === project)
     : ranked.rows.filter((r) => r.value !== null).slice(0, 3);
-  const lines = rows.map((r, index) => {
-    if (r.value === null) return `${r.name}: history unavailable.`;
-    const negative = key === "reduction" && r.value < 0;
-    const value = Math.abs(r.value).toLocaleString("en-AU");
-    const unit =
-      key === "merged"
-        ? `merged PR${r.value === 1 ? "" : "s"}`
-        : key === "closed"
-          ? `issue closure${r.value === 1 ? "" : "s"}`
-          : `${negative ? "more" : "fewer"} open issue${Math.abs(r.value) === 1 ? "" : "s"}`;
-    return `${r.name}: ${value}${index === 0 || negative ? ` ${unit}${index === 0 ? ` in ${days} days` : ""}` : ""}.`;
-  });
-  const date = (value: string) =>
-    new Date(value + "T00:00:00Z").toLocaleDateString("en-AU", {
-      day: "numeric",
-      month: "short",
-      timeZone: "UTC"
-    });
-  return `${lines[0] ?? "No complete GitHub history for this period."}${lines.length > 1 ? `\n${lines.slice(1).join(" ")}` : ""}\n\n${date(ranked.from)} to ${date(ranked.to)} ${ranked.to.slice(0, 4)}`;
+  const first = rows[0];
+  if (!first || first.value === null) return `No complete GitHub history for ${range}.`;
+  let post: string;
+  if (project) {
+    post = `${measureSentence(first.name, first.value, key, days)}${previousPhrase(first.previous, key, days)}.`;
+  } else {
+    post = `${measureSentence(first.name, first.value, key, days)}`;
+    const rest = rows.slice(1);
+    if (rest.length && key === "reduction") {
+      if (rest.length > 1 && rest[0]!.value === rest[1]!.value)
+        post += `. ${rest[0]!.name} and ${rest[1]!.name} each had ${openIssues(rest[0]!.value ?? 0)}`;
+      else
+        post += `. ${rest.map((r) => `${r.name} had ${openIssues(r.value ?? 0)}`).join(" and ")}`;
+    } else if (rest.length) {
+      const tail = rest.map((r) => `${r.name} on ${(r.value ?? 0).toLocaleString("en-AU")}`);
+      post += `, with ${tail.join(" and ")}`;
+    }
+    post += ".";
+  }
+  return `${post}\n\n${range}.`;
 }
 
 // Only these fields cross the private GitHub → public reporting boundary.

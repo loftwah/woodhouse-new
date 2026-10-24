@@ -1,12 +1,13 @@
+import { createImageShare } from "./leaderboard-share.ts";
+
 const root = document.querySelector<HTMLElement>("[data-leaderboard]");
 if (root) {
   const statuses = root.querySelectorAll<HTMLElement>("[data-lb-status], [data-lb-export-status]");
   const captionField = root.querySelector<HTMLTextAreaElement>(".lb-caption textarea");
+  const saveLink = root.querySelector<HTMLAnchorElement>("[data-lb-save]");
+  const savedLink = root.querySelector<HTMLAnchorElement>("[data-lb-saved-link]");
   const caption = () => captionField?.value ?? root.dataset.caption ?? "";
-  let busy = false;
   let operation = 0;
-  let prepared: File | undefined;
-  let preparing: Promise<File> | undefined;
   const say = (text: string, ticket: number) => {
     if (ticket === operation)
       statuses.forEach((status) => {
@@ -18,28 +19,38 @@ if (root) {
     section?.scrollIntoView({ behavior: "instant", block: "start" });
     section?.querySelector<HTMLAnchorElement>(".lb-image-grid a")?.focus({ preventScroll: true });
   }
-  function prepare() {
-    preparing ??= fetch(root!.dataset.image!)
-      .then(async (response) => {
-        if (!response.ok || !response.headers.get("content-type")?.startsWith("image/png"))
-          throw Error();
-        prepared = new File(
-          [await response.blob()],
-          root!.dataset.filename ?? "woodhouse-leaderboard.png",
-          {
-            type: "image/png"
-          }
-        );
-        return prepared;
-      })
-      .catch((error) => {
-        preparing = undefined;
-        throw error;
-      });
-    return preparing;
+  function showSavedView() {
+    savedLink?.scrollIntoView({ behavior: "instant", block: "center" });
+    savedLink?.focus({ preventScroll: true });
   }
+  function showSave() {
+    saveLink?.scrollIntoView({ behavior: "instant", block: "center" });
+    saveLink?.focus({ preventScroll: true });
+  }
+  const shareImage = root.dataset.image
+    ? createImageShare({
+        loadImage: async () => {
+          const response = await fetch(root!.dataset.image!, {
+            signal: AbortSignal.timeout(15000)
+          });
+          if (!response.ok || !response.headers.get("content-type")?.startsWith("image/png"))
+            throw Error();
+          return new File(
+            [await response.blob()],
+            root!.dataset.filename ?? "woodhouse-leaderboards.png",
+            {
+              type: "image/png"
+            }
+          );
+        },
+        share: typeof navigator.share === "function" ? (data) => navigator.share(data) : undefined,
+        canShare:
+          typeof navigator.canShare === "function" ? (data) => navigator.canShare(data) : undefined
+      })
+    : null;
   // Prepare outside the gesture. A ready File lets Safari use the click itself.
-  if (root.dataset.image && typeof navigator.share === "function") void prepare().catch(() => {});
+  if (shareImage && typeof navigator.share === "function")
+    void shareImage.prepare().catch(() => {});
   async function copy(text: string) {
     try {
       await navigator.clipboard.writeText(text);
@@ -53,7 +64,7 @@ if (root) {
       const ticket = ++operation;
       const copied = await copy(caption());
       if (ticket !== operation) return;
-      if (copied) say("Caption copied.", ticket);
+      if (copied) say("Caption copied. Paste it into your post.", ticket);
       else {
         showImages();
         captionField?.focus({ preventScroll: true });
@@ -64,53 +75,50 @@ if (root) {
   );
   root.querySelector("[data-lb-link]")?.addEventListener("click", async () => {
     const ticket = ++operation;
-    say(
-      (await copy(root.dataset.link ?? ""))
-        ? "Link copied. It opens this exact view."
-        : "Copy unavailable. Use the saved-view link below.",
-      ticket
-    );
+    const copied = await copy(root.dataset.link ?? "");
+    if (ticket !== operation) return;
+    if (copied) say("Link copied. It opens this exact view.", ticket);
+    else {
+      showSavedView();
+      say("Copy unavailable. Use the saved-view link.", ticket);
+    }
   });
   root.querySelectorAll("[data-lb-share]").forEach((button) =>
     button.addEventListener("click", async () => {
-      if (busy) return;
+      if (!shareImage || shareImage.busy) return;
       const ticket = ++operation;
-      busy = true;
-      try {
-        if (typeof navigator.share !== "function") {
-          showImages();
-          say("Save the PNG and attach it to your post. Your caption is below.", ticket);
-          return;
-        }
-        if (!prepared) {
-          say("Preparing your image…", ticket);
-          await prepare();
-          say("Image ready. Tap Share image again.", ticket);
-          return;
-        }
-        // No await before the native handoff when the file is ready.
-        if (navigator.canShare?.({ files: [prepared] })) {
-          // A combined file/text payload can become a text-only post on iOS.
-          // Keep the image handoff distinct from the editable caption and link.
-          await navigator.share({ files: [prepared] });
-          say("Image sent to the share sheet. Paste your caption in the post.", ticket);
-        } else {
-          showImages();
-          say(
-            "This browser cannot share the image. Save the PNG and attach it to your post.",
-            ticket
-          );
-        }
-      } catch (error) {
-        say(
-          error instanceof Error && error.name === "AbortError"
-            ? "Sharing cancelled. Your view is still here."
-            : "Couldn’t share this time. Save PNG and copy caption are ready.",
-          ticket
-        );
-      } finally {
-        busy = false;
+      if (typeof navigator.share === "function" && !shareImage.ready)
+        say("Preparing your image…", ticket);
+      const result = await shareImage.share();
+      if (result === "busy") return;
+      if (result === "ready") {
+        say("Image ready. Tap Share image again.", ticket);
+        return;
       }
+      if (result === "shared") {
+        say("Image sent. Paste your caption in the post.", ticket);
+        return;
+      }
+      if (result === "cancelled") {
+        say("Sharing cancelled. Your view is still here.", ticket);
+        return;
+      }
+      if (result === "unsupported") {
+        showImages();
+        say("Image sharing unavailable. Save a PNG instead.", ticket);
+        return;
+      }
+      if (result === "unavailable") {
+        showSave();
+        say("Image didn’t load. Save a PNG instead.", ticket);
+        return;
+      }
+      showSave();
+      say("Couldn’t share. Save a PNG and copy the caption.", ticket);
     })
   );
+  root.querySelector("[data-lb-images]")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    showImages();
+  });
 }
