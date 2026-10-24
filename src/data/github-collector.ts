@@ -35,7 +35,7 @@ export async function collectGitHub(
         "X-GitHub-Api-Version": "2022-11-28",
         "User-Agent": "Woodhouse-project-report"
       },
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(20000)
     });
     if (!response.ok) throw new Error(`GitHub read failed (${response.status})`);
@@ -148,7 +148,8 @@ export async function refreshLeaderboards(
     const prior = await environment.DB.prepare(
       "SELECT body FROM wh_analytics_reports WHERE id='github-auth'"
     ).first<{ body: string }>();
-    const etags: Record<string, string> = prior ? (JSON.parse(prior.body).etags ?? {}) : {};
+    const previous = prior ? JSON.parse(prior.body) : {};
+    const etags: Record<string, string> = previous.etags ?? {};
     for (const project of leaderboardProjects)
       for (const kind of ["issues", "pulls"]) {
         const tag = `${project.slug}/${kind}`;
@@ -161,7 +162,7 @@ export async function refreshLeaderboards(
               "User-Agent": "Woodhouse-project-report",
               ...(etags[tag] ? { "If-None-Match": etags[tag] } : {})
             },
-            redirect: "error",
+            redirect: "manual",
             signal: AbortSignal.timeout(20000)
           }
         );
@@ -169,26 +170,37 @@ export async function refreshLeaderboards(
         if (!response.ok && response.status !== 304) throw Error("GitHub permission check failed");
         if (response.headers.get("etag")) etags[tag] = response.headers.get("etag")!;
       }
-    await environment.DB.prepare(
-      "INSERT INTO wh_analytics_reports(id,created_at,days,body) VALUES('github-auth',?,-2,?) ON CONFLICT(id) DO UPDATE SET created_at=excluded.created_at,body=excluded.body"
-    )
-      .bind(
-        new Date(now).toISOString(),
-        JSON.stringify({
-          checkedAt: new Date(now).toISOString(),
-          issuesRead: true,
-          pullsRead: true,
-          projects: leaderboardProjects.map((p) => p.slug),
-          etags
-        })
+    const receipt = {
+      checkedAt: new Date(now).toISOString(),
+      issuesRead: true,
+      pullsRead: true,
+      projects: leaderboardProjects.map((p) => p.slug),
+      etags,
+      collectedThrough:
+        typeof previous.collectedThrough === "string" ? previous.collectedThrough : null,
+      reportId: typeof previous.reportId === "string" ? previous.reportId : null
+    };
+    const saveReceipt = () =>
+      environment.DB.prepare(
+        "INSERT INTO wh_analytics_reports(id,created_at,days,body) VALUES('github-auth',?,-2,?) ON CONFLICT(id) DO UPDATE SET created_at=excluded.created_at,body=excluded.body"
       )
-      .run();
+        .bind(new Date(now).toISOString(), JSON.stringify(receipt))
+        .run();
+    await saveReceipt();
     const latest = await readLeaderboard(environment.DB);
-    if (latest?.through === completeWindow(180, now).to) return;
-    await storeLeaderboard(
+    // A local backfill must not bypass the installed Worker's first collection.
+    if (
+      latest?.through === completeWindow(180, now).to &&
+      receipt.collectedThrough === latest.through
+    )
+      return;
+    const collected = await storeLeaderboard(
       environment.DB,
       await collectGitHub(environment.WOODHOUSE_GITHUB_TOKEN ?? "", fetcher, now)
     );
+    receipt.collectedThrough = collected.through;
+    receipt.reportId = collected.id;
+    await saveReceipt();
   } catch {
     console.error(
       "GitHub leaderboard refresh failed; the dated last successful report remains available."

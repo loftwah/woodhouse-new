@@ -45,12 +45,14 @@ export const GET: APIRoute = async ({ url, cache }) => {
     : null;
   if (!report || (project && !report.projects.some((p) => p.slug === project)))
     return new Response("Report unavailable.", { status: 404 });
+  let stage = "renderer initialization";
   try {
     await ensureReportRenderer();
+    stage = "font loading";
     fonts ??= Promise.all(
       [400, 700].map(async (weight) => {
         const r = await fetch(new URL(`/fonts/bricolage-report-${weight}.ttf`, url.origin), {
-          redirect: "error",
+          redirect: "manual",
           signal: AbortSignal.timeout(6000)
         });
         if (!r.ok) throw Error("Font unavailable");
@@ -60,6 +62,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
       fonts = undefined;
       throw e;
     });
+    const buffers = await fonts;
+    stage = "SVG conversion";
     const renderer = new Resvg(
       leaderboardSvg(
         report,
@@ -68,8 +72,9 @@ export const GET: APIRoute = async ({ url, cache }) => {
         format as LeaderboardFormat,
         project
       ),
-      { font: { fontBuffers: await fonts, defaultFontFamily: "Bricolage Grotesque" } }
+      { font: { fontBuffers: buffers, defaultFontFamily: "Bricolage Grotesque" } }
     );
+    stage = "PNG rendering";
     const image = renderer.render();
     const bytes = new Uint8Array(image.asPng());
     image.free();
@@ -86,7 +91,14 @@ export const GET: APIRoute = async ({ url, cache }) => {
           : {})
       }
     });
-  } catch {
+  } catch (error) {
+    // This stage handles only local WASM, public fonts and the approved counts.
+    // No GitHub response or credential enters it; keep failures off the page.
+    console.error(
+      "Leaderboard PNG failed",
+      stage,
+      error instanceof Error ? error.message : "unknown failure"
+    );
     return new Response("Image unavailable. Please try again.", {
       status: 503,
       headers: { "cache-control": "no-store" }

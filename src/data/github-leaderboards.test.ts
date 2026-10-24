@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { collectGitHub } from "./github-collector.ts";
+import { collectGitHub, refreshLeaderboards } from "./github-collector.ts";
 import {
   completeWindow,
   rankedProjects,
@@ -11,7 +11,8 @@ import {
 import { publishedLeaderboard } from "./github-leaderboards.ts";
 import { leaderboardSvg, leaderboardFormats } from "./leaderboard-art.ts";
 const now = Date.parse("2026-10-24T01:00:00Z");
-const fixture: typeof fetch = async (input) => {
+const fixture: typeof fetch = async (input, init) => {
+  assert.equal(init?.redirect, "manual", "Workers only accepts manual/follow redirects");
   const url = new URL(String(input));
   const common = { title: "PRIVATE BODY MUST NOT ESCAPE", author: { login: "private-author" } };
   let result: unknown;
@@ -188,4 +189,41 @@ test("current publication projects the same field for the page, image and captio
   assert.equal(s.projects.length, 8);
   assert.doesNotMatch(leaderboardSvg(projected, 28, "merged", "landscape"), /Fighter|App Composer/);
   assert.doesNotMatch(leaderboardCaption(projected, 28, "merged"), /Fighter|App Composer/);
+});
+
+test("a local backfill still gets one real Worker collection and private receipt, then only conditional permission checks", async () => {
+  const seed = await snapshot();
+  let privateBody: string | null = null;
+  const saved: unknown[] = [];
+  const db = {
+    prepare(sql: string) {
+      return {
+        first: async () =>
+          sql.includes("id='github-auth'")
+            ? privateBody
+              ? { body: privateBody }
+              : null
+            : { body: JSON.stringify(seed) },
+        bind(...values: unknown[]) {
+          return {
+            run: async () => {
+              if (sql.includes("VALUES('github-auth'")) privateBody = String(values[1]);
+              else saved.push(JSON.parse(String(values[2])));
+            }
+          };
+        }
+      };
+    }
+  } as unknown as D1Database;
+  await refreshLeaderboards({ DB: db, WOODHOUSE_GITHUB_TOKEN: "fixture" }, fixture, now);
+  assert.equal(saved.length, 1, "same-day backfill bypassed configured Worker collection");
+  const receipt = JSON.parse(privateBody!);
+  assert.equal(receipt.projects.length, 8);
+  assert.equal(receipt.issuesRead, true);
+  assert.equal(receipt.pullsRead, true);
+  assert.equal(receipt.collectedThrough, seed.through);
+  assert.equal(receipt.reportId, (saved[0] as { id: string }).id);
+  assert.doesNotMatch(privateBody!, /PRIVATE|private-author|fixture/);
+  await refreshLeaderboards({ DB: db, WOODHOUSE_GITHUB_TOKEN: "fixture" }, fixture, now + 1000);
+  assert.equal(saved.length, 1, "Worker recollected a complete day unnecessarily");
 });
