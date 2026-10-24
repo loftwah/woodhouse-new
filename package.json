@@ -5,6 +5,7 @@
   "packageManager": "pnpm@12.8.1",
   "type": "module",
   "scripts": {
+    "leaderboards:collect": "node --experimental-strip-types scripts/collect-leaderboards.mjs",
     "dev": "astro dev --host 0.0.0.0",
     "build": "node scripts/build-emdash-plugins.mjs && CLOUDFLARE_ENV=production astro build && node scripts/clean-build-secrets.mjs && node scripts/check-build-privacy.mjs && node scripts/pin-default-wrangler-config.mjs",
     "build:preview": "node scripts/build-emdash-plugins.mjs && CLOUDFLARE_ENV=preview astro build && node scripts/clean-build-secrets.mjs && node scripts/check-build-privacy.mjs && node scripts/pin-default-wrangler-config.mjs",

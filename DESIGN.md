@@ -215,3 +215,15 @@ definition follow in a closed disclosure. Saved-report status shares the compact
 date strip; its full capture metadata remains in Notes. Share actions precede
 the image preview on phones, so copying and downloading never require scrolling
 past a technical caption.
+
+## Project leaderboards — reviewed 24 October 2026
+
+The engineering board is an extension of the ink/lime publication: large
+Bricolage project names and figures, open ranked rows, project colour and a
+proportional rule. Equal ranks and previous-period movement carry words as well
+as numbers. Project detail separates the selected count from its issue breakdown
+and the actual product. Sharing actions precede the board; the three PNGs use
+independent landscape, square and portrait compositions with readable ranks,
+period and Woodhouse address. Analytics retains its compact task navigation and
+links to this separate engineering view. Product engagement is never ranked with
+GitHub activity. Definitions and private-source boundaries live under Notes.

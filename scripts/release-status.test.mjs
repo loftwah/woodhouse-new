@@ -31,7 +31,7 @@ async function fixture(t) {
 const args = process.argv.slice(2);
 console.log(JSON.stringify(args.includes('deployments')
   ? {versions:[{version_id:'${preview.workerVersion}',percentage:100}]}
-  : args.includes('secret') ? [{name:'RESEND_API_KEY'},{name:'EMDASH_ENCRYPTION_KEY'}]
+  : args.includes('secret') ? [{name:'RESEND_API_KEY'},{name:'EMDASH_ENCRYPTION_KEY'},{name:'WOODHOUSE_GITHUB_TOKEN'}]
   : {pending:[],unknownApplied:[]}));
 `,
     { mode: 0o700 }

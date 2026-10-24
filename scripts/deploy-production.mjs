@@ -196,7 +196,7 @@ const secretOutput = command([
 ]);
 const secrets = parseJsonOutput(secretOutput, "Production Worker secret inventory");
 const secretNames = new Set((Array.isArray(secrets) ? secrets : []).map((secret) => secret.name));
-const missingSecrets = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY"].filter(
+const missingSecrets = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY", "WOODHOUSE_GITHUB_TOKEN"].filter(
   (name) => !secretNames.has(name)
 );
 if (missingSecrets.length)

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
-import { initWasm, Resvg } from "@resvg/resvg-wasm";
-import wasm from "../../assets/resvg.wasm";
+import { Resvg } from "@resvg/resvg-wasm";
+import { ensureReportRenderer } from "../../data/report-renderer";
 import { listProjectRecords, listPublishedDispatches } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
 import { reportSvg, reportFormats, type ReportFormat } from "../../data/portfolio-card";
@@ -20,7 +20,6 @@ import { editionCard } from "../../data/edition-card";
 import { outcomeStories } from "../../data/connected-stories";
 export const prerender = false;
 const artwork = new Map<string, Promise<string | undefined>>();
-let initialized: Promise<void> | undefined;
 let fonts: Promise<Uint8Array[]> | undefined;
 const knownMeasures = new Set<string>([
   overviewMeasure.key,
@@ -127,8 +126,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
           headers: { "cache-control": "no-store" }
         });
     }
-    initialized ??= initWasm(wasm);
-    await initialized;
+    await ensureReportRenderer();
     fonts ??= Promise.all(
       [400, 700].map(async (weight) => {
         const response = await fetch(new URL(`/fonts/bricolage-report-${weight}.ttf`, url.origin), {

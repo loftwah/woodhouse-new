@@ -1,3 +1,4 @@
+import { refreshLeaderboards } from "./github-collector.ts";
 import { analyticsProjects } from "./portfolio-analytics.ts";
 import { createPortfolioReport } from "./portfolio-reports.ts";
 /** Only aggregate reporting runs in read-only mode; CMS maintenance stays disabled. */
@@ -33,7 +34,10 @@ export function createAnalyticsScheduledHandler<
       environment.WOODHOUSE_ENVIRONMENT === "production" &&
       "DB" in environment
     ) {
-      await refresh(environment.DB as D1Database);
+      await Promise.all([
+        refresh(environment.DB as D1Database),
+        refreshLeaderboards(environment as { DB: D1Database; WOODHOUSE_GITHUB_TOKEN?: string })
+      ]);
       return;
     }
     await fallback(...args);

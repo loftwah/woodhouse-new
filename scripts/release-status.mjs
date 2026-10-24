@@ -122,12 +122,12 @@ const secrets = command([
 const names = new Set(
   (Array.isArray(secrets.json) ? secrets.json : []).map((secret) => secret.name)
 );
-const missingSecrets = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY"].filter(
+const missingSecrets = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY", "WOODHOUSE_GITHUB_TOKEN"].filter(
   (name) => !names.has(name)
 );
 if (missingSecrets.length)
   blocked.push(`Production Worker is missing secret names: ${missingSecrets.join(", ")}.`);
-else ready.push("Production Worker holds both required secret names.");
+else ready.push("Production Worker holds all required secret names.");
 
 const receipt = await readPrivateJson(".release/production-ready.json");
 if (!receipt) {

@@ -15,8 +15,8 @@ const {
   caption,
   link,
   jsonHref,
-  heading = "Take the evidence with you",
-  note = "A dated snapshot, with the same measures and coverage. Refreshing a saved link never changes its figures.",
+  heading = "Share what happened",
+  note = "Save an image or copy a ready caption. This saved link keeps the same numbers.",
   alt,
   expanded = false,
   focus = false
@@ -77,8 +77,8 @@ const {
           <button data-report-share type="button" hidden>
             Share image
           </button>
-          <a href={link}>Open frozen permalink</a>
-          <a href={jsonHref}>Download public JSON</a>
+          <a href={link}>Open saved report</a>
+          <a href={jsonHref}>Inspect the public numbers</a>
           <p data-report-status role="status"></p>
         </div>
         <details class="share-caption">

@@ -678,6 +678,7 @@ const dataPayload = {
         <a href="/activity/listening/">Games × Radio</a>
         <a href="/connections/">Explore connected products</a>
         <a href="/editions/one-more-round/#distribution">Edition discovery</a>
+        <a href="/activity/leaderboards/">Project leaderboards ↗</a>
         <a href="/projects/">Explore the projects</a>
       </div>
     </div>
@@ -686,7 +687,15 @@ const dataPayload = {
         <div>
           <h1>{selected ? names.get(selected) : "Analytics"}</h1>
           <p class="product-view-label">
-            {view ? view.label : "Each project on its own relevant measure"}
+            {view ? view.label : "What people play, hear and use"}
+            {" · "}
+            <a
+              class="leaderboards-link"
+              href="/activity/leaderboards/"
+              aria-label="GitHub project leaderboards"
+            >
+              GitHub leaderboards ↗
+            </a>
           </p>
         </div>
         <div class="date-toolbar">
@@ -775,7 +784,7 @@ const dataPayload = {
         </span>
         <span>
           {available}/{applicable.length} reporting ·{" "}
-          {window.complete ? "Closed dates" : "Today is partial"}
+          {window.complete ? "Finished days" : "Today is partial"}
           {frozen && (
             <>
               {" "}

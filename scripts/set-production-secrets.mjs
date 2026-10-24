@@ -1,3 +1,8 @@
+import {
+  approvedWorkerSecrets,
+  requiredWorkerSecrets,
+  assertApprovedSecrets
+} from "./worker-secrets.mjs";
 import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -8,11 +13,11 @@ import { spawnSync } from "node:child_process";
 // temporary file that is removed in a finally block.
 //
 // This deliberately refuses any local variable that looks like a credential
-// but is not one of the two names the production Worker expects, so a stray
+// but is not one of the explicit names the production Worker expects, so a stray
 // R2 or third-party token cannot be uploaded by accident.
 
 const PRODUCION_WORKER = "woodhouse-loftwah";
-const EXPECTED = ["RESEND_API_KEY", "EMDASH_ENCRYPTION_KEY"];
+const EXPECTED = approvedWorkerSecrets;
 const root = process.cwd();
 
 function parseEnv(contents) {
@@ -37,12 +42,8 @@ function fail(message) {
 }
 
 const localEnv = parseEnv(await readFile(path.join(root, ".env"), "utf8"));
-for (const name of localEnv.keys()) {
-  if (/(?:key|token|secret|password)/i.test(name) && !EXPECTED.includes(name))
-    fail(`refusing to upload unreviewed local secret ${name}.`);
-}
-
-const missing = EXPECTED.filter((name) => !localEnv.get(name));
+assertApprovedSecrets(localEnv);
+const missing = requiredWorkerSecrets.filter((name) => !localEnv.get(name));
 if (missing.length) fail(`the ignored local .env is missing ${missing.join(", ")}.`);
 
 if (!/^emdash_enc_v1_[A-Za-z0-9_-]{43}$/.test(localEnv.get("EMDASH_ENCRYPTION_KEY")))
@@ -67,7 +68,9 @@ const secretsFile = path.join(tempDir, "secrets.env");
 try {
   await writeFile(
     secretsFile,
-    EXPECTED.map((name) => `${name}=${localEnv.get(name)}`).join("\n") + "\n",
+    EXPECTED.filter((name) => localEnv.has(name))
+      .map((name) => `${name}=${localEnv.get(name)}`)
+      .join("\n") + "\n",
     { mode: 0o600 }
   );
   const publish = spawnSync(
@@ -117,7 +120,7 @@ await writeFile(
 );
 
 console.log(
-  `Published ${EXPECTED.join(", ")} to ${PRODUCION_WORKER}. Added: ${
+  `Verified ${EXPECTED.join(", ")} to ${PRODUCION_WORKER}. Added: ${
     EXPECTED.filter((name) => !existing.has(name)).join(", ") || "none"
   }. Values were not printed or logged.`
 );

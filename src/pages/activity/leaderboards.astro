@@ -1,0 +1,468 @@
+---
+/* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- The labelled overflow chart supports keyboard scrolling. */
+import type { D1Database } from "@cloudflare/workers-types";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { env } from "cloudflare:workers";
+import { listProjectRecords } from "../../content/repository";
+import {
+  readLeaderboard,
+  completeWindow,
+  rankedProjects,
+  rankingMeasures,
+  measureKey,
+  selectedDays,
+  safeProject,
+  leaderboardLink,
+  leaderboardCaption
+} from "../../data/github-leaderboards";
+import { publishedLeaderboard, weeklyBarGeometry } from "../../data/github-leaderboards";
+import "../../styles/leaderboards.css";
+export const prerender = false;
+Astro.cache.set(false);
+Astro.response.headers.set("cache-control", "private, no-store");
+const requested = Astro.url.searchParams.get("report");
+const source = await readLeaderboard((env as unknown as { DB: D1Database }).DB, requested);
+if (requested && !source)
+  return new Response("This saved leaderboard is unavailable.", { status: 404 });
+const identities = await listProjectRecords();
+if (identities.error) return new Response("Projects are temporarily unavailable.", { status: 503 });
+const admitted = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
+const snapshot = source ? publishedLeaderboard(source, admitted) : null;
+const days = selectedDays(Astro.url.searchParams.get("days"));
+const measure = measureKey(Astro.url.searchParams.get("measure"));
+const project = Astro.url.searchParams.get("project") ?? undefined;
+if (project && (!safeProject(project) || !admitted.has(project)))
+  return new Response("Project unavailable.", { status: 404 });
+const ranked = snapshot ? rankedProjects(snapshot, days, measure) : null;
+const focused = ranked?.rows.find((r) => r.slug === project);
+if (project && !focused)
+  return new Response("This project is not in this saved report.", { status: 404 });
+const selected = rankingMeasures.find((m) => m.key === measure)!;
+const link = snapshot
+  ? leaderboardLink(snapshot.id, days, measure, project)
+  : "/activity/leaderboards/";
+const caption = snapshot ? leaderboardCaption(snapshot, days, measure, project) : "";
+const image = snapshot
+  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, ...(project ? { project } : {}) })}`
+  : "";
+const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
+function href(updates: Record<string, string | null>) {
+  const p = new URLSearchParams({
+    ...(snapshot ? { report: snapshot.id } : {}),
+    days: String(days),
+    measure,
+    ...(project ? { project } : {})
+  });
+  for (const [key, value] of Object.entries(updates)) {
+    if (value === null) p.delete(key);
+    else p.set(key, value);
+  }
+  if (Astro.url.searchParams.get("analytics") === "off") p.set("analytics", "off");
+  if (Astro.url.searchParams.has("qa")) p.set("qa", "");
+  return `/activity/leaderboards/?${p}`;
+}
+function outboundLink(value: string) {
+  const url = new URL(value, Astro.url);
+  if (Astro.url.searchParams.get("analytics") === "off") url.searchParams.set("analytics", "off");
+  if (Astro.url.searchParams.has("qa"))
+    url.searchParams.set("qa", Astro.url.searchParams.get("qa") ?? "");
+  return url.href;
+}
+const fmt = (n: number | null | undefined) =>
+  n === null || n === undefined ? "—" : n.toLocaleString("en-AU");
+const max = Math.max(1, ...(ranked?.rows.map((r) => Math.abs(r.value ?? 0)) ?? []));
+const date = (s: string) =>
+  new Date(s + "T00:00:00Z").toLocaleDateString("en-AU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC"
+  });
+const focusCounts = focused?.counts.daily.filter(
+  (d) => d.day >= ranked!.from && d.day <= ranked!.to
+);
+const total = (field: "merged" | "closed" | "opened" | "reopened") =>
+  focusCounts?.reduce((n, d) => n + d[field], 0) ?? null;
+const weeks = ranked
+  ? Array.from({ length: Math.ceil(days / 7) }, (_, i) => {
+      const from = new Date(Date.parse(ranked.from) + i * 7 * 86400000).toISOString().slice(0, 10);
+      const to = new Date(Math.min(Date.parse(ranked.to), Date.parse(from) + 6 * 86400000))
+        .toISOString()
+        .slice(0, 10);
+      const rows = ranked.rows.filter((r) => !project || r.slug === project);
+      const available = rows.every((r) => r.value !== null);
+      const value = available
+        ? rows.reduce(
+            (n, r) =>
+              n +
+              r.counts.daily
+                .filter((d) => d.day >= from && d.day <= to)
+                .reduce(
+                  (v, d) =>
+                    v + (measure === "reduction" ? d.closed - d.opened - d.reopened : d[measure]),
+                  0
+                ),
+            0
+          )
+        : null;
+      return { from, to, value };
+    })
+  : [];
+const weekMax = Math.max(1, ...weeks.map((w) => Math.abs(w.value ?? 0)));
+const plottedWeeks = weeks.map((w) => ({
+  ...w,
+  bar: weeklyBarGeometry(w.value, weekMax, measure === "reduction")
+}));
+---
+
+<BaseLayout
+  title={focused ? `${focused.name} · ${selected.label}` : "Projects making moves"}
+  description={`${selected.label} across the Loftwah projects. Explore the rankings and share the same dated results.`}
+  path={link}
+  {...(image ? { image } : {})}
+  imageAlt={`${selected.label}: ranked projects for ${days} complete days`}
+>
+  <div
+    class="leaderboards container"
+    data-leaderboard
+    data-caption={caption}
+    data-image={image}
+    data-link={`https://woodhouse.loftwah.com${link}`}
+  >
+    <nav class="lb-breadcrumb" aria-label="Breadcrumb">
+      <a href="/activity/">Analytics</a>
+      <span>/</span>
+      <span>Project leaderboards</span>
+    </nav>
+    <header class="lb-heading">
+      <div>
+        <h1>
+          {focused ? (
+            <>
+              {focused.name}
+              <span class="lb-title-dot">.</span>
+            </>
+          ) : (
+            <>
+              Projects
+              <br />
+              making moves<span class="lb-title-dot">.</span>
+            </>
+          )}
+        </h1>
+        <p class="lb-deck">
+          {focused
+            ? "A closer look at the work behind the project."
+            : "GitHub activity across the Loftwah projects."}
+        </p>
+      </div>
+      <div class="lb-dates">
+        {ranked ? (
+          <>
+            <strong>
+              {date(ranked.from)} — {date(ranked.to)}
+            </strong>
+            <span>{days} complete days · UTC</span>
+            <span>
+              Last updated{" "}
+              {new Date(snapshot!.collectedAt).toLocaleString("en-AU", {
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZone: "UTC"
+              })}{" "}
+              UTC
+            </span>
+            {stale && <strong class="lb-stale">Update delayed · showing the last report</strong>}
+          </>
+        ) : (
+          <span>The first report is being prepared.</span>
+        )}
+      </div>
+    </header>
+    <div class="lb-controls" id="rankings">
+      <nav aria-label="Rank by" class="lb-lenses">
+        {rankingMeasures.map((m) => (
+          <a href={href({ measure: m.key })} aria-current={measure === m.key ? "page" : undefined}>
+            {m.label}
+          </a>
+        ))}
+      </nav>
+      <nav aria-label="Reporting period" class="lb-periods">
+        {[7, 28, 90].map((d) => (
+          <a href={href({ days: String(d) })} aria-current={days === d ? "page" : undefined}>
+            {d} days
+          </a>
+        ))}
+      </nav>
+    </div>
+    {snapshot && (
+      <div class="lb-sharebar" aria-label="Share this view">
+        <button type="button" data-lb-share>
+          Share
+        </button>
+        <a href={`${image}&download=1`} download>
+          Save PNG
+        </a>
+        <button type="button" data-lb-caption>
+          Copy caption
+        </button>
+        <button type="button" data-lb-link>
+          Copy link
+        </button>
+        <a href="#share-images">All image sizes</a>
+        <p role="status" data-lb-status></p>
+      </div>
+    )}
+    {!ranked ? (
+      <section class="lb-empty">
+        <h2>The next ranking is on its way.</h2>
+        <p>GitHub could not be read yet. There are no estimated scores.</p>
+        <a href="/projects/">Explore the projects</a>
+      </section>
+    ) : (
+      <>
+        {focused && (
+          <section class:list={["lb-focus", `lb-${focused.slug}`]}>
+            <a href={href({ project: null })}>← All projects</a>
+            <div class="lb-focus-score">
+              <strong>{fmt(focused.value)}</strong>
+              <div>
+                <h2>{selected.label}</h2>
+                <p>
+                  {focused.rank === null
+                    ? "History unavailable"
+                    : `Rank ${focused.rank}${focused.tied ? " · tied" : ""} of ${ranked.rows.filter((r) => r.rank !== null).length}`}
+                </p>
+                <p>
+                  {focused.previous === null
+                    ? "Earlier period unavailable"
+                    : `${fmt(focused.previous)} in the previous ${days} days`}
+                </p>
+              </div>
+            </div>
+            <dl class="lb-breakdown">
+              {[
+                ["Changes merged", focused.counts.pullsComplete ? total("merged") : null],
+                ["Issues opened", focused.counts.issuesComplete ? total("opened") : null],
+                ["Issues closed", focused.counts.eventsComplete ? total("closed") : null],
+                ["Issues reopened", focused.counts.eventsComplete ? total("reopened") : null],
+                ["Open at last update", focused.counts.openNow]
+              ].map(([label, value]) => (
+                <div>
+                  <dt>{label}</dt>
+                  <dd>{fmt(value as number | null)}</dd>
+                </div>
+              ))}
+            </dl>
+            <div class="lb-product-links">
+              <a href={focused.slug === "woodhouse" ? "/" : `/projects/${focused.slug}/`}>
+                See this project
+              </a>
+              {identities.projects.find((p) => p.slug === focused.slug)?.siteUrl && (
+                <a
+                  href={outboundLink(
+                    identities.projects.find((p) => p.slug === focused.slug)!.siteUrl!
+                  )}
+                >
+                  Open {focused.name} ↗
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+        {!focused && (
+          <section aria-label={selected.label} class="lb-board">
+            <div class="lb-column-head">
+              <span>Rank / project</span>
+              <span>{selected.label}</span>
+            </div>
+            <ol>
+              {ranked.rows.map((r) => (
+                <li class:list={["lb-row", `lb-${r.slug}`]} value={r.rank ?? r.position}>
+                  <a
+                    class="lb-rank-link"
+                    href={href({ project: r.slug })}
+                    aria-label={`${r.name}, ${r.rank === null ? "history unavailable" : `rank ${r.rank}, ${fmt(r.value)} ${selected.label.toLowerCase()}`}`}
+                  >
+                    <span class="lb-rank">
+                      {r.rank === null ? "—" : String(r.rank).padStart(2, "0")}
+                    </span>
+                    <div class="lb-project">
+                      <h2>
+                        {r.name}
+                        <span aria-hidden="true"> ↗</span>
+                      </h2>
+                      <p>
+                        {r.value === null
+                          ? "History unavailable"
+                          : `${r.tied ? "Tied · " : ""}${r.movement === null ? "Earlier ranks unavailable" : r.movement === 0 ? "Same rank" : `${r.movement > 0 ? "Up" : "Down"} ${Math.abs(r.movement)} ${Math.abs(r.movement) === 1 ? "place" : "places"}`}`}
+                      </p>
+                    </div>
+                    <strong class="lb-value">{fmt(r.value)}</strong>
+                    <svg
+                      class="lb-rule"
+                      viewBox="0 0 1000 4"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M0 2h1000" stroke="#344158" />
+                      {measure === "reduction" && <path d="M500 0v4" stroke="#b4c0d2" />}
+                      <path
+                        d={
+                          measure === "reduction"
+                            ? `M500 2h${r.value === null ? 0 : (r.value / max) * 500}`
+                            : `M0 2h${r.value === null ? 0 : Math.max(2, (r.value / max) * 1000)}`
+                        }
+                        stroke={
+                          measure === "reduction" && r.value !== null && r.value < 0
+                            ? "#ff746a"
+                            : "currentColor"
+                        }
+                        stroke-width="3"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <p class="lb-fine">
+              GitHub activity includes bots. A merged change or closed issue doesn’t tell you how
+              good a product is.
+              {measure === "reduction" &&
+                " This shows recorded issue movement; transfers and deletions aren’t reconstructed."}
+            </p>
+          </section>
+        )}
+        <section class="lb-trends" aria-labelledby="lb-trend-title">
+          <div>
+            <h2 id="lb-trend-title">{focused ? "How the work unfolded" : "The whole picture"}</h2>
+            <p>
+              {selected.label} · {focused?.name ?? "all projects"}
+            </p>
+            <strong class="lb-total">
+              {ranked.rows
+                .filter((r) => !project || r.slug === project)
+                .every((r) => r.value !== null)
+                ? fmt(
+                    ranked.rows
+                      .filter((r) => !project || r.slug === project)
+                      .reduce((n, r) => n + r.value!, 0)
+                  )
+                : "History incomplete"}
+            </strong>
+            <p>
+              {weeks.length === 1
+                ? "Across the selected week."
+                : "Across the selected period, in blocks of up to seven days."}
+            </p>
+            {measure === "reduction" && <p>Above zero: fewer open issues. Below zero: more.</p>}
+          </div>
+          <div class="lb-week-chart" role="region" aria-label="Weekly changes" tabindex="0">
+            {plottedWeeks.map((w) => (
+              <div>
+                <svg
+                  viewBox="0 0 100 150"
+                  role="img"
+                  aria-label={`${w.from} to ${w.to}: ${fmt(w.value)} ${selected.label.toLowerCase()}`}
+                >
+                  <rect
+                    x="8"
+                    y={w.bar.y}
+                    width="84"
+                    height={w.bar.height}
+                    fill={w.value !== null && w.value < 0 ? "#ff746a" : "#e9ff49"}
+                  />
+                  <path d={`M0 ${w.bar.baseline}h100`} stroke="#607087" />
+                  <text x="50" y="18" text-anchor="middle" fill="#f4f7fd" font-size="24">
+                    {fmt(w.value)}
+                  </text>
+                </svg>
+                <span>{date(w.from).replace(" 2026", "")}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section id="share-images" class="lb-exports">
+          <div class="lb-export-intro">
+            <h2>Made to go places.</h2>
+            <p>Pick a shape. The image, caption and link keep these exact numbers.</p>
+            <a href={link}>Open this saved view</a>
+          </div>
+          <div class="lb-image-grid">
+            {[
+              { format: "landscape", label: "Landscape", width: 1200, height: 630 },
+              { format: "square", label: "Square", width: 1080, height: 1080 },
+              { format: "portrait", label: "Portrait", width: 1080, height: 1350 }
+            ].map((f) => (
+              <figure>
+                <a href={`${image}&format=${f.format}&download=1`} download>
+                  <img
+                    src={`${image}&format=${f.format}`}
+                    width={f.width}
+                    height={f.height}
+                    alt={`${focused?.name ?? "Project rankings"} · ${selected.label} · ${f.label.toLowerCase()} share layout`}
+                    loading="lazy"
+                  />
+                  <span>Save {f.label.toLowerCase()} PNG ↓</span>
+                </a>
+                <figcaption>
+                  {f.width} × {f.height}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <details class="lb-caption">
+            <summary>Caption and link</summary>
+            <textarea readonly aria-label="Caption and link">{caption}</textarea>
+          </details>
+        </section>
+        <section class="lb-notes">
+          <h2>Notes</h2>
+          <details>
+            <summary>What the numbers mean</summary>
+            <p>
+              Changes merged counts pull requests by their merge date, including bots. Issues closed
+              counts closure events, including an issue closed again after reopening. Issues opened
+              excludes pull requests. Fewer open issues is closures minus new and reopened issues;
+              negative numbers mean growth. Transfers and deleted records cannot be reconstructed
+              from this history, so this is recorded movement rather than an audited historical
+              inventory.
+            </p>
+            <p>
+              Ranks use equal complete UTC periods. Equal values share a rank; the next rank skips
+              those places. Movement compares ranks against the previous {days} days and appears
+              only when every project has both periods. Zero is a measured zero. A dash means the
+              history could not be completely read; it earns no rank.
+            </p>
+          </details>
+          <details>
+            <summary>Where the report comes from</summary>
+            <p>
+              GitHub is read on the server for eight explicitly selected projects. Only daily counts
+              and approved project identities are saved. Issue titles, bodies, authors, branches and
+              private links never enter this public report. Collection runs daily through the
+              existing hourly refresh. Today’s unfinished day is excluded; the open-issue count is
+              the count at collection time.
+            </p>
+            <p>
+              Saved report: <code>{snapshot!.id}</code>. Collected{" "}
+              <time datetime={snapshot!.collectedAt}>{snapshot!.collectedAt}</time>. Old saved links
+              retain their figures. A later refresh cannot change them.
+            </p>
+            <a href={`/api/leaderboard.json?report=${snapshot!.id}`}>Inspect the public numbers</a>{" "}
+            ·{" "}
+            <a href="https://docs.github.com/en/rest/issues/events">
+              GitHub issue-event definitions
+            </a>
+          </details>
+          <a href={href({ report: null })}>Check the latest report</a>
+        </section>
+      </>
+    )}
+  </div>
+  <script>
+    import "../../scripts/leaderboards";
+  </script>
+</BaseLayout>

@@ -195,3 +195,37 @@ The first accepted attribution day remains partial and older attribution stays
 unavailable. The existing opt-out, DNT/GPC, preview and verification exclusions
 apply before collection. Returning from a native tab resumes the same page's
 active-time timer without inventing another session.
+
+## GitHub project leaderboards — reviewed 24 October 2026
+
+`/activity/leaderboards/` reads saved GitHub counts from the existing
+`wh_analytics_reports` table (`days=0`, separate schema). The explicitly reviewed
+identity/repository list is in `src/data/github-leaderboards.ts`; token access
+never expands it. The existing hourly production handler checks the installed
+credential and collects one 180-day history per completed UTC day. The 7/28/90-day
+views compare equal preceding periods; raw issues, PRs, event bodies, authors,
+branches and repository paths are never persisted. Bounded pagination (100 pages
+per source, 850 requests overall) excludes PRs from issue creation and closure,
+counts merges by `merged_at`, and deduplicates IDs. Missing/incomplete history
+earns no rank. Closures include repeat closures; net issue movement subtracts
+new and reopened issues. Transfers/deleted records are not reconstructible and
+are explicitly excluded from an audited historical-backlog claim.
+
+A failed collection retains the dated last successful report. Reports have
+content-derived IDs; saved views, captions, ranking/project PNGs and OG previews
+retain the same period, lens and selection. Daily counts remain inspectable from
+`/api/leaderboard.json`. A private `days=-2` permission receipt records only read
+successes, time and conditional-request ETags; no public route reads it.
+
+The approved optional local secret is `WOODHOUSE_GITHUB_TOKEN`. The release
+scripts accept it when present and preserve an existing remote installation when
+omitted, following [Cloudflare's secret rules](https://developers.cloudflare.com/workers/configuration/secrets/).
+Production publication verifies its secret name before and after deploy. Preview
+can use a reviewed saved report without a GitHub credential. The existing
+`collect-leaderboards.mjs` backfill path uses the local configured token or the
+authenticated GitHub CLI; it writes only approved counts under ignored output.
+It is separate from the production Worker's credential check. The intended PAT
+is fine-grained: Issues, Pull requests and Metadata read-only for the selected
+repositories. Missing/expired credentials leave the last successful report dated;
+rotation replaces the same Worker secret through the guarded release path, never
+through public chat or committed files. #124 remains outside this work.
