@@ -10,6 +10,13 @@ interface Props {
 }
 const { report, period, published, excluded, qa } = Astro.props;
 const findings = outcomeFindings(report, period, published);
+const dateLabel = (date: string) =>
+  new Date(`${date}T00:00:00Z`).toLocaleDateString("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
 const href = (story: (typeof findings)[number]["story"]) => {
   const url = new URL(storyLink(story, report?.id));
   // If saving failed, keep the requested dates rather than silently opening 30 days.
@@ -32,7 +39,7 @@ const href = (story: (typeof findings)[number]["story"]) => {
       product and share that exact story.
     </p>
     <p class="outcome-findings__period">
-      {period.from} to {period.to} UTC ·{" "}
+      {dateLabel(period.from)} to {dateLabel(period.to)} UTC ·{" "}
       {report ? "same saved report throughout" : "report unavailable"}
       {period.complete ? "" : " · today is still being counted"}
     </p>
