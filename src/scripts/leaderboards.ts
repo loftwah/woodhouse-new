@@ -86,7 +86,10 @@ if (root) {
       } else {
         await navigator.share({
           title: "Woodhouse · Projects making moves",
-          text: root.dataset.caption ?? "",
+          text: (root.dataset.caption ?? "").replace(
+            /\nhttps:\/\/woodhouse\.loftwah\.com\/\S+$/,
+            ""
+          ),
           url: root.dataset.link!
         });
         say("Handed to your device’s share options. Save PNG is ready too.", ticket);

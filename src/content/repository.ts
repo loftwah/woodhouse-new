@@ -593,6 +593,13 @@ export async function listPublicSearchItems() {
         section: "Analytics"
       },
       {
+        title: "Project leaderboards",
+        description:
+          "Changes merged, issues closed and how the projects are moving. Explore or share the rankings.",
+        href: "/activity/leaderboards/",
+        section: "Analytics"
+      },
+      {
         title: "Projects",
         description: `${projectResult.projects.length} things you can play, listen to or try, each with its own record.`,
         href: "/projects/",

@@ -6,6 +6,7 @@ import { env } from "cloudflare:workers";
 import { listProjectRecords } from "../../content/repository";
 import {
   readLeaderboard,
+  completeWindow,
   rankedProjects,
   rankingMeasures,
   measureKey,
@@ -44,7 +45,7 @@ const caption = snapshot ? leaderboardCaption(snapshot, days, measure, project) 
 const image = snapshot
   ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, ...(project ? { project } : {}) })}`
   : "";
-const stale = snapshot && Date.now() - Date.parse(snapshot.collectedAt) > 36 * 3600000;
+const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
 function href(updates: Record<string, string | null>) {
   const p = new URLSearchParams({
     ...(snapshot ? { report: snapshot.id } : {}),
