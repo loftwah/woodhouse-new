@@ -8,7 +8,7 @@ import {
   leaderboardCaption,
   leaderboardLink
 } from "./github-leaderboards.ts";
-import { publishedLeaderboard } from "./github-leaderboards.ts";
+import { publishedLeaderboard, weeklyBarGeometry } from "./github-leaderboards.ts";
 import { leaderboardSvg, leaderboardFormats } from "./leaderboard-art.ts";
 const now = Date.parse("2026-10-24T01:00:00Z");
 const fixture: typeof fetch = async (input, init) => {
@@ -53,6 +53,16 @@ test("complete UTC windows exclude the current day, including exact midnight", (
     from: "2026-10-17",
     to: "2026-10-23"
   });
+});
+
+test("weekly positive and negative movement use equal scale, with zero and missing values drawing no bar", () => {
+  const up = weeklyBarGeometry(152, 152, true),
+    down = weeklyBarGeometry(-152, 152, true);
+  assert.equal(up.height, down.height);
+  assert.equal(up.baseline - up.y, down.y + down.height - down.baseline);
+  assert.ok(up.y >= 0 && down.y + down.height <= 150);
+  assert.equal(weeklyBarGeometry(0, 152, true).height, 0);
+  assert.equal(weeklyBarGeometry(null, 152, true).height, 0);
 });
 test("GitHub counting excludes PR issues, deduplicates events and handles reopen/reclose and merge dates", async () => {
   const s = await snapshot();

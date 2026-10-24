@@ -15,7 +15,7 @@ import {
   leaderboardLink,
   leaderboardCaption
 } from "../../data/github-leaderboards";
-import { publishedLeaderboard } from "../../data/github-leaderboards";
+import { publishedLeaderboard, weeklyBarGeometry } from "../../data/github-leaderboards";
 import "../../styles/leaderboards.css";
 export const prerender = false;
 Astro.cache.set(false);
@@ -109,6 +109,10 @@ const weeks = ranked
     })
   : [];
 const weekMax = Math.max(1, ...weeks.map((w) => Math.abs(w.value ?? 0)));
+const plottedWeeks = weeks.map((w) => ({
+  ...w,
+  bar: weeklyBarGeometry(w.value, weekMax, measure === "reduction")
+}));
 ---
 
 <BaseLayout
@@ -353,9 +357,10 @@ const weekMax = Math.max(1, ...weeks.map((w) => Math.abs(w.value ?? 0)));
                 ? "Across the selected week."
                 : "Across the selected period, in blocks of up to seven days."}
             </p>
+            {measure === "reduction" && <p>Above zero: fewer open issues. Below zero: more.</p>}
           </div>
           <div class="lb-week-chart" role="region" aria-label="Weekly changes" tabindex="0">
-            {weeks.map((w) => (
+            {plottedWeeks.map((w) => (
               <div>
                 <svg
                   viewBox="0 0 100 150"
@@ -364,20 +369,12 @@ const weekMax = Math.max(1, ...weeks.map((w) => Math.abs(w.value ?? 0)));
                 >
                   <rect
                     x="8"
-                    y={
-                      w.value !== null && w.value >= 0
-                        ? 130 - (Math.abs(w.value) / weekMax) * 105
-                        : 130
-                    }
+                    y={w.bar.y}
                     width="84"
-                    height={
-                      w.value === null
-                        ? 0
-                        : Math.max(2, (Math.abs(w.value) / weekMax) * (w.value >= 0 ? 105 : 18))
-                    }
+                    height={w.bar.height}
                     fill={w.value !== null && w.value < 0 ? "#ff746a" : "#e9ff49"}
                   />
-                  <path d="M0 130h100" stroke="#607087" />
+                  <path d={`M0 ${w.bar.baseline}h100`} stroke="#607087" />
                   <text x="50" y="18" text-anchor="middle" fill="#f4f7fd" font-size="24">
                     {fmt(w.value)}
                   </text>

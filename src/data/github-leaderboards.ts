@@ -250,3 +250,11 @@ export function publishedLeaderboard(
 ): LeaderboardSnapshot {
   return { ...snapshot, projects: snapshot.projects.filter((p) => admitted.has(p.slug)) };
 }
+
+/** Signed movement uses one pixels-per-count scale on both sides of zero. */
+export function weeklyBarGeometry(value: number | null, maximum: number, signed: boolean) {
+  const baseline = signed ? 75 : 130;
+  const height =
+    value === null ? 0 : (Math.abs(value) / Math.max(1, maximum)) * (signed ? 50 : 105);
+  return { baseline, height, y: value !== null && value >= 0 ? baseline - height : baseline };
+}
