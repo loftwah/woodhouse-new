@@ -1902,8 +1902,8 @@
           "site_og_title": "Bubbles",
           "site_og_description": "A faithful, premium web-game re-implementation of a classic bubble shooter. Aim, match, and clear.",
           "site_favicon": "https://bubbles.loftwah.com/favicon-32.png",
-          "preview_alt": "Promotional artwork on the Bubbles site: a glossy, colourful orb in an arcade scene.",
-          "preview_caption": "Promotional image from the Bubbles site",
+          "preview_alt": "Promotional artwork on the Bubbles site: the character Bubblecap beside a colourful bubble board, under the Bubbles wordmark and the line “One more shot. One more board.”",
+          "preview_caption": "Promotional image from the Bubbles site · reviewed 24 October 2026",
           "public_safe": true
         }
       },
@@ -1967,9 +1967,9 @@
           "site_og_image": "https://protocol11.loftwah.com/og/protocol-11.jpg?v=game-night-2026-10-11",
           "site_og_title": "Protocol 11 — The table changes every round",
           "site_og_description": "A lively local card-table game for two to four seats. Complete eleven protocols, outplay bot rivals, or pass the device around the table.",
-          "site_favicon": "https://protocol11.loftwah.com/runtime/artpacks/late-night-party/brand/logo-square.webp",
-          "preview_alt": "Promotional artwork on the Protocol 11 site: a tabletop game and its board.",
-          "preview_caption": "Promotional image from the Protocol 11 site",
+          "site_favicon": "https://protocol11.loftwah.com/brand-mark.svg",
+          "preview_alt": "Promotional artwork on the Protocol 11 site: friends around a green card table, holding blue, red, green and yellow number cards showing 3s and 7s.",
+          "preview_caption": "Promotional image from the Protocol 11 site · reviewed 24 October 2026",
           "public_safe": true
         }
       },
@@ -1990,8 +1990,8 @@
           "site_og_title": "MAX — Your walker, made smarter.",
           "site_og_description": "Keep your walker. Add Max. The connected companion prototype is being built around a simple FIND button, with voice and family support in development.",
           "site_favicon": "https://max.loftwah.com/brand/max-mark-32.png",
-          "preview_alt": "Promotional illustration for MAX, an assistive walker project; it is not a photograph or physical-use evidence.",
-          "preview_caption": "Illustration from the MAX site · not physical-use evidence",
+          "preview_alt": "Promotional image from the MAX site: a wheeled walker in a living room beside the words “MAX. Your walker, made smarter.” It is not physical-use evidence.",
+          "preview_caption": "Image from the MAX site · not physical-use evidence · reviewed 24 October 2026",
           "public_safe": true
         }
       },
@@ -2056,8 +2056,8 @@
           "site_og_title": "Plans With You",
           "site_og_description": "Protected time with a commitment that looks the part — and predictably gets cancelled.",
           "site_favicon": "https://club.loftwah.com/favicon.svg",
-          "preview_alt": "Artwork on the Social Club site, titled Plans With You.",
-          "preview_caption": "Artwork from the Social Club site",
+          "preview_alt": "Artwork on the Social Club site: a cream poster headed “Plans were made. Then unmade.” beside a blue ordinary-plan card marked CANCELLED.",
+          "preview_caption": "Artwork from the Social Club site · reviewed 24 October 2026",
           "public_safe": true
         }
       },
@@ -2097,8 +2097,8 @@
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
           "site_og_image": "https://composer.loftwah.com/brand/campaign/product-og-20261022b.jpg",
-          "site_og_title": "Make software. Keep it yours. · App Composer",
-          "site_og_description": "App Composer is an agent-operated studio for building applications with EmDash and Cloudflare. Get Ready prepares the environment, Init captures what the app should do, and independently maintained mini-apps connect through their data and actions.",
+          "site_og_title": "App Composer — Build apps with EmDash and Cloudflare",
+          "site_og_description": "Build and connect independent apps with EmDash and Cloudflare. App Composer prepares your environment, captures your brief and keeps your source and data yours.",
           "site_favicon": "https://composer.loftwah.com/brand/composer-icon-tile-20261022b.svg",
           "preview_alt": "App Composer's orange merging-block mark, the line “Make software. Keep it yours.” and the composer.loftwah.com address on a flat orange field.",
           "preview_caption": "Approved App Composer identity, published 22 October 2026",
