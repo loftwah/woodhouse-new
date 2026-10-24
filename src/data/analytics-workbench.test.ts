@@ -183,7 +183,7 @@ test("app report exports select useful app measures and retain their distinct fr
     assert(inspection.includes("measure=inspection_completed"));
     assert(inspection.includes(">2</text>"));
     assert(!inspection.includes(">20</text>"));
-    assert(inspection.includes("Bounded count"));
+    assert(inspection.includes("Count may be capped"));
     const oldReceipts = reportSvg(report, new Map(), format, "guest_postcards_received");
     assert(oldReceipts.includes("Guest postcards received"));
     assert(oldReceipts.includes("Not reported"));
@@ -215,7 +215,7 @@ test("app report exports select useful app measures and retain their distinct fr
     );
     assert(received.includes("measure=guest_postcards_received"));
     assert(received.includes(">7</text>"));
-    assert(received.includes("Partial coverage"));
+    assert(received.includes("Some days missing"));
   }
 });
 test("chart preserves missing days as gaps, real zeroes, and source comparability boundaries", () => {
@@ -443,15 +443,15 @@ test("overview exports keep the mixed scope, each measure label and the real zer
       `${format} order`
     );
     if (format === "landscape")
-      assert(overviewSvg.includes("Daily shape · each panel scaled to its own maximum"));
+      assert(overviewSvg.includes("Daily shape · each project has its own scale"));
     assert(overviewSvg.includes(">0</text>"), `${format} dropped the genuine zero`);
     // Four of seven supplied a value: three games plus Woodhouse's genuine zero.
-    assert(overviewSvg.includes("4/7 projects have numbers"));
+    assert(overviewSvg.includes("4 of 7 projects have numbers"));
     assert(overviewSvg.includes("totals aren’t added together"));
     assert(!overviewSvg.includes("projects report this count"));
     assert.doesNotMatch(overviewSvg, /NaN|undefined/);
     // A project that supplied nothing is not a missing gameplay source.
-    assert(!overviewSvg.includes("0/7"));
+    assert(!overviewSvg.includes("0 of 7"));
     assert(overviewSvg.includes("Not measured"));
 
     const gameplaySvg = reportSvg(mixed, names, format, "game_starts");
@@ -462,7 +462,7 @@ test("overview exports keep the mixed scope, each measure label and the real zer
       assert(gameplaySvg.includes(project));
     for (const project of ["LoftwahFM", "App Composer", "Woodhouse"])
       assert(!gameplaySvg.includes(project), `${format} listed ${project} under gameplay`);
-    assert(gameplaySvg.includes("3/4 projects report this count"));
+    assert(gameplaySvg.includes("3 of 4 projects report this count"));
     assert(gameplaySvg.includes("Not measured"));
   }
 });
@@ -502,8 +502,8 @@ test("a missing whole report or an omitted metric keeps an applicable project in
     for (const format of ["landscape", "square", "portrait"] as const) {
       const svg = reportSvg(report, names, format, "game_starts");
       assert(svg.includes("Protocol 11"), `${label} ${format} dropped the applicable game`);
-      assert(svg.includes("3/4 projects report this count"), `${label} ${format} denominator`);
-      assert(!svg.includes("3/3"));
+      assert(svg.includes("3 of 4 projects report this count"), `${label} ${format} denominator`);
+      assert(!svg.includes("3 of 3"));
       assert(
         /Bubbles[\s\S]{0,400}>0<\/text>/.test(svg),
         `${label} ${format} dropped Bubbles's genuine zero`
@@ -513,7 +513,7 @@ test("a missing whole report or an omitted metric keeps an applicable project in
     }
   // A wholly missing source and an omitted metric are named, not silently zero.
   assert(
-    reportSvg(missingReport, names, "landscape", "game_starts").includes("Source unavailable")
+    reportSvg(missingReport, names, "landscape", "game_starts").includes("No data for these dates")
   );
   assert(reportSvg(omittedMetric, names, "landscape", "game_starts").includes("Not reported"));
 });
@@ -540,7 +540,12 @@ test("the saved caption carries the same qualifier the card and PNG show", () =>
     "https://example.test/activity/",
     (date) => date
   );
-  assert.match(legacy, /Fighter: 4 game starts · Legacy\/test risk/);
+  assert.match(
+    legacy,
+    /Fighter recorded 4 game starts between 2026-10-14 and 2026-10-16 \(UTC\)\./
+  );
+  assert.match(legacy, /This count includes old test data\./);
+  assert.doesNotMatch(legacy, /Legacy\/test risk/);
   const clean = reportCaption(
     [
       {
@@ -555,7 +560,9 @@ test("the saved caption carries the same qualifier the card and PNG show", () =>
     "https://example.test/activity/",
     (date) => date
   );
-  assert.match(clean, /Fighter: 4 game starts · Reported activity/);
+  assert.match(clean, /Fighter recorded 4 game starts between 2026-10-14 and 2026-10-16 \(UTC\)\./);
+  assert.match(clean, /Every day in this range was counted\./);
+  assert.doesNotMatch(clean, /Reported activity/);
 });
 test("the last complete week shows a valid comparison and an earned record below the alert threshold", () => {
   const now = Date.parse("2026-10-17T12:00:00.000Z");
@@ -706,11 +713,13 @@ test("a seven-day report keeps its week comparison from retained history", () =>
     dateLabel,
     highlight
   );
-  assert.match(caption, /Week in focus · Fighter · 2026-10-05 – 2026-10-11 \(UTC\)/);
-  assert.match(caption, /Fighter: 70 (counts|game starts)/);
-  assert.match(caption, /Up 100% from 35/);
-  assert.match(caption, /previous week 2026-09-28 – 2026-10-04/);
-  assert.match(caption, /A new best of 3 comparable weeks\./);
+  assert.match(
+    caption,
+    /Fighter · Game starts: 70 in the complete week of 2026-10-05 – 2026-10-11 \(UTC\)\./
+  );
+  assert.match(caption, /Up 100% from 35 the week before\./);
+  assert.match(caption, /comparison week ran 2026-09-28 – 2026-10-04/);
+  assert.match(caption, /best of 3 complete weeks/);
   // A week that does not belong to the selected measure is dropped by the page
   // and the renderer alike, so the banner and the image can never disagree.
   const mismatched = reportSvg(
@@ -759,6 +768,7 @@ test("a zero baseline and a fall to zero are stated, not invented", () => {
   const base = {
     name: "Fighter",
     project: "fighter",
+    measure: { label: "Game starts" },
     from: "2026-10-05",
     to: "2026-10-11",
     unit: "count" as const,
@@ -766,11 +776,11 @@ test("a zero baseline and a fall to zero are stated, not invented", () => {
   };
   // A zero previous week has no percentage to state.
   const fromZero = caption({ ...base, value: 10, previous: 0, changePercent: null, newBest: true });
-  assert.match(fromZero, /No prior baseline \(0 the week before\)/);
+  assert.match(fromZero, /No earlier week had a usable baseline \(0 the week before\)/);
   assert.doesNotMatch(fromZero, /Up /);
   // A fall to zero remains visible.
   const toZero = caption({ ...base, value: 0, previous: 40, changePercent: -100, newBest: false });
-  assert.match(toZero, /Down 100% from 40/);
+  assert.match(toZero, /Down 100% from 40 the week before/);
   assert.match(toZero, /not a record/);
 });
 test("the discovery breakdown keeps only published destinations and reports a trend honestly", () => {
@@ -901,13 +911,16 @@ test("the share caption names each project's own measure and the mixed scope", (
   assert.match(caption, /Woodhouse: 0 visits/);
   // An unavailable measure stays in the caption as a missing entry, never as a
   // zero and never silently dropped while the PNG still counts it.
-  assert.match(caption, /Protocol 11: game starts not reported · Not measured/);
-  assert.match(caption, /LoftwahFM: audible listening not reported · Not measured/);
-  assert.match(caption, /App Composer: mini-app opens not reported · Not measured/);
+  assert.match(caption, /Protocol 11: game starts · Not measured/);
+  assert.match(caption, /LoftwahFM: audible listening · Not measured/);
+  assert.match(caption, /App Composer: mini-app opens · Not measured/);
   assert.doesNotMatch(caption, /LoftwahFM: 0/);
-  assert.match(caption, /4\/7 projects have numbers · Today is still being recorded/);
-  assert.match(caption, /Each project counts something different; totals aren’t added together\./);
-  assert.match(caption, /not people/);
+  assert.match(caption, /4 of 7 projects have numbers\. Today is still being counted\./);
+  assert.match(
+    caption,
+    /Each project counts something different, so the totals aren’t added together\./
+  );
+  assert.match(caption, /not a count of people/);
   const scopedRows = mixed.projects
     .map((row) => ({
       name: names.get(row.project) ?? row.project,
@@ -923,7 +936,8 @@ test("the share caption names each project's own measure and the mixed scope", (
     dateLabel
   );
   assert.match(scoped, /Fighter: 12 game starts/);
-  assert.match(scoped, /The same count across the named projects\./);
+  assert.match(scoped, /Game starts across the projects/);
+  assert.match(scoped, /These are separate counts, not a combined total\./);
   assert.doesNotMatch(scoped, /Woodhouse/);
   assert.doesNotMatch(scoped, /Audible listening/);
 });
@@ -946,10 +960,10 @@ test("shared images describe the same evidence the page shows", () => {
     ]
   };
   // A complete window that still carries legacy/test risk says so.
-  assert.equal(reportQualifier(exact, { coverage }, period), "Legacy/test risk");
+  assert.equal(reportQualifier(exact, { coverage }, period), "Includes old test data");
   assert.equal(
     reportQualifier(exact, { coverage: { ...coverage, comparableFrom: null } }, period),
-    "Legacy/test risk"
+    "Includes old test data"
   );
   assert.equal(
     reportQualifier(
@@ -957,17 +971,23 @@ test("shared images describe the same evidence the page shows", () => {
       { coverage: { ...coverage, comparableFrom: "2026-10-13T00:00:00.000Z" } },
       period
     ),
-    "Reported activity"
+    "All days counted"
   );
   // A source that supplied no such metric is not a measured zero.
   assert.equal(reportQualifier(undefined, { coverage }, period), "Not reported");
-  assert.equal(reportQualifier(undefined, null, period), "Source unavailable");
+  assert.equal(reportQualifier(undefined, null, period), "No data for these dates");
   assert.equal(reportQualifier({ ...exact, value: null }, { coverage }, period), "Not measured");
-  assert.equal(reportQualifier({ ...exact, quality: "bounded" }, null, period), "Bounded count");
-  assert.equal(reportQualifier({ ...exact, quality: "sampled" }, null, period), "Sampled estimate");
+  assert.equal(
+    reportQualifier({ ...exact, quality: "bounded" }, null, period),
+    "Count may be capped"
+  );
+  assert.equal(
+    reportQualifier({ ...exact, quality: "sampled" }, null, period),
+    "Estimated from a sample"
+  );
   assert.equal(
     reportQualifier(exact, { coverage: { ...coverage, quality: "unavailable" } }, period),
-    "Coverage unavailable"
+    "Missing days unknown"
   );
 });
 
@@ -1140,4 +1160,48 @@ test("deliberate discovery scope selects its own counter without substituting ov
     [null, null, null]
   );
   assert.equal(discoveryMetric([overall, bubbles], "visits", "bubbles"), undefined);
+});
+
+test("the count line and per-day labels are ordinary and singular-aware", async () => {
+  const { reportCount, periodState, dailyCoverageLabel } = await import("./analytics-workbench.ts");
+  assert.equal(reportCount(0, 1, true), "0 of 1 project has a number");
+  assert.equal(reportCount(1, 1, false), "1 of 1 project reports this count");
+  assert.equal(reportCount(4, 7, true), "4 of 7 projects have numbers");
+  assert.equal(periodState(true), "Date range finished");
+  assert.equal(periodState(false), "Today is still being counted");
+  assert.equal(dailyCoverageLabel("clean"), "Full day");
+  assert.equal(dailyCoverageLabel("legacy"), "Includes old test data");
+  assert.equal(dailyCoverageLabel("bounded"), "Count may be capped");
+  assert.equal(dailyCoverageLabel("missing"), "No data");
+  assert.doesNotMatch(
+    [dailyCoverageLabel("clean"), dailyCoverageLabel("legacy"), dailyCoverageLabel("bounded")].join(
+      " "
+    ),
+    /Legacy|Partial|Bounded/
+  );
+});
+
+test("a mixed overview caption can lead with one supported result", () => {
+  const rows = portfolioOverview(mixed, mixedIds, names).map((row) => ({
+    name: row.label,
+    metric: row.metric,
+    overviewMeasure: row.measure
+  }));
+  const caption = reportCaption(
+    rows,
+    overviewMeasure,
+    period,
+    "https://example.test/activity/",
+    (date) => date,
+    undefined,
+    {
+      headline: "Fighter's game starts rose 17% to 12 in the week of 2026-10-05–2026-10-11.",
+      comparison: "Compared with the week before (2026-09-28–2026-10-04)."
+    }
+  );
+  assert.match(caption, /^Fighter's game starts rose 17%/);
+  assert.match(caption, /clearest result in the report for 2026-10-14 – 2026-10-16 \(UTC\)/);
+  assert.match(caption, /4 of 7 projects have numbers/);
+  assert.match(caption, /not a count of people/);
+  assert.ok(caption.endsWith("https://example.test/activity/"));
 });

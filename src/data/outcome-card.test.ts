@@ -57,7 +57,7 @@ for (const story of outcomeStories) {
       assert.ok(svg.includes(story.label));
       assert.ok(svg.includes(story.boundary));
       assert.ok(svg.includes("Some activity may be omitted."));
-      assert.ok(svg.includes("Bounded count · 2/3 days reported"));
+      assert.ok(svg.includes("Count may be capped · 2/3 days reported"));
       assert.ok(svg.includes("2026-10-20 — 2026-10-22 · UTC"));
       assert.ok(svg.includes("Snapshot frozen-outcome"));
       assert.ok(svg.includes("Source revision source-sha"));
@@ -86,7 +86,7 @@ test("missing evidence draws no positive bars, zero baseline or fictional daily 
   report.projects[0]!.report = null;
   const svg = outcomeCard(report, story, "landscape", "https://woodhouse.example");
   assert.match(svg, /Not measured/);
-  assert.match(svg, /Source unavailable · 0\/3 days reported/);
+  assert.match(svg, /No data for these dates · 0\/3 days reported/);
   assert.match(svg, /Daily measurements unavailable/);
   assert.doesNotMatch(svg, /data-day=/);
 });

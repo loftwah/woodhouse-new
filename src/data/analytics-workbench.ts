@@ -41,67 +41,67 @@ export const measureChoices = [
     key: "game_completions",
     label: "Game completions",
     meaning:
-      "A product-defined terminal result. Starts and completions in this window are not a matched cohort, so dividing them would not give a reliable completion rate."
+      "A result the game itself counts as an ending. The starts and completions here are not the same set of runs, so dividing one by the other would not give a reliable completion rate."
   },
   {
     key: "active_seconds",
     label: "Active play time",
     meaning:
-      "Reported time while gameplay is active. Paused, hidden and inactive time is excluded where the product can observe it. Music time is separate."
+      "Time counted while gameplay is active. Paused, hidden and inactive time is left out where the product can see it. Music time is counted separately."
   },
   {
     key: "visits",
     label: "Visits",
     meaning:
-      "Anonymous tab sessions admitted by the collector. Opening another tab or returning after the session boundary may count again; a visit is not a unique person."
+      "Anonymous browser tab sessions counted by the site's own collector. A new tab, or a return after the session ends, can count again. A visit is not a unique person."
   },
   {
     key: "engaged_sessions",
     label: "Engaged sessions",
     meaning:
-      "Sessions meeting a source-defined attention threshold. Check each source definition; thresholds and collection coverage can differ."
+      "Visits that met that product's own definition of attention. Thresholds and counted dates can differ between products."
   },
   {
     key: "game_replays",
     label: "Replays",
     meaning:
-      "A subsequent gameplay launch linked to an earlier terminal result where the product can establish that sequence."
+      "A later gameplay launch that the product can link to an earlier finished run where it can establish that sequence."
   },
   {
     key: "browsers",
     label: "Reporting browsers",
     meaning:
-      "Distinct consenting browser identifiers within this window where supported. Devices, profiles, resets and privacy choices prevent interpreting these as unique people."
+      "Distinct consenting browser identifiers in this period where supported. Devices, profiles, resets and privacy choices mean these are not unique people."
   },
   {
     key: "returning_browsers",
     label: "Returning browsers",
     meaning:
-      "Distinct consenting browser identifiers observed in this window with an earlier different tab session in retained history. Same-day returns may count. This is not cohort retention."
+      "Consenting browsers seen in this period that had an earlier, different tab session in retained history. Same-day returns may count. This is not a returning-audience rate."
   },
   {
     key: "app_opens",
     label: "Mini-app opens",
     meaning:
-      "Recorded mini-app home-page loads. Reloads and bots can count. Counters have daily caps; an open does not establish a unique user or a completed task."
+      "Recorded mini-app home-page loads. Reloads and bots can count. Daily counters have caps; an open does not show a unique user or a completed task."
   },
   {
     key: "actions",
     label: "Mixed app actions",
     meaning:
-      "Adds Guestbook contribution-page opens and completed Link Check inspections. These represent different tasks; their sum is not a conversion rate or a count of successful creators."
+      "Adds Guestbook contribution-page opens and completed Link Check inspections. These are different tasks, so the sum is not a conversion rate or a count of successful creators."
   },
   {
     key: "photo_opens",
     label: "Guestbook contribution opens",
     meaning:
-      "Successful public Guestbook contribution-page HTML requests. Repeated opens may count. These are not image downloads, submissions, publications or unique people."
+      "Successful requests for a public Guestbook contribution page. Repeated opens may count. These are not image downloads, submissions, publications or unique people."
   },
   {
     key: "guest_postcards_received",
     label: "Guest postcards received",
     meaning:
-      "New guest postcards recorded after Guestbook accepts them as pending for moderation. This counts admissions, not the current queue size. Optional reporting can miss submissions; receipts do not establish approval, publication or unique people."
+      "New guest postcards recorded after Guestbook accepts them as pending for moderation. This is an admission count, not the current queue size. Optional reporting can miss submissions; it does not show approval, publication or unique people."
   },
   {
     key: "inspection_completed",
@@ -113,31 +113,31 @@ export const measureChoices = [
     key: "listening_seconds",
     label: "Audible listening",
     meaning:
-      "Accepted forward audible playback, excluding pauses, seeking, muted and stalled time. LoftwahFM can count observed native audio while its page is hidden; games exclude hidden time. Browser-suspended gaps can remain unmeasured. This is music time, not gameplay."
+      "Forward, audible playback the source accepted, excluding pauses, seeking, muted and stalled time. LoftwahFM can count native audio while its page is hidden; games leave hidden time out. Browser-suspended gaps can remain uncounted. This is music time, not gameplay."
   },
   {
     key: "listening_starts",
     label: "Listening starts",
     meaning:
-      "Playback receipts with confirmed audible progression. Repeated plays count again. No unique listener identity is collected."
+      "Playback receipts with confirmed audible progress. Repeated plays count again. No unique listener identity is collected."
   },
   {
     key: "game_listening_seconds",
     label: "Game-attributed listening",
     meaning:
-      "Accepted audible music time carrying the source’s game attribution. This remains listening time; it does not establish active gameplay or a distinct player."
+      "Audible music time carrying the game's own attribution. This is still listening time; it does not show active gameplay or a distinct player."
   },
   {
     key: "game_listening_starts",
     label: "Game-attributed listening starts",
     meaning:
-      "Confirmed listening starts carrying the source’s game attribution. Repeated plays count again; this does not count game launches or unique players."
+      "Confirmed listening starts carrying the game's own attribution. Repeated plays count again; this does not count game launches or unique players."
   },
   {
     key: "project_opens",
     label: "Project discovery",
     meaning:
-      "Recorded outbound project-open actions from Woodhouse. A click shows discovery intent; it does not establish downstream use or acquisition."
+      "Recorded clicks from Woodhouse to a project. A click shows someone chose to open the project; it does not show what they did after."
   }
 ] as const;
 type MeasureKey = (typeof measureChoices)[number]["key"] | ModeMeasureKey;
@@ -271,7 +271,7 @@ export const overviewMeasure = {
   key: "overview",
   label: "Project overview",
   meaning:
-    "Each admitted project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app access and outcomes for App Composer and audience discovery for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
+    "Each project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app access and outcomes for App Composer and audience discovery for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
 } as const;
 export function measuresFor(project: AnalyticsProject | null) {
   const keys = productView(project)?.keys;
@@ -343,16 +343,68 @@ export const overviewOrder: AnalyticsProject[] = [
   "woodhouse"
 ];
 /**
+ * The count line shared by the page, the saved caption and every report image.
+ * "4/7 reporting" was accurate but read like a build status; this states the
+ * same supplied/applicable relationship in words a first-time visitor uses.
+ */
+export function reportCount(supplied: number, total: number, mixed: boolean) {
+  const project = total === 1 ? "project" : "projects";
+  if (mixed)
+    return `${supplied} of ${total} ${project} ${total === 1 ? "has a number" : "have numbers"}`;
+  return `${supplied} of ${total} ${project} ${total === 1 ? "reports this count" : "report this count"}`;
+}
+/** Whether the selected UTC dates have finished, in visitor words. */
+export function periodState(complete: boolean) {
+  return complete ? "Date range finished" : "Today is still being counted";
+}
+/**
+ * Short per-day labels for the Data table, chart tooltip and CSV. They keep the
+ * distinction the raw statuses carry without exposing the collector's
+ * vocabulary; the longer explanation stays in Notes.
+ */
+export const dailyCoverageLabels = {
+  clean: "Full day",
+  partial: "Part day",
+  bounded: "Count may be capped",
+  sampled: "Estimated from a sample",
+  legacy: "Includes old test data",
+  missing: "No data"
+} as const;
+export function dailyCoverageLabel(status: string) {
+  return dailyCoverageLabels[status as keyof typeof dailyCoverageLabels] ?? "No data";
+}
+/** The short label as a spoken sentence for a one-result caption. */
+function qualifierSentence(label: string) {
+  const sentences: Record<string, string> = {
+    "All days counted": "Every day in this range was counted",
+    "Some days missing": "Some days in this range are missing",
+    "Count may be capped": "The count may be capped",
+    "Estimated from a sample": "This is estimated from a sample",
+    "Includes old test data": "This count includes old test data",
+    "Missing days unknown": "It isn’t known which days are missing",
+    "No data for these dates": "There is no data for these dates",
+    "Not reported": "This project didn’t report it",
+    "Not measured": "This wasn’t measured"
+  };
+  return sentences[label] ?? label;
+}
+/** The lead finding a mixed caption explains instead of listing every project. */
+export type CaptionFinding = {
+  headline: string;
+  comparison: string;
+};
+/**
  * The share caption for one selection. The page, the saved link and the social
  * card must describe the same scope, measure, unit and period, so the caption is
  * built once from the same rows the page renders.
  *
  * Every row here is already in the selected applicable scope. A project whose
  * source is unavailable, whose report omitted the measure or which reported no
- * value for the window keeps a concise missing-source entry instead of
- * disappearing, and the coverage line states the supplied/applicable count the
- * PNG footer uses. The observed failure was a caption that silently shrank the
- * scope the page, chart and shared images described.
+ * value for the window keeps a concise missing entry instead of disappearing,
+ * and the count line states the supplied/applicable relationship the PNG footer
+ * uses. The observed failure was a caption that silently shrank the scope the
+ * page, chart and shared images described; a second failure was a caption that
+ * read like a deployment report, so a focused result leads where one exists.
  */
 export function reportCaption(
   rows: {
@@ -365,9 +417,45 @@ export function reportCaption(
   window: ReportingWindow,
   link: string,
   dateLabel: (date: string) => string,
-  week?: CaptionWeek | undefined
+  week?: CaptionWeek | undefined,
+  finding?: CaptionFinding | undefined
 ) {
   const mixed = isOverviewMeasure(measure);
+  const period = `${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`;
+  const supplied = rows.filter((r) => r.metric?.value !== null && r.metric).length;
+  const count = `${reportCount(supplied, rows.length, mixed)}. ${periodState(window.complete)}.`;
+  if (week)
+    return [
+      ...weekCaptionLines(week, dateLabel),
+      "Every day in this week was counted.",
+      `This is the week highlighted in the report for ${period}.`,
+      "Recorded activity, not a count of people. Older numbers may include tests.",
+      link
+    ].join("\n");
+  if (finding && mixed)
+    return [
+      finding.headline,
+      finding.comparison,
+      `That is the clearest result in the report for ${period}.`,
+      `${count} Each project counts something different, so the totals aren’t added together.`,
+      "Recorded activity, not a count of people. Older numbers may include tests.",
+      link
+    ].join("\n");
+  if (rows.length === 1) {
+    const r = rows[0]!;
+    const label = (
+      mixed && r.overviewMeasure ? r.overviewMeasure.label : measure.label
+    ).toLowerCase();
+    const qualifier = reportQualifier(r.metric, r.report ?? null, window);
+    return [
+      r.metric && r.metric.value !== null
+        ? `${r.name} recorded ${formatMetric(r.metric)} ${label} between ${dateLabel(window.from)} and ${dateLabel(window.to)} (UTC).`
+        : `${r.name} has no ${label} count for ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC).`,
+      `${qualifierSentence(qualifier)}. ${periodState(window.complete)}.`,
+      "Recorded activity, not a count of people. Older numbers may include tests.",
+      link
+    ].join("\n");
+  }
   const values = rows.map((r) => {
     const label = (
       mixed && r.overviewMeasure ? r.overviewMeasure.label : measure.label
@@ -375,21 +463,18 @@ export function reportCaption(
     const qualifier = reportQualifier(r.metric, r.report ?? null, window);
     return r.metric && r.metric.value !== null
       ? `${r.name}: ${formatMetric(r.metric)} ${label} · ${qualifier}`
-      : `${r.name}: ${label} not reported · ${qualifier}`;
+      : `${r.name}: ${label} · ${qualifier}`;
   });
-  const supplied = rows.filter((r) => r.metric?.value !== null && r.metric).length;
-  const coverage = `${supplied}/${rows.length} ${
-    mixed ? "projects have numbers" : "projects report this count"
-  } · ${window.complete ? "Finished UTC days" : "Today is still being recorded"}`;
   return [
-    `Across the projects · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
-    ...(week ? weekCaptionLines(week, dateLabel) : []),
-    ...values,
-    coverage,
     mixed
-      ? "Each project counts something different; totals aren’t added together."
-      : "The same count across the named projects.",
-    "Activity counts, not people. Some older numbers may include tests.",
+      ? `What each project recorded, ${period}:`
+      : `${measure.label} across the projects, ${period}:`,
+    ...values,
+    count,
+    mixed
+      ? "Each project counts something different, so the totals aren’t added together."
+      : "These are separate counts, not a combined total.",
+    "Recorded activity, not a count of people. Older numbers may include tests.",
     link
   ].join("\n");
 }
@@ -397,6 +482,7 @@ export function reportCaption(
 export type CaptionWeek = {
   name: string;
   project: string;
+  measure: { label: string };
   from: string;
   to: string;
   value: number;
@@ -418,15 +504,16 @@ export function weekCaptionLines(week: CaptionWeek, dateLabel: (date: string) =>
   const previousTo = new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10);
   const movement =
     week.changePercent === null
-      ? `No prior baseline (${formatMetric({ value: week.previous, unit: week.unit })} the week before)`
-      : `${week.changePercent > 0 ? "Up" : week.changePercent < 0 ? "Down" : "Level"} ${Math.abs(week.changePercent)}% from ${formatMetric({ value: week.previous, unit: week.unit })}`;
+      ? `No earlier week had a usable baseline (${formatMetric({ value: week.previous, unit: week.unit })} the week before), so no percentage is claimed.`
+      : week.changePercent === 0
+        ? `Level with ${formatMetric({ value: week.previous, unit: week.unit })} the week before.`
+        : `${week.changePercent > 0 ? "Up" : "Down"} ${Math.abs(week.changePercent)}% from ${formatMetric({ value: week.previous, unit: week.unit })} the week before.`;
   return [
-    `Week in focus · ${week.name} · ${dateLabel(week.from)} – ${dateLabel(week.to)} (UTC)`,
-    `${week.name}: ${formatMetric({ value: week.value, unit: week.unit })} (this week)`,
-    `${movement} · previous week ${dateLabel(previousFrom)} – ${dateLabel(previousTo)}`,
+    `${week.name} · ${week.measure.label}: ${formatMetric({ value: week.value, unit: week.unit })} in the complete week of ${dateLabel(week.from)} – ${dateLabel(week.to)} (UTC).`,
+    `${movement} That comparison week ran ${dateLabel(previousFrom)} – ${dateLabel(previousTo)}.`,
     week.newBest
-      ? `A new best of ${week.comparedWeeks} comparable weeks.`
-      : `Compared with ${week.comparedWeeks} comparable weeks; not a record.`
+      ? `It was the best of ${week.comparedWeeks} complete weeks we can compare.`
+      : `It was one of ${week.comparedWeeks} complete weeks we can compare; not a record.`
   ];
 }
 export type OverviewRow = {
@@ -847,19 +934,23 @@ export function qualityText(metric?: Metric) {
   return !metric || metric.value === null
     ? "Not measured"
     : metric.quality === "bounded"
-      ? "Bounded count"
+      ? "Count may be capped"
       : metric.quality === "sampled"
-        ? "Sampled estimate"
+        ? "Estimated from a sample"
         : metric.quality === "partial"
-          ? "Partial measurement"
-          : "Reported activity";
+          ? "Some days missing"
+          : "Counted normally";
 }
 /**
  * The one context-aware label a value carries wherever a reader meets it: the
- * overview card, the single-measure strip, the saved caption and every shared
+ * overview row, the single-measure strip, the saved caption and every shared
  * PNG. A simpler label on one surface used to hide legacy/test risk or partial
  * coverage that another surface named, so the same qualifier is used everywhere.
  * Coverage and legacy risk stay distinct from a measured zero.
+ *
+ * The language is deliberately ordinary: definitions and collection mechanics
+ * live in Notes, while the short label still says when a count is incomplete,
+ * capped, sampled, old or absent. It is never softened into silence.
  */
 export function reportQualifier(
   metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
@@ -868,24 +959,24 @@ export function reportQualifier(
 ) {
   // A missing source, a source that omitted this metric and a measured metric
   // with no value in the window are three different facts, not one zero.
-  if (!metric) return report ? "Not reported" : "Source unavailable";
+  if (!metric) return report ? "Not reported" : "No data for these dates";
   if (metric.value === null) return "Not measured";
   if (metric.key === "guest_postcards_received" && metric.quality === "partial")
-    return "Partial coverage";
+    return "Some days missing";
   if (metric.quality === "bounded" || report?.coverage.quality === "bounded")
-    return "Bounded count";
+    return "Count may be capped";
   if (metric.quality === "sampled" || report?.coverage.quality === "sampled")
-    return "Sampled estimate";
-  if (report?.coverage.quality === "unavailable") return "Coverage unavailable";
+    return "Estimated from a sample";
+  if (report?.coverage.quality === "unavailable") return "Missing days unknown";
   if (dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "legacy"))
-    return "Legacy/test risk";
+    return "Includes old test data";
   if (
     metric.quality === "partial" ||
     metric.daily.length < period.days ||
     dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "partial")
   )
-    return "Partial coverage";
-  return "Reported activity";
+    return "Some days missing";
+  return "All days counted";
 }
 export function svgPlot(
   series: { name: string; colour: string; values: (number | null)[] }[],
@@ -909,7 +1000,7 @@ export function svgPlot(
   const yMax = Math.ceil(max / step) * step,
     x = (i: number) => left + (period.days === 1 ? plotW / 2 : (i / (period.days - 1)) * plotW),
     y = (v: number) => top + plotH - (v / yMax) * plotH;
-  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Daily activity chart; exact values are in the chart data table"><g font-family="system-ui,sans-serif" font-size="12" fill="#a9b8d0">`;
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Daily activity chart; exact values are in the daily table"><g font-family="system-ui,sans-serif" font-size="12" fill="#a9b8d0">`;
   for (let value = yMax; value >= 0; value -= step) {
     const yy = y(value);
     svg += `<path d="M${left} ${yy}H${width - right}" stroke="#263349"/><text x="${left - 10}" y="${yy + 4}" text-anchor="end">${value.toLocaleString("en-AU")}</text>`;

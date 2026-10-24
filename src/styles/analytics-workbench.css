@@ -76,6 +76,7 @@
   background: #14283e;
   border-left-color: var(--accent-link);
   color: var(--paper);
+  font-weight: 650;
 }
 .source-dot {
   display: inline-block;
@@ -590,9 +591,11 @@
 .legacy {
   background: #a57d45;
 }
-.bounded,
-.sampled {
+.bounded {
   background: #7167a8;
+}
+.sampled {
+  background: #9b8bd6;
 }
 .missing {
   background: #152238;
@@ -1834,6 +1837,7 @@
 .report-views [aria-current="page"] {
   color: var(--chart-cyan);
   border-bottom-color: var(--chart-cyan);
+  font-weight: 650;
 }
 .report-content {
   padding: 0 1.5rem 1.25rem;
@@ -2138,16 +2142,10 @@
 .report-content .measure-picker select {
   min-width: 0;
 }
-.chart-heading--overview .overview-title {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
 @media (max-width: 720px) {
   .report-content .measure-picker select {
-    width: 0;
+    width: auto;
+    flex: 1;
   }
   .report-content .chart-heading--overview {
     padding-block: 0.5rem;
@@ -2250,4 +2248,129 @@
   color: var(--acid);
   font-weight: 600;
   white-space: nowrap;
+}
+
+/* Visitor-quality layer — reviewed 25 October 2026.
+   A short "what changed" block sits between the date strip and the table. It is
+   deliberately two rows, not a second stories view: the table remains the
+   first-screen substance and Stories keeps the full evidence. */
+.change-notes {
+  margin: 0 0 1.15rem;
+  padding: 0.85rem 0 0.95rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.change-notes__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.change-notes h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.change-notes__head a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--acid);
+  font-size: 0.75rem;
+}
+.change-notes__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+  gap: 0.65rem 1.5rem;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.change-notes__list > li {
+  min-width: 0;
+  padding: 0.3rem 0 0.3rem 0.7rem;
+  border-left: 2px solid var(--source);
+}
+.change-notes__kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.3rem;
+  font: 600 0.66rem/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--copy-soft);
+}
+.change-notes__headline {
+  margin: 0 0 0.25rem;
+  color: var(--paper);
+  font: 600 0.92rem/1.4 var(--display);
+}
+.change-notes__comparison {
+  margin: 0 0 0.2rem;
+  color: var(--copy-soft);
+  font-size: 0.78rem;
+}
+.change-notes__period {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+.change-notes__period a {
+  color: var(--acid);
+}
+.change-notes__quiet {
+  max-width: 80ch;
+  margin: 0.55rem 0 0 !important;
+  color: var(--copy-soft);
+  font-size: 0.84rem;
+}
+.change-notes__quiet strong {
+  color: var(--paper);
+}
+.project-paths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.1rem;
+  margin: 0.1rem 0 0 !important;
+  font-size: 0.75rem;
+}
+.project-paths a,
+.overview-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: var(--chart-cyan);
+}
+.overview-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0.2rem 0 0 !important;
+  font-size: 0.75rem;
+}
+.overview-links a {
+  min-height: 44px;
+}
+.analytics-workbench select {
+  min-height: 44px;
+}
+@media (max-width: 720px) {
+  .change-notes__list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .change-notes__headline {
+    font-size: 0.88rem;
+  }
+  .summary-table tbody a {
+    min-height: 44px;
+  }
+  .project-paths a {
+    min-height: 44px;
+  }
+}
+/* An all-missing selection keeps a compact explanation, not an empty plot the
+   height of a real chart. The chart host stays for day inspection and CSV. */
+.report-content .interactive-plot.has-no-data {
+  height: 1.4rem;
 }

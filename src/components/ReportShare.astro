@@ -16,7 +16,7 @@ const {
   link,
   jsonHref,
   heading = "Share what happened",
-  note = "Save an image or copy a ready caption. This saved link keeps the same numbers.",
+  note = "Download an image, copy a caption, or open the same saved report.",
   alt,
   expanded = false,
   focus = false
@@ -58,11 +58,13 @@ const {
             decoding="async"
             data-report-preview
           />
-          <figcaption>Landscape · 1200 × 630. Square and portrait are separate layouts.</figcaption>
+          <figcaption>
+            Landscape · 1200 × 630. Square and portrait keep the same numbers in a different shape.
+          </figcaption>
         </figure>
         <div class="share-actions">
           <button data-report-copy type="button">
-            Copy caption + link
+            Copy caption and link
           </button>
 
           <a href={`${image}&download=1`} download>
@@ -77,8 +79,8 @@ const {
           <button data-report-share type="button" hidden>
             Share image
           </button>
-          <a href={link}>Open saved report</a>
-          <a href={jsonHref}>Inspect the public numbers</a>
+          <a href={link}>Open the saved report</a>
+          <a href={jsonHref}>See the numbers as data</a>
           <p data-report-status role="status"></p>
         </div>
         <details class="share-caption">
@@ -88,7 +90,7 @@ const {
       </div>
     </details>
   ) : (
-    <p>Sharing is unavailable until a source report can be saved.</p>
+    <p>Sharing is unavailable because this report could not be saved.</p>
   )}
 </section>
 

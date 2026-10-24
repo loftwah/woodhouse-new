@@ -264,7 +264,7 @@ test("weekly analysis catches a genuine fall to zero without inventing causes or
   assert.equal(analysis.findings[0]?.value, 0);
   assert.equal(analysis.findings[0]?.previous, 70);
   assert.equal(analysis.findings[0]?.newBest, false);
-  assert.match(analysis.findings[0]!.nextAction, /Check collection health/);
+  assert.match(analysis.findings[0]!.nextAction, /Check the data notes/);
   const partial = structuredClone(projects);
   partial[0]!.report.coverage.quality = "partial";
   assert.equal(analysePortfolio(partial, now).findings.length, 1);
@@ -496,18 +496,18 @@ test("shared charts attach source quality to totals and retain an environment-ow
       "game_starts",
       "https://preview.example"
     );
-    assert(svg.includes("Legacy/test risk"));
+    assert(svg.includes("Includes old test data"));
     assert(svg.includes(`preview.example/activity/?report=${report.id}`));
     assert(svg.includes("measure=game_starts"));
     assert(svg.includes("project=shoalshot"));
     metric.quality = "bounded";
-    assert(reportSvg(report, new Map(), format, "game_starts").includes("Bounded count"));
+    assert(reportSvg(report, new Map(), format, "game_starts").includes("Count may be capped"));
     metric.quality = "exact";
     const originalQuality = source.coverage.quality;
     for (const [quality, label] of [
-      ["bounded", "Bounded count"],
-      ["sampled", "Sampled estimate"],
-      ["unavailable", "Coverage unavailable"]
+      ["bounded", "Count may be capped"],
+      ["sampled", "Estimated from a sample"],
+      ["unavailable", "Missing days unknown"]
     ] as const) {
       source.coverage.quality = quality;
       assert(reportSvg(report, new Map(), format, "game_starts").includes(`>${label}</text>`));

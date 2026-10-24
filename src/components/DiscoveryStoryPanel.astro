@@ -28,18 +28,18 @@ const headingId =
     <h2 id={headingId}>
       <span class="discovery-story__name">{story.name}</span>
       {story.value === null ? (
-        <span class="discovery-story__figure is-empty">No recorded count</span>
+        <span class="discovery-story__figure is-empty">No click count</span>
       ) : (
         <>
           <span class="discovery-story__figure">{story.valueLabel}</span>
-          <span class="discovery-story__unit">recorded project opens</span>
+          <span class="discovery-story__unit">clicks from Woodhouse</span>
         </>
       )}
     </h2>
     <p class="discovery-story__headline">{story.headline}</p>
     <p class="discovery-story__actions">
       <a href={`/projects/${story.slug}/`}>
-        Read the {story.name} dossier <span aria-hidden="true">↗</span>
+        Read the {story.name} project page <span aria-hidden="true">↗</span>
       </a>
       {story.siteUrl && (
         <a href={story.siteUrl} rel="noopener">
@@ -60,37 +60,35 @@ const headingId =
         {dateLabel(story.period.from)} – {dateLabel(story.period.to)}
         <small>
           UTC · {story.period.days} days ·{" "}
-          {story.period.complete ? "closed calendar window" : "current UTC day is partial"}
+          {story.period.complete ? "date range finished" : "today is still being counted"}
         </small>
       </dd>
     </div>
     <div>
-      <dt>Coverage</dt>
+      <dt>How complete</dt>
       <dd>
         {story.coverageLabel}
         <small>
           {story.coverage === "partial" && story.firstObserved
-            ? `Collection began ${dateLabel(story.firstObserved)}`
+            ? `Counting began ${dateLabel(story.firstObserved)}`
             : story.coverage === "unavailable"
-              ? story.reason.startsWith("Woodhouse did not supply")
-                ? "No Woodhouse report"
-                : "No retained counter"
+              ? story.reason.startsWith("Woodhouse did not provide")
+                ? "No data from Woodhouse"
+                : "No click count"
               : story.period.complete
-                ? "Every day observed"
-                : "Current UTC day partial"}
+                ? "Every day counted"
+                : "Today is still being counted"}
         </small>
       </dd>
     </div>
     <div>
-      <dt>Most recent seven days</dt>
+      <dt>Last seven days</dt>
       <dd>
-        {story.value === null
-          ? "Not measured"
-          : (story.recent.value?.toLocaleString("en-AU") ?? "—")}
+        {story.value === null ? "No data" : (story.recent.value?.toLocaleString("en-AU") ?? "—")}
         <small>
           {story.value === null
-            ? "Not observed"
-            : `${dateLabel(story.recent.from)}–${dateLabel(story.recent.to)} · ${story.recent.observedDays} of 7 days observed`}
+            ? "No data"
+            : `${dateLabel(story.recent.from)}–${dateLabel(story.recent.to)} · ${story.recent.observedDays} of 7 days counted`}
         </small>
       </dd>
     </div>
@@ -104,24 +102,24 @@ const headingId =
           {story.comparison.eligible
             ? `${dateLabel(story.prior.from)}–${dateLabel(story.prior.to)} · ${story.comparison.change === 0 ? "level" : `${story.comparison.change! > 0 ? "up" : "down"} ${Math.abs(story.comparison.change!).toLocaleString("en-AU")}`} ${story.comparison.percent === null ? "clicks" : `(${Math.abs(story.comparison.percent)}%)`}`
             : story.period.days < 14
-              ? "Window too short"
+              ? "Dates too short"
               : story.prior.observedDays < 7
-                ? "Earlier week incomplete"
+                ? "Earlier week not full"
                 : "Not comparable"}
         </small>
       </dd>
     </div>
   </dl>
   <p class="discovery-story__establishes">
-    <strong>What this establishes.</strong> {story.establishes}
+    <strong>What this counts.</strong> {story.establishes}
   </p>
   <details class="discovery-story__limits">
-    <summary>What it does not establish</summary>
+    <summary>What this doesn’t show</summary>
     <p>{story.doesNotEstablish}</p>
     {story.reason && story.coverage !== "partial" && <p>{story.reason}</p>}
     <p>
-      A week-on-week comparison needs an exact counter for both complete seven-day windows inside
-      the selected dates. Missing days are shown as gaps, never summed as zero.
+      A week-on-week comparison needs a complete count for both full seven-day windows inside the
+      selected dates. Missing days are shown as gaps, never counted as zero.
     </p>
   </details>
 </section>

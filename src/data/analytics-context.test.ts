@@ -114,7 +114,10 @@ test("history keeps release observations separate from collection and comparison
       ["collection", "2026-10-15"]
     ]
   );
-  assert.match(timeline.find((n) => n.kind === "comparison")!.detail, /first boundary day/);
+  assert.match(
+    timeline.find((n) => n.kind === "comparison")!.detail,
+    /boundary day itself is left out/
+  );
   assert.match(timeline.find((n) => n.kind === "release")!.detail, /physical/);
   assert.equal(
     activityTimeline({ ...report, period: { ...report.period!, to: "2026-10-15" } }).some(

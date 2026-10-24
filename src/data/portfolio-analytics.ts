@@ -569,8 +569,8 @@ export function analysePortfolio(
         source: report.source,
         nextAction:
           week.comparison < 0
-            ? "Check collection health and releases in these weeks before attributing the fall to audience behaviour."
-            : "Inspect the corresponding product activity and releases before attributing the increase to a particular change."
+            ? "Check the data notes and release notes for these weeks before blaming the fall on audience behaviour."
+            : "Look at the product activity and release notes before attributing the increase to a particular change."
       });
     }
     // One substantial finding per project, prioritising the largest relative movement.

@@ -10,6 +10,8 @@ import {
   isOverviewMeasure,
   overviewMeasures,
   overviewOrder,
+  periodState,
+  reportCount,
   reportMetric,
   reportQualifier,
   supportsMeasure,
@@ -211,8 +213,10 @@ export function reportSvg(
   if (focus) {
     const movement =
       focus.changePercent === null
-        ? `no prior baseline (${formatMetric({ value: focus.previous, unit: focus.unit })} the week before)`
-        : `${focus.changePercent > 0 ? "up" : focus.changePercent < 0 ? "down" : "level"} ${Math.abs(focus.changePercent)}% from ${formatMetric({ value: focus.previous, unit: focus.unit })}`;
+        ? `no earlier week to compare (${formatMetric({ value: focus.previous, unit: focus.unit })} the week before)`
+        : focus.changePercent === 0
+          ? `level with ${formatMetric({ value: focus.previous, unit: focus.unit })} the week before`
+          : `${focus.changePercent > 0 ? "up" : "down"} ${Math.abs(focus.changePercent)}% from ${formatMetric({ value: focus.previous, unit: focus.unit })}`;
     const focusLine = `Week in focus · ${longDay(focus.from)} — ${longDay(focus.to)} · ${focus.name} · ${formatMetric({ value: focus.value, unit: focus.unit })} ${focus.measure.label.toLowerCase()} · ${movement}${focus.newBest ? ` · new best of ${focus.comparedWeeks} weeks` : ""}`;
     svg +=
       `<circle cx="${pad + 4}" cy="${(landscape ? 172 : 204) - 4}" r="4" fill="#e9ff49"/>` +
@@ -240,7 +244,7 @@ export function reportSvg(
   if ((report.projects.length === 1 || single) && !landscape && !focus)
     svg += text(pad, 237, measure.label, 28, "#79d8ff", 500);
   if (overview && !landscape && !focus)
-    svg += text(pad, landscape ? 204 : 237, "One relevant measure per project", 26, "#79d8ff", 500);
+    svg += text(pad, landscape ? 204 : 237, "Each project's own measure", 26, "#79d8ff", 500);
   if (landscape) {
     if (overview) {
       const cellW = (w - pad * 2) / Math.max(1, shown.length);
@@ -261,7 +265,7 @@ export function reportSvg(
           text(x, 288, qualifier(r), 13, "#a9b8d0");
       });
       svg +=
-        text(pad, 330, "Daily shape · each panel scaled to its own maximum", 16, "#a9b8d0") +
+        text(pad, 330, "Daily shape · each project has its own scale", 16, "#a9b8d0") +
         shown
           .map((r, i) =>
             sparkline(
@@ -288,7 +292,7 @@ export function reportSvg(
         text(
           pad,
           figureY + 66,
-          `${period.complete ? "Finished UTC days" : "Today is still being recorded"} · ${period.days} days`,
+          `${periodState(period.complete)} · ${period.days} days`,
           17,
           "#a9b8d0"
         );
@@ -298,7 +302,7 @@ export function reportSvg(
         .replace('font-size="12"', 'font-size="16"');
       svg += plot;
       if (!series.some((s) => s.values.some((v) => v !== null)))
-        svg += text(w - pad - 490, 390, "Daily measurements unavailable", 25, "#a9b8d0");
+        svg += text(w - pad - 490, 390, "No daily numbers for these dates", 25, "#a9b8d0");
     } else {
       const cellW = (w - pad * 2) / Math.max(1, shown.length);
       shown.forEach((r, i) => {
@@ -327,9 +331,10 @@ export function reportSvg(
   if (!landscape && single) {
     // A single-source export keeps a real chart in every format. The landscape
     // composition puts it beside the figure; square and portrait give it the
-    // full width and keep the source detail underneath.
+    // full width, then use the remaining canvas for the one-sentence definition
+    // instead of leaving most of a feed image empty.
     const singleChartY = portrait ? 320 : 285;
-    const singleChartH = portrait ? 560 : 380;
+    const singleChartH = portrait ? 1050 : 500;
     const plot = svgPlot(series, period, w - pad * 2, singleChartH)
       .replace(
         "<svg ",
@@ -342,7 +347,7 @@ export function reportSvg(
       svg += text(
         pad + 70,
         singleChartY + singleChartH / 2,
-        "Daily measurements unavailable",
+        "No daily numbers for these dates",
         32,
         "#a9b8d0"
       );
@@ -354,6 +359,20 @@ export function reportSvg(
       text(pad + 22, y + 32, r.name, 24, "#f4f7fd", 500) +
       text(portrait ? 520 : 500, y + 32, qualifier(r), 17, "#a9b8d0") +
       text(w - pad - 190, y + 32, r.metric ? formatMetric(r.metric) : "—", 27, r.colour, 700);
+    const definitionEnd = measure.meaning.indexOf(". ");
+    const definition =
+      definitionEnd > 0 ? measure.meaning.slice(0, definitionEnd + 1) : measure.meaning;
+    const definitionY = y + (portrait ? 86 : 72);
+    svg += text(pad, definitionY, "What this counts", 17, "#79d8ff", 600);
+    wrap(definition, portrait ? 46 : 62).forEach((line, index) => {
+      svg += text(
+        pad,
+        definitionY + 30 + index * (portrait ? 34 : 26),
+        line,
+        portrait ? 24 : 20,
+        "#a9b8d0"
+      );
+    });
   }
   if (!overview && !single) {
     const plot = svgPlot(series, period, w - pad * 2, chartH)
@@ -365,7 +384,7 @@ export function reportSvg(
       svg += text(
         pad + 70,
         chartY + chartH / 2,
-        "Daily measurements unavailable",
+        "No daily numbers for these dates",
         landscape ? 25 : 32,
         "#a9b8d0"
       );
@@ -425,7 +444,7 @@ export function reportSvg(
       svg += text(
         pad,
         top + shown.length * rowH + 26,
-        "Daily shape · each row scaled to its own maximum; the units differ by project.",
+        "Daily shape · each project has its own scale; the units differ.",
         20,
         "#a9b8d0"
       );
@@ -437,9 +456,7 @@ export function reportSvg(
     text(
       pad,
       foot + 17,
-      `${supplied}/${applicable} ${
-        overview ? "projects have numbers" : "projects report this count"
-      } · ${period.complete ? "Finished UTC days" : "Today is still being recorded"}`,
+      `${reportCount(supplied, applicable, overview)}. ${periodState(period.complete)}.`,
       landscape ? 17 : 23,
       "#b4c0d2"
     );
@@ -447,8 +464,8 @@ export function reportSvg(
     pad,
     foot + 48,
     overview
-      ? "Each project counts something different; totals aren’t added together."
-      : "Activity counts, not people. Some older numbers may include tests.",
+      ? "Each project counts something different, so the totals aren’t added together."
+      : "Recorded activity, not a count of people. Older numbers may include tests.",
     landscape ? 18 : 22,
     "#a9b8d0"
   );
@@ -463,7 +480,7 @@ export function reportSvg(
     svg += text(
       pad,
       h - 28,
-      `Captured ${report.createdAt.slice(0, 19).replace("T", " ")} UTC · snapshot ${report.id}`,
+      `Saved ${report.createdAt.slice(0, 19).replace("T", " ")} UTC · report ${report.id}`,
       18,
       "#b4c0d2"
     );
@@ -508,7 +525,7 @@ function discoveryCard(
     `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${weight}"${anchor ? ` text-anchor="${anchor}"` : ""}>${escape(v)}</text>`;
   const rule = (y: number, x = pad, width = w - pad * 2, colour = "#2a3b51") =>
     `<path d="M${x} ${y}H${x + width}" stroke="${colour}"/>`;
-  const market = `${story.period.complete ? "closed calendar window" : "current UTC day partial"}`;
+  const market = `${story.period.complete ? "date range finished" : "today is still being counted"}`;
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${story.colour}" stop-opacity="0.22"/><stop offset="1" stop-color="${story.colour}" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="#080d19"/><rect x="0" y="0" width="8" height="${h}" fill="${story.colour}"/><g font-family="Bricolage Grotesque">`;
   const header = (y: number, size: number) =>
     text(pad, y, "WOODHOUSE", size, "#e9ff49", 700) +
@@ -518,7 +535,7 @@ function discoveryCard(
   const lineHeight = nameSize * 1.02;
   const figureSize = landscape ? 150 : portrait ? 250 : 190;
   const empty = story.value === null;
-  const figure = empty ? "No data" : story.valueLabel;
+  const figure = empty ? "No click count" : story.valueLabel;
   const figureFont = empty ? (landscape ? 64 : portrait ? 96 : 80) : figureSize;
   const metaSize = landscape ? 20 : portrait ? 28 : 26;
   // --- shared chart: bars, not an invented trend line. Missing days have no bar.
@@ -532,7 +549,7 @@ function discoveryCard(
     const slot = width / Math.max(1, points.length);
     const bar = Math.max(2, slot * 0.66);
     const axisY = y + height + (landscape ? 26 : 34);
-    let out = text(x, y - 26, "Daily recorded clicks", landscape ? 17 : 22, "#a9b8d0", 500);
+    let out = text(x, y - 26, "Clicks per day", landscape ? 17 : 22, "#a9b8d0", 500);
     out += rule(y + height, x, width);
     out += text(x, axisY, longDay(story.period.from), landscape ? 15 : 19, "#a9b8d0");
     out += text(
@@ -548,9 +565,9 @@ function discoveryCard(
       out += text(
         x + 8,
         y + height / 2,
-        story.reason.startsWith("Woodhouse did not supply")
-          ? "No Woodhouse discovery report for these dates"
-          : `No retained referral counter for ${story.name} in these dates`,
+        story.reason.startsWith("Woodhouse did not provide")
+          ? "No click data from Woodhouse for these dates"
+          : `No click count for ${story.name} in these dates`,
         landscape ? 20 : 26,
         "#a9b8d0"
       );
@@ -583,7 +600,7 @@ function discoveryCard(
       const index = points.findIndex((point) => point.date === story.firstObserved);
       if (index > 0) {
         const xx = x + index * slot;
-        const marker = `collection began ${day(story.firstObserved)}`;
+        const marker = `counting began ${day(story.firstObserved)}`;
         const markerSize = landscape ? 14 : 17;
         const markerWidth = marker.length * markerSize * 0.56;
         out += `<path d="M${xx} ${y - 2}V${y + height}" stroke="#e9ff49" stroke-dasharray="4 5" opacity="0.55"/>`;
@@ -598,7 +615,7 @@ function discoveryCard(
         );
         // The gap note is only drawn when the pre-collection area can hold it
         // without crossing the first bar or the mid gridline.
-        const note = `No counter retained before ${day(story.firstObserved)}`;
+        const note = `No click data before ${day(story.firstObserved)}`;
         const noteWidth = note.length * (landscape ? 14 : 18) * 0.56;
         if (index * slot > noteWidth + 24)
           out += text(x + 8, y + height / 2, note, landscape ? 14 : 18, "#6f7f99");
@@ -609,26 +626,35 @@ function discoveryCard(
   const recentLines = (() => {
     if (story.value === null) return ["No comparison available"];
     const observed =
-      story.recent.observedDays < 7 ? ` · ${story.recent.observedDays} of 7 days observed` : "";
-    const recent = `Most recent seven days ${story.recent.value?.toLocaleString("en-AU") ?? "—"}${observed}`;
+      story.recent.observedDays < 7 ? ` · ${story.recent.observedDays} of 7 days counted` : "";
+    const recentValue = story.recent.value;
+    const recent = `Last seven days: ${recentValue === null ? "—" : `${recentValue.toLocaleString("en-AU")} ${recentValue === 1 ? "click" : "clicks"}`}${observed}`;
     if (story.comparison.eligible && story.comparison.change !== null) {
       const direction =
         story.comparison.change === 0
-          ? "level with the week before"
-          : `${Math.abs(story.comparison.change).toLocaleString("en-AU")} ${story.comparison.change > 0 ? "more" : "fewer"} than the week before`;
+          ? "level with the seven days before"
+          : `${Math.abs(story.comparison.change).toLocaleString("en-AU")} ${story.comparison.change > 0 ? "more" : "fewer"} than the seven days before`;
       return [recent, direction];
     }
-    return [
-      recent,
-      `Earlier seven days not comparable · ${story.prior.observedDays} of 7 observed`
-    ];
+    const comparisonNote = !story.period.complete
+      ? "No comparison: today is still being counted"
+      : story.period.days < 14
+        ? "No comparison: dates are shorter than two weeks"
+        : story.prior.observedDays < 7
+          ? `No comparison: ${story.prior.observedDays} of 7 earlier days counted`
+          : story.recent.observedDays < 7
+            ? `No comparison: ${story.recent.observedDays} of 7 recent days counted`
+            : "No comparison available";
+    return [recent, comparisonNote];
   })();
-  const signal = story.kicker
-    .replace("Discovery · ", "")
-    .replace("busiest", "Busiest")
-    .replace("joint", "Joint");
+  const signal =
+    story.rank === 1
+      ? story.tiedAtTop
+        ? "Joint most-opened"
+        : "Opened most"
+      : "Clicks to this project";
   const boundary =
-    "A recorded click is discovery intent on Woodhouse. It is not downstream play, adoption or a unique person.";
+    "A click shows interest in opening the project. It is not proof anyone played, subscribed or stayed.";
   if (landscape) {
     svg += header(58, 22);
     svg += rule(86, pad, w - pad * 2, "#e9ff49");
@@ -641,7 +667,7 @@ function discoveryCard(
     const figureY = y + (nameLines.length > 1 ? 90 : 150);
     svg += `<circle cx="${pad + 250}" cy="${figureY - figureSize / 2.6}" r="210" fill="url(#glow)"/>`;
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    if (!empty) svg += text(pad, figureY + 40, "recorded project opens", 24, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 40, "clicks from Woodhouse", 24, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 74,
@@ -677,7 +703,7 @@ function discoveryCard(
     svg += text(
       pad,
       572,
-      `Snapshot ${report.id} · captured ${report.createdAt.slice(0, 10)} · ${market}`,
+      `Report ${report.id} · saved ${report.createdAt.slice(0, 10)} · ${market}`,
       14,
       "#7f8ea8"
     );
@@ -702,7 +728,7 @@ function discoveryCard(
     svg += `<circle cx="${w - 160}" cy="${y - 60}" r="300" fill="url(#glow)"/>`;
     const figureY = y + (nameLines.length > 1 ? 150 : 230);
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    if (!empty) svg += text(pad, figureY + 58, "recorded project opens", 34, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 58, "clicks from Woodhouse", 34, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 106,
@@ -710,7 +736,7 @@ function discoveryCard(
       30,
       "#a9b8d0"
     );
-    svg += text(pad, figureY + 146, `UTC · ${story.period.days} days · ${market}`, 26, "#a9b8d0");
+    svg += text(pad, figureY + 146, `UTC · ${story.period.days} days`, 26, "#a9b8d0");
     svg += text(
       pad,
       figureY + 188,
@@ -746,7 +772,7 @@ function discoveryCard(
       } else line = (line + " " + word).trim();
     }
     if (line) svg += text(pad, ly, line, 24, "#a9b8d0");
-    svg += text(pad, 1560, `Snapshot ${report.id}`, 19, "#7f8ea8");
+    svg += text(pad, 1560, `Report ${report.id}`, 19, "#7f8ea8");
     retrievalRows.forEach((value, index) => {
       svg += text(pad, 1594 + index * 30, value, 18, "#a9b8d0");
     });
@@ -762,7 +788,7 @@ function discoveryCard(
     svg += `<circle cx="${w - 200}" cy="${y - 40}" r="280" fill="url(#glow)"/>`;
     const figureY = y + (nameLines.length > 1 ? 110 : 170);
     svg += text(pad, figureY, figure, figureFont, "#f4f7fd", 700);
-    if (!empty) svg += text(pad, figureY + 50, "recorded project opens", 30, "#f4f7fd", 500);
+    if (!empty) svg += text(pad, figureY + 50, "clicks from Woodhouse", 30, "#f4f7fd", 500);
     svg += text(
       pad,
       figureY + 92,
@@ -779,7 +805,7 @@ function discoveryCard(
       500
     );
     if (story.value === 0)
-      svg += text(pad, figureY + 162, "No recorded clicks in the observed days", 18, "#a9b8d0");
+      svg += text(pad, figureY + 162, "No clicks in the days counted", 18, "#a9b8d0");
     svg += chart(pad + 10, 630, w - pad * 2 - 20, 260);
     recentLines.forEach((value, index) => {
       svg += text(
@@ -796,11 +822,11 @@ function discoveryCard(
     svg += text(
       pad,
       1088,
-      "Not a unique person or evidence that the destination was used.",
+      "It is not a unique person, and it does not prove the project was used.",
       20,
       "#a9b8d0"
     );
-    svg += text(pad, 1118, `Snapshot ${report.id}`, 14, "#7f8ea8");
+    svg += text(pad, 1118, `Report ${report.id}`, 14, "#7f8ea8");
     svg += text(w - pad, 1148, retrievalLabel, 13, "#a9b8d0", 400, "end");
   }
   return svg + "</g></svg>";

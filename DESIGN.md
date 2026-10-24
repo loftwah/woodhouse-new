@@ -96,7 +96,7 @@ This contract applies to the exhibits as well as to the rest of the site.
 `/activity/` is an operational research workbench within the established Woodhouse world. It is called **Analytics** in desktop navigation, the phone Index and the page heading; `/activity/` stays the route. Its compact Bricolage heading, ink surfaces, cyan selection, acid share action, tabular figures and one-pixel seams inherit the site identity. The 190px project rail and dominant single-measure chart belong to this surface; they do not prescribe the journal, dossiers or share gallery. The approved composition and built-world detail live in `.impeccable/surfaces/src-pages-activity-astro.md`.
 
 - Keep project, inclusive UTC dates and measure selection close to the chart. The portfolio selector groups 18 measures into gameplay, visits & returns, app usage and listening. **All projects opens on a mixed overview**, not on game starts: each admitted project shows the measure its own product view defines — the games on game starts, LoftwahFM on audible listening, App Composer on mini-app opens and Woodhouse on visits — with its value, unit, measure label and reporting context for one selected period. The overview adds no cross-product total, because the units and collection boundaries differ. Choosing a project or an explicit measure opens a single-scope drill-down; games start with game starts, App Composer with mini-app opens, Woodhouse with visits and LoftwahFM with audible listening. One chart carries one measure and one unit. Source colour identifies a named project, while text identifies measurement quality. A missing observation stays a gap; a reported zero stays zero.
-- Apply metric relevance once, everywhere. Applicability comes from the product view, not from whether a source returned data. A game that should report a gameplay measure but did not stays in that measure's scope as "Not measured"; a non-game is omitted from gameplay values, chart, table, coverage calendar and coverage denominator. Genuine zero and reported unavailability remain distinct. Overall source health stays separate from coverage of the selected measure. The page, caption, saved link, chart CSV, daily table, coverage calendar and landscape/square/portrait PNGs describe the same scope, measure, unit and period, including the mixed overview. A whole missing report and an omitted metric keep the applicable project in scope; the shared qualifier names "Source unavailable", "Not reported", "Not measured", "Bounded count", "Sampled estimate", "Coverage unavailable", "Partial coverage", "Legacy/test risk" or "Reported activity" beside the value on the overview card, the measure strip, the saved caption and all three PNGs, so a limitation cannot appear on one surface and vanish on another. Both documented measurement exclusions — `?analytics=off` and `?qa` — survive project, measure, date and frozen-report navigation.
+- Apply metric relevance once, everywhere. Applicability comes from the product view, not from whether a source returned data. A game that should report a gameplay measure but did not stays in that measure's scope as "Not measured"; a non-game is omitted from gameplay values, chart, table, coverage calendar and coverage denominator. Genuine zero and reported unavailability remain distinct. Overall source health stays separate from coverage of the selected measure. The page, caption, saved link, chart CSV, daily table, coverage calendar and landscape/square/portrait PNGs describe the same scope, measure, unit and period, including the mixed overview. A whole missing report and an omitted metric keep the applicable project in scope; the shared qualifier names "No data for these dates", "Not reported", "Not measured", "Count may be capped", "Estimated from a sample", "Missing days unknown", "Some days missing", "Includes old test data" or "All days counted" beside the value on the overview row, the measure strip, the saved caption and all three PNGs, so a limitation cannot appear on one surface and vanish on another. Definitions and collection mechanics live in Notes; the short label stays ordinary without disappearing. Both documented measurement exclusions — `?analytics=off` and `?qa` — survive project, measure, date and frozen-report navigation.
 - Preserve dates and frozen-report context when changing projects. Switching product families selects the destination's default; switching games retains a compatible measure; returning to All projects returns to the overview. Legacy links without an explicit measure now land on the overview; `?measure=` links remain valid drill-downs. App access, received pending postcards, contribution-page views and completed Link Checks have separate labels and meanings. App headlines show opens, received postcards and finished inspections; receipt counts record admission as pending, not current queue size, approval or publication. Later moderation does not decrement an admission count. Mixed app actions do not become a funnel, creator activation or a successful-publication count. Keep the business interpretation within the selected product's evidence.
 - Keep the native Custom dates disclosure closed initially. On phones the project rail scrolls horizontally, the toolbar wraps and interpretation follows the chart. Show the selected measure's meaning before the plot without burying the plot beneath expanded forms or export tools.
 - The locally bundled ECharts SVG chart adds crosshair inspection, line/bar choice, zoom and named series toggles. Preserve the server SVG for measured selections and the permanent daily values/coverage table. When every value is missing, show the empty-state explanation and omit chart axes and SVG, retaining the chart host for day inspection and CSV export. A reported zero is measured data and still receives a chart. Keep keyboard day inspection and CSV export together in the native Chart data & export disclosure. Respect reduced motion and retain visible keyboard focus.
@@ -208,13 +208,42 @@ release context and definitions in native disclosures. No repeated business
 assessment precedes a chart or sharing action. Phone rows retain their coverage
 labels beside the project; the chart and table remain real, accessible data.
 
-
 The phone finish review keeps the selected chart's total and coverage beside its
 measure heading, then shows the plot. Related measures and the full counting
 definition follow in a closed disclosure. Saved-report status shares the compact
 date strip; its full capture metadata remains in Notes. Share actions precede
 the image preview on phones, so copying and downloading never require scrolling
 past a technical caption.
+
+## Analytics visitor language and first-screen findings — reviewed 25 October 2026
+
+The observed failure: the workbench was accurate but asked a first-time visitor
+to decode collector vocabulary ("Legacy/test risk", "Bounded count", "Partial
+coverage") before meeting a result. The correction keeps the precision and moves
+the mechanics.
+
+- The same ordinary qualifier travels to the overview row, measure strip, chart,
+  daily table, caption and all three PNGs: "No data for these dates", "Not
+  reported", "Not measured", "Count may be capped", "Estimated from a sample",
+  "Missing days unknown", "Some days missing", "Includes old test data" or
+  "All days counted". Raw collector statuses stay in the data model and Notes.
+- The mixed overview may open with at most two supported observations: a full
+  week compared with the week before, or recorded clicks to a measured project.
+  Each names the product, measure, period and comparison (or says why none is
+  claimed). With neither, it says "A quiet period for comparisons" and explains
+  which comparison is missing. The table remains immediately below; this is not
+  a second stories view.
+- Project drill-downs name the project first and offer its project page, the
+  product itself and a route back to all projects. The separate engineering
+  leaderboards stay in the page header, labelled as build activity and never as
+  product engagement or customer success.
+- A mixed share caption leads with one supported result and the report period
+  instead of listing every project as a deployment report. A project or measure
+  caption is one sentence with its qualifier and stable saved link. Native share
+  sends the image alone; copying the caption stays a separate action.
+- Notes keeps the definitions, collection limits, release history and browser
+  return detail. The first screen does not carry "coverage denominator",
+  "source-qualified", "scope reconciliation" or similar systems prose.
 
 ## Project leaderboards — reviewed 24 October 2026
 

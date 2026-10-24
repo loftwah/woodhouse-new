@@ -80,13 +80,13 @@ test("a partial destination story keeps missing days distinct from zero", () => 
   assert.equal(story.value, 6);
   assert.equal(story.observedDays, 8);
   assert.equal(story.coverage, "partial");
-  assert.match(story.coverageLabel, /8 of 30 days observed/);
+  assert.match(story.coverageLabel, /8 of 30 days counted/);
   assert.equal(story.daily[0]?.date, "2026-09-23");
   assert.equal(story.daily[0]?.value, null);
   assert.equal(story.daily.at(-8)?.value, 0);
   assert.match(story.reason, /missing rather than zero/);
   assert.equal(story.comparison.eligible, false);
-  assert.match(story.comparison.reason, /current UTC day is partial/);
+  assert.match(story.comparison.reason, /current UTC day is not finished/);
 });
 
 test("a complete earlier week earns a comparison and states its direction", () => {
@@ -126,8 +126,8 @@ test("a measured zero is reported as a zero with its observed days", () => {
   });
   assert.equal(story.value, 0);
   assert.equal(story.rank, null);
-  assert.match(story.headline, /No recorded clicks to Fighter/);
-  assert.match(story.establishes, /0 recorded outbound clicks/);
+  assert.match(story.headline, /No clicks from Woodhouse to Fighter/);
+  assert.match(story.establishes, /0 recorded clicks from Woodhouse/);
 });
 
 test("a tie for the top destination is not described as an outright winner", () => {
@@ -138,8 +138,8 @@ test("a tie for the top destination is not described as an outright winner", () 
     period
   });
   assert.equal(story.rank, 1);
-  assert.match(story.kicker, /joint busiest/);
-  assert.match(story.headline, /shared the busiest/);
+  assert.match(story.kicker, /Joint most-opened/);
+  assert.match(story.headline, /shared the most-opened spot/);
 });
 
 test("the caption and the story name the same destination, period and coverage", () => {
@@ -154,11 +154,14 @@ test("the caption and the story name the same destination, period and coverage",
     "a".repeat(24) +
     "&measure=project_opens&destination=loftwahfm";
   const caption = discoveryCaption(story, link, dateLabel);
-  assert.match(caption, /Woodhouse → LoftwahFM/);
-  assert.match(caption, /6 recorded project opens/);
-  assert.match(caption, /23 Sept 2026 – 22 Oct 2026 \(UTC\)/);
-  assert.match(caption, /Partial coverage · 8 of 30 days observed/);
-  assert.match(caption, /not downstream use/);
+  assert.match(caption, /LoftwahFM received 6 clicks from Woodhouse/);
+  assert.match(caption, /23 Sept 2026 and 22 Oct 2026 \(UTC\)/);
+  assert.match(caption, /8 of 30 days counted; the rest are missing/);
+  assert.match(caption, /not proof anyone played or stayed/);
+  assert.doesNotMatch(
+    caption,
+    /Legacy\/test risk|Bounded count|Partial coverage|referral counter/i
+  );
   assert.ok(caption.endsWith(link));
 });
 
@@ -178,10 +181,10 @@ test("all three shared formats carry the same destination story and retrieval sc
     assert.match(svg, /DISCOVERY STORY/);
     assert.match(svg, /Bubbles/);
     assert.match(svg, />6<\/text>/);
-    assert.match(svg, /recorded project opens/);
-    assert.match(svg, /Partial coverage/);
+    assert.match(svg, /clicks from Woodhouse/);
+    assert.match(svg, /8 of 30 days counted/);
     assert.match(svg, /destination=bubbles/);
-    assert.match(svg, /A recorded click is discovery intent/);
+    assert.match(svg, /A click shows interest in opening the project/);
   }
   const unrelated = reportSvg(
     fixture,
@@ -207,7 +210,10 @@ test("a destination with no retained counter still gets an honest card", async (
     "fighter"
   );
   assert.match(svg, /Fighter/);
-  assert.match(svg, /No retained referral counter for Fighter|No Woodhouse discovery report/);
+  assert.match(
+    svg,
+    /No click count for Fighter in these dates|No click data from Woodhouse for these dates/
+  );
   assert.doesNotMatch(svg, />0<\/text>/);
 });
 
@@ -221,7 +227,7 @@ test("withdrawn destinations do not win the busiest-hand-off ranking", () => {
   });
   assert.equal(story.rank, 1);
   assert.equal(story.measuredDestinations, 1);
-  assert.match(story.headline, /busiest measured hand-off/);
+  assert.match(story.headline, /opened most from Woodhouse/);
 });
 
 test("a partial recent week is labelled in the shared caption", () => {
@@ -238,7 +244,7 @@ test("a partial recent week is labelled in the shared caption", () => {
     "https://example.test/activity/?report=x",
     (date) => date
   );
-  assert.match(caption, /No retained referral counter|Partial coverage/);
+  assert.match(caption, /No click count|days counted/);
 });
 
 test("a tie is described as joint in the caption, not as an outright winner", () => {
@@ -254,8 +260,8 @@ test("a tie is described as joint in the caption, not as an outright winner", ()
     "https://example.test/activity/?report=x",
     (date) => date
   );
-  assert.match(caption, /A joint busiest measured hand-off/);
-  assert.doesNotMatch(caption, /^The busiest/m);
+  assert.match(caption, /shared the most-opened spot/);
+  assert.doesNotMatch(caption, /was opened most/);
 });
 
 test("a complete, fully observed window can claim coverage and a comparison", () => {
@@ -266,14 +272,14 @@ test("a complete, fully observed window can claim coverage and a comparison", ()
     name: "Bubbles",
     period: { ...period, from: "2026-10-09", days: 14, complete: true }
   });
-  assert.equal(story.coverageLabel, "Full coverage · 14 days observed");
+  assert.equal(story.coverageLabel, "All 14 days counted");
   assert.equal(story.comparison.eligible, true);
   const caption = discoveryCaption(
     story,
     "https://example.test/activity/?report=x",
     (date) => date
   );
-  assert.match(caption, /It does not establish that anyone played/);
+  assert.match(caption, /not proof anyone played or stayed/);
 });
 
 test("an open window never presents an observed day as full coverage", () => {
@@ -284,7 +290,7 @@ test("an open window never presents an observed day as full coverage", () => {
     name: "Bubbles",
     period
   });
-  assert.equal(story.coverageLabel, "All days observed · current UTC day partial");
+  assert.equal(story.coverageLabel, "All days so far counted; today is still being counted");
   assert.equal(story.comparison.eligible, false);
 });
 
@@ -300,8 +306,8 @@ test("the shared image labels a partial recent week", async () => {
     undefined,
     "bubbles"
   );
-  assert.match(svg, /3 of 7 days observed/);
-  assert.doesNotMatch(svg, /Most recent seven days 2<\/text>/);
+  assert.match(svg, /3 of 7 days counted/);
+  assert.doesNotMatch(svg, /Last seven days 2<\/text>/);
 });
 
 test("a single-project report keeps its chart and measure label in every format", async () => {
@@ -337,5 +343,27 @@ test("a single-project report keeps its chart and measure label in every format"
     assert.match(svg, /game_starts|Game starts/);
     assert.match(svg, /Daily activity chart/);
     assert.match(svg, />42<\/text>/);
+  }
+});
+
+test("the discovery card uses the same ordinary qualifier in every format", async () => {
+  const { reportSvg } = await import("./portfolio-card.ts");
+  const fixture = report([referral("referral_bubbles", 6)]);
+  for (const format of ["landscape", "square", "portrait"] as const) {
+    const svg = reportSvg(
+      fixture,
+      new Map([["bubbles", "Bubbles"]]),
+      format,
+      "project_opens",
+      "https://preview.example",
+      undefined,
+      "bubbles"
+    );
+    assert.match(svg, /8 of 30 days counted; the rest are missing/);
+    assert.match(svg, /clicks from Woodhouse/);
+    assert.doesNotMatch(
+      svg,
+      /Legacy\/test risk|Bounded count|Partial coverage|source-qualified|scope reconciliation|recorded project opens/
+    );
   }
 });

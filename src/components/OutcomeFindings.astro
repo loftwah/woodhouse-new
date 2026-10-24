@@ -34,7 +34,7 @@ const href = (story: (typeof findings)[number]["story"]) => {
     <p class="outcome-findings__period">
       {period.from} to {period.to} UTC ·{" "}
       {report ? "same saved report throughout" : "report unavailable"}
-      {period.complete ? "" : " · today is partial"}
+      {period.complete ? "" : " · today is still being counted"}
     </p>
   </div>
   <ul class="outcome-findings__list">
@@ -64,10 +64,10 @@ const href = (story: (typeof findings)[number]["story"]) => {
     })}
   </ul>
   <p class="outcome-findings__note">
-    Available observations lead; legacy/test history and missing measures follow. Editorial order
-    applies within each group, never the size of incompatible totals. Recorded activity is not a
-    count of people. A zero is measured; “Not measured” means no retained evidence. Historical
-    verification limits follow each result into its story and export.
+    Results with numbers lead; old test history and missing measures follow. The order is editorial,
+    never a ranking of different units. Recorded activity is not a count of people. A zero is
+    measured; “Not measured” means no recorded evidence. Older test activity follows each result
+    into its story and export.
   </p>
 </section>
 

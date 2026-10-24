@@ -6,9 +6,9 @@
  * "highlight" that quietly turns a recorded click into an adoption claim.
  *
  * Every observation here is derived from the report the page is already showing,
- * names its own period, and carries both what it establishes and the nearest
- * tempting claim it does not support. Nothing is invented to fill a slot: an
- * absent observation stays absent and the page says what is missing.
+ * names its own period, and carries both what it counts and the nearest tempting
+ * claim it does not support. Nothing is invented to fill a slot: an absent
+ * observation stays absent and the page says what is missing.
  */
 
 import {
@@ -37,6 +37,8 @@ type Observation = {
   unitLabel: string;
   /** The dates the figure covers. */
   period: string;
+  /** The comparison, or a plain statement that none is available. */
+  comparison: string;
   /** What a reader may take from it. */
   establishes: string;
   /** The nearest tempting claim it does not support. */
@@ -94,7 +96,7 @@ function pickWeek(weekly: WeeklyHighlight[]): WeeklyHighlight | null {
   // A comparison needs two complete adjacent weeks. A record with no baseline is
   // still not a movement, so it is reported by the week-focus section instead.
   // Among real comparisons the largest movement leads, because the opening
-  // claims "the largest complete-week movement", not the first project in order.
+  // names the largest complete-week movement, not the first project in order.
   const comparable = weekly.filter(
     (highlight) => highlight.changePercent !== null && highlight.comparedWeeks >= 2
   );
@@ -114,13 +116,14 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   const week = pickWeek(input.weekly);
   const weekInsideWindow = week ? week.to >= window.from : false;
   if (week && weekInsideWindow) {
+    const valueLabel = formatMetric({ value: week.value, unit: week.unit });
     const previous = formatMetric({ value: week.previous, unit: week.unit });
     const movement =
       week.changePercent === null
-        ? "has no comparable baseline"
+        ? `held level with ${previous} the week before`
         : week.changePercent === 0
-          ? "held level with the week before"
-          : `${week.changePercent > 0 ? "rose" : "fell"} ${Math.abs(week.changePercent)}% against the week before`;
+          ? `held level with ${previous} the week before`
+          : `${week.changePercent > 0 ? "rose" : "fell"} ${Math.abs(week.changePercent)}% to ${valueLabel}, from ${previous} the week before`;
     observations.push({
       kind: "week",
       project: week.project,
@@ -128,50 +131,58 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       colour: colours[week.project] ?? "#b4c0d2",
       kicker: `${week.name} · ${week.measure.label}`,
       headline: week.newBest
-        ? `${week.name} recorded its best complete week of the ${week.comparedWeeks} comparable weeks in retained history.`
-        : `${week.name} ${movement} in the complete week of ${dateLabel(week.from)}–${dateLabel(week.to)}.`,
-      figure: formatMetric({ value: week.value, unit: week.unit }),
+        ? `${week.name}'s ${week.measure.label.toLowerCase()} reached ${valueLabel} — a new best across the ${week.comparedWeeks} complete weeks we can compare, against ${previous} the week before.`
+        : `${week.name}'s ${week.measure.label.toLowerCase()} ${movement}.`,
+      figure: valueLabel,
       unitLabel: week.measure.label,
-      period: `${dateLabel(week.from)}–${dateLabel(week.to)}, a complete Monday–Sunday UTC week`,
-      establishes: `${formatMetric({ value: week.value, unit: week.unit })} recorded, against ${previous} the week before.`,
+      period: `${dateLabel(week.from)}–${dateLabel(week.to)} · full Monday–Sunday week, UTC`,
+      comparison:
+        week.changePercent === null
+          ? `No earlier week had a usable baseline, so no percentage is claimed.`
+          : `Compared with the week before (${dateLabel(new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10))}–${dateLabel(new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10))}).`,
+      establishes: `${valueLabel} recorded, against ${previous} in the week before.`,
       doesNotEstablish:
-        "That the week is typical, that anything nearby caused it, or that these are people rather than recorded actions.",
+        "Why it changed, whether this week is typical, or how many people were involved.",
       href: input.links.week(week.project, week.measure.key, week.from),
-      linkLabel: "Open the week"
+      linkLabel: "Open this week"
     });
   } else {
     notes.push({
       kind: "week",
       reason: week
-        ? `The last complete week (${dateLabel(week.from)}–${dateLabel(week.to)}) sits outside the selected dates and is reported below instead.`
+        ? `The last full week (${dateLabel(week.from)}–${dateLabel(week.to)}) is outside these dates, so it is not presented as a change here.`
         : input.weekly.length > 0
-          ? "A complete week is reported below, but it has no earlier comparable week to compare against."
-          : "No two adjacent complete weeks are available in retained history for these dates."
+          ? "A full week is available, but there is no earlier full week to compare it with."
+          : "No two full weeks in a row are available for these dates."
     });
   }
 
   const topDestination = input.discovery[0];
   if (topDestination) {
     const comparison = topDestination.hasTrend
-      ? `${topDestination.recent} in ${dateLabel(topDestination.recentFrom)}–${dateLabel(topDestination.recentTo)}, against ${topDestination.prior} in the earlier seven days.`
+      ? `${topDestination.recent} clicks in the last seven days, against ${topDestination.prior} in the seven days before.`
       : window.days < 14
-        ? `${topDestination.recent} in the most recent seven days. These dates are shorter than the two weeks a comparison needs, so none is claimed.`
+        ? `${topDestination.recent} clicks in the last seven days. These dates are shorter than the two weeks needed to compare.`
         : topDestination.priorCoverage === "partial"
-          ? `${topDestination.recent} in the most recent seven days. The earlier seven days recorded only ${topDestination.priorObservedDays} of 7, so no comparison is claimed.`
-          : `${topDestination.recent} in the most recent seven days. No earlier retained history exists to compare.`;
+          ? `${topDestination.recent} clicks in the last seven days. The earlier seven days have only ${topDestination.priorObservedDays} of 7 days counted, so no comparison is claimed.`
+          : `${topDestination.recent} clicks in the last seven days. There is no earlier counted week to compare.`;
+    const clicks = `${topDestination.value.toLocaleString("en-AU")} ${
+      topDestination.value === 1 ? "click" : "clicks"
+    }`;
     observations.push({
       kind: "discovery",
       project: "woodhouse",
       name: "Woodhouse",
       colour: colours.woodhouse ?? "#b4c0d2",
-      kicker: `Discovery · ${topDestination.name}`,
-      headline: `The busiest measured hand-off from Woodhouse went to ${topDestination.name}.`,
+      kicker: `Project discovery · ${topDestination.name}`,
+      headline: `${topDestination.name} was the project readers opened most from Woodhouse: ${clicks}.`,
       figure: topDestination.value.toLocaleString("en-AU"),
-      unitLabel: "recorded clicks",
+      unitLabel: "clicks from Woodhouse",
       period: periodLabel,
-      establishes: comparison,
+      comparison,
+      establishes: `${clicks} from Woodhouse to ${topDestination.name} between ${dateLabel(window.from)} and ${dateLabel(window.to)} (UTC).`,
       doesNotEstablish:
-        "That anyone played, tried or kept using it: this counts the outbound action on this origin, not what happened at the destination.",
+        "That anyone played, tried or kept using it. This counts clicks on Woodhouse, not what happened next.",
       href: input.links.discovery(),
       linkLabel: "Open this discovery story"
     });
@@ -180,8 +191,8 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       kind: "discovery",
       reason:
         input.discoveryTotal === null
-          ? "Discovery counts are unavailable for these dates."
-          : "No positive clicks through to a measured project were recorded in these dates."
+          ? "Project-click counts are unavailable."
+          : "No clicks from Woodhouse to a measured project were recorded."
     });
   }
 
@@ -206,14 +217,15 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       project: startedInside.project,
       name: startedInside.name,
       colour: colours[startedInside.project] ?? "#b4c0d2",
-      kicker: `New collection · ${startedInside.name}`,
-      headline: `${startedInside.name} began reporting inside these dates, so this is the first comparable history it has.`,
+      kicker: `${startedInside.name} · New to this report`,
+      headline: `${startedInside.name} started reporting on ${dateLabel(startedDay)}, so this is the first history we have for it.`,
       figure: String(days),
-      unitLabel: days === 1 ? "day recorded" : "days recorded",
-      period: `from ${dateLabel(startedDay)}`,
-      establishes: `Everything before ${dateLabel(startedDay)} was never recorded. It is missing, not zero.`,
+      unitLabel: days === 1 ? "day of history" : "days of history",
+      period: `From ${dateLabel(startedDay)}`,
+      comparison: "No earlier history to compare.",
+      establishes: `Every day before ${dateLabel(startedDay)} is missing, not zero.`,
       doesNotEstablish:
-        "That the product was unused before collection began, or that the first days are representative.",
+        "That the product was unused before then, or that the first days are typical.",
       href: input.links.project(startedInside.project, startedInside.defaultMeasure),
       linkLabel: `Open ${startedInside.name}`
     });
@@ -228,27 +240,28 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       project: "woodhouse",
       name: "Woodhouse",
       colour: colours.woodhouse ?? "#b4c0d2",
-      kicker: "Woodhouse · its own audience",
+      kicker: "Woodhouse · Visits",
       headline:
         engaged && engaged.value !== null
-          ? `${formatMetric({ value: engaged.value, unit: engaged.unit })} of those visits met the source's engaged-session threshold.`
-          : "Woodhouse's own reading traffic, counted the same way as every product's.",
+          ? `${formatMetric({ value: visits.value, unit: visits.unit })} visits, including ${formatMetric({ value: engaged.value, unit: engaged.unit })} that lasted 10 seconds or more.`
+          : `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded for Woodhouse.`,
       figure: formatMetric({ value: visits.value, unit: visits.unit }),
       unitLabel: "visits",
       period: periodLabel,
+      comparison: "No earlier period is compared here.",
       establishes:
         engaged && engaged.value !== null
-          ? `${formatMetric({ value: visits.value, unit: visits.unit })} anonymous tab sessions admitted, ${formatMetric({ value: engaged.value, unit: engaged.unit })} engaged.`
-          : `${formatMetric({ value: visits.value, unit: visits.unit })} anonymous tab sessions admitted by the collector.`,
+          ? `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded; ${formatMetric({ value: engaged.value, unit: engaged.unit })} lasted 10 seconds or more.`
+          : `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded by Woodhouse.`,
       doesNotEstablish:
-        "How many individual people read anything, or whether they came back: both need a measure this source cannot supply.",
+        "How many people read anything, or whether they came back. This counts visits, not people.",
       href: input.links.project("woodhouse", "visits"),
       linkLabel: "Open Woodhouse analytics"
     });
   } else {
     notes.push({
       kind: "audience",
-      reason: "Woodhouse's own visit measure is unavailable for these dates."
+      reason: "Woodhouse's visit count is unavailable for these dates."
     });
   }
 
@@ -261,7 +274,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
     notes,
     emptyReason:
       observations.length === 0
-        ? `No project, discovery or audience finding cleared the bar for ${periodLabel}. The measurements below still report exactly what was collected, with their coverage stated.`
+        ? `Nothing in this report supports a before-and-after claim for ${periodLabel}. The numbers below show what was recorded.`
         : null
   };
 }
