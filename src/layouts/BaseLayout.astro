@@ -46,7 +46,7 @@ const {
   imageWidth = 1200,
   imageHeight = 630,
   fallbackImage,
-  currentPath = path,
+  currentPath: suppliedCurrentPath,
   type = "website",
   pageType,
   publishedAt,
@@ -58,6 +58,9 @@ const {
   robots,
   noindex = false
 } = Astro.props;
+// Use the real pathname rather than the canonical `path`; a leaderboard or
+// saved report carries a query string that would defeat aria-current matching.
+const currentPath = suppliedCurrentPath ?? Astro.url.pathname;
 const siteSettings = await getSiteSettings();
 const siteTitle = siteSettings.title || "WOODHOUSE";
 const titleSeparator = siteSettings.seo?.titleSeparator || " — ";
