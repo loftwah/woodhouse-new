@@ -450,9 +450,9 @@ export function createLoom(options: LoomOptions) {
     const { model, aspect } = orientation();
     const projection = mat4.perspective(FOV, aspect, 0.1, 60);
     const viewModel = mat4.multiply(mat4.translation(0, 0, -fitDistance(model, aspect)), model);
-    // Wakes decay against wall-clock time; the artwork's pose and waves use the
-    // accumulated scene phase above, so a resumed page does not jump.
-    const now = performance.now();
+    // Wakes age on the same active clock as the pose, so freezing the scene
+    // freezes an existing wake instead of letting it expire behind the still.
+    const now = state.phase;
 
     gl.useProgram(mainProgram.program);
     gl.bindVertexArray(vertexArray);
@@ -472,7 +472,7 @@ export function createLoom(options: LoomOptions) {
 
     for (let index = 0; index < 12; index += 1) wakeVec[index] = 0;
     state.wakes.forEach((wake, index) => {
-      const age = (now - wake.born) / 1000;
+      const age = now - wake.born;
       wakeVec[index * 4] = wake.x;
       wakeVec[index * 4 + 1] = wake.y;
       wakeVec[index * 4 + 2] = wake.strength * Math.max(0, 1 - age / 1.5);
@@ -529,8 +529,8 @@ export function createLoom(options: LoomOptions) {
     }
 
     const speed = Math.hypot(pointer.vx, pointer.vy);
-    const now = performance.now();
-    if (state.inside && speed > 0.55 && now - state.lastWakeAt > 120) {
+    const now = state.phase;
+    if (state.inside && speed > 0.55 && now - state.lastWakeAt > 0.12) {
       state.lastWakeAt = now;
       state.wakes.unshift({
         x: pointer.x,
@@ -540,7 +540,7 @@ export function createLoom(options: LoomOptions) {
       });
       state.wakes.length = Math.min(state.wakes.length, 3);
     }
-    if (state.wakes.length) state.wakes = state.wakes.filter((wake) => now - wake.born < 1500);
+    if (state.wakes.length) state.wakes = state.wakes.filter((wake) => now - wake.born < 1.5);
   }
 
   function trackQuality(delta: number) {
@@ -774,6 +774,7 @@ export function createLoom(options: LoomOptions) {
         state.pointer.vx = 0;
         state.strength.value = 0;
         state.wakes = [];
+        state.lastWakeAt = 0;
         state.phase = 0;
         state.intro = 1;
         draw();
