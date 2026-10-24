@@ -85,8 +85,14 @@ if (root) {
   });
   root.querySelectorAll("[data-lb-share]").forEach((button) =>
     button.addEventListener("click", async () => {
-      if (!shareImage || shareImage.busy) return;
+      if (!shareImage) return;
       const ticket = ++operation;
+      // A tap while the first preparation is still running must acknowledge
+      // itself, not disappear. It must also not open a second share sheet.
+      if (shareImage.busy) {
+        say("Still preparing your image. Try again when it’s ready.", ticket);
+        return;
+      }
       if (typeof navigator.share === "function" && !shareImage.ready)
         say("Preparing your image…", ticket);
       const result = await shareImage.share();
