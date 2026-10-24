@@ -3262,6 +3262,16 @@ body {
   min-height: 11rem;
   resize: vertical;
 }
+.contact-form [aria-invalid="true"] {
+  border-color: var(--brass);
+}
+.contact-form__problem {
+  color: var(--brass);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  line-height: 1.55;
+}
 .contact-form input:focus-visible,
 .contact-form select:focus-visible,
 .contact-form textarea:focus-visible,

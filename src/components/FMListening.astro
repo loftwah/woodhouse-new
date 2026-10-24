@@ -51,9 +51,14 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
         allow="autoplay"
         referrerpolicy="strict-origin-when-cross-origin"
       />
-      <p class="fm-listening__state" data-fm-state role="status">
-        The player loads when this panel opens.
-      </p>
+      <div class="fm-listening__state-row">
+        <p class="fm-listening__state" data-fm-state role="status" hidden>
+          The player loads when this panel opens.
+        </p>
+        <button class="fm-listening__retry" type="button" data-fm-retry hidden>
+          Try loading the player again
+        </button>
+      </div>
       <p class="fm-listening__help">
         Press Play in the player. Closing this panel stops playback.{" "}
         <a href={stationUrl} data-fm-open>
@@ -90,65 +95,206 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
 )}
 
 <script>
+  import { fmPlayerStatus, type FmPlayerStage } from "../data/fm-player";
+  import { createOperationIntent } from "../data/operation-intent";
+
+  const retryLabel = "Try loading the player again";
+
   for (const panel of document.querySelectorAll<HTMLDetailsElement>("[data-fm-listener]")) {
-    const frame = panel.querySelector<HTMLIFrameElement>("iframe");
+    const frame = panel.querySelector("iframe");
     const select = panel.querySelector("select");
     const link = panel.querySelector<HTMLAnchorElement>("[data-fm-open]");
     const state = panel.querySelector<HTMLElement>("[data-fm-state]");
+    const retry = panel.querySelector<HTMLButtonElement>("[data-fm-retry]");
     if (!frame || !select || !link) continue;
-    frame.hidden = false;
-    select.disabled = false;
-    // The host cannot hear the frame, so it reports its own loading and
-    // failure. A loaded frame is not proof that audio is playing: only the
-    // supported FM player can say that.
+    if (state) state.hidden = false;
+
+    const intent = createOperationIntent();
     let timer = 0;
-    const say = (message: string) => {
-      if (state) state.textContent = message;
+    let probe: AbortController | undefined;
+    let stopWaiting: (() => void) | undefined;
+    let frameLoaded = false;
+    let probeState: "pending" | "answered" | "failed" = "pending";
+    let returnFocus = false;
+
+    const stationName = () => select.selectedOptions[0]?.textContent?.trim() || "the station";
+    const say = (stage: FmPlayerStage) => {
+      if (!state) return;
+      state.textContent = fmPlayerStatus(stage, stationName());
+      state.dataset.state = stage;
     };
     const clearTimer = () => {
       if (timer) window.clearTimeout(timer);
       timer = 0;
     };
-    const sync = () => {
-      const source = new URL(frame.dataset.fmSource!);
-      source.searchParams.set("station", select.value);
+    const setBusy = (busy: boolean) => {
+      if (busy) frame.setAttribute("aria-busy", "true");
+      else frame.removeAttribute("aria-busy");
+    };
+    const hideRetry = () => {
+      if (!retry) return;
+      retry.hidden = true;
+      delete retry.dataset.pending;
+      retry.removeAttribute("aria-busy");
+      retry.textContent = retryLabel;
+    };
+    const showRetry = () => {
+      if (retry) retry.hidden = false;
+    };
+    const resetRetry = () => {
+      if (!retry) return;
+      delete retry.dataset.pending;
+      retry.removeAttribute("aria-busy");
+      retry.textContent = retryLabel;
+    };
+    const stopProbe = () => {
+      if (probe) probe.abort();
+      probe = undefined;
+    };
+    const stopWaitingForFrame = () => {
+      if (stopWaiting) stopWaiting();
+      stopWaiting = undefined;
+    };
+    const updateLink = (source: URL) => {
       const player = new URL(source);
       player.pathname = "/radio";
       link.href = player.href;
-      // Loading on intent avoids a player request on every portfolio page.
-      // Unloading the frame also releases FM's audio transport on close.
-      if (panel.open) {
-        clearTimer();
-        say("Loading the player…");
-        timer = window.setTimeout(() => {
-          say(
-            "The player is taking longer than expected. Open the station on FM if it does not appear."
-          );
-        }, 12000);
-        frame.src = source.href;
-      } else {
-        clearTimer();
-        frame.src = "about:blank";
-        say("The player loads when this panel opens.");
+    };
+    const ready = (token: number) => {
+      if (!intent.isCurrent(token) || !panel.open) return;
+      clearTimer();
+      setBusy(false);
+      resetRetry();
+      hideRetry();
+      say("ready");
+      if (returnFocus) {
+        returnFocus = false;
+        frame.focus({ preventScroll: true });
       }
     };
-    frame.addEventListener("load", () => {
-      if (!panel.open) return;
+    const failed = (token: number) => {
+      if (!intent.isCurrent(token) || !panel.open) return;
       clearTimer();
-      say("The player is loaded. Press Play inside it to start the station.");
-    });
-    frame.addEventListener("error", () => {
+      setBusy(false);
+      returnFocus = false;
+      resetRetry();
+      showRetry();
+      say("failed");
+    };
+    const slow = (token: number) => {
+      if (!intent.isCurrent(token) || !panel.open) return;
+      setBusy(false);
+      returnFocus = false;
+      resetRetry();
+      showRetry();
+      say("slow");
+    };
+    // A HEAD request tells us whether the station host answered at all. The
+    // frame's own load event fires for a browser error page, so a lone load is
+    // not evidence that the player is usable.
+    const probeStation = (source: URL, token: number) => {
+      stopProbe();
+      probeState = "pending";
+      const controller = new AbortController();
+      probe = controller;
+      const timeout = window.setTimeout(() => controller.abort(), 8000);
+      fetch(source.href, {
+        method: "HEAD",
+        mode: "no-cors",
+        cache: "no-store",
+        signal: controller.signal
+      })
+        .then(() => {
+          if (!intent.isCurrent(token)) return;
+          probeState = "answered";
+          if (frameLoaded) ready(token);
+        })
+        .catch(() => {
+          if (!intent.isCurrent(token)) return;
+          probeState = "failed";
+          failed(token);
+        })
+        .finally(() => window.clearTimeout(timeout));
+    };
+    const waitForFrame = (token: number) => {
+      stopWaitingForFrame();
+      const onLoad = () => {
+        stopWaitingForFrame();
+        if (!intent.isCurrent(token) || !panel.open) return;
+        frameLoaded = true;
+        if (probeState === "answered") ready(token);
+        else if (probeState === "failed") failed(token);
+        else say("checking");
+      };
+      frame.addEventListener("load", onLoad);
+      stopWaiting = () => frame.removeEventListener("load", onLoad);
+    };
+    const loadPlayer = (token: number, keepRetry = false) => {
       clearTimer();
-      say("The player could not be loaded. Open the station on FM instead.");
-    });
+      stopWaitingForFrame();
+      stopProbe();
+      frameLoaded = false;
+      setBusy(true);
+      if (!keepRetry) hideRetry();
+      say("loading");
+      const source = new URL(frame.dataset.fmSource!);
+      source.searchParams.set("station", select.value);
+      updateLink(source);
+      frame.hidden = false;
+      frame.src = source.href;
+      waitForFrame(token);
+      probeStation(source, token);
+      timer = window.setTimeout(() => slow(token), 12000);
+    };
+    const sync = () => {
+      const token = intent.begin();
+      returnFocus = false;
+      clearTimer();
+      stopWaitingForFrame();
+      stopProbe();
+      if (!panel.open) {
+        frameLoaded = false;
+        setBusy(false);
+        resetRetry();
+        hideRetry();
+        frame.src = "about:blank";
+        frame.hidden = true;
+        say("closed");
+        return;
+      }
+      select.disabled = false;
+      loadPlayer(token);
+    };
+
     panel.addEventListener("toggle", sync);
     select.addEventListener("change", sync);
+    retry?.addEventListener("click", () => {
+      if (!panel.open) {
+        sync();
+        return;
+      }
+      if (retry.dataset.pending === "true") {
+        say("loading");
+        return;
+      }
+      const token = intent.begin();
+      returnFocus = document.activeElement === retry;
+      retry.dataset.pending = "true";
+      retry.setAttribute("aria-busy", "true");
+      retry.textContent = "Trying again…";
+      loadPlayer(token, true);
+    });
     window.addEventListener("pagehide", () => {
+      intent.cancel();
+      clearTimer();
+      stopWaitingForFrame();
+      stopProbe();
       frame.src = "about:blank";
     });
-    window.addEventListener("pageshow", () => {
-      if (panel.open) sync();
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted && panel.open) sync();
     });
+    sync();
   }
 </script>
 
@@ -203,6 +349,41 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
     border: 0;
     background: #080809;
   }
+  .fm-listening__state-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: 0.5rem 0.75rem;
+    margin-block: 0.75rem 0;
+  }
+  .fm-listening__state {
+    flex: 1 1 18rem;
+    margin: 0;
+    padding: 0.55rem 0.7rem;
+    border-left: 2px solid var(--accent-link);
+    background: rgba(121, 216, 255, 0.07);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--copy);
+  }
+  .fm-listening__state[hidden],
+  .fm-listening__retry[hidden] {
+    display: none;
+  }
+  .fm-listening__retry {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    color: var(--paper);
+    background: transparent;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .fm-listening__retry[aria-busy="true"] {
+    opacity: 0.6;
+    cursor: progress;
+  }
   .fm-listening__shows h3 {
     font-size: 1rem;
     margin-block: 1.5rem 0.75rem;
@@ -218,16 +399,12 @@ if (embedUrl && defaultStation) embedUrl.searchParams.set("station", defaultStat
     font-size: 0.8125rem;
     line-height: 1.6;
   }
-  .fm-listening__state {
-    margin: 0.75rem 0 0;
-    padding: 0.55rem 0.7rem;
-    border-left: 2px solid var(--accent-link);
-    background: rgba(121, 216, 255, 0.07);
-    font-size: 0.8rem;
-    line-height: 1.5;
-    color: var(--copy);
-  }
   .fm-listening__handoff {
     margin-block: 1.5rem 0;
+  }
+  @media (max-width: 600px) {
+    .fm-listening__retry {
+      width: 100%;
+    }
   }
 </style>
