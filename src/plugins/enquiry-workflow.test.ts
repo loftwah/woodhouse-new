@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { EnquiryPersistenceError, parseEnquiry, persistThenNotify } from "./enquiry-workflow.ts";
+import {
+  EnquiryPersistenceError,
+  decodeEnquiry,
+  parseEnquiry,
+  persistThenNotify
+} from "./enquiry-workflow.ts";
 
 const validEnquiry = {
   name: "Dean",
@@ -16,6 +21,15 @@ test("enquiry schema accepts tagged private reply addresses and rejects invalid 
   assert.equal(parseEnquiry({ ...validEnquiry, reply: "not-an-email" }), null);
   assert.equal(parseEnquiry({ ...validEnquiry, message: "short" }), null);
   assert.equal(parseEnquiry({ ...validEnquiry, message: "x".repeat(3001) }), null);
+});
+
+test("enquiry decode names the field that needs correction", () => {
+  assert.deepEqual(decodeEnquiry(validEnquiry), { value: validEnquiry });
+  assert.deepEqual(decodeEnquiry({ ...validEnquiry, reply: "not-an-email" }), { field: "reply" });
+  assert.deepEqual(decodeEnquiry({ ...validEnquiry, name: "x".repeat(81) }), { field: "name" });
+  assert.deepEqual(decodeEnquiry({ ...validEnquiry, topic: "Secrets" }), { field: "topic" });
+  assert.deepEqual(decodeEnquiry({ ...validEnquiry, kind: "robot" }), { field: "kind" });
+  assert.deepEqual(decodeEnquiry({ ...validEnquiry, message: "short" }), { field: "message" });
 });
 
 test("enquiry notification runs only after persistence succeeds", async () => {

@@ -1,6 +1,6 @@
 import type { PluginContext, SandboxedPlugin, SandboxedRouteContext } from "emdash/plugin";
 import { pluginResponse } from "emdash/plugin";
-import { parseEnquiry, persistThenNotify } from "./enquiry-workflow.js";
+import { decodeEnquiry, persistThenNotify } from "./enquiry-workflow.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -192,14 +192,15 @@ const plugin: SandboxedPlugin = {
       handler: async (routeCtx, ctx) => {
         if (textField(routeCtx.input, "website")) return formMarkupResponse();
         if (!(await allowRequest(routeCtx, ctx))) return redirect("/contact/?error=rate-limit");
-        const submission = parseEnquiry({
+        const decoded = decodeEnquiry({
           name: cleanText(textField(routeCtx.input, "name")),
           reply: cleanText(textField(routeCtx.input, "reply")),
           topic: cleanText(textField(routeCtx.input, "topic")),
           kind: cleanText(textField(routeCtx.input, "kind")),
           message: cleanText(textField(routeCtx.input, "message"))
         });
-        if (!submission) return redirect("/contact/?error=invalid");
+        if ("field" in decoded) return redirect(`/contact/?error=invalid&field=${decoded.field}`);
+        const submission = decoded.value;
 
         const id = crypto.randomUUID();
         const createdAt = new Date().toISOString();

@@ -61,6 +61,21 @@ const {
   </details>
 </div>
 <script>
+  import { createOperationIntent } from "../data/operation-intent";
+  import {
+    clipboardFailureMessage,
+    clipboardProblem,
+    downloadFailureMessage,
+    downloadHandoffMessage,
+    downloadReadyMessage,
+    withDeadline
+  } from "../data/share-feedback";
+
+  const imageDeadline = 20_000;
+  const clipboardDeadline = 12_000;
+  const textDeadline = 8_000;
+  const resetDelay = 4_000;
+
   for (const root of document.querySelectorAll<HTMLElement>("[data-share-actions]")) {
     const status = root.querySelector<HTMLElement>("[data-status]");
     const text = root.querySelector<HTMLTextAreaElement>("textarea");
@@ -68,7 +83,13 @@ const {
     const copyImage = root.querySelector<HTMLButtonElement>("[data-copy-image]");
     const share = root.querySelector<HTMLButtonElement>("[data-device-share]");
     const download = root.querySelector<HTMLAnchorElement>(".download");
-    const say = (message: string) => {
+    const retry = root.querySelector<HTMLButtonElement>("[data-retry-download]");
+    // The status line belongs to the newest action. A slow response from an
+    // older action may update its own button, but it may not replace the
+    // status of the action the person is now using.
+    const statusIntent = createOperationIntent();
+    const say = (message: string, token?: number) => {
+      if (token !== undefined && !statusIntent.isCurrent(token)) return;
       if (status) status.textContent = message;
     };
     const absolute = (url: string) => {
@@ -82,75 +103,98 @@ const {
       const match = /\.([a-z0-9]+)(?:[?#]|$)/i.exec(url);
       return match ? `.${match[1]!.toLowerCase()}` : "";
     };
+    const primaryImage = root.dataset.image ?? "";
+    const primarySource = root.dataset.shareSource ?? primaryImage;
     const fallback = root.dataset.fallbackImage ?? "";
-    let resolvedImage = root.dataset.image!;
-    let resolvedSource = root.dataset.shareSource!;
     // Nothing to do when there is no distinct fallback: the local gallery assets
     // are already verified, and probing every control would download them twice.
-    const needsResolution = Boolean(fallback) && absolute(fallback) !== absolute(resolvedImage);
+    const needsResolution = Boolean(fallback) && absolute(fallback) !== absolute(primaryImage);
+    let resolvedImage = primaryImage;
+    let resolvedSource = primarySource;
+    let usedFallback = false;
+    let resolution: "pending" | "ready" | "failed" = needsResolution ? "pending" : "ready";
+    let settling: Promise<void> | undefined;
 
     const probe = (url: string) =>
       new Promise<void>((resolve, reject) => {
         const image = new Image();
-        const timer = setTimeout(() => {
+        const timer = window.setTimeout(() => {
           image.onload = null;
           image.onerror = null;
           image.src = "";
           reject(new Error("Image unavailable"));
         }, 15000);
         image.onload = () => {
-          clearTimeout(timer);
+          window.clearTimeout(timer);
           resolve();
         };
         image.onerror = () => {
-          clearTimeout(timer);
+          window.clearTimeout(timer);
           reject(new Error("Image unavailable"));
         };
         image.src = url;
       });
 
-    let settled: boolean | undefined;
-    let settling: Promise<void> | undefined;
-    let resolution: "pending" | "ready" | "failed" = "pending";
+    const showRetry = () => {
+      if (retry) retry.hidden = false;
+    };
+    const hideRetry = () => {
+      if (retry) retry.hidden = true;
+    };
+    const applyResolvedDownload = () => {
+      if (!download || resolution !== "ready") return;
+      download.href = resolvedImage;
+      download.setAttribute(
+        "download",
+        (root.dataset.filename ?? "loftwah-social.jpg").replace(
+          /\.[^.]+$/,
+          extensionOf(resolvedImage) || ".jpg"
+        )
+      );
+      download.removeAttribute("aria-disabled");
+      delete download.dataset.state;
+    };
+    const markDownloadFailed = () => {
+      if (!download) return;
+      download.setAttribute("aria-disabled", "true");
+      download.dataset.state = "failed";
+      showRetry();
+    };
     const resolveImage = () => {
       if (settling) return settling;
-      settling = (
-        !needsResolution
-          ? Promise.resolve()
-          : probe(resolvedImage)
-              .catch(() => {
-                resolvedImage = fallback;
-                resolvedSource = fallback;
-                return probe(fallback);
-              })
-              .catch(() => {
-                // Neither the project image nor the reviewed fallback answered.
-                // The control must not claim a usable file it does not have.
-                resolution = "failed";
-                const retry = root.querySelector<HTMLButtonElement>("[data-retry-download]");
-                if (retry) retry.hidden = false;
-              })
-      ).then(() => {
-        settled = true;
-        if (!download) return;
-        if (resolution === "failed") return;
-        download.href = resolvedImage;
-        download.setAttribute(
-          "download",
-          (root.dataset.filename ?? "loftwah-social.jpg").replace(
-            /\.[^.]+$/,
-            extensionOf(resolvedImage) || ".jpg"
-          )
-        );
-        if (resolvedImage !== root.dataset.image)
-          say("Project image unavailable; using the reviewed fallback artwork.");
-      });
+      if (!needsResolution) {
+        resolution = "ready";
+        applyResolvedDownload();
+        settling = Promise.resolve();
+        return settling;
+      }
+      settling = probe(primaryImage)
+        .catch(() =>
+          probe(fallback).then(() => {
+            resolvedImage = fallback;
+            resolvedSource = fallback;
+            usedFallback = true;
+          })
+        )
+        .then(() => {
+          resolution = "ready";
+        })
+        .catch(() => {
+          // Neither the project image nor the reviewed fallback answered. The
+          // control must not claim a usable file it does not have.
+          resolution = "failed";
+        })
+        .then(applyResolvedDownload);
       return settling;
     };
+
     const promises: { original?: Promise<Blob> | undefined } = {};
     const load = () =>
       (promises.original ??= resolveImage()
-        .then(() => fetch(resolvedSource, { signal: AbortSignal.timeout(15000) }))
+        .then(() => {
+          if (resolution === "failed") throw new Error("Image unavailable");
+          return fetch(resolvedSource, { signal: AbortSignal.timeout(15000) });
+        })
         .then(async (response) => {
           if (!response.ok) throw new Error("Image unavailable");
           const blob = await response.blob();
@@ -162,73 +206,147 @@ const {
           promises.original = undefined;
           throw error;
         }));
+
     if (download)
       download.addEventListener("click", (event) => {
-        // The native download follows the resolved href. A click before the
-        // primary asset has been checked waits for that check first.
-        if (settled) return;
+        // A resolved anchor keeps its native download. Everything else is one
+        // operation with one owner: a second press joins the first instead of
+        // queueing another follow-up click.
+        if (resolution === "ready") {
+          // The synthetic follow-up click below is part of the operation that
+          // already owns the status; it must not announce itself as a new one.
+          if (download.dataset.followUp === "true") return;
+          say(downloadHandoffMessage(usedFallback), statusIntent.begin());
+          return;
+        }
         event.preventDefault();
-        // One owner for the pending download: a second click joins the first
-        // instead of queueing another file write.
+        if (resolution === "failed") {
+          const token = statusIntent.begin();
+          markDownloadFailed();
+          say(downloadFailureMessage(Boolean(fallback)), token);
+          return;
+        }
         if (download.dataset.pending === "true") {
+          // A repeat press acknowledges itself but does not take status away
+          // from the operation that is still running.
           say("Still preparing the file. It will download once it is ready.");
           return;
         }
+        const token = statusIntent.begin();
         download.dataset.pending = "true";
         download.setAttribute("aria-busy", "true");
-        say("Preparing the file…");
+        say("Checking the project image…", token);
         resolveImage()
           .then(() => {
             if (resolution === "failed") {
-              say("That image could not be prepared. Open the source link and save it from there.");
+              markDownloadFailed();
+              say(downloadFailureMessage(Boolean(fallback)), token);
               return;
             }
+            download.dataset.followUp = "true";
             download.click();
-            say("The file was handed to your browser to save.");
+            delete download.dataset.followUp;
+            say(downloadHandoffMessage(usedFallback), token);
           })
           .finally(() => {
             delete download.dataset.pending;
             download.removeAttribute("aria-busy");
           });
       });
-    root
-      .querySelector<HTMLButtonElement>("[data-retry-download]")
-      ?.addEventListener("click", () => {
-        resolution = "pending";
-        settled = undefined;
+
+    if (retry)
+      retry.addEventListener("click", () => {
+        if (retry.dataset.pending === "true") {
+          say("Still checking the image…");
+          return;
+        }
+        const token = statusIntent.begin();
+        // Retry the project image first. A failed fallback must not become the
+        // new primary, or every later attempt would check the same broken file.
+        resolution = needsResolution ? "pending" : "ready";
         settling = undefined;
+        resolvedImage = primaryImage;
+        resolvedSource = primarySource;
+        usedFallback = false;
         promises.original = undefined;
-        const retry = root.querySelector<HTMLButtonElement>("[data-retry-download]");
-        if (retry) retry.hidden = true;
-        say("Checking the image again…");
+        if (download) {
+          download.removeAttribute("aria-disabled");
+          delete download.dataset.state;
+        }
+        retry.dataset.pending = "true";
+        retry.setAttribute("aria-busy", "true");
+        retry.textContent = "Trying again…";
+        say("Checking the project image again…", token);
         resolveImage()
           .then(() => {
             if (resolution === "failed") {
-              say("That image still could not be prepared.");
-              if (retry) retry.hidden = false;
+              markDownloadFailed();
+              say(downloadFailureMessage(Boolean(fallback)), token);
               return;
             }
-            say("The file is ready. Choose Download.");
+            const returnFocus = document.activeElement === retry;
+            hideRetry();
+            applyResolvedDownload();
+            if (returnFocus) download?.focus({ preventScroll: true });
+            say(downloadReadyMessage(usedFallback), token);
           })
-          .catch(() => {
-            say("That image could not be prepared.");
-            if (retry) retry.hidden = false;
+          .finally(() => {
+            delete retry.dataset.pending;
+            retry.removeAttribute("aria-busy");
+            retry.textContent = "Try the download again";
           });
       });
+
     if (copy && navigator.clipboard?.writeText) {
       copy.hidden = false;
+      const idleLabel = copy.textContent?.trim() || "Copy post";
+      const labelIntent = createOperationIntent();
+      let resetTimer = 0;
       copy.addEventListener("click", async () => {
+        if (copy.dataset.pending === "true") {
+          say("Still copying the post.");
+          return;
+        }
+        const token = statusIntent.begin();
+        const labelToken = labelIntent.begin();
+        copy.dataset.pending = "true";
+        copy.setAttribute("aria-busy", "true");
+        copy.setAttribute("aria-disabled", "true");
+        copy.textContent = "Copying…";
+        say("Copying the post and link…", token);
+        window.clearTimeout(resetTimer);
         try {
-          await navigator.clipboard.writeText(text?.value ?? "");
-          say("Post copied.");
-        } catch {
+          await withDeadline(navigator.clipboard.writeText(text?.value ?? ""), textDeadline);
+          if (labelIntent.isCurrent(labelToken)) {
+            copy.dataset.state = "copied";
+            copy.textContent = "Post copied";
+            resetTimer = window.setTimeout(() => {
+              if (!labelIntent.isCurrent(labelToken)) return;
+              if (copy.dataset.pending === "true") return;
+              copy.textContent = idleLabel;
+              delete copy.dataset.state;
+            }, resetDelay);
+          }
+          say("Post copied.", token);
+        } catch (error) {
+          if (labelIntent.isCurrent(labelToken)) {
+            copy.textContent = idleLabel;
+            delete copy.dataset.state;
+          }
           const details = root.querySelector("details");
           if (details) details.open = true;
-          text?.select();
-          say("Select and copy the caption.");
+          // Only take focus when the person is still at this control. A late
+          // failure must not pull focus from somewhere they have moved to.
+          if (document.activeElement === copy) text?.select();
+          say(clipboardFailureMessage(clipboardProblem(error), "post"), token);
+        } finally {
+          copy.removeAttribute("aria-busy");
+          copy.removeAttribute("aria-disabled");
+          delete copy.dataset.pending;
         }
       });
     }
+
     if (
       root.dataset.mediaType !== "video" &&
       copyImage &&
@@ -284,42 +402,79 @@ const {
           URL.revokeObjectURL(objectURL);
         }
       };
+      const pngDimensions = async (blob: Blob) => {
+        const size = new DataView(await blob.slice(16, 24).arrayBuffer());
+        return { width: size.getUint32(0), height: size.getUint32(4) };
+      };
       copyImage.hidden = false;
       // The idle label is captured once, so a second copy inside the restore
       // window cannot leave the button reading "Image copied" for ever.
-      const idleLabel = copyImage.textContent ?? "Copy image";
+      const idleLabel = copyImage.textContent?.trim() || "Copy image";
+      const labelIntent = createOperationIntent();
+      let resetTimer = 0;
       copyImage.addEventListener("click", async () => {
-        if (copyImage.disabled) return;
-        copyImage.disabled = true;
+        if (copyImage.dataset.pending === "true") {
+          say("Still preparing the image. It will copy when it is ready.");
+          return;
+        }
+        const token = statusIntent.begin();
+        const labelToken = labelIntent.begin();
+        copyImage.dataset.pending = "true";
+        copyImage.setAttribute("aria-busy", "true");
+        copyImage.setAttribute("aria-disabled", "true");
         copyImage.dataset.state = "preparing";
         copyImage.textContent = "Preparing image…";
-        say("Preparing the image for the clipboard…");
+        say("Preparing the image for the clipboard…", token);
+        window.clearTimeout(resetTimer);
+        // Start the clipboard handoff during the click, retaining WebKit
+        // activation, then bound the wait so a permission prompt that never
+        // answers cannot leave the control busy for ever.
+        const imagePromise = withDeadline(png(), imageDeadline);
+        imagePromise.catch(() => {});
         try {
-          // Start the clipboard handoff during the click, retaining WebKit activation.
-          const imagePromise = png();
-          imagePromise.catch(() => {});
-          await navigator.clipboard.write([new ClipboardItem({ "image/png": imagePromise })]);
-          const copied = await imagePromise;
-          const size = new DataView(await copied.slice(16, 24).arrayBuffer());
-          const width = size.getUint32(0),
-            height = size.getUint32(4);
-          root.dataset.copiedDimensions = `${width}x${height}`;
-          copyImage.dataset.state = "copied";
-          copyImage.textContent = "Image copied";
-          say(`Image copied · ${width} × ${height}. Paste it into your post.`);
-        } catch {
-          copyImage.dataset.state = "failed";
-          copyImage.textContent = idleLabel;
-          say("Image copy unavailable here. Use Download.");
+          const [, copied] = await withDeadline(
+            Promise.all([
+              navigator.clipboard.write([new ClipboardItem({ "image/png": imagePromise })]),
+              imagePromise
+            ]),
+            clipboardDeadline
+          );
+          let dimensions = "";
+          try {
+            const { width, height } = await pngDimensions(copied);
+            dimensions = ` · ${width} × ${height}`;
+          } catch {
+            /* The copy succeeded even if the PNG header was unexpected. */
+          }
+          if (labelIntent.isCurrent(labelToken)) {
+            copyImage.dataset.state = "copied";
+            copyImage.textContent = "Image copied";
+            resetTimer = window.setTimeout(() => {
+              if (!labelIntent.isCurrent(labelToken)) return;
+              if (copyImage.dataset.pending === "true") return;
+              copyImage.textContent = idleLabel;
+              delete copyImage.dataset.state;
+            }, resetDelay);
+          }
+          say(
+            `Image copied${dimensions}${usedFallback ? " · reviewed backup artwork" : ""}. Paste it into your post.`,
+            token
+          );
+        } catch (error) {
+          if (labelIntent.isCurrent(labelToken)) {
+            copyImage.dataset.state = "failed";
+            copyImage.textContent = idleLabel;
+          }
+          say(clipboardFailureMessage(clipboardProblem(error), "image"), token);
         } finally {
-          copyImage.disabled = false;
-          delete copyImage.dataset.state;
-          window.setTimeout(() => {
-            if (copyImage.textContent === "Image copied") copyImage.textContent = idleLabel;
-          }, 4000);
+          copyImage.removeAttribute("aria-busy");
+          copyImage.removeAttribute("aria-disabled");
+          delete copyImage.dataset.pending;
+          if (copyImage.dataset.state === "failed") delete copyImage.dataset.state;
         }
       });
     }
+
     if (
       root.dataset.mediaType !== "video" &&
       share &&
@@ -329,6 +484,7 @@ const {
     ) {
       let prepared: File | undefined;
       let visible = false;
+      let sharing = false;
       const observer = new IntersectionObserver((entries) => {
         visible = entries.some((entry) => entry.isIntersecting);
         if (!visible) {
@@ -347,31 +503,45 @@ const {
                 : blob.type.includes("webp")
                   ? "webp"
                   : "jpg";
-            prepared = new File(
+            const file = new File(
               [blob],
               root.dataset.filename!.replace(/\.[^.]+$/, `.${extension}`),
               { type: blob.type }
             );
-            if (navigator.canShare({ files: [prepared] })) share.hidden = false;
+            prepared = file;
+            if (navigator.canShare({ files: [file] })) share.hidden = false;
           })
           .catch(() => {});
       });
       observer.observe(root);
       share.addEventListener("click", async () => {
-        if (!prepared) return;
+        if (sharing) {
+          say("The share sheet is already open.");
+          return;
+        }
+        if (!prepared) {
+          say("The image is still being prepared. Try again in a moment.");
+          return;
+        }
+        const token = statusIntent.begin();
+        sharing = true;
+        share.setAttribute("aria-busy", "true");
         try {
           await navigator.share({
             files: [prepared],
             text: text?.value ?? "",
             url: root.dataset.link ?? "https://woodhouse.loftwah.com/share/"
           });
-          say("Handed to your device’s share options.");
+          say("Handed to your device’s share options.", token);
         } catch (error) {
           if (error instanceof Error && error.name === "AbortError") {
-            say("");
+            say("Share cancelled.", token);
             return;
           }
-          say("Use Download or Copy image.");
+          say("Sharing is unavailable here. Use Download or Copy image.", token);
+        } finally {
+          sharing = false;
+          share.removeAttribute("aria-busy");
         }
       });
     }
@@ -401,9 +571,10 @@ const {
   .actions [hidden] {
     display: none;
   }
-  .actions button:disabled {
+  .actions button:disabled,
+  .actions [aria-disabled="true"] {
     opacity: 0.6;
-    cursor: wait;
+    cursor: progress;
   }
   .actions .download {
     background: var(--acid);
@@ -413,6 +584,7 @@ const {
   }
   [role="status"] {
     margin: 0.4rem 0;
+    min-height: 1.3em;
     font-size: 0.85rem;
   }
   summary {

@@ -1,9 +1,21 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { enquiryProblemMessage, isEnquiryField } from "../../data/contact-feedback";
 export const prerender = false;
 const editorialEnabled = !__WOODHOUSE_READ_ONLY__;
 const submitted = Astro.url.searchParams.get("submitted") === "1";
 const error = Astro.url.searchParams.get("error");
+const requestedField = Astro.url.searchParams.get("field");
+const invalidField = error === "invalid" && isEnquiryField(requestedField) ? requestedField : null;
+const invalidMessage = enquiryProblemMessage(invalidField);
+const fieldProps = (field: NonNullable<typeof invalidField>) =>
+  invalidField === field
+    ? {
+        "aria-invalid": "true" as const,
+        "aria-describedby":
+          field === "message" ? "contact-message-help contact-problem" : "contact-problem"
+      }
+    : {};
 ---
 
 <BaseLayout
@@ -68,7 +80,7 @@ const error = Astro.url.searchParams.get("error");
           )}
           {error === "invalid" && (
             <p class="source-note" role="alert">
-              Some details did not pass validation. Check the form and try again.
+              Some details did not pass validation. Check the highlighted field and try again.
             </p>
           )}
           <p class="source-note" data-contact-note role="status"></p>
@@ -97,7 +109,13 @@ const error = Astro.url.searchParams.get("error");
                   type="text"
                   maxlength="80"
                   autocomplete="name"
+                  {...fieldProps("name")}
                 />
+                {invalidField === "name" && (
+                  <small class="contact-form__problem" id="contact-problem">
+                    {invalidMessage}
+                  </small>
+                )}
               </label>
               <label for="contact-reply">
                 Reply address <span>(optional)</span>
@@ -107,24 +125,40 @@ const error = Astro.url.searchParams.get("error");
                   type="email"
                   maxlength="200"
                   autocomplete="email"
+                  {...fieldProps("reply")}
                 />
+                {invalidField === "reply" && (
+                  <small class="contact-form__problem" id="contact-problem">
+                    {invalidMessage}
+                  </small>
+                )}
               </label>
               <label for="contact-topic">
                 Topic
-                <select id="contact-topic" name="topic" required>
+                <select id="contact-topic" name="topic" required {...fieldProps("topic")}>
                   <option value="Woodhouse">Woodhouse</option>
                   <option value="Projects">Projects</option>
                   <option value="Engineering">Engineering</option>
                   <option value="Media">Media</option>
                   <option value="Other">Other</option>
                 </select>
+                {invalidField === "topic" && (
+                  <small class="contact-form__problem" id="contact-problem">
+                    {invalidMessage}
+                  </small>
+                )}
               </label>
               <label for="contact-kind">
                 I am a
-                <select id="contact-kind" name="kind" required>
+                <select id="contact-kind" name="kind" required {...fieldProps("kind")}>
                   <option value="human">Person</option>
                   <option value="agent">Software agent</option>
                 </select>
+                {invalidField === "kind" && (
+                  <small class="contact-form__problem" id="contact-problem">
+                    {invalidMessage}
+                  </small>
+                )}
               </label>
               <label class="contact-form__message" for="contact-message">
                 Message
@@ -135,11 +169,17 @@ const error = Astro.url.searchParams.get("error");
                   minlength="10"
                   maxlength="3000"
                   required
+                  {...fieldProps("message")}
                 ></textarea>
-                <small>
+                <small id="contact-message-help">
                   10–3,000 characters. Please do not include passwords, access tokens or information
                   you do not want sent.
                 </small>
+                {invalidField === "message" && (
+                  <small class="contact-form__problem" id="contact-problem">
+                    {invalidMessage}
+                  </small>
+                )}
               </label>
             </div>
             <button class="button" type="submit" data-contact-send>
@@ -157,13 +197,18 @@ const error = Astro.url.searchParams.get("error");
 </BaseLayout>
 
 <script>
-  // The form stays a native form: this only acknowledges the press, keeps the
+  import { contactMessages, isEnquiryField } from "../../data/contact-feedback";
+
+  // The form stays a native form: this acknowledges the press, keeps the
   // visitor's words if the server sends them back, and never blocks a send.
   const form = document.querySelector<HTMLFormElement>(".contact-form");
   const send = document.querySelector<HTMLButtonElement>("[data-contact-send]");
   const note = document.querySelector<HTMLElement>("[data-contact-note]");
   const draftKey = "woodhouse:contact-draft";
   const fields = ["name", "reply", "topic", "kind", "message"] as const;
+  const sendMarkup = send?.innerHTML ?? "Send enquiry";
+  let sending = false;
+  let slowTimer = 0;
 
   const saveDraft = () => {
     if (!form) return;
@@ -220,43 +265,96 @@ const error = Astro.url.searchParams.get("error");
     }
   };
 
+  const setNote = (message: string) => {
+    if (note) note.textContent = message;
+  };
+
+  const focusField = (field: string) => {
+    if (!form) return;
+    const element = form.elements.namedItem(field);
+    if (element instanceof HTMLElement) element.focus();
+  };
+
+  const resetSend = () => {
+    sending = false;
+    if (slowTimer) window.clearTimeout(slowTimer);
+    slowTimer = 0;
+    if (send) {
+      send.disabled = false;
+      send.removeAttribute("aria-busy");
+      send.innerHTML = sendMarkup;
+    }
+    form?.removeAttribute("aria-busy");
+  };
+
   if (form) {
-    form.addEventListener("input", saveDraft);
+    const params = new URLSearchParams(window.location.search);
+    const problem = params.get("error");
+    const invalidField = params.get("field");
+
+    if (params.get("submitted") === "1") {
+      // The enquiry reached the inbox; the draft has served its purpose.
+      clearDraft();
+      setNote("");
+    } else {
+      const restored = restoreDraft();
+      if (problem === "invalid") {
+        setNote(restored ? contactMessages.invalidKept : contactMessages.invalidEmpty);
+        if (isEnquiryField(invalidField)) focusField(invalidField);
+      } else if (problem === "rate-limit") {
+        setNote(restored ? contactMessages.rateLimitedKept : contactMessages.rateLimitedEmpty);
+      } else if (restored) {
+        setNote(contactMessages.restored);
+      }
+    }
+
+    form.addEventListener("input", (event) => {
+      saveDraft();
+      if (event.target instanceof HTMLElement) event.target.removeAttribute("aria-invalid");
+    });
     form.addEventListener("change", saveDraft);
-    form.addEventListener("submit", () => {
+    form.addEventListener("submit", (event) => {
+      if (sending) {
+        event.preventDefault();
+        setNote(contactMessages.stillSending);
+        return;
+      }
+      const message = form.elements.namedItem("message");
+      // Native validation covers a short value; this catches whitespace that
+      // passes minlength but would be rejected by the server after a round trip.
+      if (message instanceof HTMLTextAreaElement && message.value.trim().length < 10) {
+        event.preventDefault();
+        message.setAttribute("aria-invalid", "true");
+        message.focus();
+        setNote(contactMessages.shortMessage);
+        return;
+      }
+      sending = true;
+      form.setAttribute("aria-busy", "true");
       if (send) {
         send.disabled = true;
         send.setAttribute("aria-busy", "true");
         send.textContent = "Sending…";
       }
-      if (note) note.textContent = "Sending your enquiry…";
+      setNote(contactMessages.sending);
       saveDraft();
-      // If the page never navigates, the visitor must not be left with a
-      // permanently disabled button.
-      window.setTimeout(() => {
-        if (!send || !send.disabled) return;
-        send.disabled = false;
-        send.removeAttribute("aria-busy");
-        send.textContent = "Send enquiry ↗";
-        if (note) note.textContent = "The send did not complete. Try again.";
-      }, 12000);
+      // The browser owns the navigation and its wait. This notice is for a
+      // stalled request; it does not re-enable the button, because a second
+      // press could duplicate a submission that already reached the inbox.
+      slowTimer = window.setTimeout(() => {
+        if (!sending) return;
+        setNote(contactMessages.slow);
+      }, 20000);
     });
 
-    const params = new URLSearchParams(window.location.search);
-    const problem = params.get("error");
-    if (params.get("submitted") === "1") {
-      // The enquiry reached the inbox; the draft has served its purpose.
-      clearDraft();
-      if (note) note.textContent = "";
-    } else if (problem === "invalid" || problem === "rate-limit") {
-      if (restoreDraft() && note) {
-        note.textContent =
-          problem === "invalid"
-            ? "Your message was kept. Check the message and the reply address, then send it again."
-            : "Your message was kept. The form is busy for now; try again in a little while.";
-      }
-    } else if (note && !document.querySelector("[data-submitted]")) {
-      note.textContent = "";
-    }
+    window.addEventListener("pageshow", (event) => {
+      // Coming back from a completed navigation leaves the restored page with a
+      // disabled button. Reconcile it explicitly instead of claiming the send
+      // did not finish.
+      if (!event.persisted || !sending) return;
+      resetSend();
+      setNote(contactMessages.restoredAfterSend);
+      send?.focus({ preventScroll: true });
+    });
   }
 </script>
