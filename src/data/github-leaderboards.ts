@@ -150,11 +150,28 @@ export function leaderboardCaption(
   project?: string
 ) {
   const ranked = rankedProjects(snapshot, days, key);
-  const label = rankingMeasures.find((m) => m.key === key)!.label;
   const rows = project
     ? ranked.rows.filter((r) => r.slug === project)
     : ranked.rows.filter((r) => r.value !== null).slice(0, 3);
-  return `${project ? rows[0]?.name : "Projects making moves"} · ${label.toLowerCase()}\n${ranked.from}–${ranked.to} UTC\n${rows.map((r) => `${r.rank === null ? "" : `${r.rank}. `}${r.name}: ${r.value === null ? "history unavailable" : r.value.toLocaleString("en-AU")}`).join("\n")}\nGitHub activity, not a measure of product quality.\nhttps://woodhouse.loftwah.com${leaderboardLink(snapshot.id, days, key, project)}`;
+  const lines = rows.map((r, index) => {
+    if (r.value === null) return `${r.name}: history unavailable.`;
+    const negative = key === "reduction" && r.value < 0;
+    const value = Math.abs(r.value).toLocaleString("en-AU");
+    const unit =
+      key === "merged"
+        ? `merged PR${r.value === 1 ? "" : "s"}`
+        : key === "closed"
+          ? `issue closure${r.value === 1 ? "" : "s"}`
+          : `${negative ? "more" : "fewer"} open issue${Math.abs(r.value) === 1 ? "" : "s"}`;
+    return `${r.name}: ${value}${index === 0 || negative ? ` ${unit}${index === 0 ? ` in ${days} days` : ""}` : ""}.`;
+  });
+  const date = (value: string) =>
+    new Date(value + "T00:00:00Z").toLocaleDateString("en-AU", {
+      day: "numeric",
+      month: "short",
+      timeZone: "UTC"
+    });
+  return `${lines[0] ?? "No complete GitHub history for this period."}${lines.length > 1 ? `\n${lines.slice(1).join(" ")}` : ""}\n\n${date(ranked.from)} to ${date(ranked.to)} ${ranked.to.slice(0, 4)}`;
 }
 
 // Only these fields cross the private GitHub → public reporting boundary.

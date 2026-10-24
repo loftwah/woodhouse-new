@@ -84,6 +84,11 @@ Before publication, make these editing passes:
 
 ### Lessons from the App Composer edit
 
+Reviewed 24 October 2026. MP rejected a leaderboard caption in the actual X composer:
+the slogan, ISO dates, ranked list, disclaimer and long query string read like a generated report.
+Write the post around the actual figures in ordinary sentences. Let the person edit it, keep
+the retrieval link separate, and put counting definitions in Notes rather than appending a lecture.
+
 Reviewed 18 October 2026. Keep these distinctions in future project stories:
 
 - MP's subsequent review rejected the first article as a product introduction: it explained the

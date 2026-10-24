@@ -212,6 +212,26 @@ test("a repeated full page fails closed; real pagination deduplicates overlap an
   assert.equal(complete.projects[0]!.pullsComplete, true);
   assert.equal(rankedProjects(complete, 28, "merged").rows[0]!.value, 101);
 });
+test("post captions use the real figures without canned headings, disclaimers or an automatic URL", async () => {
+  const s = await snapshot();
+  const caption = leaderboardCaption(s, 28, "merged", "bubbles");
+  assert.equal(caption, "Bubbles: 1 merged PR in 28 days.\n\n26 Sept to 23 Oct 2026");
+  assert.doesNotMatch(
+    leaderboardCaption(s, 28, "merged"),
+    /https:|report=|Projects making moves|product quality| UTC/
+  );
+  s.projects[0]!.daily.find((day) => day.day === "2026-10-15")!.opened = 20;
+  assert.match(leaderboardCaption(s, 28, "reduction", "woodhouse"), /19 more open issues/);
+});
+test("the new image copy is plain while existing PNG URLs retain their original artwork", async () => {
+  const s = await snapshot();
+  for (const format of Object.keys(leaderboardFormats) as (keyof typeof leaderboardFormats)[]) {
+    const current = leaderboardSvg(s, 28, "merged", format, undefined, 2);
+    assert.match(current, /GitHub leaderboards/);
+    assert.doesNotMatch(current, /Projects making moves|product quality is a separate question/);
+    assert.match(leaderboardSvg(s, 28, "merged", format), /Projects making moves/);
+  }
+});
 test("closure counts stay available independently of issue creation history, while net movement does not", async () => {
   const s = await snapshot();
   s.projects[0]!.issuesComplete = false;

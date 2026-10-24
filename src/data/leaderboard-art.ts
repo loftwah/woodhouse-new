@@ -22,7 +22,8 @@ export function leaderboardSvg(
   days: number,
   key: RankingMeasure,
   format: LeaderboardFormat,
-  project?: string
+  project?: string,
+  edition: 1 | 2 = 1
 ) {
   const [w, h] = leaderboardFormats[format];
   const wide = format === "landscape";
@@ -38,7 +39,7 @@ export function leaderboardSvg(
     48,
     wide ? 92 : 108,
     wide ? 64 : 78,
-    selected ? selected.name : "Projects making moves",
+    selected ? selected.name : edition === 2 ? "GitHub leaderboards" : "Projects making moves",
     selected?.colour ?? "#f4f7fd",
     'font-weight="700" letter-spacing="-2"'
   );
@@ -47,7 +48,9 @@ export function leaderboardSvg(
     50,
     wide ? 178 : 209,
     22,
-    `${ranked.from} — ${ranked.to} UTC · ${days} days`,
+    edition === 2
+      ? `${new Date(ranked.from + "T00:00:00Z").toLocaleDateString("en-AU", { day: "numeric", month: "short", timeZone: "UTC" })} to ${new Date(ranked.to + "T00:00:00Z").toLocaleDateString("en-AU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })} · ${days} days`
+      : `${ranked.from} — ${ranked.to} UTC · ${days} days`,
     "#b4c0d2"
   );
   if (selected) {
@@ -193,7 +196,9 @@ export function leaderboardSvg(
     wide ? 15 : 18,
     key === "reduction"
       ? "Recorded issue movement · positive = fewer open issues · negative = more"
-      : "GitHub activity · counts include bots · product quality is a separate question",
+      : edition === 2
+        ? "GitHub counts, including bots"
+        : "GitHub activity · counts include bots · product quality is a separate question",
     "#b4c0d2"
   );
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><title>${esc(leaderboardCaption(snapshot, days, key, project))}</title><rect width="${w}" height="${h}" fill="#080d19"/><g font-family="Bricolage Grotesque">${content}</g></svg>`;
