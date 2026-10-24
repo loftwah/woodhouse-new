@@ -217,6 +217,13 @@ retain the same period, lens and selection. Daily counts remain inspectable from
 `/api/leaderboard.json`. A private `days=-2` permission receipt records only read
 successes, time and conditional-request ETags; no public route reads it.
 
+Reviewed 24 October 2026 after MP's X composer rejection: `/l/` losslessly encodes
+the existing report ID and preserves nondefault period, measure and project in
+its path, redirecting to the same saved view without another alias store.
+Caption text is editable and copied separately from the link; native image
+sharing sends only a file. Current PNGs request `v=2`; the original image URLs
+keep their previous lettering and figures.
+
 The approved optional local secret is `WOODHOUSE_GITHUB_TOKEN`. The release
 scripts accept it when present and preserve an existing remote installation when
 omitted, following [Cloudflare's secret rules](https://developers.cloudflare.com/workers/configuration/secrets/).

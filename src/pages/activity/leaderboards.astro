@@ -16,6 +16,7 @@ import {
   leaderboardCaption
 } from "../../data/github-leaderboards";
 import { publishedLeaderboard, weeklyBarGeometry } from "../../data/github-leaderboards";
+import { leaderboardShareLink } from "../../data/leaderboard-links";
 import "../../styles/leaderboards.css";
 export const prerender = false;
 Astro.cache.set(false);
@@ -42,8 +43,9 @@ const link = snapshot
   ? leaderboardLink(snapshot.id, days, measure, project)
   : "/activity/leaderboards/";
 const caption = snapshot ? leaderboardCaption(snapshot, days, measure, project) : "";
+const shareLink = snapshot ? leaderboardShareLink(snapshot.id, days, measure, project) : link;
 const image = snapshot
-  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, ...(project ? { project } : {}) })}`
+  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "2", ...(project ? { project } : {}) })}`
   : "";
 const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
 function href(updates: Record<string, string | null>) {
@@ -116,7 +118,7 @@ const plottedWeeks = weeks.map((w) => ({
 ---
 
 <BaseLayout
-  title={focused ? `${focused.name} · ${selected.label}` : "Projects making moves"}
+  title={focused ? `${focused.name} · ${selected.label}` : "GitHub leaderboards"}
   description={`${selected.label} across the Loftwah projects. Explore the rankings and share the same dated results.`}
   path={link}
   {...(image ? { image } : {})}
@@ -127,7 +129,8 @@ const plottedWeeks = weeks.map((w) => ({
     data-leaderboard
     data-caption={caption}
     data-image={image}
-    data-link={`https://woodhouse.loftwah.com${link}`}
+    data-link={`https://woodhouse.loftwah.com${shareLink}`}
+    data-filename={`woodhouse-${project ?? "github-rankings"}-${days}days-${measure}.png`}
   >
     <nav class="lb-breadcrumb" aria-label="Breadcrumb">
       <a href="/activity/">Analytics</a>
@@ -144,15 +147,15 @@ const plottedWeeks = weeks.map((w) => ({
             </>
           ) : (
             <>
-              Projects
+              GitHub
               <br />
-              making moves<span class="lb-title-dot">.</span>
+              leaderboards<span class="lb-title-dot">.</span>
             </>
           )}
         </h1>
         <p class="lb-deck">
           {focused
-            ? "A closer look at the work behind the project."
+            ? "Merged PRs, issue closures and changes in open issues."
             : "GitHub activity across the Loftwah projects."}
         </p>
       </div>
@@ -200,7 +203,7 @@ const plottedWeeks = weeks.map((w) => ({
     {snapshot && (
       <div class="lb-sharebar" aria-label="Share this view">
         <button type="button" data-lb-share>
-          Share
+          Share image
         </button>
         <a href={`${image}&download=1`} download>
           Save PNG
@@ -386,9 +389,22 @@ const plottedWeeks = weeks.map((w) => ({
         </section>
         <section id="share-images" class="lb-exports">
           <div class="lb-export-intro">
-            <h2>Made to go places.</h2>
-            <p>Pick a shape. The image, caption and link keep these exact numbers.</p>
-            <a href={link}>Open this saved view</a>
+            <h2>Share this leaderboard</h2>
+            <p>Copy the caption, then share the image. You can edit the text below.</p>
+            <a href={shareLink}>Open this saved view</a>
+            <p role="status" data-lb-export-status></p>
+          </div>
+          <div class="lb-caption">
+            <label for="leaderboard-caption">Post text</label>
+            <textarea id="leaderboard-caption" aria-label="Post text" rows="4">{caption}</textarea>
+            <div class="lb-export-actions">
+              <button type="button" data-lb-caption>
+                Copy caption
+              </button>
+              <button type="button" data-lb-share>
+                Share image
+              </button>
+            </div>
           </div>
           <div class="lb-image-grid">
             {[
@@ -413,10 +429,6 @@ const plottedWeeks = weeks.map((w) => ({
               </figure>
             ))}
           </div>
-          <details class="lb-caption">
-            <summary>Caption and link</summary>
-            <textarea readonly aria-label="Caption and link">{caption}</textarea>
-          </details>
         </section>
         <section class="lb-notes">
           <h2>Notes</h2>

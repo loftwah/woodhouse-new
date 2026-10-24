@@ -20,6 +20,7 @@ let fonts: Promise<Uint8Array[]> | undefined;
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const format = url.searchParams.get("format") ?? "landscape";
+  const edition = url.searchParams.get("v") === "2" ? 2 : 1;
   const project = url.searchParams.get("project") ?? undefined;
   if (
     !Object.hasOwn(leaderboardFormats, format) ||
@@ -70,7 +71,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
         selectedDays(url.searchParams.get("days")),
         measureKey(url.searchParams.get("measure")),
         format as LeaderboardFormat,
-        project
+        project,
+        edition
       ),
       { font: { fontBuffers: buffers, defaultFontFamily: "Bricolage Grotesque" } }
     );
@@ -86,7 +88,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
         "x-content-type-options": "nosniff",
         ...(url.searchParams.has("download")
           ? {
-              "content-disposition": `attachment; filename="woodhouse-${project ?? "leaderboard"}-${report.id}-${format}.png"`
+              "content-disposition": `attachment; filename="${edition === 2 ? `woodhouse-${project ?? "github-rankings"}-${selectedDays(url.searchParams.get("days"))}days-${measureKey(url.searchParams.get("measure"))}-${report.through}-${format}` : `woodhouse-${project ?? "leaderboard"}-${report.id}-${format}`}.png"`
             }
           : {})
       }

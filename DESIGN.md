@@ -227,3 +227,10 @@ independent landscape, square and portrait compositions with readable ranks,
 period and Woodhouse address. Analytics retains its compact task navigation and
 links to this separate engineering view. Product engagement is never ranked with
 GitHub activity. Definitions and private-source boundaries live under Notes.
+
+MP correction, 24 October 2026: the first actual X composer showed a text wall
+and a long query URL, with no attached image. Captions are short, editable post
+text; Copy link is separate and uses the compact saved-view route. Share image
+sends only the file. Unsupported image sharing leads to visible downloads,
+never a text-only share. New image copy uses an explicit revision so existing
+PNG URLs retain their artwork. A browser API fixture is not X app acceptance.
