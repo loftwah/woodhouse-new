@@ -446,9 +446,9 @@ test("overview exports keep the mixed scope, each measure label and the real zer
       assert(overviewSvg.includes("Daily shape · each panel scaled to its own maximum"));
     assert(overviewSvg.includes(">0</text>"), `${format} dropped the genuine zero`);
     // Four of seven supplied a value: three games plus Woodhouse's genuine zero.
-    assert(overviewSvg.includes("4/7 projects supplied their own measure"));
-    assert(overviewSvg.includes("units are not added together"));
-    assert(!overviewSvg.includes("sources supply this measure"));
+    assert(overviewSvg.includes("4/7 projects have numbers"));
+    assert(overviewSvg.includes("totals aren’t added together"));
+    assert(!overviewSvg.includes("projects report this count"));
     assert.doesNotMatch(overviewSvg, /NaN|undefined/);
     // A project that supplied nothing is not a missing gameplay source.
     assert(!overviewSvg.includes("0/7"));
@@ -462,7 +462,7 @@ test("overview exports keep the mixed scope, each measure label and the real zer
       assert(gameplaySvg.includes(project));
     for (const project of ["LoftwahFM", "App Composer", "Woodhouse"])
       assert(!gameplaySvg.includes(project), `${format} listed ${project} under gameplay`);
-    assert(gameplaySvg.includes("3/4 sources supply this measure"));
+    assert(gameplaySvg.includes("3/4 projects report this count"));
     assert(gameplaySvg.includes("Not measured"));
   }
 });
@@ -502,7 +502,7 @@ test("a missing whole report or an omitted metric keeps an applicable project in
     for (const format of ["landscape", "square", "portrait"] as const) {
       const svg = reportSvg(report, names, format, "game_starts");
       assert(svg.includes("Protocol 11"), `${label} ${format} dropped the applicable game`);
-      assert(svg.includes("3/4 sources supply this measure"), `${label} ${format} denominator`);
+      assert(svg.includes("3/4 projects report this count"), `${label} ${format} denominator`);
       assert(!svg.includes("3/3"));
       assert(
         /Bubbles[\s\S]{0,400}>0<\/text>/.test(svg),
@@ -905,9 +905,9 @@ test("the share caption names each project's own measure and the mixed scope", (
   assert.match(caption, /LoftwahFM: audible listening not reported · Not measured/);
   assert.match(caption, /App Composer: mini-app opens not reported · Not measured/);
   assert.doesNotMatch(caption, /LoftwahFM: 0/);
-  assert.match(caption, /4\/7 projects supplied their own measure · Current UTC day is partial/);
-  assert.match(caption, /One relevant measure per project; units are not added together\./);
-  assert.match(caption, /not unique people/);
+  assert.match(caption, /4\/7 projects have numbers · Today is still being recorded/);
+  assert.match(caption, /Each project counts something different; totals aren’t added together\./);
+  assert.match(caption, /not people/);
   const scopedRows = mixed.projects
     .map((row) => ({
       name: names.get(row.project) ?? row.project,
@@ -923,7 +923,7 @@ test("the share caption names each project's own measure and the mixed scope", (
     dateLabel
   );
   assert.match(scoped, /Fighter: 12 game starts/);
-  assert.match(scoped, /One measure and one unit across the named projects\./);
+  assert.match(scoped, /The same count across the named projects\./);
   assert.doesNotMatch(scoped, /Woodhouse/);
   assert.doesNotMatch(scoped, /Audible listening/);
 });

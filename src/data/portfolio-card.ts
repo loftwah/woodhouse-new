@@ -288,7 +288,7 @@ export function reportSvg(
         text(
           pad,
           figureY + 66,
-          `${period.complete ? "Closed calendar window" : "Current UTC day is partial"} · ${period.days} days`,
+          `${period.complete ? "Finished UTC days" : "Today is still being recorded"} · ${period.days} days`,
           17,
           "#a9b8d0"
         );
@@ -437,8 +437,8 @@ export function reportSvg(
       pad,
       foot + 17,
       `${supplied}/${applicable} ${
-        overview ? "projects supplied their own measure" : "sources supply this measure"
-      } · ${period.complete ? "Closed calendar window" : "Current UTC day is partial"}`,
+        overview ? "projects have numbers" : "projects report this count"
+      } · ${period.complete ? "Finished UTC days" : "Today is still being recorded"}`,
       landscape ? 17 : 23,
       "#b4c0d2"
     );
@@ -446,8 +446,8 @@ export function reportSvg(
     pad,
     foot + 48,
     overview
-      ? "One relevant measure per project; units are not added together."
-      : "Reported activity, not unique people. Legacy/test and coverage limits apply.",
+      ? "Each project counts something different; totals aren’t added together."
+      : "Activity counts, not people. Some older numbers may include tests.",
     landscape ? 18 : 22,
     "#a9b8d0"
   );

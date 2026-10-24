@@ -379,17 +379,17 @@ export function reportCaption(
   });
   const supplied = rows.filter((r) => r.metric?.value !== null && r.metric).length;
   const coverage = `${supplied}/${rows.length} ${
-    mixed ? "projects supplied their own measure" : "sources supply this measure"
-  } · ${window.complete ? "Closed calendar window" : "Current UTC day is partial"}`;
+    mixed ? "projects have numbers" : "projects report this count"
+  } · ${window.complete ? "Finished UTC days" : "Today is still being recorded"}`;
   return [
-    `Portfolio analytics · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
+    `Across the projects · ${dateLabel(window.from)} – ${dateLabel(window.to)} (UTC)`,
     ...(week ? weekCaptionLines(week, dateLabel) : []),
     ...values,
     coverage,
     mixed
-      ? "One relevant measure per project; units are not added together."
-      : "One measure and one unit across the named projects.",
-    "Reported activity, not unique people. Legacy/test and coverage limits apply.",
+      ? "Each project counts something different; totals aren’t added together."
+      : "The same count across the named projects.",
+    "Activity counts, not people. Some older numbers may include tests.",
     link
   ].join("\n");
 }
