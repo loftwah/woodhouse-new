@@ -1,3 +1,6 @@
+Current file: App Composer's approved 22 October 2026 product share card, kept byte-for-byte as Woodhouse's failure fallback. Adopted from https://composer.loftwah.com/brand/campaign/product-og-20261022b.jpg on 22 October 2026; source and bytes re-verified 24 October 2026. 1200 x 630 JPEG, 92,248 bytes, SHA-256 0ed47d3fea0628308dec42db8e294bd462c1d82b9092905a5b207df61b31afad. The producer owns this artwork; it is not a Woodhouse illustration.
+
+Retired Woodhouse fallback (13 October 2026), replaced 22 October 2026 and retained here as history:
 Built-in imagegen, 13 October 2026. Inspected before publication. Original generated master retained in private operator evidence. Export: 1200 x 630 JPEG.
 
 Prompt: Original meticulous studio editorial still life: interlocking architectural open-square frames in burnt orange aluminium and warm charcoal, connected like a transit interchange. Ivory textured tabletop, restrained shadows, fine material texture. Swiss publishing influence. Exact text: App Composer / Build with apps you own. No Cloudflare logo, copied interface, glow, code snippets, metrics or watermark. Central safe area for social cropping.
