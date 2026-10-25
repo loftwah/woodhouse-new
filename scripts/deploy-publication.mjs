@@ -47,6 +47,32 @@ function run(binary, args, options = {}) {
     throw new Error(`${binary} ${args.slice(0, 3).join(" ")} failed.\n${result.stderr ?? ""}`);
   return result.stdout ?? "";
 }
+// The page audit runs immediately after `wrangler deploy`, and a Worker takes a
+// few seconds to answer from every edge node. Twice now the audit failed on the
+// first pass and passed unchanged a minute later — a propagation race reported as
+// a content failure. The audit is read-only and idempotent, so retrying it is
+// safe; the attempt that finally passed is named in the output.
+function auditPages(origin) {
+  let last;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    last = spawnSync("pnpm", ["run", "audit:pages", "--", origin], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: "inherit"
+    });
+    if (last.status === 0) {
+      if (attempt > 1) process.stdout.write(`Page audit passed on attempt ${attempt}.\n`);
+      return;
+    }
+    if (attempt < 3) {
+      process.stdout.write(`Page audit attempt ${attempt} failed; retrying in ${attempt * 5}s.\n`);
+      spawnSync("sleep", [String(attempt * 5)]);
+    }
+  }
+  throw new Error(`pnpm run audit:pages -- ${origin} failed.\n${last?.stderr ?? ""}`);
+}
+
 function json(output) {
   return JSON.parse(output.slice(output.search(/[[{]/)));
 }
@@ -191,7 +217,7 @@ if (environment === "production") {
   if (!identity.ok) throw new Error("Preview no longer serves the reviewed source.");
   await verifyServedContent(targets.preview.origin, identity.identity);
   await verifyBoundary(targets.preview.origin);
-  run("pnpm", ["run", "audit:pages", "--", targets.preview.origin], { stdio: "inherit" });
+  auditPages(targets.preview.origin);
   run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
 }
 // The observed failure would be a healthy CMS release with a missing analytics
@@ -300,7 +326,7 @@ if (!identity.ok || (environment === "production" && identity.identity?.gitClean
   throw new Error("The deployed origin does not report the intended reviewed build.");
 await verifyServedContent(target.origin, identity.identity);
 await verifyBoundary(target.origin);
-run("pnpm", ["run", "audit:pages", "--", target.origin], { stdio: "inherit" });
+auditPages(target.origin);
 const active = json(
   run("pnpm", ["exec", "wrangler", "deployments", "status", "--name", target.worker, "--json"])
 );
