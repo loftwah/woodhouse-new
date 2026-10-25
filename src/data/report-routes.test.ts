@@ -374,6 +374,35 @@ test("the portfolio card renders a PNG inside its published cache contract", asy
   assert.deepEqual(records, []);
 });
 
+test("a downloaded portfolio card names its scope once", async () => {
+  resetFixtures();
+  installFetch();
+  const { portfolio } = loadRoutes();
+  // `woodhouse` is the portfolio scope's own project key. Interpolating it
+  // beside the site prefix produced `woodhouse-woodhouse-<id>-landscape.png`,
+  // which is what a visitor saw when they saved the image.
+  const names = new Map<string, string | null>();
+  for (const [label, query] of [
+    ["portfolio default", ""],
+    ["portfolio named", "&project=woodhouse"]
+  ] as const) {
+    const { response } = await captureLogs(() =>
+      invoke(
+        portfolio,
+        `/api/portfolio-card.png?report=${REPORT_ID}&format=landscape&download=1${query}`
+      )
+    );
+    assert.equal(response.status, 200, label);
+    names.set(label, response.headers.get("content-disposition"));
+  }
+  for (const [label, disposition] of names) {
+    assert.match(disposition ?? "", /^attachment; filename="woodhouse-portfolio-/, label);
+    assert.doesNotMatch(disposition ?? "", /woodhouse-woodhouse/, `${label} doubles the prefix`);
+  }
+  // Naming the portfolio scope explicitly and omitting it are the same request.
+  assert.equal(names.get("portfolio named"), names.get("portfolio default"));
+});
+
 test("a rejected CMS identity read is a route 503 with evidence, not an uncaught 500", async () => {
   resetFixtures();
   installFetch();

@@ -327,7 +327,10 @@ export const GET: APIRoute = async ({ url, cache }) => {
             "x-content-type-options": "nosniff",
             ...(url.searchParams.has("download")
               ? {
-                  "content-disposition": `attachment; filename="woodhouse-${selected ?? "portfolio"}-${id}-${format}.png"`
+                  // `woodhouse` is the portfolio scope's own project key, so
+                  // interpolating it beside the site prefix produced
+                  // `woodhouse-woodhouse-<id>`. Name the scope once.
+                  "content-disposition": `attachment; filename="${selected && selected !== "woodhouse" ? `woodhouse-${selected}` : "woodhouse-portfolio"}-${id}-${format}.png"`
                 }
               : {})
           }
