@@ -1,0 +1,84 @@
+WOODHOUSE — PLAY. MAKE. LISTEN.
+Reviewed 25 October 2026 (Australia/Melbourne)
+
+These are new Woodhouse editorial compositions and staged public product
+captures. They do not replace the products' approved native OG artwork.
+No new image-generation provider, service, credentials or paid commitment.
+No public activity, scores, records, customer adoption or listening is implied.
+
+AUTHORING AND MASTERS
+Reproduce: node scripts/render-showcase-campaign.mjs
+Editable composition source and embedded-source SVG masters are retained.
+Original PNG editions are provided beside bounded JPEG gallery previews.
+Type: Bricolage Grotesque, the existing Woodhouse font.
+Authored by Woodhouse using Loftwah's published product assets.
+
+BUBBLES
+https://bubbles.loftwah.com/play?seed=0&analytics=off
+Fresh production capture: 25 October 2026, 1440x900, staged Classic opening board.
+The native aiming line and complete playfield remain intact. Original Orbit
+is a deliberately small in-game avatar. No rejected shared-six art is used.
+Native art retained for comparison:
+https://bubbles.loftwah.com/og-image-20261012.png
+
+FIGHTER
+https://fighter.loftwah.com/?analytics=off
+Fresh production capture: 25 October 2026, 1280x720, practice tutorial.
+Poster uses the game's public original Viking and Grim Reaper roster portraits:
+https://fighter.loftwah.com/assets/generated/battle-compact-v1/characters/viking/portrait.webp
+https://fighter.loftwah.com/assets/generated/battle-compact-v1/characters/grim-reaper/portrait.webp
+The full portrait composition and silhouettes are preserved. This is a
+fight-night bill, not a screenshot or new character art. Native approved V5
+Dean/Pippa art is retained unchanged and is not repurposed here.
+
+SHOALSHOT
+https://shoalshot.loftwah.com/?analytics=off
+Fresh production capture: 25 October 2026, 1280x720, opening Tide Pool dive.
+Poster uses the published Lantern Ray artwork already in Woodhouse's reviewed
+public asset library: /share/shoalshot/ui/art/specimens/lantern_ray.webp
+A new specimen-plate composition, not a claim that the specimen was caught.
+Native art retained for comparison:
+https://shoalshot.loftwah.com/og-shoalshot-v5.jpg
+
+PROTOCOL 11
+https://protocol11.loftwah.com/?analytics=off
+Fresh production capture: 25 October 2026, 1280x720, staged Classic match.
+The poster uses only a detail crop of its actual hand. Opponent and player
+portrait rows are excluded; cards retain the native screenshot's framing.
+No shared-six mascot art, player identity or achievement is promoted.
+Native art retained for comparison:
+https://protocol11.loftwah.com/og/protocol-11.jpg?v=game-night-2026-10-11
+
+APP COMPOSER
+https://composer.loftwah.com/?analytics=off
+Fresh homepage capture: 25 October 2026, 1280x720.
+Poster uses the publisher's actual deployed Paperwork editor capture,
+publicly served on that homepage and labelled by its owner as a fictional
+PDF demonstration: https://composer.loftwah.com/paperwork/editor-20261024-compact.webp
+The publisher dates that source 24 October 2026. It is not relabelled as
+our own fresh editor interaction. App Composer is the studio, Paperwork one
+independently owned app. No creator or private family photos are used.
+
+LOFTWAHFM
+https://fm.loftwah.com/radio/?analytics=off
+Fresh radio capture: 25 October 2026, 1280x720. No play action was taken.
+Poster re-composes three existing approved complete album covers:
+https://fm.loftwah.com/album/cartridge-funk
+https://fm.loftwah.com/album/cloud-control
+https://fm.loftwah.com/album/beats-to-break-someones-face-to
+The covers are LoftwahFM's original artwork, retained in Woodhouse's existing
+public media collection. Overlap is editorial placement, not a new album.
+No claim that this selection is a radio playlist or the most popular music.
+
+WOODHOUSE
+New publisher spread combining three large subjects: SHOALSHOT Lantern Ray,
+App Composer Paperwork editor and LoftwahFM Cartridge Funk cover, credited
+above. It is an editorial composition, not one application, partnership,
+product-adoption proof or licence transfer.
+
+REVIEW
+Blank-subject candidates caused by unsupported WebP embedding were rejected.
+The renderer now embeds lossless PNG conversions before rasterisation.
+An incorrect Protocol hand transform was rejected and replaced with a deliberate
+native hand detail. Full-size and 300px feed editions were visually inspected.
+MP's taste acceptance and physical sharing acceptance remain separate.

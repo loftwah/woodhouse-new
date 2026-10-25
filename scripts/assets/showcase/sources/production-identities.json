@@ -1,0 +1,36 @@
+[
+  {
+    "host": "bubbles",
+    "publicBuild": "No JSON build identity at /build.json",
+    "status": 404
+  },
+  {
+    "host": "fighter",
+    "publicBuild": "No JSON build identity at /build.json",
+    "status": 200
+  },
+  {
+    "host": "shoalshot",
+    "publicBuild": "No JSON build identity at /build.json",
+    "status": 200
+  },
+  {
+    "host": "protocol11",
+    "publicBuild": "No JSON build identity at /build.json",
+    "status": 200
+  },
+  {
+    "host": "composer",
+    "publicBuild": {
+      "app": "app-composer",
+      "commit": "3f4cca7505b788590205c7da3926c4fac6609ab1",
+      "reviewed": "2026-10-13",
+      "contract": 1
+    }
+  },
+  {
+    "host": "fm",
+    "publicBuild": "No JSON build identity at /build.json",
+    "status": 404
+  }
+]

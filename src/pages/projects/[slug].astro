@@ -31,6 +31,7 @@ import {
   type AnalyticsProject
 } from "../../data/portfolio-analytics";
 import { productView } from "../../data/analytics-workbench";
+import { publicCampaignItems, campaignCollectionPath } from "../../data/showcase-public";
 
 export const prerender = false;
 const slug = Astro.params.slug;
@@ -63,6 +64,9 @@ if (allProjects.error)
   });
 if (Astro.cache?.enabled) for (const hint of allProjects.cacheHints) Astro.cache.set(hint);
 const nextProjects = allProjects.projects.filter((item) => item.slug !== project?.slug).slice(0, 3);
+const campaign = publicCampaignItems(allProjects.projects.map((item) => item.slug)).filter(
+  (item) => item.project === project.slug
+);
 const reviewDateLabel = formatReviewDate(project?.reviewDate) ?? "Review date unavailable";
 const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
@@ -265,6 +269,30 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       )}
     </figcaption>
   </figure>
+  {campaign.length > 0 && (
+    <section class="container project-campaign" aria-labelledby="campaign-title">
+      <div>
+        <h2 id="campaign-title">Take a closer look.</h2>
+        <p>New artwork and current product captures, with original downloads.</p>
+        <a class="text-link" href={campaignCollectionPath(project.slug)}>
+          Explore the {project.name} gallery ↗
+        </a>
+      </div>
+      <a
+        href={campaignCollectionPath(project.slug)}
+        aria-label={`Explore ${project.name} artwork and screenshots`}
+      >
+        <img
+          src={campaign[0]!.image}
+          width={campaign[0]!.width}
+          height={campaign[0]!.height}
+          alt={campaign[0]!.alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+    </section>
+  )}
   {studioFilm && (
     <section class="container dossier-film" aria-label={`${project.name} product film`}>
       <h2 class="dossier-media__heading">Watch {project.name}</h2>
@@ -438,6 +466,36 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
 </BaseLayout>
 
 <style>
+  .project-campaign {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 2rem;
+    align-items: center;
+    margin-block: 1rem 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .project-campaign h2 {
+    font: 600 clamp(1.7rem, 3vw, 2.5rem)/1.15 var(--display);
+    margin: 0 0 1rem;
+  }
+  .project-campaign p {
+    color: var(--copy-soft);
+    line-height: 1.6;
+  }
+  .project-campaign img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 430px;
+    object-fit: contain;
+  }
+  @media (max-width: 650px) {
+    .project-campaign {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+  }
   .project-feature {
     border-top: 1px solid var(--line);
     padding-block: 2rem 3rem;

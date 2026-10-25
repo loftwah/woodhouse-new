@@ -8,8 +8,11 @@ type Props = {
   end?: boolean;
 };
 const { project, type, page, pages, end = false } = Astro.props;
-const href = (page: number) =>
-  shareNavigation(galleryURL(project, type, page), Astro.url.searchParams);
+const href = (page: number) => {
+  const url = new URL(galleryURL(project, type, page), Astro.url.origin);
+  if (type === "images") url.searchParams.set("type", "images");
+  return shareNavigation(url.pathname + url.search, Astro.url.searchParams);
+};
 ---
 
 <nav aria-label={end ? "Gallery pages end" : "Gallery pages"} class:list={["pagination", { end }]}>

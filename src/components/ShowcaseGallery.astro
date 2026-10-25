@@ -1,0 +1,354 @@
+---
+import ShareActions from "./ShareActions.astro";
+import { shareNavigation } from "../data/share-browser";
+import type { campaignItems } from "../data/showcase-campaign";
+type Props = { items: ReadonlyArray<(typeof campaignItems)[number]> };
+const { items } = Astro.props;
+const productName = (slug: string) =>
+  ({
+    bubbles: "Bubbles",
+    fighter: "Fighter",
+    shoalshot: "SHOALSHOT",
+    "protocol-11": "Protocol 11",
+    loftwahfm: "LoftwahFM",
+    "app-composer": "App Composer",
+    woodhouse: "Woodhouse"
+  })[slug] ?? slug;
+---
+
+<div class:list={["showcase-wall", { "single-work": items.length === 1 }]}>
+  {items.map((item, index) => (
+    <figure
+      id={item.id}
+      class:list={["showcase-work", { landscape: item.width / item.height > 1.3 }]}
+    >
+      <a
+        href={item.original}
+        class="showcase-image"
+        data-open-art={`viewer-${item.id}`}
+        aria-label={`View ${item.title} full size`}
+      >
+        <img
+          src={item.image}
+          width={item.width}
+          height={item.height}
+          alt={item.alt}
+          loading={index < 3 ? "eager" : "lazy"}
+          fetchpriority={index === 0 ? "high" : "auto"}
+          decoding="async"
+        />
+        <span class="view-affordance" aria-hidden="true">
+          View
+        </span>
+      </a>
+      <figcaption>
+        <div class="work-identity">
+          <h2>{item.title}</h2>
+          <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
+            {item.action} <span class="action-name">{productName(item.project)}</span>
+          </a>
+        </div>
+        <details class="work-sharing">
+          <summary>Share & download</summary>
+          <p class="work-caption">{item.caption}</p>
+          <p class="work-credit">
+            {item.kind} · {item.credit} · {item.reviewedAt}
+          </p>
+          <ShareActions
+            caption={item.caption}
+            image={item.original}
+            shareSource={item.image}
+            filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
+            link={item.href}
+          />
+          {item.landscapeImage && (
+            <a class="collection-link" href={item.landscapeImage} download>
+              Download landscape poster
+            </a>
+          )}
+          <a
+            class="collection-link"
+            href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}
+          >
+            More {productName(item.project)}
+          </a>
+        </details>
+      </figcaption>
+      <dialog
+        id={`viewer-${item.id}`}
+        aria-labelledby={`viewer-title-${item.id}`}
+        class="art-viewer"
+      >
+        <div class="viewer-toolbar">
+          <h2 id={`viewer-title-${item.id}`}>{item.title}</h2>
+          <form method="dialog">
+            <button aria-label="Close image viewer">Close</button>
+          </form>
+        </div>
+        <img
+          src={item.image}
+          data-viewer-original={item.original}
+          data-viewer-preview={item.image}
+          loading="lazy"
+          alt={item.alt}
+          width={item.width}
+          height={item.height}
+        />
+        <div class="viewer-caption">
+          <p role="status" data-viewer-status></p>
+          <p>{item.caption}</p>
+          <p class="work-credit">
+            {item.kind} · {item.credit} · {item.reviewedAt}
+          </p>
+          <div class="viewer-actions">
+            <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
+              {item.action} {productName(item.project)}
+            </a>
+            <a href={item.original} download>
+              Download original
+            </a>
+            <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
+              Project gallery
+            </a>
+          </div>
+        </div>
+      </dialog>
+    </figure>
+  ))}
+</div>
+<script>
+  for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-open-art]")) {
+    const dialog = document.getElementById(link.dataset.openArt ?? "");
+    if (!(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== "function") continue;
+    let returnFocus: HTMLElement | null = null;
+    link.addEventListener("click", (event) => {
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
+        return;
+      event.preventDefault();
+      returnFocus = link;
+      dialog.showModal();
+      const image = dialog.querySelector<HTMLImageElement>("[data-viewer-original]");
+      const status = dialog.querySelector<HTMLElement>("[data-viewer-status]");
+      if (image?.dataset.viewerOriginal && image.dataset.originalLoaded !== "true") {
+        if (status) status.textContent = "Loading original image…";
+        image.onload = () => {
+          image.dataset.originalLoaded = "true";
+          if (status) status.textContent = "Original image loaded.";
+        };
+        image.onerror = () => {
+          image.onload = null;
+          image.onerror = null;
+          if (image.dataset.viewerPreview) image.src = image.dataset.viewerPreview;
+          if (status)
+            status.textContent = "The original image is unavailable. Showing the gallery preview.";
+        };
+        image.src = image.dataset.viewerOriginal;
+      }
+    });
+    dialog.addEventListener("close", () => returnFocus?.focus({ preventScroll: true }));
+    dialog.addEventListener("click", (event) => {
+      if (event.target !== dialog) return;
+      const bounds = dialog.getBoundingClientRect();
+      if (
+        event.clientX < bounds.left ||
+        event.clientX > bounds.right ||
+        event.clientY < bounds.top ||
+        event.clientY > bounds.bottom
+      )
+        dialog.close();
+    });
+  }
+</script>
+<style>
+  .showcase-wall {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 2.5rem 1.25rem;
+    align-items: start;
+  }
+  .showcase-work {
+    grid-column: span 2;
+    min-width: 0;
+    margin: 0;
+    scroll-margin-top: 1rem;
+  }
+  .showcase-work.landscape {
+    grid-column: span 4;
+  }
+  .single-work .showcase-work {
+    grid-column: 1 / -1;
+  }
+  .single-work .showcase-work:not(.landscape) {
+    max-width: 44rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+  .showcase-image {
+    display: block;
+    position: relative;
+    background: var(--surface);
+  }
+  .showcase-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .view-affordance {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.2rem 0.65rem;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.75rem;
+  }
+  figcaption {
+    padding-top: 0.65rem;
+  }
+  .work-identity {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.35rem 1rem;
+  }
+  .work-identity h2 {
+    font: 600 clamp(1.05rem, 1.6vw, 1.5rem)/1.15 var(--display);
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+  .product-action {
+    gap: 0.25em;
+    min-width: 44px;
+    color: var(--acid);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+  .work-sharing summary {
+    display: list-item;
+    min-height: 44px;
+    padding-block: 0.6rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  .work-caption {
+    max-width: 60ch;
+    margin: 0.2rem 0 0.7rem;
+    font-size: 0.9rem;
+  }
+  .work-credit {
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+  .collection-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .art-viewer {
+    width: min(1200px, calc(100% - 2rem));
+    max-width: none;
+    max-height: calc(100dvh - 2rem);
+    padding: 0;
+    border: 1px solid var(--line);
+    color: var(--paper);
+    background: var(--ink);
+    overflow: auto;
+  }
+  .art-viewer::backdrop {
+    background: rgb(0 0 0 / 88%);
+  }
+  .art-viewer > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 72dvh;
+    object-fit: contain;
+  }
+  .viewer-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+  }
+  .viewer-toolbar h2 {
+    font: 600 1.25rem/1.2 var(--display);
+    margin: 0;
+  }
+  .viewer-toolbar button {
+    min-height: 44px;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--paper);
+    cursor: pointer;
+  }
+  .viewer-caption {
+    padding: 0 1rem 1rem;
+  }
+  .viewer-caption p {
+    margin-block: 0.5rem;
+    max-width: 75ch;
+  }
+  .viewer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.5rem;
+    align-items: center;
+  }
+  .viewer-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  @media (max-width: 700px) {
+    .showcase-wall {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.4rem 0.75rem;
+    }
+    .showcase-work,
+    .showcase-work.landscape {
+      grid-column: span 1;
+    }
+    .showcase-work:nth-child(4n),
+    .showcase-work:nth-child(3) {
+      grid-column: 1 / -1;
+    }
+    .work-identity {
+      display: block;
+    }
+    .work-identity h2 {
+      font-size: 1.1rem;
+    }
+    .product-action {
+      font-size: 0.8rem;
+    }
+    .action-name {
+      display: none;
+    }
+    .work-sharing summary {
+      font-size: 0.75rem;
+    }
+    .view-affordance {
+      right: 0.35rem;
+      bottom: 0.35rem;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.4rem;
+    }
+    .art-viewer {
+      width: calc(100% - 1rem);
+      max-height: calc(100dvh - 1rem);
+    }
+    .viewer-toolbar h2 {
+      font-size: 1.05rem;
+    }
+  }
+</style>

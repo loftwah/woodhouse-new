@@ -1,3 +1,53 @@
+# Share gallery — current surface brief
+
+Reviewed 25 October 2026. Scope: `/share/`, public project collections and the
+retained query-based archive. Mode: Experience. Audience: players, listeners,
+builders and people choosing a piece of work to share. Job: discover a desirable
+product through its imagery, open the real product, or take an original image and
+caption. New campaign work from #142 leads; the previous asset inventory is history.
+
+Direction: an edited wall of complete images, varied in aspect and scale, inside
+the existing Woodhouse world. The first screen spends its area on the images,
+with a short heading, compact project links and direct product actions. Desktop
+uses six tracks: portraits and squares span two, landscapes four.
+At phone widths the opening pairs SHOALSHOT and Bubbles, then gives Fighter
+the full row; the fourth work and each subsequent fourth work also span the
+two-track grid. Complete images keep their authored ratio. The memorable moment
+is the work, with a visible View affordance, short title and direct product action.
+
+Content: seven new campaign compositions and five staged production captures,
+with four additional landscape poster files for sharing and collection unfurls.
+Existing approved clips and published music artwork remain available. Distinguish
+editorial art from production screenshots and staged records. Never feature
+rejected mascot likenesses. Publication membership controls every promoted project, including
+multi-project artwork. Native `/share/[slug]/` collections have their own title,
+description, canonical, Open Graph image and CollectionPage/ImageObject data.
+The sitemap lists only admitted collections and their original/landscape images;
+composites require every contributing project to be published. Native products
+retain their own audio, play and release.
+
+Interaction: original-image anchors progressively open a native dialog; Escape
+returns to the initiating link. Native disclosures reveal captions and the
+existing copy/share/download controls. The archive keeps every existing media ID,
+caption, pack, query/page link and fallback, with six previews per archive page.
+Existing images and historical files are retained. Mobile remains visual before
+archive forms, with no fixed-height letterboxes or destructive crops.
+
+Review, 25 October 2026: the independent finish verdict is **SHIP**, with no
+material findings in the supplied final desktop, phone, continuation and viewer
+captures: `output/playwright/showoff-20261025/after-desktop-final.png`,
+`after-phone-viewport-final.png`, `phone-continuation-final.png` and
+`viewer-phone-final.png`. The detector returned `[]`. This is rendered local
+review evidence; deployment is pending. MP's subjective taste acceptance,
+physical device sharing and destination-app acceptance remain separate. PR #140
+is untouched by this scope.
+
+---
+
+The earlier surface record below is historical. Its mandatory six-item default,
+introductory navigation and uniform preview layout are superseded above; archive
+integrity and sharing behaviour continue to apply.
+
 ---
 version: 1
 slug: src-pages-share-astro
