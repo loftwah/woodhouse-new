@@ -331,5 +331,24 @@ export const campaignItems: CampaignItem[] = [
     href: "https://assets.loftwah.com/",
     action: "Explore",
     source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt"
+  },
+  {
+    id: "pirates-original-voyage",
+    project: "pirates",
+    title: "Pirates · An original prelaunch concept",
+    alt: "Master of the Secret Sea title beside an original cream-sailed vessel leaving an imagined dawn harbour. Labelled In reconstruction and Original prelaunch concept; not original-game artwork or a gameplay capture.",
+    caption:
+      "A voyage still taking shape. Original prelaunch concept for the source-first reconstruction of Master of the Secret Sea. No public game launch is claimed.\nhttps://woodhouse.loftwah.com/projects/pirates/",
+    image: "/campaign/20261025-v2/pirates-original-voyage.jpg",
+    original: "/campaign/20261025-v2/pirates-original-voyage-original.jpg",
+    width: 1200,
+    height: 630,
+    reviewedAt: "2026-10-25",
+    credit:
+      "Pirates promotional preparation · original OpenAI image_gen illustration and editable typography; not original-game art",
+    kind: "editorial composition",
+    href: "https://woodhouse.loftwah.com/projects/pirates/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025-v2/provenance.txt"
   }
 ];
