@@ -315,11 +315,17 @@ if (sharePayload) {
   // A missing preview is reported as a missing image, not left as a broken
   // frame inside the share panel. The downloads and the caption still work.
   const preview = document.querySelector<HTMLImageElement>("[data-report-preview]");
-  preview?.addEventListener("error", () => {
+  const dropPreview = () => {
+    if (!preview || preview.hidden) return;
     preview.hidden = true;
     if (status && feedback === 0)
       status.textContent = "The shared image preview is unavailable. Try a PNG download.";
-  });
+  };
+  preview?.addEventListener("error", dropPreview);
+  // The image can finish failing before this module runs, and a listener
+  // attached afterwards never hears it. Check the settled state once so a
+  // broken frame cannot stay inside the panel.
+  if (preview?.complete && preview.naturalWidth === 0) dropPreview();
   document.querySelector("[data-report-copy]")?.addEventListener("click", async () => {
     const owner = ++feedback;
     if (status) status.textContent = "Copying caption and report link…";
@@ -333,6 +339,9 @@ if (sharePayload) {
   });
   const button = document.querySelector<HTMLButtonElement>("[data-report-share]");
   let file: File | null = null;
+  // A share sheet stays open until the person finishes with it. Repeated
+  // activation while it is up must acknowledge, not open a second sheet.
+  let sharing = false;
   // Request identity: a later request owns the result, so a slow earlier
   // preparation cannot publish a stale file over a newer one.
   let request = 0;
@@ -380,6 +389,11 @@ if (sharePayload) {
   if (panel?.open) void prepare();
   button?.addEventListener("click", async () => {
     if (!file) return;
+    if (sharing) {
+      if (status) status.textContent = "Your device is still finishing the last share.";
+      return;
+    }
+    sharing = true;
     const owner = ++feedback;
     if (status) status.textContent = "Opening your device's share options…";
     try {
@@ -396,6 +410,8 @@ if (sharePayload) {
       }
       if (status && owner === feedback)
         status.textContent = "Image sharing unavailable. Use a PNG download.";
+    } finally {
+      sharing = false;
     }
   });
 }

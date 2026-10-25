@@ -356,6 +356,43 @@ test("links carry the week and the project so a shared finding keeps its context
   );
 });
 
+test("a real comparison carries both figures so the change can be drawn", () => {
+  const { observations } = analyticsObservations(input());
+  const week = observations.find((observation) => observation.kind === "week");
+  assert.deepEqual(week?.change, {
+    previous: 3600,
+    current: 4200,
+    previousLabel: "Week before",
+    currentLabel: "This week",
+    unit: "seconds"
+  });
+  const discovery = observations.find((observation) => observation.kind === "discovery");
+  assert.deepEqual(discovery?.change, {
+    previous: 14,
+    current: 21,
+    previousLabel: "Previous 7 days",
+    currentLabel: "Last 7 days",
+    unit: "count"
+  });
+});
+
+test("no comparison means no pair of bars, only the reason none is claimed", () => {
+  const missingWeek = analyticsObservations(
+    input({ weekly: [week({ changePercent: null, comparedWeeks: 0 })] })
+  ).observations.find((observation) => observation.kind === "week");
+  assert.equal(missingWeek, undefined);
+  const partial = analyticsObservations(
+    input({
+      weekly: [],
+      discovery: [
+        referral({ hasTrend: false, priorCoverage: "partial", priorObservedDays: 3, prior: 0 })
+      ]
+    })
+  ).observations.find((observation) => observation.kind === "discovery");
+  assert.equal(partial?.change, undefined);
+  assert.match(partial?.comparison ?? "", /no comparison is claimed/);
+});
+
 test("the opening uses ordinary language and names a comparison or its absence", () => {
   const { observations } = analyticsObservations(input());
   for (const observation of observations) {

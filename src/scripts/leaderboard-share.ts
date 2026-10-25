@@ -1,5 +1,5 @@
 export type ImageShareResult =
-  "shared" | "cancelled" | "unsupported" | "unavailable" | "ready" | "busy" | "failed";
+  "shared" | "cancelled" | "unsupported" | "unavailable" | "ready" | "busy" | "pending" | "failed";
 
 type ImageShareOptions = {
   loadImage: () => Promise<File>;
@@ -14,7 +14,7 @@ type ImageShareOptions = {
 export function createImageShare({ loadImage, share, canShare }: ImageShareOptions) {
   let prepared: File | undefined;
   let preparing: Promise<File> | undefined;
-  let busy = false;
+  let phase: "preparing" | "sharing" | undefined;
 
   function prepare() {
     if (prepared) return Promise.resolve(prepared);
@@ -31,22 +31,25 @@ export function createImageShare({ loadImage, share, canShare }: ImageShareOptio
   }
 
   async function shareImage(): Promise<ImageShareResult> {
-    if (busy) return "busy";
+    // Two different acknowledgements: an image still loading is not the same
+    // work as a share sheet the person is already looking at.
+    if (phase === "sharing") return "pending";
+    if (phase === "preparing") return "busy";
     if (!share) return "unsupported";
     if (!prepared) {
-      busy = true;
+      phase = "preparing";
       try {
         await prepare();
       } catch {
         return "unavailable";
       } finally {
-        busy = false;
+        phase = undefined;
       }
       if (canShare && !canShare({ files: [prepared!] })) return "unsupported";
       return "ready";
     }
     if (canShare && !canShare({ files: [prepared] })) return "unsupported";
-    busy = true;
+    phase = "sharing";
     try {
       // No await before this call: the file and the gesture stay together.
       await share({ files: [prepared] });
@@ -54,7 +57,7 @@ export function createImageShare({ loadImage, share, canShare }: ImageShareOptio
     } catch (error) {
       return error instanceof Error && error.name === "AbortError" ? "cancelled" : "failed";
     } finally {
-      busy = false;
+      phase = undefined;
     }
   }
 
@@ -62,7 +65,7 @@ export function createImageShare({ loadImage, share, canShare }: ImageShareOptio
     prepare,
     share: shareImage,
     get busy() {
-      return busy;
+      return phase !== undefined;
     },
     get ready() {
       return prepared !== undefined;

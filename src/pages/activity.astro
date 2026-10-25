@@ -901,23 +901,53 @@ const dataPayload = {
                 </div>
                 {changeFindings.length ? (
                   <ol class="change-notes__list">
-                    {changeFindings.map((finding) => (
-                      <li style={`--source:${finding.colour}`}>
-                        <p class="change-notes__kicker">
-                          <span class="source-dot" aria-hidden="true" />
-                          {finding.kicker}
-                        </p>
-                        <p class="change-notes__headline">{finding.headline}</p>
-                        {finding.kind === "discovery" && (
+                    {changeFindings.map((finding) => {
+                      const change = finding.change;
+                      // One shared scale for both bars, so the pair reads as a
+                      // comparison rather than as two unrelated lengths.
+                      const scale = change ? Math.max(1, change.previous, change.current) : 1;
+                      return (
+                        <li style={`--source:${finding.colour}`}>
+                          <p class="change-notes__kicker">
+                            <span class="source-dot" aria-hidden="true" />
+                            {finding.kicker}
+                          </p>
+                          <p class="change-notes__headline">{finding.headline}</p>
+                          {change && (
+                            <figure class="change-notes__compare">
+                              {[
+                                { label: change.previousLabel, value: change.previous },
+                                { label: change.currentLabel, value: change.current }
+                              ].map((row) => (
+                                <div class="change-notes__compare-row">
+                                  <span class="change-notes__compare-label">{row.label}</span>
+                                  <span class="change-notes__compare-track" aria-hidden="true">
+                                    <span
+                                      class="change-notes__compare-fill"
+                                      style={`--share:${(Math.abs(row.value) / scale) * 100}%`}
+                                    />
+                                  </span>
+                                  <span class="change-notes__compare-value">
+                                    {formatMetric({ value: row.value, unit: change.unit })}
+                                  </span>
+                                </div>
+                              ))}
+                              <figcaption>Both periods on one scale</figcaption>
+                            </figure>
+                          )}
                           <p class="change-notes__comparison">{finding.comparison}</p>
-                        )}
-                        <p class="change-notes__period">
-                          {finding.period}
-                          {" · "}
-                          <a href={finding.href}>{finding.linkLabel} ↗</a>
-                        </p>
-                      </li>
-                    ))}
+                          <p class="change-notes__limit">
+                            <span>What this doesn’t show: </span>
+                            {finding.doesNotEstablish}
+                          </p>
+                          <p class="change-notes__period">
+                            {finding.period}
+                            {" · "}
+                            <a href={finding.href}>{finding.linkLabel} ↗</a>
+                          </p>
+                        </li>
+                      );
+                    })}
                   </ol>
                 ) : (
                   <p class="change-notes__quiet">
@@ -1942,3 +1972,60 @@ const dataPayload = {
 <script>
   import "../scripts/analytics-workbench";
 </script>
+<style>
+  /* "What changed" carries the pair of figures its sentence compares, so a
+     reader can see the change instead of decoding a percentage. Same scale on
+     both rows; a measured zero draws no bar and keeps its number. */
+  .change-notes__compare {
+    display: grid;
+    gap: 0.22rem;
+    max-width: 30rem;
+    margin: 0.5rem 0 0.55rem;
+  }
+  .change-notes__compare-row {
+    display: grid;
+    grid-template-columns: 7.6rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+  .change-notes__compare-label {
+    color: var(--muted);
+    font: 400 0.64rem/1.35 var(--mono);
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+  }
+  .change-notes__compare-track {
+    display: block;
+    height: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .change-notes__compare-fill {
+    display: block;
+    width: var(--share, 0%);
+    height: 100%;
+    max-width: 100%;
+    background: var(--source);
+  }
+  .change-notes__compare-value {
+    color: var(--paper);
+    font: 650 0.8rem/1.2 var(--display);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .change-notes__compare figcaption {
+    margin-top: 0.1rem;
+    color: var(--muted);
+    font-size: 0.66rem;
+  }
+  .change-notes__limit {
+    margin: 0.35rem 0 0.2rem;
+    color: var(--copy-soft);
+    font-size: 0.74rem;
+    line-height: 1.5;
+  }
+  .change-notes__limit span {
+    color: var(--paper);
+    font-weight: 650;
+  }
+</style>

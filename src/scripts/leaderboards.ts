@@ -87,16 +87,17 @@ if (root) {
     button.addEventListener("click", async () => {
       if (!shareImage) return;
       const ticket = ++operation;
-      // A tap while the first preparation is still running must acknowledge
-      // itself, not disappear. It must also not open a second share sheet.
-      if (shareImage.busy) {
-        say("Still preparing your image. Try again when it’s ready.", ticket);
-        return;
-      }
       if (typeof navigator.share === "function" && !shareImage.ready)
         say("Preparing your image…", ticket);
       const result = await shareImage.share();
-      if (result === "busy") return;
+      if (result === "busy") {
+        say("Still preparing your image. Try again when it’s ready.", ticket);
+        return;
+      }
+      if (result === "pending") {
+        say("Your device is still finishing the last share.", ticket);
+        return;
+      }
       if (result === "ready") {
         say("Image ready. Tap Share image again.", ticket);
         return;

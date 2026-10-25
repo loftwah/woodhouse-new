@@ -45,6 +45,7 @@
     "emdash:migrate:check": "emdash migrate --check --wrangler-config wrangler.jsonc --wrangler-env preview --json",
     "emdash:site:export": "emdash site export --output .release/woodhouse-site.emdash",
     "test": "node --experimental-strip-types --test scripts/*.test.mjs \"src/**/*.test.ts\"",
+    "acceptance:share": "node scripts/acceptance-share.mjs",
     "lab:artifacts": "node lab/artifacts-lifecycle/report.mjs",
     "lab:evidence": "node lab/evidence-replay/report.mjs",
     "lab:test": "node --test lab/**/*.test.mjs",
