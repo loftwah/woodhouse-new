@@ -26,8 +26,8 @@ import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createServer } from "node:net";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -229,20 +229,64 @@ function dailyRows(through) {
 async function seedDatabase(evidenceDir, through) {
   const database = localDatabasePath();
   assert(database, "Could not identify one local D1 database under .wrangler");
+  // Seeding into a database that already exists keeps its earlier block-type
+  // schema — EmDash's seed uses `onConflict: "skip"`. A machine that has run
+  // `pnpm dev` since the last diagram was added therefore rejects the seed with
+  // "Invalid option", and the fixture is only reproducible on a fresh clone.
+  // Move the developer's local database aside and build the fixture from
+  // nothing, then put the original back.
+  const backup = join(evidenceDir, "local-d1-backup");
+  const moved = [];
+  for (const suffix of ["", "-wal", "-shm"]) {
+    const source = database + suffix;
+    if (!existsSync(source)) continue;
+    const target = join(backup, basename(source));
+    await mkdir(backup, { recursive: true });
+    await rename(source, target);
+    moved.push([target, source]);
+  }
+  const restore = async () => {
+    for (const [target, source] of moved) {
+      await rm(source, { force: true });
+      await rename(target, source);
+    }
+  };
   // EmDash's own local bootstrap, the same sequence scripts/emdash-doctor.mjs uses.
   const cli = join(root, "node_modules/emdash/dist/cli/index.mjs");
   assert(existsSync(cli), "The EmDash CLI is missing; run pnpm install --frozen-lockfile");
-  run(process.execPath, [cli, "init", "--cwd", root, "--database", database]);
-  run(process.execPath, [
-    cli,
-    "seed",
-    "seed/seed.json",
-    "--cwd",
-    root,
-    "--database",
-    database,
-    "--skip-media"
-  ]);
+  try {
+    run(process.execPath, [cli, "init", "--cwd", root, "--database", database]);
+    run(process.execPath, [
+      cli,
+      "seed",
+      "seed/seed.json",
+      "--cwd",
+      root,
+      "--database",
+      database,
+      "--skip-media"
+    ]);
+  } catch (error) {
+    await restore();
+    throw error;
+  }
+  // A fresh database has EmDash's own schema but not Woodhouse's analytics
+  // tables, which live in plain SQL migrations rather than EmDash's ledger.
+  const migrations = readdirSync(join(root, "migrations"))
+    .filter((name) => name.endsWith(".sql"))
+    .sort();
+  assert(migrations.length > 0, "No analytics migrations were found to apply");
+  for (const name of migrations)
+    run("pnpm", [
+      "exec",
+      "wrangler",
+      "d1",
+      "execute",
+      "DB",
+      "--local",
+      "--file",
+      join(root, "migrations", name)
+    ]);
   const snapshot = JSON.stringify(leaderboardFixture(through));
   const file = join(evidenceDir, "fixture.sql");
   const statements = [
@@ -251,7 +295,7 @@ async function seedDatabase(evidenceDir, through) {
   ];
   await writeFile(file, statements.join("\n") + "\n", "utf8");
   run("pnpm", ["exec", "wrangler", "d1", "execute", "DB", "--local", "--file", file]);
-  return { database, from: JSON.parse(snapshot).from };
+  return { database, from: JSON.parse(snapshot).from, restore };
 }
 
 function freePort() {
@@ -1060,10 +1104,12 @@ async function main() {
     })();
 
   let server;
+  let restoreDatabase;
   let origin = options.origin;
   if (!origin) {
     const port = await freePort();
     const fixture = await seedDatabase(evidence, through);
+    restoreDatabase = fixture.restore;
     origin = `http://localhost:${port}`;
     console.log(`Seeded the local fixture from ${fixture.from} to ${through}; starting ${origin}…`);
     server = startServer(port, join(evidence, "dev-server.log"));
@@ -1135,6 +1181,9 @@ async function main() {
     }
   } finally {
     if (server) await server.stop();
+    // The fixture replaced the developer's local database. Put it back whatever
+    // happened, so running the acceptance suite never costs anyone their state.
+    await restoreDatabase?.();
     receipt.finishedAt = new Date().toISOString();
     const failed = receipt.runs.flatMap((run) =>
       (run.results ?? []).filter((item) => item.status !== "pass")
