@@ -241,6 +241,28 @@ async function request(url) {
   return fetch(target, { redirect: "manual", signal: AbortSignal.timeout(30000) });
 }
 
+/**
+ * The audit used to wait for one request at a time: roughly six hundred
+ * sequential round trips for 212 pages, their link targets, canonicals and
+ * social images. That was most of a release. Six in flight keeps the same
+ * requests and the same findings while removing the queueing, and every phase
+ * below still processes results in a fixed order so messages stay stable.
+ */
+const CONCURRENCY = 6;
+async function pool(items, worker) {
+  const results = new Array(items.length);
+  let next = 0;
+  const runners = Array.from({ length: Math.min(CONCURRENCY, items.length) }, async () => {
+    while (true) {
+      const index = next++;
+      if (index >= items.length) return;
+      results[index] = await worker(items[index], index);
+    }
+  });
+  await Promise.all(runners);
+  return results;
+}
+
 const sitemap = await request(`${origin}/sitemap.xml`);
 if (!sitemap.ok) throw new Error(`${origin}/sitemap.xml returned HTTP ${sitemap.status}.`);
 const sitemapBody = await sitemap.text();
@@ -279,14 +301,24 @@ async function canonicalOf(pathname) {
   return path;
 }
 
-for (const page of pages) {
+// Fetch the documents together, then inspect them in sitemap order. Only the
+// waiting changes: the findings, their order and their wording do not.
+const documents = await pool(pages, async (page) => {
   const response = await request(`${origin}${page}`);
   if (response.status !== 200) {
-    report(page, `returned HTTP ${response.status}`);
     await response.body?.cancel();
+    return { page, status: response.status, html: null };
+  }
+  return { page, status: response.status, html: await response.text() };
+});
+
+for (const document of documents) {
+  const { page, status, html: body } = document;
+  if (status !== 200 || body === null) {
+    report(page, `returned HTTP ${status}`);
     continue;
   }
-  const html = await response.text();
+  const html = body;
   // This document is already in hand. A second GET adds latency and can even
   // audit a different response from the one whose links and privacy we inspect.
   const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
@@ -349,14 +381,17 @@ const linkedPaths = new Set([...linkedFrom].map((link) => new URL(link, origin).
 // Keep one status per exact destination while retaining a finding for every
 // linking page. Shared navigation and downloads otherwise repeat the same GET.
 const targetStatuses = new Map();
+const uncheckedTargets = [
+  ...new Set([...internalLinks.values()].flat().filter((target) => !pages.includes(target)))
+];
+await pool(uncheckedTargets, async (target) => {
+  const response = await request(`${origin}${target}`);
+  targetStatuses.set(target, response.status);
+  await response.body?.cancel();
+});
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
     if (pages.includes(target)) continue;
-    if (!targetStatuses.has(target)) {
-      const response = await request(`${origin}${target}`);
-      targetStatuses.set(target, response.status);
-      await response.body?.cancel();
-    }
     const status = targetStatuses.get(target);
     if (status >= 400) report(page, `links to ${target}, which returned HTTP ${status}`);
   }
@@ -368,6 +403,8 @@ for (const orphan of orphans) report(orphan, "is listed for discovery but no pag
 // An internal link must point at the page's own canonical URL. A record id
 // used as a path segment resolves but splits one page across several
 // crawlable addresses, which is how the dated records drifted apart before.
+// Resolve every distinct target once, together, then compare in page order.
+await pool([...new Set([...internalLinks.values()].flat())], (target) => canonicalOf(target));
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
     const canonical = await canonicalOf(target);
@@ -376,14 +413,22 @@ for (const [page, targets] of internalLinks) {
   }
 }
 
-for (const [image, page] of socialImages) {
+const socialResults = await pool([...socialImages.keys()], async (image) => {
   const response = await request(`${origin}${image}`);
   const type = response.headers.get("content-type") ?? "";
   socialImageStatus.set(image, response.status);
-  if (response.status !== 200) report(page, `og:image ${image} returned HTTP ${response.status}`);
-  else if (!/^image\//.test(type)) report(page, `og:image ${image} served ${type || "no type"}`);
+  const finding =
+    response.status !== 200
+      ? `og:image ${image} returned HTTP ${response.status}`
+      : !/^image\//.test(type)
+        ? `og:image ${image} served ${type || "no type"}`
+        : null;
   await response.body?.cancel();
-}
+  return finding;
+});
+socialResults.forEach((finding, index) => {
+  if (finding) report(socialImages.get([...socialImages.keys()][index]), finding);
+});
 
 // Safe negative requests to known credential paths. A missing file must not
 // resolve to secret content. A generic HTML fallback is recorded but is neither
