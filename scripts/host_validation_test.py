@@ -51,6 +51,22 @@ class Reservation(unittest.TestCase):
                 self.fail("Timed out: " + "\n".join(p.read_text() for p in self.root.glob("*.log")))
             time.sleep(.03)
 
+    def until_pid(self, path):
+        """Wait for a pid that a child process has finished writing.
+
+        `open(path, "w")` creates the file before it writes to it, so waiting on
+        `path.exists()` can win the race against the write and read an empty
+        string. That is invisible on an idle machine and reliably wrong on a busy
+        one — which is exactly when the shared validation slot is in use.
+        """
+        def written():
+            try:
+                return int(path.read_text().strip()) > 0
+            except (OSError, ValueError):
+                return False
+        self.until(written)
+        return int(path.read_text().strip())
+
     def hold(self, name):
         marker = self.root / name
         job = self.launch(name, f"from pathlib import Path; import time; Path({str(marker)!r}).touch(); time.sleep(30)")
@@ -133,8 +149,7 @@ class Reservation(unittest.TestCase):
                 f"p=subprocess.Popen(['{sys.executable}','-c','import time; time.sleep(30)'],start_new_session=True); "
                 f"open({str(marker)!r},'w').write(str(p.pid)); time.sleep(.7); p.terminate(); p.wait()")
         job = self.launch("detached", code)
-        self.until(marker.exists)
-        pid = int(marker.read_text())
+        pid = self.until_pid(marker)
         self.assertEqual(job.wait(timeout=20), 0)
         self.until(lambda: subprocess.run(["ps", "-p", str(pid)], stdout=subprocess.DEVNULL).returncode != 0)
         self.assertEqual(self.launch("next", "pass").wait(timeout=5), 0)
@@ -157,8 +172,7 @@ class Reservation(unittest.TestCase):
                 f"p=subprocess.Popen(['{sys.executable}','-c','import time; time.sleep(30)'],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL); "
                 f"open({str(marker)!r},'w').write(str(p.pid))")
         job = self.launch("escape", code)
-        self.until(marker.exists)
-        pid = int(marker.read_text())
+        pid = self.until_pid(marker)
         try:
             self.assertEqual(job.wait(timeout=20), 0)
             # The inherited marker finds a detached child regardless of its
@@ -200,8 +214,7 @@ class Reservation(unittest.TestCase):
         self.until(ready.exists)
         holder.kill(); holder.wait()
         release.touch()
-        self.until(escaped.exists)
-        pid = int(escaped.read_text())
+        pid = self.until_pid(escaped)
         try:
             self.assertEqual(self.launch("must-wait", "raise RuntimeError('overlap')", wait=.3).wait(timeout=5),75)
         finally:

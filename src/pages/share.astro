@@ -15,7 +15,7 @@ import {
   listPublicEvidence
 } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
-import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
+import { getArtworkFallback, getSiteMetadata, socialCardFor } from "../data/site-metadata";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
 import { sharePreviews } from "../data/share-previews";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
@@ -226,7 +226,8 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
   description="Game screenshots, playable promo clips, result cards, character art and social artwork. Download an image or copy a ready post directly from the gallery."
   path={pagePath}
   currentPath="/share/"
-  image={selected ? getSiteMetadata(selected).image : "/og/woodhouse-workshop-20261018.jpg"}
+  image={selected ? socialCardFor(selected).image : "/og/woodhouse-workshop-20261018.jpg"}
+  imageAlt={selected ? socialCardFor(selected).alt : undefined}
 >
   <div class="container share-gallery">
     <header class="gallery-intro">

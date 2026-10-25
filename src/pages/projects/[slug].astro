@@ -14,7 +14,7 @@ import {
   getProjectRecord,
   getEditorialDispatch
 } from "../../content/repository";
-import { getArtworkFallback, getSiteMetadata } from "../../data/site-metadata";
+import { getArtworkFallback, getSiteMetadata, socialCardFor } from "../../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
@@ -79,7 +79,7 @@ const action = projectAction(project);
 const actionHref = projectActionHref(project);
 const actionLabel = projectActionLabel(project);
 const actionExternal = Boolean(project.siteUrl);
-const socialPreview = "/og/project-dossier-preview.jpg";
+const social = socialCardFor(project);
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const capabilityResult = await listPublicCapabilities();
 if (capabilityResult.error)
@@ -95,13 +95,8 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
   description={project.summary}
   path={"/projects/" + project.slug + "/"}
   currentPath="/projects/"
-  image={siteMeta?.image ?? project.previewImage ?? socialPreview}
-  imageAlt={
-    siteMeta
-      ? (project.previewAlt ?? `Artwork for ${project.name}.`)
-      : `Woodhouse illustration for ${project.name}.`
-  }
-  fallbackImage={siteMeta ? socialPreview : undefined}
+  image={social.image}
+  imageAlt={social.alt}
   type="website"
   contentRef={{ collection: "projects", id: projectEntry?.id ?? project.slug, slug: project.slug }}
   contentSeo={projectEntry ? { data: projectEntry.data } : undefined}

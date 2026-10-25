@@ -19,10 +19,9 @@ type Props = {
   description: string;
   path: string;
   image?: string;
-  imageAlt?: string;
+  imageAlt?: string | undefined;
   imageWidth?: number;
   imageHeight?: number;
-  fallbackImage?: string | undefined;
   currentPath?: string;
   type?: "website" | "article";
   pageType?: string;
@@ -45,7 +44,6 @@ const {
   imageAlt: suppliedImageAlt,
   imageWidth = 1200,
   imageHeight = 630,
-  fallbackImage,
   currentPath: suppliedCurrentPath,
   type = "website",
   pageType,
@@ -184,14 +182,6 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
     <meta property="og:image:width" content={String(imageWidth)} />
     <meta property="og:image:height" content={String(imageHeight)} />
     <meta property="og:image:alt" content={imageAlt} />
-    {fallbackImage && (
-      <>
-        <meta property="og:image" content={new URL(fallbackImage, siteUrl).toString()} />
-        <meta property="og:image:width" content={String(imageWidth)} />
-        <meta property="og:image:height" content={String(imageHeight)} />
-        <meta property="og:image:alt" content={`Woodhouse project illustration for ${title}`} />
-      </>
-    )}
     <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="author" content={authorName} />
     {authorName && <link rel="author" href="/dean/" />}
