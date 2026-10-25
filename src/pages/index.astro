@@ -13,6 +13,7 @@ import {
   listPublicCapabilities
 } from "../content/repository";
 import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
+import { liveProjectArtwork } from "../data/live-project-artwork";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 import FMListening from "../components/FMListening.astro";
 import SignaturePlate from "../components/SignaturePlate.astro";
@@ -32,7 +33,7 @@ if (projectResult.error || dispatchResult.error || capabilityResult.error)
     status: 503,
     headers: { "cache-control": "private, no-store" }
   });
-const projects = projectResult.projects;
+const projects = await Promise.all(projectResult.projects.map(liveProjectArtwork));
 const edition = portfolioEdition(dispatchResult.dispatches);
 const latestReport = dispatchResult.dispatches.find((note) => note.kind === "Portfolio report");
 const recentNotes = dispatchResult.dispatches.filter((note) => note !== latestReport).slice(0, 3);
@@ -160,12 +161,10 @@ export const prerender = false;
               aria-label={`${label} — open the ${project.name} site in a new tab`}
             >
               <img
-                src={campaign?.image ?? meta.image}
-                width={campaign?.width ?? 1200}
-                height={campaign?.height ?? 630}
-                alt={
-                  campaign?.alt ?? project.previewAlt ?? `Artwork from the ${project.name} site.`
-                }
+                src={meta.image}
+                width={project.previewWidth ?? 1200}
+                height={project.previewHeight ?? 630}
+                alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
                 loading="lazy"
                 decoding="async"
                 data-fallback-src={fallback.image}

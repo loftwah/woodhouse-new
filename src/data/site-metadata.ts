@@ -41,19 +41,25 @@ export function socialCardFor(project: WoodhouseProject): {
   image: string;
   alt: string;
   fromProduct: boolean;
+  width: number;
+  height: number;
 } {
   const candidate = project.previewImage;
   if (project.siteUrl && isRasterImage(candidate)) {
     return {
       image: candidate!,
       alt: project.previewAlt ?? `Artwork from the ${project.name} site.`,
-      fromProduct: true
+      fromProduct: true,
+      width: project.previewWidth ?? 1200,
+      height: project.previewHeight ?? 630
     };
   }
   return {
     image: WOODHOUSE_SOCIAL_CARD,
     alt: WOODHOUSE_SOCIAL_CARD_ALT,
-    fromProduct: false
+    fromProduct: false,
+    width: 1200,
+    height: 630
   };
 }
 

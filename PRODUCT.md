@@ -39,6 +39,14 @@ existing discovery programme in #18; a coverage target does not justify thin or 
 
 ## Promise
 
+Reviewed 25 October 2026, MP correction: a project's live site owns its visual
+identity. Homepage product cards, project records and project share links use
+that site's declared OG image, including future filename changes. Woodhouse
+campaign compositions are optional gallery material and must not replace those
+product images. A previous issue or campaign brief that implies otherwise is
+superseded. Source imagery is read with a short cache; an unavailable source
+retains the last known product image. Dated editorial exports remain unchanged.
+
 Claims have a source and a review date. Implementation, qualification, production verification and physical proof remain distinct states. A project can be strong in one dimension and unfinished in another.
 
 ## First release

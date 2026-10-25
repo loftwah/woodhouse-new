@@ -9,6 +9,7 @@ import {
 } from "../../data/showcase-public";
 import { toJsonLd } from "../../data/safe-json";
 import { socialCardFor } from "../../data/site-metadata";
+import { liveProjectArtwork } from "../../data/live-project-artwork";
 
 export const prerender = false;
 const result = await listProjectRecords();
@@ -18,7 +19,8 @@ if (result.error)
     headers: { "cache-control": "private, no-store" }
   });
 const slug = Astro.params.slug ?? "";
-const project = result.projects.find((entry) => entry.slug === slug);
+const recordedProject = result.projects.find((entry) => entry.slug === slug);
+const project = recordedProject ? await liveProjectArtwork(recordedProject) : undefined;
 const items = publicCampaignItems(result.projects.map((entry) => entry.slug)).filter(
   (item) => item.project === slug
 );
@@ -31,12 +33,8 @@ const description = project
   ? `${project.summary} Explore ${name} promotional artwork and current product captures, with original downloads and a direct link to the product.`
   : "Games, software and music from the Loftwah software factory. Explore the Woodhouse campaign, open the real products and download the original artwork.";
 const social = campaignSocial(items)!;
-// Reviewed 25 October 2026: retain these products' established share identity.
-// New gallery compositions must not replace their approved OG artwork.
-const productSocial =
-  project && ["loftwahfm", "bubbles", "app-composer"].includes(slug)
-    ? socialCardFor(project)
-    : null;
+// The product owns its identity. Campaign pieces stay in the gallery.
+const productSocial = project ? socialCardFor(project) : null;
 const path = campaignCollectionPath(slug);
 const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 ---
@@ -48,8 +46,8 @@ const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
   currentPath="/share/"
   image={productSocial?.image ?? social.original}
   imageAlt={productSocial?.alt ?? social.alt}
-  imageWidth={productSocial ? 1200 : social.width}
-  imageHeight={productSocial ? 630 : social.height}
+  imageWidth={productSocial?.width ?? social.width}
+  imageHeight={productSocial?.height ?? social.height}
 >
   <script
     slot="head"

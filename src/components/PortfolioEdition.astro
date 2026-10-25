@@ -5,6 +5,7 @@ import { dispatchSocialCard } from "../data/social-cards";
 import { formatReviewDate } from "../data/review-date";
 import { projectActionLabel } from "../data/share-browser";
 import { publicCampaignItems, campaignCollectionPath } from "../data/showcase-public";
+import { liveProjectArtwork } from "../data/live-project-artwork";
 import {
   editionSections,
   type EditionEntry,
@@ -18,7 +19,8 @@ type Props = {
   projects: WoodhouseProject[];
   isPreview?: boolean;
 };
-const { edition, projects, isPreview = false } = Astro.props;
+const { edition, projects: recordedProjects, isPreview = false } = Astro.props;
+const projects = await Promise.all(recordedProjects.map(liveProjectArtwork));
 const { dispatch, entries: editionEntries, path } = edition;
 const editionReviewDate = formatReviewDate(dispatch.reviewDate);
 const editionMethod = [
@@ -130,8 +132,8 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
         <img
           src={heroImage}
           alt={artworkAlt(lead)}
-          width="1200"
-          height="630"
+          width={leadProject.previewWidth ?? 1200}
+          height={leadProject.previewHeight ?? 630}
           fetchpriority="high"
           decoding="async"
         />
@@ -169,8 +171,8 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
                       <img
                         src={project.previewImage}
                         alt={artworkAlt(entry)}
-                        width="1200"
-                        height="630"
+                        width={project.previewWidth ?? 1200}
+                        height={project.previewHeight ?? 630}
                         loading="lazy"
                         decoding="async"
                       />

@@ -1,5 +1,6 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
+import { liveProjectArtwork } from "../data/live-project-artwork";
 import {
   getArtworkFallback,
   getSiteMetadata,
@@ -8,7 +9,8 @@ import {
 } from "../data/site-metadata";
 import { formatReviewDate } from "../data/review-date";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
-const { project, compact = false, headingLevel = "h3" } = Astro.props;
+const { project: recordedProject, compact = false, headingLevel = "h3" } = Astro.props;
+const project = await liveProjectArtwork(recordedProject);
 const Heading = headingLevel;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
@@ -33,8 +35,8 @@ const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
         <img
           src={siteMeta.image}
           alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
-          width="1200"
-          height="630"
+          width={project.previewWidth ?? 1200}
+          height={project.previewHeight ?? 630}
           loading="lazy"
           decoding="async"
           data-fallback-src={placeholder}

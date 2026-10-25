@@ -32,6 +32,7 @@ import {
 } from "../../data/portfolio-analytics";
 import { productView } from "../../data/analytics-workbench";
 import { publicCampaignItems, campaignCollectionPath } from "../../data/showcase-public";
+import { liveProjectArtwork } from "../../data/live-project-artwork";
 
 export const prerender = false;
 const slug = Astro.params.slug;
@@ -41,7 +42,7 @@ if (current?.error)
     status: 503,
     headers: { "cache-control": "private, no-store" }
   });
-const project = current?.project;
+const project = current?.project ? await liveProjectArtwork(current.project) : undefined;
 const isPreview = current?.isPreview === true;
 const projectEntry = current?.projectEntry;
 const statusEntry = current?.status;
@@ -120,6 +121,8 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
   currentPath="/projects/"
   image={social.image}
   imageAlt={social.alt}
+  imageWidth={social.width}
+  imageHeight={social.height}
   type="website"
   contentRef={{ collection: "projects", id: projectEntry?.id ?? project.slug, slug: project.slug }}
   contentSeo={projectEntry ? { data: projectEntry.data } : undefined}
@@ -229,8 +232,8 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
   >
     <img
       src={artworkSource}
-      width="1200"
-      height="630"
+      width={project.previewWidth ?? 1200}
+      height={project.previewHeight ?? 630}
       alt={artworkAlt}
       loading="eager"
       decoding="async"
