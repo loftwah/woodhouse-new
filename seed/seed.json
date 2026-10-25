@@ -5661,7 +5661,7 @@
           "summary": "The radio player loads the approved bodies and same-source portrait crops. Character selection, the current-track conversation and saved choices remain usable at phone and desktop sizes. Missing artwork retains the same identity or an honest unavailable state. Historical assets and Moss’s accepted appearance remain intact; Pepe’s creator credit is available in the native companion panel.",
           "source_label": "Listen and inspect the native companions",
           "source_url": "https://fm.loftwah.com/",
-          "revision": "5b09d3a2b4724da7977f59c370aa335d1579c4f8",
+          "revision": "8bd418c550ff8490c748ec664a9f51d90870a774",
           "public_safe": true,
           "proof_boundary": "These are three authored single-image recoveries, not a complete expression or gaze library. Native browser evidence is distinct from physical-device or voice-listening acceptance. The remaining Miku art and full acting programme are not completed by this release."
         }
