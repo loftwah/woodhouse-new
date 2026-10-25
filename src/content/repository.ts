@@ -23,6 +23,8 @@ export type WoodhouseProject = {
   siteOgDescription?: string;
   siteFavicon?: string;
   previewImage?: string;
+  previewWidth?: number;
+  previewHeight?: number;
   previewAlt?: string;
   previewCaption?: string;
   state: string;

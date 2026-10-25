@@ -1,5 +1,13 @@
 # Design system
 
+MP correction, reviewed 25 October 2026: the homepage Bubbles, LoftwahFM and
+App Composer cards retain their native OG artwork. Read the product's current
+OG declaration for product identity across homepage cards, project rows,
+dossiers, current portfolio editions and project share links. Do not replace it
+with a Woodhouse campaign composition. Optional promotional gallery work stays
+separate, and frozen historical exports keep their original source. A live
+source failure retains known product artwork before any labelled fallback.
+
 Reviewed 7 October 2026.
 
 ## Direction

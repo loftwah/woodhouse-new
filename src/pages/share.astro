@@ -23,6 +23,7 @@ import {
 } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
 import { getArtworkFallback, getSiteMetadata, socialCardFor } from "../data/site-metadata";
+import { liveProjectArtwork } from "../data/live-project-artwork";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
 import { sharePreviews } from "../data/share-previews";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
@@ -55,7 +56,7 @@ if (result.error)
     status: 503,
     headers: { "cache-control": "no-store" }
   });
-const projects = orderShareProjects(result.projects);
+const projects = orderShareProjects(await Promise.all(result.projects.map(liveProjectArtwork)));
 const galleryURL = (...args: Parameters<typeof canonicalGalleryURL>) => {
   const url = new URL(canonicalGalleryURL(...args), Astro.url.origin);
   // The new editorial wall owns the bare route; archive image links explicitly
@@ -254,6 +255,7 @@ const effectivePath = showcase
   : view === "images"
     ? `${pagePath}${pagePath.includes("?") ? "&" : "?"}type=images`
     : pagePath;
+const selectedSocial = selected ? socialCardFor(selected) : null;
 ---
 
 <BaseLayout
@@ -266,21 +268,12 @@ const effectivePath = showcase
   path={effectivePath}
   currentPath="/share/"
   image={
-    showcase && featuredSocial
-      ? featuredSocial.image
-      : selected
-        ? socialCardFor(selected).image
-        : "/og/woodhouse-workshop-20261018.jpg"
+    selectedSocial?.image ??
+    (showcase && featuredSocial ? featuredSocial.image : "/og/woodhouse-workshop-20261018.jpg")
   }
-  imageAlt={
-    showcase && featuredSocial
-      ? featuredSocial.alt
-      : selected
-        ? socialCardFor(selected).alt
-        : undefined
-  }
-  imageWidth={showcase && featuredSocial ? featuredSocial.width : 1200}
-  imageHeight={showcase && featuredSocial ? featuredSocial.height : 630}
+  imageAlt={selectedSocial?.alt ?? (showcase && featuredSocial ? featuredSocial.alt : undefined)}
+  imageWidth={selectedSocial?.width ?? (showcase && featuredSocial ? featuredSocial.width : 1200)}
+  imageHeight={selectedSocial?.height ?? (showcase && featuredSocial ? featuredSocial.height : 630)}
 >
   <div class:list={["container share-gallery", { "showcase-page": showcase }]}>
     {showcase && (

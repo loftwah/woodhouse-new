@@ -23,6 +23,18 @@ Astro owns page structure, CSS, diagrams, editorial block renderers and accessib
 
 `src/content/repository.ts` is the only Woodhouse query boundary. Every public query asks for published entries and then checks the explicit `public_safe` flag; public conversations also require `source_reviewed`. CMS links and project metadata are constrained to root-relative or HTTPS URLs. A review date and proof boundary are shown with project state. The current state is a dated editorial record, never live repository telemetry.
 
+Reviewed 25 October 2026: product artwork follows the published site's current
+`og:image`, alt text and dimensions through `src/data/live-project-artwork.ts`.
+This is a presentation read after CMS publication filtering, not a mutation of
+the reviewed evidence or its content-generation digest. Only the existing
+approved publisher hosts are read; redirects are refused, requests time out
+after three seconds, and the HTML head is bounded to 256 KiB. Resolved artwork
+has a five-minute in-memory cache; a failed refresh retains the last fetched
+product image, then the reviewed CMS image on a cold instance. No job, binding,
+resource or service is added. Homepage cards and project share metadata never
+select campaign art in preference to the product's own image. Existing page and
+destination-platform caches can delay a visible update independently.
+
 The seeded model contains seven collections: project identity, append-only factory snapshots, reviewed project statuses, evidence records, dispatches, structured incident records and an intentionally empty conversations collection. A project status points to a snapshot; evidence records also point to a project and snapshot. Dispatches link to the project/topic context they discuss. The relation keeps historical state instead of overwriting it when a project is reviewed again.
 
 The Cloudflare Worker binds D1 as `DB`, private R2 as `MEDIA`, KV as `CACHE` and `SESSION`, and Worker Loader as `LOADER`. A one-minute scheduled handler runs EmDash maintenance, scheduled publishing and plugin cron work. Automatic EmDash JSON backups are not yet enabled or verified. Production and preview have separate database, media and KV resources. The root Wrangler target defaults to preview; the named production environment owns the custom-domain route.
