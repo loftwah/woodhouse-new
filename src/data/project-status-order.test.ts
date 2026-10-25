@@ -32,101 +32,125 @@ const bundled = await build({
 });
 
 test("same-day current project reads agree across dossier and portfolio regardless of seed order", async () => {
-  for (const reverse of [false, true]) {
-    const db = new DatabaseSync(":memory:");
-    try {
-      db.exec(
-        "CREATE TABLE entries(collection TEXT,slug TEXT,data TEXT,reviewed_at TEXT,sort_order INTEGER,name TEXT,project_key TEXT)"
-      );
-      for (const [collection, entries] of Object.entries(seed.content)) {
-        for (const item of reverse ? [...(entries as never[])].reverse() : (entries as never[])) {
-          const entry = item as { slug: string; status: string; data: Record<string, unknown> };
-          if (entry.status !== "published") continue;
-          db.prepare("INSERT INTO entries VALUES(?,?,?,?,?,?,?)").run(
-            collection,
-            entry.slug,
-            JSON.stringify(entry.data),
-            String(entry.data.reviewed_at ?? ""),
-            Number(entry.data.sort_order ?? 0),
-            String(entry.data.name ?? ""),
-            String(entry.data.project_key ?? "")
-          );
-        }
-      }
-      const unpack = (row: { slug: string; data: string }) => ({
-        id: row.slug,
-        data: JSON.parse(row.data),
-        edit: {}
-      });
-      const module = { exports: {} as Record<string, (...args: unknown[]) => Promise<unknown>> };
-      runInNewContext(bundled.outputFiles[0]!.text, {
-        module,
-        exports: module.exports,
-        crypto,
-        TextEncoder,
-        URL,
-        readCollection(
-          collection: string,
-          filter: {
-            where?: { project_key?: string };
-            orderBy: Record<string, string>;
-            limit: number;
+  const reviews = [
+    {
+      cutoff: "2026-10-23",
+      status: "app-composer-2026-10-23-atlas-owner-v1",
+      snapshot: "2026-10-23-atlas-owner-v1",
+      scope: /supported title update.*standing policy/
+    },
+    {
+      cutoff: null,
+      status: "app-composer-2026-10-25-portfolio-recovery-v1",
+      snapshot: "2026-10-25-portfolio-recovery-v1",
+      scope: /controlled local native run/
+    }
+  ];
+  for (const expected of reviews) {
+    for (const reverse of [false, true]) {
+      const db = new DatabaseSync(":memory:");
+      try {
+        db.exec(
+          "CREATE TABLE entries(collection TEXT,slug TEXT,data TEXT,reviewed_at TEXT,sort_order INTEGER,name TEXT,project_key TEXT)"
+        );
+        for (const [collection, entries] of Object.entries(seed.content)) {
+          for (const item of reverse ? [...(entries as never[])].reverse() : (entries as never[])) {
+            const entry = item as { slug: string; status: string; data: Record<string, unknown> };
+            if (entry.status !== "published") continue;
+            // Keep the original same-day ordering regression, then independently
+            // exercise the real current review without freezing the site in history.
+            if (
+              expected.cutoff &&
+              ["project_statuses", "factory_snapshots"].includes(collection) &&
+              String(entry.data.reviewed_at ?? "") > expected.cutoff
+            )
+              continue;
+            db.prepare("INSERT INTO entries VALUES(?,?,?,?,?,?,?)").run(
+              collection,
+              entry.slug,
+              JSON.stringify(entry.data),
+              String(entry.data.reviewed_at ?? ""),
+              Number(entry.data.sort_order ?? 0),
+              String(entry.data.name ?? ""),
+              String(entry.data.project_key ?? "")
+            );
           }
-        ) {
-          // The installed EmDash loader applies every valid orderBy field in SQL.
-          // Exercise that actual query contract over the real seeded same-day rows.
-          const order = Object.entries(filter.orderBy)
-            .map(([key, direction]) => {
-              assert(["name", "reviewed_at", "sort_order"].includes(key));
-              assert(["asc", "desc"].includes(direction));
-              return `${key} ${direction}`;
-            })
-            .join(",");
-          const rows = filter.where?.project_key
-            ? db
-                .prepare(
-                  `SELECT slug,data FROM entries WHERE collection=? AND project_key=? ORDER BY ${order} LIMIT ?`
-                )
-                .all(collection, filter.where.project_key, filter.limit)
-            : db
-                .prepare(
-                  `SELECT slug,data FROM entries WHERE collection=? ORDER BY ${order} LIMIT ?`
-                )
-                .all(collection, filter.limit);
-          return {
-            entries: rows.map((row) => unpack(row as { slug: string; data: string })),
-            cacheHint: {}
-          };
-        },
-        readEntry(collection: string, slug: string) {
-          const row = db
-            .prepare("SELECT slug,data FROM entries WHERE collection=? AND slug=?")
-            .get(collection, slug);
-          return {
-            entry: row ? unpack(row as { slug: string; data: string }) : null,
-            cacheHint: {},
-            isPreview: false
-          };
         }
-      });
-      const detail = (await module.exports.getProjectRecord!("app-composer")) as {
-        project: { statusId: string; snapshotId: string; current: string };
-      };
-      const listing = (await module.exports.listProjectRecords!()) as {
-        projects: { slug: string; statusId: string; snapshotId: string; current: string }[];
-      };
-      const composer = listing.projects.find((project) => project.slug === "app-composer")!;
-      for (const project of [detail.project, composer]) {
-        assert.equal(project.statusId, "app-composer-2026-10-23-atlas-owner-v1");
-        assert.equal(project.snapshotId, "2026-10-23-atlas-owner-v1");
-        assert.match(project.current, /supported title update.*standing policy/);
+        const unpack = (row: { slug: string; data: string }) => ({
+          id: row.slug,
+          data: JSON.parse(row.data),
+          edit: {}
+        });
+        const module = { exports: {} as Record<string, (...args: unknown[]) => Promise<unknown>> };
+        runInNewContext(bundled.outputFiles[0]!.text, {
+          module,
+          exports: module.exports,
+          crypto,
+          TextEncoder,
+          URL,
+          readCollection(
+            collection: string,
+            filter: {
+              where?: { project_key?: string };
+              orderBy: Record<string, string>;
+              limit: number;
+            }
+          ) {
+            // The installed EmDash loader applies every valid orderBy field in SQL.
+            // Exercise that actual query contract over the real seeded same-day rows.
+            const order = Object.entries(filter.orderBy)
+              .map(([key, direction]) => {
+                assert(["name", "reviewed_at", "sort_order"].includes(key));
+                assert(["asc", "desc"].includes(direction));
+                return `${key} ${direction}`;
+              })
+              .join(",");
+            const rows = filter.where?.project_key
+              ? db
+                  .prepare(
+                    `SELECT slug,data FROM entries WHERE collection=? AND project_key=? ORDER BY ${order} LIMIT ?`
+                  )
+                  .all(collection, filter.where.project_key, filter.limit)
+              : db
+                  .prepare(
+                    `SELECT slug,data FROM entries WHERE collection=? ORDER BY ${order} LIMIT ?`
+                  )
+                  .all(collection, filter.limit);
+            return {
+              entries: rows.map((row) => unpack(row as { slug: string; data: string })),
+              cacheHint: {}
+            };
+          },
+          readEntry(collection: string, slug: string) {
+            const row = db
+              .prepare("SELECT slug,data FROM entries WHERE collection=? AND slug=?")
+              .get(collection, slug);
+            return {
+              entry: row ? unpack(row as { slug: string; data: string }) : null,
+              cacheHint: {},
+              isPreview: false
+            };
+          }
+        });
+        const detail = (await module.exports.getProjectRecord!("app-composer")) as {
+          project: { statusId: string; snapshotId: string; current: string };
+        };
+        const listing = (await module.exports.listProjectRecords!()) as {
+          projects: { slug: string; statusId: string; snapshotId: string; current: string }[];
+        };
+        const composer = listing.projects.find((project) => project.slug === "app-composer")!;
+        for (const project of [detail.project, composer]) {
+          assert.equal(project.statusId, expected.status);
+          assert.equal(project.snapshotId, expected.snapshot);
+          assert.match(project.current, expected.scope);
+        }
+        assert.equal(
+          listing.projects.find((project) => project.slug === "shoalshot")!.snapshotId,
+          "2026-10-19"
+        );
+      } finally {
+        db.close();
       }
-      assert.equal(
-        listing.projects.find((project) => project.slug === "shoalshot")!.snapshotId,
-        "2026-10-19"
-      );
-    } finally {
-      db.close();
     }
   }
 });

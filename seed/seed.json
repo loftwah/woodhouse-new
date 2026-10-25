@@ -2407,6 +2407,19 @@
           "editorial_notes": "Plans With You replaces the stale private-club introduction. The public sample establishes neither a real calendar operation nor paid membership. MAX’s public simulation is distinct from physical hardware. No new producer artwork, customer adoption or physical acceptance is claimed.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-10-25-portfolio-recovery-v1",
+        "slug": "2026-10-25-portfolio-recovery-v1",
+        "status": "published",
+        "data": {
+          "title": "Native product recovery and useful public examples · 25 October 2026",
+          "reviewed_at": "2026-10-25",
+          "source_description": "Current public product pages, served artwork and production build identities, reviewed 25 October 2026 UTC / 26 October AEDT. Producer qualification records informed the bounded claims; private source bodies and conversations remain unpublished.",
+          "scope": "Selected product improvements, native artwork and useful public examples. Existing dated project reviews and the published portfolio edition remain historical records.",
+          "editorial_notes": "Published interface changes, controlled local demonstrations and actual provider integrations keep their own evidence boundaries. This review does not establish customer adoption, physical-device acceptance or delivery by an external sharing platform.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3433,6 +3446,44 @@
           "proof_boundary": "Public homepage and waitlist inspected 25 October 2026. The sample is not a real booking, cancellation, paid membership or proof of customer use.",
           "reviewed_at": "2026-10-25",
           "sort_order": 8,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-app-composer-2026-10-25-portfolio-recovery-v1",
+        "slug": "app-composer-2026-10-25-portfolio-recovery-v1",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "state": "Creator controls and working public examples",
+          "state_tone": "active",
+          "current": "App Composer’s deployed studio has clearer creator permissions, Brand Studio comparison and restore controls, and a Trust Centre that separates installed versions from registry observations. Public migration, incident and diagram examples make the evidence inspectable. A controlled local native run also created, configured, previewed, published, revised and restored an app while retaining owner customisation. The existing live creator apps and guarded Get Ready and Init setup remain available.",
+          "next_proof": "Observe a new creator preparing and operating their own authorised app. Qualify the selected hosted identity, plugin, merchant and recovery integrations separately; preserve owner configuration and independent app releases.",
+          "proof_boundary": "The public interface and dated producer release establish deployed studio changes. The complete lifecycle, plugin installation, incident execution and recovery demonstrations used isolated local fixtures. They do not establish hosted provider integration, external customer adoption, physical-device or assistive-technology acceptance.",
+          "reviewed_at": "2026-10-25",
+          "sort_order": 20,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-loftwahfm-2026-10-25-portfolio-recovery-v1",
+        "slug": "loftwahfm-2026-10-25-portfolio-recovery-v1",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "state": "A radio player with recognisable listening companions",
+          "state_tone": "active",
+          "current": "LoftwahFM plays its music catalogue through the native station player and its versioned game-radio client. The listening companion now shows approved complete Loftwah, Pippa and Pepe figures in the player, with intentional portraits in the chooser and honest missing-art recovery. Saved character choices, Moss’s accepted appearance, station controls and optional conversation remain. These recovered stills do not add authored expression sets.",
+          "next_proof": "Finish the remaining character artwork and expressive acting. Verify real listener and game-consumer journeys, business operations and physical-device behaviour within their separate acceptance boundaries.",
+          "proof_boundary": "Production and native browser checks establish these three approved stills, saved selection, conversation and player containment. They do not establish complete six-character recovery, authored acting, external listener adoption, business customer operation or physical-device acceptance. Optional companion speech remains separate from the station’s recorded music.",
+          "reviewed_at": "2026-10-25",
+          "sort_order": 20,
           "public_safe": true
         }
       }
@@ -5498,6 +5549,121 @@
           "revision": "public-origin-reviewed-2026-10-25",
           "public_safe": true,
           "proof_boundary": "Public proposition and access state only. No real booking, cancellation, paid membership, delivery or customer adoption is established."
+        }
+      },
+      {
+        "id": "evidence-app-composer-public-examples-2026-10-25",
+        "slug": "app-composer-public-examples-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "Inspect a real migration example before planning your own",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "claim": "Composer publishes an inspectable migration example and clearer native creator controls.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "The public migration page describes a genuine controlled WordPress import and its retained-content boundaries. The adjacent native diagram atlas and incident replay identify local or illustrative steps explicitly. The current deployed studio also provides improved Brand Studio comparison and restore controls and clearer installed-versus-registry evidence. The complete create-to-revise-to-restore lifecycle was qualified locally; no new hosted customer app is asserted.",
+          "source_label": "Inspect the native public source",
+          "source_url": "https://composer.loftwah.com/migration-example",
+          "revision": "8847b93f9474f22c3d724e59a3d9e165f8444a76",
+          "public_safe": true,
+          "proof_boundary": "Public example delivery and source-bound producer qualification. Local import, lifecycle, plugin and incident fixtures remain distinct from a hosted migration, a production responder, live merchant access or external adoption."
+        }
+      },
+      {
+        "id": "evidence-max-native-walker-study-2026-10-25",
+        "slug": "max-native-walker-study-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "MAX shows the walker concept at a useful size",
+          "project": "$ref:project-max",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "max",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "claim": "The native MAX preview presents its tube-mounted companion as a labelled hardware design study.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "The current native Open Graph and Twitter image uses the selected charcoal-walker composition. A deliberate simulator interaction remains available on the product site. Woodhouse’s dossier follows the producer’s current image; the earlier domestic concept remains retained.",
+          "source_label": "Inspect the native public source",
+          "source_url": "https://max.loftwah.com/og-walker-20261025.png",
+          "revision": "574b55c324492bf5f26b93851f97db43555102a9",
+          "public_safe": true,
+          "proof_boundary": "Artwork and public simulator delivery. The mount is a design study, physical fit is unverified and the simulator does not prove a connected walker."
+        }
+      },
+      {
+        "id": "evidence-asset-hunter-native-discovery-2026-10-25",
+        "slug": "asset-hunter-native-discovery-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "Asset Hunter’s native preview makes its purpose visible",
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "claim": "Asset Hunter publishes the selected discovery illustration on its own public destination.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "The native image presents the discovery instrument, folded form, typographic letter and miniature landscape in a composition that remains readable at feed sizes. Woodhouse’s current dossier uses the producer’s image and description; previous artwork remains retained.",
+          "source_label": "Inspect the native public source",
+          "source_url": "https://assets.loftwah.com/og-discovery-20261025.png",
+          "revision": "0269c6799b6f1ac8cb9a4e14345dadbd6367976d",
+          "public_safe": true,
+          "proof_boundary": "Conceptual promotional illustration and current native metadata delivery. The image is not evidence of a particular imported asset, customer project or external platform unfurl."
+        }
+      },
+      {
+        "id": "evidence-plans-with-you-native-invitation-2026-10-25",
+        "slug": "plans-with-you-native-invitation-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "Plans With You keeps its invitation in the native preview",
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "social-club",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "claim": "The native product and Woodhouse dossier use the selected cancellation-invitation artwork.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "A cream invitation stamped CANCELLED and a blue envelope keep the product name and planned-cancellation idea readable in the native sharing image and smaller feed crops. The original source and historical artwork remain retained. The native public proposition still offers a waitlist while paid membership stays closed.",
+          "source_label": "Inspect the native public source",
+          "source_url": "https://club.loftwah.com/og/cancelled-20261025.jpg",
+          "revision": "a3213953fc6c5410904e2942279976e303c62839",
+          "public_safe": true,
+          "proof_boundary": "Native artwork, metadata and public proposition only. The fictional invitation is not a real calendar booking, cancellation, paid membership, customer result or external sharing-platform delivery."
+        }
+      },
+      {
+        "id": "evidence-loftwahfm-approved-companions-2026-10-25",
+        "slug": "loftwahfm-approved-companions-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "Complete characters fit the real radio player",
+          "project": "$ref:project-loftwahfm",
+          "snapshot": "$ref:snapshot-2026-10-25-portfolio-recovery-v1",
+          "project_key": "loftwahfm",
+          "snapshot_key": "2026-10-25-portfolio-recovery-v1",
+          "claim": "LoftwahFM’s native player uses approved complete Loftwah, Pippa and Pepe figures and intentional chooser portraits.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "The radio player loads the approved bodies and same-source portrait crops. Character selection, the current-track conversation and saved choices remain usable at phone and desktop sizes. Missing artwork retains the same identity or an honest unavailable state. Historical assets and Moss’s accepted appearance remain intact; Pepe’s creator credit is available in the native companion panel.",
+          "source_label": "Listen and inspect the native companions",
+          "source_url": "https://fm.loftwah.com/",
+          "revision": "8bd418c550ff8490c748ec664a9f51d90870a774",
+          "public_safe": true,
+          "proof_boundary": "These are three authored single-image recoveries, not a complete expression or gaze library. Native browser evidence is distinct from physical-device or voice-listening acceptance. The remaining Miku art and full acting programme are not completed by this release."
         }
       }
     ],
