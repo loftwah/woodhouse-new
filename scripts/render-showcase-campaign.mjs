@@ -7,8 +7,9 @@ import { createHash } from "node:crypto";
 import { Resvg, initWasm } from "@resvg/resvg-wasm";
 const root = new URL("../", import.meta.url).pathname;
 const sources = `${root}scripts/assets/showcase/sources/`;
-const out = `${root}public/campaign/20261025/`;
-const masters = `${root}scripts/assets/showcase/masters/`;
+const refinementsOnly = process.argv.includes("--refinements");
+let out = `${root}public/campaign/20261025/`;
+let masters = `${root}scripts/assets/showcase/masters/`;
 mkdirSync(out, { recursive: true });
 mkdirSync(masters, { recursive: true });
 await initWasm(readFileSync(`${root}src/assets/resvg.wasm`));
@@ -28,7 +29,7 @@ const im = (f, x, y, w, h, extra = "") => {
 const rect = (x, y, w, h, fill) =>
   `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}"/>`;
 const secondaryOnly = process.argv.includes("--secondary-only");
-if (!secondaryOnly) {
+if (!secondaryOnly && !refinementsOnly) {
   execFileSync("magick", [
     sources + "protocol-production-20261025.png",
     "-crop",
@@ -80,7 +81,7 @@ function render(id, w, h, bg, body) {
       .digest("hex")
   });
 }
-if (!secondaryOnly) {
+if (!secondaryOnly && !refinementsOnly) {
   // The playfield is the Bubbles subject. Whole screen, no counterfeit UI.
   render(
     "bubbles-one-more-shot",
@@ -385,4 +386,246 @@ function renderSecondary() {
     ) + "\n"
   );
 }
-renderSecondary();
+if (!refinementsOnly) renderSecondary();
+
+// These four subjects were too small or conventional in the first campaign.
+// Keep both alternatives privately; publish only the selected second edition.
+// Historical 20261025 files remain byte-for-byte untouched.
+if (refinementsOnly) {
+  const clip = (id, x, y, w, h, body) =>
+    `<defs><clipPath id="${id}">${rect(x, y, w, h, "white")}</clipPath></defs><g clip-path="url(#${id})">${body}</g>`;
+  const loom = (x, y, w, h) => {
+    const bytes = readFileSync(`${root}public/signature/loom-wide.jpg`);
+    return `<image x="${x}" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" href="data:image/jpeg;base64,${bytes.toString("base64")}"/>`;
+  };
+  const candidates = [
+    {
+      id: "bubbles-next-shot",
+      w: 1200,
+      h: 1500,
+      bg: "#17102b",
+      selected: true,
+      body:
+        clip(
+          "board",
+          0,
+          320,
+          1200,
+          1120,
+          im("bubbles-production-20261025.png", -360, 190, 1980, 1238)
+        ) +
+        rect(0, 0, 1200, 220, "#17102b") +
+        t(48, 65, "BUBBLES", 35, "#a9f9ff") +
+        t(42, 180, "Make the next shot.", 106) +
+        rect(0, 1440, 1200, 60, "#17102b") +
+        t(
+          48,
+          1480,
+          "Match three. Clear the board.                 bubbles.loftwah.com",
+          27,
+          "#a9f9ff",
+          400
+        )
+    },
+    {
+      id: "bubbles-board-detail-rejected",
+      w: 1200,
+      h: 1200,
+      bg: "#17102b",
+      body:
+        clip(
+          "detail",
+          0,
+          0,
+          1200,
+          930,
+          im("bubbles-production-20261025.png", -660, -110, 2520, 1575)
+        ) +
+        rect(0, 930, 1200, 270, "#17102b") +
+        t(45, 1045, "ONE MORE SHOT.", 104) +
+        t(48, 1140, "BUBBLES", 45, "#a9f9ff")
+    },
+    {
+      id: "composer-paperwork-close",
+      w: 1600,
+      h: 1000,
+      bg: "#ff6500",
+      selected: true,
+      body:
+        t(48, 75, "APP COMPOSER", 37) +
+        t(42, 201, "A PDF.", 120) +
+        t(42, 335, "Your mark.", 110) +
+        t(48, 440, "Paperwork", 43, "#17181c") +
+        t(48, 498, "A real browser editor.", 32, "#17181c", 400) +
+        clip("editor", 650, 0, 950, 1000, im("composer-paperwork.webp", 377, 0, 1527, 1167)) +
+        t(48, 815, "Edit. Highlight.", 39, "#17181c") +
+        t(48, 869, "Sign. Export.", 39, "#17181c") +
+        t(48, 955, "composer.loftwah.com", 27, "#17181c", 400)
+    },
+    {
+      id: "composer-full-screen-rejected",
+      w: 1600,
+      h: 1000,
+      bg: "#ff6500",
+      body:
+        t(45, 110, "Make something useful.", 110) +
+        im("composer-paperwork.webp", 0, 165, 1600, 790) +
+        t(45, 975, "APP COMPOSER · PAPERWORK", 27, "#17181c")
+    },
+    {
+      id: "max-try-the-simulator",
+      w: 1200,
+      h: 1200,
+      bg: "#060606",
+      selected: true,
+      body:
+        im("max-wordmark.png", 48, 35, 220, 75) +
+        t(350, 90, "Try the simulator.", 55, "#c9f06b") +
+        clip(
+          "simulator",
+          48,
+          170,
+          1104,
+          867,
+          im("max-simulator-interaction.png", 48, 170, 1104, 867)
+        ) +
+        t(48, 1100, "Browser demonstration. No physical walker connected.", 31, "#c9f06b", 400) +
+        t(48, 1170, "max.loftwah.com/demo", 29, "#fff8e8", 400)
+    },
+    {
+      id: "max-concept-close-rejected",
+      w: 1200,
+      h: 1200,
+      bg: "#060606",
+      body:
+        im("max-module-concept.webp", -200, 0, 1800, 1200) +
+        rect(0, 0, 1200, 280, "#060606") +
+        t(45, 160, "A little help.", 130) +
+        rect(0, 1050, 1200, 150, "#060606") +
+        t(48, 1110, "MAX · Concept image", 38) +
+        t(48, 1170, "Explore the simulator.", 32)
+    },
+    {
+      id: "woodhouse-made-here",
+      w: 1600,
+      h: 1000,
+      bg: "#080d19",
+      selected: true,
+      body:
+        loom(0, 0, 1600, 1000) +
+        rect(0, 0, 760, 1000, "#080d19") +
+        t(48, 80, "WOODHOUSE", 41, "#e9ff49") +
+        t(38, 285, "The things", 137) +
+        t(38, 432, "we make.", 153, "#e9ff49") +
+        t(48, 680, "Games to play.", 42) +
+        t(48, 742, "Software to try.", 42) +
+        t(48, 804, "Music to keep.", 42) +
+        t(48, 950, "woodhouse.loftwah.com", 31, "#e9ff49", 400)
+    },
+    {
+      id: "woodhouse-overlap-rejected",
+      w: 1600,
+      h: 1000,
+      bg: "#080d19",
+      body:
+        t(45, 150, "Play. Make. Listen.", 137, "#e9ff49") +
+        `<g transform="rotate(-9 420 600)">${im("shoalshot-ray.webp", 50, 300, 800, 620)}</g>` +
+        `<g transform="rotate(8 1040 600)">${im("composer-paperwork.webp", 670, 340, 700, 535)}</g>` +
+        im("fm-cartridge-funk.jpg", 1100, 500, 450, 450)
+    }
+  ];
+  const wides = [
+    {
+      id: "bubbles-next-shot-landscape",
+      w: 1200,
+      h: 630,
+      bg: "#17102b",
+      body:
+        clip(
+          "wide-board",
+          390,
+          0,
+          810,
+          630,
+          im("bubbles-production-20261025.png", 291, 0, 1008, 630)
+        ) +
+        t(30, 62, "BUBBLES", 31, "#a9f9ff") +
+        t(25, 205, "Make", 95) +
+        t(25, 300, "the next", 81) +
+        t(25, 400, "shot.", 105) +
+        t(30, 583, "bubbles.loftwah.com", 22, "#a9f9ff", 400)
+    },
+    {
+      id: "composer-paperwork-close-landscape",
+      w: 1200,
+      h: 630,
+      bg: "#ff6500",
+      body:
+        t(32, 56, "APP COMPOSER", 30) +
+        t(25, 175, "A PDF.", 104) +
+        t(25, 280, "Your mark.", 86) +
+        t(32, 379, "Paperwork", 34, "#17181c") +
+        t(32, 430, "Edit. Highlight. Sign. Export.", 25, "#17181c", 400) +
+        t(32, 587, "composer.loftwah.com", 23, "#17181c", 400) +
+        clip("wide-editor", 530, 0, 670, 630, im("composer-paperwork.webp", 331, 0, 1054, 805))
+    },
+    {
+      id: "max-try-the-simulator-landscape",
+      w: 1200,
+      h: 630,
+      bg: "#060606",
+      body:
+        im("max-wordmark.png", 32, 24, 175, 58) +
+        t(27, 202, "Meet MAX.", 90) +
+        t(32, 275, "Try the simulator.", 35, "#c9f06b") +
+        clip(
+          "wide-sim",
+          480,
+          85,
+          690,
+          405,
+          im("max-simulator-interaction.png", 480, 85, 690, 405)
+        ) +
+        t(32, 515, "Browser demonstration.", 28) +
+        t(32, 559, "No physical walker connected.", 26, "#c9f06b", 400) +
+        t(32, 606, "max.loftwah.com/demo", 22, "#fff8e8", 400)
+    },
+    {
+      id: "woodhouse-made-here-landscape",
+      w: 1200,
+      h: 630,
+      bg: "#080d19",
+      body:
+        loom(0, 0, 1200, 630) +
+        rect(0, 0, 590, 630, "#080d19") +
+        t(32, 57, "WOODHOUSE", 31, "#e9ff49") +
+        t(25, 210, "The things", 103) +
+        t(25, 321, "we make.", 116, "#e9ff49") +
+        t(32, 445, "Games. Software. Original music.", 27) +
+        t(32, 589, "woodhouse.loftwah.com", 25, "#e9ff49", 400)
+    }
+  ];
+  out = `${root}output/playwright/portfolio-20261025/alternatives/`;
+  masters = out;
+  mkdirSync(out, { recursive: true });
+  for (const c of candidates) render(c.id, c.w, c.h, c.bg, c.body);
+  out = `${root}public/campaign/20261025-v2/`;
+  masters = `${root}scripts/assets/showcase/masters-v2/`;
+  mkdirSync(out, { recursive: true });
+  mkdirSync(masters, { recursive: true });
+  for (const c of candidates.filter((c) => c.selected)) render(c.id, c.w, c.h, c.bg, c.body);
+  for (const c of wides) render(c.id, c.w, c.h, c.bg, c.body);
+  writeFileSync(
+    `${out}composition-receipt.json`,
+    JSON.stringify(
+      {
+        reviewedAt: "2026-10-25",
+        method:
+          "Editorial compositions of real public product captures and Woodhouse's own fibre artwork. Historical first editions retained.",
+        cards: cards.slice(-(4 + wides.length))
+      },
+      null,
+      2
+    ) + "\n"
+  );
+}

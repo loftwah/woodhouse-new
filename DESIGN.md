@@ -335,3 +335,12 @@ local rendered views; deployment is pending. Release identity, MP's taste
 acceptance and physical sharing/destination-app acceptance remain separate.
 PR #140’s editorial content and draft workflow are preserved. Its project-artwork
 links now use the corresponding canonical gallery collection.
+
+The focused second selection, reviewed 25 October 2026, keeps this gallery and
+replaces four weaker compositions. Bubbles' complete board, aim and launcher
+occupy a portrait plate; Paperwork's actual editor is large enough to inspect;
+MAX shows a deliberate simulator response with its simulation limit beside it;
+Woodhouse's own fibre artwork replaces the three-product strip. Independently
+composed landscape editions carry the same meaning. Earlier URLs and native OG
+art remain historical. The Composer action opens Paperwork's useful introduction
+rather than making a visitor find the pictured app from the studio homepage.
