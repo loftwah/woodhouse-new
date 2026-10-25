@@ -55,6 +55,7 @@
     "social-cards:record": "node scripts/social-cards.mjs",
     "social-cards:check": "node scripts/social-cards.mjs --check",
     "dossier-preview": "node scripts/render-dossier-preview.mjs",
+    "edition-card": "node scripts/render-edition-card.mjs",
     "share-previews": "node --experimental-strip-types scripts/render-share-previews.mjs",
     "share-previews:check": "node --experimental-strip-types scripts/render-share-previews.mjs --check",
     "diagrams": "bash scripts/render-diagrams.sh",

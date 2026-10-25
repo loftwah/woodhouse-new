@@ -263,3 +263,23 @@ text; Copy link is separate and uses the compact saved-view route. Share image
 sends only the file. Unsupported image sharing leads to visible downloads,
 never a text-only share. New image copy uses an explicit revision so existing
 PNG URLs retain their artwork. A browser API fixture is not X app acceptance.
+
+## What we built — reviewed 25 October 2026
+
+The dated portfolio edition opens as a magazine cover, not a dashboard: one
+display headline with the second word in acid italic, a short deck, three ruled
+jumps, then the lead project's own artwork at full width with its credit beneath.
+
+The body is three ruled sections rather than a card grid. Each project is one open
+row: its published artwork on the left and the argument on the right, with the
+state as a word plus a small dot (shipped / improving / in progress), never colour
+alone. The first shipped entry earns the wider plate. The product action and the
+route to the full record are ordinary links; the action label names the product
+(“Play Protocol 11”, “Listen LoftwahFM”, “Open MAX”) instead of a generic verb.
+
+Mobile is a deliberate single column: artwork, state, headline, paragraph, basis,
+actions, then the invitation. Nothing is hidden, and the reading order matches the
+desktop argument. The edition card is set over the site's own fibre lens with no
+project count or relative date to go stale. Share actions are link and caption
+only, with honest copy feedback; the image is a separate download.
+

@@ -1821,7 +1821,17 @@ const dataPayload = {
                       in the full week {f.from}–{f.to}
                       {f.newBest
                         ? `, a new best across ${f.comparedWeeks} complete weeks`
-                        : ""}. {f.nextAction}
+                        : ""}. {f.nextAction}{" "}
+                      <a
+                        href={`${pageLink({
+                          project: f.project,
+                          measure: f.metric,
+                          week: f.from,
+                          view: "chart"
+                        })}#week-focus`}
+                      >
+                        Open {names.get(f.project)}'s {f.label.toLowerCase()} for that week
+                      </a>
                     </p>
                   ))}
                 </section>

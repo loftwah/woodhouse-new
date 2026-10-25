@@ -34,6 +34,26 @@ export const prerender = false;
       </div>
     </div>
   </section>
+  <section class="section edition-callout" aria-labelledby="current-edition">
+    <div class="container">
+      <p class="edition-callout__label">Current edition · 25 October 2026</p>
+      <div class="edition-callout__row">
+        <div>
+          <h2 id="current-edition">
+            <a href="/editions/what-we-built/">What we built</a>
+          </h2>
+          <p>
+            Ten projects in one dated edit: what shipped, what is getting better, and what is still
+            being built. Four of them you can open right now.
+          </p>
+        </div>
+        <a class="edition-callout__action" href="/editions/what-we-built/">
+          Read the edition
+          <span aria-hidden="true"> ↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
   <section class="section paper-section">
     <div class="container">
       {editorialDispatches.map((dispatch, index) => (
@@ -67,3 +87,51 @@ export const prerender = false;
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .edition-callout {
+    padding-block: clamp(1.6rem, 3vw, 2.4rem);
+  }
+  .edition-callout__label {
+    margin: 0 0 0.8rem;
+    font: 0.7rem/1.4 var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--acid);
+  }
+  .edition-callout__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem 2.5rem;
+  }
+  .edition-callout h2 {
+    margin: 0 0 0.4rem;
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  .edition-callout h2 a {
+    color: var(--paper);
+  }
+  .edition-callout h2 a:hover {
+    color: var(--acid);
+  }
+  .edition-callout p {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--copy-soft);
+  }
+  .edition-callout__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 0;
+    color: var(--acid);
+    font-family: var(--display);
+    font-weight: 600;
+    border-bottom: 2px solid var(--acid);
+  }
+</style>

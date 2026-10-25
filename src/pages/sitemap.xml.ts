@@ -87,6 +87,7 @@ export const GET: APIRoute = async ({ cache }) => {
       "/contact/"
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
+    { path: "/editions/what-we-built/", lastmod: "2026-10-25" },
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate

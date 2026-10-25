@@ -104,6 +104,52 @@ function coverageDay(value: string | null | undefined): string | null {
   return /^\d{4}-\d{2}-\d{2}$/.test(day) ? day : null;
 }
 
+/**
+ * A seven-day pair taken from a daily series, used to give an aggregate finding
+ * something specific to compare against. The in-progress day is excluded rather
+ * than counted as a short day, and both windows must be fully observed: a
+ * partial week keeps its reason instead of becoming a movement.
+ */
+function recentWeekPair(
+  metric: Metric | undefined,
+  window: ReportingWindow
+): {
+  previous: number;
+  current: number;
+  from: string;
+  to: string;
+  previousFrom: string;
+  previousTo: string;
+  priorObservedDays: number;
+} | null {
+  if (!metric || metric.value === null || window.days < 14) return null;
+  const observed = new Map(metric.daily.map((point) => [point.date, point.value]));
+  const lastComplete = window.complete
+    ? window.to
+    : new Date(Date.parse(window.to) - 86400000).toISOString().slice(0, 10);
+  if (lastComplete < window.from) return null;
+  const days: string[] = [];
+  for (let index = 13; index >= 0; index -= 1) {
+    const day = new Date(Date.parse(lastComplete) - index * 86400000).toISOString().slice(0, 10);
+    if (day < window.from) return null;
+    days.push(day);
+  }
+  const current = days.slice(-7);
+  const previous = days.slice(0, 7);
+  const priorObservedDays = previous.filter((day) => observed.has(day)).length;
+  if (priorObservedDays < 7 || current.some((day) => !observed.has(day))) return null;
+  const sum = (list: string[]) => list.reduce((total, day) => total + (observed.get(day) ?? 0), 0);
+  return {
+    previous: sum(previous),
+    current: sum(current),
+    from: current[0]!,
+    to: current.at(-1)!,
+    previousFrom: previous[0]!,
+    previousTo: previous.at(-1)!,
+    priorObservedDays
+  };
+}
+
 function pickWeek(weekly: WeeklyHighlight[]): WeeklyHighlight | null {
   // A comparison needs two complete adjacent weeks. A record with no baseline is
   // still not a movement, so it is reported by the week-focus section instead.
@@ -184,6 +230,20 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
 
   const topDestination = input.discovery[0];
   if (topDestination) {
+    // "Opened most" is a ranking claim, so the card carries the field it beat and
+    // the total it came out of. Without that a reader has to trust the sentence,
+    // or follow a link that only shows the winning destination.
+    const runnerUp = input.discovery.find(
+      (entry) => entry.slug !== topDestination.slug && entry.value > 0
+    );
+    const field =
+      input.discoveryTotal !== null && input.discoveryTotal > topDestination.value
+        ? `${topDestination.value} of ${input.discoveryTotal.toLocaleString("en-AU")} recorded project clicks${
+            runnerUp ? `; ${runnerUp.name} was next with ${runnerUp.value}` : ""
+          }`
+        : runnerUp
+          ? `${topDestination.value} recorded clicks; ${runnerUp.name} was next with ${runnerUp.value}`
+          : `${topDestination.value} recorded clicks`;
     const comparison = topDestination.hasTrend
       ? `${topDestination.recent} clicks in the last seven days, against ${topDestination.prior} in the seven days before.`
       : window.days < 14
@@ -216,7 +276,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
             }
           }
         : {}),
-      establishes: `${clicks} from Woodhouse to ${topDestination.name} between ${dateLabel(window.from)} and ${dateLabel(window.to)} (UTC).`,
+      establishes: `${clicks} from Woodhouse to ${topDestination.name} between ${dateLabel(window.from)} and ${dateLabel(window.to)} (UTC) — ${field}.`,
       doesNotEstablish:
         "That anyone played, tried or kept using it. This counts clicks on Woodhouse, not what happened next.",
       href: input.links.discovery(),
@@ -271,6 +331,15 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   const visits = woodhouse?.data?.metrics.find((metric) => metric.key === "visits");
   const engaged = woodhouse?.data?.metrics.find((metric) => metric.key === "engaged_sessions");
   if (visits && visits.value !== null) {
+    // The opening statement for Woodhouse's own site is an aggregate. Give it the
+    // same before-and-after a reader expects elsewhere: the last seven counted
+    // days against the seven before, both required to be whole.
+    const pair = recentWeekPair(visits, window);
+    const comparison = pair
+      ? `${pair.current.toLocaleString("en-AU")} visits in the last seven counted days (${dateLabel(pair.from)}–${dateLabel(pair.to)}), against ${pair.previous.toLocaleString("en-AU")} in the seven days before.`
+      : window.days < 14
+        ? "These dates are shorter than the two weeks needed to compare."
+        : "No two complete seven-day windows are available inside these dates, so no comparison is claimed.";
     observations.push({
       kind: "audience",
       project: "woodhouse",
@@ -284,7 +353,18 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       figure: formatMetric({ value: visits.value, unit: visits.unit }),
       unitLabel: "visits",
       period: periodLabel,
-      comparison: "No earlier period is compared here.",
+      comparison,
+      ...(pair
+        ? {
+            change: {
+              previous: pair.previous,
+              current: pair.current,
+              previousLabel: "Previous 7 days",
+              currentLabel: "Last 7 days",
+              unit: visits.unit
+            }
+          }
+        : {}),
       establishes:
         engaged && engaged.value !== null
           ? `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded; ${formatMetric({ value: engaged.value, unit: engaged.unit })} lasted 10 seconds or more.`

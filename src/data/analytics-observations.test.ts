@@ -225,6 +225,128 @@ test("Woodhouse's own audience is reported with its engagement context", () => {
   assert.match(audience?.doesNotEstablish ?? "", /How many people/);
 });
 
+function visitsMetric(values: (number | null)[], from: string): Metric {
+  return {
+    ...metric(
+      "visits",
+      values.reduce<number>((total, value) => total + (value ?? 0), 0)
+    ),
+    daily: values.map((value, index) => ({
+      date: new Date(Date.parse(from) + index * 86400000).toISOString().slice(0, 10),
+      value: value ?? 0
+    }))
+  };
+}
+
+test("Woodhouse's own audience compares the last counted week with the one before", () => {
+  const { observations } = analyticsObservations(
+    input({
+      window: { from: "2026-10-01", to: "2026-10-30", days: 30, complete: true },
+      weekly: [],
+      discovery: [],
+      rows: [
+        {
+          project: "woodhouse",
+          name: "Woodhouse",
+          defaultMeasure: "visits",
+          data: {
+            coverage: { startedAt: "2026-01-01", through: "2026-10-30", quality: "exact" },
+            metrics: [
+              visitsMetric([...Array(23).fill(10), ...Array(7).fill(20)], "2026-10-01"),
+              metric("engaged_sessions", 12)
+            ]
+          }
+        }
+      ]
+    })
+  );
+  const audience = observations.find((observation) => observation.kind === "audience");
+  assert.match(audience?.comparison ?? "", /140 visits in the last seven counted days/);
+  assert.match(audience?.comparison ?? "", /against 70 in the seven days before/);
+  assert.deepEqual(audience?.change, {
+    previous: 70,
+    current: 140,
+    previousLabel: "Previous 7 days",
+    currentLabel: "Last 7 days",
+    unit: "count"
+  });
+});
+
+test("an in-progress day is left out of the audience comparison instead of counted short", () => {
+  const { observations } = analyticsObservations(
+    input({
+      window: { from: "2026-10-01", to: "2026-10-30", days: 30, complete: false },
+      weekly: [],
+      discovery: [],
+      rows: [
+        {
+          project: "woodhouse",
+          name: "Woodhouse",
+          defaultMeasure: "visits",
+          data: {
+            coverage: { startedAt: "2026-01-01", through: "2026-10-30", quality: "exact" },
+            // 24 observed days ending 29 October, so the compared weeks are 16–22 and 23–29.
+            metrics: [
+              visitsMetric([...Array(23).fill(10), ...Array(7).fill(20)], "2026-10-01"),
+              metric("engaged_sessions", 12)
+            ]
+          }
+        }
+      ]
+    })
+  );
+  const audience = observations.find((observation) => observation.kind === "audience");
+  assert.match(audience?.comparison ?? "", /130 visits in the last seven counted days/);
+  assert.match(audience?.comparison ?? "", /against 70 in the seven days before/);
+});
+
+test("an unobserved earlier week keeps the reason no comparison is claimed", () => {
+  const { observations } = analyticsObservations(
+    input({
+      window: { from: "2026-10-01", to: "2026-10-30", days: 30, complete: true },
+      weekly: [],
+      discovery: [],
+      rows: [
+        {
+          project: "woodhouse",
+          name: "Woodhouse",
+          defaultMeasure: "visits",
+          data: {
+            coverage: { startedAt: "2026-10-20", through: "2026-10-30", quality: "partial" },
+            metrics: [visitsMetric(Array(11).fill(5), "2026-10-20"), metric("engaged_sessions", 3)]
+          }
+        }
+      ]
+    })
+  );
+  const audience = observations.find((observation) => observation.kind === "audience");
+  assert.equal(audience?.change, undefined);
+  assert.match(audience?.comparison ?? "", /No two complete seven-day windows/);
+});
+
+test("discovery names the field it beat so 'opened most' is checkable", () => {
+  const { observations } = analyticsObservations(
+    input({
+      weekly: [],
+      discoveryTotal: 19,
+      discovery: [
+        referral({
+          slug: "app-composer",
+          name: "App Composer",
+          value: 7,
+          recent: 3,
+          hasTrend: false
+        }),
+        referral({ slug: "loftwahfm", name: "LoftwahFM", value: 6, recent: 4, hasTrend: false })
+      ]
+    })
+  );
+  const discovery = observations.find((observation) => observation.kind === "discovery");
+  assert.match(discovery?.establishes ?? "", /7 of 19 recorded project clicks/);
+  assert.match(discovery?.establishes ?? "", /LoftwahFM was next with 6/);
+  assert.match(discovery?.headline ?? "", /App Composer was the project readers opened most/);
+});
+
 test("missing sources produce reasons rather than an invented finding", () => {
   const { observations, emptyReason } = analyticsObservations(
     input({
