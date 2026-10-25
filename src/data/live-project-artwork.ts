@@ -1,7 +1,12 @@
 import type { WoodhouseProject } from "../content/repository.ts";
 import { approvedShareImage } from "./share-desk.ts";
 
-type Artwork = { image: string; alt?: string; width?: number; height?: number };
+type Artwork = {
+  image: string;
+  alt: string | undefined;
+  width: number | undefined;
+  height: number | undefined;
+};
 const freshness = 5 * 60 * 1000;
 const maxHeadBytes = 256 * 1024;
 
@@ -14,7 +19,8 @@ function decodeAttribute(value: string) {
       "&lt;": "<",
       "&gt;": ">"
     };
-    if (named[entity.toLowerCase()]) return named[entity.toLowerCase()];
+    const replacement = named[entity.toLowerCase()];
+    if (replacement !== undefined) return replacement;
     const hex = entity.toLowerCase().startsWith("&#x");
     const code = Number.parseInt(entity.slice(hex ? 3 : 2, -1), hex ? 16 : 10);
     return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : "";
@@ -22,14 +28,18 @@ function decodeAttribute(value: string) {
 }
 
 function artworkFromHead(html: string, source: string): Artwork | null {
-  const head = html
-    .split(/<\/head\s*>/i)[0]
-    .replace(/<!--[\s\S]*?-->|<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, "");
+  const head = (html.split(/<\/head\s*>/i)[0] ?? "").replace(
+    /<!--[\s\S]*?-->|<script\b[^>]*>[\s\S]*?<\/script\s*>/gi,
+    ""
+  );
   const values = new Map<string, string>();
   for (const tag of head.match(/<meta\b[^>]*>/gi) ?? []) {
     const attributes = new Map<string, string>();
-    for (const match of tag.matchAll(/([^\s=/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g))
-      attributes.set(match[1].toLowerCase(), decodeAttribute(match[2] ?? match[3] ?? match[4]));
+    for (const match of tag.matchAll(/([^\s=/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g)) {
+      const name = match[1];
+      if (name)
+        attributes.set(name.toLowerCase(), decodeAttribute(match[2] ?? match[3] ?? match[4] ?? ""));
+    }
     const key = (attributes.get("property") ?? attributes.get("name"))?.toLowerCase();
     if (key && !values.has(key) && attributes.has("content"))
       values.set(key, attributes.get("content")!);

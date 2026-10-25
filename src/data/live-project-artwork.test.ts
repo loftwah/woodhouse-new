@@ -99,7 +99,9 @@ test("a missing or arbitrary site never causes an outbound read", async () => {
     "https://composer.loftwah.com:8443/",
     "https://user:pass@composer.loftwah.com/"
   ]) {
-    const entry = { ...project, siteUrl };
+    const entry = { ...project };
+    delete entry.siteUrl;
+    if (siteUrl) entry.siteUrl = siteUrl;
     assert.equal(await reader(entry), entry);
   }
 });
