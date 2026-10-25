@@ -6,6 +6,30 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { Resvg, initWasm } from "@resvg/resvg-wasm";
 const root = new URL("../", import.meta.url).pathname;
+// The wall previously downloaded the full 960–1200px campaign JPEG even for
+// a half-width phone tile. Keep those URLs and originals; resize only copies.
+if (process.argv.includes("--responsive-previews")) {
+  const { campaignItems } = await import("../src/data/showcase-campaign.ts");
+  const directory = `${root}public/campaign/20261026-previews/`;
+  mkdirSync(directory, { recursive: true });
+  for (const item of campaignItems)
+    execFileSync("magick", [
+      `${root}public${item.image}`,
+      "-resize",
+      "640x>",
+      "-strip",
+      "-sampling-factor",
+      "4:2:0",
+      "-quality",
+      "85",
+      `${directory}${item.id}.jpg`
+    ]);
+  writeFileSync(
+    `${directory}provenance.txt`,
+    "Reviewed 26 October 2026 (AEDT). Responsive derivatives of the already published Woodhouse campaign JPEGs, resized without cropping by the existing renderer. Reproduce: node scripts/render-showcase-campaign.mjs --responsive-previews. Full previews, source masters and historical URLs are unchanged.\n"
+  );
+  process.exit(0);
+}
 const sources = `${root}scripts/assets/showcase/sources/`;
 const refinementsOnly = process.argv.includes("--refinements");
 let out = `${root}public/campaign/20261025/`;

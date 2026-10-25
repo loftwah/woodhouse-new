@@ -1,5 +1,16 @@
 import { campaignItems, type CampaignItem } from "./showcase-campaign.ts";
 
+/** The existing renderer caps display JPEGs at 1200px on their longest edge. */
+export function campaignResponsiveImage(item: CampaignItem) {
+  const scale = Math.min(1, 1200 / item.width, 1200 / item.height);
+  const fullWidth = Math.round(item.width * scale);
+  return {
+    thumbnail: `/campaign/20261026-previews/${item.id}.jpg`,
+    thumbnailWidth: Math.min(640, fullWidth),
+    fullWidth
+  };
+}
+
 /** A campaign never overrides the CMS publication decision, including a composite's inputs. */
 export function publicCampaignItems(projectSlugs: string[]): CampaignItem[] {
   const published = new Set(projectSlugs);
