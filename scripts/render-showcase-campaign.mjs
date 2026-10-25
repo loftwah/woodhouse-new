@@ -409,9 +409,9 @@ if (refinementsOnly) {
         clip(
           "board",
           0,
-          260,
+          320,
           1200,
-          1180,
+          1120,
           im("bubbles-production-20261025.png", -360, 190, 1980, 1238)
         ) +
         rect(0, 0, 1200, 220, "#17102b") +
