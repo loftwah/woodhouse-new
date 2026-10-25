@@ -8,6 +8,7 @@ import {
   campaignSocial
 } from "../../data/showcase-public";
 import { toJsonLd } from "../../data/safe-json";
+import { socialCardFor } from "../../data/site-metadata";
 
 export const prerender = false;
 const result = await listProjectRecords();
@@ -30,6 +31,12 @@ const description = project
   ? `${project.summary} Explore ${name} promotional artwork and current product captures, with original downloads and a direct link to the product.`
   : "Games, software and music from the Loftwah software factory. Explore the Woodhouse campaign, open the real products and download the original artwork.";
 const social = campaignSocial(items)!;
+// Reviewed 25 October 2026: retain these products' established share identity.
+// New gallery compositions must not replace their approved OG artwork.
+const productSocial =
+  project && ["loftwahfm", "bubbles", "app-composer"].includes(slug)
+    ? socialCardFor(project)
+    : null;
 const path = campaignCollectionPath(slug);
 const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 ---
@@ -39,10 +46,10 @@ const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
   description={description}
   path={path}
   currentPath="/share/"
-  image={social.original}
-  imageAlt={social.alt}
-  imageWidth={social.width}
-  imageHeight={social.height}
+  image={productSocial?.image ?? social.original}
+  imageAlt={productSocial?.alt ?? social.alt}
+  imageWidth={productSocial ? 1200 : social.width}
+  imageHeight={productSocial ? 630 : social.height}
 >
   <script
     slot="head"
