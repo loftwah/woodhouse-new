@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { stat } from "node:fs/promises";
 import { campaignItems } from "./showcase-campaign.ts";
-import { publicCampaignItems, campaignSitemapEntries } from "./showcase-public.ts";
+import {
+  publicCampaignItems,
+  campaignSitemapEntries,
+  campaignResponsiveImage
+} from "./showcase-public.ts";
 
 const published = [
   ...new Set(campaignItems.flatMap((item) => [item.project, ...(item.requiredProjects ?? [])]))
@@ -38,6 +42,12 @@ test("every advertised campaign original and bounded preview exists locally", as
     assert.ok(item.width > 0 && item.height > 0);
     const preview = await stat(new URL(`../../public${item.image}`, import.meta.url));
     const original = await stat(new URL(`../../public${item.original}`, import.meta.url));
+    const responsive = campaignResponsiveImage(item);
+    const thumbnail = await stat(new URL(`../../public${responsive.thumbnail}`, import.meta.url));
+    assert.ok(
+      thumbnail.size < preview.size,
+      `${item.id}: small tile avoids the full preview transfer`
+    );
     if (item.landscapeImage) {
       assert.match(
         item.landscapeImage,

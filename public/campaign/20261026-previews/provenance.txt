@@ -1,0 +1,1 @@
+Reviewed 26 October 2026 (AEDT). Responsive derivatives of the already published Woodhouse campaign JPEGs, resized without cropping by the existing renderer. Reproduce: node scripts/render-showcase-campaign.mjs --responsive-previews. Full previews, source masters and historical URLs are unchanged.
