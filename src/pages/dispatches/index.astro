@@ -1,4 +1,5 @@
 ---
+import { dispatchPath } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { listPublishedDispatches } from "../../content/repository";
 import { formatReviewDate } from "../../data/review-date";
@@ -60,7 +61,7 @@ export const prerender = false;
         <article class="ledger-note">
           <span class="ledger-note__index">DISPATCH / {String(index + 1).padStart(2, "0")}</span>
           <div class="ledger-note__main">
-            <a href={"/dispatches/" + dispatch.slug + "/"}>
+            <a href={dispatchPath(dispatch)}>
               <h2 class="ledger-note__title">{dispatch.title}</h2>
             </a>
             <p class="ledger-note__deck">{dispatch.deck}</p>

@@ -1,6 +1,7 @@
 ---
 import { portfolioEdition } from "../data/portfolio-edition";
 import EditionInvitation from "../components/EditionInvitation.astro";
+import { dispatchPath } from "../data/what-we-built";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { formatReviewDate } from "../data/review-date";
 import { portfolioReadout } from "../data/portfolio";
@@ -257,14 +258,14 @@ export const prerender = false;
               href={
                 edition && latestReport.slug === edition.slug
                   ? edition.href
-                  : `/dispatches/${latestReport.slug}/`
+                  : dispatchPath(latestReport)
               }
             >
               {latestReport.title}
             </a>
           </h2>
           <p>{latestReport.deck}</p>
-          <a class="text-link" href={`/dispatches/${latestReport.slug}/`}>
+          <a class="text-link" href={dispatchPath(latestReport)}>
             Read the portfolio report <span aria-hidden="true">↗</span>
           </a>
         </div>
@@ -318,13 +319,13 @@ export const prerender = false;
         {recentNotes.map((note) => (
           <article>
             <h3>
-              <a href={`/dispatches/${note.slug}/`}>{note.title}</a>
+              <a href={dispatchPath(note)}>{note.title}</a>
             </h3>
             <p class="publication-notes__meta">
               {note.kind} · {formatReviewDate(note.reviewDate) ?? note.reviewDate}
             </p>
             <p>{note.deck}</p>
-            <a class="text-link" href={`/dispatches/${note.slug}/`}>
+            <a class="text-link" href={dispatchPath(note)}>
               Read the story <span aria-hidden="true">↗</span>
             </a>
           </article>

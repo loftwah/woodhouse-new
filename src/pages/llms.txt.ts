@@ -1,3 +1,4 @@
+import { dispatchPath } from "../data/what-we-built";
 import type { APIRoute } from "astro";
 import {
   asText,
@@ -56,7 +57,7 @@ export const GET: APIRoute = async ({ cache }) => {
     "",
     ...dispatchResult.dispatches.map(
       (dispatch) =>
-        `- ${url(`/dispatches/${encodeURIComponent(dispatch.slug)}/`)} (${dispatch.kind}, reviewed ${dispatch.reviewDate})`
+        `- ${url(dispatchPath(dispatch))} (${dispatch.kind}, reviewed ${dispatch.reviewDate})`
     ),
     "",
     "## Projects",

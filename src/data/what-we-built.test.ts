@@ -1,14 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { readPortfolioEdition, editionPath } from "./what-we-built.ts";
+import { readPortfolioEdition, editionPath, dispatchPath } from "./what-we-built.ts";
 import type { EditorialDispatch } from "../content/repository.ts";
 const seed = JSON.parse(readFileSync(new URL("../../seed/seed.json", import.meta.url), "utf8"));
 const row = seed.content.dispatches.find(
   (d: { slug: string }) => d.slug === "what-we-built-2026-10-25"
 );
 const dispatch = (): EditorialDispatch => ({
-  ...row.data,
+  ...structuredClone(row.data),
   slug: row.slug,
   reviewDate: row.data.review_date,
   sourceReference: row.data.source_reference,
@@ -58,4 +58,11 @@ test("incomplete, duplicated, future-sourced and unsafe-source entries fail clos
     if (mutation === "duplicate") d.content.push(structuredClone(b));
     assert.equal(readPortfolioEdition(d), null, mutation);
   }
+});
+
+test("edition discovery publishes the canonical path without an alias hop", () => {
+  assert.equal(dispatchPath(dispatch()), "/editions/what-we-built/");
+  const ordinary = dispatch();
+  ordinary.content = [];
+  assert.equal(dispatchPath(ordinary), "/dispatches/what-we-built-2026-10-25/");
 });

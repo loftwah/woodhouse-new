@@ -80,3 +80,10 @@ export function readPortfolioEdition(dispatch: EditorialDispatch | null) {
   }
   return entries.length ? { dispatch, entries, path: editionPath(dispatch.slug) } : null;
 }
+
+/** One canonical address for reader, feed, sitemap and agent discovery. */
+export function dispatchPath(dispatch: EditorialDispatch) {
+  return (
+    readPortfolioEdition(dispatch)?.path ?? `/dispatches/${encodeURIComponent(dispatch.slug)}/`
+  );
+}

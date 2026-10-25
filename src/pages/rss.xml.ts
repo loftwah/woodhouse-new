@@ -1,3 +1,4 @@
+import { dispatchPath } from "../data/what-we-built";
 import type { APIRoute } from "astro";
 import { listPublishedDispatches } from "../content/repository";
 import { validReviewDay } from "../data/dispatch-dates";
@@ -47,7 +48,7 @@ export const GET: APIRoute = async ({ cache }) => {
   }));
   const items = dispatches
     .map((dispatch) => {
-      const link = `${siteOrigin}/dispatches/${encodeURIComponent(dispatch.slug)}/`;
+      const link = `${siteOrigin}${dispatchPath(dispatch)}`;
       return `<item><title>${xmlSafe(dispatch.title)}</title><link>${xmlSafe(link)}</link><guid>${xmlSafe(link)}</guid><description>${xmlSafe(dispatch.deck)}</description><pubDate>${dispatch.date.toUTCString()}</pubDate><category>${xmlSafe(dispatch.kind)}</category></item>`;
     })
     .join("");
