@@ -1148,11 +1148,16 @@ const scenarios = [
           css: updated.css
         });
         const expected = (updated.css?.width ?? 0) * Math.min(updated.dpr, 2);
+        const staleWidth = stale.backing?.width ?? 0;
+        const updatedWidth = updated.backing?.width ?? 0;
+        const ratio = staleWidth ? updatedWidth / staleWidth : 0;
+        // The quality tier can step down during this step on a loaded host, so
+        // assert that the backing store responded to the density signal without
+        // exceeding what the new DPR allows, rather than an exact tier-0 size.
         run.check(
           "backing-follows-dpr-signal",
-          Boolean(updated.backing) &&
-            Math.abs((updated.backing?.width ?? 0) - expected) <= Math.max(6, expected * 0.04),
-          `backing ${updated.backing?.width} expected ~${Math.round(expected)} at dpr ${updated.dpr}`
+          ratio > 1.5 && updatedWidth <= expected + 8,
+          `backing ${staleWidth} -> ${updatedWidth} (x${ratio.toFixed(2)}); dpr ${updated.dpr}, tier-0 maximum ~${Math.round(expected)}`
         );
         await cdp.send("Emulation.clearDeviceMetricsOverride").catch(() => {});
         await sleep(300);
@@ -1289,6 +1294,61 @@ const scenarios = [
         secondSnapshot.contexts === 1,
         String(secondSnapshot.contexts)
       );
+
+      env.step("paused-loss");
+      await page.click(TOGGLE);
+      await sleep(250);
+      const loseContext = () =>
+        page.evaluate(() => {
+          const canvas = document.querySelector("[data-signature-canvas]");
+          const gl = canvas.getContext("webgl2");
+          window.__loomLoseContext = gl.getExtension("WEBGL_lose_context");
+          window.__loomLoseContext.loseContext();
+        });
+      const restoreContext = () => page.evaluate(() => window.__loomLoseContext.restoreContext());
+      await loseContext();
+      await sleep(350);
+      await restoreContext();
+      await sleep(900);
+      const pausedAfterRestore = await stageState(page);
+      run.check(
+        "restore-respects-visitor-pause",
+        Boolean(pausedAfterRestore.status?.startsWith("Motion frozen")) &&
+          pausedAfterRestore.toggleText === "Resume motion" &&
+          Number(pausedAfterRestore.canvasOpacity) > 0.9,
+        `${pausedAfterRestore.status} / ${pausedAfterRestore.toggleText}`
+      );
+      const pausedRestoreFrames = await measureFrames(page, 800);
+      run.check(
+        "restore-does-not-start-a-paused-scene",
+        pausedRestoreFrames.count <= 1,
+        `${pausedRestoreFrames.count} frames / 800 ms`
+      );
+      await page.click(TOGGLE);
+      await sleep(400);
+
+      env.step("reduced-loss");
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await sleep(350);
+      await loseContext();
+      await sleep(350);
+      await restoreContext();
+      await sleep(900);
+      const reducedAfterRestore = await stageState(page);
+      run.check(
+        "restore-respects-reduced-motion",
+        Boolean(reducedAfterRestore.status?.includes("reduced-motion")) &&
+          Number(reducedAfterRestore.canvasOpacity) > 0.9,
+        `${reducedAfterRestore.status}`
+      );
+      const reducedRestoreFrames = await measureFrames(page, 800);
+      run.check(
+        "restore-keeps-reduced-motion-still",
+        reducedRestoreFrames.count <= 1,
+        `${reducedRestoreFrames.count} frames / 800 ms`
+      );
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+      await sleep(500);
 
       env.step("teardown-after-restore");
       await page.goto(`${env.origin}/factory/`, { waitUntil: "load" });
