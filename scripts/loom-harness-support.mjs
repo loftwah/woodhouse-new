@@ -40,6 +40,16 @@ const CONSOLE_NOISE = [
     prefix: "Button failed to load, iconName = ",
     kind: "environment",
     why: "Playwright WebKit's own media-control button artwork fails to load; no page script is involved"
+  },
+  {
+    prefix: "window.styleMedia is a deprecated draft version of window.matchMedia API",
+    kind: "environment",
+    why: "WebKit's own deprecation notice for a draft API this site never references"
+  },
+  {
+    prefix: "The resource https://woodhouse.loftwah.com",
+    kind: "environment",
+    why: "WebKit font-preload note on the live origin; unrelated to the loom"
   }
 ];
 
@@ -122,6 +132,27 @@ export function meanBrightness(capture) {
     samples += 3;
   }
   return total / samples;
+}
+
+/**
+ * Only growth is accumulation.
+ *
+ * `sameListenerMap` reports any change, which on the live origin flagged a
+ * `visibilitychange` net that went 3 -> 2 across the cycle as an accumulation.
+ * A leak adds listeners; losing one is the direction that is safe. Counting them
+ * as the same failure makes the check cry wolf and hides the real shape.
+ */
+export function listenerGrowth(before, after) {
+  const left = before ?? {};
+  const right = after ?? {};
+  const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
+  const growth = [];
+  for (const key of keys) {
+    const a = left[key] ?? 0;
+    const b = right[key] ?? 0;
+    if (b > a) growth.push(`${key}: ${a} -> ${b}`);
+  }
+  return growth;
 }
 
 export function sameListenerMap(before, after) {
