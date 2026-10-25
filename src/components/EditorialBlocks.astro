@@ -9,6 +9,7 @@ import ImagePlateBlock from "./blocks/ImagePlateBlock.astro";
 import EvidenceLinkBlock from "./blocks/EvidenceLinkBlock.astro";
 import ProjectReferenceBlock from "./blocks/ProjectReferenceBlock.astro";
 import CapabilityReviewBlock from "./blocks/CapabilityReviewBlock.astro";
+import PortfolioEntryBlock from "./blocks/PortfolioEntryBlock.astro";
 import UnknownBlock from "./blocks/UnknownBlock.astro";
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
 const { value = [] } = Astro.props;
 const components = {
   prose: Prose,
+  portfolio_entry: PortfolioEntryBlock,
   pull_quote: PullQuote,
   callout: Callout,
   technical_plate: TechnicalPlateBlock,

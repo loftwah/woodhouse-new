@@ -4,6 +4,7 @@ import EditionShareAssets from "../components/EditionShareAssets.astro";
 import { editionShareAssets } from "../data/edition-share-kit";
 import { portfolioEdition } from "../data/portfolio-edition";
 import EditionInvitation from "../components/EditionInvitation.astro";
+import { dispatchPath } from "../data/what-we-built";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import GameMedia from "../components/GameMedia.astro";
 import GalleryPagination from "../components/GalleryPagination.astro";
@@ -575,13 +576,13 @@ const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.proje
                   caption={shareCaption(
                     story.title,
                     story.deck,
-                    `https://woodhouse.loftwah.com/dispatches/${story.slug}/`
+                    `https://woodhouse.loftwah.com${dispatchPath(story)}`
                   )}
                   image={dispatchSocialCard(story.slug)}
                   filename={`${story.slug}.jpg`}
-                  link={`https://woodhouse.loftwah.com/dispatches/${story.slug}/`}
+                  link={`https://woodhouse.loftwah.com${dispatchPath(story)}`}
                 />
-                <a class="story-link" href={`/dispatches/${story.slug}/`}>
+                <a class="story-link" href={dispatchPath(story)}>
                   Read the story
                 </a>
               </figure>

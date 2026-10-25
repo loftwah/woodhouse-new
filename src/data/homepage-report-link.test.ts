@@ -31,8 +31,8 @@ test("the homepage still offers the portfolio report", () => {
 test("the homepage report link is built from content, not a hardcoded slug", () => {
   assert.match(
     homepage,
-    /href=\{`\/dispatches\/\$\{latestReport\.slug\}\/`\}/,
-    "the report link must follow the newest report in the read model"
+    /href=\{dispatchPath\(latestReport\)\}/,
+    "the report link must follow the newest report’s canonical address"
   );
   // A hardcoded slug would silently point at a superseded report the next time
   // a newer one is reviewed.

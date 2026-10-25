@@ -30,7 +30,7 @@ const aliases: Record<string, string> = {
   loftwahfm:
     "music radio fm station stream song songs album soundtrack playlist music for my game game music background music listening shows radio client audio",
   "social-club":
-    "membership club hospitality restaurant venue booking private members experience prototype",
+    "Plans With You Social Club calendar protected time plans cancellation cancel commitment evening waitlist prototype",
   "asset-hunter":
     "assets asset discovery rights licence licences credit attribution packs images icons fonts textures models sourcing free assets field guide",
   "app-composer":

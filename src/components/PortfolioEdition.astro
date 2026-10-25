@@ -1,0 +1,430 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { WoodhouseProject } from "../content/repository";
+import { dispatchSocialCard } from "../data/social-cards";
+import { formatReviewDate } from "../data/review-date";
+import { projectActionLabel } from "../data/share-browser";
+import {
+  editionSections,
+  type EditionEntry,
+  type EditionSectionKey,
+  type readPortfolioEdition
+} from "../data/what-we-built";
+import "../styles/what-we-built.css";
+
+type Props = {
+  edition: NonNullable<ReturnType<typeof readPortfolioEdition>>;
+  projects: WoodhouseProject[];
+  isPreview?: boolean;
+};
+const { edition, projects, isPreview = false } = Astro.props;
+const { dispatch, entries: editionEntries, path } = edition;
+const editionReviewDate = formatReviewDate(dispatch.reviewDate);
+const editionMethod = [
+  dispatch.sourceReference,
+  "The stories describe the work on the review date. Project names, artwork and destinations come from the current published records; they may change later. A withdrawn project is withheld, and the text makes no new release claim when that happens.",
+  "A merge is not a deployment, and a deployment is not a person using the thing. Physical use and customer adoption need their own evidence."
+];
+const published = new Map(projects.map((project) => [project.slug, project]));
+// An unpublished project silently leaves the edition rather than leaving a dead
+// action behind. The count is reported honestly at the foot of the page.
+const present = editionEntries.filter((entry) => published.has(entry.slug));
+const withheld = editionEntries.length - present.length;
+const bySection = (key: EditionSectionKey) => present.filter((entry) => entry.section === key);
+
+const lead =
+  bySection("shipped").find((entry) => published.get(entry.slug)?.previewImage) ?? present[0]!;
+const leadProject = lead ? published.get(lead.slug) : undefined;
+const heroImage = leadProject?.previewImage;
+const actionLabel = (entry: EditionEntry) => {
+  const label = projectActionLabel(entry.slug);
+  return label === "Open project"
+    ? `Open ${published.get(entry.slug)?.name ?? entry.slug}`
+    : `${label} ${published.get(entry.slug)?.name ?? entry.slug}`;
+};
+const dossier = (entry: EditionEntry) => `/projects/${entry.slug}/`;
+const site = (entry: EditionEntry) => published.get(entry.slug)?.siteUrl ?? null;
+const artworkAlt = (entry: EditionEntry) => {
+  const project = published.get(entry.slug);
+  return project?.previewAlt ?? `${project?.name ?? entry.slug} artwork from its own site.`;
+};
+
+const counts = {
+  published: present.length
+};
+const title = `${dispatch.title} — a Woodhouse portfolio edition`;
+const description = dispatch.deck;
+const caption = `${dispatch.title} · Woodhouse, ${editionReviewDate}\n${dispatch.deck}`;
+const firstEdition = dispatch.slug === "what-we-built-2026-10-25";
+const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocialCard(dispatch.slug);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  currentPath="/dispatches/"
+  type="article"
+  image={card}
+  noindex={isPreview}
+  imageAlt={
+    firstEdition
+      ? "What we built, over Woodhouse’s tensioned-fibre lens. Reviewed 25 October 2026."
+      : "Woodhouse editorial artwork."
+  }
+  publishedAt={`${dispatch.reviewDate}T00:00:00.000Z`}
+  modifiedAt={dispatch.updatedAt ?? undefined}
+>
+  <article class="wwb">
+    {isPreview && (
+      <p class="container source-note">
+        <strong>Unpublished rehearsal.</strong> This is a local EmDash draft, not a new release or a
+        public edition.
+      </p>
+    )}
+    <nav class="wwb-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">WOODHOUSE</a>
+      <span aria-hidden="true">/</span>
+      <a href="/dispatches/">Stories</a>
+      <span aria-hidden="true">/</span>
+      <span>{dispatch.title}</span>
+    </nav>
+
+    <header class="wwb-cover">
+      <p class="wwb-kicker">Portfolio edition · {editionReviewDate}</p>
+      <h1>
+        {dispatch.title === "What we built" ? (
+          <>
+            What we <em>built</em>
+          </>
+        ) : (
+          dispatch.title
+        )}
+      </h1>
+      <p class="wwb-deck">{dispatch.lead}</p>
+      <ul class="wwb-jump">
+        {editionSections
+          .filter((section) => bySection(section.key).length > 0)
+          .map((section) => (
+            <li>
+              <a href={`#${section.key}`}>
+                <span>{section.title}</span>
+                <small>{bySection(section.key).length}</small>
+              </a>
+            </li>
+          ))}
+      </ul>
+    </header>
+
+    {present.length === 0 && (
+      <p class="wwb-deck">
+        The selected projects are no longer public. Their stories and actions are withheld.
+      </p>
+    )}
+    {heroImage && leadProject && (
+      <figure class="wwb-lead">
+        <img
+          src={heroImage}
+          alt={artworkAlt(lead)}
+          width="1200"
+          height="630"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <figcaption>
+          <span class="wwb-lead__project">
+            <strong>{leadProject.name}.</strong> <a href={dossier(lead)}>The full record</a>
+          </span>
+          <span class="wwb-credit">
+            <a href={site(lead) ?? dossier(lead)}>{leadProject.name}</a>
+            {leadProject.previewCaption
+              ? ` · ${leadProject.previewCaption}`
+              : " · artwork reviewed for this edition"}
+          </span>
+        </figcaption>
+      </figure>
+    )}
+
+    {editionSections.map((section) => {
+      const entries = bySection(section.key);
+      if (!entries.length) return null;
+      return (
+        <section class={`wwb-section wwb-section--${section.key}`} id={section.key}>
+          <header class="wwb-section__head">
+            <h2>{section.title}</h2>
+            <p>{section.deck}</p>
+          </header>
+          <ol class="wwb-entries">
+            {entries.map((entry) => {
+              const project = published.get(entry.slug)!;
+              const href = site(entry);
+              return (
+                <li class="wwb-entry" id={`project-${entry.slug}`}>
+                  <div class="wwb-entry__media">
+                    {project.previewImage ? (
+                      <img
+                        src={project.previewImage}
+                        alt={artworkAlt(entry)}
+                        width="1200"
+                        height="630"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <div class="wwb-entry__plate" aria-hidden="true">
+                        <span>{project.name}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div class="wwb-entry__body">
+                    <p class="wwb-entry__kicker">
+                      <span class={`wwb-state wwb-state--${section.key}`}>{section.state}</span>
+                      <span>{project.discipline}</span>
+                    </p>
+                    <h3>
+                      <span class="wwb-entry__name">{project.name}.</span> {entry.headline}
+                    </h3>
+                    <p>{entry.body}</p>
+                    <p class="wwb-entry__basis">
+                      <strong>Where that stands:</strong> {entry.basis}
+                    </p>
+                    <div class="wwb-entry__actions">
+                      {href && (
+                        <a class="wwb-action" href={href} target="_blank" rel="noopener noreferrer">
+                          {actionLabel(entry)}
+                          <span aria-hidden="true"> ↗</span>
+                        </a>
+                      )}
+                      <a class="wwb-record" href={dossier(entry)}>
+                        See the full record
+                      </a>
+                      {entry.readMore && (
+                        <a class="wwb-record" href={entry.readMore.href}>
+                          {entry.readMore.label}
+                        </a>
+                      )}
+                    </div>
+                    <p class="wwb-entry__invitation">{entry.invitation}</p>
+                    {!isPreview && ["social-club", "app-composer"].includes(entry.slug) && (
+                      <div class="wwb-entry__actions" data-story-share>
+                        <button
+                          type="button"
+                          data-copy-story
+                          data-story-caption={`${project.name}: ${entry.headline}. ${entry.basis}`}
+                          data-story-path={`${path}#project-${entry.slug}`}
+                        >
+                          Copy this story
+                        </button>
+                        <span role="status" aria-live="polite" data-story-status></span>
+                      </div>
+                    )}
+                    <p class="wwb-entry__caption">
+                      <a href={entry.sourceUrl}>Source</a> · checked{" "}
+                      {formatReviewDate(entry.sourceReviewed)} ·{" "}
+                      <a href={`#project-${entry.slug}`}>Link to this part</a> ·{" "}
+                      <a href={`/share/?project=${entry.slug}`}>Project artwork</a>
+                    </p>
+                    <p class="wwb-entry__caption">
+                      {project.previewImage ? (
+                        <>
+                          {href ? (
+                            <a href={href} target="_blank" rel="noopener noreferrer">
+                              {project.name}
+                            </a>
+                          ) : (
+                            <span>{project.name}</span>
+                          )}
+                          {project.previewCaption
+                            ? ` · ${project.previewCaption}`
+                            : " · artwork reviewed for this edition"}
+                        </>
+                      ) : (
+                        <>
+                          No artwork published by {project.name} yet. The plate names the project.
+                        </>
+                      )}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      );
+    })}
+
+    <section class="wwb-learning" aria-labelledby="learning-heading">
+      <h2 id="learning-heading">What this edition taught us</h2>
+      <p>{dispatch.lesson}</p>
+    </section>
+
+    <section class="wwb-method" aria-labelledby="method-heading">
+      <h2 id="method-heading">How this edition was made</h2>
+      <ul>
+        {editionMethod.map((line) => (
+          <li>{line}</li>
+        ))}
+      </ul>
+      <p class="wwb-count">
+        {counts.published} of {editionEntries.length} selected projects are currently public.
+        {withheld > 0 && ` ${withheld} entry was withheld because its project is not public.`}
+      </p>
+    </section>
+
+    {!isPreview && (
+      <section
+        class="wwb-share"
+        aria-labelledby="share-heading"
+        data-edition-share
+        data-caption={caption.replace(/\n/g, " ")}
+        data-path={path}
+        data-title={dispatch.title}
+      >
+        <h2 id="share-heading">Send it to someone</h2>
+        <p>
+          Copy the link, copy a short post, or hand it to your device's share sheet. Nothing is
+          posted on your behalf.
+        </p>
+        <div class="wwb-share__actions">
+          <button type="button" class="wwb-share__native" data-share-native hidden>
+            Share this edition
+          </button>
+          <button type="button" data-share-image hidden>
+            Share edition image
+          </button>
+          <button type="button" data-share-link>
+            Copy link
+          </button>
+          <button type="button" data-share-caption>
+            Copy post
+          </button>
+        </div>
+        <p class="wwb-share__status" role="status" aria-live="polite" data-share-status></p>
+        <p class="wwb-share__more">
+          Want the picture?
+          <a href={card} download>
+            Download the edition card
+          </a>{" "}
+          (1200×630)
+          {firstEdition && (
+            <>
+              {" "}
+              ·{" "}
+              <a href="/og/what-we-built-20261025-v2-square.jpg" download>
+                Square (1200×1200)
+              </a>{" "}
+              ·{" "}
+              <a href="/og/what-we-built-20261025-v2-portrait.jpg" download>
+                Portrait (1080×1920)
+              </a>
+            </>
+          )}
+          , or browse <a href="/share/">the share desk</a> for every approved project format.
+        </p>
+      </section>
+    )}
+  </article>
+</BaseLayout>
+
+<script>
+  import { createImageShare } from "../scripts/leaderboard-share";
+  document.querySelectorAll<HTMLElement>("[data-story-share]").forEach((story) => {
+    const button = story.querySelector<HTMLButtonElement>("[data-copy-story]");
+    const status = story.querySelector<HTMLElement>("[data-story-status]");
+    button?.addEventListener("click", async () => {
+      const link = new URL(button.dataset.storyPath ?? location.pathname, location.origin).href;
+      try {
+        await navigator.clipboard.writeText(`${button.dataset.storyCaption}\n${link}`);
+        if (status) status.textContent = "Story and link copied.";
+      } catch {
+        if (status) status.textContent = `Copy failed. The story link is ${link}`;
+      }
+    });
+  });
+  const root = document.querySelector<HTMLElement>("[data-edition-share]");
+  if (root) {
+    const caption =
+      root.dataset.caption ?? "What we built · Woodhouse portfolio edition, 25 October 2026.";
+    const status = root.querySelector<HTMLElement>("[data-share-status]");
+    const native = root.querySelector<HTMLButtonElement>("[data-share-native]");
+    const link = new URL(root.dataset.path ?? location.pathname, location.origin).href;
+    let timer: number | undefined;
+    const say = (message: string) => {
+      if (!status) return;
+      status.textContent = message;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        status.textContent = "";
+      }, 6000);
+    };
+
+    if (native && typeof navigator.share === "function") native.hidden = false;
+    native?.addEventListener("click", async () => {
+      try {
+        await navigator.share({ title: root.dataset.title ?? "Woodhouse edition", url: link });
+        say("Handed to your device's share options.");
+      } catch (error) {
+        say(
+          (error as DOMException)?.name === "AbortError"
+            ? "Share cancelled. The link is still here."
+            : "Your device could not share this. Use Copy link instead."
+        );
+      }
+    });
+
+    const imageButton = root.querySelector<HTMLButtonElement>("[data-share-image]");
+    const imageLink = root.querySelector<HTMLAnchorElement>("a[download]");
+    if (imageButton && imageLink && navigator.share && navigator.canShare) {
+      const imageShare = createImageShare({
+        loadImage: async () => {
+          const response = await fetch(imageLink.href);
+          if (!response.ok) throw new Error("Image unavailable");
+          return new File(
+            [await response.blob()],
+            imageLink.pathname.split("/").pop() ?? "woodhouse.jpg",
+            { type: "image/jpeg" }
+          );
+        },
+        share: (data) => navigator.share(data),
+        canShare: (data) => navigator.canShare(data)
+      });
+      imageShare
+        .prepare()
+        .then((file) => {
+          imageButton.hidden = !navigator.canShare({ files: [file] });
+        })
+        .catch(() => {});
+      imageButton.addEventListener("click", async () => {
+        say("Opening your image share options…");
+        const result = await imageShare.share();
+        say(
+          result === "shared"
+            ? "Image handed to your device’s share options."
+            : result === "cancelled"
+              ? "Share cancelled. The downloads are still here."
+              : result === "pending"
+                ? "Your image share options are already open."
+                : "Image sharing is unavailable. Download the image instead."
+        );
+      });
+    }
+
+    root.querySelector("[data-share-link]")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(link);
+        say("Edition link copied.");
+      } catch {
+        say(`Copy failed. The link is ${link}`);
+      }
+    });
+
+    root.querySelector("[data-share-caption]")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(`${caption}\n${link}`);
+        say("Post copied, with the link.");
+      } catch {
+        say("Copy failed. Your browser may be blocking clipboard access.");
+      }
+    });
+  }
+</script>

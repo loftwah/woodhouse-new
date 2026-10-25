@@ -845,6 +845,85 @@
           ]
         }
       ]
+    },
+    {
+      "slug": "portfolio_entry",
+      "label": "Portfolio edition entry",
+      "currentVersion": 1,
+      "versions": [
+        {
+          "version": 1,
+          "fields": [
+            {
+              "slug": "project_key",
+              "label": "Project slug",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "section",
+              "label": "Section",
+              "type": "select",
+              "required": true,
+              "validation": {
+                "options": [
+                  "shipped",
+                  "improving",
+                  "waiting"
+                ]
+              }
+            },
+            {
+              "slug": "headline",
+              "label": "Headline",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "body",
+              "label": "Story",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "basis",
+              "label": "What the state rests on",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "invitation",
+              "label": "First step",
+              "type": "text",
+              "required": true
+            },
+            {
+              "slug": "source_url",
+              "label": "Public source",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "source_reviewed",
+              "label": "Source review date",
+              "type": "string",
+              "required": true
+            },
+            {
+              "slug": "read_more_label",
+              "label": "Related story label",
+              "type": "string",
+              "required": false
+            },
+            {
+              "slug": "read_more_href",
+              "label": "Related story path",
+              "type": "string",
+              "required": false
+            }
+          ]
+        }
+      ]
     }
   ],
   "collections": [
@@ -1370,7 +1449,8 @@
               "image_plate",
               "evidence_link",
               "project_reference",
-              "capability_review"
+              "capability_review",
+              "portfolio_entry"
             ],
             "maxItems": 100
           }
@@ -2044,20 +2124,20 @@
         "slug": "social-club",
         "status": "published",
         "data": {
-          "name": "Social Club",
+          "name": "Plans With You",
           "index": "08",
-          "discipline": "Hospitality · membership experience",
-          "title": "Membership and hospitality, in prototype.",
-          "summary": "Social Club is a membership and hospitality product: a working foundation for a private-club experience, from joining through to what members see.",
-          "why": "A club is about how it feels to be a member, not just what the booking form does. The foundation works; that feeling is the standard the next design pass has to reach.",
+          "discipline": "Calendar protection · planned cancellation",
+          "title": "Plans cancelled. Time kept.",
+          "summary": "Plans With You proposes a plausible calendar commitment, confirmation and deliberate cancellation so you can keep a block of time your own. The public site explains the idea and accepts waitlist interest; paid membership is not open.",
+          "why": "A credible prior commitment can make it easier to protect an evening. Plans With You builds its invitation and cancellation around that purpose, with no attendance expected. Today you can explore the example and join the waitlist.",
           "teaches": "Product quality includes how a coherent interface feels as well as what its controls do.",
           "site_url": "https://club.loftwah.com/",
           "site_og_image": "https://club.loftwah.com/og/default.svg",
           "site_og_title": "Plans With You",
           "site_og_description": "Protected time with a commitment that looks the part — and predictably gets cancelled.",
           "site_favicon": "https://club.loftwah.com/favicon.svg",
-          "preview_alt": "Artwork on the Social Club site: a cream poster headed “Plans were made. Then unmade.” beside a blue ordinary-plan card marked CANCELLED.",
-          "preview_caption": "Artwork from the Social Club site · reviewed 24 October 2026",
+          "preview_alt": "Plans With You artwork: a cream poster headed “Plans were made. Then unmade.” beside a blue ordinary-plan card marked CANCELLED.",
+          "preview_caption": "Artwork from the Plans With You site · reviewed 25 October 2026",
           "public_safe": true
         }
       },
@@ -2312,6 +2392,19 @@
           "source_description": "Fighter’s released public metadata, release manifest and selected versioned Dean/Pippa artwork, followed by Woodhouse’s project, dossier, share and download consumers. Public-safe observations only.",
           "scope": "Fighter’s current promotional identity and its verified portfolio adoption. Earlier gameplay and frozen-edition records retain their own dates and scope.",
           "editorial_notes": "The poster uses Fighter’s established Dean/Loftwah and Pippa designs. The producer owns the artwork and release; Woodhouse retains a matching local fallback with the same credit. Artwork adoption does not establish new gameplay acceptance, physical native sharing or external social-cache refresh.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-10-25-edition-correction",
+        "slug": "2026-10-25-edition-correction",
+        "status": "published",
+        "data": {
+          "title": "Plans With You public identity and portfolio edition correction · 25 October 2026",
+          "reviewed_at": "2026-10-25",
+          "source_description": "The owning public product sites, their current metadata and Woodhouse’s existing dated portfolio records, reviewed 25 October 2026. Private repository evidence checked selected claims; private bodies remain unpublished.",
+          "scope": "Plans With You’s current proposition and waitlist boundary; the portfolio edition’s dated text and current project references. Earlier gameplay, artwork and frozen reports retain their dates.",
+          "editorial_notes": "Plans With You replaces the stale private-club introduction. The public sample establishes neither a real calendar operation nor paid membership. MAX’s public simulation is distinct from physical hardware. No new producer artwork, customer adoption or physical acceptance is claimed.",
           "public_safe": true
         }
       }
@@ -3321,6 +3414,25 @@
           "proof_boundary": "One existing owner in a fictional workspace on the shared app runtime. New-customer admission, invited-member contributions, dedicated team infrastructure, incident recovery, restore and retirement are outside this proof. Public postcards remain closed. Public moderation sharing is unsupported; an approval is not an Open.",
           "reviewed_at": "2026-10-23",
           "sort_order": 13,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-social-club-2026-10-25",
+        "slug": "social-club-2026-10-25",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-10-25-edition-correction",
+          "project_key": "social-club",
+          "snapshot_key": "2026-10-25-edition-correction",
+          "state": "Waitlist open · paid membership closed",
+          "state_tone": "quiet",
+          "current": "Plans With You’s public site presents protected calendar time through a plausible commitment, confirmation and deliberate cancellation. The sample is illustrative; visitors can register interest without a payment card.",
+          "next_proof": "Product-owned delivery and acceptance of the real calendar and correspondence journey before claiming an operating membership service.",
+          "proof_boundary": "Public homepage and waitlist inspected 25 October 2026. The sample is not a real booking, cancellation, paid membership or proof of customer use.",
+          "reviewed_at": "2026-10-25",
+          "sort_order": 8,
           "public_safe": true
         }
       }
@@ -5363,6 +5475,29 @@
           "revision": "efc226eac2eaa83520f4a18e2b67b0a99b901dd3",
           "public_safe": true,
           "proof_boundary": "Studio source and small-preview review establish this artwork delivery. Gameplay, physical-device sharing and external platform previews remain separate. The report producer revision identifies aggregate-producing code, not every historical event client."
+        }
+      },
+      {
+        "id": "evidence-plans-with-you-2026-10-25",
+        "slug": "plans-with-you-public-proposition-2026-10-25",
+        "status": "published",
+        "data": {
+          "title": "Plans With You presents planned cancellation and an open waitlist",
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-10-25-edition-correction",
+          "project_key": "social-club",
+          "snapshot_key": "2026-10-25-edition-correction",
+          "claim": "Plans With You is the current public identity, with a protected-time proposition and waitlist-only access.",
+          "evidence_kind": "production verification",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-10-25",
+          "reviewed_at": "2026-10-25",
+          "summary": "The public homepage explains a plausible calendar commitment, confirmation and deliberate cancellation. Its example is labelled illustrative. The waitlist accepts interest while paid membership remains closed. Woodhouse preserves the stable social-club project slug and older dated records.",
+          "source_label": "Plans With You public homepage and waitlist",
+          "source_url": "https://club.loftwah.com/",
+          "revision": "public-origin-reviewed-2026-10-25",
+          "public_safe": true,
+          "proof_boundary": "Public proposition and access state only. No real booking, cancellation, paid membership, delivery or customer adoption is established."
         }
       }
     ],
@@ -13738,6 +13873,172 @@
                   ]
                 }
               ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "dispatch-what-we-built-2026-10-25",
+        "slug": "what-we-built-2026-10-25",
+        "status": "published",
+        "bylines": [
+          {
+            "byline": "byline-dean-lofts"
+          }
+        ],
+        "data": {
+          "title": "What we built",
+          "kind": "Portfolio report",
+          "deck": "Games, music, a studio and a field guide: what shipped, what is getting better, and what is still being built.",
+          "review_date": "2026-10-25",
+          "source_reference": "Edited from the owning products and Woodhouse’s dated public records, checked 25 October 2026. Private repository evidence was used only to check claims; private source bodies and the operator report are not published.",
+          "lead": "Choose a game to play, music to hear or a tool to try. This is a dated selection of the work, including projects whose next step is still being built.",
+          "lesson": "Woodhouse’s publication audit was waiting on hundreds of page requests one at a time. Checking six at once removed that waiting while preserving the same checks. Other projects have different release paths; a faster command is useful only when it still proves what its product needs.",
+          "public_safe": true,
+          "projects": [
+            "$ref:project-protocol-11",
+            "$ref:project-bubbles",
+            "$ref:project-loftwahfm",
+            "$ref:project-app-composer",
+            "$ref:project-fighter",
+            "$ref:project-shoalshot",
+            "$ref:project-asset-hunter",
+            "$ref:project-pirates",
+            "$ref:project-max",
+            "$ref:project-social-club"
+          ],
+          "content": [
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "protocol-11",
+              "project_key": "protocol-11",
+              "section": "shipped",
+              "headline": "The table now answers when a move is refused",
+              "body": "An illegal desktop drop used to do nothing at all. Now the destination answers, the card stays yours and the turn does not move. The same delivery reworked Wild placement and hand sorting, gave Journey stages their own identity, and released three short films of the game being played.",
+              "basis": "The refusal, the reworked placement and the films are live on the Protocol 11 site.",
+              "invitation": "Opens Protocol 11. Play Classic for a full table, or Quick Start to choose the mode and length.",
+              "source_url": "https://protocol11.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "bubbles",
+              "project_key": "bubbles",
+              "section": "shipped",
+              "headline": "A clear is now about efficiency, not just points",
+              "body": "Fewest Shots gives you one board and no shot limit. The server replays a submitted clear before it counts, so a record cannot come from a browser's unverified claim, and a patient, awkward clear still gets in. The same release rebuilt the presentation and promoted Bubblecap.",
+              "basis": "The mode and the replay check are live on the Bubbles site.",
+              "invitation": "Opens Bubbles. Choose Fewest Shots for the new board, or Classic for the original.",
+              "source_url": "https://bubbles.loftwah.com/",
+              "source_reviewed": "2026-10-25",
+              "read_more_label": "Why a second attempt matters",
+              "read_more_href": "/dispatches/a-better-second-attempt/"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "loftwahfm",
+              "project_key": "loftwahfm",
+              "section": "shipped",
+              "headline": "Three game soundtracks have their own albums",
+              "body": "Protocol 11's twelve Jukebox tracks, the Loftwah Fighter soundtrack and the SHOALSHOT soundtrack are public albums with their own covers. A game builder can drop in the same browser player, so a small game gets a real station instead of a loop with no home.",
+              "basis": "The albums, covers and player are live on LoftwahFM.",
+              "invitation": "Opens LoftwahFM. Press play, change station, or read the notes beside each album.",
+              "source_url": "https://fm.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "app-composer",
+              "project_key": "app-composer",
+              "section": "shipped",
+              "headline": "A build story you can follow, and a contribution rule you can check",
+              "body": "The public story follows one brief from a plain sentence to a running app, including the parts that stayed local. Guestbook publishes the versioned invitation that Linkarooie validates: open, paused, closed or full, with approval and featuring kept separate. The hosted demonstration is explicitly fictional traffic, and it says so.",
+              "basis": "The build story, contribution contract and hosted demo are live on App Composer.",
+              "invitation": "Opens App Composer. Try the working composition, or read the build story first.",
+              "source_url": "https://composer.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "fighter",
+              "project_key": "fighter",
+              "section": "improving",
+              "headline": "You can see fights finish, not only start",
+              "body": "Fighter's own report now separates fight starts, terminal results and time actually played, and a deliberate same-tab Quick Fight replay has its own definition. Settings offers returning-browser recognition as a separate choice, off by default, with revocation when storage fails.",
+              "basis": "The measurement release is live; phone play and audio balance are still open.",
+              "invitation": "Opens Fighter. Choose Quick Fight for a standalone match, or Story for the longer path.",
+              "source_url": "https://fighter.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "shoalshot",
+              "project_key": "shoalshot",
+              "section": "improving",
+              "headline": "Ten achievement cards have their own artwork",
+              "body": "Each card front is original art, joined by an earned-card receipt and an ordered reveal after a catch. Two new encounter patterns and launcher-specific fire signatures landed in the same window. The multi-tab save-revert repair has shipped; what remains is release acceptance and real phone play.",
+              "basis": "The artwork and the save repair are merged and deployed; the release is still being accepted.",
+              "invitation": "Opens SHOALSHOT. Choose Dive to enter the Tide Pool slice.",
+              "source_url": "https://shoalshot.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "asset-hunter",
+              "project_key": "asset-hunter",
+              "section": "improving",
+              "headline": "A pack checks rights before it fetches anything",
+              "body": "The pack builder reads redistribution rights first, carries recorded provenance and attribution, verifies manifested bytes and produces a reproducible ZIP. Review-required and reference-only resources remain records without redistributed payloads. Independent use by someone outside the factory is not yet proven.",
+              "basis": "The pack builder is reviewed and implemented; adoption is not claimed.",
+              "invitation": "Opens Asset Hunter. Explore a technique and inspect the rights recorded beside its examples.",
+              "source_url": "https://assets.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "pirates",
+              "project_key": "pirates",
+              "section": "waiting",
+              "headline": "A playable sequence rebuilt from the original's own evidence",
+              "body": "Free Mode, the Moostyn port and economy, sailing, encounters, naval combat and save/load now run connected. Every claim is anchored to decoded source geometry and records rather than memory. What the source cannot prove stays out of the build, which is slower and more honest than filling the gaps.",
+              "basis": "A source-backed slice is playable; full parity gates remain closed.",
+              "invitation": "Opens the Pirates record, which explains what the current build does and does not reconstruct.",
+              "source_url": "https://woodhouse.loftwah.com/projects/pirates/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "max",
+              "project_key": "max",
+              "section": "waiting",
+              "headline": "Try finding the walker in a simulation",
+              "body": "MAX is a connected companion prototype for the walker you already own, starting with a FIND button, light and sound. Its public Virtual MAX demo lets you try the idea in an isolated browser session. It has no physical walker connection; real-home usefulness and the hardware still need testing.",
+              "basis": "The public demo and waitlist are available. A working simulation does not establish physical use.",
+              "invitation": "Opens MAX. Try Virtual MAX or read the prototype status before joining the waitlist.",
+              "source_url": "https://max.loftwah.com/",
+              "source_reviewed": "2026-10-25"
+            },
+            {
+              "_type": "portfolio_entry",
+              "_version": 1,
+              "_key": "social-club",
+              "project_key": "social-club",
+              "section": "waiting",
+              "headline": "The plan is to cancel, so the evening stays yours",
+              "body": "Plans With You proposes a plausible commitment in your calendar, a confirmation that looks the part, then a deliberate cancellation that leaves the time yours. The public example explains the promise. You can join the waitlist; paid membership is not open, and the example does not book or cancel a real event.",
+              "basis": "The public site and waitlist are live. The calendar service is a proposition, not an open paid membership.",
+              "invitation": "Opens Plans With You. Follow the sample plan or join the waitlist without a payment card.",
+              "source_url": "https://club.loftwah.com/",
+              "source_reviewed": "2026-10-25"
             }
           ]
         }

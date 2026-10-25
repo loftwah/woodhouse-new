@@ -61,7 +61,8 @@
     "diagrams": "bash scripts/render-diagrams.sh",
     "figures": "node scripts/render-article-figures.mjs",
     "figures:check": "node scripts/render-article-figures.mjs --check",
-    "deploy:publication": "node scripts/deploy-publication.mjs"
+    "deploy:publication": "node scripts/deploy-publication.mjs",
+    "edition:rehearse": "node scripts/rehearse-edition.mjs"
   },
   "emdash": {
     "seed": "seed/seed.json"

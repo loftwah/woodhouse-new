@@ -173,7 +173,25 @@ export interface DispatchContentCapabilityReviewV2Block {
 
 export type DispatchContentCapabilityReviewBlock = DispatchContentCapabilityReviewV1Block | DispatchContentCapabilityReviewV2Block;
 
-export type DispatchContentBlock = DispatchContentProseBlock | DispatchContentPullQuoteBlock | DispatchContentCalloutBlock | DispatchContentTechnicalPlateBlock | DispatchContentDiagramPlateBlock | DispatchContentImagePlateBlock | DispatchContentEvidenceLinkBlock | DispatchContentProjectReferenceBlock | DispatchContentCapabilityReviewBlock;
+export interface DispatchContentPortfolioEntryV1Block {
+  _type: "portfolio_entry";
+  _version: 1;
+  _key: string;
+  "project_key": string;
+  "section": "shipped" | "improving" | "waiting";
+  "headline": string;
+  "body": string;
+  "basis": string;
+  "invitation": string;
+  "source_url": string;
+  "source_reviewed": string;
+  "read_more_label"?: string | null;
+  "read_more_href"?: string | null;
+}
+
+export type DispatchContentPortfolioEntryBlock = DispatchContentPortfolioEntryV1Block;
+
+export type DispatchContentBlock = DispatchContentProseBlock | DispatchContentPullQuoteBlock | DispatchContentCalloutBlock | DispatchContentTechnicalPlateBlock | DispatchContentDiagramPlateBlock | DispatchContentImagePlateBlock | DispatchContentEvidenceLinkBlock | DispatchContentProjectReferenceBlock | DispatchContentCapabilityReviewBlock | DispatchContentPortfolioEntryBlock;
 
 export interface Dispatch {
   id: string;

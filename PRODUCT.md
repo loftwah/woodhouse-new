@@ -179,27 +179,19 @@ nor unique people. Measurement exclusions and privacy choices still dominate.
 
 ## What we built — the dated portfolio edition, reviewed 25 October 2026
 
-`/editions/what-we-built/` is the second portfolio edition and the first that reports
-the whole inventory. It answers a different question from `one-more-round`: that
-edition invites a reader into four games; this one answers “what have you been
-making, what is new, and what can I try” across all ten published projects.
+`/editions/what-we-built/` presents a dated selection across the published portfolio.
+The existing EmDash dispatch collection owns its title, deck, lead, lesson and
+source-checked project stories through the `portfolio_entry` block. The Astro
+renderer supplies the magazine composition; it does not own the editorial copy.
 
-The editorial layer is dated and authored: three sections (just shipped, getting
-better, still building), one paragraph per project about what a player, listener,
-builder or visitor can actually do, and a named basis for the state. A project
-with no news is not a worse project, and the sections are not a ranking. Artwork is
-each project's own published preview, credited at the point of use; Pirates has no
-producer artwork, so it shows a labelled plate rather than a manufactured image.
+The story text remains dated. Names, artwork and destinations are current public
+project records, so a withdrawn project is withheld rather than leaving a dead
+link. The page states that distinction and reports how many selected entries are
+currently public. The cover carries a review date and no project count. This
+corrects the first release's contrary rendered count and its inaccurate receipt.
 
-The page reads the published project records at request time so a withdrawn product
-leaves no dead action, and it refuses to render an entry for a project that is not
-public. It adds no collection, registry, report store or analytics event. The
-edition card (`public/og/what-we-built-20261025.jpg`) is an authored composition of
-Woodhouse's own signature still, reproduced by `pnpm run edition-card`.
-
-Publication is the existing reading-only release path. Editorial authoring in
-production remains disabled, so this edition's copy lives in the repository rather
-than in EmDash; that is a recorded limitation, not a claim that CMS authoring is
-available. A later edition that must be drafted by an editor needs the editorial
-deployment gate, not a second content system.
-
+The second-edition rehearsal uses a real local EmDash draft and signed preview.
+Production stays in read-only publication mode. Preparing and reviewing a local
+draft does not establish that the production admin, scheduling or authoring works.
+Future publication still uses the reviewed seed delivery and guarded release path;
+the exact local procedure and rehearsal live in EMDASH.md.

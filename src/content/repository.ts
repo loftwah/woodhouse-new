@@ -1,3 +1,4 @@
+import { dispatchPath } from "../data/what-we-built.ts";
 import { decodeSlug, getEmDashCollection, getEmDashEntry, getMenuWithCacheHint } from "emdash";
 import type { CacheHint, ContentEntry } from "emdash";
 import { contentGenerationDigest } from "../data/content-generation";
@@ -671,7 +672,7 @@ export async function listPublicSearchItems() {
     ...dispatchResult.dispatches.map((dispatch) => ({
       title: dispatch.title,
       description: `${dispatch.kind}. ${dispatch.deck}`,
-      href: `/dispatches/${dispatch.slug}/`,
+      href: dispatchPath(dispatch),
       section: dispatch.kind,
       searchText: `${dispatch.lead} ${searchTextFromBlocks(dispatch.content)}`
     })),

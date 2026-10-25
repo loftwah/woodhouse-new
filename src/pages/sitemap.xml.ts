@@ -1,3 +1,4 @@
+import { dispatchPath } from "../data/what-we-built";
 import { portfolioEdition } from "../data/portfolio-edition";
 import type { APIRoute } from "astro";
 import {
@@ -87,13 +88,12 @@ export const GET: APIRoute = async ({ cache }) => {
       "/contact/"
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
-    { path: "/editions/what-we-built/", lastmod: "2026-10-25" },
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
-      path: `/dispatches/${encodeURIComponent(dispatch.slug)}/`,
+      path: dispatchPath(dispatch),
       // The review date, not `published_at`. Every seeded dispatch carries the
       // same SQL install instant as its publication date, so a sitemap built
       // from it would tell a crawler the whole journal was rewritten on the day

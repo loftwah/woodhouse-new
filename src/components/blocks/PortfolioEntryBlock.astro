@@ -1,0 +1,12 @@
+---
+const { value } = Astro.props;
+---
+
+<section>
+  <h2>{value.headline}</h2>
+  <p>{value.body}</p>
+  <p>
+    <strong>Where that stands:</strong> {value.basis}
+  </p>
+  <p>{value.invitation}</p>
+</section>

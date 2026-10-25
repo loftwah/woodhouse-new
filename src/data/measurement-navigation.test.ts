@@ -140,7 +140,7 @@ test("manual editorial/exhibit hops cannot resume accepted public collection", a
       );
       current = result.href;
     }
-    const editionSource = readFileSync("src/pages/editions/[slug].astro", "utf8");
+    const editionSource = readFileSync("src/pages/editions/one-more-round.astro", "utf8");
     const secondary = editionSource.match(
       /internal\(\s*"(https:\/\/composer\.loftwah\.com\/reports\/r971f5140bbe0c84c8147a64b[^"]*)"/
     )?.[1];

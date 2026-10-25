@@ -2,6 +2,7 @@
 import BuildExamples from "../../components/BuildExamples.astro";
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
 import { listPublicCapabilities } from "../../content/repository";
+import { dispatchPath } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import ProjectRow from "../../components/ProjectRow.astro";
@@ -329,7 +330,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
     <section class="container project-feature" aria-labelledby="project-feature-title">
       <h2 id="project-feature-title">{feature.title}</h2>
       <p>{feature.deck}</p>
-      <a class="home-action" href={`/dispatches/${feature.slug}/`}>
+      <a class="home-action" href={dispatchPath(feature)}>
         Read the feature ↗
       </a>
     </section>
