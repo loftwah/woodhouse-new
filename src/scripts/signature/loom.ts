@@ -274,69 +274,79 @@ export function createLoom(options: LoomOptions) {
   }
   const gl: WebGL2RenderingContext = context;
 
-  let program: Program | undefined;
-  let ground: Program | undefined;
-  try {
-    program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
-    ground = createProgram(gl, GROUND_VERTEX, GROUND_FRAGMENT);
-  } catch (error) {
-    if (program) gl.deleteProgram(program.program);
-    if (ground) gl.deleteProgram(ground.program);
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    console.warn("Woodhouse signature: shader unavailable", error);
-    options.onStatusChange?.("unsupported");
-    return null;
-  }
-  if (!program || !ground) {
-    options.onStatusChange?.("unsupported");
-    return null;
-  }
-  const mainProgram: Program = program;
-  const groundProgram: Program = ground;
+  type Resources = {
+    mainProgram: Program;
+    groundProgram: Program;
+    fibreTexture: WebGLTexture;
+    vertexArray: WebGLVertexArrayObject;
+  };
 
-  const uniforms = mainProgram.uniforms;
-  const fibreTexture = gl.createTexture();
-  if (!fibreTexture) {
-    gl.deleteProgram(mainProgram.program);
-    gl.deleteProgram(groundProgram.program);
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    options.onStatusChange?.("unsupported");
-    return null;
+  /**
+   * Every GL object the scene owns. A restored context has none of them: the
+   * shader programs, the fibre texture and the empty vertex array all belong to
+   * the context generation that was lost, so recovery builds a fresh set rather
+   * than reusing handles that no longer name anything.
+   */
+  function disposeResources(resources: Resources) {
+    if (gl.isContextLost()) return;
+    gl.deleteTexture(resources.fibreTexture);
+    gl.deleteVertexArray(resources.vertexArray);
+    gl.deleteProgram(resources.mainProgram.program);
+    gl.deleteProgram(resources.groundProgram.program);
   }
-  gl.bindTexture(gl.TEXTURE_2D, fibreTexture);
-  const fibres = new Float32Array(FIBRE_TEXTURE_WIDTH * 2 * 4);
-  for (let index = 0; index < LOOM_STRANDS; index += 1) {
-    fibres[index * 4] = 0.16 + Math.pow(hash(index * 7 + 1), 0.62) * 0.94;
-    fibres[index * 4 + 1] = (hash(index * 11 + 5) - 0.5) * 2;
-    fibres[index * 4 + 2] = hash(index * 13 + 9);
-    fibres[index * 4 + 3] = hash(index * 17 + 21);
-    const second = (FIBRE_TEXTURE_WIDTH + index) * 4;
-    fibres[second] = hash(index * 23 + 3) < 0.46 ? -1 : 1;
-    fibres[second + 1] = hash(index * 29 + 37);
-    fibres[second + 2] = 0.76 + hash(index * 19 + 55) * 0.26;
-    fibres[second + 3] = hash(index * 31 + 41);
-  }
-  gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, FIBRE_TEXTURE_WIDTH, 2, 0, gl.RGBA, gl.FLOAT, fibres);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-  const vertexArray = gl.createVertexArray();
-  if (!vertexArray) {
-    gl.deleteTexture(fibreTexture);
-    gl.deleteProgram(mainProgram.program);
-    gl.deleteProgram(groundProgram.program);
-    gl.getExtension("WEBGL_lose_context")?.loseContext();
-    options.onStatusChange?.("unsupported");
-    return null;
+  function buildResources(): Resources | null {
+    let mainProgram: Program | undefined;
+    let groundProgram: Program | undefined;
+    let fibreTexture: WebGLTexture | null = null;
+    let vertexArray: WebGLVertexArrayObject | null = null;
+    try {
+      mainProgram = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
+      groundProgram = createProgram(gl, GROUND_VERTEX, GROUND_FRAGMENT);
+      fibreTexture = gl.createTexture();
+      if (!fibreTexture) throw new Error("WebGL texture allocation failed");
+      gl.bindTexture(gl.TEXTURE_2D, fibreTexture);
+      const fibres = new Float32Array(FIBRE_TEXTURE_WIDTH * 2 * 4);
+      for (let index = 0; index < LOOM_STRANDS; index += 1) {
+        fibres[index * 4] = 0.16 + Math.pow(hash(index * 7 + 1), 0.62) * 0.94;
+        fibres[index * 4 + 1] = (hash(index * 11 + 5) - 0.5) * 2;
+        fibres[index * 4 + 2] = hash(index * 13 + 9);
+        fibres[index * 4 + 3] = hash(index * 17 + 21);
+        const second = (FIBRE_TEXTURE_WIDTH + index) * 4;
+        fibres[second] = hash(index * 23 + 3) < 0.46 ? -1 : 1;
+        fibres[second + 1] = hash(index * 29 + 37);
+        fibres[second + 2] = 0.76 + hash(index * 19 + 55) * 0.26;
+        fibres[second + 3] = hash(index * 31 + 41);
+      }
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA32F,
+        FIBRE_TEXTURE_WIDTH,
+        2,
+        0,
+        gl.RGBA,
+        gl.FLOAT,
+        fibres
+      );
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      vertexArray = gl.createVertexArray();
+      if (!vertexArray) throw new Error("WebGL vertex array allocation failed");
+    } catch (error) {
+      if (fibreTexture) gl.deleteTexture(fibreTexture);
+      if (vertexArray) gl.deleteVertexArray(vertexArray);
+      if (mainProgram) gl.deleteProgram(mainProgram.program);
+      if (groundProgram) gl.deleteProgram(groundProgram.program);
+      console.warn("Woodhouse signature: shader unavailable", error);
+      return null;
+    }
+    if (!mainProgram || !groundProgram || !fibreTexture || !vertexArray) return null;
+    return { mainProgram, groundProgram, fibreTexture, vertexArray };
   }
-  gl.bindVertexArray(vertexArray);
-  gl.useProgram(mainProgram.program);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.ONE, gl.ONE);
-  gl.clearColor(INK[0], INK[1], INK[2], 1);
 
   const state = {
     reducedMotion: options.reducedMotion,
@@ -358,6 +368,7 @@ export function createLoom(options: LoomOptions) {
     frameStamps: [] as number[],
     badWindows: 0,
     goodWindows: 0,
+    resources: null as Resources | null,
     pointer: { x: 0, y: 0, vx: 0, vy: 0, targetX: 0, targetY: 0 },
     strength: { value: 0, velocity: 0, target: 0 },
     inside: false,
@@ -365,6 +376,25 @@ export function createLoom(options: LoomOptions) {
     lastWakeAt: 0,
     wakes: [] as { x: number; y: number; strength: number; born: number }[]
   };
+
+  /** Context state is reset by a loss, so every draw setup is re-applied here. */
+  function configureGl() {
+    gl.bindVertexArray(state.resources?.vertexArray ?? null);
+    if (state.resources) gl.useProgram(state.resources.mainProgram.program);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE);
+    gl.clearColor(INK[0], INK[1], INK[2], 1);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+
+  const initialResources = buildResources();
+  if (!initialResources) {
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    options.onStatusChange?.("unsupported");
+    return null;
+  }
+  state.resources = initialResources;
+  configureGl();
 
   const pointerVec = new Float32Array(2);
   const wakeVec = new Float32Array(12);
@@ -446,7 +476,10 @@ export function createLoom(options: LoomOptions) {
   }
 
   function draw() {
-    if (state.destroyed || state.contextLost) return;
+    const resources = state.resources;
+    if (state.destroyed || state.contextLost || !resources) return;
+    const { mainProgram, groundProgram, fibreTexture, vertexArray } = resources;
+    const uniforms = mainProgram.uniforms;
     const { model, aspect } = orientation();
     const projection = mat4.perspective(FOV, aspect, 0.1, 60);
     const viewModel = mat4.multiply(mat4.translation(0, 0, -fitDistance(model, aspect)), model);
@@ -655,12 +688,18 @@ export function createLoom(options: LoomOptions) {
   for (const [target, type, handler] of listeners)
     target.addEventListener(type, handler, { passive: true });
 
-  const resizeObserver = new ResizeObserver(() => {
+  function resizeAndRedraw() {
     resize();
     if (state.contextLost) return;
     if (state.reducedMotion || state.paused) drawStill();
-  });
+  }
+  const resizeObserver = new ResizeObserver(resizeAndRedraw);
   resizeObserver.observe(canvas);
+  // A display or zoom change can alter devicePixelRatio without changing the
+  // canvas's CSS box, so the ResizeObserver never hears about it. The browser
+  // announces that change as a window resize; without this the backing store
+  // stays at the old density and the artwork turns soft.
+  window.addEventListener("resize", resizeAndRedraw);
 
   function start() {
     if (
@@ -715,21 +754,51 @@ export function createLoom(options: LoomOptions) {
 
   function onContextLost(event: Event) {
     event.preventDefault();
+    // The context generation is gone, and so are every program, texture and
+    // vertex array made from it. Dropping the reference stops draw() from
+    // touching dead objects until a restored context supplies new ones.
     state.contextLost = true;
+    state.resources = null;
     stop();
     setStatus("lost");
   }
 
   /**
-   * A restored context has no shaders, texture or vertex array. Rebuilding them
-   * is not free and a partial rebuild would be worse than none, so the scene
-   * stays on its still image and keeps saying so rather than claiming a recovery
-   * it cannot draw. `contextLost` also blocks the observers from restarting a
-   * loop against the dead context.
+   * A restored context has no shaders, texture or vertex array. The still image
+   * held the plate while it was gone; now that the browser says the context is
+   * usable again, build one fresh set and carry on from the same point in the
+   * scene clock. If the rebuild fails, the still stays and the caption keeps
+   * saying the live scene stopped.
    */
   function onContextRestored() {
+    if (state.destroyed) return;
     stop();
-    setStatus("lost");
+    const resources = buildResources();
+    if (!resources) {
+      state.contextLost = true;
+      state.resources = null;
+      setStatus("lost");
+      return;
+    }
+    state.contextLost = false;
+    state.resources = resources;
+    configureGl();
+    state.lastTimestamp = 0;
+    state.intro = 1;
+    state.wakes = [];
+    state.lastWakeAt = 0;
+    state.frameStamps.length = 0;
+    resize();
+    draw();
+    announceFirstFrame();
+    if (state.reducedMotion) {
+      setStatus("still");
+    } else if (state.paused) {
+      setStatus("paused");
+    } else {
+      start();
+      setStatus("running");
+    }
   }
   canvas.addEventListener("webglcontextlost", onContextLost as EventListener, false);
   canvas.addEventListener("webglcontextrestored", onContextRestored as EventListener, false);
@@ -794,12 +863,14 @@ export function createLoom(options: LoomOptions) {
       window.removeEventListener("pageshow", onPageShow);
       resizeObserver.disconnect();
       intersection.disconnect();
+      window.removeEventListener("resize", resizeAndRedraw);
       canvas.removeEventListener("webglcontextlost", onContextLost as EventListener);
       canvas.removeEventListener("webglcontextrestored", onContextRestored as EventListener);
-      gl.deleteTexture(fibreTexture);
-      gl.deleteVertexArray(vertexArray);
-      gl.deleteProgram(mainProgram.program);
-      gl.deleteProgram(groundProgram.program);
+      // Deleting objects from a context that was lost (or lost and restored
+      // without a rebuild) is an INVALID_OPERATION in WebKit. disposeResources
+      // checks the live context before touching anything.
+      if (state.resources) disposeResources(state.resources);
+      state.resources = null;
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     }
   };
