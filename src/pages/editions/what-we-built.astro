@@ -113,8 +113,10 @@ const caption = `What we built · Woodhouse portfolio edition, ${editionReviewDa
             <strong>{leadProject.name}.</strong> <a href={dossier(lead)}>The full record</a>
           </span>
           <span class="wwb-credit">
-            Artwork published by <a href={site(lead) ?? dossier(lead)}>{leadProject.name}</a>
-            {leadProject.previewCaption ? ` · ${leadProject.previewCaption}` : ""}
+            <a href={site(lead) ?? dossier(lead)}>{leadProject.name}</a>
+            {leadProject.previewCaption
+              ? ` · ${leadProject.previewCaption}`
+              : " · artwork reviewed for this edition"}
           </span>
         </figcaption>
       </figure>
@@ -183,7 +185,6 @@ const caption = `What we built · Woodhouse portfolio edition, ${editionReviewDa
                     <p class="wwb-entry__caption">
                       {project.previewImage ? (
                         <>
-                          Artwork from{" "}
                           {href ? (
                             <a href={href} target="_blank" rel="noopener noreferrer">
                               {project.name}
@@ -191,7 +192,9 @@ const caption = `What we built · Woodhouse portfolio edition, ${editionReviewDa
                           ) : (
                             <span>{project.name}</span>
                           )}
-                          {project.previewCaption ? ` · ${project.previewCaption}` : ""}
+                          {project.previewCaption
+                            ? ` · ${project.previewCaption}`
+                            : " · artwork reviewed for this edition"}
                         </>
                       ) : (
                         <>
