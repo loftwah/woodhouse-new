@@ -76,7 +76,7 @@ Work that belongs to another repository is referenced, not reproduced. See [Owne
 | Credential revocation | Local credentials, revocable at the source | Adds a credential store to revoke | Same |
 | Data retention and deletion | Git plus Cloudflare account | Adds a third retention surface | Same |
 | Isolation | Not a sandbox today, and does not claim to be | **Not established** — a mount is not isolation | Same |
-| Failure recovery | Time Travel and R2 recovery drills | Unchanged | Unchanged |
+| Failure recovery | Time Travel, D1 export and R2 recovery drills | Unchanged | Unchanged |
 | Operational cost | No additional service to run | Managed: unknown price; self-hosted: a service to operate | Highest |
 
 **What would actually disappear or improve.** Stated honestly, the candidate list is short: a shared agent workspace, a durable handoff that is not a git branch, and centralised credential scoping. Each is currently either adequate — git is a durable handoff and GitHub is a credential scope — or owned by GitHub, which the factory has already decided is authoritative. The honest conclusion is that nothing would disappear, and the improvements are conveniences rather than gaps.
