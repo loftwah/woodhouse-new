@@ -155,7 +155,7 @@ const plottedWeeks = weeks.map((w) => ({
     data-leaderboard
     data-caption={caption}
     data-image={image}
-    data-link={`https://woodhouse.loftwah.com${shareLink}`}
+    data-link={`${Astro.url.origin}${shareLink}`}
     data-filename={`woodhouse-${project ?? "leaderboards"}-${days}days-${measure}.png`}
   >
     <nav class="lb-breadcrumb" aria-label="Breadcrumb">

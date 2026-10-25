@@ -107,3 +107,28 @@ test("unsupported file sharing is reported instead of attempting a text-only sha
   assert.equal(await controller.share(), "unsupported");
   assert.equal(shares, 0);
 });
+
+test("a share sheet already open is reported as pending, not as preparing", async () => {
+  let shares = 0;
+  const pending: Array<() => void> = [];
+  const controller = createImageShare({
+    loadImage: async () => file,
+    share: () => {
+      shares += 1;
+      return new Promise<void>((resolve) => pending.push(resolve));
+    },
+    canShare: () => true
+  });
+  await controller.prepare();
+  const first = controller.share();
+  assert.equal(controller.busy, true, "the sheet is open, so the control stays busy");
+  assert.equal(await controller.share(), "pending");
+  assert.equal(shares, 1, "a second activation must not open another sheet");
+  pending.shift()!();
+  assert.equal(await first, "shared");
+  assert.equal(controller.busy, false);
+  const second = controller.share();
+  assert.equal(shares, 2, "a later deliberate activation still shares");
+  pending.shift()!();
+  assert.equal(await second, "shared");
+});
