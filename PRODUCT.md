@@ -104,6 +104,29 @@ Reviewed 12 October 2026: MP rejected an OG-only interpretation of the gallery. 
 
 Reviewed 12 October 2026: MP rejected the unbounded single-page media dump after the assets were collected. The share gallery must now browse by project and asset type, with six previews per page and native previous/next links at both ends. The overview shows the priority projects together. This replaces the earlier requirement to render every asset in one page; all approved assets remain reachable, directly copyable and downloadable, with no reading prerequisite or mandatory setup.
 
+## Share showcase — reviewed 25 October 2026
+
+The Share gallery is an Experience surface for players, listeners and builders.
+New campaign compositions and current public captures lead `/share/`, with each
+product's own identity and a direct Play, Listen, Try or Explore action. A compact
+project row opens a dedicated public collection. The visitor sees the work before
+archive controls or edition introductions.
+
+This supersedes the 12 October requirement that the default page show only six
+screenshots. The six-item limit still bounds the existing archive, with native
+project/type/page URLs, stable asset IDs, original downloads, image packs and
+captions retained. Bare project queries can open that project's new selection;
+explicit category and page queries retain archive browsing. New artwork does not
+replace historical dated files or confer approval on rejected mascot derivatives.
+
+The image viewer uses native dialog behaviour with Escape and focus return; an
+ordinary original-image link remains when JavaScript is unavailable. Sharing is
+available beside each work in a native disclosure, keeping the wall visual while
+preserving ready captions and original-file downloads. New artwork is labelled as
+an editorial composition or production screenshot; neither implies player records
+or a native product release. MP taste and physical sharing acceptance stay open
+until separately observed.
+
 ## Reading the analytics — reviewed 23 October 2026
 
 MP rejected the long, text-heavy analytics page after using it. `/activity/` now

@@ -283,3 +283,47 @@ desktop argument. The edition card is set over the site's own fibre lens with no
 project count or relative date to go stale. Share actions are link and caption
 only, with honest copy feedback; the image is a separate download.
 
+
+## Share showcase — reviewed 25 October 2026
+
+The default Share route is a wall of artwork inside Woodhouse's existing ink,
+Bricolage and acid identity. A compact heading and horizontally browseable project
+row precede the work. There is no edition invitation, asset counter or category
+form above the new selection. Project colour and composition belong to the images.
+
+Desktop uses six tracks: portrait and square work occupy two, landscape work four.
+Images retain their complete authored ratio. Captions are short, with the native
+product action beside the title; Share & download opens the existing controls in
+a native disclosure. Phones use two tracks: SHOALSHOT and Bubbles open side by
+side, then Fighter and Composer each occupy a full row. That two-small/two-wide
+sequence repeats without stranding a half-row before a wide work. This keeps several identities in
+view before the archive. No image is stretched or cropped to force a common
+card shape. View remains a visible affordance rather than a hover
+requirement. The large image viewer is a native dialog with a labelled close,
+Escape, focus return, useful caption and ordinary download/product links.
+
+The archive follows the new wall, with all existing project/type/page browsing,
+image IDs, credits, packs, films and captions retained. Explicit image-category
+links name `type=images`, so archive page one cannot unexpectedly become the new
+curated wall. The former six-preview default is historical; its performance bound
+now applies to archive pages, while the curated selection remains intentionally
+small and uses optimised previews with lazy loading after its first three works.
+
+The built selection has ten new campaign compositions, eight staged production
+captures and seven additional landscape poster files. Club and Asset Hunter add
+new generated conceptual illustrations with retained prompts and masters; MAX
+retains an explicit concept/simulator qualification. Club remains a waitlist with
+paid membership closed. Native `/share/[slug]/`
+collections carry their own metadata and structured image data. Published project
+membership gates each collection and its sitemap images, including all required
+contributors to composite artwork. These are surface rules, not a new global
+visual identity.
+
+The independent finish review on 25 October 2026 returned **SHIP**, with no
+material findings in `output/playwright/showoff-20261025/after-desktop-final.png`,
+`after-phone-viewport-final.png`, `phone-continuation-final.png` and
+`viewer-phone-final.png`. The detector returned `[]`. This qualifies the supplied
+local rendered views; deployment is pending. Release identity, MP's taste
+acceptance and physical sharing/destination-app acceptance remain separate.
+PR #140’s editorial content and draft workflow are preserved. Its project-artwork
+links now use the corresponding canonical gallery collection.

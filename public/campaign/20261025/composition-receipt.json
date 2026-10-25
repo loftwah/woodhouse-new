@@ -1,0 +1,72 @@
+{
+  "reviewedAt": "2026-10-25",
+  "method": "Editorial compositions, public native artwork and production browser captures. No image-generation provider. Not native product OG replacements.",
+  "cards": [
+    {
+      "id": "bubbles-one-more-shot",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "9547e8ecf5fb35832bb1228d13a1b31074af1ce56b77b76955bfc29374d6c295"
+    },
+    {
+      "id": "fighter-first-fight",
+      "width": 1080,
+      "height": 1350,
+      "sha256": "e2fa89c27199121dab3106cbbe5ce4afeb630312d645c24fd5ae87f72d218c00"
+    },
+    {
+      "id": "shoalshot-lantern-ray",
+      "width": 1080,
+      "height": 1350,
+      "sha256": "aa5c1c3396301b1b5f92e4018fd2e841e11e84adc0b2fe8019fb91bc22a0dfd8"
+    },
+    {
+      "id": "protocol-your-next-move",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "694e644238a445286bf651277ae7aef5f5b63bab89c24833eefaed16ce0b5cc3"
+    },
+    {
+      "id": "fm-find-your-frequency",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "793faa4d6aaf8751bbad62df4349d870ded0d9c1f86e5848034e6c456559df8e"
+    },
+    {
+      "id": "composer-make-something-useful",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "bbf3e7b0dc0be35ff137399fe2eb0ba5c4467173c78ddfd94076d71af8913f69"
+    },
+    {
+      "id": "woodhouse-play-make-listen",
+      "width": 1600,
+      "height": 900,
+      "sha256": "34362bb85ae363262fa82f08d0697437ab5af5ee867733d578ceb15003076446"
+    },
+    {
+      "id": "bubbles-one-more-shot-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "3dfb33b06e0acbe2f44fc04ac4c35028bb5c589ff18e000a9e545e54d288067b"
+    },
+    {
+      "id": "fighter-first-fight-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "cb6c066970e78606968f75ed1ebc413b9cc4606b8a2b39710b97a96889cd50ec"
+    },
+    {
+      "id": "shoalshot-lantern-ray-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "9cc3b51cf8365dba44dc07e94b1ea75a90725f3d0fd45badb292908d386594f5"
+    },
+    {
+      "id": "fm-find-your-frequency-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "e44330371f322dee1c4edc3786699e63a8a0cb7e9e8416785ec6eeac5ccaddc0"
+    }
+  ]
+}

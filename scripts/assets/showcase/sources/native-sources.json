@@ -1,0 +1,38 @@
+[
+  {
+    "project": "bubbles",
+    "url": "https://bubbles.loftwah.com/og-image-20261012.png",
+    "bytes": 1012917,
+    "file": "bubbles-native.png"
+  },
+  {
+    "project": "fighter",
+    "url": "https://fighter.loftwah.com/assets/generated/promotional/loftwah-fighter-v5-duo-2026-10.png",
+    "bytes": 276411,
+    "file": "fighter-native.png"
+  },
+  {
+    "project": "shoalshot",
+    "url": "https://shoalshot.loftwah.com/og-shoalshot-v5.jpg",
+    "bytes": 215180,
+    "file": "shoalshot-native.jpg"
+  },
+  {
+    "project": "protocol-11",
+    "url": "https://protocol11.loftwah.com/og/protocol-11.jpg?v=game-night-2026-10-11",
+    "bytes": 280604,
+    "file": "protocol-11-native.jpg"
+  },
+  {
+    "project": "loftwahfm",
+    "url": "https://fm.loftwah.com/og/loftwahfm-brand-burst-20261018.jpg",
+    "bytes": 375977,
+    "file": "loftwahfm-native.jpg"
+  },
+  {
+    "project": "app-composer",
+    "url": "https://composer.loftwah.com/brand/campaign/product-og-20261022b.jpg",
+    "bytes": 92248,
+    "file": "app-composer-native.jpg"
+  }
+]

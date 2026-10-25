@@ -1,0 +1,42 @@
+{
+  "reviewedAt": "2026-10-25",
+  "method": "Two new built-in image_gen conceptual illustrations, a composition of MAX public concept artwork and current production screenshots. No native OG replacement.",
+  "cards": [
+    {
+      "id": "plans-with-you-evening-returned",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "cdafef41553d96375192cc8ae653f240593fff59985456ed9628f896b67232af"
+    },
+    {
+      "id": "asset-hunter-discover-possibilities",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "97a4c701b041f8df4ab401caf11152a22d7749dc1f6e8c8a9e2e4aed59c5230e"
+    },
+    {
+      "id": "max-a-little-help",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "e47b9d6b7273b0861ca54bb42321d98b3fba5008313334c589ab6044b8f2d9b7"
+    },
+    {
+      "id": "plans-with-you-evening-returned-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "9807b143b3c37542f6f114d2dd0cb82f9087b2c9eeea74ffd2f913c3930fe4bf"
+    },
+    {
+      "id": "asset-hunter-discover-possibilities-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "eb8fee5ccc10162214625175d0483476f9f0611083ae7d80e1be764829476c98"
+    },
+    {
+      "id": "max-a-little-help-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "ad997a2ddde38c7dc7ba4d1ba94fbf865ecee2b9619f631795c09fdb79ef03d3"
+    }
+  ]
+}

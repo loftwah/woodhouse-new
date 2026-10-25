@@ -1,0 +1,147 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
+import { listProjectRecords } from "../../content/repository";
+import {
+  publicCampaignItems,
+  campaignCollectionPath,
+  campaignSocial
+} from "../../data/showcase-public";
+import { toJsonLd } from "../../data/safe-json";
+
+export const prerender = false;
+const result = await listProjectRecords();
+if (result.error)
+  return new Response("The gallery is temporarily unavailable.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const slug = Astro.params.slug ?? "";
+const project = result.projects.find((entry) => entry.slug === slug);
+const items = publicCampaignItems(result.projects.map((entry) => entry.slug)).filter(
+  (item) => item.project === slug
+);
+if (!items.length || (slug !== "woodhouse" && !project))
+  return new Response("Gallery not found.", { status: 404 });
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+const name = project?.name ?? "Woodhouse";
+const title = `${name} — artwork & screenshots`;
+const description = project
+  ? `${project.summary} Explore ${name} promotional artwork and current product captures, with original downloads and a direct link to the product.`
+  : "Games, software and music from the Loftwah software factory. Explore the Woodhouse campaign, open the real products and download the original artwork.";
+const social = campaignSocial(items)!;
+const path = campaignCollectionPath(slug);
+const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  path={path}
+  currentPath="/share/"
+  image={social.original}
+  imageAlt={social.alt}
+  imageWidth={social.width}
+  imageHeight={social.height}
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={toJsonLd({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      name: title,
+      description,
+      url: `${origin}${path}`,
+      hasPart: items.map((item) => ({
+        "@type": "ImageObject",
+        name: item.title,
+        description: item.alt,
+        contentUrl: new URL(item.original, origin).href,
+        thumbnailUrl: new URL(item.image, origin).href,
+        caption: item.caption,
+        creditText: item.credit,
+        dateCreated: item.reviewedAt
+      }))
+    })}
+  />
+  <div class="container collection">
+    <nav aria-label="Breadcrumb">
+      <a href="/share/">Share gallery</a>
+      <span aria-hidden="true"> / </span>
+      <span>{name}</span>
+    </nav>
+    <header>
+      <h1>
+        {name}
+        <span>Artwork & screenshots</span>
+      </h1>
+      <p>{project?.summary ?? "Games, software and music. A selection from the things we make."}</p>
+      <div class="collection__links">
+        <a href={project?.siteUrl ?? "/"}>
+          {items[0]?.action ?? "Explore"} {name} ↗
+        </a>
+        {project && <a href={`/projects/${slug}/`}>About {name}</a>}
+        <a
+          href={`/share/?${slug === "woodhouse" ? "type=factory" : `project=${slug}&type=images`}`}
+        >
+          Earlier images & downloads
+        </a>
+      </div>
+    </header>
+    <ShowcaseGallery items={items} />
+    <p class="collection__note">
+      Promotional compositions and production captures are labelled individually. Open an image for
+      its credit, caption and original download.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .collection {
+    padding-block: 1.5rem 4rem;
+  }
+  nav {
+    color: var(--copy-soft);
+    font-size: 0.875rem;
+  }
+  header {
+    padding-block: 1.5rem 2rem;
+  }
+  h1 {
+    font: 700 clamp(2.5rem, 6vw, 5rem)/1 var(--display);
+    margin: 0 0 1rem;
+  }
+  h1 span {
+    display: block;
+    font-size: 0.35em;
+    line-height: 1.5;
+    color: var(--copy-soft);
+    font-weight: 500;
+  }
+  header p {
+    max-width: 68ch;
+    line-height: 1.6;
+  }
+  .collection__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+  .collection__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 0.25em;
+  }
+  .collection__links a:first-child {
+    color: var(--acid);
+  }
+  .collection__note {
+    color: var(--copy-soft);
+    max-width: 70ch;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin-block: 2rem;
+  }
+</style>

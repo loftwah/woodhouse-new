@@ -16,6 +16,11 @@ import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 import FMListening from "../components/FMListening.astro";
 import SignaturePlate from "../components/SignaturePlate.astro";
+import {
+  publicCampaignItems,
+  campaignSocial,
+  campaignCollectionPath
+} from "../data/showcase-public";
 
 const [projectResult, dispatchResult, capabilityResult] = await Promise.all([
   listProjectRecords(),
@@ -43,6 +48,7 @@ const fmMetadata = fm ? getSiteMetadata(fm) : null;
 const fmCapability = capabilityResult.capabilities.find(
   (capability) => capability.key === "loftwahfm-radio"
 );
+const currentCampaign = publicCampaignItems(projects.map((project) => project.slug));
 /**
  * A deliberate selection, not the whole catalogue: a game you can play, the
  * music you can listen to and the builder product. The projects index carries
@@ -55,6 +61,7 @@ const picks = ["bubbles", "loftwahfm", "app-composer"]
     project,
     meta: getSiteMetadata(project),
     fallback: getArtworkFallback(project),
+    campaign: campaignSocial(currentCampaign.filter((item) => item.project === project.slug)),
     action: projectAction(project),
     href: projectActionHref(project),
     label: projectActionLabel(project),
@@ -104,6 +111,9 @@ export const prerender = false;
           <a class="text-link" href="/dean/">
             About Dean <span aria-hidden="true">↗</span>
           </a>
+          <a class="text-link" href="/share/">
+            Explore the new artwork <span aria-hidden="true">↗</span>
+          </a>
         </p>
       </div>
       <div class="signature-hero__plate">
@@ -140,7 +150,7 @@ export const prerender = false;
         </p>
       </div>
       <div class="start-here__grid">
-        {picks.map(({ project, meta, fallback, action, href, label, external }) => (
+        {picks.map(({ project, meta, fallback, campaign, action, href, label, external }) => (
           <article class="start-card" data-project-artwork>
             <a
               class="start-card__image"
@@ -150,10 +160,12 @@ export const prerender = false;
               aria-label={`${label} — open the ${project.name} site in a new tab`}
             >
               <img
-                src={meta.image}
-                width="1200"
-                height="630"
-                alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
+                src={campaign?.image ?? meta.image}
+                width={campaign?.width ?? 1200}
+                height={campaign?.height ?? 630}
+                alt={
+                  campaign?.alt ?? project.previewAlt ?? `Artwork from the ${project.name} site.`
+                }
                 loading="lazy"
                 decoding="async"
                 data-fallback-src={fallback.image}
@@ -181,6 +193,11 @@ export const prerender = false;
                 <a class="text-link" href={"/projects/" + project.slug + "/"}>
                   How it works <span aria-hidden="true">↗</span>
                 </a>
+                {campaign && (
+                  <a class="text-link" href={campaignCollectionPath(project.slug)}>
+                    Artwork & downloads ↗
+                  </a>
+                )}
               </p>
             </div>
           </article>

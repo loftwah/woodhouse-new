@@ -1,5 +1,6 @@
 import { dispatchPath } from "../data/what-we-built";
 import { portfolioEdition } from "../data/portfolio-edition";
+import { campaignSitemapEntries } from "../data/showcase-public";
 import type { APIRoute } from "astro";
 import {
   asText,
@@ -66,7 +67,8 @@ export const GET: APIRoute = async ({ cache }) => {
   ])
     if (hint) cache.set(hint);
   const edition = portfolioEdition(dispatchResult.dispatches);
-  const urls: Array<{ path: string; lastmod?: string }> = [
+  const campaign = campaignSitemapEntries(projectResult.projects.map((project) => project.slug));
+  const urls: Array<{ path: string; lastmod?: string | undefined; images?: string[] }> = [
     ...[
       "/",
       "/factory/",
@@ -88,6 +90,7 @@ export const GET: APIRoute = async ({ cache }) => {
       "/contact/"
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
+    ...campaign,
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate
@@ -124,8 +127,8 @@ export const GET: APIRoute = async ({ cache }) => {
   const unique = new Map(urls.map((entry) => [entry.path, entry]));
   const xml = [...unique.values()]
     .map(
-      ({ path, lastmod }) =>
-        `<url><loc>${xmlSafe(`${siteOrigin}${path}`)}</loc>${lastmod ? `<lastmod>${xmlSafe(lastmod)}</lastmod>` : ""}</url>`
+      ({ path, lastmod, images }) =>
+        `<url><loc>${xmlSafe(`${siteOrigin}${path}`)}</loc>${lastmod ? `<lastmod>${xmlSafe(lastmod)}</lastmod>` : ""}${(images ?? []).map((image) => `<image:image><image:loc>${xmlSafe(new URL(image, siteOrigin).href)}</image:loc></image:image>`).join("")}</url>`
     )
     .join("");
   const headers = new Headers({
@@ -135,7 +138,7 @@ export const GET: APIRoute = async ({ cache }) => {
   if (new URL(siteOrigin).hostname.endsWith(".workers.dev"))
     headers.set("x-robots-tag", "noindex, nofollow, noarchive");
   return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${xml}</urlset>`,
+    `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${xml}</urlset>`,
     { headers }
   );
 };
