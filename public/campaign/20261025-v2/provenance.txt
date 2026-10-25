@@ -1,0 +1,47 @@
+WOODHOUSE — SECOND CAMPAIGN SELECTION
+Reviewed 25 October 2026, Australia/Melbourne.
+
+Four focused replacements within the existing gallery. Earlier 20261025 image
+URLs, source captures and approved native social images remain historical.
+Reproduce selected masters, independently composed landscape editions and private
+alternatives: node scripts/render-showcase-campaign.mjs --refinements
+Type: existing OFL Bricolage Grotesque. No new illustration provider.
+
+BUBBLES — MAKE THE NEXT SHOT
+A larger native playfield detail from the staged 25 October Classic opening
+capture: https://bubbles.loftwah.com/play?seed=0&analytics=off
+Side panels are cropped. The full symbol board, aim and launcher remain visible.
+This is an editorial composition of a real screen, not an earned record.
+The alternative enlarged only the bubble rows: rejected because it lost the
+launcher and the aiming decision that make the game understandable.
+
+APP COMPOSER — A PDF. YOUR MARK.
+A closer composition of the publisher's 24 October editor capture:
+https://composer.loftwah.com/paperwork/editor-20261024-compact.webp
+The document, text and signature are fictional. The surrounding browser editor
+is real. App Composer is the studio; Paperwork is an independently owned app.
+The direct action now opens its product introduction, including the actual
+editor, fictional sample and completed example: https://composer.loftwah.com/paperwork
+The centred full-screen alternative was rejected because its editor remained too
+small at feed width. This crop retains the real form and native toolbar.
+
+MAX — TRY THE SIMULATOR
+New production interaction capture, 25 October, from:
+https://max.loftwah.com/demo?analytics=off&qa=portfolio-20261025
+A deliberate Find Max tap displayed Max is sounding, STOP, the virtual flashing
+light, locator sound and simulated speech. The retained native interface states
+that this is simulated. No physical walker was connected or commanded.
+The alternative close-up of the old concept photograph was rejected because it
+still sold the concept instead of showing the public interaction.
+
+WOODHOUSE — THE THINGS WE MAKE
+Woodhouse's own published fibre composition, /signature/loom-wide.jpg, with
+editable publisher type. This uses no sibling product artwork, interface,
+mascot or user achievement. It is a still of the site's original signature.
+The overlapping three-product alternative was rejected because it repeated the
+old collage and made the editor small again. The new cover belongs to Woodhouse.
+
+No new visitors, growth, engagement, creator adoption, licence clearance,
+physical-device acceptance, external unfurl delivery or MP taste approval is
+claimed. The real browser journeys and the native producers' release evidence
+are separate from this publisher composition.

@@ -21,6 +21,13 @@ export type CampaignItem = {
   landscapeImage?: string;
 };
 const base = "/campaign/20261025/";
+const refined = (entry: CampaignItem, file: string): CampaignItem => ({
+  ...entry,
+  image: `/campaign/20261025-v2/${file}.jpg`,
+  original: `/campaign/20261025-v2/${file}-original.png`,
+  landscapeImage: `/campaign/20261025-v2/${file}-landscape.jpg`,
+  source: "https://woodhouse.loftwah.com/campaign/20261025-v2/provenance.txt"
+});
 const item = (
   id: string,
   project: string,
@@ -72,16 +79,19 @@ export const campaignItems: CampaignItem[] = [
     "https://shoalshot.loftwah.com/",
     "Play"
   ),
-  item(
-    "bubbles-one-more-shot",
-    "bubbles",
-    "Bubbles · One more shot",
-    "Bubbles' current Classic board, colourful symbol-marked bubbles and aiming line beneath One more shot. The full playfield is retained.",
-    "Match three. Clear the board. Bubbles' current Classic playfield, captured in a staged opening round.",
-    1200,
-    1200,
-    "https://bubbles.loftwah.com/",
-    "Play"
+  refined(
+    item(
+      "bubbles-one-more-shot",
+      "bubbles",
+      "Bubbles · Make the next shot",
+      "An enlarged detail of Bubbles' actual Classic board: symbol bubbles, aiming line and launcher, beneath Make the next shot. Side panels are cropped; the playing area is complete.",
+      "Make the next shot. Match three and clear the board in Bubbles. A staged opening round, with no earned record claimed.",
+      1200,
+      1500,
+      "https://bubbles.loftwah.com/",
+      "Play"
+    ),
+    "bubbles-next-shot"
   ),
   item(
     "fighter-first-fight",
@@ -94,16 +104,19 @@ export const campaignItems: CampaignItem[] = [
     "https://fighter.loftwah.com/",
     "Play"
   ),
-  item(
-    "composer-make-something-useful",
-    "app-composer",
-    "App Composer · Make something useful",
-    "An orange App Composer composition featuring the actual deployed Paperwork PDF editor and a clearly fictional demonstration form.",
-    "Make something useful with App Composer. Paperwork is a browser PDF editor built here; this public demonstration uses a fictional document.",
-    1600,
-    1000,
-    "https://composer.loftwah.com/",
-    "Try"
+  refined(
+    item(
+      "composer-make-something-useful",
+      "app-composer",
+      "App Composer · A PDF. Your mark.",
+      "A large close view of the real Paperwork PDF editor beside App Composer orange and A PDF. Your mark. The fictional form, text, ink and signature remain visibly native.",
+      "A PDF. Your mark. Paperwork is an independent browser editor built with App Composer. Open its fictional sample, edit a form and export the result.",
+      1600,
+      1000,
+      "https://composer.loftwah.com/paperwork",
+      "Try"
+    ),
+    "composer-paperwork-close"
   ),
   item(
     "protocol-your-next-move",
@@ -127,20 +140,20 @@ export const campaignItems: CampaignItem[] = [
     "https://fm.loftwah.com/",
     "Listen"
   ),
-  {
-    ...item(
+  refined(
+    item(
       "woodhouse-play-make-listen",
       "woodhouse",
-      "Woodhouse · Play. Make. Listen.",
-      "A Woodhouse publisher spread: SHOALSHOT's complete Lantern Ray, App Composer's real Paperwork editor and LoftwahFM's Cartridge Funk cover in three large panels.",
-      "Play. Make. Listen. Games, software and original music from Loftwah. An editorial selection of SHOALSHOT, App Composer and LoftwahFM.",
+      "Woodhouse · The things we make",
+      "Woodhouse's own flowing fibre artwork fills the right of an ink and acid publisher cover: The things we make. Games, software and original music.",
+      "The things we make. Games to play, software to try and original music from Loftwah. Explore the work at Woodhouse.",
       1600,
-      900,
+      1000,
       "https://woodhouse.loftwah.com/share/",
       "Explore"
     ),
-    requiredProjects: ["shoalshot", "app-composer", "loftwahfm"]
-  },
+    "woodhouse-made-here"
+  ),
   item(
     "bubbles-play-20261025",
     "bubbles",
@@ -241,25 +254,29 @@ export const campaignItems: CampaignItem[] = [
     source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
     landscapeImage: "/campaign/20261025/asset-hunter-discover-possibilities-landscape.jpg"
   },
-  {
-    id: "max-a-little-help",
-    project: "max",
-    title: "MAX · A familiar walker. A little help.",
-    alt: "MAX native wordmark and a new black-and-white editorial arrangement of its existing public concept image: a prototype module in a wheeled walker basket. Labelled concept image.",
-    caption:
-      "A familiar walker. A little help. A new editorial composition of MAX’s published concept image. Explore the public simulator; no physical walker is connected.\nhttps://max.loftwah.com/demo",
-    image: "/campaign/20261025/max-a-little-help.jpg",
-    original: "/campaign/20261025/max-a-little-help-original.png",
-    width: 1200,
-    height: 1200,
-    reviewedAt: "2026-10-25",
-    credit: "Woodhouse composition · MAX published native concept illustration; not physical proof",
-    kind: "editorial composition",
-    href: "https://max.loftwah.com/demo",
-    action: "Explore",
-    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
-    landscapeImage: "/campaign/20261025/max-a-little-help-landscape.jpg"
-  },
+  refined(
+    {
+      id: "max-a-little-help",
+      project: "max",
+      title: "MAX · Try the simulator",
+      alt: "The real MAX browser simulator responding to a deliberate Find Max tap: Max is sounding, STOP, flashing light and simulated speech. The poster explicitly says no physical walker is connected.",
+      caption:
+        "Try MAX's browser simulator. Tap Find Max and see the virtual locator respond. Voice and device responses are simulated; no physical walker is connected.\nhttps://max.loftwah.com/demo",
+      image: "/campaign/20261025/max-a-little-help.jpg",
+      original: "/campaign/20261025/max-a-little-help-original.png",
+      width: 1200,
+      height: 1200,
+      reviewedAt: "2026-10-25",
+      credit:
+        "Woodhouse composition · real MAX simulator interaction, 25 October 2026; simulated device",
+      kind: "editorial composition",
+      href: "https://max.loftwah.com/demo",
+      action: "Explore",
+      source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
+      landscapeImage: "/campaign/20261025/max-a-little-help-landscape.jpg"
+    },
+    "max-try-the-simulator"
+  ),
   {
     id: "max-demo-20261025",
     project: "max",

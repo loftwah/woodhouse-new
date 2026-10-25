@@ -1,0 +1,54 @@
+{
+  "reviewedAt": "2026-10-25",
+  "method": "Editorial compositions of real public product captures and Woodhouse's own fibre artwork. Historical first editions retained.",
+  "cards": [
+    {
+      "id": "bubbles-next-shot",
+      "width": 1200,
+      "height": 1500,
+      "sha256": "46bb93e415743e1d1b802161b2c8ec4fbe2e6650d19bdd7fdb21fcf2e40a8cc7"
+    },
+    {
+      "id": "composer-paperwork-close",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "2dc570f8ba580c63da21276cea59507243877b08749f58a9bc70c64888ac44db"
+    },
+    {
+      "id": "max-try-the-simulator",
+      "width": 1200,
+      "height": 1200,
+      "sha256": "463b5c3f41a0dee2f5b9bba905dd05a13c7171b64553f0060962deea1157b7d1"
+    },
+    {
+      "id": "woodhouse-made-here",
+      "width": 1600,
+      "height": 1000,
+      "sha256": "b60b4a408527f6c81192e3f29e36f134ea29edd8508f0e4e6dee26f9651e5468"
+    },
+    {
+      "id": "bubbles-next-shot-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "2fe20893b6dac6e2c0046c020441321697f21ce9d493664653a66c38659c0b48"
+    },
+    {
+      "id": "composer-paperwork-close-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "655587a00f9553d23c32d93e9d144864abd8d2aac67c0fea48c8c7e9cce2e9e8"
+    },
+    {
+      "id": "max-try-the-simulator-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "390e3b56773315415d5ac7135dbe3eda47d817756da36f81aedff3eeada2bc28"
+    },
+    {
+      "id": "woodhouse-made-here-landscape",
+      "width": 1200,
+      "height": 630,
+      "sha256": "6e8a88e02369facf7bcd6d2f063257e71701bcc7f3ab034bc69b47bcb3a6c41c"
+    }
+  ]
+}
