@@ -1,0 +1,21 @@
+# Technical equivalent of /architecture/'s rendered HTML publication diagram.
+# Reviewed 26 October 2026 AEDT (25 October UTC). Earlier artwork models remain retained.
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 24}}
+direction: right
+projects: "1. Independent project work\nProduct sites, source and release evidence"
+review: "2. Editorial review\nCheck claims, choose story, remove private material"
+records: "3. Approved public records\nEmDash: summaries, evidence, media, review dates"
+page: "4. Woodhouse public page\nAstro / Cloudflare delivery"
+visitor: "Visitor\nRead, explore, follow a product link"
+private: "Private inputs\nIssue bodies and working conversations"
+credentials: "Credentials\nOutside public content"
+projects -> review: "Evidence for review"
+private -> review: "Derive a safe summary; never copy raw bodies"
+review -> records: "Explicit publication decision"
+records -> page: "Published records at server render; caching may reuse results"
+page -> visitor: "Read-only published content"
+visitor -> projects: "Try the product at its own site"
+build: "Code release\nTemplates, styles, scripts and static assets"
+build -> page: "Built assets and templates"
+# Credentials have no outgoing edge. A private input only reaches public records
+# through editorial derivation and explicit publication, never by a direct copy.

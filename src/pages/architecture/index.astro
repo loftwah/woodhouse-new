@@ -1,180 +1,413 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import D2Diagram from "../../components/D2Diagram.astro";
 import { listPublicSnapshots } from "../../content/repository";
 import { formatReviewDate } from "../../data/review-date";
 
 export const prerender = false;
-
 const snapshotResult = await listPublicSnapshots();
 const currentReview = formatReviewDate(snapshotResult.snapshots[0]?.data.reviewed_at);
 if (Astro.cache?.enabled) Astro.cache.set(snapshotResult.cacheHint);
 ---
 
 <BaseLayout
-  title="Architecture"
-  description="How Woodhouse keeps its reviewed project snapshot separate from EmDash editorial publishing on Cloudflare Workers."
+  title="How Woodhouse works · Architecture"
+  description="Independent projects, checked evidence, edited stories and a dated public record. See how work becomes a Woodhouse page, and who owns each part."
   path="/architecture/"
   image="/og/factory-workshop-20261018.jpg"
 >
-  <section class="container page-intro">
-    <div class="page-intro__grid">
-      <div>
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="/">WOODHOUSE</a>
-          <span>/</span>
-          <span>Architecture</span>
-        </nav>
-        <h1 class="page-title">
-          A public record.
-          <br />
-          <em>Private inputs stay private.</em>
-        </h1>
-      </div>
-      <div class="page-intro__aside">
-        <strong>Astro · EmDash · Cloudflare Workers</strong>Woodhouse keeps its authored
-        presentation; EmDash supplies reviewed content at request time.
-      </div>
-    </div>
+  <section class="container architecture-intro">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">WOODHOUSE</a>
+      <span>/</span>
+      <span>Architecture</span>
+    </nav>
+    <p class="eyebrow">How Woodhouse works</p>
+    <h1>
+      A window into
+      <br />
+      the work.
+    </h1>
+    <p class="lead">
+      Woodhouse brings independently run games, music and tools into one place. We check the
+      evidence, edit what is useful and publish a dated account that leads you to the real product.
+    </p>
+  </section>
+  <section class="container" aria-labelledby="publication-heading">
+    <figure class="publication-flow">
+      <figcaption>
+        <h2 id="publication-heading">From project work to a public page</h2>
+        <p>Review is the step that makes material ready to publish.</p>
+      </figcaption>
+      <ol class="flow-steps">
+        <li>
+          <span class="step-number" aria-hidden="true">
+            01
+          </span>
+          <h3>Projects make things</h3>
+          <p>Each product owns its experience, source, artwork and releases.</p>
+          <span class="handoff">Evidence enters review</span>
+        </li>
+        <li class="review-step">
+          <span class="step-number" aria-hidden="true">
+            02
+          </span>
+          <h3>We check and edit</h3>
+          <p>Check what actually works. Choose the story. Remove private material.</p>
+          <span class="handoff">Explicit publication decision</span>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">
+            03
+          </span>
+          <h3>Keep a public record</h3>
+          <p>Approved summaries, evidence, media and review dates live in the editorial system.</p>
+          <span class="handoff">Published content only</span>
+        </li>
+        <li>
+          <span class="step-number" aria-hidden="true">
+            04
+          </span>
+          <h3>You read and explore</h3>
+          <p>Woodhouse serves the page. Follow its links to try the independent product.</p>
+          <span class="handoff">
+            <a href="/projects/">Explore the projects →</a>
+          </span>
+        </li>
+      </ol>
+      <p class="flow-boundary">
+        <strong>Private inputs need review.</strong> An editor can derive a public-safe summary from
+        private work. Original issue bodies, conversations and credentials stay outside public
+        content; they have no direct publishing route.
+      </p>
+      <a class="flow-source" href="/diagrams/woodhouse-publication.d2">
+        Editable technical diagram (D2 source) ↗
+      </a>
+    </figure>
   </section>
   <section class="section">
-    <div class="container">
-      <D2Diagram
-        title="Artwork keeps its source"
-        description="Each product site has its own title, icon, description and main image. Woodhouse credits and links to the project behind each image. Illustrations made for project dossiers are credited to Woodhouse."
-        desktop="/images/diagrams/publication-path.svg"
-        mobile="/images/diagrams/publication-path-mobile.svg"
-        caption="Project artwork links to its source. Woodhouse illustrations carry a clear credit."
-        className="publication-plate"
-      >
-        <ol class="diagram-transcript">
-          <li>
-            <strong>Project site</strong>
-            <span>
-              Owns and serves its page title, search and sharing details, icon, description and main
-              image.
-            </span>
-          </li>
-          <li>
-            <strong>Woodhouse build</strong>
-            <span>
-              Records public details and preserves the source of each project's own image.
-            </span>
-          </li>
-          <li>
-            <strong>Visitor's browser</strong>
-            <span>Shows the credited artwork and links to that project's own site.</span>
-          </li>
-          <li>
-            <strong>Woodhouse illustration</strong>
-            <span>
-              If the source image fails, a Woodhouse illustration replaces it. Both its text and
-              visible credit change to identify Woodhouse.
-            </span>
-          </li>
-          <li>
-            <strong>Private data</strong>
-            <span>Issues, transcripts and credentials stay outside the public build.</span>
-          </li>
-        </ol>
-      </D2Diagram>
+    <div class="container reading-grid">
+      <div>
+        <p class="eyebrow">Who owns what?</p>
+        <h2>Each part has a job.</h2>
+        <p>
+          Woodhouse connects the portfolio. Each game, station or tool keeps control of its own
+          product and release decisions.
+        </p>
+        <a href="/factory/">See useful connections in the Factory →</a>
+      </div>
+      <dl class="roles">
+        <div>
+          <dt>The independent products</dt>
+          <dd>
+            The places you play, listen or create. Their sites own current product identity and
+            artwork.
+          </dd>
+        </div>
+        <div>
+          <dt>GitHub</dt>
+          <dd>
+            The authority for source code, issues and pull requests. Many repositories are private;
+            Woodhouse publishes reviewed summaries.
+          </dd>
+        </div>
+        <div>
+          <dt>Editorial review &amp; EmDash</dt>
+          <dd>
+            Editors decide what is safe and useful to publish. EmDash, the content system, stores
+            structured records and their publishing state.
+          </dd>
+        </div>
+        <div>
+          <dt>Astro &amp; Cloudflare</dt>
+          <dd>
+            Astro supplies the page design. A Cloudflare Worker reads published records and renders
+            the public page; static assets are delivered alongside it.
+          </dd>
+        </div>
+        <div>
+          <dt>Your browser</dt>
+          <dd>
+            Displays the page and runs its local interactions. Following a product link takes you to
+            that product's own experience.
+          </dd>
+        </div>
+      </dl>
     </div>
   </section>
   <section class="section paper-section">
-    <div class="container">
-      <div class="section-heading">
-        <div>
-          <h2>The browser gets a finished page.</h2>
-        </div>
+    <div class="container reading-grid">
+      <div>
+        <p class="eyebrow">Reading the evidence</p>
+        <h2>A date tells you what was checked.</h2>
         <p>
-          GitHub remains authoritative. The current edition publishes a reviewed snapshot because
-          most project repositories are private.
+          {currentReview
+            ? `The latest portfolio snapshot was reviewed ${currentReview}.`
+            : "Each portfolio snapshot carries its own review date."}{" "}
+          Project states belong to that review. Loading this page today does not verify a new
+          release or move a project's review date forward.
+        </p>
+        <p>
+          New evidence needs another editorial review. Earlier editions remain available as history.
         </p>
       </div>
-      <div class="two-column-list">
-        <article class="method-step">
-          <span class="method-step__n">01</span>
-          <div>
-            <h3>Review the source</h3>
-            <p>
-              A human-readable, public-safe project report is the input. Private issue and pull
-              request bodies stay in their repositories.
-            </p>
-          </div>
-        </article>
-        <article class="method-step">
-          <span class="method-step__n">02</span>
-          <div>
-            <h3>Record the date</h3>
-            <p>
-              Every state belongs to the{" "}
-              {currentReview ? `${currentReview} snapshot` : "most recent reviewed snapshot"}. A
-              later report must be reviewed before the date is moved.
-            </p>
-          </div>
-        </article>
-        <article class="method-step">
-          <span class="method-step__n">03</span>
-          <div>
-            <h3>Review and publish</h3>
-            <p>
-              EmDash holds structured project states, evidence, dispatches, drafts, revisions,
-              approved media and publishing schedules. Astro renders each public page with the
-              existing Woodhouse components.
-            </p>
-          </div>
-        </article>
-        <article class="method-step">
-          <span class="method-step__n">04</span>
-          <div>
-            <h3>Serve from the edge</h3>
-            <p>
-              The Cloudflare Worker renders the public read model from published EmDash records and
-              serves static assets at the edge. Readers need no account; editors use the
-              authenticated EmDash office.
-            </p>
-          </div>
-        </article>
+      <div class="reading-notes">
+        <h3>What visitors can access</h3>
+        <p>
+          Published pages, public evidence, approved images and read-only agent views. The live
+          publication keeps the editorial office, authoring API and draft previews closed.
+        </p>
+        <h3>What the numbers mean</h3>
+        <p>
+          Analytics has a separate, limited collection endpoint. Its published aggregates explain
+          their coverage; a click, a product visit and a useful action are different measurements.
+        </p>
+        <p>
+          <a href="/doctrine/">Read the publishing principles →</a>
+        </p>
       </div>
     </div>
   </section>
   <section class="section">
-    <div class="container split-section">
-      <div class="split-section__copy">
-        <h2>Visitors can read the report. They cannot change it.</h2>
-        <p>
-          The public JSON contains project names, reviewed state, summary, next proof and review
-          date. It cannot query private GitHub repositories or run a tool. If a collector is added
-          later, a person will review each proposed update before it is published.
-        </p>
-        <p>
-          EmDash uses D1 for editorial records and R2 for approved media. Woodhouse has no D1 event
-          store, R2 evidence archive, public chat or private project office. Editorial storage does
-          not receive repository credentials or private project data.
-        </p>
-      </div>
-      <div class="factory-plate">
-        <div class="factory-plate__heading">
-          <span>DATA BOUNDARY</span>
-          <span>PUBLIC READ MODEL</span>
+    <div class="container technical-details">
+      <h2>Under the page</h2>
+      <p>The technical details are here when you need them.</p>
+      <details>
+        <summary>What happens at build time, and what happens when I visit?</summary>
+        <div>
+          <p>
+            A code release builds the page templates, styles, scripts and static images. On a server
+            render, Astro queries published EmDash records. Cached pages or query results may be
+            reused, so a request does not always make a fresh database read.
+          </p>
+          <p>
+            D1 stores editorial records. R2 stores approved editorial media. Existing analytics
+            tables and their limited collection endpoint are separate from CMS authoring; D1 is not
+            an empty or editorial-only database.
+          </p>
+          <p>
+            This production release exposes the reading surfaces. Editorial access and publishing
+            schedules are gated separately; installing a CMS does not mean its public authoring
+            routes are open.
+          </p>
+          <p>
+            <a href="https://docs.emdashcms.com/guides/querying-content/">
+              EmDash's published-content and rendering contract ↗
+            </a>
+          </p>
         </div>
-        <div
-          class="agent-entry"
-          style="grid-template-columns:1fr;gap:1.1rem;margin-top:1rem;padding:1.2rem"
-        >
-          <div>
-            <span class="agent-entry__label">Approved for publication</span>
-            <p>Reviewed summary · state · next proof · review date · edited dispatches</p>
-          </div>
-          <div>
-            <span class="agent-entry__label">Stays outside public content</span>
-            <p>
-              Issue bodies · private transcripts · repository credentials · unreviewed agent
-              interpretation
-            </p>
-          </div>
+      </details>
+      <details>
+        <summary>Where do product images come from?</summary>
+        <div>
+          <p>
+            Current product artwork follows the producer's own sharing metadata. A bounded
+            request-time read checks approved product destinations and caches the result for five
+            minutes. If that read fails, the last resolved image or reviewed record remains
+            available. This presentation refresh does not change the reviewed project status.
+          </p>
+          <p>
+            Optional Woodhouse campaign images and dossier illustrations keep their own credits. An
+            image failure must not present a Woodhouse illustration as the producer's canonical art.
+          </p>
+          <p>
+            <a href="/share/">Browse the artwork and its sources →</a>
+          </p>
         </div>
-      </div>
+      </details>
+      <details>
+        <summary>What can the public agent view do?</summary>
+        <div>
+          <p>
+            Agent Reception makes the same reviewed public information easier for software to read.
+            It cannot query private repositories, run tools or publish an update. The authenticated
+            editorial interface is a separate capability.
+          </p>
+          <p>
+            <a href="/agents/">Visit Agent Reception →</a>
+          </p>
+        </div>
+      </details>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .architecture-intro {
+    padding-block: 2.5rem 2rem;
+  }
+  .eyebrow {
+    color: var(--brass);
+    font: 700 0.75rem var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .architecture-intro h1 {
+    font: 700 clamp(3rem, 6vw, 5.75rem)/0.98 var(--display);
+    letter-spacing: -0.045em;
+    margin: 0.75rem 0 1.25rem;
+  }
+  .lead {
+    max-width: 52rem;
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    color: var(--copy);
+    line-height: 1.6;
+  }
+  .publication-flow {
+    margin: 0;
+    border: 1px solid var(--line-dark);
+    background: var(--surface);
+    padding: clamp(1rem, 2vw, 2rem);
+  }
+  .publication-flow figcaption {
+    margin-bottom: 1.5rem;
+  }
+  .publication-flow h2 {
+    margin: 0;
+    font: 700 clamp(1.5rem, 2.5vw, 2.25rem)/1.15 var(--display);
+  }
+  .publication-flow figcaption p {
+    margin: 0.5rem 0 0;
+    color: var(--copy-soft);
+  }
+  .flow-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 1rem;
+  }
+  .flow-steps li {
+    min-width: 0;
+    border-top: 2px solid var(--line-dark);
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .flow-steps .review-step {
+    border-color: var(--brass);
+  }
+  .step-number {
+    font: 700 2.5rem/1 var(--display);
+    color: var(--copy-soft);
+  }
+  .review-step .step-number {
+    color: var(--brass);
+  }
+  .publication-flow h3 {
+    font: 700 1.2rem/1.2 var(--display);
+    margin: 0.8rem 0 0.4rem;
+  }
+  .flow-steps p {
+    color: var(--copy);
+    margin: 0 0 1.25rem;
+  }
+  .handoff {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: var(--copy-soft);
+  }
+  .handoff a {
+    color: var(--brass);
+  }
+  .flow-boundary {
+    margin: 1.5rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-dark);
+    max-width: 70rem;
+    font-size: 0.95rem;
+    color: var(--copy);
+  }
+  .flow-boundary strong {
+    color: var(--paper);
+  }
+  .flow-source {
+    font-size: 0.8rem;
+    color: var(--copy-soft);
+  }
+  .reading-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 5vw, 6rem);
+  }
+  .reading-grid h2,
+  .technical-details h2 {
+    font: 700 clamp(2rem, 3vw, 3rem)/1.1 var(--display);
+    margin: 0.7rem 0 1.25rem;
+  }
+  .reading-grid p,
+  .roles dd,
+  .technical-details p {
+    color: var(--copy);
+  }
+  .roles {
+    margin: 0;
+  }
+  .roles > div {
+    border-top: 1px solid var(--line-dark);
+    padding-block: 1rem;
+  }
+  .roles dt {
+    font-weight: 700;
+  }
+  .roles dd {
+    margin: 0.35rem 0 0;
+  }
+  .reading-notes h3 {
+    margin-top: 0;
+  }
+  .reading-notes h3:not(:first-child) {
+    margin-top: 2rem;
+  }
+  .technical-details {
+    max-width: 68rem;
+  }
+  .technical-details details {
+    border-top: 1px solid var(--line-dark);
+  }
+  .technical-details summary {
+    padding: 1.2rem 0;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .technical-details details > div {
+    padding: 0 0 1rem;
+    max-width: 54rem;
+  }
+  @media (max-width: 1000px) {
+    .flow-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+  @media (max-width: 760px) {
+    .architecture-intro {
+      padding-top: 1.5rem;
+    }
+    .reading-grid {
+      grid-template-columns: 1fr;
+    }
+    .flow-steps {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .flow-steps li {
+      display: grid;
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+      column-gap: 0.8rem;
+    }
+    .step-number {
+      grid-row: span 3;
+      font-size: 2rem;
+    }
+    .publication-flow h3 {
+      margin-top: 0;
+    }
+    .flow-steps p {
+      margin-bottom: 0.5rem;
+    }
+    .handoff {
+      grid-column: 2;
+    }
+  }
+</style>
