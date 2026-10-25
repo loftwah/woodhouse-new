@@ -200,5 +200,119 @@ export const campaignItems: CampaignItem[] = [
     "https://fm.loftwah.com/radio/",
     "Listen",
     "production screenshot"
-  )
+  ),
+  {
+    id: "plans-with-you-evening-returned",
+    project: "social-club",
+    title: "Plans With You · Evening returned",
+    alt: "A new conceptual still-life: a cream invitation on a cobalt envelope, stamped CANCELLED, with Evening returned embossed beside a clock. Waitlist open; paid membership closed.",
+    caption:
+      "Evening returned. New generated campaign artwork for Plans With You, the planned-cancellation concept. Waitlist only; paid membership remains closed.\nhttps://club.loftwah.com/",
+    image: "/campaign/20261025/plans-with-you-evening-returned.jpg",
+    original: "/campaign/20261025/plans-with-you-evening-returned-original.png",
+    width: 1200,
+    height: 1200,
+    reviewedAt: "2026-10-25",
+    credit:
+      "Woodhouse · new generated promotional illustration; built-in Codex image_gen; concept, not a real invitation",
+    kind: "editorial composition",
+    href: "https://club.loftwah.com/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
+    landscapeImage: "/campaign/20261025/plans-with-you-evening-returned-landscape.jpg"
+  },
+  {
+    id: "asset-hunter-discover-possibilities",
+    project: "asset-hunter",
+    title: "Asset Hunter · Find a possibility",
+    alt: "New conceptual artwork of an orange optical discovery instrument revealing folded paper, with a blue letterform and miniature terrain. It illustrates creative discovery, not an actual machine.",
+    caption:
+      "Find a possibility. See how it works. New generated conceptual artwork for Asset Hunter, with its real public catalogue linked separately. The instrument is an illustration.\nhttps://assets.loftwah.com/",
+    image: "/campaign/20261025/asset-hunter-discover-possibilities.jpg",
+    original: "/campaign/20261025/asset-hunter-discover-possibilities-original.png",
+    width: 1200,
+    height: 1200,
+    reviewedAt: "2026-10-25",
+    credit:
+      "Woodhouse · new generated promotional illustration; built-in Codex image_gen; conceptual discovery instrument",
+    kind: "editorial composition",
+    href: "https://assets.loftwah.com/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
+    landscapeImage: "/campaign/20261025/asset-hunter-discover-possibilities-landscape.jpg"
+  },
+  {
+    id: "max-a-little-help",
+    project: "max",
+    title: "MAX · A familiar walker. A little help.",
+    alt: "MAX native wordmark and a new black-and-white editorial arrangement of its existing public concept image: a prototype module in a wheeled walker basket. Labelled concept image.",
+    caption:
+      "A familiar walker. A little help. A new editorial composition of MAX’s published concept image. Explore the public simulator; no physical walker is connected.\nhttps://max.loftwah.com/demo",
+    image: "/campaign/20261025/max-a-little-help.jpg",
+    original: "/campaign/20261025/max-a-little-help-original.png",
+    width: 1200,
+    height: 1200,
+    reviewedAt: "2026-10-25",
+    credit: "Woodhouse composition · MAX published native concept illustration; not physical proof",
+    kind: "editorial composition",
+    href: "https://max.loftwah.com/demo",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt",
+    landscapeImage: "/campaign/20261025/max-a-little-help-landscape.jpg"
+  },
+  {
+    id: "max-demo-20261025",
+    project: "max",
+    title: "MAX · Public simulator",
+    alt: "The actual public MAX demo with FIND MAX, a virtual prototype view and the visible explanation that no physical walker is connected.",
+    caption:
+      "MAX’s public browser simulator, captured 25 October 2026. Its voice and device responses are simulated; no physical walker is connected.\nhttps://max.loftwah.com/demo",
+    image: "/campaign/20261025/max-demo-20261025.jpg",
+    original: "/campaign/20261025/max-demo-20261025-original.png",
+    width: 1440,
+    height: 900,
+    reviewedAt: "2026-10-25",
+    credit: "MAX · public simulator capture, 25 October 2026; simulated device",
+    kind: "production screenshot",
+    href: "https://max.loftwah.com/demo",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt"
+  },
+  {
+    id: "plans-with-you-home-20261025",
+    project: "social-club",
+    title: "Plans With You · Waitlist introduction",
+    alt: "Current Plans With You public homepage showing its planned-cancellation explanation, illustrative ordinary plan and explicit waitlist status.",
+    caption:
+      "Plans With You’s public introduction, captured 25 October 2026. Waitlist open; paid membership remains closed. No signup was performed.\nhttps://club.loftwah.com/",
+    image: "/campaign/20261025/plans-with-you-home-20261025.jpg",
+    original: "/campaign/20261025/plans-with-you-home-20261025-original.png",
+    width: 1440,
+    height: 900,
+    reviewedAt: "2026-10-25",
+    credit: "Plans With You · public homepage capture, 25 October 2026",
+    kind: "production screenshot",
+    href: "https://club.loftwah.com/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt"
+  },
+  {
+    id: "asset-hunter-catalogue-20261025",
+    project: "asset-hunter",
+    title: "Asset Hunter · Catalogue",
+    alt: "Current Asset Hunter catalogue showing creative possibility plates and their explicit Reference only and Generated labels. The screenshot does not clear reuse rights.",
+    caption:
+      "Explore the technique and check the rights. Asset Hunter’s actual public catalogue, captured 25 October 2026. Reference only material is not cleared for reuse.\nhttps://assets.loftwah.com/",
+    image: "/campaign/20261025/asset-hunter-catalogue-20261025.jpg",
+    original: "/campaign/20261025/asset-hunter-catalogue-20261025-original.png",
+    width: 1440,
+    height: 900,
+    reviewedAt: "2026-10-25",
+    credit:
+      "Asset Hunter · public catalogue capture, 25 October 2026; native rights labels retained",
+    kind: "production screenshot",
+    href: "https://assets.loftwah.com/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt"
+  }
 ];

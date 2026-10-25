@@ -12,7 +12,10 @@ const productName = (slug: string) =>
     "protocol-11": "Protocol 11",
     loftwahfm: "LoftwahFM",
     "app-composer": "App Composer",
-    woodhouse: "Woodhouse"
+    woodhouse: "Woodhouse",
+    "social-club": "Plans With You",
+    "asset-hunter": "Asset Hunter",
+    max: "MAX"
   })[slug] ?? slug;
 ---
 
@@ -319,7 +322,7 @@ const productName = (slug: string) =>
       grid-column: span 1;
     }
     .showcase-work:nth-child(4n),
-    .showcase-work:nth-child(3) {
+    .showcase-work:nth-child(4n - 1) {
       grid-column: 1 / -1;
     }
     .work-identity {

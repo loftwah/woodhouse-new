@@ -11,12 +11,12 @@ the existing Woodhouse world. The first screen spends its area on the images,
 with a short heading, compact project links and direct product actions. Desktop
 uses six tracks: portraits and squares span two, landscapes four.
 At phone widths the opening pairs SHOALSHOT and Bubbles, then gives Fighter
-the full row; the fourth work and each subsequent fourth work also span the
-two-track grid. Complete images keep their authored ratio. The memorable moment
+the full row, followed by Composer. Each four-work group repeats two narrow
+works then two full rows, avoiding a stranded half-row before a wide work. Complete images keep their authored ratio. The memorable moment
 is the work, with a visible View affordance, short title and direct product action.
 
-Content: seven new campaign compositions and five staged production captures,
-with four additional landscape poster files for sharing and collection unfurls.
+Content: ten new campaign compositions and eight staged production captures,
+with seven additional landscape poster files for sharing and collection unfurls.
 Existing approved clips and published music artwork remain available. Distinguish
 editorial art from production screenshots and staged records. Never feature
 rejected mascot likenesses. Publication membership controls every promoted project, including
@@ -39,8 +39,9 @@ captures: `output/playwright/showoff-20261025/after-desktop-final.png`,
 `after-phone-viewport-final.png`, `phone-continuation-final.png` and
 `viewer-phone-final.png`. The detector returned `[]`. This is rendered local
 review evidence; deployment is pending. MP's subjective taste acceptance,
-physical device sharing and destination-app acceptance remain separate. PR #140
-is untouched by this scope.
+physical device sharing and destination-app acceptance remain separate. PR #140’s
+editorial content and draft workflow are preserved; its artwork links now use
+the canonical gallery collections.
 
 ---
 

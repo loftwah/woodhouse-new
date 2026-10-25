@@ -82,3 +82,9 @@ The renderer now embeds lossless PNG conversions before rasterisation.
 An incorrect Protocol hand transform was rejected and replaced with a deliberate
 native hand detail. Full-size and 300px feed editions were visually inspected.
 MP's taste acceptance and physical sharing acceptance remain separate.
+
+SECONDARY CAMPAIGN
+Plans With You, Asset Hunter and MAX new compositions and public captures:
+https://woodhouse.loftwah.com/campaign/20261025/provenance-secondary.txt
+This addition includes two new generated promotional illustrations, explicitly
+credited there. The original seven compositions above used no generation.

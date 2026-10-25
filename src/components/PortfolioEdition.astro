@@ -4,6 +4,7 @@ import type { WoodhouseProject } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
 import { formatReviewDate } from "../data/review-date";
 import { projectActionLabel } from "../data/share-browser";
+import { publicCampaignItems, campaignCollectionPath } from "../data/showcase-public";
 import {
   editionSections,
   type EditionEntry,
@@ -26,6 +27,9 @@ const editionMethod = [
   "A merge is not a deployment, and a deployment is not a person using the thing. Physical use and customer adoption need their own evidence."
 ];
 const published = new Map(projects.map((project) => [project.slug, project]));
+const galleryProjects = new Set(
+  publicCampaignItems(projects.map((project) => project.slug)).map((item) => item.project)
+);
 // An unpublished project silently leaves the edition rather than leaving a dead
 // action behind. The count is reported honestly at the foot of the page.
 const present = editionEntries.filter((entry) => published.has(entry.slug));
@@ -222,7 +226,15 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
                       <a href={entry.sourceUrl}>Source</a> · checked{" "}
                       {formatReviewDate(entry.sourceReviewed)} ·{" "}
                       <a href={`#project-${entry.slug}`}>Link to this part</a> ·{" "}
-                      <a href={`/share/?project=${entry.slug}`}>Project artwork</a>
+                      <a
+                        href={
+                          galleryProjects.has(entry.slug)
+                            ? campaignCollectionPath(entry.slug)
+                            : `/share/?project=${entry.slug}`
+                        }
+                      >
+                        Project artwork
+                      </a>
                     </p>
                     <p class="wwb-entry__caption">
                       {project.previewImage ? (

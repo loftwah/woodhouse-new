@@ -38,6 +38,13 @@ test("every advertised campaign original and bounded preview exists locally", as
     assert.ok(item.width > 0 && item.height > 0);
     const preview = await stat(new URL(`../../public${item.image}`, import.meta.url));
     const original = await stat(new URL(`../../public${item.original}`, import.meta.url));
+    if (item.landscapeImage) {
+      assert.match(item.landscapeImage, /^\/campaign\/20261025\/[a-z0-9-]+-landscape\.jpg$/);
+      assert.ok(
+        (await stat(new URL(`../../public${item.landscapeImage}`, import.meta.url))).size <
+          6 * 1024 * 1024
+      );
+    }
     assert.ok(preview.size < 800 * 1024, `${item.id}: preview should stay bounded`);
     assert.ok(original.size < 6 * 1024 * 1024, `${item.id}: original fits image actions`);
     if (item.project === "woodhouse")
