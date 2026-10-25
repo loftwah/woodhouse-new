@@ -39,6 +39,18 @@ type Observation = {
   period: string;
   /** The comparison, or a plain statement that none is available. */
   comparison: string;
+  /**
+   * The two figures the comparison is made of, when a real comparison exists.
+   * The page draws them side by side so a reader sees the change, and never
+   * invents a pair when one of the periods is missing or partial.
+   */
+  change?: {
+    previous: number;
+    current: number;
+    previousLabel: string;
+    currentLabel: string;
+    unit: Metric["unit"];
+  };
   /** What a reader may take from it. */
   establishes: string;
   /** The nearest tempting claim it does not support. */
@@ -118,6 +130,8 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   if (week && weekInsideWindow) {
     const valueLabel = formatMetric({ value: week.value, unit: week.unit });
     const previous = formatMetric({ value: week.previous, unit: week.unit });
+    const previousFrom = new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10);
+    const previousTo = new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10);
     const movement =
       week.changePercent === null
         ? `held level with ${previous} the week before`
@@ -139,7 +153,18 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       comparison:
         week.changePercent === null
           ? `No earlier week had a usable baseline, so no percentage is claimed.`
-          : `Compared with the week before (${dateLabel(new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10))}–${dateLabel(new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10))}).`,
+          : `Compared with the week before (${dateLabel(previousFrom)}–${dateLabel(previousTo)}).`,
+      ...(week.changePercent === null
+        ? {}
+        : {
+            change: {
+              previous: week.previous,
+              current: week.value,
+              previousLabel: "Week before",
+              currentLabel: "This week",
+              unit: week.unit
+            }
+          }),
       establishes: `${valueLabel} recorded, against ${previous} in the week before.`,
       doesNotEstablish:
         "Why it changed, whether this week is typical, or how many people were involved.",
@@ -180,6 +205,17 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       unitLabel: "clicks from Woodhouse",
       period: periodLabel,
       comparison,
+      ...(topDestination.hasTrend
+        ? {
+            change: {
+              previous: topDestination.prior,
+              current: topDestination.recent,
+              previousLabel: "Previous 7 days",
+              currentLabel: "Last 7 days",
+              unit: "count" as const
+            }
+          }
+        : {}),
       establishes: `${clicks} from Woodhouse to ${topDestination.name} between ${dateLabel(window.from)} and ${dateLabel(window.to)} (UTC).`,
       doesNotEstablish:
         "That anyone played, tried or kept using it. This counts clicks on Woodhouse, not what happened next.",
