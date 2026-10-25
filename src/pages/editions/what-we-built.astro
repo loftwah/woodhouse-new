@@ -100,16 +100,14 @@ const caption = `What we built · Woodhouse portfolio edition, ${editionReviewDa
 
     {heroImage && (
       <figure class="wwb-lead">
-        <a href={site(lead) ?? dossier(lead)} target="_blank" rel="noopener noreferrer">
-          <img
-            src={heroImage}
-            alt={artworkAlt(lead)}
-            width="1200"
-            height="630"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </a>
+        <img
+          src={heroImage}
+          alt={artworkAlt(lead)}
+          width="1200"
+          height="630"
+          fetchpriority="high"
+          decoding="async"
+        />
         <figcaption>
           <span class="wwb-lead__project">
             <strong>{leadProject.name}.</strong> <a href={dossier(lead)}>The full record</a>
@@ -139,22 +137,14 @@ const caption = `What we built · Woodhouse portfolio edition, ${editionReviewDa
                 <li class="wwb-entry">
                   <div class="wwb-entry__media">
                     {project.previewImage ? (
-                      <a
-                        href={href ?? dossier(entry)}
-                        target={href ? "_blank" : undefined}
-                        rel={href ? "noopener noreferrer" : undefined}
-                        tabindex="-1"
-                        aria-hidden="true"
-                      >
-                        <img
-                          src={project.previewImage}
-                          alt=""
-                          width="1200"
-                          height="630"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </a>
+                      <img
+                        src={project.previewImage}
+                        alt={artworkAlt(entry)}
+                        width="1200"
+                        height="630"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : (
                       <div class="wwb-entry__plate" aria-hidden="true">
                         <span>{project.name}</span>
