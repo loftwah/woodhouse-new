@@ -14,7 +14,13 @@ import {
   getProjectRecord,
   getEditorialDispatch
 } from "../../content/repository";
-import { getArtworkFallback, getSiteMetadata, socialCardFor } from "../../data/site-metadata";
+import {
+  getArtworkFallback,
+  getSiteMetadata,
+  socialCardFor,
+  WOODHOUSE_SOCIAL_CARD,
+  WOODHOUSE_SOCIAL_CARD_ALT
+} from "../../data/site-metadata";
 import { projectAction, projectActionHref, projectActionLabel } from "../../data/project-actions";
 import { formatReviewDate } from "../../data/review-date";
 import { toJsonLd } from "../../data/safe-json";
@@ -60,7 +66,19 @@ const reviewDateLabel = formatReviewDate(project?.reviewDate) ?? "Review date un
 const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
 const artworkFallback = getArtworkFallback(project);
+// The per-project SVG names the project, which is what an image needs to do when
+// a product's own artwork fails to load. It is not what should greet a visitor on
+// a project with no artwork at all: the page already says which project this is,
+// and a drawn index-and-status card reads as a generated form. Show the site's
+// owned card instead and keep the SVG for error recovery.
 const placeholder = artworkFallback.image;
+// Display and social metadata are decided separately. A product that publishes
+// only an SVG still renders it here — a browser draws SVG perfectly well — while
+// its social tag switches to a raster, because unfurlers do not.
+const artworkSource = siteMeta ? siteMeta.image : WOODHOUSE_SOCIAL_CARD;
+const artworkAlt = siteMeta
+  ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
+  : WOODHOUSE_SOCIAL_CARD_ALT;
 const studioFilm = featuredMediaFor(project.slug);
 // These are individual editorial features in the existing article series.
 const featureSlug =
@@ -205,14 +223,10 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
     {...projectEntry?.edit.site_og_image}
   >
     <img
-      src={siteMeta?.image ?? placeholder}
+      src={artworkSource}
       width="1200"
       height="630"
-      alt={
-        siteMeta
-          ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
-          : artworkFallback.alt
-      }
+      alt={artworkAlt}
       loading="eager"
       decoding="async"
       data-fallback-src={siteMeta ? placeholder : undefined}
@@ -222,7 +236,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
     <figcaption>
       <span>
         <strong data-artwork-status>
-          {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE ILLUSTRATION"}
+          {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE"}
         </strong>
         {siteMeta ? (
           <>
@@ -237,7 +251,10 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
             </span>
           </>
         ) : (
-          <span class="dossier-preview__description">Made for this record.</span>
+          <span class="dossier-preview__description">
+            This project publishes no artwork of its own. The plate is Woodhouse's, drawn from the
+            signature the homepage renders live.
+          </span>
         )}
       </span>
       {project.siteUrl && (

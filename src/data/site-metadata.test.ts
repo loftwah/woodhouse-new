@@ -172,3 +172,19 @@ test("the Woodhouse card is a real, correctly sized raster with retained provena
   ).catch(() => null);
   assert.ok(master, "the retained master must stay beside the card it produces");
 });
+
+test("a project with no artwork shows the owned card, not a generated form", async () => {
+  // The visible fallback for a project that publishes nothing was a per-project
+  // SVG drawing the dossier number, name and a status box in Arial. It named the
+  // project, which a page already does, and looked like a form. The owned card
+  // replaces it, while the SVG stays available as an image-error fallback where
+  // naming the project is the whole point.
+  const row = await readFile(new URL("../components/ProjectRow.astro", import.meta.url), "utf8");
+  assert.match(row, /src=\{WOODHOUSE_SOCIAL_CARD\}/);
+  assert.match(row, /alt=\{WOODHOUSE_SOCIAL_CARD_ALT\}/);
+  assert.match(
+    projectRoute,
+    /const artworkSource = siteMeta \? siteMeta\.image : WOODHOUSE_SOCIAL_CARD/
+  );
+  assert.match(projectRoute, /data-fallback-src=\{siteMeta \? placeholder : undefined\}/);
+});

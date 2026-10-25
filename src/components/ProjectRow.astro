@@ -1,6 +1,11 @@
 ---
 import StatusStamp from "./StatusStamp.astro";
-import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
+import {
+  getArtworkFallback,
+  getSiteMetadata,
+  WOODHOUSE_SOCIAL_CARD,
+  WOODHOUSE_SOCIAL_CARD_ALT
+} from "../data/site-metadata";
 import { formatReviewDate } from "../data/review-date";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 const { project, compact = false, headingLevel = "h3" } = Astro.props;
@@ -40,8 +45,8 @@ const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
     ) : (
       <div class="project-row__image project-row__image--placeholder">
         <img
-          src={placeholder}
-          alt={fallback.alt}
+          src={WOODHOUSE_SOCIAL_CARD}
+          alt={WOODHOUSE_SOCIAL_CARD_ALT}
           width="1200"
           height="630"
           loading="lazy"
