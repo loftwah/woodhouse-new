@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { listProjectRecords } from "../../content/repository";
 import { readPortfolioReport, projectReport } from "../../data/portfolio-reports";
+import { logReportFailure, type ReportDependency } from "../../data/report-failure";
 export const prerender = false;
 export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
@@ -11,13 +12,31 @@ export const GET: APIRoute = async ({ url, cache }) => {
       { available: false },
       { status: 400, headers: { "cache-control": "no-store" } }
     );
-  const projects = await listProjectRecords();
-  if (projects.error)
-    return Response.json(
-      { available: false },
-      { status: 503, headers: { "cache-control": "no-store" } }
-    );
+  const startedAt = Date.now();
+  // The activity page reads this before it can render a frozen report, so a
+  // rejected CMS or database read must stay a 503 rather than an uncaught 500.
+  let stage = "identities";
+  let dependency: ReportDependency = "cms";
   try {
+    const projects = await listProjectRecords();
+    if (projects.error) {
+      logReportFailure({
+        route: "/api/portfolio-report.json",
+        stage,
+        scope: "report",
+        reportId: id,
+        dependency,
+        durationMs: Date.now() - startedAt,
+        status: 503,
+        error: projects.error
+      });
+      return Response.json(
+        { available: false },
+        { status: 503, headers: { "cache-control": "no-store" } }
+      );
+    }
+    stage = "report-read";
+    dependency = "database";
     const report = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
     if (!report)
       return Response.json(
@@ -35,7 +54,17 @@ export const GET: APIRoute = async ({ url, cache }) => {
     const published: Record<string, unknown> = { ...narrowed };
     delete published.history;
     return Response.json(published, { headers: { "cache-control": "public, max-age=60" } });
-  } catch {
+  } catch (error) {
+    logReportFailure({
+      route: "/api/portfolio-report.json",
+      stage,
+      scope: "report",
+      reportId: id,
+      dependency,
+      durationMs: Date.now() - startedAt,
+      status: 503,
+      error
+    });
     return Response.json(
       { available: false },
       { status: 503, headers: { "cache-control": "no-store" } }
