@@ -446,7 +446,8 @@
   flex-wrap: wrap;
   gap: 0.6rem;
 }
-.wwb-share__actions button {
+.wwb-share__actions button,
+.wwb-entry__actions button {
   min-height: 46px;
   padding: 0.7rem 1.2rem;
   border: 1px solid var(--line-dark);
@@ -458,11 +459,13 @@
     background-color 0.15s ease-out,
     border-color 0.15s ease-out;
 }
-.wwb-share__actions button:hover {
+.wwb-share__actions button:hover,
+.wwb-entry__actions button:hover {
   border-color: var(--acid);
   color: var(--acid);
 }
-.wwb-share__actions button:active {
+.wwb-share__actions button:active,
+.wwb-entry__actions button:active {
   background: var(--hover-surface);
 }
 .wwb-share__native {
@@ -497,7 +500,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wwb-share__actions button {
+  .wwb-share__actions button,
+  .wwb-entry__actions button {
     transition: none;
   }
 }

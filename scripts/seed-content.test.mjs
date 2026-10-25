@@ -18,8 +18,13 @@ function paragraphs(block) {
 
 function bodyParagraphs(entry) {
   return (entry.data.content ?? [])
-    .filter((block) => block?._type === "prose")
-    .flatMap(paragraphs)
+    .flatMap((block) =>
+      block?._type === "portfolio_entry"
+        ? [normalise(block.body)]
+        : block?._type === "prose"
+          ? paragraphs(block)
+          : []
+    )
     .filter(Boolean);
 }
 
@@ -42,7 +47,7 @@ test("a dispatch body does not repeat its own standfirst", () => {
   }
 });
 
-test("every dispatch keeps prose after its standfirst", () => {
+test("every dispatch keeps substantive body text after its standfirst", () => {
   for (const dispatch of dispatches) assert.ok(bodyParagraphs(dispatch).length > 0, dispatch.slug);
 });
 

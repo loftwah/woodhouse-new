@@ -400,3 +400,81 @@ The local browser check rendered the home, Factory, project index, dispatch inde
 `pnpm run verify` reports no Astro or TypeScript diagnostics and all 14 tests pass. The local Doctor's “no users” warning is expected for its isolated temporary database. Production remains unchanged. The Worker dry-run and local browser review are not deployment or live-content proof.
 
 Update this record only with direct observations, and distinguish local test evidence from preview and production observations.
+
+## Repeatable portfolio editions — reviewed 25 October 2026
+
+Observed failures: the first edition's editorial copy lived in TypeScript, its
+cover contradicted its receipt, and there was no unpublished second run.
+`dispatches` now owns the copy through the existing revisioned editorial model.
+The small `portfolio_entry` block holds a project slug, section, headline, story,
+state basis, first step and public source/review date. It adds no collection or
+project-state store. Names, art and destinations still resolve from published
+project records. Story text is dated; current identity/art does not re-date it.
+
+The first record is `what-we-built-2026-10-25`; its permanent reading address is
+`/editions/what-we-built/`. Further dispatches containing these blocks render at
+`/editions/<dispatch-slug>/`. The ordinary dispatch address redirects there, with
+an authenticated preview query retained. Drafts use EmDash's signed preview,
+private/no-store/noindex response and no public share controls. Public lists,
+RSS, facts and sitemap read published, public-safe records only. Empty sections
+have no jump link; withdrawn projects lose their story and action.
+
+### Prepare, review, publish
+
+1. Select the reader and argument from the supplied report. Check the selected
+   claims against their owning product and release evidence. Record a public
+   source and review date on each entry; keep private bodies and the full input
+   out. A quiet project can keep its paragraph. Review current identities and
+   the actual artwork as well as the text.
+2. Use an ordinary `Portfolio report` dispatch, with `portfolio_entry` blocks,
+   as an EmDash draft. CLI create/update **auto-publishes unless `--draft` is
+   explicit**. Update uses the `_rev` returned by the prior get. Keep
+   `public_safe: false` until the actual editorial/privacy review is complete.
+   [Official CLI](https://docs.emdashcms.com/reference/cli/) and
+   [lifecycle](https://docs.emdashcms.com/reference/content-lifecycle/) were
+   checked against installed 1.3.1 on the review date.
+3. Inspect the real signed preview at phone, short landscape and desktop sizes,
+   enlarged text and reduced motion. Check unchanged entries, publication states,
+   source actions, artwork/credits and the downloaded social formats at feed size.
+   Use `?analytics=off` (or `&analytics=off` on a signed preview).
+4. Production **does not have an enabled editor or preview surface**. Until its
+   separate editorial activation gates pass, review locally, carry only the
+   approved minimised dispatch into `seed/seed.json` as published, regenerate
+   types, and use the existing model-install and guarded publication path. The
+   model installer refuses unexpected drafts/schedules/records remotely; never
+   bypass that protection. Do not insert the rehearsal into the deployed seed.
+5. Use the existing dispatch social-card manifest for a future edition's reviewed
+   card. Without one the renderer uses the existing generic Woodhouse art, never
+   the first edition's title/date. Keep a dated cover count-free because current
+   project admission may differ later. Preserve former card URLs as history.
+6. `pnpm run verify`, reviewed seed-model install on preview then production, and
+   clean pushed-main `deploy:publication -- preview` → `production` retain their
+   normal checks. Verify the live source/content identities and actual reading
+   address. This is a reading release, not editorial activation, MP taste or
+   physical-device acceptance.
+
+### The unpublished second run
+
+With no Woodhouse dev server running, `pnpm run edition:rehearse` prepares
+an isolated local run from the current schema. It preserves the existing local
+D1, starts a loopback server, creates `edition-rehearsal` through the real EmDash
+CLI with `--draft`, and asks EmDash for a signed preview. Its private
+`.release/edition-rehearsal/<run>/preview.json` identifies that local preview.
+Press Enter or send SIGINT to stop its server and restore the original local D1.
+The draft input, local database and evidence remain ignored; nothing is uploaded.
+
+The rehearsal changes the title to “An evening kept” and the Plans With You
+headline, retaining Bubbles unchanged. Those are editing variations over the
+same checked sources, not new milestones. On 25 October the actual preview was
+reviewed at 390px and 1440px. Its unsigned URL returned 404, sharing was absent,
+and facts/RSS/sitemap contained no draft title. A local revisioned approval edit
+then allowed EmDash publish: the ordinary local URL returned 200 with the same
+copy. EmDash unpublish returned it to 404. It ended **unpublished**.
+
+The first seed-created rehearsal exposed a useful boundary: seed SQLite approval
+read back as numeric `1`, which the strict publication policy rejected. A normal
+revisioned EmDash edit carrying boolean `true` passed; the policy was preserved.
+The repeatable runner now creates the rehearsal with the normal CLI instead of
+seeding its draft. Local authoring proof is not evidence that production's
+blocked authoring works. Production D1 SQL export still requires MP's maintenance
+window; R2's scoped credential/non-empty-drill boundary is unchanged.

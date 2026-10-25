@@ -18,8 +18,8 @@ import { Resvg, initWasm } from "@resvg/resvg-wasm";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const MASTER = `${ROOT}scripts/assets/dossier/loom-master.png`;
-const DEST = `${ROOT}public/og/what-we-built-20261025.jpg`;
-const PROVENANCE = `${ROOT}public/og/what-we-built-20261025.provenance.txt`;
+let DEST = `${ROOT}public/og/what-we-built-20261025-v2.jpg`;
+let PROVENANCE = `${ROOT}public/og/what-we-built-20261025-v2.provenance.txt`;
 const FONT_DIR = `${ROOT}public/fonts`;
 
 const INK = "#080d19";
@@ -28,9 +28,17 @@ const ACID = "#e9ff49";
 const COPY = "#b7c7df";
 const RULE = "#4a5a78";
 
-const WIDTH = 1200;
-const HEIGHT = 630;
+const format = process.argv.slice(2).find((a) => a !== "--") ?? "landscape";
+const sizes = { landscape: [1200, 630], square: [1200, 1200], portrait: [1080, 1920] };
+if (!sizes[format]) throw new Error("Choose landscape, square or portrait");
+const [WIDTH, HEIGHT] = sizes[format];
+const portrait = format === "portrait";
+const tall = format !== "landscape";
 
+if (format !== "landscape") {
+  DEST = DEST.replace(".jpg", `-${format}.jpg`);
+  PROVENANCE = PROVENANCE.replace(".provenance", `-${format}.provenance`);
+}
 await initWasm(readFileSync(`${ROOT}src/assets/resvg.wasm`));
 
 const fonts = [400, 700].map(
@@ -58,22 +66,22 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${
   </defs>
   <rect width="${WIDTH}" height="${HEIGHT}" fill="${INK}"/>
   <g clip-path="url(#card)">
-    <g transform="translate(-58 -88) scale(0.9375)">
+    <g transform="${tall ? `translate(-160 ${portrait ? 420 : 180}) scale(${portrait ? 1.0 : 1.0})` : "translate(-58 -88) scale(0.9375)"}">
       <image width="1600" height="1000" href="data:image/png;base64,${master}"/>
     </g>
     <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#corner)"/>
     <rect width="${WIDTH}" height="${HEIGHT}" fill="url(#scrim)"/>
     ${text(74, 126, "WOODHOUSE · PORTFOLIO EDITION", { size: 16, spacing: 5.6, fill: ACID })}
     <path d="M74 148h44" stroke="${ACID}" stroke-width="3"/>
-    ${text(68, 292, "What we", { size: 104, spacing: -3 })}
-    ${text(68, 388, "built", { size: 104, spacing: -3, fill: ACID })}
-    <path d="M74 438h186" stroke="${RULE}" stroke-width="1"/>
-    ${text(74, 482, "Ten projects, one dated edit. 25 October 2026.", {
-      size: 21,
+    ${text(68, tall ? 300 : 292, "What we", { size: 104, spacing: -3 })}
+    ${text(68, tall ? 410 : 388, "built", { size: 104, spacing: -3, fill: ACID })}
+    <path d="M74 ${tall ? HEIGHT - 210 : 438}h186" stroke="${RULE}" stroke-width="1"/>
+    ${text(74, tall ? HEIGHT - 160 : 482, "A dated selection. 25 October 2026.", {
+      size: tall ? (portrait ? 36 : 32) : 27,
       weight: 400,
       fill: COPY
     })}
-    ${text(74, 574, "woodhouse.loftwah.com", { size: 15, weight: 400, fill: ACID, spacing: 1.1 })}
+    ${text(74, tall ? HEIGHT - 65 : 574, "woodhouse.loftwah.com", { size: tall ? 25 : 18, weight: 400, fill: ACID, spacing: 1.1 })}
   </g>
 </svg>`;
 
@@ -81,7 +89,7 @@ const renderer = new Resvg(svg, {
   font: { fontBuffers: fonts, defaultFontFamily: "Bricolage Grotesque" }
 });
 const rendered = renderer.render();
-const png = `${ROOT}output/og/what-we-built-20261025.png`;
+const png = `${ROOT}output/og/what-we-built-20261025-v2-${format}.png`;
 mkdirSync(dirname(png), { recursive: true });
 writeFileSync(png, rendered.asPng());
 rendered.free();
@@ -109,9 +117,9 @@ writeFileSync(
     "captured to scripts/assets/dossier/loom-master.png (1600x1000) and cropped here.",
     "Type: Bricolage Grotesque from public/fonts, set inside the SVG.",
     "Reproduce: node scripts/render-edition-card.mjs",
-    "Output: public/og/what-we-built-20261025.jpg (1200x630).",
+    `Output: ${relative(ROOT, DEST)} (${WIDTH}x${HEIGHT}).`,
     "",
-    "No project count is baked in beyond the edition's own ten, and the date names the edition,",
+    "No project count is baked in. The date names the editorial review,",
     "not the moment a reader opens it."
   ].join("\n")
 );

@@ -51,7 +51,8 @@ test("an ordinary intent phrase finds the project it means", () => {
     ["fishing game", "shoalshot"],
     ["fighting game", "fighter"],
     ["walking frame", "max"],
-    ["fm", "loftwahfm"]
+    ["fm", "loftwahfm"],
+    ["cancel plans", "social-club"]
   ] as const) {
     assert.ok(
       projects.some(
@@ -82,7 +83,8 @@ test("stop words and short tokens do not decide a match", () => {
 });
 
 test("a query about nothing in the record matches nothing", () => {
-  assert.deepEqual(ranked("quantum blockchain insurance"), []);
+  // “block” is now legitimate calendar-protection copy, so blockchain is no longer an unrelated prefix fixture.
+  assert.deepEqual(ranked("quantum neutrino insurance"), []);
 });
 
 test("a two-letter word inside another word is not a match", () => {

@@ -1,4 +1,5 @@
 ---
+import { readPortfolioEdition } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import EditorialBlocks from "../../components/EditorialBlocks.astro";
 import PatchBench from "../../components/exhibits/PatchBench.astro";
@@ -22,6 +23,8 @@ if (result?.error) {
   });
 }
 const editorial = result?.dispatch ?? null;
+const edition = readPortfolioEdition(editorial);
+if (edition) return Astro.redirect(`${edition.path}${Astro.url.search}`, 302);
 const entry = result?.entry;
 const isPreview = result?.isPreview === true;
 // Each dispatch has its own rendered social card where one exists; a dispatch

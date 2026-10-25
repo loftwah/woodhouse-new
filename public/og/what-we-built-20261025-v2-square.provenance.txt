@@ -1,0 +1,11 @@
+What we built — portfolio edition card, 25 October 2026
+
+Method: authored composition, no image-generation provider.
+Artwork: Woodhouse's own homepage signature (the tensioned-fibre lens),
+captured to scripts/assets/dossier/loom-master.png (1600x1000) and cropped here.
+Type: Bricolage Grotesque from public/fonts, set inside the SVG.
+Reproduce: node scripts/render-edition-card.mjs
+Output: public/og/what-we-built-20261025-v2-square.jpg (1200x1200).
+
+No project count is baked in. The date names the editorial review,
+not the moment a reader opens it.

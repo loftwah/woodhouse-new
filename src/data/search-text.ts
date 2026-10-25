@@ -22,6 +22,10 @@
 const TEXT_KEYS = new Set([
   "text",
   "title",
+  "headline",
+  "body",
+  "basis",
+  "invitation",
   "label",
   "quote",
   "attribution",

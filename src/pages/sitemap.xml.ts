@@ -1,3 +1,4 @@
+import { readPortfolioEdition } from "../data/what-we-built";
 import { portfolioEdition } from "../data/portfolio-edition";
 import type { APIRoute } from "astro";
 import {
@@ -87,7 +88,10 @@ export const GET: APIRoute = async ({ cache }) => {
       "/contact/"
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
-    { path: "/editions/what-we-built/", lastmod: "2026-10-25" },
+    ...dispatchResult.dispatches.flatMap((d) => {
+      const e = readPortfolioEdition(d);
+      return e ? [{ path: e.path, lastmod: d.reviewDate }] : [];
+    }),
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate
