@@ -102,30 +102,46 @@ async function verifyBoundary(origin) {
     ["/?_preview=publication-probe", "GET"],
     ["/", "POST"]
   ];
-  for (const [pathname, method] of cases) {
-    const response = await fetch(origin + pathname, {
-      method,
-      redirect: "manual",
-      signal: AbortSignal.timeout(30000)
-    });
-    if (response.status !== 404 || !response.headers.get("cache-control")?.includes("no-store"))
-      throw new Error(`Read-only boundary failed for ${method} ${pathname}: ${response.status}`);
-    await response.body?.cancel();
-  }
+  // A Worker takes a few seconds to serve every edge node after a deploy. Asking
+  // once turned that settling time into "bypassed the publication boundary" —
+  // an alarming sentence for a transient, and the kind of false alarm that
+  // teaches an operator to rerun without reading. Anything that answers 2xx is
+  // a real bypass and fails at once; only an infrastructure-shaped answer
+  // (5xx, reset, timeout) is retried, and the last observation is reported.
+  const probe = async (url, init, describe) => {
+    let last = "";
+    for (let attempt = 1; attempt <= 4; attempt += 1) {
+      let response;
+      try {
+        response = await fetch(url, {
+          ...init,
+          redirect: "manual",
+          signal: AbortSignal.timeout(30000)
+        });
+      } catch (error) {
+        last = `the request failed (${error?.name ?? "Error"})`;
+        if (attempt < 4) await new Promise((resolve) => setTimeout(resolve, 750 * attempt));
+        continue;
+      }
+      const status = response.status;
+      const cacheControl = response.headers.get("cache-control") ?? "";
+      await response.body?.cancel();
+      if (status >= 200 && status < 300)
+        throw new Error(`${describe} answered ${status}, which is a publication bypass.`);
+      if (status === 404 && cacheControl.includes("no-store")) return;
+      last = `${status} with cache-control "${cacheControl}"`;
+      if (attempt < 4) await new Promise((resolve) => setTimeout(resolve, 750 * attempt));
+    }
+    throw new Error(`${describe} never settled on 404 no-store; last answer was ${last}.`);
+  };
+  for (const [pathname, method] of cases)
+    await probe(origin + pathname, { method }, `The read-only boundary for ${method} ${pathname}`);
   for (const cookie of [
     "emdash-edit-mode=%74rue",
     "emdash-edit-mode = true",
     'emdash-edit-mode="true"'
-  ]) {
-    const response = await fetch(origin + "/", {
-      headers: { Cookie: cookie },
-      redirect: "manual",
-      signal: AbortSignal.timeout(30000)
-    });
-    if (response.status !== 404 || !response.headers.get("cache-control")?.includes("no-store"))
-      throw new Error("Encoded edit-mode cookie bypassed the publication boundary.");
-    await response.body?.cancel();
-  }
+  ])
+    await probe(origin + "/", { headers: { Cookie: cookie } }, `The edit-mode cookie ${cookie}`);
   const html = await fetch(origin + "/contact/", { signal: AbortSignal.timeout(30000) }).then((r) =>
     r.text()
   );
