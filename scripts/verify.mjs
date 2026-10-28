@@ -142,14 +142,28 @@ function parseArguments(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === "--") continue;
-    else if (argument === "--heavy") options.mode = "heavy";
-    else if (argument === "--reserved") options.mode = "reserved";
-    else if (argument === "--stage") options.stage = argv[(index += 1)];
-    else if (argument === "--state-dir") options.stateDir = argv[(index += 1)];
+    else if (argument === "--heavy" || argument === "--light") {
+      if (options.mode !== "full") throw new Error("Choose only one verification lane");
+      options.mode = argument.slice(2);
+    } else if (argument === "--reserved") {
+      if (options.mode !== "full") throw new Error("Choose only one verification lane");
+      options.mode = "reserved";
+    } else if (argument === "--stage") {
+      if (options.stage !== undefined || !argv[index + 1] || argv[index + 1].startsWith("--"))
+        throw new Error("--stage requires one named stage");
+      options.stage = argv[(index += 1)];
+    } else if (argument === "--state-dir") options.stateDir = argv[(index += 1)];
     else if (argument === "--wait-seconds") options.waitSeconds = Number(argv[(index += 1)]);
     else throw new Error(`Unknown argument: ${argument}`);
   }
   if (options.stage && !stageFor(options.stage)) throw new Error(`Unknown stage: ${options.stage}`);
+  if (options.stage && options.mode === "light") throw new Error("Use --stage without --light");
+  if (
+    options.stage &&
+    ["heavy", "reserved"].includes(options.mode) &&
+    !heavyStages.includes(stageFor(options.stage))
+  )
+    throw new Error("The heavy lane accepts only heavy stages");
   return options;
 }
 
@@ -164,6 +178,7 @@ export async function main(argv) {
   try {
     if (options.mode === "reserved") return await runReserved(options);
     if (options.mode === "heavy") return await heavyLane(options);
+    if (options.mode === "light") return await runStages(lightStages);
     if (options.stage) {
       const stage = stageFor(options.stage);
       return lightStages.includes(stage) ? await runStages([stage]) : await heavyLane(options);

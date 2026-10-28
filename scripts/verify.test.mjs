@@ -52,6 +52,25 @@ test("only the stages that rewrite build output take the host slot", () => {
     assert.ok(!heavyStages.some(([, heavy]) => heavy === script), `${label} is reserved`);
 });
 
+test("invalid staged commands fail before running a lane", async () => {
+  for (const args of [
+    ["--stage"],
+    ["--light", "--heavy"],
+    ["--light", "--stage", "lint"],
+    ["--heavy", "--stage", "lint"]
+  ]) {
+    const result = await new Promise((done) => {
+      const child = spawn(process.execPath, [verify, ...args], { cwd: root });
+      let output = "";
+      child.stdout.on("data", (chunk) => (output += chunk));
+      child.stderr.on("data", (chunk) => (output += chunk));
+      child.on("close", (status) => done({ status, output }));
+    });
+    assert.notEqual(result.status, 0, args.join(" "));
+    assert.doesNotMatch(result.output, /== (light stages|format|lint|Astro and TypeScript)/);
+  }
+});
+
 test("a busy host slot stops the heavy lane instead of starting it", async () => {
   const directory = mkdtempSync(join(tmpdir(), "woodhouse-verify-"));
   const state = join(directory, "state");

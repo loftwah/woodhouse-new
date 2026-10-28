@@ -31,10 +31,14 @@ participating validation entrypoints, but only for the stages that need it. On
 `build` (~26s of a ~62s pipeline) rewrite `dist/` and `.astro/` and dominate CPU,
 so they hold the slot; the other thirteen stages only read the tree and run
 before the slot is requested. A foreign reservation therefore no longer blocks a
-format, lint or unit check. `pnpm run verify -- --heavy` re-runs just the
-reserved pair, and `pnpm run verify -- --stage <script>` runs one named stage in
-its correct lane. Re-measure before claiming a speedup, and keep the receipts in
-ignored `output/`.
+format, lint or unit check. `pnpm run verify -- --light` runs the read-only
+lane independently; `pnpm run verify -- --heavy` runs the reserved pair, and
+`pnpm run verify -- --stage <script>` runs one named stage in its correct lane.
+Use the light lane during implementation, then the heavy lane on the same
+unchanged source when ready. These commands do not create a combined release receipt: re-run
+affected checks after edits and follow the relevant publication or editorial path.
+A full `pnpm run verify` remains available for an end-to-end check. Re-measure
+before claiming a speedup, and keep the receipts in ignored `output/`.
 
 The slot is host resource arbitration, not repository ownership. It does not
 make two builds in one worktree safe: one writer still owns integration and
