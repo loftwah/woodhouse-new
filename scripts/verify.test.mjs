@@ -9,7 +9,7 @@ import { dirname, join, resolve } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { completeHostValidation } from "./host-validation-complete.mjs";
-import { heavyStages, lightStages } from "./verify.mjs";
+import { heavyStages, lightStages, quickStages } from "./verify.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const verify = resolve(root, "scripts/verify.mjs");
@@ -42,6 +42,13 @@ test("the pipeline still runs every gate exactly once", () => {
   for (const script of planned) assert.ok(pkg.scripts[script], `package.json lost ${script}`);
 });
 
+test("quick feedback is a small subset and does not replace full verification", () => {
+  assert.deepEqual(
+    quickStages.map(([, script]) => script),
+    ["format:check", "lint", "test"]
+  );
+});
+
 test("only the stages that rewrite build output take the host slot", () => {
   assert.deepEqual(
     heavyStages.map(([, script]) => script),
@@ -56,6 +63,7 @@ test("invalid staged commands fail before running a lane", async () => {
   for (const args of [
     ["--stage"],
     ["--light", "--heavy"],
+    ["--quick", "--stage", "lint"],
     ["--light", "--stage", "lint"],
     ["--heavy", "--stage", "lint"]
   ]) {

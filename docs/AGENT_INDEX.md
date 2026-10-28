@@ -25,6 +25,11 @@ Reviewed 16 October 2026. Start at [AGENTS.md](../AGENTS.md); this index routes 
 
 ## Shared local validation capacity
 
+Reviewed 28 October 2026: `pnpm run verify -- --quick` runs formatting, lint
+and the application/script tests for fast feedback while editing. It is not a
+release qualification and does not replace the remaining checks. Run a focused
+test directly when that gives a faster answer.
+
 `pnpm run verify` takes the same private host/user capacity slot used by other
 participating validation entrypoints, but only for the stages that need it. On
 22 October 2026 the measured split on the maintainer's host was: `typecheck` and

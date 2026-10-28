@@ -41,6 +41,11 @@ export const heavyStages = [
   ["production build and privacy scan", "build"]
 ];
 
+// Fast feedback during editing; this is not the complete verification pipeline.
+export const quickStages = lightStages.filter(([, script]) =>
+  ["format:check", "lint", "test"].includes(script)
+);
+
 const allStages = [...lightStages, ...heavyStages];
 const stageFor = (script) => allStages.find(([, name]) => name === script);
 
@@ -142,7 +147,7 @@ function parseArguments(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === "--") continue;
-    else if (argument === "--heavy" || argument === "--light") {
+    else if (["--heavy", "--light", "--quick"].includes(argument)) {
       if (options.mode !== "full") throw new Error("Choose only one verification lane");
       options.mode = argument.slice(2);
     } else if (argument === "--reserved") {
@@ -157,7 +162,8 @@ function parseArguments(argv) {
     else throw new Error(`Unknown argument: ${argument}`);
   }
   if (options.stage && !stageFor(options.stage)) throw new Error(`Unknown stage: ${options.stage}`);
-  if (options.stage && options.mode === "light") throw new Error("Use --stage without --light");
+  if (options.stage && ["light", "quick"].includes(options.mode))
+    throw new Error("Use --stage without a lane option");
   if (
     options.stage &&
     ["heavy", "reserved"].includes(options.mode) &&
@@ -179,6 +185,10 @@ export async function main(argv) {
     if (options.mode === "reserved") return await runReserved(options);
     if (options.mode === "heavy") return await heavyLane(options);
     if (options.mode === "light") return await runStages(lightStages);
+    if (options.mode === "quick") {
+      process.stdout.write("== quick feedback only; not complete verification ==\n");
+      return await runStages(quickStages);
+    }
     if (options.stage) {
       const stage = stageFor(options.stage);
       return lightStages.includes(stage) ? await runStages([stage]) : await heavyLane(options);
