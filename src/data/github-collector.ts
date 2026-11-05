@@ -197,7 +197,8 @@ export async function refreshLeaderboards(
     // A local backfill must not bypass the installed Worker's first collection.
     if (
       latest?.through === completeWindow(180, now).to &&
-      receipt.collectedThrough === latest.through
+      receipt.collectedThrough === latest.through &&
+      leaderboardProjects.every((project) => latest.projects.some((p) => p.slug === project.slug))
     )
       return;
     const collected = await storeLeaderboard(
