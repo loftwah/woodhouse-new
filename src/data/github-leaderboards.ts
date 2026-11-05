@@ -1,4 +1,4 @@
-/** Reviewed 24 October 2026. Repository access never expands publication. */
+/** Reviewed 6 November 2026. Repository access never expands publication. */
 export const leaderboardProjects = [
   { slug: "woodhouse", name: "Woodhouse", repo: "woodhouse-new", colour: "#e9ff49", mark: "W" },
   {
@@ -13,6 +13,7 @@ export const leaderboardProjects = [
   { slug: "protocol-11", name: "Protocol 11", repo: "protocol-11", colour: "#c1b0ff", mark: "11" },
   { slug: "loftwahfm", name: "LoftwahFM", repo: "loftwahfm", colour: "#ff83cb", mark: "FM" },
   { slug: "bubbles", name: "Bubbles", repo: "bubbles", colour: "#75e6a9", mark: "B" },
+  { slug: "foilbury", name: "Foilbury", repo: "card-collector-bot", colour: "#f0b66c", mark: "F" },
   {
     slug: "asset-hunter",
     name: "Asset Hunter",
@@ -24,7 +25,7 @@ export const leaderboardProjects = [
 export const rankingMeasures = [
   {
     key: "merged",
-    label: "Changes merged",
+    label: "PRs merged",
     detail: "Pull requests merged on GitHub, counted by merge date."
   },
   {

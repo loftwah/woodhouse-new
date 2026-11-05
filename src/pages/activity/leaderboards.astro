@@ -179,7 +179,7 @@ const plottedWeeks = weeks.map((w) => ({
         </h1>
         <p class="lb-deck">
           {focused
-            ? "This project's merged changes, closed issues and backlog over the selected period."
+            ? "This project's merged pull requests, closed issues and backlog over the selected period."
             : "The Loftwah projects making moves, ranked over the same complete days."}
         </p>
       </div>
@@ -476,7 +476,9 @@ const plottedWeeks = weeks.map((w) => ({
           <details>
             <summary>What the numbers mean</summary>
             <p>
-              Changes merged counts pull requests by their merge date, including bots. Issues closed
+              PRs merged counts pull requests by their merge date, including bots. It excludes direct
+              integrations and does not establish production deployment or verified feature delivery.
+              Those outcomes are not measured by this report. Issues closed
               counts closure events, including an issue closed again after reopening. Issues opened
               excludes pull requests. Fewer open issues is closures minus new and reopened issues;
               negative numbers mean growth. Transfers and deleted records cannot be reconstructed
