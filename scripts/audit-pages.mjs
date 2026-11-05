@@ -7,6 +7,7 @@ import {
   scanPublicText
 } from "./public-privacy.mjs";
 import { isCloudflareHiddenContentLink, socialImageURL } from "./page-link-policy.mjs";
+import { auditScopeArguments } from "./publication-audit-scope.mjs";
 
 const args = process.argv.slice(2);
 if (args[0] === "--") args.shift();
@@ -18,6 +19,8 @@ if (!/^https?:\/\//.test(origin))
   throw new Error(
     "Usage: pnpm run audit:pages -- [origin] (https://host or http://localhost:port)"
   );
+const focusedPaths = args.filter((arg) => arg.startsWith("--path=")).map((arg) => arg.slice(7));
+if (focusedPaths.length) auditScopeArguments(focusedPaths);
 
 const alwaysChecked = [
   "/",
@@ -272,7 +275,9 @@ const sitemapPages = [...sitemapBody.matchAll(/<loc>([^<]+)<\/loc>/g)]
 for (const url of sitemapPages)
   if (url.origin !== origin) findings.push(`sitemap.xml points outside ${origin}: ${url}`);
 
-const pages = [...new Set([...sitemapPages.map((url) => url.pathname), ...alwaysChecked])];
+const pages = focusedPaths.length
+  ? [...new Set(focusedPaths)]
+  : [...new Set([...sitemapPages.map((url) => url.pathname), ...alwaysChecked])];
 const titles = new Map();
 const internalLinks = new Map();
 const checked = [];
@@ -337,7 +342,16 @@ for (const document of documents) {
   }
 
   const targets = new Set();
-  for (const anchor of elements(html, "a")) {
+  // The global search dialog links to the entire site on every page. For a
+  // focused audit inspect the selected page's own main content; a full audit
+  // still follows navigation and search links across the whole sitemap.
+  const linkScope = focusedPaths.length
+    ? (/<main\b[^>]*>([\s\S]*?)<\/main>/i.exec(html)?.[1] ?? html).replace(
+        /<dialog\b[^>]*>[\s\S]*?<\/dialog>/gi,
+        ""
+      )
+    : html;
+  for (const anchor of elements(linkScope, "a")) {
     const href = anchor.attrs.get("href");
     if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:"))
       continue;
@@ -397,7 +411,7 @@ for (const [page, targets] of internalLinks) {
   }
 }
 
-const orphans = pages.filter((page) => page !== "/" && !linkedPaths.has(page));
+const orphans = focusedPaths.length ? [] : pages.filter((page) => page !== "/" && !linkedPaths.has(page));
 for (const orphan of orphans) report(orphan, "is listed for discovery but no page links to it");
 
 // An internal link must point at the page's own canonical URL. A record id
@@ -450,7 +464,7 @@ if (riskyFallbacks.length)
   );
 
 console.log(
-  `Audited ${checked.length} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}. ${riskyAbsent}/${riskyPaths.length} credential paths returned a clean 4xx.`
+  `Audited ${checked.length} ${focusedPaths.length ? "selected" : "sitemap"} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}. ${riskyAbsent}/${riskyPaths.length} credential paths returned a clean 4xx.`
 );
 if (findings.length) {
   for (const finding of findings) console.error("Page audit failed: " + finding);

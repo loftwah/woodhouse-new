@@ -8,6 +8,7 @@ import path from "node:path";
 import { computeSourceDigest } from "./source-digest.mjs";
 import { awaitBuildIdentity } from "./verify-build-identity.mjs";
 import { assertPublicationContent, previewReceiptIsFresh } from "./publication-content.mjs";
+import { publicationAuditScope, auditScopeArguments } from "./publication-audit-scope.mjs";
 
 const root = process.cwd();
 const environment = process.argv.filter((arg) => arg !== "--")[2];
@@ -34,6 +35,7 @@ const targets = {
   }
 };
 const target = targets[environment];
+let auditScope = publicationAuditScope(process.argv.slice(3));
 function run(binary, args, options = {}) {
   const result = spawnSync(binary, args, {
     cwd: root,
@@ -52,10 +54,10 @@ function run(binary, args, options = {}) {
 // first pass and passed unchanged a minute later — a propagation race reported as
 // a content failure. The audit is read-only and idempotent, so retrying it is
 // safe; the attempt that finally passed is named in the output.
-function auditPages(origin) {
+function auditPages(origin, scope) {
   let last;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
-    last = spawnSync("pnpm", ["run", "audit:pages", "--", origin], {
+    last = spawnSync("pnpm", ["run", "audit:pages", "--", origin, ...auditScopeArguments(scope)], {
       cwd: root,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
@@ -193,6 +195,16 @@ if (environment === "production") {
     !previewReceiptIsFresh(receipt)
   )
     throw new Error("A fresh matching read-only preview is required.");
+  // Production audits exactly the pages accepted in preview. The full audit
+  // is represented explicitly by null, never by a missing receipt field.
+  if (!Object.hasOwn(receipt, "auditScope")) throw new Error("Preview audit scope is missing.");
+  auditScopeArguments(receipt.auditScope);
+  if (
+    process.argv.some((arg) => arg === "--full-audit" || arg.startsWith("--path=")) &&
+    JSON.stringify(auditScope) !== JSON.stringify(receipt.auditScope)
+  )
+    throw new Error("Production audit scope differs from the accepted preview.");
+  auditScope = receipt.auditScope;
   const active = json(
     run("pnpm", [
       "exec",
@@ -219,7 +231,7 @@ if (environment === "production") {
   await verifyBoundary(targets.preview.origin);
   // The fresh receipt is written only after the preview audit and active-version
   // check pass. Recheck the live identity, content and boundary above; the
-  // production origin receives its own full audit after deployment.
+  // production origin receives the same scoped audit after deployment.
   run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
 }
 // The observed failure would be a healthy CMS release with a missing analytics
@@ -328,7 +340,7 @@ if (!identity.ok || (environment === "production" && identity.identity?.gitClean
   throw new Error("The deployed origin does not report the intended reviewed build.");
 await verifyServedContent(target.origin, identity.identity);
 await verifyBoundary(target.origin);
-auditPages(target.origin);
+auditPages(target.origin, auditScope);
 const active = json(
   run("pnpm", ["exec", "wrangler", "deployments", "status", "--name", target.worker, "--json"])
 );
@@ -345,6 +357,7 @@ const manifest = {
   environment,
   origin: target.origin,
   mode: "read-only",
+  auditScope,
   workerVersion,
   sourceDigest,
   gitCommit: identity.identity.gitCommit,

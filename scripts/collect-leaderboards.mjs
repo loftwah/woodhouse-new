@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { parseEnvFile } from "./public-privacy.mjs";
 import { collectGitHub } from "../src/data/github-collector.ts";
+import { leaderboardInsertSql } from "./leaderboard-sql.mjs";
 const local = parseEnvFile(await readFile(".env", "utf8"));
 const token =
   local.get("WOODHOUSE_GITHUB_TOKEN") ||
@@ -21,10 +22,9 @@ await mkdir("output/leaderboards", { recursive: true });
 await writeFile("output/leaderboards/initial.json", JSON.stringify(snapshot, null, 2), {
   mode: 0o600
 });
-const quote = (s) => "'" + s.replaceAll("'", "''") + "'";
 await writeFile(
   "output/leaderboards/initial.sql",
-  `INSERT OR IGNORE INTO wh_analytics_reports(id,created_at,days,body) VALUES(${quote(id)},${quote(body.collectedAt)},0,${quote(JSON.stringify(snapshot))});\n`,
+  leaderboardInsertSql(snapshot),
   { mode: 0o600 }
 );
 console.log(
