@@ -16,6 +16,7 @@
  * and they never introduce a capability the project's own record does not have.
  */
 const aliases: Record<string, string> = {
+  liferaft: "email mail archive mbox google takeout backup search recover messages attachments desktop",
   bubbles:
     "bubble shooter bubble pop puzzle arcade match three marble popper casual quick game play in browser phone",
   fighter:

@@ -2186,6 +2186,27 @@
         }
       },
       {
+        "id": "project-liferaft",
+        "slug": "liferaft",
+        "status": "published",
+        "data": {
+          "name": "Liferaft",
+          "index": "12",
+          "discipline": "Desktop tool · email archive recovery",
+          "title": "Find your way back into an email archive.",
+          "summary": "Liferaft is a local desktop app for searching MBOX email archives, previewing messages and recovering attachments or selected messages.",
+          "why": "An email backup is more useful when you can find the message or attachment you need without importing it into a mail service.",
+          "teaches": "A read-only archive browser can help recover messages without becoming another email client.",
+          "site_url": "https://github.com/loftwah/liferaft",
+          "site_og_image": "https://raw.githubusercontent.com/loftwah/liferaft/f6c8afa907d41216757d6732a8f12dded19fa12b/og-image.jpg",
+          "site_og_title": "Liferaft · email archive recovery",
+          "site_og_description": "Search MBOX archives locally and recover messages and attachments.",
+          "preview_alt": "An illustrated orange liferaft alongside the words Liferaft and Recover your emails from Google Takeout.",
+          "preview_caption": "Liferaft artwork from its public repository, reviewed 6 November 2026",
+          "public_safe": true
+        }
+      },
+      {
         "id": "project-foilbury",
         "slug": "foilbury",
         "status": "published",
@@ -2440,6 +2461,19 @@
           "source_description": "Current public product pages, served artwork and production build identities, reviewed 25 October 2026 UTC / 26 October AEDT. Producer qualification records informed the bounded claims; private source bodies and conversations remain unpublished.",
           "scope": "Selected product improvements, native artwork and useful public examples. Existing dated project reviews and the published portfolio edition remain historical records.",
           "editorial_notes": "Published interface changes, controlled local demonstrations and actual provider integrations keep their own evidence boundaries. This review does not establish customer adoption, physical-device acceptance or delivery by an external sharing platform.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-11-06-liferaft",
+        "slug": "2026-11-06-liferaft",
+        "status": "published",
+        "data": {
+          "title": "Liferaft desktop archive recovery · 6 November 2026",
+          "reviewed_at": "2026-11-06",
+          "source_description": "Liferaft public repository and GitHub release, reviewed 6 November 2026 in Melbourne.",
+          "scope": "The documented desktop application and published release assets.",
+          "editorial_notes": "Repository documentation and release assets do not establish installation or recovery on a physical device.",
           "public_safe": true
         }
       },
@@ -3519,6 +3553,25 @@
           "proof_boundary": "Production and native browser checks establish these three approved stills, saved selection, conversation and player containment. They do not establish complete six-character recovery, authored acting, external listener adoption, business customer operation or physical-device acceptance. Optional companion speech remains separate from the station’s recorded music.",
           "reviewed_at": "2026-10-25",
           "sort_order": 20,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-liferaft-2026-11-06",
+        "slug": "liferaft-2026-11-06",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-liferaft",
+          "snapshot": "$ref:snapshot-2026-11-06-liferaft",
+          "project_key": "liferaft",
+          "snapshot_key": "2026-11-06-liferaft",
+          "state": "Desktop release available",
+          "state_tone": "active",
+          "current": "The public repository describes a local, read-only MBOX browser. Release v0.1.2 lists builds for macOS, Windows and Linux.",
+          "next_proof": "Verify installation and recovery with representative archives on supported devices.",
+          "proof_boundary": "The repository and release assets were reviewed on 6 November 2026; installation and recovery were not tested in this review.",
+          "reviewed_at": "2026-11-06",
+          "sort_order": 1,
           "public_safe": true
         }
       },
@@ -5718,6 +5771,29 @@
           "revision": "8bd418c550ff8490c748ec664a9f51d90870a774",
           "public_safe": true,
           "proof_boundary": "These are three authored single-image recoveries, not a complete expression or gaze library. Native browser evidence is distinct from physical-device or voice-listening acceptance. The remaining Miku art and full acting programme are not completed by this release."
+        }
+      },
+      {
+        "id": "evidence-liferaft-release-2026-11-06",
+        "slug": "liferaft-release-2026-11-06",
+        "status": "published",
+        "data": {
+          "title": "Liferaft public desktop release",
+          "project": "$ref:project-liferaft",
+          "snapshot": "$ref:snapshot-2026-11-06-liferaft",
+          "project_key": "liferaft",
+          "snapshot_key": "2026-11-06-liferaft",
+          "claim": "Liferaft describes a local MBOX recovery tool and publishes desktop release assets.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-11-06",
+          "reviewed_at": "2026-11-06",
+          "summary": "The public README describes searching local archives and exporting messages or attachments; the v0.1.2 release lists desktop downloads.",
+          "source_label": "Explore the Liferaft repository",
+          "source_url": "https://github.com/loftwah/liferaft",
+          "revision": "f6c8afa907d41216757d6732a8f12dded19fa12b",
+          "public_safe": true,
+          "proof_boundary": "Source and release listing only; no device installation, archive recovery or adoption is claimed."
         }
       },
       {
