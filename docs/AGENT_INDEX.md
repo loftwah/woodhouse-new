@@ -89,6 +89,17 @@ Private project diagnostics must never enter this public repository or issue.
 
 ## Handoff and continuation
 
+Reviewed 5 November 2026: when draft changes accumulate faster than they can be
+integrated, prioritise that queue over opening more small PRs for the same work. Group
+related work into coherent candidates, give each integration branch one writer,
+and use focused checks while editing. Run the owning repository's required
+qualification on the exact integrated release candidate, not on each constituent
+draft. A failed or partial receipt does not authorise release. Close a draft as
+incorporated or superseded only after checking its actual changes and tests
+against the integrated target. Preserve genuine security, data and release holds.
+Independent outcomes can continue. Issue #137 owns portfolio delivery recovery;
+the spoke retains its own gates.
+
 Use the existing owning issue/PR as the durable handoff: goal, repository, expected base, writable branch/worktree, bounded scope, required context, acceptance, returned head SHA, commands/results and next exact step. One writer owns each branch/worktree; the coordinator inspects the returned artefact and integrates it. MP is not a relay for routine details.
 
 A fresh operator fetches the target, checks branch/status and compares base/head and relevant source identity before accepting a worker's result. After a relevant edit, re-run the affected proof; an older green summary cannot qualify the changed revision. Local, preview, production, human taste/listening and physical-device evidence remain separate. Record a precise unavailable slice while continuing independent work. No generated verification skill is validated until its actual launch/doctor/drive/evidence/cleanup route has run.
