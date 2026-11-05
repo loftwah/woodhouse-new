@@ -217,7 +217,9 @@ if (environment === "production") {
   if (!identity.ok) throw new Error("Preview no longer serves the reviewed source.");
   await verifyServedContent(targets.preview.origin, identity.identity);
   await verifyBoundary(targets.preview.origin);
-  auditPages(targets.preview.origin);
+  // The fresh receipt is written only after the preview audit and active-version
+  // check pass. Recheck the live identity, content and boundary above; the
+  // production origin receives its own full audit after deployment.
   run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
 }
 // The observed failure would be a healthy CMS release with a missing analytics
