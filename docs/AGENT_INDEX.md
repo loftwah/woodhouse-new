@@ -25,25 +25,24 @@ Reviewed 16 October 2026. Start at [AGENTS.md](../AGENTS.md); this index routes 
 
 ## Shared local validation capacity
 
-Reviewed 28 October 2026: `pnpm run verify -- --quick` runs formatting, lint
-and the application/script tests for fast feedback while editing. It is not a
-release qualification and does not replace the remaining checks. Run a focused
-test directly when that gives a faster answer.
+Reviewed 6 November 2026: `pnpm run verify -- --quick` runs lint and the
+focused tests. `pnpm run verify` also validates the seed, typechecks and builds;
+the build includes the privacy scan. Tests run at concurrency two to limit host
+load. The host reservation is held only for typecheck and build. Use
+`--light`, `--heavy`, or `--stage <script>` for a focused lane; a split run is
+not a combined release receipt. Follow the publication or editorial path for
+release-specific evidence.
 
-`pnpm run verify` takes the same private host/user capacity slot used by other
-participating validation entrypoints, but only for the stages that need it. On
-22 October 2026 the measured split on the maintainer's host was: `typecheck` and
-`build` (~26s of a ~62s pipeline) rewrite `dist/` and `.astro/` and dominate CPU,
-so they hold the slot; the other thirteen stages only read the tree and run
-before the slot is requested. A foreign reservation therefore no longer blocks a
-format, lint or unit check. `pnpm run verify -- --light` runs the read-only
-lane independently; `pnpm run verify -- --heavy` runs the reserved pair, and
-`pnpm run verify -- --stage <script>` runs one named stage in its correct lane.
-Use the light lane during implementation, then the heavy lane on the same
-unchanged source when ready. These commands do not create a combined release receipt: re-run
-affected checks after edits and follow the relevant publication or editorial path.
-A full `pnpm run verify` remains available for an end-to-end check. Re-measure
-before claiming a speedup, and keep the receipts in ignored `output/`.
+MP requested a much smaller routine suite on 6 November 2026. Removed tests
+covered presentation and copy, static content, implementation details, and
+completed lab experiments; routine verification also stopped enforcing format,
+dead-code, generated-asset freshness, dependency-audit, local Doctor, lab and
+host-reservation checks on every change. Those checks previously guarded style,
+unused code, asset drift, dependency review, schema wiring and scheduler process
+races; relevant existing commands remain available for work in those areas.
+The retained tests cover privacy and consent, publication boundaries, safe
+image fetching, credentials and enquiries, release evidence and identity, and
+R2 recovery. This is a deliberate reduction in automated regression coverage.
 
 The slot is host resource arbitration, not repository ownership. It does not
 make two builds in one worktree safe: one writer still owns integration and

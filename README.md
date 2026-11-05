@@ -24,7 +24,7 @@ Use Node 22.16 or later and pnpm.
 - Start the local site with pnpm dev.
 - Open the EmDash editor at `http://localhost:4321/_emdash/admin/`.
 - Build with pnpm build.
-- Run the complete local checks with pnpm run verify: seed validation, generated types, format, lint, dead code, diagram sizes, the reviewed dependency audit, EmDash Doctor, tests, typecheck and the production build with its privacy scan.
+- Run the complete local checks with pnpm run verify: seed validation, lint, focused tests, typecheck and the production build with its privacy scan. Other checks can be run when their area changes.
 - Exercise the homepage loom's browser lifecycle with `pnpm run loom:harness -- --origin http://127.0.0.1:4331` while `pnpm dev` is running. It drives the real page in Playwright Chromium and WebKit through hidden tabs, history restores, WebGL context loss, reduced motion, resize/DPR and repeated cycles, and writes screenshots and a pass/fail report under ignored `output/loom-harness/`. It is browser evidence, not a physical phone or Safari result.
 - Audit a deployed origin with pnpm run audit:pages -- https://host. It checks document structure, internal link integrity, canonical consistency, page discovery, social images and privacy across every sitemap page.
 - Validate the EmDash seed with pnpm run emdash:seed:validate; regenerate schema types with pnpm run emdash:types.

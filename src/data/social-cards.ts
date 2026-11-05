@@ -7,7 +7,7 @@
  * template asks this manifest instead of assuming.
  *
  * `scripts/social-cards.mjs` writes the list from the files on disk and
- * `pnpm run verify` fails when the two disagree.
+ * `pnpm run social-cards:check` checks whether the two agree.
  */
 const DISPATCH_SOCIAL_CARDS: readonly string[] = [
   "a-better-second-attempt",

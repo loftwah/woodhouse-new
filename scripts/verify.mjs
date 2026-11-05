@@ -20,18 +20,8 @@ const packageManager =
 
 /** Stages that only read the tree, so they never take the host capacity slot. */
 export const lightStages = [
-  ["host reservation contract", "test:host-reservation"],
   ["EmDash seed", "emdash:seed:validate"],
-  ["EmDash generated types", "emdash:types:check"],
-  ["format", "format:check"],
   ["lint", "lint"],
-  ["unused code", "deadcode"],
-  ["diagram intrinsic sizes", "diagrams:sizes:check"],
-  ["dispatch social cards", "social-cards:check"],
-  ["share gallery previews", "share-previews:check"],
-  ["labs", "lab:test"],
-  ["dependency audit", "audit"],
-  ["EmDash local schema", "emdash:doctor"],
   ["tests", "test"]
 ];
 
@@ -43,7 +33,7 @@ export const heavyStages = [
 
 // Fast feedback during editing; this is not the complete verification pipeline.
 export const quickStages = lightStages.filter(([, script]) =>
-  ["format:check", "lint", "test"].includes(script)
+  ["lint", "test"].includes(script)
 );
 
 const allStages = [...lightStages, ...heavyStages];
