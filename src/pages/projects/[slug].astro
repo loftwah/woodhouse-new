@@ -71,6 +71,9 @@ const campaign = publicCampaignItems(allProjects.projects.map((item) => item.slu
 const reviewDateLabel = formatReviewDate(project?.reviewDate) ?? "Review date unavailable";
 const snapshotSource = project?.snapshotSource ?? "No public snapshot is available.";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
+const repositoryDestination = project.siteUrl
+  ? new URL(project.siteUrl).hostname === "github.com"
+  : false;
 const artworkFallback = getArtworkFallback(project);
 // The per-project SVG names the project, which is what an image needs to do when
 // a product's own artwork fails to load. It is not what should greet a visitor on
@@ -186,7 +189,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         <dt>Reviewed</dt>
         <dd>{reviewDateLabel}</dd>
         <dt>Public build</dt>
-        <dd>{siteMeta ? "A site you can open today" : "No public build yet"}</dd>
+        <dd>
+          {repositoryDestination
+            ? "Desktop downloads and source"
+            : siteMeta
+              ? "A site you can open today"
+              : "No public build yet"}
+        </dd>
         <dt>Evidence</dt>
         <dd>Operator-reviewed snapshot</dd>
         <dt>Record</dt>
@@ -244,7 +253,11 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
     <figcaption>
       <span>
         <strong data-artwork-status>
-          {siteMeta ? "ARTWORK FROM THE PRODUCT'S OWN SITE" : "WOODHOUSE"}
+          {repositoryDestination
+            ? "ARTWORK FROM THE PROJECT REPOSITORY"
+            : siteMeta
+              ? "ARTWORK FROM THE PRODUCT'S OWN SITE"
+              : "WOODHOUSE"}
         </strong>
         {siteMeta ? (
           <>
