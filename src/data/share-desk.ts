@@ -25,6 +25,9 @@ export function projectCaption(project: WoodhouseProject) {
   );
 }
 // Only the currently reviewed public image publishers, never a caller-provided URL.
+const reviewedImages = new Set([
+  "https://raw.githubusercontent.com/loftwah/liferaft/f6c8afa907d41216757d6732a8f12dded19fa12b/og-image.jpg"
+]);
 const imageHosts = new Set([
   "fighter.loftwah.com",
   "shoalshot.loftwah.com",
@@ -45,7 +48,7 @@ export function approvedShareImage(source: string) {
       !url.username &&
       !url.password &&
       !url.port &&
-      imageHosts.has(url.hostname)
+      (imageHosts.has(url.hostname) || reviewedImages.has(url.href))
     );
   } catch {
     return false;

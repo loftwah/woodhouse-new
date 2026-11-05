@@ -5,6 +5,14 @@ import type { WoodhouseProject } from "../content/repository.ts";
 const png = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 0]);
 test("image downloads reject unreviewed hosts, credentials, insecure URLs and ports", () => {
   assert.equal(approvedShareImage("https://bubbles.loftwah.com/og-image.png"), true);
+  const liferaft =
+    "https://raw.githubusercontent.com/loftwah/liferaft/f6c8afa907d41216757d6732a8f12dded19fa12b/og-image.jpg";
+  assert.equal(approvedShareImage(liferaft), true);
+  assert.equal(approvedShareImage(liferaft + "?other=1"), false);
+  assert.equal(
+    approvedShareImage("https://raw.githubusercontent.com/other/repo/main/image.jpg"),
+    false
+  );
   for (const url of [
     "http://bubbles.loftwah.com/x",
     "https://bubbles.loftwah.com.evil/x",
