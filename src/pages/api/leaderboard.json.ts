@@ -13,7 +13,12 @@ export const GET: APIRoute = async ({ url, cache }) => {
   let stage = "identities";
   let dependency: ReportDependency = "cms";
   try {
-    const identities = await listProjectRecords();
+    const [identitiesResult, sourceResult] = await Promise.allSettled([
+      listProjectRecords(),
+      readLeaderboard((env as unknown as { DB: D1Database }).DB, reportId)
+    ]);
+    if (identitiesResult.status === "rejected") throw identitiesResult.reason;
+    const identities = identitiesResult.value;
     if (identities.error) {
       logReportFailure({
         route: "/api/leaderboard.json",
@@ -32,7 +37,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
     }
     stage = "report-read";
     dependency = "database";
-    const source = await readLeaderboard((env as unknown as { DB: D1Database }).DB, reportId);
+    if (sourceResult.status === "rejected") throw sourceResult.reason;
+    const source = sourceResult.value;
     const report = source
       ? publishedLeaderboard(
           source,
