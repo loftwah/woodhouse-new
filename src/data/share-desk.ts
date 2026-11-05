@@ -30,6 +30,7 @@ const imageHosts = new Set([
   "shoalshot.loftwah.com",
   "protocol11.loftwah.com",
   "bubbles.loftwah.com",
+  "foilbury.loftwah.com",
   "fm.loftwah.com",
   "max.loftwah.com",
   "club.loftwah.com",
