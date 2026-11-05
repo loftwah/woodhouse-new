@@ -1,5 +1,17 @@
 # Agent instructions
 
+## Delivery contract — current owner direction
+
+This section supersedes older routine checkpoint, approval and blanket testing defaults. Explicit task-specific owner holds, security/privacy, data integrity, credentials, spending and destructive-operation boundaries remain binding.
+
+- Authorised implementation includes routine commit, push, review, merge and deployment to the existing target. Do not ask MP to repeat delivery authority at each checkpoint. Respect actual branch protections, specific holds and genuinely external decisions.
+- A draft PR is unfinished work. A worker hand-off, green check or merged runtime change is not delivery. The parent/integrator owns it through a focused production check. Report `IN_PROGRESS`, `BLOCKED` or `PRODUCTION_VERIFIED` truthfully. Documentation/tooling-only work finishes on the default branch with relevant checks; do not redeploy an unchanged app just to satisfy a label.
+- Recover existing branches/PRs before starting new work. Finish the oldest executable delivery, integrate related fixes coherently, and stop spawning unrelated branches while integration/release is the bottleneck. A blocked draft stays in the unfinished inventory; marking it blocked must not manufacture unlimited capacity. One integration writer owns each release.
+- Verification follows the changed risk. Docs-only work needs diff/link/contract checks. UI changes need the affected journey and representative phone/desktop inspection. Auth, publication, persistence, migrations, shared runtime and release tooling need the relevant broader boundary checks. During implementation use focused checks; run required integrated release checks once per coherent candidate, not at every worker hand-off, commit, review or status update. Reuse evidence only while its inputs remain valid.
+- Correct a redundant executable gate and its focused regression rather than silently bypassing it. Never forge receipts, claim skipped checks passed or remove useful assertions to obtain green. Do not require repeated broad audits, separate receipt PRs or a new human taste/device gate for an unrelated routine fix. Existing final-art and genuine physical/safety acceptance remain separate.
+- Report a blocker immediately in the existing issue/PR: exact failing step, risk, next action and whether MP is genuinely required. A report is not a delivered outcome. Preserve active runs' changes and reread current instructions before integration.
+- Apply this delivery direction to the eight requested projects without inventing another orchestration layer: App Composer (`loftwah/app-composer`), Woodhouse (`loftwah/woodhouse-new`, not the old Discord bot repository), Fighter, SHOALSHOT, Protocol 11 (`loftwah/protocol-11`), Bubbles, Foilbury (`loftwah/card-collector-bot`) and MAX. Each repository retains its own product, deployment and real safety boundaries. Count actual delivered outcomes separately from PR merges; do not game the leaderboard with tiny PRs or claim closed-without-merge work was integrated without source evidence.
+
 When working with EmDash, query the official EmDash documentation rather than relying on remembered APIs or examples. Never include private Woodhouse code, credentials or personal information in documentation-search queries.
 
 ## Owner / human nomenclature
@@ -13,11 +25,11 @@ When working with EmDash, query the official EmDash documentation rather than re
 
 MP is the human principal and final authority, but not the default planner, memory store, specification writer or decision engine. Agents own routine reasoning and execution, and should not escalate a decision that repository truth and competent reasoning already supply.
 
-Escalate only what genuinely needs a capability MP alone has: taste, physical hardware, money, credentials, external accounts, legal judgement, irreversible actions, and any gate this repository explicitly reserves for MP.
+Escalate only what genuinely needs a capability MP alone has: final-art taste where reserved, physical hardware, money, credentials, external accounts, legal judgement and irreversible actions. Routine authorised merge/release decisions belong to the delivery owner under the contract above, not a repeated approval checkpoint.
 
-Naming MP confers no authority, and no naming convention can widen a safety, release, deployment or merge gate. Those stay exactly as this repository defines them.
+Naming MP confers no authority; the current task does. Preserve actual security, privacy, cost and explicit task-specific holds.
 
-Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md before making product changes.
+Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md as relevant to the product change; do not reload unrelated authorities for a small follow-up.
 
 ## Editorial work — reviewed 18 October 2026
 
@@ -30,7 +42,7 @@ on MP to repeat the feedback. These rules apply across the project series in PRO
 
 ## Routing and verification — reviewed 16 October 2026
 
-[docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here.
+[docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here. Apply the delivery contract above when older guidance imposes routine checkpoint stops or duplicated qualification.
 
 Current source and tests establish observed behaviour. MP's current intent and accepted product/design requirements establish desired behaviour. Investigate a mismatch with its owning issue and review date: neither implement stale prose blindly nor dismiss an unmet requirement because current code or tests disagree.
 
@@ -73,11 +85,11 @@ Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It reco
 - Do not create process, tooling, architecture or abstraction without naming the observed failure it prevents. "It may be useful later" is not a failure.
 - Solve the smallest material discrepancy blocking the owning outcome. Do not widen the task because adjacent work is visible.
 
-## Active work budget — reviewed 22 October 2026
+## Active work budget
 
-- The work-in-progress limit counts **active implementation outcomes**, not outcomes completed in a session. When an outcome is merged or genuinely blocked, its slot is free: take the next ready outcome from the current brief and continue.
-- Do not stop because a session has completed a count of outcomes, and do not treat a completed task as evidence that the authorised brief is exhausted. A concrete execution limit or blocker can justify stopping; the budget alone cannot.
-- A review, taste acceptance or other open gate holds only the work it actually blocks. Continue independent work that does not depend on it.
+- The work-in-progress limit counts active implementation and delivery outcomes, not completed outcomes. A runtime outcome leaves the delivery queue when production is checked; a repository-only outcome leaves when integrated and checked. A blocked draft remains visible unfinished work even when independent capacity can be reused.
+- Do not stop because a session has completed a count of outcomes. Continue the authorised ready queue after finishing deliveries, rather than opening more work while existing executable deliveries wait.
+- A genuine external gate blocks only its affected work. Isolate it explicitly and continue independent work without accumulating another unbounded draft queue.
 
 ## Implementation
 
@@ -85,11 +97,11 @@ Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It reco
 - Preserve meaningful HTML, keyboard operation, visible focus and reduced-motion preferences.
 - Add page-specific title, description, canonical and Open Graph metadata.
 - Keep generated source documents in this repository untouched unless the operator explicitly asks to publish them.
-- Run the production build before deployment. Inspect representative pages at phone and desktop sizes after visual changes.
+- Run the production build before deployment. Inspect affected representative pages at phone and desktop sizes after visual changes. Reuse the valid candidate build; do not rebuild it at every reporting checkpoint.
 
 ## Publishing
 
-Deployment targets the Cloudflare Worker configured in wrangler.jsonc. A production deploy changes woodhouse.loftwah.com; report the deployed version and verify the live hostname before claiming completion.
+Deployment targets the Cloudflare Worker configured in wrangler.jsonc. A production deploy changes woodhouse.loftwah.com; report the deployed version and verify the affected live behaviour before claiming completion.
 
 ## LoftwahFM as reusable game music
 
