@@ -14,6 +14,7 @@ export const leaderboardProjects = [
   { slug: "loftwahfm", name: "LoftwahFM", repo: "loftwahfm", colour: "#ff83cb", mark: "FM" },
   { slug: "bubbles", name: "Bubbles", repo: "bubbles", colour: "#75e6a9", mark: "B" },
   { slug: "foilbury", name: "Foilbury", repo: "card-collector-bot", colour: "#f0b66c", mark: "F" },
+  { slug: "liferaft", name: "Liferaft", repo: "liferaft", colour: "#ff8758", mark: "L" },
   {
     slug: "asset-hunter",
     name: "Asset Hunter",
