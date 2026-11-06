@@ -92,6 +92,16 @@ route keeps its real content, artwork, accessibility and evidence. The remaining
 families can be inferred from the foundation and these patterns, but the design work in
 [issue #170](https://github.com/loftwah/woodhouse-new/issues/170) is still useful if it is picked up.
 
+## Signature artwork
+
+The homepage loom is the incumbent under
+[issue #158](https://github.com/loftwah/woodhouse-new/issues/158) and #90. It is a real WebGL2
+sculpture, but it reads as an abstract fibre lens rather than a working object. The next design
+pass is **Prompt 16 — the working loom**, with Prompt 16B (the shipping press) as a materially
+different comparison. Do not commission a replacement from Stitch until #158's first-frame comparison
+and the phone/short-landscape stills have been reviewed; the incumbent is the baseline, not a
+failure to erase.
+
 ## Continuing safely
 
 1. Open the project in Stitch and confirm the design system is `Woodhouse`.

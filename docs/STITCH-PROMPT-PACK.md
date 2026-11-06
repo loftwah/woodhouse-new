@@ -384,3 +384,64 @@ Compare every generated Woodhouse screen against the foundation and the live sit
 Keep the dark editorial world, the acid-lime identity, the open rows, the dated evidence and each
 product's own artwork. State which screens are design references and which production routes are
 authoritative. The production site wins every disagreement.
+
+---
+
+## Prompt 16 — Signature artwork: the working loom (recommended)
+
+Design a still hero plate for Woodhouse's homepage. This is an artwork, not a UI card, dashboard or
+product screenshot. It must be beautiful at rest and obviously physical.
+
+Subject: **a working loom, large in the frame**, built from dark machined steel and brass. A top warp
+beam holds 640 fine tensioned fibres; they run down through heddles to a lower cloth beam, where a
+narrow woven band is beginning to emerge. One shuttle sits part-way across the warp. The fibres are
+pale blue, cyan and a little acid lime, with a few cobalt and coral threads. The metal is matte and
+used, not shiny chrome. One raking lamp from the upper left makes the fibres catch light and throws a
+soft shadow behind the frame. Ink `#080D19` ground. No neon, no glow, no HUD, no fake labels.
+
+Composition: the loom fills the plate with a deliberate crop — the frame runs off the top and bottom
+edges, so it reads as a real object rather than a border. Leave the left third calmer; the hero
+headline and actions sit outside the plate, not on top of it. The plate is the visual rest, not a
+place for copy.
+
+Show three states as separate frames:
+
+1. **At rest.** The warp is still, the shuttle paused, the lamp pool steady. A few fibres carry a
+   slight wave from the last pass. This is the first-frame still and the reduced-motion composition.
+2. **Mid-brush.** A visitor has moved across the warp. The fibres part in a causal wake, the shuttle
+   has moved, and the light catches the disturbed threads. Do not draw a cursor, hand or instruction
+   inside the artwork.
+3. **Settled.** The wake has travelled and the fibres are returning with a little overshoot. The
+   shuttle rests at the far side; the woven band shows one more pass.
+
+Caption outside the plate: **“The loom.”** Then: **“640 tensioned fibres, one shuttle and one raking
+light. Move across the warp and brush through them; they spring back.”**
+
+Do not add metrics, project logos, sci-fi telemetry, a fake date or a second artwork. The real
+production page supplies the headline, actions and links. This plate is the one authored object.
+
+Phone variant: compose a **portrait loom** at 390px. Keep the same materials and one lamp. Crop the
+frame so the warp and shuttle are readable at phone size; do not shrink the desktop composition into
+a postage stamp. The plate follows the `h1` and primary action in the reading order.
+
+## Prompt 16B — Signature artwork: the shipping press (alternative, only for comparison)
+
+Design one materially different hero plate for the same page, for a bounded comparison under #158.
+
+Subject: **a working proof press / plotter** on a dark ink desk. A brass pen carriage runs on two
+machined rails over a sheet of deep ink-black paper. The pen is drawing a single, fresh line — an
+editorial mark, not a logo or readable paragraph. One raking lamp from the left; paper grain, a slight
+curl at the sheet edge, a shallow tray of type or a spool of thread at the edge of the frame. The
+machine is used, precise and quiet. Ink `#080D19` ground; brass, paper and one cyan or lime line.
+No neon, no HUD, no invented chart, no readable fake copy.
+
+Show two states: **at rest** (carriage paused, one clean line already drawn) and **mid-draw** (the
+carriage has advanced, a fresh line catches the light, paper shadow shifts). The plate must read as a
+physical machine that makes a mark, not as a dashboard.
+
+Caption outside: **“The press.”** Then: **“A working plotter drawing the current edition, one line at
+a time. Move across the sheet and the carriage follows.”**
+
+This is an alternative, not an instruction to ship two heroes. Compare it with the working loom on
+first-frame impact, material credibility, causal interaction, brand fit, phone composition and
+measured rendering cost. Keep the incumbent if it wins.
