@@ -10,11 +10,16 @@ if (href && Astro.url.searchParams.get("analytics") === "off")
 
 {edition && href && (
   <nav class="edition-invitation" aria-label="Current portfolio edition">
-    <a href={href.pathname + href.search}>
-      <strong>{edition.title}</strong> Find your next game, hear the music and take a story with you{" "}
-      <span aria-hidden="true">↗</span>
+    <a class="edition-invitation__main" href={href.pathname + href.search}>
+      <strong>{edition.title}</strong>
+      <span class="edition-invitation__copy">
+        Find your next game, hear the music and take a story with you{"\u00a0"}
+        <span aria-hidden="true">↗</span>
+      </span>
     </a>
-    <a href={href.pathname + href.search + "#distribution"}>See recorded discovery</a>
+    <a class="edition-invitation__discovery" href={href.pathname + href.search + "#distribution"}>
+      See recorded discovery
+    </a>
   </nav>
 )}
 <style>
@@ -29,16 +34,48 @@ if (href && Astro.url.searchParams.get("analytics") === "off")
     border-block: 1px solid var(--line);
     font-size: 0.9rem;
   }
-  .edition-invitation a {
+  .edition-invitation__main {
+    display: grid;
+    align-content: center;
+    gap: 0.15rem;
     min-height: 44px;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .edition-invitation__discovery {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    min-height: 44px;
+    color: var(--copy-soft);
+    border-bottom: 1px solid var(--line-dark);
+    text-decoration: none;
+  }
+  .edition-invitation__main:hover .edition-invitation__copy {
+    color: var(--brass);
+  }
+  .edition-invitation__copy {
+    color: var(--copy-soft);
+    line-height: 1.5;
+  }
+  .edition-invitation__copy span {
+    color: var(--brass);
+  }
+  .edition-invitation__discovery:hover {
+    color: var(--brass);
+    border-color: var(--brass);
   }
   .edition-invitation strong {
     color: var(--acid);
     font-family: var(--display);
     font-size: 1.15rem;
+    font-weight: 600;
+  }
+  @media (max-width: 700px) {
+    .edition-invitation {
+      align-items: flex-start;
+    }
+    .edition-invitation__main {
+      flex: 1 1 100%;
+    }
   }
 </style>

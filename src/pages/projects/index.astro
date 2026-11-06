@@ -87,8 +87,8 @@ export const prerender = false;
           : `${shown.length} of ${projects.length} projects · ${choice.label}`}
       </p>
       <div class="project-ledger">
-        {shown.map((project) => (
-          <ProjectRow project={project} headingLevel="h2" />
+        {shown.map((project, index) => (
+          <ProjectRow project={project} headingLevel="h2" eager={index === 0} />
         ))}
       </div>
       <p class="source-note">

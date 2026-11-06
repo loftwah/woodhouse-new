@@ -1,0 +1,142 @@
+---
+/**
+ * Documentation sheet for the workshop. It renders the real token values from
+ * global.css; it is not a production component and no page uses it.
+ */
+const type = [
+  ["display-xl", "A software factory.", "clamp(3.15rem, 6.3vw, 6.7rem)"],
+  ["display-lg", "Explore the projects.", "clamp(2.65rem, 5.4vw, 5.5rem)"],
+  ["display-md", "What we built", "clamp(2.1rem, 4vw, 4rem)"],
+  ["title-lg", "Where the work stands", "clamp(1.5rem, 2.4vw, 2.25rem)"],
+  ["title-md", "A radio player with recognisable listening companions", "1.25rem"],
+  ["body-lg", "Twelve real projects, brought together here.", "1.25rem"],
+  ["body-md", "Each row starts with what the product is and how you can use it today.", "1rem"],
+  ["body-sm", "Reviewed 19 October 2026 · Operator-reviewed snapshot", "0.875rem"],
+  ["label", "PORTFOLIO EDITION · 25 OCTOBER 2026", "0.75rem mono"]
+] as const;
+
+const colours = [
+  ["Ink", "--ink", "#080D19"],
+  ["Raised", "--ink-raised", "#111A2C"],
+  ["Soft", "--ink-soft", "#17233A"],
+  ["Acid", "--acid", "#E9FF49"],
+  ["Cyan", "--cyan", "#79D8FF"],
+  ["Electric", "--electric", "#647DFF"],
+  ["Signal", "--signal", "#FF746A"],
+  ["Copy", "--copy", "#DCE6F5"],
+  ["Copy soft", "--copy-soft", "#A9B8D0"]
+] as const;
+---
+
+<div class="workshop-frame">
+  <p class="workshop-note">Foundations · type scale and semantic colour</p>
+  <h1 class="sheet-title">The Woodhouse type scale.</h1>
+  <div class="sheet-type">
+    {type.map(([name, sample, size]) => (
+      <div class="sheet-type__row">
+        <span class="sheet-type__name">{name}</span>
+        <div class="sheet-type__sample" style={`font-size:${size}`}>
+          {sample}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <h2 class="sheet-title sheet-title--small">Semantic colour.</h2>
+  <p class="sheet-copy">
+    Colour never carries a state without a text label. Acid marks human direction and one primary
+    action. Cyan marks links and real system paths. Coral marks a stop or evidence boundary.
+  </p>
+  <div class="sheet-colours">
+    {colours.map(([name, token, hex]) => (
+      <div class="sheet-colour">
+        <span class="sheet-colour__chip" style={`background:var(${token})`} />
+        <span class="sheet-colour__name">{name}</span>
+        <span class="sheet-colour__value">{hex}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .sheet-title {
+    margin: 0 0 2rem;
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .sheet-title--small {
+    margin-top: 4rem;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+  }
+  .sheet-type {
+    border-top: 1px solid var(--line);
+  }
+  .sheet-type__row {
+    display: grid;
+    grid-template-columns: 8rem minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet-type__name {
+    color: var(--brass);
+    font: 600 0.62rem/1.4 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sheet-type__sample {
+    font-family: var(--display);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .sheet-type__row:nth-child(n + 6) .sheet-type__sample {
+    font-family: var(--sans);
+    letter-spacing: 0;
+    line-height: 1.5;
+  }
+  .sheet-type__row:last-child .sheet-type__sample {
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+  }
+  .sheet-copy {
+    max-width: 60ch;
+    color: var(--copy-soft);
+  }
+  .sheet-colours {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1px;
+    margin-top: 2rem;
+    border: 1px solid var(--line);
+    background: var(--line);
+  }
+  .sheet-colour {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem;
+    background: var(--ink);
+  }
+  .sheet-colour__chip {
+    display: block;
+    height: 4.5rem;
+    border: 1px solid var(--line);
+  }
+  .sheet-colour__name {
+    font-weight: 600;
+  }
+  .sheet-colour__value {
+    color: var(--muted);
+    font: 500 0.68rem/1.4 var(--mono);
+  }
+  @media (max-width: 640px) {
+    .sheet-type__row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>

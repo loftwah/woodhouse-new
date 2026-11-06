@@ -9,8 +9,19 @@ import {
 } from "../data/site-metadata";
 import { formatReviewDate } from "../data/review-date";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
-const { project: recordedProject, compact = false, headingLevel = "h3" } = Astro.props;
-const project = await liveProjectArtwork(recordedProject);
+const {
+  project: recordedProject,
+  /**
+   * A presentation boundary for workshops and stories: hand ProjectRow a
+   * project whose artwork has already been resolved instead of reading the
+   * source site during render. Production does not pass this.
+   */
+  artwork: resolvedArtwork,
+  compact = false,
+  eager = false,
+  headingLevel = "h3"
+} = Astro.props;
+const project = resolvedArtwork ?? (await liveProjectArtwork(recordedProject));
 const Heading = headingLevel;
 const domain = project.siteUrl ? new URL(project.siteUrl).hostname : "No public site or demo";
 const siteMeta = project.siteUrl ? getSiteMetadata(project) : null;
@@ -37,7 +48,8 @@ const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
           alt={project.previewAlt ?? `Artwork from the ${project.name} site.`}
           width={project.previewWidth ?? 1200}
           height={project.previewHeight ?? 630}
-          loading="lazy"
+          loading={eager ? "eager" : "lazy"}
+          fetchpriority={eager ? "high" : "auto"}
           decoding="async"
           data-fallback-src={placeholder}
           data-fallback-alt={fallback.alt}

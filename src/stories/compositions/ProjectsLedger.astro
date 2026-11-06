@@ -1,0 +1,72 @@
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import BrandMark from "../../components/BrandMark.astro";
+import SiteSearch from "../../components/SiteSearch.astro";
+import ProjectRow from "../../components/ProjectRow.astro";
+import { bubbles, fighter, houseIndexNavigation, primaryNavigation, shoalshot } from "../fixtures";
+
+const projects = [bubbles, fighter, shoalshot];
+---
+
+<div class="workshop-page">
+  <SiteHeader
+    currentPath="/projects/"
+    links={primaryNavigation}
+    houseIndexLinks={houseIndexNavigation}
+  >
+    <BrandMark slot="brand" />
+    <SiteSearch pages={[]} />
+  </SiteHeader>
+  <main>
+    <section class="container page-intro">
+      <div class="page-intro__grid">
+        <div>
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">WOODHOUSE</a>
+            <span>/</span>
+            <span>Projects</span>
+          </nav>
+          <h1 class="page-title">Explore the projects.</h1>
+        </div>
+        <div class="page-intro__aside">
+          <strong>12 projects · newest review 6 November 2026</strong>
+          Each row starts with what the product is and how you can use it today. The dated status,
+          the artwork source and the limits of each claim sit further in, on the project's own page.
+        </div>
+      </div>
+    </section>
+    <section class="section paper-section">
+      <div class="container">
+        <nav class="project-choices" aria-label="Find something to do">
+          <a href="/projects/" aria-current="page">
+            Everything
+          </a>
+          <a href="/projects/?do=play">Play a game</a>
+          <a href="/projects/?do=listen">Listen</a>
+          <a href="/projects/?do=build">Build something</a>
+          <a href="/projects/?do=explore">Explore experiments</a>
+        </nav>
+        <p class="project-choice-count" role="status">
+          All 12 projects
+        </p>
+        <div class="project-ledger">
+          {projects.map((project, index) => (
+            <ProjectRow project={project} artwork={project} headingLevel="h2" eager={index === 0} />
+          ))}
+        </div>
+        <p class="source-note">
+          <strong>Source:</strong> operator-reviewed public summary. Private repository material
+          remains private.
+        </p>
+      </div>
+    </section>
+  </main>
+  <SiteFooter links={primaryNavigation} reviewDateLabel="6 November 2026" />
+</div>
+
+<style>
+  .workshop-page {
+    background: var(--ink);
+  }
+</style>

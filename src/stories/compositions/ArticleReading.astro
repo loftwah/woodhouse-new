@@ -1,0 +1,185 @@
+---
+import SiteHeader from "../../components/SiteHeader.astro";
+import SiteFooter from "../../components/SiteFooter.astro";
+import BrandMark from "../../components/BrandMark.astro";
+import SiteSearch from "../../components/SiteSearch.astro";
+import Callout from "../../components/blocks/Callout.astro";
+import PullQuote from "../../components/blocks/PullQuote.astro";
+import EvidenceLinkBlock from "../../components/blocks/EvidenceLinkBlock.astro";
+import { houseIndexNavigation, primaryNavigation } from "../fixtures";
+---
+
+<div class="workshop-page">
+  <SiteHeader
+    currentPath="/dispatches/"
+    links={primaryNavigation}
+    houseIndexLinks={houseIndexNavigation}
+  >
+    <BrandMark slot="brand" />
+    <SiteSearch pages={[]} />
+  </SiteHeader>
+  <main class="container article-shell">
+    <article>
+      <header class="article-header">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">WOODHOUSE</a>
+          <span>/</span>
+          <a href="/dispatches/">STORIES</a>
+          <span>/</span>
+          <span>FIELD NOTE</span>
+        </nav>
+        <h1 class="article-title">Bubbles: a better second attempt.</h1>
+        <p class="article-meta">Field note · Reviewed 23 October 2026</p>
+        <p class="article-deck">
+          One board, no shot limit. Fewest Shots gives the familiar bubble shooter a different
+          reason to try again: improve the clear, rather than chase a bigger score.
+        </p>
+      </header>
+      <div class="article-body">
+        <div class="article-prose">
+          <p class="article-lede">
+            Bubbles gives the same aiming problem two different goals. In Classic, a large drop can
+            be worth more than a quick clear. In Fewest Shots, clearing the board in fewer shots is
+            the point.
+          </p>
+          <p>
+            Bubbles is a browser bubble shooter. Aim, match three or more, and remove the bubbles
+            holding the rest of the board up. The pleasure is in seeing an angle become an opening:
+            a useful match can bring down more than the cluster you hit.
+          </p>
+          <PullQuote
+            value={{
+              quote: "A useful second attempt starts with a goal a player can understand."
+            }}
+          />
+          <h2>Start with one decision.</h2>
+          <p>
+            Fewest Shots takes that familiar action and gives it a clear finish. There is one board
+            and no shot limit. The question is not how long you can last, but how few shots the
+            board needs.
+          </p>
+          <Callout
+            value={{
+              kind: "boundary",
+              title: "What this does not prove",
+              body: "A passing replay check is evidence for the replay, not for a person enjoying the game. Physical play and adoption need their own observations."
+            }}
+          />
+          <EvidenceLinkBlock
+            value={{
+              evidence_key: "bubbles-replay-check",
+              context:
+                "The replay check is the evidence behind the competition claim. Read the record before treating a score as verified.",
+              label: "Read the replay-check record"
+            }}
+          />
+        </div>
+        <aside class="article-rail" aria-label="Article evidence">
+          <div class="rail-block">
+            <span class="rail-label">Evidence reviewed</span>
+            <strong>2026-10-23</strong>
+          </div>
+          <div class="rail-block">
+            <span class="rail-label">What changed</span>
+            <p>A useful personal challenge starts with a goal a player can understand.</p>
+          </div>
+          <div class="rail-block">
+            <span class="rail-label">Proof boundary</span>
+            <p>This is an edited public record, not a private source transcript.</p>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </main>
+  <SiteFooter links={primaryNavigation} reviewDateLabel="6 November 2026" />
+</div>
+
+<style>
+  .workshop-page {
+    background: var(--ink);
+  }
+  .article-shell {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  .article-header {
+    max-width: 68rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .article-title {
+    max-width: 18ch;
+    margin: 1rem 0;
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 5vw, 5rem);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+  .article-meta {
+    color: var(--muted);
+    font: 500 0.72rem/1.5 var(--mono);
+    letter-spacing: 0.04em;
+  }
+  .article-deck {
+    max-width: 46rem;
+    color: var(--copy);
+    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+    line-height: 1.5;
+  }
+  .article-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.36fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    padding-top: 3rem;
+  }
+  .article-prose {
+    max-width: 44rem;
+    font-size: 1.06rem;
+    line-height: 1.75;
+  }
+  .article-prose h2 {
+    margin: 2.4rem 0 0.8rem;
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+  .article-lede {
+    font-size: 1.2rem;
+    font-weight: 650;
+  }
+  .article-rail {
+    display: grid;
+    gap: 1.4rem;
+    align-content: start;
+  }
+  .rail-block {
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+  }
+  .rail-block strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+  .rail-block p {
+    margin: 0.5rem 0 0;
+    color: var(--copy-soft);
+    font-size: 0.86rem;
+  }
+  .rail-label {
+    color: var(--brass);
+    font: 600 0.6rem/1.4 var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 860px) {
+    .article-body {
+      grid-template-columns: 1fr;
+    }
+    .article-rail {
+      order: -1;
+    }
+  }
+</style>

@@ -244,13 +244,15 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
         : runnerUp
           ? `${topDestination.value} recorded clicks; ${runnerUp.name} was next with ${runnerUp.value}`
           : `${topDestination.value} recorded clicks`;
+    const clickCount = (value: number) =>
+      `${value.toLocaleString("en-AU")} ${value === 1 ? "click" : "clicks"}`;
     const comparison = topDestination.hasTrend
-      ? `${topDestination.recent} clicks in the last seven days, against ${topDestination.prior} in the seven days before.`
+      ? `${clickCount(topDestination.recent)} in the last seven days, against ${clickCount(topDestination.prior)} in the seven days before.`
       : window.days < 14
-        ? `${topDestination.recent} clicks in the last seven days. These dates are shorter than the two weeks needed to compare.`
+        ? `${clickCount(topDestination.recent)} in the last seven days. These dates are shorter than the two weeks needed to compare.`
         : topDestination.priorCoverage === "partial"
-          ? `${topDestination.recent} clicks in the last seven days. The earlier seven days have only ${topDestination.priorObservedDays} of 7 days counted, so no comparison is claimed.`
-          : `${topDestination.recent} clicks in the last seven days. There is no earlier counted week to compare.`;
+          ? `${clickCount(topDestination.recent)} in the last seven days. The earlier seven days have only ${topDestination.priorObservedDays} of 7 days counted, so no comparison is claimed.`
+          : `${clickCount(topDestination.recent)} in the last seven days. There is no earlier counted week to compare.`;
     const clicks = `${topDestination.value.toLocaleString("en-AU")} ${
       topDestination.value === 1 ? "click" : "clicks"
     }`;

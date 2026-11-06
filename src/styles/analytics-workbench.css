@@ -874,6 +874,8 @@
     overflow: auto;
     scrollbar-width: thin;
     gap: 0.3rem;
+    padding-right: 2.5rem;
+    mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2.5rem), transparent 100%);
   }
   .project-rail nav a {
     flex-shrink: 0;

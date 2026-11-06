@@ -2,6 +2,9 @@ node_modules/
 dist/
 .astro/
 .wrangler/
+storybook-static/
+debug-storybook.log
+.storybook/.cache/
 .playwright-cli/
 .playwright-mcp/
 .emdash/migrations.json

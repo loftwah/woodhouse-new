@@ -1,0 +1,44 @@
+/* The workshop canvas is the site's ink ground, not a neutral frame. */
+html,
+body {
+  background: var(--ink, #080d19);
+  color: var(--paper, #f4f7fd);
+}
+
+body {
+  margin: 0;
+}
+
+.sb-show-main.sb-main-padded {
+  padding: 0;
+}
+
+.workshop-frame {
+  padding: clamp(1.5rem, 4vw, 4.5rem);
+}
+
+.workshop-frame--paper {
+  background: var(--paper-warm);
+}
+
+.workshop-note {
+  margin: 0 0 1.5rem;
+  max-width: 62ch;
+  color: var(--copy-soft, #a9b8d0);
+  font: 500 0.8rem/1.5 var(--mono, monospace);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.workshop-stack {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+
+.workshop-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}

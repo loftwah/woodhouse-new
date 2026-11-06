@@ -2,6 +2,16 @@
 
 Reviewed 16 October 2026. Start at [AGENTS.md](../AGENTS.md); this index routes existing work rather than adding a second operating system.
 
+## Design and component work
+
+Reviewed 6 November 2026. Start with [UI-SCREEN-INVENTORY.md](UI-SCREEN-INVENTORY.md) for the route,
+states and known weaknesses. [DESIGN-SYSTEM-MAP.md](DESIGN-SYSTEM-MAP.md) connects a route to its
+Stitch reference, production component, Storybook story and live page. Use
+[STORYBOOK.md](STORYBOOK.md) for the workshop commands, catalogue and limitations. Stitch work uses
+[STITCH-PROMPT-PACK.md](STITCH-PROMPT-PACK.md) and records its outcome in
+[stitch/README.md](stitch/README.md). The production page remains authoritative; a Stitch screen or
+a story is not proof that the public route behaves that way.
+
 ## Authority and task routing
 
 - MP's current instruction sets the task. [PRODUCT.md](../PRODUCT.md), [DESIGN.md](../DESIGN.md), [UNSLOP.md](../UNSLOP.md) and [ARCHITECTURE.md](../ARCHITECTURE.md) own accepted local intent and boundaries. Code and tests show what actually happens; reconcile discrepancies with their dated owner records.

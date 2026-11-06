@@ -1646,21 +1646,6 @@ figure.image-plate--inline {
   color: var(--paper);
   font-weight: 500;
 }
-.error-404 {
-  min-height: 55vh;
-  display: grid;
-  place-items: center;
-  text-align: center;
-}
-.error-404 h1 {
-  margin: 1rem 0;
-  font-family: var(--serif);
-  font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: 500;
-}
-.error-404 p {
-  color: var(--muted);
-}
 
 @media (min-width: 1700px) {
   :root {
@@ -2192,7 +2177,6 @@ body {
 .origin-hero h1,
 .prose h2,
 .prose h3,
-.error-404 h1,
 .ledger-note__title,
 .value-step h3,
 .pattern-register__intro h3,
@@ -3124,15 +3108,6 @@ a.project-row__image:hover img {
 .source-note strong {
   color: var(--paper);
 }
-.error-404 {
-  color: var(--paper);
-}
-.error-404 h1 {
-  font-size: clamp(3rem, 8vw, 6rem);
-}
-.error-404 p {
-  color: var(--copy-soft);
-}
 .site-footer {
   border-top: 5px solid var(--acid);
   color: #fffaf0;
@@ -3179,7 +3154,6 @@ body {
 .origin-hero h1,
 .prose h2,
 .prose h3,
-.error-404 h1,
 .ledger-note__title,
 .value-step h3,
 .pattern-register__intro h3,

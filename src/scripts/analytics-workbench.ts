@@ -13,6 +13,16 @@ for (let parent = anchor?.parentElement; parent; parent = parent.parentElement) 
   if (parent instanceof HTMLDetailsElement) parent.open = true;
 }
 
+// On phones the project rail scrolls horizontally. A saved link to a project
+// must open with that project visible, not with the start of the list hiding
+// the current selection off-screen. Adjust scrollLeft only: never scroll the
+// page vertically just to reveal a navigation item.
+const projectRail = document.querySelector<HTMLElement>(".project-rail nav");
+const currentProject = projectRail?.querySelector<HTMLElement>('[aria-current="page"]');
+if (projectRail && currentProject && projectRail.scrollWidth > projectRail.clientWidth) {
+  projectRail.scrollLeft = Math.max(0, currentProject.offsetLeft - projectRail.offsetLeft - 8);
+}
+
 import * as echarts from "echarts/core";
 import { LineChart, BarChart, type LineSeriesOption, type BarSeriesOption } from "echarts/charts";
 import {
