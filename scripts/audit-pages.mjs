@@ -308,9 +308,13 @@ async function canonicalOf(pathname) {
 
 // Fetch the documents together, then inspect them in sitemap order. Only the
 // waiting changes: the findings, their order and their wording do not.
+// A not-found route is supposed to answer 404. Treating it as a failed 200 page
+// made a scoped audit of the real 404 unreleasable while the response was
+// correct. Every other page must still answer 200.
+const expectedStatus = (page) => (page === "/404/" ? 404 : 200);
 const documents = await pool(pages, async (page) => {
   const response = await request(`${origin}${page}`);
-  if (response.status !== 200) {
+  if (response.status !== expectedStatus(page)) {
     await response.body?.cancel();
     return { page, status: response.status, html: null };
   }
@@ -319,8 +323,8 @@ const documents = await pool(pages, async (page) => {
 
 for (const document of documents) {
   const { page, status, html: body } = document;
-  if (status !== 200 || body === null) {
-    report(page, `returned HTTP ${status}`);
+  if (status !== expectedStatus(page) || body === null) {
+    report(page, `returned HTTP ${status}; expected ${expectedStatus(page)}`);
     continue;
   }
   const html = body;
