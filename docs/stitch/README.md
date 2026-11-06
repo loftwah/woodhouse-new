@@ -72,6 +72,26 @@ Those remain manual Stitch work. Use
 [`STITCH-PROMPT-PACK.md`](../STITCH-PROMPT-PACK.md) prompts 07, 09, 11, 12, 13, 14 and 15. They are
 written to be pasted directly into the same project so the generated design system stays consistent.
 
+## What the mockups changed in production
+
+The reference screens are not a checklist to reproduce literally. The accepted compositions
+changed the production system where they were materially better:
+
+| Reference | Applied in production | Not copied |
+| --- | --- | --- |
+| 01 / 08 Homepage | No structural change. The production hero already leads with the `h1`, plain action and loom plate before the decorative artwork on phones. | Stitch's uppercase buttons, plaque chrome and placeholder loom. |
+| 02 Projects catalogue | The catalogue row now uses the reference's tighter plate/record split, a slim source caption and a legible reviewed date. The first row is eager. | Invented disciplines and status labels; abstract placeholder artwork. |
+| 03 Bubbles record | "Other work in view" is now a text register (name, discipline, hook, action) instead of three more full artwork rows. 3 × 110px instead of 3 × 387px. | The generated schematic and the invented art plate. |
+| 04 Field note | No structural change. Production already has the wide title, narrow measure and evidence rail. | Any generated plate labels. |
+| 05 Analytics | The real 98% / 63,419 / 1,134 copy and singular "1 click" are correct in production; the phone rail opens on the selected project. | Every piece of invented benchmark, telemetry and ISO chrome. |
+| 06 Share | The phone project rail scrolls horizontally with an edge fade and opens on the current project. | Placeholder previews; production uses the approved files. |
+| 07 Patch bench | No visual copy. The real exhibit remains the authored HTML/CSS/canvas experience. | The flat generated bench. |
+
+This is the intended relationship: the mockups propose composition and hierarchy; the production
+route keeps its real content, artwork, accessibility and evidence. The remaining ungenerated
+families can be inferred from the foundation and these patterns, but the design work in
+[issue #170](https://github.com/loftwah/woodhouse-new/issues/170) is still useful if it is picked up.
+
 ## Continuing safely
 
 1. Open the project in Stitch and confirm the design system is `Woodhouse`.
