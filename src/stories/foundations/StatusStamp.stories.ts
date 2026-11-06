@@ -5,6 +5,7 @@ const meta = {
   title: "Foundations/Status stamp",
   component: StatusStamp,
   parameters: {
+    layout: "padded",
     docs: {
       description: {
         component:

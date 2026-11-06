@@ -9,10 +9,6 @@ body {
   margin: 0;
 }
 
-.sb-show-main.sb-main-padded {
-  padding: 0;
-}
-
 .workshop-frame {
   padding: clamp(1.5rem, 4vw, 4.5rem);
 }

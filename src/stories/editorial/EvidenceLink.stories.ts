@@ -4,7 +4,7 @@ import EvidenceLinkBlock from "../../components/blocks/EvidenceLinkBlock.astro";
 const meta = {
   title: "Editorial/Evidence link",
   component: EvidenceLinkBlock,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: {
     value: {
       evidence_key: "bubbles-replay-check",

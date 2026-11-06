@@ -4,7 +4,7 @@ import EditionShareKit from "../../components/EditionShareKit.astro";
 const meta = {
   title: "Editions/Edition share kit",
   component: EditionShareKit,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: { compact: false, availablePack: true }
 } satisfies Record<string, unknown>;
 

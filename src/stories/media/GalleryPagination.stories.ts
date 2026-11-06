@@ -4,7 +4,7 @@ import GalleryPagination from "../../components/GalleryPagination.astro";
 const meta = {
   title: "Media/Gallery pagination",
   component: GalleryPagination,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: {
     type: "images",
     page: 1,

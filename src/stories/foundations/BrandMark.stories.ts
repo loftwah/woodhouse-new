@@ -4,7 +4,7 @@ import BrandMark from "../../components/BrandMark.astro";
 const meta = {
   title: "Foundations/Brand mark",
   component: BrandMark,
-  parameters: { layout: "fullscreen" }
+  parameters: { layout: "padded" }
 } satisfies Record<string, unknown>;
 
 export default meta;

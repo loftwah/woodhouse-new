@@ -7,6 +7,8 @@ every screen so the foundational tokens stay consistent.
 The first generation pass invented metrics, projects and statuses. It was rejected. The rules below
 exist because that happened: **do not invent**. Read
 [`stitch/README.md`](stitch/README.md) for the review record and the screens already generated.
+The unfinished prompts are parked in
+[issue #170](https://github.com/loftwah/woodhouse-new/issues/170).
 
 ## Non-negotiable content rules for every prompt
 

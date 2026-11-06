@@ -8,7 +8,7 @@ const meta = {
   title: "Media/Share actions",
   component: ShareActions,
   parameters: {
-    layout: "fullscreen",
+    layout: "padded",
     docs: {
       description: {
         component:

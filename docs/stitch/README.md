@@ -4,6 +4,10 @@ Reviewed 6 November 2026. This records what was actually generated in Google Sti
 rejected, and what a future pass must correct. Stitch is a design workspace; it is not evidence that
 a screen works, that the content is true or that the production site has changed.
 
+The remaining Stitch work is parked in [issue #170](https://github.com/loftwah/woodhouse-new/issues/170)
+after the service hit its daily generation limit. Production repairs and the Storybook workshop did
+not depend on it and are already shipped.
+
 ## Project
 
 - **Project:** `Woodhouse — The Loftwah Software Factory`

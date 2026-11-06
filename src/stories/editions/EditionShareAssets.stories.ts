@@ -5,7 +5,7 @@ import { editionShareAssets } from "../../data/edition-share-kit";
 const meta = {
   title: "Editions/Edition share assets",
   component: EditionShareAssets,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: {
     assets: editionShareAssets.slice(0, 3)
   }

@@ -4,7 +4,7 @@ import PullQuote from "../../components/blocks/PullQuote.astro";
 const meta = {
   title: "Editorial/Pull quote",
   component: PullQuote,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: {
     value: {
       quote: "A useful second attempt starts with a goal a player can understand.",

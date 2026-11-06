@@ -4,7 +4,7 @@ import Callout from "../../components/blocks/Callout.astro";
 const meta = {
   title: "Editorial/Callout",
   component: Callout,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   argTypes: {
     value: { control: "object" }
   },

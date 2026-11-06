@@ -4,7 +4,7 @@ import ProjectReferenceBlock from "../../components/blocks/ProjectReferenceBlock
 const meta = {
   title: "Editorial/Project reference",
   component: ProjectReferenceBlock,
-  parameters: { layout: "fullscreen" },
+  parameters: { layout: "padded" },
   args: {
     value: { project_key: "bubbles", label: "Bubbles" }
   }
