@@ -761,6 +761,17 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
     form.addEventListener("change", () => form.requestSubmit());
   }
 
+  // The phone gallery rails scroll horizontally. Open with the selected project
+  // or asset type visible instead of leaving the current choice off-screen.
+  for (const nav of document.querySelectorAll<HTMLElement>(
+    ".showcase-projects, .gallery-controls nav"
+  )) {
+    const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
+    if (active && nav.scrollWidth > nav.clientWidth) {
+      nav.scrollLeft = Math.max(0, active.offsetLeft - nav.offsetLeft - 8);
+    }
+  }
+
   for (const image of document.querySelectorAll<HTMLImageElement>("[data-gallery-image]")) {
     const label = image.closest("figure")?.querySelector("[data-image-size]");
     const describe = () => {
@@ -1118,8 +1129,31 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
       border: 0;
     }
 
+    .showcase-projects {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-right: 2.25rem;
+      scrollbar-width: thin;
+      mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2rem), transparent 100%);
+    }
+    .showcase-projects a {
+      flex-shrink: 0;
+    }
+
     .gallery-intro nav {
       gap: 0 0.75rem;
+    }
+    .gallery-controls .project-choices,
+    .gallery-controls .type-choices {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-right: 2.25rem;
+      scrollbar-width: thin;
+      mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2rem), transparent 100%);
+    }
+    .gallery-controls .project-choices a,
+    .gallery-controls .type-choices a {
+      flex-shrink: 0;
     }
     .gallery {
       grid-template-columns: 1fr;
