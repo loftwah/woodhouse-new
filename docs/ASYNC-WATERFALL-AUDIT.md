@@ -208,6 +208,8 @@ itself evidence; the disposition below is based on what the ticket records.
 | [Bubbles #1581](https://github.com/loftwah/bubbles/issues/1581) | Leaderboard top page and total now start together (`Promise.all`), with a barrier test proving both statements are in flight and the existing 29 cloud leaderboard tests green. | No real-provider p50/p95; the ticket’s own last comment says the measured outcome report remains open. Closed with that gap stated. |
 | [Foilbury #3](https://github.com/loftwah/card-collector-bot/issues/3) | Local Chromium and route measurements: `/play` images **6.9 MB → 0.9 MB**, a fully derived collection **1.36 MB → 94 KB**, showcase videos no longer preload 3.7 MB, serial collection progress loop removed. Deployed with the 2026/11/04 release (Worker `4da539c4`). | Production percentile/field monitoring is not claimed; the ticket remains open for that residual. |
 | [Woodhouse #163](https://github.com/loftwah/woodhouse-new/issues/163) | `localAnalytics` six-statement stage plus five independent request pairs; dispatch-order test and rendered-output equality recorded above. | One uncontrolled latency sample; no p95 or load claim. |
+| [LoftwahFM #328](https://github.com/loftwah/loftwahfm/issues/328) | `/radio/` read every edition manifest twice and in series: `RadioEditions.library` (12 serial R2 reads) and the page's per-edition `version()` (12 serial D1 + 12 R2). `/api/radio/v1/stations` read both editorial stations twice, once for the list and once for the All Stations mix. Both are now one bounded stage, with the page order, cursor and per-show failure shape preserved. Controlled 40 ms/read span: library **492.7 → 41.5 ms**, station registry **328.4 → 83.0 ms**. Production: `/radio/` **2,059 → 571 ms** median, `/api/radio/v1/stations` **432 → 171 ms** median; stations JSON byte-identical; page HTML identical apart from build hashes. Release `af01a0d`, Worker `b2fb1955`, 27/27 HTTP and 8/8 browser smoke. | Uncontrolled public-network medians, not p95 or field data. `/radio/` still reads each edition manifest twice per request; the pair is now concurrent, so it costs reads rather than latency. |
+| [MAX #141](https://github.com/loftwah/max/issues/141) | `/settings` awaited five independent reads about one identity one after another. They are one `readSettingsOverview` set now. Controlled 40 ms/read span: **212.5 → 42.2 ms** median. Release `718a39c`, Worker `64bec3f2`, receipt-matched production build, 13-check local release gate. | Authenticated route, so the changed path was not driven on production; the unauthenticated boundary and build identity were. |
 
 ### Intentionally sequential
 
@@ -219,18 +221,41 @@ itself evidence; the disposition below is based on what the ticket records.
 | Protocol 11 | single ordered `table-app.css` import before React render; synchronous session/local-save restore | The stylesheet is required before render; restoration is not asynchronous. |
 | Woodhouse | engagement admission → storage, report digest → insert, cron rollup → report, per-IP → global enquiry counters, persist → notify | Recorded with call sites in the section above. |
 | Pirates #495 | all optimisation | The ticket is explicitly parity-gated/deferred; source parity and qualification override opportunistic speedups. |
+| LoftwahFM | station/album access gate → playlist read, audio admission → `head` → media serve, publication validate → store → generation check, rate-limit check → album access decision | Publication, economy and playback ordering are the contract; each call site is recorded in #328's inventory. |
+| MAX | Turnstile → abuse limits → digest → store → delivery → unsubscribe token (waitlist); authorise → dispatch → gateway exchange → mark applied → audit (device command); voice transcribe → command | Consent/suppression/storage ordering, permission and audit ordering, and a command derived from a paid transcript. |
+| Liferaft | one MBOX stream → per-message parse → synchronous inserts; single-message preview stream; manual attachment export loop; renderer startup `refreshArchives → refreshStorageInfo → runSearch` | Bounded memory, progress accuracy and deterministic recovery; search consumes the archive filter the previous call narrows. |
 
-### Unfixed blockers — tickets with no evidence
+### Evidence-backed no-ops
 
-These tickets are open and record no callsite inventory, measurement, patch or explicit deferral.
-#163 stays open until each has evidence or a stated deferral the issue allows:
+These tickets found no independent asynchronous pair whose overlap reduces a person's wait. The
+conclusion is the deliverable, and each ticket records the inventory that supports it:
 
-- [LoftwahFM #328](https://github.com/loftwah/loftwahfm/issues/328) — open, no comments.
-- [Asset Hunter #124](https://github.com/loftwah/asset-hunter/issues/124) — open, no comments.
-- [MAX #141](https://github.com/loftwah/max/issues/141) — open, no comments.
-- [Social Club #44](https://github.com/loftwah/club/issues/44) — open, no comments.
-- [Liferaft #4](https://github.com/loftwah/liferaft/issues/4) — open, no comments.
-- [Bogan Hustler #19](https://github.com/loftwah/bogan_hustler/issues/19) — open, no comments.
+- [Liferaft #4](https://github.com/loftwah/liferaft/issues/4) — the only long path is one sequential
+  MBOX stream whose per-message parse is CPU-bound and whose inserts are synchronous
+  `better-sqlite3`; `Promise.all` cannot overlap either. Search and preview are single synchronous
+  or single-stream reads. The renderer's startup chain is ordered because search consumes the
+  archive filter `refreshArchives` has just narrowed. No patch.
+- [Bogan Hustler #19](https://github.com/loftwah/bogan_hustler/issues/19) — the app makes zero remote
+  calls. Persistence is `localStorage`, the "async" thunks are synchronous payload creators, and the
+  only awaited browser promise is `HTMLMediaElement.play()` under a single audio owner. No patch.
+
+### Blocked on an archived repository — no evidence can be recorded on the ticket
+
+Both repositories below are **archived on GitHub**, so their `main` is read-only: a change cannot be
+integrated, and an issue comment or close cannot be posted. The work and the evidence exist locally,
+and the ticket cannot receive them until the repository is unarchived.
+
+| Ticket | Local state | Exact pending step |
+| --- | --- | --- |
+| [Asset Hunter #124](https://github.com/loftwah/asset-hunter/issues/124) | Branch `perf/124-page-reads` at `8edfa35` in `/Users/deanlofts/gits/asset-hunter`. The finding is real: **Effect 4's `Effect.all` defaults to concurrency 1**, so every "parallel" read set in the repo (wall, collections index, possibility page, `/api/catalogue.json`, both curator pages) was sequential. Fixed with explicit concurrency plus `src/lib/page-reads.ts` and `tests/page-reads.test.ts`; `npm run verify` 1,154/1,154 passed locally. One deploy was made and then **rolled back** to Worker `8372bf85` because production must not run a commit that is not on `main`. Controlled span: wall **83.5 → 42.3 ms**, possibility page **167.7 → 41.6 ms**. | Unarchive `loftwah/asset-hunter`, then push `perf/124-page-reads`, deploy, run `npm run verify:prod`, and post the evidence. |
+| [Social Club #44](https://github.com/loftwah/club/issues/44) | Branch `perf/44-portal-reads` at `f4a1db8` in `/Users/deanlofts/gits/club`. The portal home awaited eight independent reads and read `member_facts` twice; `readPortalHome` now reads them in one stage and `usableFacts` keeps the single "safe to use in copy" rule. `mise run acceptance`-equivalent `node scripts/acceptance.mjs` passed; unit 65/65 and integration 74/74 passed; typecheck and lint clean. Not deployed. | Unarchive `loftwah/club`, then push the branch, deploy the built Worker, and post the evidence. |
+
+### Portfolio position
+
+Four of the six blockers now have evidence: two are production-verified (LoftwahFM #328, MAX #141)
+and two are explicit no-ops the tickets allow (Liferaft #4, Bogan Hustler #19). Two are blocked by an
+owner-level action (unarchiving Asset Hunter and Social Club) rather than by missing analysis.
+#163 therefore stays open.
 
 Pirates #495 is not counted as a blocker because its own ticket explicitly defers the work behind
 source parity. Bubbles #1581 and Foilbury #3 have evidence but retain stated measurement limits;
