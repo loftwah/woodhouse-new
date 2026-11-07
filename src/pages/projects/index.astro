@@ -87,8 +87,8 @@ export const prerender = false;
       </nav>
       <p class="project-choice-count" role="status">
         {choice.key === "all"
-          ? `All ${projects.length} projects`
-          : `${shown.length} of ${projects.length} projects · ${choice.label}`}
+          ? `All ${projects.length} in the record · ${active.length} active`
+          : `${shown.length} ${shown.length === 1 ? "project" : "projects"} · ${choice.label}`}
       </p>
       <div class="project-ledger">
         {shown.map((project, index) => (

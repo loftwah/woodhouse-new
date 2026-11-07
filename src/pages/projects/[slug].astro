@@ -169,14 +169,16 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         {project.summary}
       </p>
       <div class="dossier-hero__actions">
-        <a
-          class="dossier-hero__action"
-          href={actionHref}
-          target={actionExternal ? "_blank" : undefined}
-          rel={actionExternal ? "noopener noreferrer" : undefined}
-        >
-          {actionLabel} <span aria-hidden="true">{actionExternal ? "↗" : "→"}</span>
-        </a>
+        {project.lifecycle === "active" && (
+          <a
+            class="dossier-hero__action"
+            href={actionHref}
+            target={actionExternal ? "_blank" : undefined}
+            rel={actionExternal ? "noopener noreferrer" : undefined}
+          >
+            {actionLabel} <span aria-hidden="true">{actionExternal ? "↗" : "→"}</span>
+          </a>
+        )}
         <a class="text-link" href="#where-the-work-stands">
           See how it works <span aria-hidden="true">↓</span>
         </a>
