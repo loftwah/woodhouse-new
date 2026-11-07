@@ -23,6 +23,23 @@ The site is dark by design on every device. Do not follow the operating-system a
 - Cyan `#79D8FF`, cobalt `#647DFF`, and coral `#FF746A` distinguish real system paths and evidence boundaries. A colour must never carry a state without a text label.
 - Use crisp edges, strong contrast and restrained light. No paper backgrounds, gradients for decoration, glass, soft dashboard tiles, or nests of boxes.
 
+## Components — reviewed 8 November 2026
+
+There is no separate visual component library. A component is an Astro file in `src/components/` and
+it owns its markup, its states and its copy; the CSS it uses comes from the tokens above.
+
+- The route-to-component map is [DESIGN-SYSTEM-MAP.md](docs/DESIGN-SYSTEM-MAP.md). A new screen or a
+  materially changed component adds its row there.
+- The interactive states are the ones in [Interaction and states](#interaction-and-states): resting,
+  hover, focus-visible, pressed, disabled, loading, empty, failed and unavailable. A component that
+  can fail has a named failure state, not a blank space.
+- Every component keeps text, links, status and focus outside any canvas, and works with reduced
+  motion.
+- A component is composed from the page, not from a second design language: no new colour, radius or
+  type step without changing this document first.
+- Components that read shared data take it as a prop. They do not fetch on the client, and they do not
+  invent a fallback value when the data is missing; missing stays visibly missing.
+
 ## Typography
 
 - Display titles use locally hosted Bricolage Grotesque with deliberate line breaks and tight tracking.

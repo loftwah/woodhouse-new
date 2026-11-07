@@ -31,3 +31,6 @@ LOFTWAH.md
 # Python stdlib validation caches are generated locally.
 __pycache__/
 *.py[cod]
+
+# Installed design skill: machine state, versioned globally (see docs/IMPECCABLE.md).
+.agents/skills/impeccable/
