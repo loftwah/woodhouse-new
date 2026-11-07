@@ -5,9 +5,13 @@ const { value } = Astro.props;
 // dimensioned same-origin value through EmDash's image service made the article
 // fail at runtime. Retain CMS metadata and dimensions on the native static path;
 // uploaded/provider media continues through the established EmDash renderer.
+// `/signature/` holds the approved loom stills, which are editorial artwork and
+// not media-library records.
 const image = value.image;
 const staticSource =
-  typeof image?.src === "string" && /^\/(?:images|share)\//.test(image.src) ? image.src : null;
+  typeof image?.src === "string" && /^\/(?:images|share|signature)\//.test(image.src)
+    ? image.src
+    : null;
 const priority = value.variant === "full-bleed";
 ---
 
@@ -29,3 +33,47 @@ const priority = value.variant === "full-bleed";
     {value.caption && <figcaption>{value.caption}</figcaption>}
   </figure>
 )}
+
+<style>
+  /* A wide plate fills its box with an absolutely positioned image, so an
+     in-flow caption would sit underneath it. Keep the caption in the authored
+     bottom scrim, where it stays readable without shrinking the artwork. */
+  .image-plate:not(.image-plate--inline) figcaption {
+    position: absolute;
+    z-index: 2;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    max-width: 52rem;
+    color: #eee7da;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+  }
+
+  /* On phones the plate becomes a composed figure rather than a cropped box:
+     the whole still is visible and the caption sits underneath it. */
+  @media (max-width: 760px) {
+    .image-plate:not(.image-plate--inline) {
+      min-height: 0;
+    }
+    .image-plate:not(.image-plate--inline) img {
+      position: static;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .image-plate:not(.image-plate--inline)::after {
+      content: none;
+    }
+    .image-plate:not(.image-plate--inline) figcaption {
+      position: static;
+      max-width: none;
+      padding: 0.85rem 1rem;
+      border-top: 1px solid rgba(198, 169, 106, 0.28);
+      color: var(--copy-soft);
+      background: var(--surface-deep);
+    }
+  }
+</style>
