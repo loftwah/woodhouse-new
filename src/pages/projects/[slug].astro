@@ -1,6 +1,8 @@
 ---
 import BuildExamples from "../../components/BuildExamples.astro";
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
+import AgentCapabilityRecord from "../../components/AgentCapabilityRecord.astro";
+import { agentCapabilities } from "../../data/agent-capabilities";
 import { listPublicCapabilities } from "../../content/repository";
 import { dispatchPath } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -378,6 +380,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       )}
       <BuildExamples projects={[project]} only={project.slug} />
     </section>
+  )}
+  {project.slug === "app-composer" && (
+    <div class="container">
+      {agentCapabilities.map((capability) => (
+        <AgentCapabilityRecord capability={capability} />
+      ))}
+    </div>
   )}
   {feature && (
     <section class="container project-feature" aria-labelledby="project-feature-title">

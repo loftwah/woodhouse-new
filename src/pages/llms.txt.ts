@@ -9,6 +9,7 @@ import {
 } from "../content/repository";
 import { portfolioReadout } from "../data/portfolio";
 import { activeProjects } from "../data/project-lifecycle";
+import { agentCapabilities, AGENT_CAPABILITY_REVIEWED } from "../data/agent-capabilities";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -70,6 +71,16 @@ export const GET: APIRoute = async ({ cache }) => {
       (project) =>
         `- ${url(`/projects/${project.slug}/`)} (${project.discipline}; lifecycle: ${project.lifecycle}; state: ${project.state}; reviewed ${project.reviewDate})`
     ),
+    "",
+    "## Agent capabilities",
+    "",
+    ...agentCapabilities.flatMap((capability) =>
+      capability.operations.map(
+        (operation) =>
+          `- ${capability.provider.name} → ${capability.app.name}: ${operation.method} ${operation.path} (${operation.kind}; ${operation.availability}${operation.confirmation ? "; confirmation required" : ""}; verified ${operation.verified}) — ${capability.provider.contract}`
+      )
+    ),
+    `- Reviewed ${AGENT_CAPABILITY_REVIEWED}. Woodhouse signposts the app-owned contract; it does not invoke the operation or hold its credentials.`,
     "",
     "## Incidents",
     "",

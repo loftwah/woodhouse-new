@@ -1,0 +1,86 @@
+---
+import { formatReviewDate } from "../data/review-date";
+import { AGENT_CAPABILITY_REVIEWED } from "../data/agent-capabilities";
+import type { AgentCapability } from "../data/agent-capabilities";
+
+type Props = { capability: AgentCapability; compact?: boolean };
+const { capability, compact = false } = Astro.props;
+const reviewed = formatReviewDate(AGENT_CAPABILITY_REVIEWED) ?? AGENT_CAPABILITY_REVIEWED;
+---
+
+<section
+  class:list={["capability-record", "agent-capability", { "capability-record--compact": compact }]}
+  aria-label={`${capability.provider.name} agent capability: ${capability.app.name}`}
+>
+  <p class="eyebrow">Verified agent capability</p>
+  <h2>
+    {capability.provider.name} → {capability.app.name}
+  </h2>
+  <p class="article-meta">
+    Reviewed {reviewed} · <a href={capability.provider.humanContract}>Human-readable contract</a> ·{" "}
+    <a href={capability.provider.contract}>Machine-readable contract</a>
+  </p>
+  <p>{capability.boundary}</p>
+  <ul class="agent-capability__operations">
+    {capability.operations.map((operation) => (
+      <li>
+        <p class="agent-capability__name">
+          <strong>{operation.name}</strong>
+          <span>
+            {operation.kind === "effect" ? "Effect" : "Read"} ·{" "}
+            {operation.availability === "public" ? "Public" : "Guest invitation"} · verified{" "}
+            {formatReviewDate(operation.verified) ?? operation.verified}
+          </span>
+        </p>
+        <code>{`${operation.method} ${operation.path}`}</code>
+        <p>{operation.description}</p>
+        <p class="agent-capability__permits">
+          Requires: {operation.requires.join(", ")}
+          {operation.confirmation && " · explicit confirmation"}
+        </p>
+      </li>
+    ))}
+  </ul>
+  <p class="source-note">
+    Woodhouse publishes the signpost, not the tool.{" "}
+    <a href={capability.app.origin}>Open {capability.app.name}</a> for the app-owned operation and
+    its current availability. A listed operation is not proof of adoption, and a submitted postcard
+    is not a published one.
+  </p>
+</section>
+
+<style>
+  .agent-capability__operations {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1.25rem 0;
+    padding: 0;
+    list-style: none;
+  }
+  .agent-capability__operations li {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border-subtle, rgba(198, 169, 106, 0.24));
+    background: var(--surface-deep, #0b101c);
+  }
+  .agent-capability__name {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.8rem;
+    align-items: baseline;
+    margin: 0 0 0.35rem;
+  }
+  .agent-capability__name > span,
+  .agent-capability__permits {
+    color: var(--copy-soft, #9aa3b2);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+  .agent-capability__operations code {
+    display: inline-block;
+    margin-bottom: 0.45rem;
+    color: var(--acid, #e9ff49);
+    font-size: 0.78rem;
+    overflow-wrap: anywhere;
+  }
+</style>

@@ -1,5 +1,7 @@
 ---
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
+import AgentCapabilityRecord from "../../components/AgentCapabilityRecord.astro";
+import { agentCapabilities } from "../../data/agent-capabilities";
 import { listPublicCapabilities } from "../../content/repository";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { portfolioReadout } from "../../data/portfolio";
@@ -95,6 +97,19 @@ No credentials or raw issue text</pre>
           </p>
         </div>
       </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Agent capabilities</p>
+      <h2>What an agent can actually call.</h2>
+      <p class="body-copy">
+        A verified operation, the real transport and its permits. Each app still owns execution,
+        storage and permissions; Woodhouse is the signpost, never the executor.
+      </p>
+      {agentCapabilities.map((capability) => (
+        <AgentCapabilityRecord capability={capability} compact={true} />
+      ))}
     </div>
   </section>
   {capabilityResult.capabilities.length > 0 && (

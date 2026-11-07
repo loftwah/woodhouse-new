@@ -6,6 +6,7 @@ import {
 } from "../../content/repository";
 import { portfolioReadout } from "../../data/portfolio";
 import { activeProjects } from "../../data/project-lifecycle";
+import { AGENT_CAPABILITY_REVIEWED, publicAgentCapabilities } from "../../data/agent-capabilities";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -94,6 +95,14 @@ export const GET: APIRoute = async ({ cache }) => {
         "Discover published project identities and upstream game profiles; add a reviewed capability record after checking the owning work and source. A profile alone is not adoption."
     },
     capabilities: capabilityResult.capabilities,
+    agentCapabilities: {
+      reviewed: AGENT_CAPABILITY_REVIEWED,
+      note:
+        "Allowlisted signposts to live app-owned operations. Woodhouse does not invoke these " +
+        "operations, proxy privileged tools or hold their credentials. A listed effect still " +
+        "requires the owning app's permits and owner review.",
+      items: publicAgentCapabilities()
+    },
     knownAnswers: {
       piratesProceduralFork: {
         answer: "not approved",
