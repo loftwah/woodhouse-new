@@ -1,0 +1,95 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/shop.css";
+
+export const prerender = false;
+const fixtures = [
+  { key: "duplicatePayment", label: "Duplicate payment" },
+  { key: "reorderedFulfilment", label: "Reordered fulfilment before payment" },
+  { key: "invalidSignature", label: "Invalid signature" },
+  { key: "wrongAccount", label: "Wrong account" },
+  { key: "refundAndDuplicatePrint", label: "Refund and duplicate print" }
+] as const;
+---
+
+<BaseLayout
+  title="Demo operator view · Woodhouse"
+  description="The Woodhouse merch demo operator view: review a candidate product, inspect fictional orders and prove duplicate events cannot create a second order, charge or print."
+  path="/shop/operator/"
+  robots="noindex, nofollow"
+>
+  <div data-shop-page="operator">
+    <section class="container shop-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/shop/">Shop demo</a>
+        <span>/</span>
+        <span>Operator</span>
+      </nav>
+      <p class="eyebrow">Demo operator view</p>
+      <h1 class="page-title">Review, then fulfil.</h1>
+      <p class="shop-lede">
+        A local operator console for the demo. It can review a candidate product and advance a
+        fictional order, but it cannot publish a product, charge a card, contact a printer or ship
+        an item. Everything here is stored in this browser only.
+      </p>
+      <p class="shop-demo-banner">
+        <strong>No real order exists.</strong> Fulfilment needs a paid demo order and a separate
+        confirmation, exactly as the tested event model requires.
+      </p>
+
+      <section aria-labelledby="candidates-heading">
+        <h2 id="candidates-heading">Product review</h2>
+        <p>
+          One candidate is waiting. Approve, return or reject it. An approval promotes it in this
+          browser's demo catalogue only.
+        </p>
+        <ul class="operator-candidates" data-operator-candidates>
+          <li>Loading the demo candidate…</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="orders-heading">
+        <h2 id="orders-heading">Fictional orders</h2>
+        <p>
+          These are demo orders from this browser. The action offered follows the state: payment,
+          separate fulfilment confirmation, one print action, printed, shipped.
+        </p>
+        <ul class="operator-orders" data-operator-orders>
+          <li>Loading demo orders…</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="fixtures-heading">
+        <h2 id="fixtures-heading">Event fixtures</h2>
+        <p>
+          Each fixture creates a demo order and injects duplicate, reordered, invalid or
+          wrong-account events. The log shows what the reducer accepted or rejected. None of these
+          events reached a provider.
+        </p>
+        <div class="operator-fixtures">
+          {fixtures.map((fixture) => (
+            <button type="button" data-fixture={fixture.key}>
+              Run: {fixture.label}
+            </button>
+          ))}
+        </div>
+        <div class="operator-log" data-fixture-log hidden></div>
+      </section>
+
+      <p class="shop-source-note">
+        The same reducer runs in the tests: <code>pnpm test</code> exercises
+        <code>src/data/merch-demo.test.ts</code>. A fixture result is evidence of the model, not of
+        a provider integration.
+      </p>
+      <p class="shop-toolbar">
+        <a href="/shop/">← Back to the demo shop</a>
+      </p>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>

@@ -1,0 +1,119 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { merchProduct } from "../../data/merch-demo";
+import { formatReviewDate } from "../../data/review-date";
+import "../../styles/shop.css";
+
+export const prerender = false;
+const slug = Astro.params.slug;
+const product = slug ? merchProduct(slug) : undefined;
+if (!product || product.approval !== "approved")
+  return new Response("Demo product not found.", {
+    status: 404,
+    headers: { "cache-control": "public, max-age=60" }
+  });
+const reviewLabel = formatReviewDate(product.reviewedAt) ?? product.reviewedAt;
+const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+---
+
+<BaseLayout
+  title={`${product.name} · Shop demo`}
+  description={`${product.blurb} A clearly labelled Woodhouse merchandise demo: no charge, print or shipment, and no customer data collected.`}
+  path={`/shop/${product.slug}/`}
+  robots="noindex, nofollow"
+  image={product.artwork.src}
+>
+  <div data-shop-page="product">
+    <section class="container product-hero">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/shop/">Shop demo</a>
+        <span>/</span>
+        <span>{product.name}</span>
+      </nav>
+      <div class="product-hero__grid">
+        <figure class="product-art">
+          <img
+            src={product.artwork.src}
+            alt={product.artwork.alt}
+            width={product.artwork.width}
+            height={product.artwork.height}
+          />
+          <figcaption>
+            {product.artwork.credit} · demo composition, not a product photograph
+          </figcaption>
+        </figure>
+        <div class="product-buy">
+          <p class="eyebrow">{product.kind} · demo product</p>
+          <h1>{product.name}</h1>
+          <p class="shop-lede">{product.description}</p>
+          <p class="shop-demo-banner">
+            <strong>Demo only.</strong> No payment is taken, no item is printed or shipped and no
+            customer details are collected.
+          </p>
+          <form
+            data-add-to-cart
+            data-product={product.slug}
+            data-default-variant={product.variants[0]?.id}
+          >
+            <fieldset>
+              <legend>Choose a variation</legend>
+              {product.variants.map((variant, index) => (
+                <label class="variant-option">
+                  <input
+                    type="radio"
+                    name="variant"
+                    value={variant.id}
+                    checked={index === 0}
+                    data-variant-price={variant.priceCents}
+                  />
+                  <span>{variant.label}</span>
+                  <strong>{money(variant.priceCents)}</strong>
+                  <small>{variant.availability}</small>
+                </label>
+              ))}
+            </fieldset>
+            <p class="product-selected">
+              Demo price{" "}
+              <strong data-selected-price>{money(product.variants[0]?.priceCents ?? 0)}</strong>
+            </p>
+            <button class="shop-action" type="submit">
+              Add to demo basket
+            </button>
+            <a class="shop-secondary" href="/shop/basket/">
+              Open the demo basket · <span data-cart-count>0</span>
+            </a>
+            <p class="shop-feedback" data-add-feedback hidden></p>
+          </form>
+          <dl class="product-notes">
+            <div>
+              <dt>Production</dt>
+              <dd>{product.productionNote}</dd>
+            </div>
+            <div>
+              <dt>Shipping</dt>
+              <dd>{product.shippingNote}</dd>
+            </div>
+            <div>
+              <dt>Tax</dt>
+              <dd>{product.taxNote}</dd>
+            </div>
+            <div>
+              <dt>Margin</dt>
+              <dd>{product.marginNote}</dd>
+            </div>
+          </dl>
+          <p class="shop-source-note">
+            Artwork: {product.artwork.credit}. Reviewed {reviewLabel}. The product title, price and
+            medium are demo fixtures, not a published offer.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>

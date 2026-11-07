@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/shop.css";
+
+export const prerender = false;
+---
+
+<BaseLayout
+  title="Demo checkout · Woodhouse"
+  description="A clearly simulated Woodhouse checkout. Choose a demo outcome; no card, provider, charge, print or shipment is involved."
+  path="/shop/checkout/"
+  robots="noindex, nofollow"
+>
+  <div data-shop-page="checkout">
+    <section class="container shop-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/shop/">Shop demo</a>
+        <span>/</span>
+        <span>Demo checkout</span>
+      </nav>
+      <p class="eyebrow">Demo checkout</p>
+      <h1 class="page-title">Choose an outcome.</h1>
+      <p class="shop-lede">
+        There is no payment form because there is no payment. Pick the demo outcome you want to
+        inspect; the same order and event model runs either way.
+      </p>
+      <div class="checkout-grid">
+        <div>
+          <h2>Order summary</h2>
+          <div data-checkout-summary>
+            <noscript>
+              <p class="shop-empty">The demo checkout needs JavaScript.</p>
+            </noscript>
+          </div>
+        </div>
+        <div class="checkout-panel">
+          <h2>Simulated payment</h2>
+          <label class="checkout-outcome">
+            Demo outcome
+            <select data-outcome>
+              <option value="paid">Paid · records one demo charge</option>
+              <option value="failed">Failed · terminal, no charge</option>
+              <option value="cancelled">Cancelled · terminal, no charge</option>
+            </select>
+          </label>
+          <p>
+            The order is identified by this checkout, so retrying cannot create a second order or a
+            second charge.
+          </p>
+          <button class="shop-action" type="button" data-place-order>
+            Place demo order
+          </button>
+          <p class="shop-feedback" data-checkout-note hidden></p>
+          <p class="shop-estimate">
+            No card fields, no name, no address, no email. This is a fixture, not a checkout.
+          </p>
+        </div>
+      </div>
+      <p class="shop-toolbar">
+        <a href="/shop/basket/">← Back to the demo basket</a>
+      </p>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>

@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/shop.css";
+
+export const prerender = false;
+---
+
+<BaseLayout
+  title="Demo order tracking · Woodhouse"
+  description="A simulated Woodhouse order timeline. It exists only in your browser; no payment, print or shipment happened."
+  path="/shop/order/"
+  robots="noindex, nofollow"
+>
+  <div data-shop-page="order">
+    <section class="container shop-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/shop/">Shop demo</a>
+        <span>/</span>
+        <span>Order tracking</span>
+      </nav>
+      <div data-order>
+        <p class="shop-eyebrow">Demo order</p>
+        <h1>Demo order tracking</h1>
+        <p class="shop-lede">Open the tracking link produced by the demo checkout.</p>
+        <noscript>
+          <p class="shop-empty">Demo order tracking needs JavaScript.</p>
+        </noscript>
+      </div>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>

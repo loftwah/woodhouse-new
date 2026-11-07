@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/shop.css";
+
+export const prerender = false;
+---
+
+<BaseLayout
+  title="Demo basket · Woodhouse"
+  description="The Woodhouse merch demo basket. It lives in your browser, estimates shipping and tax, and charges nothing."
+  path="/shop/basket/"
+  robots="noindex, nofollow"
+>
+  <div data-shop-page="basket">
+    <section class="container shop-page">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <a href="/shop/">Shop demo</a>
+        <span>/</span>
+        <span>Basket</span>
+      </nav>
+      <p class="eyebrow">Demo basket</p>
+      <h1 class="page-title">Your demo basket.</h1>
+      <p class="shop-demo-banner">
+        <strong>Nothing is reserved.</strong> This basket lives in this browser. Shipping and tax
+        are estimates, and no supplier has quoted a price.
+      </p>
+      <div data-basket>
+        <noscript>
+          <p class="shop-empty">
+            This demo basket needs JavaScript. The <a href="/shop/">catalogue</a> remains readable
+            without it.
+          </p>
+        </noscript>
+      </div>
+      <p class="shop-toolbar">
+        <a href="/shop/">← Keep browsing the demo</a>
+      </p>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>

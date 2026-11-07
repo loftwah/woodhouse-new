@@ -1,0 +1,166 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { merchProducts, merchReviewDate } from "../../data/merch-demo";
+import { formatReviewDate } from "../../data/review-date";
+import "../../styles/shop.css";
+
+export const prerender = false;
+const reviewLabel = formatReviewDate(merchReviewDate) ?? merchReviewDate;
+const lowest = (product: (typeof merchProducts)[number]) =>
+  Math.min(...product.variants.map((variant) => variant.priceCents));
+const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+---
+
+<BaseLayout
+  title="Shop demo · Woodhouse"
+  description="A credential-free Woodhouse merch demo: browse approved artwork products, build a basket and follow a clearly simulated order. Nothing is charged, printed or shipped."
+  path="/shop/"
+  robots="noindex, nofollow"
+  image="/og/factory-workshop-20261018.jpg"
+>
+  <div data-shop-page="catalogue">
+    <section class="container shop-hero">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">WOODHOUSE</a>
+        <span>/</span>
+        <span>Shop demo</span>
+      </nav>
+      <p class="eyebrow">Demo shop · no purchase</p>
+      <h1 class="page-title">
+        Things from
+        <br />
+        the workshop.
+      </h1>
+      <p class="shop-lede">
+        A working merchandise demo built from artwork the projects already publish. Pick a product,
+        choose a variation, use the basket and follow a simulated order through payment, fulfilment
+        and shipping. No provider, card, printer or carrier is connected.
+      </p>
+      <p class="shop-demo-banner">
+        <strong>This is a demonstration.</strong> Prices, shipping and tax are estimates. Nothing is
+        charged, reserved, printed or shipped, and this page collects no customer data.
+      </p>
+      <div class="shop-toolbar">
+        <a class="shop-action" href="/shop/basket/">
+          Demo basket · <span data-cart-count>0</span>
+        </a>
+        <a href="/shop/operator/">Open the demo operator view →</a>
+        <span class="shop-reviewed">Reviewed {reviewLabel}</span>
+      </div>
+    </section>
+
+    <section class="section paper-section" aria-labelledby="catalogue-heading">
+      <div class="container">
+        <div class="shop-section-heading">
+          <div>
+            <p class="eyebrow">Four approved demo products</p>
+            <h2 id="catalogue-heading">Artwork, not a supplier proof.</h2>
+          </div>
+          <p>
+            Each product uses existing project artwork and labels its source. Mock-up quality is the
+            demo's, not a print proof; garment fit, paper stock and colour are unverified.
+          </p>
+        </div>
+        <ul class="product-grid">
+          {merchProducts.map((product) => (
+            <li class="product-card">
+              <a href={`/shop/${product.slug}/`} class="product-card__art">
+                <img
+                  src={product.artwork.src}
+                  alt={product.artwork.alt}
+                  width={product.artwork.width}
+                  height={product.artwork.height}
+                  loading="lazy"
+                />
+              </a>
+              <div class="product-card__body">
+                <p class="product-kind">{product.kind}</p>
+                <h3>
+                  <a href={`/shop/${product.slug}/`}>{product.name}</a>
+                </h3>
+                <p>{product.blurb}</p>
+                <p class="product-price">From {money(lowest(product))} · demo price</p>
+                <p class="product-credit">{product.artwork.credit}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <section data-local-catalogue hidden aria-labelledby="local-catalogue-heading">
+          <h2 id="local-catalogue-heading">Approved in this browser's demo session</h2>
+          <p>
+            These candidates were approved in the local operator console. They are not published and
+            do not appear for anyone else.
+          </p>
+          <ul class="product-grid" data-local-products></ul>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="provider-heading">
+      <div class="container shop-limits">
+        <div>
+          <h2 id="provider-heading">The seam for a real provider.</h2>
+          <p>
+            A real shop would hand payment to a hosted checkout and fulfilment to a provider, then
+            observe their signed state. The recommended path is Stripe-hosted checkout plus
+            Printful, with Shopify as the alternative if the portfolio decides catalogue and
+            fulfilment should be Shopify-owned. App Composer's commerce programme owns that adapter;
+            Woodhouse would own the shop front, artwork approval and operator view.
+          </p>
+        </div>
+        <div>
+          <h2>What would change.</h2>
+          <ul>
+            <li>A real order and action identity, not a browser record.</li>
+            <li>A verified provider observation, not a return URL or button.</li>
+            <li>Fulfilment confirmation separated from payment, with no replay.</li>
+            <li>Tax, shipping, refund, retention and merchant decisions by MP.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="container">
+        <p class="shop-source-note">
+          The full seam record is in <code>docs/MERCH-DEMO.md</code>. No provider account,
+          credential or live call is part of this release.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limits-heading">
+      <div class="container shop-limits">
+        <div>
+          <h2 id="limits-heading">What this demo does.</h2>
+          <ul>
+            <li>One basket in this browser, no account and no server record.</li>
+            <li>
+              A simulated checkout with pending, paid, failed, cancelled and refunded outcomes.
+            </li>
+            <li>An operator view for product review and fictional fulfilment states.</li>
+            <li>Event fixtures that prove one order, one charge and one print action.</li>
+          </ul>
+        </div>
+        <div>
+          <h2>What it does not do.</h2>
+          <ul>
+            <li>Contact Stripe, Shopify, Printful or any other provider.</li>
+            <li>Store a customer's name, address or payment details.</li>
+            <li>Quote a real shipping rate, tax amount, margin or delivery date.</li>
+            <li>Publish an offer, take a reservation or start a print run.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="container">
+        <p class="shop-source-note">
+          The event model and its duplicate/reordered-event guarantees live in
+          <code>src/data/merch-demo.ts</code> and are exercised by
+          <code>src/data/merch-demo.test.ts</code>. Artwork credits appear on each product.
+        </p>
+      </div>
+    </section>
+  </div>
+  <script>
+    import { initShopDemo } from "../../scripts/shop-demo";
+    initShopDemo();
+  </script>
+</BaseLayout>
