@@ -3,7 +3,6 @@ import BuildExamples from "../../components/BuildExamples.astro";
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
 import AgentCapabilityRecord from "../../components/AgentCapabilityRecord.astro";
 import { agentCapabilities } from "../../data/agent-capabilities";
-import { projectCapabilities } from "../../data/capabilities";
 import { dispatchPath } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
@@ -14,8 +13,7 @@ import { featuredMediaFor } from "../../data/featured-media";
 import { leaderboardProjects } from "../../data/github-leaderboards";
 import {
   listProjectRecords,
-  listPublishedDispatches,
-  listPublicEvidence,
+  listPublicCapabilities,
   getProjectRecord,
   getEditorialDispatch
 } from "../../content/repository";
@@ -70,19 +68,20 @@ const featureSlug =
       : project.slug === "loftwahfm"
         ? "your-game-its-own-soundtrack"
         : null;
-// Four independent reads: the project list, the optional feature dispatch, the
-// dispatch set the capability records are matched against, and the evidence
-// those records cite. None consumes another's result, and the capability record
-// builder is pure, so the list this page already needs is handed to it instead
-// of asking the repository for the same collection a second time.
-const [allProjects, featureResult, dispatchResult, evidenceResult] = await Promise.all([
+// Three independent reads: this project's neighbours, the optional feature
+// dispatch, and the capability records. None consumes another's result.
+const [allProjects, featureResult, capabilityResult] = await Promise.all([
   listProjectRecords(),
   featureSlug ? getEditorialDispatch(featureSlug) : Promise.resolve(null),
-  listPublishedDispatches(),
-  listPublicEvidence()
+  listPublicCapabilities()
 ]);
 if (allProjects.error)
   return new Response("Unable to load public project records.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+if (capabilityResult.error)
+  return new Response("Unable to load public capability evidence.", {
     status: 503,
     headers: { "cache-control": "private, no-store" }
   });
@@ -121,20 +120,6 @@ const actionLabel = projectActionLabel(project);
 const actionExternal = /^https?:\/\//.test(actionHref);
 const social = socialCardFor(project);
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
-const capabilityError = dispatchResult.error ?? evidenceResult.error;
-if (capabilityError)
-  return new Response("Unable to load public capability evidence.", {
-    status: 503,
-    headers: { "cache-control": "private, no-store" }
-  });
-const capabilityResult = {
-  capabilities: projectCapabilities(
-    dispatchResult.dispatches,
-    allProjects.projects,
-    evidenceResult.evidence
-  ),
-  cacheHints: [...allProjects.cacheHints, dispatchResult.cacheHint, evidenceResult.cacheHint]
-};
 if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 ---
 
