@@ -81,7 +81,13 @@ const contentSeo = contentSeoInput
   : null;
 const fullTitle = contentSeo?.title || templateTitle;
 const pageDescription = contentSeo?.description || description;
-const canonical = contentSeo?.canonical ?? new URL(path, siteUrl).toString();
+// A report, leaderboard window or selected story lives in the query string, but
+// it is view state rather than a different document. Canonicalising it produced a
+// canonical that disagreed with the sitemap entry for the same route, so a
+// crawler was told the plain URL was a duplicate of itself. Keep the shareable
+// URL shareable; declare the clean pathname as the canonical document.
+const canonicalPath = path.split(/[?#]/, 1)[0] || "/";
+const canonical = contentSeo?.canonical ?? new URL(canonicalPath, siteUrl).toString();
 const imageUrl = new URL(contentSeo?.ogImage ?? image, siteUrl).toString();
 const imageAlt =
   suppliedImageAlt ??
