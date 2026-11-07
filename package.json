@@ -70,7 +70,9 @@
     "deploy:publication": "node scripts/deploy-publication.mjs",
     "edition:rehearse": "node scripts/rehearse-edition.mjs",
     "showcase:delivery": "node scripts/showcase-delivery.mjs",
-    "test:showcase": "node --test scripts/discord-showcase.test.mjs scripts/showcase-delivery.test.mjs scripts/showcase-publication.test.mjs"
+    "test:showcase": "node --test scripts/discord-showcase.test.mjs scripts/showcase-delivery.test.mjs scripts/showcase-publication.test.mjs",
+    "hooks:install": "node scripts/install-git-hooks.mjs",
+    "hooks:check": "node scripts/install-git-hooks.mjs --check"
   },
   "emdash": {
     "seed": "seed/seed.json"

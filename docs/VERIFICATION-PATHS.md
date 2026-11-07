@@ -58,6 +58,23 @@ Per-stage attribution:
 | Seed or content model | `--light` (adds seed validation), then `verify:content -- preview`. | The model is the thing that changed. |
 | Host reservation, R2 recovery, credential or privacy code | `--heavy` plus the specific suite (`test:host-reservation`, `test:r2`). | These are the invariants that break silently. |
 
+## Local CI
+
+There is no hosted CI for this repository, deliberately. The checks run here, on the machine that has
+the source, the build cache and the failure output.
+
+`pnpm run hooks:install` points `core.hooksPath` at `.githooks`, and `.githooks/pre-push` runs the
+**quick lane** before a push leaves the machine. It takes about five seconds, prints the failing
+output when it fails, and refuses to overwrite a `core.hooksPath` that already points elsewhere.
+
+- Bypass a real emergency with `SKIP_LOCAL_CI=1 git push`; the hook says the push is unverified.
+- It runs the quick lane, not the full pipeline. Typecheck and build stay in `pnpm run verify`, because
+  a hook that costs 30 seconds is a hook people disable.
+- `pnpm run hooks:check` reports whether it is installed and exits non-zero if not.
+
+First use caught a real lint error in the hook's own installer, which is the behaviour you want from a
+gate.
+
 ## The release path
 
 Runtime change: focused checks → preview publication → production publication → live verification.

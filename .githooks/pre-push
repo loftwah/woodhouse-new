@@ -1,0 +1,47 @@
+#!/bin/sh
+# Local CI gate. There is no hosted CI for this repository and there should not
+# be: the checks already exist locally and a hosted runner would only repeat them
+# later, with less context and a bill.
+#
+# This runs the cheapest lane that catches real regressions (~5 seconds) before a
+# push leaves the machine. It is deliberately not the full pipeline: typecheck and
+# build belong in `pnpm run verify`, and duplicating them here would push people to
+# disable the hook.
+#
+# Bypass for a genuine emergency, and say so in the commit:
+#   SKIP_LOCAL_CI=1 git push
+set -eu
+
+if [ "${SKIP_LOCAL_CI:-0}" = "1" ]; then
+  echo "local-ci: skipped by SKIP_LOCAL_CI=1. The push is unverified." >&2
+  exit 0
+fi
+
+root=$(git rev-parse --show-toplevel 2>/dev/null || true)
+[ -n "$root" ] || exit 0
+cd "$root"
+
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "local-ci: pnpm not found, so the quick lane could not run. Push allowed." >&2
+  echo "local-ci: install pnpm and run 'pnpm run verify -- --quick' before relying on this push." >&2
+  exit 0
+fi
+
+if [ -n "$(git status --porcelain)" ]; then
+  echo "local-ci: worktree is dirty; the quick lane runs against what is on disk, not the commit." >&2
+fi
+
+echo "local-ci: running the quick lane (lint + tests) before push..." >&2
+if pnpm run verify -- --quick >/tmp/local-ci-$$.log 2>&1; then
+  echo "local-ci: quick lane passed." >&2
+  rm -f "/tmp/local-ci-$$.log"
+  exit 0
+fi
+
+echo "" >&2
+echo "local-ci: the quick lane FAILED. The push was refused." >&2
+tail -n 25 "/tmp/local-ci-$$.log" >&2
+rm -f "/tmp/local-ci-$$.log"
+echo "" >&2
+echo "Fix the failure, or bypass deliberately with: SKIP_LOCAL_CI=1 git push" >&2
+exit 1
