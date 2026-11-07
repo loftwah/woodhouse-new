@@ -24,3 +24,10 @@ overrides:
   "zod@>=4 <4.6.6": 4.6.6
   fast-uri@3.1.8: 3.1.9
   body-parser@2.3.0: 2.4.0
+  # @napi-rs/wasm-runtime accepts ^2.0.0-alpha.4 as a peer, so pnpm resolved
+  # @emnapi/runtime 2.0.0-beta.2 for @astrojs/astro2tsx. On Node 22 that beta
+  # throws "this.bridge.deleteEnv is not a function" during process cleanup and
+  # aborts `astro check`. 1.11.3 satisfies the same peer range and is the stable
+  # line every other consumer in this tree already uses. Remove when the beta is
+  # fixed or @astrojs/astro2tsx stops needing the peer.
+  "@emnapi/runtime": 1.11.3
