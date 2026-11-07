@@ -105,7 +105,7 @@ if (!isPreview && Astro.cache?.enabled && featureResult?.cacheHint)
 const action = projectAction(project);
 const actionHref = projectActionHref(project);
 const actionLabel = projectActionLabel(project);
-const actionExternal = Boolean(project.siteUrl);
+const actionExternal = /^https?:\/\//.test(actionHref);
 const social = socialCardFor(project);
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
 const capabilityResult = await listPublicCapabilities();
@@ -175,7 +175,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           target={actionExternal ? "_blank" : undefined}
           rel={actionExternal ? "noopener noreferrer" : undefined}
         >
-          {actionLabel} <span aria-hidden="true">↗</span>
+          {actionLabel} <span aria-hidden="true">{actionExternal ? "↗" : "→"}</span>
         </a>
         <a class="text-link" href="#where-the-work-stands">
           See how it works <span aria-hidden="true">↓</span>
@@ -190,11 +190,15 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
         <dd>{reviewDateLabel}</dd>
         <dt>Public build</dt>
         <dd>
-          {repositoryDestination
-            ? "Desktop downloads and source"
-            : siteMeta
-              ? "A site you can open today"
-              : "No public build yet"}
+          {project.lifecycle === "retired"
+            ? "Retired · historical site"
+            : project.lifecycle === "paused"
+              ? "Paused · no active build"
+              : repositoryDestination
+                ? "Desktop downloads and source"
+                : siteMeta
+                  ? "A site you can open today"
+                  : "No public build yet"}
         </dd>
         <dt>Evidence</dt>
         <dd>Operator-reviewed snapshot</dd>
@@ -206,7 +210,10 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
       {leaderboardProjects.some((entry) => entry.slug === project.slug) && (
         <p class="dossier-hero__analytics">
           <a class="text-link" href={`/activity/leaderboards/?project=${project.slug}`}>
-            See where {project.name} ranks <span aria-hidden="true">→</span>
+            {project.lifecycle === "active"
+              ? `See where ${project.name} ranks`
+              : `See ${project.name}'s historical GitHub record`}{" "}
+            <span aria-hidden="true">→</span>
           </a>
         </p>
       )}
@@ -469,7 +476,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           <h2>Other work in view.</h2>
         </div>
         <a class="text-link section-heading__action" href="/projects/">
-          See all {allProjects.projects.length} projects <span aria-hidden="true">↗</span>
+          See all {allProjects.projects.length} project records <span aria-hidden="true">↗</span>
         </a>
       </div>
       <div class="project-ledger">

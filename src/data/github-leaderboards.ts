@@ -1,28 +1,95 @@
 /** Reviewed 6 November 2026. Repository access never expands publication. */
 export const leaderboardProjects = [
-  { slug: "woodhouse", name: "Woodhouse", repo: "woodhouse-new", colour: "#e9ff49", mark: "W" },
+  {
+    slug: "woodhouse",
+    lifecycle: "active",
+    name: "Woodhouse",
+    repo: "woodhouse-new",
+    colour: "#e9ff49",
+    mark: "W"
+  },
   {
     slug: "app-composer",
+    lifecycle: "active",
     name: "App Composer",
     repo: "app-composer",
     colour: "#ff8758",
     mark: "AC"
   },
-  { slug: "fighter", name: "Fighter", repo: "fighter", colour: "#ff746a", mark: "F" },
-  { slug: "shoalshot", name: "SHOALSHOT", repo: "shoalshot", colour: "#79d8ff", mark: "S" },
-  { slug: "protocol-11", name: "Protocol 11", repo: "protocol-11", colour: "#c1b0ff", mark: "11" },
-  { slug: "loftwahfm", name: "LoftwahFM", repo: "loftwahfm", colour: "#ff83cb", mark: "FM" },
-  { slug: "bubbles", name: "Bubbles", repo: "bubbles", colour: "#75e6a9", mark: "B" },
-  { slug: "foilbury", name: "Foilbury", repo: "card-collector-bot", colour: "#f0b66c", mark: "F" },
-  { slug: "liferaft", name: "Liferaft", repo: "liferaft", colour: "#ff8758", mark: "L" },
+  {
+    slug: "fighter",
+    lifecycle: "active",
+    name: "Fighter",
+    repo: "fighter",
+    colour: "#ff746a",
+    mark: "F"
+  },
+  {
+    slug: "shoalshot",
+    lifecycle: "active",
+    name: "SHOALSHOT",
+    repo: "shoalshot",
+    colour: "#79d8ff",
+    mark: "S"
+  },
+  {
+    slug: "protocol-11",
+    lifecycle: "active",
+    name: "Protocol 11",
+    repo: "protocol-11",
+    colour: "#c1b0ff",
+    mark: "11"
+  },
+  {
+    slug: "loftwahfm",
+    lifecycle: "active",
+    name: "LoftwahFM",
+    repo: "loftwahfm",
+    colour: "#ff83cb",
+    mark: "FM"
+  },
+  {
+    slug: "bubbles",
+    lifecycle: "active",
+    name: "Bubbles",
+    repo: "bubbles",
+    colour: "#75e6a9",
+    mark: "B"
+  },
+  {
+    slug: "foilbury",
+    lifecycle: "active",
+    name: "Foilbury",
+    repo: "card-collector-bot",
+    colour: "#f0b66c",
+    mark: "F"
+  },
+  {
+    slug: "liferaft",
+    lifecycle: "active",
+    name: "Liferaft",
+    repo: "liferaft",
+    colour: "#ff8758",
+    mark: "L"
+  },
   {
     slug: "asset-hunter",
+    lifecycle: "retired",
     name: "Asset Hunter",
     repo: "asset-hunter",
     colour: "#ffd276",
     mark: "AH"
   }
 ] as const;
+
+/**
+ * The collector and the current board only admit active projects. Retired and
+ * paused projects keep their historical rows, which stay reachable through a
+ * saved report or a direct project view.
+ */
+export const activeLeaderboardProjects = leaderboardProjects.filter(
+  (project) => project.lifecycle === "active"
+);
 export const rankingMeasures = [
   {
     key: "merged",
@@ -106,13 +173,22 @@ function projectValue(
     .filter((d) => d.day >= from && d.day <= to)
     .reduce((sum, d) => sum + (key === "reduction" ? d.closed - d.opened - d.reopened : d[key]), 0);
 }
-export function rankedProjects(snapshot: LeaderboardSnapshot, days: number, key: RankingMeasure) {
+export function rankedProjects(
+  snapshot: LeaderboardSnapshot,
+  days: number,
+  key: RankingMeasure,
+  options: { includeRetired?: boolean } = {}
+) {
+  const includeRetired = options.includeRetired === true;
   const to = snapshot.through;
   const from = new Date(Date.parse(to) - (days - 1) * DAY).toISOString().slice(0, 10);
   const previousTo = new Date(Date.parse(from) - DAY).toISOString().slice(0, 10);
   const previousFrom = new Date(Date.parse(from) - days * DAY).toISOString().slice(0, 10);
   const rows = snapshot.projects
-    .filter((p) => safeProject(p.slug))
+    .filter((p) => {
+      const identity = safeProject(p.slug);
+      return Boolean(identity) && (includeRetired || identity?.lifecycle === "active");
+    })
     .map((project) => ({
       ...safeProject(project.slug)!,
       counts: project,
@@ -201,9 +277,10 @@ export function leaderboardCaption(
   snapshot: LeaderboardSnapshot,
   days: number,
   key: RankingMeasure,
-  project?: string
+  project?: string,
+  options: { includeRetired?: boolean } = {}
 ) {
-  const ranked = rankedProjects(snapshot, days, key);
+  const ranked = rankedProjects(snapshot, days, key, options);
   const range = leaderboardDateRange(ranked.from, ranked.to);
   const rows = project
     ? ranked.rows.filter((r) => r.slug === project)

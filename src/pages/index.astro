@@ -15,6 +15,7 @@ import {
 import { getArtworkFallback, getSiteMetadata } from "../data/site-metadata";
 import { liveProjectArtwork } from "../data/live-project-artwork";
 import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
+import { activeProjects, lifecycleLabel } from "../data/project-lifecycle";
 import FMListening from "../components/FMListening.astro";
 import SignaturePlate from "../components/SignaturePlate.astro";
 import {
@@ -43,6 +44,7 @@ if (Astro.cache?.enabled) {
   for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 }
 const readout = portfolioReadout(projects);
+const active = activeProjects(projects);
 const reviewDateLabel = formatReviewDate(readout.reviewDate) ?? "Review date unavailable";
 const fm = projects.find((project) => project.slug === "loftwahfm");
 const fmMetadata = fm ? getSiteMetadata(fm) : null;
@@ -100,8 +102,8 @@ export const prerender = false;
           <em>Judged by what ships.</em>
         </h1>
         <p class="signature-hero__intro">
-          I’m Dean. I run a small software factory with the coding agents I direct:{" "}
-          {projects.length} real projects, brought together here. There are games you can play right
+          I’m Dean. I run a small software factory with the coding agents I direct: {active.length}{" "}
+          active projects, with {projects.length} in the record. There are games you can play right
           now, a music service you can listen to, a couple of tools and a few experiments.
         </p>
         <p class="signature-hero__actions">
@@ -305,7 +307,11 @@ export const prerender = false;
           <a class="portfolio-register__row" href={`/projects/${project.slug}/`}>
             <span class="portfolio-register__identity">
               <strong>{project.name}</strong>
-              <span>{project.title}</span>
+              <span>
+                {lifecycleLabel(project.lifecycle)
+                  ? `${lifecycleLabel(project.lifecycle)} · ${project.title}`
+                  : project.title}
+              </span>
             </span>
             <span class="portfolio-register__action">{projectActionLabel(project)}</span>
             <time datetime={project.reviewDate}>

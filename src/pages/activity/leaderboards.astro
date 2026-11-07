@@ -37,7 +37,11 @@ const measure = measureKey(Astro.url.searchParams.get("measure"));
 const project = Astro.url.searchParams.get("project") ?? undefined;
 if (project && (!safeProject(project) || !admitted.has(project)))
   return new Response("Project unavailable.", { status: 404 });
-const ranked = snapshot ? rankedProjects(snapshot, days, measure) : null;
+// A retired project keeps a reachable historical view; the current board does
+// not rank it. Explicit saved reports retain their original membership.
+const includeRetired =
+  Boolean(requested) || Boolean(project && safeProject(project)?.lifecycle !== "active");
+const ranked = snapshot ? rankedProjects(snapshot, days, measure, { includeRetired }) : null;
 const focused = ranked?.rows.find((r) => r.slug === project);
 if (project && !focused)
   return new Response("This project is not in this saved report.", { status: 404 });
@@ -45,10 +49,12 @@ const selected = rankingMeasures.find((m) => m.key === measure)!;
 const link = snapshot
   ? leaderboardLink(snapshot.id, days, measure, project)
   : "/activity/leaderboards/";
-const caption = snapshot ? leaderboardCaption(snapshot, days, measure, project) : "";
+const caption = snapshot
+  ? leaderboardCaption(snapshot, days, measure, project, { includeRetired })
+  : "";
 const shareLink = snapshot ? leaderboardShareLink(snapshot.id, days, measure, project) : link;
 const image = snapshot
-  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "3", ...(project ? { project } : {}) })}`
+  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "3", ...(project ? { project } : {}), ...(includeRetired ? { includeRetired: "1" } : {}) })}`
   : "";
 const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
 function href(updates: Record<string, string | null>) {
@@ -179,8 +185,10 @@ const plottedWeeks = weeks.map((w) => ({
         </h1>
         <p class="lb-deck">
           {focused
-            ? "This project's merged pull requests, closed issues and backlog over the selected period."
-            : "The Loftwah projects making moves, ranked over the same complete days."}
+            ? focused.lifecycle === "active"
+              ? "This project's merged pull requests, closed issues and backlog over the selected period."
+              : `${focused.name} is ${focused.lifecycle}. This is the historical GitHub record, not part of the current board.`
+            : "The active Loftwah projects making moves, ranked over the same complete days."}
         </p>
       </div>
       <div class="lb-dates">
@@ -219,6 +227,8 @@ const plottedWeeks = weeks.map((w) => ({
       <p class="lb-helper">
         {selected.detail} Movement compares with the previous {days} days when both periods are
         complete.
+        {!includeRetired &&
+          " Paused and retired projects keep their saved reports but do not join the current board."}
       </p>
     </div>
     {snapshot && (
@@ -476,14 +486,14 @@ const plottedWeeks = weeks.map((w) => ({
           <details>
             <summary>What the numbers mean</summary>
             <p>
-              PRs merged counts pull requests by their merge date, including bots. It excludes direct
-              integrations and does not establish production deployment or verified feature delivery.
-              Those outcomes are not measured by this report. Issues closed
-              counts closure events, including an issue closed again after reopening. Issues opened
-              excludes pull requests. Fewer open issues is closures minus new and reopened issues;
-              negative numbers mean growth. Transfers and deleted records cannot be reconstructed
-              from this history, so this is recorded movement rather than an audited historical
-              inventory. A high count doesn't mean a better project.
+              PRs merged counts pull requests by their merge date, including bots. It excludes
+              direct integrations and does not establish production deployment or verified feature
+              delivery. Those outcomes are not measured by this report. Issues closed counts closure
+              events, including an issue closed again after reopening. Issues opened excludes pull
+              requests. Fewer open issues is closures minus new and reopened issues; negative
+              numbers mean growth. Transfers and deleted records cannot be reconstructed from this
+              history, so this is recorded movement rather than an audited historical inventory. A
+              high count doesn't mean a better project.
             </p>
             <p>
               Ranks use equal complete UTC periods. Equal values share a rank; the next rank skips

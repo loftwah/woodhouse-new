@@ -28,6 +28,7 @@ export const bubbles: WoodhouseProject = {
   slug: "bubbles",
   name: "Bubbles",
   index: "01",
+  lifecycle: "active",
   discipline: "Game systems · deterministic play",
   title: "The classic bubble shooter, in your browser.",
   summary:

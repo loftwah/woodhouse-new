@@ -6,6 +6,7 @@ import { portfolioReadout } from "../../data/portfolio";
 import { formatReviewDate } from "../../data/review-date";
 import ProjectRow from "../../components/ProjectRow.astro";
 import { listProjectRecords } from "../../content/repository";
+import { activeProjects } from "../../data/project-lifecycle";
 const result = await listProjectRecords();
 if (result.error)
   return new Response("Unable to load the public project record.", {
@@ -13,6 +14,7 @@ if (result.error)
     headers: { "cache-control": "private, no-store" }
   });
 const projects = result.projects;
+const active = activeProjects(projects);
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const reviewDate = portfolioReadout(projects).reviewDate ?? "Review date unavailable";
 export const prerender = false;
@@ -66,8 +68,9 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
             <strong>Question:</strong> Is Pirates ready for a procedural fork?
           </p>
           <p>
-            <strong>Answer from this snapshot:</strong> No. Integrated parity remains incomplete, so
-            expansion stays behind the source-backed gate.
+            <strong>Answer from this snapshot:</strong> No. Pirates is paused indefinitely by owner
+            decision. Integrated parity remains incomplete, so it is not in the active portfolio
+            queue and expansion stays behind the source-backed gate.
           </p>
           <p>
             <strong>Boundary:</strong> Reviewed{" "}
@@ -80,7 +83,7 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           <pre class="agent-entry__code"><a href="/agents/facts.json">GET /agents/facts.json</a>
 
 Read-only JSON
-{projects.length} public project summaries
+{active.length} active project summaries · {projects.length} in the record
 Review date: {reviewDate}
 No credentials or raw issue text</pre>
           <p class="source-note">
@@ -111,7 +114,9 @@ No credentials or raw issue text</pre>
     <div class="container">
       <div class="section-heading">
         <div>
-          <h2>{projects.length} summaries. Each with its own date.</h2>
+          <h2>
+            {projects.length} summaries. {active.length} active.
+          </h2>
         </div>
         <p>
           Use the source field and proof boundary with every answer. Do not turn a reviewed summary

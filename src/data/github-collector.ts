@@ -1,5 +1,5 @@
 import {
-  leaderboardProjects,
+  activeLeaderboardProjects,
   completeWindow,
   daysBetween,
   readLeaderboard,
@@ -70,7 +70,7 @@ export async function collectGitHub(
     return false;
   }
   const projects: ProjectCounts[] = [];
-  for (const project of leaderboardProjects) {
+  for (const project of activeLeaderboardProjects) {
     const prefix = `/repos/loftwah/${project.repo}`;
     const daily = daysBetween(period.from, period.to).map((day) => ({
       day,
@@ -156,7 +156,7 @@ export async function refreshLeaderboards(
     ).first<{ body: string }>();
     const previous = prior ? JSON.parse(prior.body) : {};
     const etags: Record<string, string> = previous.etags ?? {};
-    for (const project of leaderboardProjects)
+    for (const project of activeLeaderboardProjects)
       for (const kind of ["issues", "pulls"]) {
         const tag = `${project.slug}/${kind}`;
         const response = await fetcher(
@@ -180,7 +180,7 @@ export async function refreshLeaderboards(
       checkedAt: new Date(now).toISOString(),
       issuesRead: true,
       pullsRead: true,
-      projects: leaderboardProjects.map((p) => p.slug),
+      projects: activeLeaderboardProjects.map((p) => p.slug),
       etags,
       collectedThrough:
         typeof previous.collectedThrough === "string" ? previous.collectedThrough : null,
@@ -198,7 +198,9 @@ export async function refreshLeaderboards(
     if (
       latest?.through === completeWindow(180, now).to &&
       receipt.collectedThrough === latest.through &&
-      leaderboardProjects.every((project) => latest.projects.some((p) => p.slug === project.slug))
+      activeLeaderboardProjects.every((project) =>
+        latest.projects.some((p) => p.slug === project.slug)
+      )
     )
       return;
     const collected = await storeLeaderboard(

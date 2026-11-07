@@ -5,6 +5,7 @@ import {
   listPublicCapabilities
 } from "../../content/repository";
 import { portfolioReadout } from "../../data/portfolio";
+import { activeProjects } from "../../data/project-lifecycle";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -33,6 +34,7 @@ export const GET: APIRoute = async ({ cache }) => {
     return {
       slug: project.slug,
       name: project.name,
+      lifecycle: project.lifecycle,
       discipline: project.discipline,
       state: project.state,
       summary: project.summary,
@@ -54,6 +56,7 @@ export const GET: APIRoute = async ({ cache }) => {
     };
   });
   const readout = portfolioReadout(projectResult.projects);
+  const active = activeProjects(projectResult.projects);
   const pirates = projectResult.projects.find((project) => project.slug === "pirates");
   const bubbles = projectResult.projects.find((project) => project.slug === "bubbles");
   const bubblesAdoption = capabilityResult.capabilities
@@ -76,6 +79,12 @@ export const GET: APIRoute = async ({ cache }) => {
       "Private repository contents are not published or connected to this endpoint. " +
       "A project whose repository is public is summarised from that repository and its published site.",
     projectCount: projects.length,
+    activeProjectCount: active.length,
+    pausedOrRetiredProjectCount: projects.length - active.length,
+    portfolioLifecycle:
+      "Only active projects join current work, current rankings and promotional priority. " +
+      "Paused and retired projects keep their dossier, dated evidence and stable URL; retirement " +
+      "records a portfolio decision, not a claim that the product never worked.",
     projects,
     portfolioRole: {
       hub: "Woodhouse publishes portfolio discovery, relationships and reviewed evidence.",

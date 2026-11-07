@@ -2489,6 +2489,19 @@
           "editorial_notes": "Public presentation is distinct from private inventories and from a verified player or Discord journey.",
           "public_safe": true
         }
+      },
+      {
+        "id": "snapshot-2026-11-07-portfolio-lifecycle",
+        "slug": "2026-11-07-portfolio-lifecycle",
+        "status": "published",
+        "data": {
+          "title": "Portfolio lifecycle review - 7 November 2026",
+          "reviewed_at": "2026-11-07",
+          "source_description": "Owner decision in #164 plus the published project records and current repository states, reviewed 7 November 2026.",
+          "scope": "Active, paused and retired status for the current Loftwah portfolio.",
+          "editorial_notes": "Retirement and pause are portfolio decisions. They preserve product history; they do not claim that a project never worked or that a paused project is cancelled.",
+          "public_safe": true
+        }
       }
     ],
     "project_statuses": [
@@ -3593,6 +3606,63 @@
           "sort_order": 1,
           "public_safe": true
         }
+      },
+      {
+        "id": "status-social-club-2026-11-07",
+        "data": {
+          "project": "$ref:project-social-club",
+          "snapshot": "$ref:snapshot-2026-11-07-portfolio-lifecycle",
+          "project_key": "social-club",
+          "snapshot_key": "2026-11-07-portfolio-lifecycle",
+          "state": "Retired",
+          "state_tone": "quiet",
+          "current": "Plans With You was retired on 26 October 2026 by owner decision. The public site, dossier, evidence and dated campaign artwork remain as a historical record; no new active work is planned.",
+          "next_proof": "No active delivery. The stable record matters more than a new claim; revisit only if MP explicitly starts the project again.",
+          "proof_boundary": "Retirement records a portfolio decision, not a judgement that the prototype never worked. The site may remain reachable, and past evidence keeps its original review date.",
+          "reviewed_at": "2026-11-07",
+          "sort_order": 8,
+          "public_safe": true
+        },
+        "slug": "social-club-2026-11-07",
+        "status": "published"
+      },
+      {
+        "id": "status-asset-hunter-2026-11-07",
+        "data": {
+          "project": "$ref:project-asset-hunter",
+          "snapshot": "$ref:snapshot-2026-11-07-portfolio-lifecycle",
+          "project_key": "asset-hunter",
+          "snapshot_key": "2026-11-07-portfolio-lifecycle",
+          "state": "Retired",
+          "state_tone": "quiet",
+          "current": "Asset Hunter was retired on 26 October 2026 by owner decision. The catalogue, evidence and campaign artwork remain as a dated record; it is no longer an active recommendation or a current build target.",
+          "next_proof": "No active delivery. Preserve the historical record and stable links unless MP explicitly resumes the project.",
+          "proof_boundary": "Retirement is a portfolio decision. It does not erase the catalogue's earlier review, and a remaining live site is not a promise of current support.",
+          "reviewed_at": "2026-11-07",
+          "sort_order": 9,
+          "public_safe": true
+        },
+        "slug": "asset-hunter-2026-11-07",
+        "status": "published"
+      },
+      {
+        "id": "status-pirates-2026-11-07",
+        "data": {
+          "project": "$ref:project-pirates",
+          "snapshot": "$ref:snapshot-2026-11-07-portfolio-lifecycle",
+          "project_key": "pirates",
+          "snapshot_key": "2026-11-07-portfolio-lifecycle",
+          "state": "Paused",
+          "state_tone": "quiet",
+          "current": "Pirates is paused indefinitely by owner decision. The dossier, source-parity evidence and repository remain available; this is not a cancellation, and no archive or deletion is intended.",
+          "next_proof": "Resume only when MP asks. Until then, do not treat the reconstruction or its parity gates as active delivery work.",
+          "proof_boundary": "Paused means out of the current portfolio queue, not cancelled or archived. No public build is claimed, and the repository stays writable for a later return.",
+          "reviewed_at": "2026-11-07",
+          "sort_order": 6,
+          "public_safe": true
+        },
+        "slug": "pirates-2026-11-07",
+        "status": "published"
       }
     ],
     "evidence_records": [

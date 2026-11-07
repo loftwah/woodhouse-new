@@ -6,6 +6,7 @@ import { formatReviewDate } from "../../data/review-date";
 import { portfolioReadout } from "../../data/portfolio";
 import ProjectRow from "../../components/ProjectRow.astro";
 import { listProjectRecords } from "../../content/repository";
+import { activeProjects } from "../../data/project-lifecycle";
 const result = await listProjectRecords();
 if (result.error)
   return new Response("Unable to load public project records.", {
@@ -13,6 +14,7 @@ if (result.error)
     headers: { "cache-control": "private, no-store" }
   });
 const projects = result.projects;
+const active = activeProjects(projects);
 // Native query views must not share the path-only route cache.
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
@@ -59,10 +61,12 @@ export const prerender = false;
       </div>
       <div class="page-intro__aside">
         <strong>
-          {projects.length} projects · newest review {reviewDateLabel}
+          {active.length} active projects · {projects.length} in the record · newest review{" "}
+          {reviewDateLabel}
         </strong>
-        Each row starts with what the product is and how you can use it today. The dated status, the
-        artwork source and the limits of each claim sit further in, on the project's own page.
+        Each row starts with what the product is and how you can use it today. Retired and paused
+        projects stay in the record with their history. The dated status, the artwork source and the
+        limits of each claim sit further in, on the project's own page.
       </div>
     </div>
   </section>

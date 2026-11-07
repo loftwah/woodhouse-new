@@ -8,6 +8,7 @@ import {
   listPublishedDispatches
 } from "../content/repository";
 import { portfolioReadout } from "../data/portfolio";
+import { activeProjects } from "../data/project-lifecycle";
 
 export const prerender = false;
 const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
@@ -30,6 +31,7 @@ export const GET: APIRoute = async ({ cache }) => {
     if (hint) cache.set(hint);
 
   const projects = projectResult.projects;
+  const active = activeProjects(projects);
   // The newest review in the portfolio, not the first project's. This file is
   // read by agents deciding how much to trust the record, so quoting the
   // oldest project's date here understates how current part of it is.
@@ -62,9 +64,11 @@ export const GET: APIRoute = async ({ cache }) => {
     "",
     "## Projects",
     "",
+    `${active.length} active projects, ${projects.length} in the record. Paused and retired projects keep their dossier and dated evidence.`,
+    "",
     ...projects.map(
       (project) =>
-        `- ${url(`/projects/${project.slug}/`)} (${project.discipline}; state: ${project.state}; reviewed ${project.reviewDate})`
+        `- ${url(`/projects/${project.slug}/`)} (${project.discipline}; lifecycle: ${project.lifecycle}; state: ${project.state}; reviewed ${project.reviewDate})`
     ),
     "",
     "## Incidents",

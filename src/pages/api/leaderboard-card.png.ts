@@ -24,6 +24,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
   const edition = version === "3" ? 3 : version === "2" ? 2 : 1;
   const project = url.searchParams.get("project") ?? undefined;
   const reportId = url.searchParams.get("report");
+  const includeRetired = url.searchParams.get("includeRetired") === "1";
   if (!Object.hasOwn(leaderboardFormats, format) || (project && !safeProject(project)) || !reportId)
     return new Response("Image unavailable.", { status: 400 });
   const startedAt = Date.now();
@@ -76,7 +77,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
         measureKey(url.searchParams.get("measure")),
         format as LeaderboardFormat,
         project,
-        edition
+        edition,
+        includeRetired
       ),
       { font: { fontBuffers: buffers, defaultFontFamily: "Bricolage Grotesque" } }
     );

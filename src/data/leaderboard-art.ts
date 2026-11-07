@@ -26,11 +26,12 @@ export function leaderboardSvg(
   key: RankingMeasure,
   format: LeaderboardFormat,
   project?: string,
-  edition: 1 | 2 | 3 = 1
+  edition: 1 | 2 | 3 = 1,
+  includeRetired = false
 ) {
   return edition === 3
-    ? leaderboardSvgV3(snapshot, days, key, format, project)
-    : leaderboardSvgLegacy(snapshot, days, key, format, project, edition);
+    ? leaderboardSvgV3(snapshot, days, key, format, project, includeRetired)
+    : leaderboardSvgLegacy(snapshot, days, key, format, project, edition, includeRetired);
 }
 function leaderboardSvgLegacy(
   snapshot: LeaderboardSnapshot,
@@ -38,11 +39,12 @@ function leaderboardSvgLegacy(
   key: RankingMeasure,
   format: LeaderboardFormat,
   project?: string,
-  edition: 1 | 2 = 1
+  edition: 1 | 2 = 1,
+  includeRetired = false
 ) {
   const [w, h] = leaderboardFormats[format];
   const wide = format === "landscape";
-  const ranked = rankedProjects(snapshot, days, key);
+  const ranked = rankedProjects(snapshot, days, key, { includeRetired });
   const label = rankingMeasures.find((m) => m.key === key)!.label;
   const selected = project ? ranked.rows.find((r) => r.slug === project) : null;
   const rows = ranked.rows;
@@ -225,12 +227,13 @@ function leaderboardSvgV3(
   days: number,
   key: RankingMeasure,
   format: LeaderboardFormat,
-  project?: string
+  project?: string,
+  includeRetired = false
 ) {
   const [w, h] = leaderboardFormats[format];
   const wide = format === "landscape";
   const portrait = format === "portrait";
-  const ranked = rankedProjects(snapshot, days, key);
+  const ranked = rankedProjects(snapshot, days, key, { includeRetired });
   const label = rankingMeasures.find((m) => m.key === key)!.label;
   const selected = project ? ranked.rows.find((r) => r.slug === project) : null;
   const rows = ranked.rows;

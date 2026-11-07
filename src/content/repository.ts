@@ -7,12 +7,15 @@ import type { CapabilityReview } from "../data/capabilities";
 import { projectCapabilities } from "../data/capabilities";
 import { searchTextFromBlocks } from "../data/search-text";
 import { aliasesFor } from "../data/search-intent";
+import { projectLifecycle } from "../data/project-lifecycle";
+import type { ProjectLifecycle } from "../data/project-lifecycle";
 import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
 
 export type WoodhouseProject = {
   slug: string;
   name: string;
   index: string;
+  lifecycle: ProjectLifecycle;
   discipline: string;
   title: string;
   summary: string;
@@ -170,6 +173,7 @@ function toWoodhouseProject(
     slug: entry.id,
     name: data.name,
     index: data.index,
+    lifecycle: projectLifecycle(currentStatus?.state),
     discipline: data.discipline,
     title: data.title,
     summary: data.summary,

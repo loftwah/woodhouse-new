@@ -1,4 +1,5 @@
 import type { WoodhouseProject } from "../content/repository";
+import type { ProjectLifecycle } from "./project-lifecycle";
 
 /**
  * What a visitor can actually do with a project, decided once for every entry
@@ -56,21 +57,70 @@ const reviewed: Record<string, ProjectAction> = {
 };
 
 /**
+ * Reviewed copy for a project that is paused or retired. The action is always
+ * the dossier, never a live product surface: a reader can inspect the history
+ * without being sent to a product the portfolio is no longer recommending.
+ */
+const closedLifecycle: Record<string, { action: ProjectAction["action"]; availability: string }> = {
+  "social-club": {
+    action: "See",
+    availability:
+      "Retired 26 October 2026. The dossier, evidence and dated campaign artwork remain; no new active work is planned."
+  },
+  "asset-hunter": {
+    action: "See",
+    availability:
+      "Retired 26 October 2026. The catalogue and past evidence remain as a dated record, not a current recommendation."
+  },
+  pirates: {
+    action: "See",
+    availability:
+      "Paused indefinitely on 26 October 2026. The reconstruction and its evidence remain; this is not a cancellation."
+  }
+};
+
+function lifecycleAction(
+  slug: string,
+  lifecycle: ProjectLifecycle | undefined
+): ProjectAction | null {
+  if (lifecycle !== "paused" && lifecycle !== "retired") return null;
+  return (
+    closedLifecycle[slug] ?? {
+      action: "See",
+      availability:
+        lifecycle === "retired"
+          ? "Retired. The dossier and its history remain; there is no current active build."
+          : "Paused. The dossier and its history remain; this is not a cancellation."
+    }
+  );
+}
+
+/**
  * The reviewed action for a project. An unknown or newly published project gets
  * the honest default: point at the project's own record rather than inventing an
  * availability claim or offering a link that does not exist.
  */
-export function projectAction(project: Pick<WoodhouseProject, "slug">): ProjectAction {
+export function projectAction(
+  project: Pick<WoodhouseProject, "slug"> & { lifecycle?: ProjectLifecycle }
+): ProjectAction {
+  const closed = lifecycleAction(project.slug, project.lifecycle);
+  if (closed) return closed;
   return reviewed[project.slug] ?? { action: "See", availability: "See the project record." };
 }
 
 /** The action as a visitor reads it: "Play Fighter", "Listen to LoftwahFM". */
-export function projectActionLabel(project: Pick<WoodhouseProject, "name" | "slug">): string {
+export function projectActionLabel(
+  project: Pick<WoodhouseProject, "name" | "slug"> & { lifecycle?: ProjectLifecycle }
+): string {
   const { action } = projectAction(project);
   return action === "Listen" ? `Listen to ${project.name}` : `${action} ${project.name}`;
 }
 
 /** The product's own destination, or its Woodhouse record when there is none. */
-export function projectActionHref(project: Pick<WoodhouseProject, "slug" | "siteUrl">): string {
+export function projectActionHref(
+  project: Pick<WoodhouseProject, "slug" | "siteUrl"> & { lifecycle?: ProjectLifecycle }
+): string {
+  if (project.lifecycle === "paused" || project.lifecycle === "retired")
+    return `/projects/${project.slug}/`;
   return project.siteUrl ?? `/projects/${project.slug}/`;
 }

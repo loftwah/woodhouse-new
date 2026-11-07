@@ -29,7 +29,7 @@ const fallback = getArtworkFallback(project);
 const placeholder = fallback.image;
 const action = projectAction(project);
 const actionHref = projectActionHref(project);
-const external = Boolean(project.siteUrl);
+const external = /^https?:\/\//.test(actionHref);
 const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
 ---
 
@@ -113,7 +113,7 @@ const reviewLabel = formatReviewDate(project.reviewDate) ?? project.reviewDate;
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
       >
-        {projectActionLabel(project)} <span aria-hidden="true">↗</span>
+        {projectActionLabel(project)} <span aria-hidden="true">{external ? "↗" : "→"}</span>
       </a>
       <a class="project-row__dossier" href={"/projects/" + project.slug + "/"}>
         See how it works <span aria-hidden="true">↗</span>
