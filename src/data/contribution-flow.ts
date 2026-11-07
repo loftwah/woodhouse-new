@@ -232,9 +232,3 @@ export const invitationStates: {
     boundary: "Without an exact saved source and configuration there is nothing to ask."
   }
 ];
-
-export const contributionAnchors = [
-  ...contributionSteps.map((step) => ({ url: step.source.url, note: step.source.note })),
-  { url: contract, note: "the maintained contract note" },
-  { url: guestbook("app.manifest.json"), note: "the guest invitation descriptor" }
-];

@@ -13,9 +13,7 @@
  * Lifecycle is deliberately separate from the engineering state: a retired
  * project still has a real history, and a paused project is not cancelled.
  */
-export const projectLifecycles = ["active", "paused", "retired"] as const;
-
-export type ProjectLifecycle = (typeof projectLifecycles)[number] | "unknown";
+export type ProjectLifecycle = "active" | "paused" | "retired" | "unknown";
 
 const lifecycleStates: Record<string, ProjectLifecycle> = {
   Paused: "paused",
@@ -29,7 +27,7 @@ export function projectLifecycle(value: unknown): ProjectLifecycle {
 }
 
 /** Only an explicit `active` record joins current work, counts and rankings. */
-export function isActiveProject(project: { lifecycle: ProjectLifecycle }): boolean {
+function isActiveProject(project: { lifecycle: ProjectLifecycle }): boolean {
   return project.lifecycle === "active";
 }
 

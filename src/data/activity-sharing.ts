@@ -32,7 +32,7 @@ export const cardFormats = {
   portrait: { width: 1080, height: 1920 }
 } as const;
 export type CardFormat = keyof typeof cardFormats;
-export function cardIsPng(bytes: Uint8Array, format: CardFormat = "landscape") {
+function cardIsPng(bytes: Uint8Array, format: CardFormat = "landscape") {
   if (bytes.length < 24 || bytes.length > 1024 * 1024) return false;
   const signature = [137, 80, 78, 71, 13, 10, 26, 10];
   if (!signature.every((byte, i) => bytes[i] === byte)) return false;

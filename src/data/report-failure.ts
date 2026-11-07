@@ -68,7 +68,7 @@ function describeError(error: unknown) {
   return `${name}: ${message.replace(/\s+/g, " ").trim()}`.slice(0, 160);
 }
 
-export function reportRouteEvent(
+function reportRouteEvent(
   input: ReportRouteLogInput & { event: ReportRouteEvent["event"] }
 ): ReportRouteEvent {
   return {

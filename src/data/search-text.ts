@@ -67,7 +67,7 @@ const SKIPPED_KEYS = new Set([
 ]);
 
 /** Per-entry ceiling, so a long dispatch cannot make the index payload unbounded. */
-export const MAX_SEARCH_TEXT = 4000;
+const MAX_SEARCH_TEXT = 4000;
 
 function collect(value: unknown, into: string[], depth: number) {
   if (depth > 12 || into.join(" ").length >= MAX_SEARCH_TEXT) return;

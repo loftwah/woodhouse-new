@@ -10,7 +10,7 @@
  */
 export const AGENT_CAPABILITY_REVIEWED = "2026-11-07";
 
-export type AgentCapabilityOperation = {
+type AgentCapabilityOperation = {
   name: string;
   description: string;
   kind: "read" | "effect";

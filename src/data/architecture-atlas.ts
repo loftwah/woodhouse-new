@@ -19,23 +19,23 @@
  * the EmDash catalogue; this module never re-declares them.
  */
 
-export type AtlasStatus = "live" | "demo" | "planned" | "unknown";
+type AtlasStatus = "live" | "demo" | "planned" | "unknown";
 
 export type AtlasGroupKey = "play" | "listen" | "build" | "collect" | "everyday" | "publish";
 
-export type AtlasFact = {
+type AtlasFact = {
   label: string;
   value: string;
   evidence?: string;
 };
 
-export type AtlasPart = {
+type AtlasPart = {
   label: string;
   detail: string;
   evidence?: string;
 };
 
-export type AtlasDecision = {
+type AtlasDecision = {
   title: string;
   detail: string;
 };
@@ -1597,8 +1597,4 @@ export const atlasRelationships: AtlasRelationship[] = [
 export function atlasProfile(slug: string | undefined): AtlasProfile | undefined {
   if (!slug) return undefined;
   return atlasProfiles.find((profile) => profile.slug === slug);
-}
-
-export function atlasGroup(key: AtlasGroupKey) {
-  return atlasGroups.find((group) => group.key === key);
 }

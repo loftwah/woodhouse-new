@@ -8,10 +8,10 @@ import type { PublicMenuItem } from "../content/repository";
  * labels and keep one of each, with Leaderboards beside Analytics rather than
  * buried in the secondary Index.
  */
-export const analyticsLabel = "Analytics";
-export const analyticsUrl = "/activity/";
-export const leaderboardsLabel = "Leaderboards";
-export const leaderboardsUrl = "/activity/leaderboards/";
+const analyticsLabel = "Analytics";
+const analyticsUrl = "/activity/";
+const leaderboardsLabel = "Leaderboards";
+const leaderboardsUrl = "/activity/leaderboards/";
 
 const activityDestinations: PublicMenuItem[] = [
   { label: analyticsLabel, url: analyticsUrl },
@@ -22,7 +22,7 @@ const activityDestinations: PublicMenuItem[] = [
  * A route's canonical `path` can carry a report's query string, so compare the
  * pathname without its query, hash or a trailing slash.
  */
-export function normalisePathname(value: string): string {
+function normalisePathname(value: string): string {
   const [pathname = "/"] = value.split(/[?#]/, 1);
   if (!pathname.startsWith("/")) return pathname;
   const trimmed = pathname.replace(/\/+$/, "");
@@ -46,7 +46,7 @@ export function withDestinationLabels(links: PublicMenuItem[]): PublicMenuItem[]
 }
 
 /** Remove a destination repeated across the primary and secondary CMS menus. */
-export function uniqueDestinations(links: PublicMenuItem[]): PublicMenuItem[] {
+function uniqueDestinations(links: PublicMenuItem[]): PublicMenuItem[] {
   const seen = new Set<string>();
   return links.filter((link) => {
     if (!link.url.startsWith("/")) return true;

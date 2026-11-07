@@ -75,19 +75,55 @@ capability block on a dispatch page. The reads are request-cached, so this is pr
 and the `value`-filtered call is what keeps the block's contract local. Changing it would push the
 dispatch content into the block's props for an unmeasured gain. Not changed.
 
-### Surplus — recorded, not removed
+### Surplus — the `src/` subset removed (8 November 2026)
 
-`pnpm run deadcode` reports 51 unused exports, 13 unused exported types and one unused devDependency
-(`@storybook/builder-vite`). Many are internal helpers that only need their `export` removed
-(`searchTokens`, `searchScore`, `searchRank`, `searchMatches`, `projectLifecycles`,
-`isActiveProject`, `reportRouteEvent`, `parseDistributionMetric`, `editionPath`, `isRasterImage`,
-`OperationTimeoutError`, `cardIsPng`, several `lab/` and `scripts/` helpers), and several types are
-referenced by nothing (`AtlasStatus`, `OverviewRow`, `MerchKind`, `DemoOrderLine`, …).
+The first pass recorded 51 unused exports, 13 unused exported types and one unused devDependency
+(`@storybook/builder-vite`) but removed none of them. This second pass took the `src/`-only subset.
+`pnpm run deadcode` now reports **18 unused exports, all in `lab/` and `scripts/`**, plus that
+devDependency and one configuration hint. No unused exported type remains in `src/`.
 
-They were not removed here. The list includes release tooling (`scripts/build-identity.mjs`,
-`scripts/discord-showcase.mjs`) and the lab experiments, where a wrong deletion costs more than the
-export keyword does, and the change would be a 60-symbol diff mixed into this pass. The next pass
-should take the `src/`-only subset first, and the release-script subset with its own verification.
+**Deleted because nothing referenced the symbol, in its module or elsewhere:**
+
+- `searchScore`, `searchRank`, `searchMatches`, and the helpers they alone used (`searchTokens`,
+  `meaningfulTokens`, `searchMatchesText`) from `search-intent.ts`. `searchStopWords` stays because
+  the search UI reads it.
+- `portfolioOverview` and `OverviewRow` from `analytics-workbench.ts`; the live overview builds its
+  own rows in `activity.astro`.
+- `atlasGroup` from `architecture-atlas.ts`; the architecture pages use `atlasGroups` directly.
+- `contributionAnchors` from `contribution-flow.ts`.
+- `exhibitAnchors` and `DriftCheck` from `exhibit-model.ts`.
+- `isContentGeneration` from `content-generation.ts`.
+- `BUILD_IDENTITY_SCHEMA` from `build-identity.ts`; the build script owns the schema string.
+- `projectFixtures` from `stories/fixtures.ts` and `Meta` from `stories/types.ts`; the stories import
+  the individual fixtures and the `Story` alias.
+
+**Export removed, symbol kept because its own module uses it:**
+
+- `cardIsPng` (`loadActivityCard`), `weekCaptionLines` (the caption builder), `benchStateToParams`
+  (`benchStateLink`), `enquiryFields` (`EnquiryField`, `isEnquiryField`), `CONTENT_GENERATION_PREFIX`
+  (`contentGenerationDigest`), `dispatchDate` (`byDispatchDate`), `parseSnapshot` in
+  `github-leaderboards.ts` (its own row parser), `normalisePathname` and `uniqueDestinations` in
+  `navigation.ts` (`isCurrentDestination`, `withActivityNavigation`), `OperationTimeoutError`
+  (`withDeadline`, `clipboardProblem`), `isRasterImage` (`socialCardFor`),
+  `parseDistributionMetric` (`loadStoryDistribution`), `editionPath` (`readPortfolioEdition`),
+  `isActiveProject` (`activeProjects`) and `reportRouteEvent` (`logReportFailure`,
+  `logReportDegraded`).
+- The `reportQualifier` re-export in `portfolio-card.ts` was removed. The workbench owns the
+  function; `activity.astro` imports it there, and `portfolio-card` still uses its own import.
+- Type exports removed while the types still describe their module's own records:
+  `AgentCapabilityOperation`, `AtlasStatus`, `AtlasFact`, `AtlasPart`, `AtlasDecision`, `MerchKind`,
+  `MerchVariant`, `MerchArtwork`, `DemoOrderLine` and `DemoOrderStatus`.
+
+`projectLifecycles` was not kept as a value at all: the union type is now written directly, because
+the array existed only to derive that type.
+
+**Retained, with the reason:**
+
+| Finding | Why it stays |
+| --- | --- |
+| 18 unused exports in `lab/` and `scripts/` | Separate pass. The lab is a bounded experiment and the release scripts are not imported by the Worker; deleting them needs their own run, not a mixed refactor. |
+| `@storybook/builder-vite` devDependency | The Storybook build path is not part of this pass. Removing it would need a Storybook build check that this change did not run. |
+| knip `cloudflare` ignore hint | `cloudflare:workers` is a workerd virtual module, not the npm `cloudflare` package. The hint is a knip configuration detail, not a code export; changing it risks a false unresolved-import finding. |
 
 ### Special cases worth naming (not changed)
 
@@ -116,12 +152,30 @@ Release: source `a9528ac`, preview Worker `0835f58d-a995-4abd-9ce2-a89800cdd1bd`
 `e4e3be98-9825-4aa0-907b-8364ef3a2762` at 100%, build identity from a clean tree. No behaviour
 changed: the constant is the value every replaced line already used.
 
+## Verification of the surplus removal
+
+- `pnpm run typecheck` (316 files, 0 errors), `pnpm run lint` and `pnpm test` (197 tests) pass.
+- `pnpm run deadcode` reports 18 unused exports, all in `lab/` and `scripts/`, plus
+  `@storybook/builder-vite` and the knip `cloudflare` hint. The `src/` unused-export and unused-type
+  counts are zero.
+- The production build completes and the privacy scan passes across 2,284 artifacts.
+- No behaviour changed: every deleted symbol had no caller, and every de-exported symbol is still
+  used by its own module. The built HTML and public JSON are compared before and after the deploy in
+  the release receipt below.
+
+Release: source, preview Worker, production Worker and the rendered-output comparison are recorded
+in the #168 receipt once the deploy is verified.
+
 ## Next pass
 
-1. Remove the `src/`-only unused exports and types, keeping `lab/` and `scripts/` in their own change.
-2. Take the report-route join into one function if a fourth caller appears.
-3. Re-run the pass with the skill's Comments add-on only if MP asks for comment pruning; it is
+1. Remove the 18 `lab/` and `scripts/` unused exports with their own run and verification.
+2. Decide whether `@storybook/builder-vite` is still needed by the Storybook build.
+3. Resolve the knip `cloudflare` configuration hint if the virtual-module handling can be stated
+   without a false unresolved import.
+4. Take the report-route join into one function if a fourth caller appears.
+5. Re-run the pass with the skill's Comments add-on only if MP asks for comment pruning; it is
    currently unauthorised.
 
-#168 is not complete: the skill is installed and used, one hidden link is fixed, and the remaining
-categories are recorded above rather than claimed.
+#168 is complete for the `src/` scope this pass took: the skill is installed and used, the hidden
+origin link and the `src/` surplus are fixed, and every remaining finding is named above with a
+reason. The `lab/`/`scripts/` subset remains a separate change, not a silent omission.

@@ -35,7 +35,7 @@ export const editionSections = [
   }
 ] as const;
 
-export function editionPath(slug: string) {
+function editionPath(slug: string) {
   return slug === "what-we-built-2026-10-25" ? "/editions/what-we-built/" : `/editions/${slug}/`;
 }
 

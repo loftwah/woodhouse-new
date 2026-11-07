@@ -71,7 +71,7 @@ export const benchStateFromParams = (params: URLSearchParams): BenchState => {
  * The parameters for a state. Only the differences from the resting bench are
  * written, so a shared link stays short and readable.
  */
-export const benchStateToParams = (state: BenchState): URLSearchParams => {
+const benchStateToParams = (state: BenchState): URLSearchParams => {
   const params = new URLSearchParams();
   if (state.open) params.set("bench", "open");
   if (state.layer) params.set("layer", state.layer);

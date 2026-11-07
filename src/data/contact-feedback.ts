@@ -3,7 +3,7 @@
  * server redirect so a corrected value is highlighted and described in the same
  * words on both paths.
  */
-export const enquiryFields = ["name", "reply", "topic", "kind", "message"] as const;
+const enquiryFields = ["name", "reply", "topic", "kind", "message"] as const;
 export type EnquiryField = (typeof enquiryFields)[number];
 
 export function isEnquiryField(value: unknown): value is EnquiryField {

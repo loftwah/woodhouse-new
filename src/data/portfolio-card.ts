@@ -21,9 +21,6 @@ import {
 } from "./analytics-workbench.ts";
 import { discoveryStory, type DiscoveryStory } from "./analytics-story.ts";
 import { SITE_ORIGIN } from "./site-origin.ts";
-// Re-exported so the shared-image tests keep one import path; the qualifier is
-// owned by the workbench module the page and the renderer both use.
-export { reportQualifier };
 export const reportFormats = {
   landscape: { width: 1200, height: 630 },
   square: { width: 1200, height: 1200 },

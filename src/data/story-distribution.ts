@@ -45,7 +45,7 @@ export function distributionMetric(
 ) {
   return `distribution:${context.edition}:${context.story}:${context.report}:${stage}${target ? `:${target}` : ""}`;
 }
-export function parseDistributionMetric(metric: string) {
+function parseDistributionMetric(metric: string) {
   const [prefix, edition, story, report, stage, target, extra] = metric.split(":");
   const context = parseDistributionContext({ edition, story, report });
   if (

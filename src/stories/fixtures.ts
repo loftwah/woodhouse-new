@@ -94,5 +94,3 @@ export const shoalshot: WoodhouseProject = {
   snapshotId: "shoalshot-2026-10-19",
   statusId: "shoalshot-status-2026-10-19"
 };
-
-export const projectFixtures = { bubbles, fighter, shoalshot };

@@ -23,7 +23,7 @@ export const WOODHOUSE_SOCIAL_CARD_ALT =
  * The share gallery still shows the original SVG in a browser; this guard is
  * for social metadata only.
  */
-export function isRasterImage(url: string | undefined): boolean {
+function isRasterImage(url: string | undefined): boolean {
   if (!url) return false;
   try {
     const { pathname } = new URL(url, SITE_ORIGIN);

@@ -308,7 +308,7 @@ export function leaderboardCaption(
 }
 
 // Only these fields cross the private GitHub → public reporting boundary.
-export function parseSnapshot(value: unknown): LeaderboardSnapshot | null {
+function parseSnapshot(value: unknown): LeaderboardSnapshot | null {
   if (!value || typeof value !== "object") return null;
   const s = value as LeaderboardSnapshot;
   if (

@@ -54,7 +54,7 @@ function publishedDay(publishedAt: string | null | undefined): string | null {
  * was delivered and would silently become a false claim the moment that day
  * differs from the review.
  */
-export function dispatchDate({ reviewDate, publishedAt }: DispatchDates): string | null {
+function dispatchDate({ reviewDate, publishedAt }: DispatchDates): string | null {
   return validReviewDay(reviewDate) ?? publishedDay(publishedAt);
 }
 

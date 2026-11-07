@@ -12,9 +12,9 @@
  * emails, prints or publishes anything.
  */
 
-export type MerchKind = "poster" | "apparel" | "stickers" | "postcards";
+type MerchKind = "poster" | "apparel" | "stickers" | "postcards";
 
-export type MerchVariant = {
+type MerchVariant = {
   id: string;
   label: string;
   priceCents: number;
@@ -22,7 +22,7 @@ export type MerchVariant = {
   availability: string;
 };
 
-export type MerchArtwork = {
+type MerchArtwork = {
   src: string;
   alt: string;
   credit: string;
@@ -209,13 +209,13 @@ export type DemoLine = {
   quantity: number;
 };
 
-export type DemoOrderLine = DemoLine & {
+type DemoOrderLine = DemoLine & {
   name: string;
   variantLabel: string;
   unitPriceCents: number;
 };
 
-export type DemoOrderStatus =
+type DemoOrderStatus =
   | "pending"
   | "paid"
   | "failed"

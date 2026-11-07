@@ -5,7 +5,7 @@
  * a saved file and a blocked clipboard is never described as a copy.
  */
 
-export class OperationTimeoutError extends Error {
+class OperationTimeoutError extends Error {
   constructor() {
     super("The operation timed out.");
     this.name = "OperationTimeoutError";

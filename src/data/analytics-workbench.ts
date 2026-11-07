@@ -505,7 +505,7 @@ export type CaptionWeek = {
  * surface and vanish on another. A zero previous week is stated as a zero
  * baseline rather than an invented percentage, and a fall to zero stays visible.
  */
-export function weekCaptionLines(week: CaptionWeek, dateLabel: (date: string) => string) {
+function weekCaptionLines(week: CaptionWeek, dateLabel: (date: string) => string) {
   const previousFrom = new Date(Date.parse(week.from) - 7 * 86400000).toISOString().slice(0, 10);
   const previousTo = new Date(Date.parse(week.from) - 86400000).toISOString().slice(0, 10);
   const movement =
@@ -521,36 +521,6 @@ export function weekCaptionLines(week: CaptionWeek, dateLabel: (date: string) =>
       ? `It was the best of ${week.comparedWeeks} complete weeks we can compare.`
       : `It was one of ${week.comparedWeeks} complete weeks we can compare; not a record.`
   ];
-}
-export type OverviewRow = {
-  project: AnalyticsProject;
-  family: ProductView["family"];
-  label: string;
-  measure: MeasureChoice;
-  metric: Metric | undefined;
-};
-/**
- * Build the mixed overview in product-family order. A project is applicable by
- * definition and stays in the list when its source is unavailable, so a real
- * reporting failure is visible rather than filtered out.
- */
-export function portfolioOverview(
-  report: PortfolioReport | null,
-  publicIds: Set<string>,
-  names: Map<string, string>
-): OverviewRow[] {
-  const members = overviewOrder.filter((project) => publicIds.has(project));
-  return members.map((project) => {
-    const data = report?.projects.find((p) => p.project === project)?.report ?? null;
-    const [primary] = overviewMeasures(project);
-    return {
-      project,
-      family: productView(project)!.family,
-      label: names.get(project) ?? project,
-      measure: primary!,
-      metric: overviewMetric(data, project)
-    };
-  });
 }
 /**
  * Whether the product's own view defines this measure at all. Applicability comes

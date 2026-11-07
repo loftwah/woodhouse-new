@@ -152,12 +152,3 @@ export const exhibitSteps: ExhibitStep[] = [
     }
   }
 ];
-
-export type DriftCheck = {
-  path: string;
-  anchor: string;
-  note: string;
-};
-
-/** Every implementation string this explanation depends on. */
-export const exhibitAnchors: DriftCheck[] = exhibitSteps.map((step) => step.source);
