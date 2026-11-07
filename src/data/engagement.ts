@@ -416,16 +416,46 @@ export async function localAnalytics(
 ): Promise<ProjectAnalytics> {
   const period = requestedWindow ?? periodFor(days, now);
   const generatedAt = new Date(now).toISOString();
-  const first = await db
-    .prepare("SELECT MIN(day) AS day FROM wh_analytics_daily WHERE project=?")
-    .bind(project)
-    .first<{ day: string | null }>();
-  const rows = await db
-    .prepare(
-      "SELECT day,metric,value FROM wh_analytics_daily WHERE project=? AND day>=? AND day<=? ORDER BY day"
-    )
-    .bind(project, period.from, period.to)
-    .all<{ day: string; metric: string; value: number }>();
+  const splitModes = splitModesFor(project);
+  // Every read below is keyed by the project and the reporting window only, so
+  // none of them answers another. D1 is single-threaded per database and each
+  // statement costs a request, so issuing them together removes serialised
+  // round trips without changing the statements, their order inside a response
+  // or the gating that decides which ones are allowed to run.
+  const [first, rows, starts, browserStart, referralRows] = await Promise.all([
+    db
+      .prepare("SELECT MIN(day) AS day FROM wh_analytics_daily WHERE project=?")
+      .bind(project)
+      .first<{ day: string | null }>(),
+    db
+      .prepare(
+        "SELECT day,metric,value FROM wh_analytics_daily WHERE project=? AND day>=? AND day<=? ORDER BY day"
+      )
+      .bind(project, period.from, period.to)
+      .all<{ day: string; metric: string; value: number }>(),
+    splitModes.length
+      ? db
+          .prepare(
+            "SELECT metric, MIN(day) AS day FROM wh_analytics_daily WHERE project=? GROUP BY metric"
+          )
+          .bind(project)
+          .all<{ metric: string; day: string }>()
+      : null,
+    project === "woodhouse"
+      ? db
+          .prepare("SELECT started_at FROM wh_analytics_browser_coverage WHERE project=?")
+          .bind(project)
+          .first<{ started_at: number }>()
+      : null,
+    project === "woodhouse"
+      ? db
+          .prepare(
+            "SELECT metric, day, value FROM wh_analytics_daily WHERE project=? AND metric LIKE 'referral\\_%' ESCAPE '\\' AND day>=? AND day<=? ORDER BY day"
+          )
+          .bind(project, period.from, period.to)
+          .all<{ metric: string; day: string; value: number }>()
+      : null
+  ]);
   const started = first?.day ?? null;
   const metrics: Metric[] = Object.entries(definitions)
     .filter(([kind]) =>
@@ -457,16 +487,9 @@ export async function localAnalytics(
   // missing row for a mode is a measured zero for that mode, because the counter
   // is written for every accepted event that mode receives, and the partition of
   // the parent counter stays exact.
-  const splitModes = splitModesFor(project);
   const splitStarts = new Map<string, string>();
   let splitFrom: string | undefined;
-  if (splitModes.length) {
-    const starts = await db
-      .prepare(
-        "SELECT metric, MIN(day) AS day FROM wh_analytics_daily WHERE project=? GROUP BY metric"
-      )
-      .bind(project)
-      .all<{ metric: string; day: string }>();
+  if (splitModes.length && starts) {
     for (const row of starts.results) splitStarts.set(row.metric, row.day);
     splitFrom = gameplayKindMeasures
       .flatMap((kind) => splitModes.map((mode) => splitStarts.get(modeMetricName(kind.kind, mode))))
@@ -502,13 +525,6 @@ export async function localAnalytics(
   }
   // Only Woodhouse's reviewed client currently offers consent. Collector acceptance alone
   // must never advertise that Protocol 11 or SHOALSHOT adopted browser measurement.
-  const browserStart =
-    project === "woodhouse"
-      ? await db
-          .prepare("SELECT started_at FROM wh_analytics_browser_coverage WHERE project=?")
-          .bind(project)
-          .first<{ started_at: number }>()
-      : null;
   const retainedFrom = new Date(now - 90 * 86400000).toISOString().slice(0, 10);
   const browserStartDay = browserStart
     ? new Date(browserStart.started_at * 1000).toISOString().slice(0, 10)
@@ -516,10 +532,11 @@ export async function localAnalytics(
   // A UTC day intersecting expired raw history cannot support an exact period distinct.
   const available =
     browserStartDay !== null && period.to >= browserStartDay && period.from > retainedFrom;
-  const browserDaily = available
-    ? await db
-        .prepare(
-          `
+  const [browserDaily, browserTotals] = available
+    ? await Promise.all([
+        db
+          .prepare(
+            `
     SELECT v.day, COUNT(DISTINCT v.browser_hash) AS browsers,
       COUNT(DISTINCT CASE WHEN EXISTS (
         SELECT 1 FROM wh_analytics_browser_visits p WHERE p.project=v.project
@@ -527,36 +544,35 @@ export async function localAnalytics(
       ) THEN v.browser_hash END) AS returning_browsers
     FROM wh_analytics_browser_visits v WHERE v.project=? AND v.day>=? AND v.day<=? AND v.received_at>=?
     GROUP BY v.day ORDER BY v.day`
-        )
-        .bind(
-          Math.floor(now / 1000) - 90 * 86400,
-          project,
-          period.from,
-          period.to,
-          Math.floor(now / 1000) - 90 * 86400
-        )
-        .all<{ day: string; browsers: number; returning_browsers: number }>()
-    : null;
-  const browserTotals = available
-    ? await db
-        .prepare(
-          `
+          )
+          .bind(
+            Math.floor(now / 1000) - 90 * 86400,
+            project,
+            period.from,
+            period.to,
+            Math.floor(now / 1000) - 90 * 86400
+          )
+          .all<{ day: string; browsers: number; returning_browsers: number }>(),
+        db
+          .prepare(
+            `
     SELECT COUNT(DISTINCT v.browser_hash) AS browsers,
       COUNT(DISTINCT CASE WHEN EXISTS (
         SELECT 1 FROM wh_analytics_browser_visits p WHERE p.project=v.project
           AND p.browser_hash=v.browser_hash AND p.sequence<v.sequence AND p.received_at>=?
       ) THEN v.browser_hash END) AS returning_browsers
     FROM wh_analytics_browser_visits v WHERE v.project=? AND v.day>=? AND v.day<=? AND v.received_at>=?`
-        )
-        .bind(
-          Math.floor(now / 1000) - 90 * 86400,
-          project,
-          period.from,
-          period.to,
-          Math.floor(now / 1000) - 90 * 86400
-        )
-        .first<{ browsers: number; returning_browsers: number }>()
-    : null;
+          )
+          .bind(
+            Math.floor(now / 1000) - 90 * 86400,
+            project,
+            period.from,
+            period.to,
+            Math.floor(now / 1000) - 90 * 86400
+          )
+          .first<{ browsers: number; returning_browsers: number }>()
+      ])
+    : ([null, null] as const);
   for (const [key, label] of [
     ["browsers", "Reporting browsers"],
     ["returning_browsers", "Returning browsers"]
@@ -589,14 +605,8 @@ export async function localAnalytics(
   // proof of downstream play, adoption or a unique person. The page rechecks
   // current published membership before linking a destination.
   if (project === "woodhouse") {
-    const referralRows = await db
-      .prepare(
-        "SELECT metric, day, value FROM wh_analytics_daily WHERE project=? AND metric LIKE 'referral\\_%' ESCAPE '\\' AND day>=? AND day<=? ORDER BY day"
-      )
-      .bind(project, period.from, period.to)
-      .all<{ metric: string; day: string; value: number }>();
     const bySlug = new Map<string, Map<string, number>>();
-    for (const row of referralRows.results) {
+    for (const row of referralRows?.results ?? []) {
       const slug = row.metric.slice("referral_".length).replaceAll("_", "-");
       if (!bySlug.has(slug)) bySlug.set(slug, new Map());
       bySlug.get(slug)!.set(row.day, row.value);

@@ -1,0 +1,102 @@
+# Async-waterfall audit
+
+Reviewed 8 November 2026 on `b8a313d`. Issue #163 asked for a measured audit of sequential
+asynchronous work in request paths, not a blanket `Promise.all`. This record is the Woodhouse
+inventory: which reads are independent, which sequencing is deliberate, and what changed.
+
+## Method and what counts as evidence
+
+- Source inventory of every request path that awaits more than once: page frontmatter, API routes,
+  the Worker wrapper, the layout, engagement ingestion and the scheduled handlers. A pair qualifies
+  only when the second read does not consume the first read's result.
+- Production timings come from the `server-timing: render;dur` header on cache-busted requests
+  (`?audit=<nonce>` on the analytics route; `/?audit=` is accepted and ignored). These are
+  uncontrolled samples over the public network, not a benchmark. They include isolate start-up and
+  edge variance.
+- The concurrency proof is a focused test with a gated fake D1 that records dispatch time
+  (`src/data/analytics-waterfall.test.ts`). It proves which statements are issued together and that
+  gating still suppresses reads that must not run. It does not model SQL, so behaviour is separately
+  covered by the existing real-SQLite suite (`src/data/portfolio-analytics.test.ts`).
+- No provider credits were spent, no load test was run and no production query was altered.
+
+## Fixed
+
+### `localAnalytics` — `/api/portfolio-analytics` and the `/activity/` report
+
+`src/data/engagement.ts:localAnalytics` built its report from six statements that depend only on the
+project and the reporting window:
+
+| Statement | Depends on | Why independent |
+| --- | --- | --- |
+| `MIN(day)` for the project | project | Collection start, not derived from any other read |
+| daily rows for the window | project, window | The range is computed from the window, not from `MIN(day)` |
+| mode-start days (`GROUP BY metric`) | project, split modes | Only used to decide where a mode split may begin |
+| browser coverage start | project | Only gates the browser pair |
+| browser daily series | coverage start, window | The pair reads the same table; neither answers the other |
+| browser period totals | coverage start, window | Same |
+| referral rows | project, window | Same event stream, separate aggregate |
+
+Before: these ran in up to six serialised round trips (five for Woodhouse, three for a game
+project). After: one stage of at most four independent reads, then — only when coverage exists — one
+stage of the two browser reads. The statements, their gating (`available`, split modes,
+Woodhouse-only referrals) and the response shape are unchanged.
+
+Measured before (origin render, ms):
+
+| Path | Samples | Min | Median | Max |
+| --- | --- | --- | --- | --- |
+| `/api/portfolio-analytics?project=woodhouse&days=30` | 12 | 17 | ~50 | 251 |
+| `/api/portfolio-analytics?project=protocol-11&days=30` | 8 | 12 | 22 | 66 |
+| `/activity/` | 8 | 36 | ~75 | 814 |
+
+The sample is bimodal (roughly 19 ms and roughly 80 ms for the same Woodhouse URL), which is larger
+than any plausible per-statement saving. The honest reading is that **p50 did not visibly move**;
+the change bounds the tail (a slow or queued statement no longer blocks five others) and removes
+serialised request overhead. The after sample is appended below when the release is verified.
+
+## Intentionally sequential
+
+| Path | Sequence | Why the order carries meaning |
+| --- | --- | --- |
+| `src/data/engagement.ts:collectEngagement` | bucket hash → rate-limit `INSERT … RETURNING` → report validation → `db.batch` | Admission must precede storage; validating a report only after admission stops arbitrary identifiers driving report parsing. The hashes are local CPU and cheap; overlapping them would not justify reordering the gate. |
+| `src/data/portfolio-reports.ts:createPortfolioReport` | recent-report lookup → per-project load → history → digest → insert | The digest binds the exact saved body; the lookup decides whether a saved report is reusable. Background/report creation, not a page read. |
+| `src/data/analytics-schedule.ts` | `db.batch` rollup → report creation | Cron; a report must be built from completed rollups. |
+| `src/plugins/woodhouse-enquiries.ts:allowRequest` | per-IP increment → global increment | Two counters with a rejection contract; order is the contract. |
+| `src/plugins/enquiry-workflow.ts` | persist → notify | Notification of an unsaved enquiry would be false. |
+
+## Candidate, not changed in this slice
+
+These are real independent pairs. They are recorded with the exact call site so the next slice can
+take them without re-deriving the analysis; none was changed here to keep this release to one
+proven change.
+
+| Call site | Pair | Why it is independent |
+| --- | --- | --- |
+| `src/pages/api/portfolio-report.json.ts:28,46` | `listProjectRecords()` → `readPortfolioReport()` | The identities narrow the report after both reads; the read itself does not need them. Same shape already accepted for `/api/leaderboard.json`. |
+| `src/pages/activity/leaderboards.astro:28,31` | `readLeaderboard()` → `listProjectRecords()` | The snapshot is narrowed by the identities after both reads. |
+| `src/pages/activity.astro:76,105` | `listProjectRecords()` → `listPublicEvidence()` | Both feed `createPortfolioReport`; neither needs the other. |
+| `src/pages/projects/[slug].astro:62,103,113` | `listProjectRecords()`, `getEditorialDispatch()`, `listPublicCapabilities()` | Three independent CMS reads after the dossier record. |
+| `src/pages/editions/one-more-round.astro:20,40` | dispatch/identity pair → `readPortfolioReport()` | The stored report id is fixed by the edition, not by the other reads. |
+| `src/layouts/BaseLayout.astro:62,140` | `getSiteSettings()` → the five menu/search/project reads | Settings only feed metadata; they do not gate the reads. Moving them would reorder the whole metadata block for one read. |
+
+## Not hot / no opportunity
+
+- Single-read routes (`rss.xml`, `build.json`, `sitemap-*`, `l/[...view]`, `share/[slug]`,
+  `statuses/[slug]` after its parallel pair) have nothing to overlap.
+- `src/pages/api/guestbook-items.json.ts` is a deliberate provider-then-snapshot fallback: the
+  second fetch exists only because the first failed.
+- The Worker wrapper does no I/O of its own before delegating; its header work is synchronous.
+- `listPublicSearchItems` and `listProjectRecords` are called twice in one base-layout request
+  (once directly, once inside the search list). That is duplicate work, not a waterfall; removing it
+  needs a request-scoped cache, which is a larger change than this issue asked for and is not
+  attempted here.
+
+## Limits
+
+- The production sample measures the whole render, so it cannot attribute time to one statement.
+  D1 is single-threaded per database: overlapping statements removes client round trips, not SQL
+  execution time.
+- The concurrency test proves dispatch order, not latency. It would pass on a database that answers
+  instantly.
+- Cross-repo project-local audits and the portfolio summary remain with #163's linked tickets; this
+  record covers Woodhouse only.
