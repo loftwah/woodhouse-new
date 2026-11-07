@@ -50,9 +50,31 @@ Measured before (origin render, ms):
 | `/activity/` | 8 | 36 | ~75 | 814 |
 
 The sample is bimodal (roughly 19 ms and roughly 80 ms for the same Woodhouse URL), which is larger
-than any plausible per-statement saving. The honest reading is that **p50 did not visibly move**;
-the change bounds the tail (a slow or queued statement no longer blocks five others) and removes
-serialised request overhead. The after sample is appended below when the release is verified.
+than any plausible per-statement saving. The honest reading is that the sample cannot attribute the
+change to one cause; the structural proof is the dispatch test, not the timing.
+
+Measured after the same release (same probe, same route, cache-busted):
+
+| Path | Samples | Min | Median | Max |
+| --- | --- | --- | --- | --- |
+| `/api/portfolio-analytics?project=woodhouse&days=30` | 12 | 8 | ~16 | 71 |
+| `/api/portfolio-analytics?project=protocol-11&days=30` | 8 | 6 | ~21 | 30 |
+| `/activity/` | 8 | 41 | ~62 | 595 |
+
+The Woodhouse median moved from ~50 ms to ~16 ms and the game project barely moved (22 → 21 ms),
+which is the direction the change predicts: Woodhouse had the longest waterfall (five serialised
+reads against three). It is still one uncontrolled sample on a quiet host, taken at a different time
+of day, with a before distribution that was already bimodal. **Do not quote the 34 ms difference as
+a guaranteed saving.** The claims that do hold are that the same six statements now occupy two
+round-trip stages instead of six, and that the response body was byte-identical (apart from
+`generatedAt`, `coverage.through` and `source.revision`) before and after the production deploy for
+Woodhouse, Protocol 11 and SHOALSHOT.
+
+Release: `b8d1757`, Worker `491e6651-9f1c-4bf6-8c7c-5bfc1a1d43b1` at 100%, preview
+`7b2f20ec-3218-4aeb-ab95-ab365edd8e50`, scoped audit on `/activity/` (30 link targets, 9/9 credential
+paths clean), build identity `sha256:bce52458c9a6…` clean tree. The audit scope covers the page;
+the JSON route was verified by comparing its production body before and after, because
+`audit:pages` correctly refuses to treat a JSON document as an HTML page.
 
 ## Intentionally sequential
 
