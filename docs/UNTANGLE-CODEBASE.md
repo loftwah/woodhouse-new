@@ -163,8 +163,14 @@ changed: the constant is the value every replaced line already used.
   used by its own module. The built HTML and public JSON are compared before and after the deploy in
   the release receipt below.
 
-Release: source, preview Worker, production Worker and the rendered-output comparison are recorded
-in the #168 receipt once the deploy is verified.
+Release: source `1a11dd8`, preview Worker `8c60e631-7165-4316-9bce-198407fd8ad9`, production Worker
+`64281732-c1b1-4f00-a9b4-cd37b3379a5b` at 100%, build identity `sha256:2a15be8c9f6e…` from a clean
+tree. The scoped audit covered 10 affected pages (229 preview / 235 production link targets, 10 unique
+titles, 7 social images, 9/9 credential paths clean). `/agents/facts.json` is byte-identical and the
+visible text of all 10 routes is stable across repeated requests; full HTML cannot be compared
+byte-for-byte because Cloudflare injects a per-request challenge attribute. No runtime behaviour
+change is claimed: every deleted symbol had no caller and every de-exported symbol is still used by
+its own module.
 
 ## Next pass
 
