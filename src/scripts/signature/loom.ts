@@ -24,6 +24,10 @@ const FIBRE_TEXTURE_WIDTH = 1024;
 const HALF_SPAN = 3.3;
 const FOV = (34 * Math.PI) / 180;
 const FIT_MARGIN = 0.99;
+// The fit is computed from the model's bounding corners, not the tapered fibre
+// envelope. Pull the camera in slightly so the fibre tips meet the machined
+// clamps instead of floating inside the frame.
+const LOOM_ZOOM = 1.08;
 const INK: [number, number, number] = [8 / 255, 13 / 255, 25 / 255];
 const MODEL_CORNERS: [number, number, number][] = [];
 for (const x of [-HALF_SPAN, HALF_SPAN])
@@ -482,7 +486,10 @@ export function createLoom(options: LoomOptions) {
     const uniforms = mainProgram.uniforms;
     const { model, aspect } = orientation();
     const projection = mat4.perspective(FOV, aspect, 0.1, 60);
-    const viewModel = mat4.multiply(mat4.translation(0, 0, -fitDistance(model, aspect)), model);
+    const viewModel = mat4.multiply(
+      mat4.translation(0, 0, -fitDistance(model, aspect) / LOOM_ZOOM),
+      model
+    );
     // Wakes age on the same active clock as the pose, so freezing the scene
     // freezes an existing wake instead of letting it expire behind the still.
     const now = state.phase;

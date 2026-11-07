@@ -28,6 +28,13 @@ const { class: className } = Astro.props;
       />
     </picture>
     <canvas class="signature-plate__canvas" data-signature-canvas aria-hidden="true"></canvas>
+    <div class="signature-plate__rig" aria-hidden="true">
+      <span class="signature-plate__rail signature-plate__rail--top"></span>
+      <span class="signature-plate__rail signature-plate__rail--bottom"></span>
+      <span class="signature-plate__clamp signature-plate__clamp--left"></span>
+      <span class="signature-plate__clamp signature-plate__clamp--right"></span>
+      <span class="signature-plate__scale"></span>
+    </div>
     <span class="signature-plate__control">
       <button type="button" data-signature-toggle hidden>
         Freeze motion
@@ -37,8 +44,8 @@ const { class: className } = Astro.props;
   <figcaption>
     <span class="signature-plate__title">The loom</span>
     <span class="signature-plate__note">
-      {LOOM_STRANDS} tensioned fibres, one raking light, drawn by the browser. Move across the plate
-      and brush through them.
+      {LOOM_STRANDS} tensioned fibres, a machined tension frame and one raking light. Move across
+      the warp and brush through them; they spring back.
     </span>
     <span class="signature-plate__status" role="status" data-signature-status></span>
   </figcaption>
@@ -96,6 +103,129 @@ const { class: className } = Astro.props;
     visibility: hidden;
     transition: opacity 220ms ease;
   }
+  /* The machined tension frame. The fibres are clamped between two rails and
+     two end jaws, so the plate reads as a working instrument rather than a
+     floating bundle. It is material, not a UI border: no card, no radius. */
+  .signature-plate__rig {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .signature-plate__rail {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 13px;
+    background: linear-gradient(
+      180deg,
+      rgba(233, 255, 73, 0.2) 0,
+      rgba(89, 105, 128, 0.42) 6%,
+      #0b1220 38%,
+      #1b2538 62%,
+      #05080f 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(244, 247, 253, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.8),
+      0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+  .signature-plate__rail::before,
+  .signature-plate__rail::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e6d29a 0 22%, #8d7439 55%, #241c0f 100%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%);
+  }
+  .signature-plate__rail::before {
+    left: 12px;
+  }
+  .signature-plate__rail::after {
+    right: 12px;
+  }
+  .signature-plate__rail--top {
+    top: 0;
+  }
+  .signature-plate__rail--bottom {
+    bottom: 0;
+    height: 18px;
+  }
+  .signature-plate__clamp {
+    position: absolute;
+    top: 50%;
+    width: 13px;
+    height: 36%;
+    border: 1px solid rgba(218, 231, 255, 0.16);
+    background: linear-gradient(
+      90deg,
+      rgba(233, 255, 73, 0.22) 0,
+      rgba(111, 128, 151, 0.38) 18%,
+      #0c1322 46%,
+      #1b2538 70%,
+      #05080f 100%
+    );
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+      0 0 18px rgba(0, 0, 0, 0.55);
+    transform: translateY(-50%);
+  }
+  .signature-plate__clamp::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #e6d29a 0 22%, #8d7439 55%, #241c0f 100%);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    transform: translate(-50%, -50%);
+  }
+  .signature-plate__clamp--left {
+    left: 5px;
+  }
+  .signature-plate__clamp--right {
+    right: 5px;
+  }
+  .signature-plate__clamp::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(233, 255, 73, 0.42), transparent);
+  }
+  .signature-plate__clamp--left::after {
+    left: 100%;
+  }
+  .signature-plate__clamp--right::after {
+    right: 100%;
+    transform: scaleX(-1);
+  }
+  .signature-plate__scale {
+    position: absolute;
+    right: 24px;
+    bottom: 6px;
+    left: 24px;
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(233, 255, 73, 0.58) 0 1px,
+      transparent 1px 11px
+    );
+    opacity: 0.55;
+    mask-image: linear-gradient(90deg, transparent 0, #000 3%, #000 97%, transparent 100%);
+  }
+  .signature-plate__stage[data-lost="true"] .signature-plate__rig,
+  .signature-plate__stage[data-lost="true"] .signature-plate__scale {
+    opacity: 0.5;
+    transition: none;
+  }
   .signature-plate__stage[data-live="true"] .signature-plate__canvas {
     opacity: 1;
     visibility: visible;
@@ -114,7 +244,7 @@ const { class: className } = Astro.props;
     position: absolute;
     right: 0.9rem;
     bottom: 0.9rem;
-    z-index: 3;
+    z-index: 4;
   }
   .signature-plate__control button {
     appearance: none;
@@ -175,6 +305,48 @@ const { class: className } = Astro.props;
   @media (max-width: 760px) {
     .signature-plate__stage {
       aspect-ratio: 1 / 1;
+    }
+    .signature-plate__rail {
+      height: 10px;
+    }
+    .signature-plate__rail--bottom {
+      height: 15px;
+    }
+    .signature-plate__clamp {
+      top: auto;
+      left: 50%;
+      width: 34%;
+      height: 9px;
+      transform: translateX(-50%);
+    }
+    .signature-plate__clamp--left {
+      top: 10px;
+      left: 50%;
+    }
+    .signature-plate__clamp--right {
+      right: auto;
+      bottom: 15px;
+      left: 50%;
+    }
+    .signature-plate__clamp::after {
+      top: auto;
+      left: 50%;
+      width: 1px;
+      height: 18px;
+      background: linear-gradient(180deg, rgba(233, 255, 73, 0.42), transparent);
+    }
+    .signature-plate__clamp--left::after {
+      top: 100%;
+    }
+    .signature-plate__clamp--right::after {
+      top: auto;
+      bottom: 100%;
+      transform: scaleY(-1);
+    }
+    .signature-plate__scale {
+      right: 18px;
+      bottom: 5px;
+      left: 18px;
     }
     .signature-plate__control {
       right: 0.7rem;
