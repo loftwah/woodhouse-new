@@ -76,6 +76,73 @@ paths clean), build identity `sha256:bce52458c9a6…` clean tree. The audit scop
 the JSON route was verified by comparing its production body before and after, because
 `audit:pages` correctly refuses to treat a JSON document as an HTML page.
 
+## Second slice — the deferred independent pairs
+
+Released 8 November 2026 from `23e6283`. This takes the candidate list below rather than leaving it
+for a later audit, and records one correction to the first slice's reasoning.
+
+| Call site | Pair that now runs together | Why it is independent |
+| --- | --- | --- |
+| `src/pages/projects/[slug].astro:64-70` | `listProjectRecords()`, optional `getEditorialDispatch()`, `listPublicCapabilities()` | Three separate reads dispatched after the dossier is resolved and the 404 decided. The capability wrapper keeps its own rules; the page does not reimplement them. |
+| `src/pages/activity.astro:76-81` | `listPublicEvidence()` started before `listProjectRecords()` is awaited | The report joins both; neither narrows the other. The identity gates still decide the 503/404 first. |
+| `src/pages/activity/leaderboards.astro:29-36` | `readLeaderboard()` and `listProjectRecords()` | Different stores, joined only when the snapshot is narrowed. The missing-board 404 still precedes the 503. |
+| `src/pages/api/portfolio-report.json.ts:30-41` | `readPortfolioReport()` and `listProjectRecords()` | Different stores. The CMS failure still decides the 503; the report read is attributed as `report-read`/`database` only once it is awaited. |
+| `src/pages/editions/one-more-round.astro:40-49` | `readPortfolioReport()` and `loadStoryDistribution()` | Both key off the edition's fixed snapshot id and read different tables. |
+
+### Correction: EmDash already dedupes repeated collection reads
+
+The first slice recorded that `listPublicSearchItems` and `listProjectRecords` being called twice in
+one base-layout request was "duplicate work … removing it needs a request-scoped cache". That was
+wrong on the database cost. EmDash's `getEmDashCollection` passes collection reads through
+`requestCached()` (`node_modules/emdash/dist/query-eR_Nz70M.mjs`), so an identical collection read
+inside one request is served from the request's own cache, not a second D1 round trip.
+
+Measured evidence for the correction: `/projects/[slug]/` used to call `listProjectRecords()` twice
+(once directly, once inside `listPublicCapabilities()`). Removing the second call changed the served
+`db.count` from 19 to 19. The duplicate cost repeated projection CPU, not a round trip. The first
+slice's other structural claims stand; this one does not.
+
+### Before and after
+
+Cache-busted requests, `server-timing` `render;dur` in milliseconds, eight samples per route, taken
+minutes apart on the same host:
+
+| Route | Before (median, min–max) | After (median, min–max) | `db.count` |
+| --- | --- | --- | --- |
+| `/projects/bubbles/` | 96 (66–443) | 85 (52–637) | 19 → 19 |
+| `/activity/` | 77 (51–318) | 51 (31–107) | 9 → 9 |
+| `/activity/leaderboards/` | 57 (25–106) | 29 (18–58) | 7 → 7 |
+| `/editions/one-more-round/` | 135 (41–182) | 47 (34–117) | 10 → 10 |
+
+The query count is unchanged, which is the honest expectation: overlapping independent reads removes
+serial waits, not statements. The render medians moved in the predicted direction on three routes and
+not on the project page, `db.total` moved both ways, and the largest before-sample outlier (637 ms
+after) is a cold isolate. **This sample cannot attribute the difference to the change.** The claim
+that holds is structural: five request paths that awaited independent reads one after another now
+await them together, and the site's output did not change.
+
+### Output equality
+
+- `/projects/bubbles/`, `/projects/app-composer/`, `/activity/`, `/activity/leaderboards/` and
+  `/editions/one-more-round/` were captured before the release and after it. After stripping
+  Cloudflare's injected `__CF$cv$params` challenge script and `/activity/`'s per-request
+  `createdAt` millisecond, all five are byte-identical.
+- Capability record counts on the two project pages are unchanged (16 and 13).
+- Both saved-report JSON bodies are identical before and after, excluding `generatedAt`,
+  `coverage.through` and `source.revision`.
+- `/projects/not-a-project/` → 404, `/api/portfolio-report.json?report=bogus` → 404, the same route
+  with no parameter → 400, `/activity/leaderboards/?report=bogus` → 404.
+
+Release: preview Worker `71a711c0-c59a-42b0-8cee-15c4ca7a771f`, production Worker
+`be5bef4a-ed5f-489d-8646-5c425cc3a06c` at 100%, build identity `sha256:a2540b87b1be…` from a clean
+tree, content generation unchanged at `sha256:3830ff69a537…`. Scoped audit on the five affected
+pages: 111 link targets, 5 unique titles, 3 social images, 9/9 credential paths clean.
+
+Limits: no unit test covers Astro page frontmatter or route wiring — the handlers bind to
+`cloudflare:workers` and there is no injectable seam without adding a layer this issue did not ask
+for. The proof is rendered-output equality plus status behaviour, not a dispatch-order test. Only
+Woodhouse's own paths are covered; the project-local tickets remain with their repositories.
+
 ## Intentionally sequential
 
 | Path | Sequence | Why the order carries meaning |
@@ -89,8 +156,8 @@ the JSON route was verified by comparing its production body before and after, b
 ## Candidate, not changed in this slice
 
 These are real independent pairs. They are recorded with the exact call site so the next slice can
-take them without re-deriving the analysis; none was changed here to keep this release to one
-proven change.
+take them without re-deriving the analysis. (The first five were taken in the second slice above;
+the base-layout pair is retained.)
 
 | Call site | Pair | Why it is independent |
 | --- | --- | --- |
@@ -109,9 +176,10 @@ proven change.
   second fetch exists only because the first failed.
 - The Worker wrapper does no I/O of its own before delegating; its header work is synchronous.
 - `listPublicSearchItems` and `listProjectRecords` are called twice in one base-layout request
-  (once directly, once inside the search list). That is duplicate work, not a waterfall; removing it
-  needs a request-scoped cache, which is a larger change than this issue asked for and is not
-  attempted here.
+  (once directly, once inside the search list). EmDash's `requestCached()` already serves the second
+  identical collection read from the request cache, so this costs projection CPU rather than extra
+  D1 round trips (see the correction in the second slice). Removing the projection work itself would
+  need a request-scoped memo in this repository; it is not attempted here.
 
 ## Limits
 
