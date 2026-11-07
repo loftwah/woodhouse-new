@@ -37,7 +37,17 @@ if (
     status: 400
   });
 const db = (env as unknown as { DB: D1Database }).DB;
-const stored = await readPortfolioReport(db, edition.reportId);
+// The stored report and the story distribution read different tables and both
+// key off the edition's fixed snapshot id, so they are issued together rather
+// than one after the other.
+const period = periodFor(7, Date.now());
+const [stored, distribution] = await Promise.all([
+  readPortfolioReport(db, edition.reportId),
+  loadStoryDistribution(db, period, {
+    edition: "one-more-round",
+    report: edition.reportId
+  }).catch(() => null)
+]);
 const publicIds = new Set(identities.projects.map((p) => p.slug));
 const report = stored ? projectReport(stored, null, new Set(["woodhouse", ...publicIds])) : null;
 const selections = report
@@ -49,11 +59,6 @@ const image = `/api/portfolio-card.png?report=${edition.reportId}&edition=${edit
 const link = new URL(edition.href, Astro.url.origin).href;
 const caption = report ? editionCaption(edition, report, Astro.url.origin, publicIds) : "";
 const internal = (href: string) => shareNavigation(href, query, Astro.url.origin);
-const period = periodFor(7, Date.now());
-const distribution = await loadStoryDistribution(db, period, {
-  edition: "one-more-round",
-  report: edition.reportId
-}).catch(() => null);
 const visibleDistribution =
   distribution?.stories
     .filter(

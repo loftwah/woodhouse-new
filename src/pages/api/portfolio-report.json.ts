@@ -18,6 +18,14 @@ export const GET: APIRoute = async ({ url, cache }) => {
   let stage = "identities";
   let dependency: ReportDependency = "cms";
   try {
+    // The identity list (CMS) and the stored report (D1) are separate stores and
+    // the response only joins them after both arrive, so they run together. The
+    // CMS failure keeps precedence: a rejected report read has not been awaited
+    // yet when the 503 is decided.
+    const reportRead = readPortfolioReport((env as unknown as { DB: D1Database }).DB, id).then(
+      (report) => ({ report, error: null as unknown }),
+      (error: unknown) => ({ report: null, error })
+    );
     const projects = await listProjectRecords();
     if (projects.error) {
       logReportFailure({
@@ -37,7 +45,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
     }
     stage = "report-read";
     dependency = "database";
-    const report = await readPortfolioReport((env as unknown as { DB: D1Database }).DB, id);
+    const { report, error: readError } = await reportRead;
+    if (readError) throw readError;
     if (!report)
       return Response.json(
         { available: false },

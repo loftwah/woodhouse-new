@@ -73,6 +73,11 @@ if (invalidWindow) Astro.response.status = 400;
 const requested = Astro.url.searchParams.get("project");
 if (requested && !analyticsProjects.includes(requested as AnalyticsProject))
   return new Response("Project unavailable.", { status: 404 });
+const frozen = Astro.url.searchParams.has("report");
+// Published evidence and the project identities are read from different
+// collections; the report needs both, and the evidence read does not use the
+// identity list, so start it now rather than after the identity gates.
+const releaseEvidenceRead = frozen ? null : listPublicEvidence();
 const identities = await listProjectRecords();
 if (identities.error)
   return new Response("Public project identities are unavailable.", {
@@ -101,8 +106,7 @@ const selectedIdentity = selected
   ? identities.projects.find((p) => p.slug === selected)
   : undefined;
 const selectedSite = selected === "woodhouse" ? "/" : (selectedIdentity?.siteUrl ?? null);
-const frozen = Astro.url.searchParams.has("report");
-const releaseEvidence = frozen ? null : await listPublicEvidence();
+const releaseEvidence = releaseEvidenceRead ? await releaseEvidenceRead : null;
 const releaseNotes =
   releaseEvidence && !releaseEvidence.error
     ? releaseNotesFromEvidence(releaseEvidence.evidence, publicIds, now)

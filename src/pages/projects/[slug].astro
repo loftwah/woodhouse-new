@@ -3,7 +3,7 @@ import BuildExamples from "../../components/BuildExamples.astro";
 import CapabilityRecord from "../../components/CapabilityRecord.astro";
 import AgentCapabilityRecord from "../../components/AgentCapabilityRecord.astro";
 import { agentCapabilities } from "../../data/agent-capabilities";
-import { listPublicCapabilities } from "../../content/repository";
+import { projectCapabilities } from "../../data/capabilities";
 import { dispatchPath } from "../../data/what-we-built";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
@@ -14,6 +14,8 @@ import { featuredMediaFor } from "../../data/featured-media";
 import { leaderboardProjects } from "../../data/github-leaderboards";
 import {
   listProjectRecords,
+  listPublishedDispatches,
+  listPublicEvidence,
   getProjectRecord,
   getEditorialDispatch
 } from "../../content/repository";
@@ -59,7 +61,26 @@ if (isPreview) {
   Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
 } else if (Astro.cache?.enabled)
   for (const hint of current?.cacheHints ?? []) if (hint) Astro.cache.set(hint);
-const allProjects = await listProjectRecords();
+// These are individual editorial features in the existing article series.
+const featureSlug =
+  project.slug === "bubbles"
+    ? "a-better-second-attempt"
+    : project.slug === "app-composer"
+      ? "your-apps-should-get-along"
+      : project.slug === "loftwahfm"
+        ? "your-game-its-own-soundtrack"
+        : null;
+// Four independent reads: the project list, the optional feature dispatch, the
+// dispatch set the capability records are matched against, and the evidence
+// those records cite. None consumes another's result, and the capability record
+// builder is pure, so the list this page already needs is handed to it instead
+// of asking the repository for the same collection a second time.
+const [allProjects, featureResult, dispatchResult, evidenceResult] = await Promise.all([
+  listProjectRecords(),
+  featureSlug ? getEditorialDispatch(featureSlug) : Promise.resolve(null),
+  listPublishedDispatches(),
+  listPublicEvidence()
+]);
 if (allProjects.error)
   return new Response("Unable to load public project records.", {
     status: 503,
@@ -91,16 +112,6 @@ const artworkAlt = siteMeta
   ? (project.previewAlt ?? `Artwork from the ${project.name} site.`)
   : WOODHOUSE_SOCIAL_CARD_ALT;
 const studioFilm = featuredMediaFor(project.slug);
-// These are individual editorial features in the existing article series.
-const featureSlug =
-  project.slug === "bubbles"
-    ? "a-better-second-attempt"
-    : project.slug === "app-composer"
-      ? "your-apps-should-get-along"
-      : project.slug === "loftwahfm"
-        ? "your-game-its-own-soundtrack"
-        : null;
-const featureResult = featureSlug ? await getEditorialDispatch(featureSlug) : null;
 const feature = featureResult?.dispatch;
 if (!isPreview && Astro.cache?.enabled && featureResult?.cacheHint)
   Astro.cache.set(featureResult.cacheHint);
@@ -110,12 +121,20 @@ const actionLabel = projectActionLabel(project);
 const actionExternal = /^https?:\/\//.test(actionHref);
 const social = socialCardFor(project);
 const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
-const capabilityResult = await listPublicCapabilities();
-if (capabilityResult.error)
+const capabilityError = dispatchResult.error ?? evidenceResult.error;
+if (capabilityError)
   return new Response("Unable to load public capability evidence.", {
     status: 503,
     headers: { "cache-control": "private, no-store" }
   });
+const capabilityResult = {
+  capabilities: projectCapabilities(
+    dispatchResult.dispatches,
+    allProjects.projects,
+    evidenceResult.evidence
+  ),
+  cacheHints: [...allProjects.cacheHints, dispatchResult.cacheHint, evidenceResult.cacheHint]
+};
 if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.cache.set(hint);
 ---
 

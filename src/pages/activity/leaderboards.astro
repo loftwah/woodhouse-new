@@ -25,10 +25,15 @@ export const prerender = false;
 Astro.cache.set(false);
 Astro.response.headers.set("cache-control", "private, no-store");
 const requested = Astro.url.searchParams.get("report");
-const source = await readLeaderboard((env as unknown as { DB: D1Database }).DB, requested);
+// The stored board and the published identities come from different stores and
+// neither narrows the other's read; the response needs both, so issue them
+// together and keep the existing failure order (missing board, then CMS error).
+const [source, identities] = await Promise.all([
+  readLeaderboard((env as unknown as { DB: D1Database }).DB, requested),
+  listProjectRecords()
+]);
 if (requested && !source)
   return new Response("This saved leaderboard is unavailable.", { status: 404 });
-const identities = await listProjectRecords();
 if (identities.error) return new Response("Projects are temporarily unavailable.", { status: 503 });
 const admitted = new Set(["woodhouse", ...identities.projects.map((p) => p.slug)]);
 const snapshot = source ? publishedLeaderboard(source, admitted) : null;
