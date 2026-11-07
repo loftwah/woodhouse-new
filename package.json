@@ -53,6 +53,7 @@
     "lab:evidence": "node lab/evidence-replay/report.mjs",
     "test:host-reservation": "python3 -m unittest discover -s scripts -p host_validation_test.py",
     "verify": "node scripts/verify.mjs",
+    "workspace:prune": "node scripts/prune-workspace.mjs",
     "social-cards": "python3 scripts/render-social-cards.py",
     "social-cards:record": "node scripts/social-cards.mjs",
     "social-cards:check": "node scripts/social-cards.mjs --check",
