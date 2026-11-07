@@ -75,3 +75,19 @@ and none of these is claimed to be fixed.
 - `pnpm run format:check`: still flags 10 files. Verified with the previous Prettier 3.9.9 as well, so
   this is pre-existing formatting drift, not caused by the bump. Not fixed here to avoid mixing a
   reformat into a dependency release.
+
+## Release
+
+Source `dad8403`, Worker `7571ac72-37c3-4603-8018-a33ee3d6fa23` at 100% (preview
+`36b85f42-291c-4cfd-b2f0-1e934c06ee7a`), build identity `sha256:ab1e75006f45…` from a clean tree,
+content generation `sha256:3830ff69a537…`. Scoped audit on `/`, `/activity/`, `/projects/bubbles/`
+and `/connections/`: four unique titles, 95 link targets, 3 social images, 9/9 credential paths
+clean. The four live routes returned 200 with one `h1` and their expected titles.
+
+The upload grew from about 20 s to about 52 s because the refreshed Astro build emits 2,285
+artifacts against 1,604. That is a real release-time cost increase, not a regression in the checks;
+if it persists, the next stack pass should find which output grew rather than accepting it.
+
+A live analytics body comparison taken across the deploy differs in today's visits and engaged
+sessions (65677 → 65680 and 3952 → 3957). Those are live counters moving with real traffic, not a
+runtime change; the empty-window behaviour and shape were verified in the preceding release.
