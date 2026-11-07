@@ -124,7 +124,12 @@ export const GET: APIRoute = async ({ cache }) => {
       lastmod: asText(item.data, "reviewed_at")
     }))
   ];
-  const unique = new Map(urls.map((entry) => [entry.path, entry]));
+  // A sitemap enumerates documents, not view state. An edition link carries the
+  // report id it was published with, so submitting it verbatim advertised a
+  // query-string URL whose own canonical is the clean path. Collapse the query
+  // before de-duplicating so a parameterised entry cannot reappear.
+  const documentPath = (path: string) => new URL(path, siteOrigin).pathname;
+  const unique = new Map(urls.map((entry) => [documentPath(entry.path), { ...entry, path: documentPath(entry.path) }]));
   const xml = [...unique.values()]
     .map(
       ({ path, lastmod, images }) =>
