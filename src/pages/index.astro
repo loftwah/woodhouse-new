@@ -1,5 +1,6 @@
 ---
 import { portfolioEdition } from "../data/portfolio-edition";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import EditionInvitation from "../components/EditionInvitation.astro";
 import { dispatchPath } from "../data/what-we-built";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -70,7 +71,7 @@ const picks = ["bubbles", "loftwahfm", "app-composer"]
     label: projectActionLabel(project),
     external: Boolean(project.siteUrl)
   }));
-const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+const siteOrigin = Astro.site?.origin ?? SITE_ORIGIN;
 export const prerender = false;
 ---
 

@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import { normaliseContract } from "../../data/guestbook-contract";
 
 /**
@@ -16,7 +17,7 @@ export const prerender = false;
 
 const PROVIDER = "https://guestbook.loftwah.com/api/items";
 const SNAPSHOT = "/exhibits/guestbook-items.json";
-const SITE = "https://woodhouse.loftwah.com";
+const SITE = SITE_ORIGIN;
 
 export const GET: APIRoute = async () => {
   try {

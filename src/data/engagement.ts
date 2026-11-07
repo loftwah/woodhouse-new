@@ -1,4 +1,5 @@
 import { producerRevision } from "./build-identity.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 import {
   analyticsSchema,
   discoveryProjects,
@@ -24,7 +25,7 @@ import {
 } from "./story-distribution.ts";
 import { readPortfolioReport } from "./portfolio-reports.ts";
 const origins: Record<string, string> = {
-  woodhouse: "https://woodhouse.loftwah.com",
+  woodhouse: SITE_ORIGIN,
   shoalshot: "https://shoalshot.loftwah.com",
   "protocol-11": "https://protocol11.loftwah.com"
 };
@@ -169,7 +170,7 @@ async function hash(value: string) {
 function headers(origin: string | null) {
   return {
     "cache-control": "private, no-store",
-    "access-control-allow-origin": origin ?? "https://woodhouse.loftwah.com",
+    "access-control-allow-origin": origin ?? SITE_ORIGIN,
     vary: "Origin",
     "x-content-type-options": "nosniff"
   };
@@ -666,7 +667,7 @@ export async function localAnalytics(
     },
     metrics,
     source: {
-      endpoint: `https://woodhouse.loftwah.com/api/portfolio-analytics?project=${project}`,
+      endpoint: `${SITE_ORIGIN}/api/portfolio-analytics?project=${project}`,
       revision: producerRevision()
     }
   };

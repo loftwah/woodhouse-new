@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import type { BuildIdentity } from "../data/build-identity";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { listPublicContentGeneration } from "../content/repository";
 
 // Reports exactly which source this deployed Worker was built from.
@@ -15,7 +16,7 @@ import { listPublicContentGeneration } from "../content/repository";
 export type { BuildIdentity };
 
 export const prerender = false;
-const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
+const siteOrigin = new URL(import.meta.env.SITE ?? SITE_ORIGIN).origin;
 
 export const GET: APIRoute = async ({ cache }) => {
   const identity = __WOODHOUSE_BUILD_IDENTITY__;

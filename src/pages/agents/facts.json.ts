@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import {
   listProjectRecords,
   listPublicEvidence,
@@ -9,7 +10,7 @@ import { activeProjects } from "../../data/project-lifecycle";
 import { AGENT_CAPABILITY_REVIEWED, publicAgentCapabilities } from "../../data/agent-capabilities";
 
 export const prerender = false;
-const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
+const siteOrigin = new URL(import.meta.env.SITE ?? SITE_ORIGIN).origin;
 
 export const GET: APIRoute = async ({ cache }) => {
   const [projectResult, evidenceResult, capabilityResult] = await Promise.all([

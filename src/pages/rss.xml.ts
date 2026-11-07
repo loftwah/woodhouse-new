@@ -1,10 +1,11 @@
 import { dispatchPath } from "../data/what-we-built";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import type { APIRoute } from "astro";
 import { listPublishedDispatches } from "../content/repository";
 import { validReviewDay } from "../data/dispatch-dates";
 
 export const prerender = false;
-const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
+const siteOrigin = new URL(import.meta.env.SITE ?? SITE_ORIGIN).origin;
 
 function xmlSafe(value: string) {
   return value

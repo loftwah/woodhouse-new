@@ -13,6 +13,7 @@ import { EmDashHead } from "emdash/ui";
 import { getPublicMenu, listProjectRecords, listPublicSearchItems } from "../content/repository";
 import { portfolioReadout } from "../data/portfolio";
 import { formatReviewDate } from "../data/review-date";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 
 type Props = {
   title: string;
@@ -66,7 +67,7 @@ const templateTitle =
   title === siteTitle
     ? `${siteTitle}${titleSeparator}The Loftwah Software Factory`
     : `${title}${titleSeparator}${siteTitle}`;
-const siteUrl = Astro.site ?? new URL("https://woodhouse.loftwah.com");
+const siteUrl = Astro.site ?? new URL(SITE_ORIGIN);
 const previewEnvironment = siteUrl.hostname.endsWith(".workers.dev");
 if (previewEnvironment) Astro.response.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
 const contentSeo = contentSeoInput

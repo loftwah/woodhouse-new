@@ -1,4 +1,5 @@
 /** Aggregate-only contract. Reviewed 15 October 2026. Never return upstream payloads. */
+import { SITE_ORIGIN } from "./site-origin.ts";
 export const analyticsSchema = "woodhouse.portfolio-analytics/1";
 export const analyticsProjects = [
   "woodhouse",
@@ -109,11 +110,11 @@ export type PortfolioAnalysis = {
   }[];
 };
 const analyticsSources: Record<AnalyticsProject, string> = {
-  woodhouse: "https://woodhouse.loftwah.com/api/portfolio-analytics?project=woodhouse",
+  woodhouse: `${SITE_ORIGIN}/api/portfolio-analytics?project=woodhouse`,
   "app-composer": "https://composer.loftwah.com/api/portfolio-analytics",
   fighter: "https://fighter.loftwah.com/api/portfolio-analytics",
-  shoalshot: "https://woodhouse.loftwah.com/api/portfolio-analytics?project=shoalshot",
-  "protocol-11": "https://woodhouse.loftwah.com/api/portfolio-analytics?project=protocol-11",
+  shoalshot: `${SITE_ORIGIN}/api/portfolio-analytics?project=shoalshot`,
+  "protocol-11": `${SITE_ORIGIN}/api/portfolio-analytics?project=protocol-11`,
   loftwahfm: "https://fm.loftwah.com/api/portfolio-analytics",
   bubbles: "https://api.bubbles.loftwah.com/api/portfolio-analytics"
 };

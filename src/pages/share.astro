@@ -1,5 +1,6 @@
 ---
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import {
   publicCampaignItems,
   campaignSocial,
@@ -127,7 +128,7 @@ const featuredNames = projects.slice(0, 5).map((project) => project.name);
 const remainingProjects = Math.max(0, projects.length - featuredNames.length);
 const houseCaption = `Games, music, apps and a software factory. ${featuredNames.join(", ")}${
   remainingProjects ? ` and ${remainingProjects} more` : ""
-} — made by Loftwah.\nhttps://woodhouse.loftwah.com/share/`;
+} — made by Loftwah.\n${SITE_ORIGIN}/share/`;
 const stories = dispatches.dispatches.filter((story) =>
   dispatchSocialCard(story.slug).startsWith("/og/dispatches/")
 );
@@ -142,14 +143,14 @@ const houseImages = [
     name: "The factory",
     image: "/og/factory-workshop-20261018.jpg",
     link: "/factory/",
-    caption: "Independent projects. One software factory.\nhttps://woodhouse.loftwah.com/factory/"
+    caption: `Independent projects. One software factory.\n${SITE_ORIGIN}/factory/`
   },
   {
     name: "Dean Lofts",
     image: "/og/dean.jpg",
     link: "/dean/",
     caption:
-      "Meet the human behind the Loftwah software factory.\nhttps://woodhouse.loftwah.com/dean/"
+      `Meet the human behind the Loftwah software factory.\n${SITE_ORIGIN}/dean/`
   }
 ];
 const smallAssets = [
@@ -505,7 +506,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
               const metadata = getSiteMetadata(project);
               const fallback = getArtworkFallback(project);
               const destination =
-                project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`;
+                project.siteUrl ?? `${SITE_ORIGIN}/projects/${project.slug}/`;
               return (
                 <figure id={`project-${project.slug}`}>
                   <a
@@ -595,10 +596,10 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                     <p class="credit">Official game artwork · LoftwahFM composition</p>
                   </figcaption>
                   <ShareActions
-                    caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\nhttps://woodhouse.loftwah.com/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
+                    caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\n${SITE_ORIGIN}/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
                     image={radioImage(format, true)}
                     filename={`loftwahfm-games-${format}.png`}
-                    link={`https://woodhouse.loftwah.com/activity/?snapshot=${radio.snapshot}`}
+                    link={`${SITE_ORIGIN}/activity/?snapshot=${radio.snapshot}`}
                   />
                 </figure>
               ))}
@@ -648,7 +649,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                     caption={item.caption}
                     image={item.image}
                     filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
-                    link={`https://woodhouse.loftwah.com${item.link}`}
+                    link={`${SITE_ORIGIN}${item.link}`}
                   />
                   <a class="story-link" href={item.link}>
                     Read the story
@@ -683,11 +684,11 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                     caption={shareCaption(
                       story.title,
                       story.deck,
-                      `https://woodhouse.loftwah.com${dispatchPath(story)}`
+                      `${SITE_ORIGIN}${dispatchPath(story)}`
                     )}
                     image={dispatchSocialCard(story.slug)}
                     filename={`${story.slug}.jpg`}
-                    link={`https://woodhouse.loftwah.com${dispatchPath(story)}`}
+                    link={`${SITE_ORIGIN}${dispatchPath(story)}`}
                   />
                   <a class="story-link" href={dispatchPath(story)}>
                     Read the story
@@ -720,14 +721,14 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                   <p class="credit">{item.credit}</p>
                 </figcaption>
                 <ShareActions
-                  caption={`${item.name} · ${item.credit}\nhttps://woodhouse.loftwah.com/share/`}
+                  caption={`${item.name} · ${item.credit}\n${SITE_ORIGIN}/share/`}
                   image={
                     "download" in item && typeof item.download === "string"
                       ? item.download
                       : item.image
                   }
                   filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
-                  link="https://woodhouse.loftwah.com/share/"
+                  link={`${SITE_ORIGIN}/share/`}
                 />
               </figure>
             ))}

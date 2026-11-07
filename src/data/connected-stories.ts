@@ -1,6 +1,7 @@
 /** Authored views of existing public measures. Identities/adoption stay in EmDash.
  * Reviewed 23 October 2026; no visitor identity or cross-product funnel. */
 import { type PortfolioReport, type ReportingWindow } from "./portfolio-analytics.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 import { dailyPoints, dailyStatus, reportQualifier } from "./analytics-workbench.ts";
 export type OutcomeStory = {
   key: "link-check" | "music" | "bubbles" | "protocol-11" | "fighter" | "shoalshot";
@@ -214,7 +215,7 @@ export function outcomeFindings(
 export function storyLink(
   story: OutcomeStory,
   reportId?: string,
-  origin = "https://woodhouse.loftwah.com"
+  origin = SITE_ORIGIN
 ) {
   const url = new URL("/connections/", origin);
   url.searchParams.set("story", story.key);

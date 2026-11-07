@@ -1,5 +1,6 @@
 import { editionShareAssets } from "./edition-share-kit.ts";
 import { gameMedia } from "./share-desk.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 
 export const galleryTypes = [
   ["images", "Images & screenshots"],
@@ -134,7 +135,7 @@ export function projectViewRedirect(
 export function shareNavigation(
   href: string,
   current: URLSearchParams,
-  origin = "https://woodhouse.loftwah.com"
+  origin = SITE_ORIGIN
 ): string {
   const url = new URL(href, origin);
   if (url.origin === "https://composer.loftwah.com") {

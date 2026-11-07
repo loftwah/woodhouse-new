@@ -1,6 +1,7 @@
 import type { EditorialDispatch } from "../content/repository.ts";
 import { isObject, type PortfolioReport } from "./portfolio-analytics.ts";
 import { outcomeStories, outcomeEvidence, storyLink } from "./connected-stories.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 
 /** Publication authority and frozen identity live in the existing EmDash dispatch. */
 export function portfolioEdition(dispatches: EditorialDispatch[]) {
@@ -47,7 +48,7 @@ export function editionSelections(report: PortfolioReport, publicIds?: ReadonlyS
 export function editionCaption(
   edition: PortfolioEdition,
   report: PortfolioReport,
-  origin = "https://woodhouse.loftwah.com",
+  origin = SITE_ORIGIN,
   publicIds?: ReadonlySet<string>
 ) {
   if (report.id !== edition.reportId) throw new Error("Edition snapshot mismatch");

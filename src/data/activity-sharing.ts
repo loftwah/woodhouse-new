@@ -1,5 +1,6 @@
 /** Presentation priorities, not a second project registry. Identity stays in EmDash. */
 import { activityGameIds } from "./activity.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 export const sharingGames = ["fighter", "shoalshot", "protocol-11", "bubbles"] as const;
 /** Current FM composite includes all registered listening. Keep public membership coupled. */
 export function compositeIsPublic(publicIds: Set<string>) {
@@ -23,7 +24,7 @@ export function cardPath(game: string, snapshot: number, download = false) {
 export function activityLink(game: string, snapshot: number) {
   const params = new URLSearchParams({ snapshot: String(snapshot) });
   if (game) params.set("game", game);
-  return `https://woodhouse.loftwah.com/activity/?${params}`;
+  return `${SITE_ORIGIN}/activity/?${params}`;
 }
 export const cardFormats = {
   landscape: { width: 1200, height: 630 },

@@ -1,4 +1,5 @@
 import { producerRevision } from "./build-identity.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 import {
   analyticsProjects,
   loadProjectAnalytics,
@@ -248,5 +249,5 @@ export function projectReport(
   return result;
 }
 export function reportLink(id: string, project?: string | null) {
-  return `https://woodhouse.loftwah.com/activity/?report=${id}${project ? `&project=${project}` : ""}`;
+  return `${SITE_ORIGIN}/activity/?report=${id}${project ? `&project=${project}` : ""}`;
 }

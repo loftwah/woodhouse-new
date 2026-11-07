@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import { toJsonLd } from "../../data/safe-json";
-const siteOrigin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+const siteOrigin = Astro.site?.origin ?? SITE_ORIGIN;
 export const prerender = false;
 ---
 

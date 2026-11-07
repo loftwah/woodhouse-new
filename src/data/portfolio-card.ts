@@ -20,6 +20,7 @@ import {
   weeklyHighlights
 } from "./analytics-workbench.ts";
 import { discoveryStory, type DiscoveryStory } from "./analytics-story.ts";
+import { SITE_ORIGIN } from "./site-origin.ts";
 // Re-exported so the shared-image tests keep one import path; the qualifier is
 // owned by the workbench module the page and the renderer both use.
 export { reportQualifier };
@@ -63,7 +64,7 @@ export function reportSvg(
   names: Map<string, string>,
   format: ReportFormat = "landscape",
   requestedMeasure?: string,
-  origin = "https://woodhouse.loftwah.com",
+  origin = SITE_ORIGIN,
   highlightedWeek?: string,
   destination?: string,
   published?: ReadonlySet<string>

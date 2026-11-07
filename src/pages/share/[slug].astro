@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import { listProjectRecords } from "../../content/repository";
 import {
@@ -36,7 +37,7 @@ const social = campaignSocial(items)!;
 // The product owns its identity. Campaign pieces stay in the gallery.
 const productSocial = project ? socialCardFor(project) : null;
 const path = campaignCollectionPath(slug);
-const origin = Astro.site?.origin ?? "https://woodhouse.loftwah.com";
+const origin = Astro.site?.origin ?? SITE_ORIGIN;
 ---
 
 <BaseLayout

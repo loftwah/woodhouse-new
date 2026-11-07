@@ -1,6 +1,7 @@
 ---
 /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- Labelled overflow regions require keyboard scrolling. */
 import { workbenchView, trendGeometry } from "../data/analytics-presentation";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import EditionInvitation from "../components/EditionInvitation.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/analytics-workbench.css";
@@ -515,9 +516,9 @@ const title =
 const shareDestination = storyShare ? selectedDestinationSlug : null;
 const link = report
   ? storyShare
-    ? `${reportLink(report.id, "woodhouse").replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
-    : `${reportLink(report.id, selected).replace("https://woodhouse.loftwah.com", Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
-  : `https://woodhouse.loftwah.com/activity/`;
+    ? `${reportLink(report.id, "woodhouse").replace(SITE_ORIGIN, Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
+    : `${reportLink(report.id, selected).replace(SITE_ORIGIN, Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
+  : `${SITE_ORIGIN}/activity/`;
 // The visible permalink keeps a measurement exclusion; the canonical `link`
 // published in page metadata and the shared caption must not carry a QA
 // parameter, so only this navigable copy is augmented.

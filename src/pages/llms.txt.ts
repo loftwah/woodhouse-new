@@ -1,4 +1,5 @@
 import { dispatchPath } from "../data/what-we-built";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import type { APIRoute } from "astro";
 import {
   asText,
@@ -12,7 +13,7 @@ import { activeProjects } from "../data/project-lifecycle";
 import { agentCapabilities, AGENT_CAPABILITY_REVIEWED } from "../data/agent-capabilities";
 
 export const prerender = false;
-const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
+const siteOrigin = new URL(import.meta.env.SITE ?? SITE_ORIGIN).origin;
 
 export const GET: APIRoute = async ({ cache }) => {
   const [projectResult, dispatchResult, incidentResult, evidenceResult] = await Promise.all([

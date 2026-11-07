@@ -1,4 +1,5 @@
 import type { WoodhouseProject } from "../content/repository";
+import { SITE_ORIGIN } from "./site-origin.ts";
 
 export type SiteMetadata = {
   title: string;
@@ -25,7 +26,7 @@ export const WOODHOUSE_SOCIAL_CARD_ALT =
 export function isRasterImage(url: string | undefined): boolean {
   if (!url) return false;
   try {
-    const { pathname } = new URL(url, "https://woodhouse.loftwah.com");
+    const { pathname } = new URL(url, SITE_ORIGIN);
     return /\.(png|jpe?g|webp|avif)$/i.test(pathname);
   } catch {
     return false;

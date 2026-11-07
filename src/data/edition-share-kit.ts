@@ -1,4 +1,5 @@
 /** Public edition assets reviewed 23 October 2026. Frozen originals retain their original identity. */
+import { SITE_ORIGIN } from "./site-origin.ts";
 export type EditionShareAsset = {
   id: string;
   project?: string;
@@ -22,8 +23,8 @@ export const editionShareAssets: EditionShareAsset[] = [
     width: 1920,
     height: 1080,
     caption:
-      "A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\nhttps://woodhouse.loftwah.com/editions/one-more-round/",
-    link: "https://woodhouse.loftwah.com/editions/one-more-round/",
+      `A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\n${SITE_ORIGIN}/editions/one-more-round/`,
+    link: `${SITE_ORIGIN}/editions/one-more-round/`,
     note: "Product artwork · no statistical claim",
     alt: "One more round. Protocol 11 card table beside SHOALSHOT underwater play. An invitation to play, listen or try a composition."
   },
@@ -35,8 +36,8 @@ export const editionShareAssets: EditionShareAsset[] = [
     width: 1200,
     height: 1200,
     caption:
-      "A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\nhttps://woodhouse.loftwah.com/editions/one-more-round/",
-    link: "https://woodhouse.loftwah.com/editions/one-more-round/",
+      `A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\n${SITE_ORIGIN}/editions/one-more-round/`,
+    link: `${SITE_ORIGIN}/editions/one-more-round/`,
     note: "Product artwork · no statistical claim",
     alt: "One more round. Protocol 11 card table beside SHOALSHOT underwater play. An invitation to play, listen or try a composition."
   },
@@ -48,8 +49,8 @@ export const editionShareAssets: EditionShareAsset[] = [
     width: 1080,
     height: 1920,
     caption:
-      "A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\nhttps://woodhouse.loftwah.com/editions/one-more-round/",
-    link: "https://woodhouse.loftwah.com/editions/one-more-round/",
+      `A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\n${SITE_ORIGIN}/editions/one-more-round/`,
+    link: `${SITE_ORIGIN}/editions/one-more-round/`,
     note: "Product artwork · no statistical claim",
     alt: "One more round. Protocol 11 card table beside SHOALSHOT underwater play. An invitation to play, listen or try a composition."
   },
@@ -63,7 +64,7 @@ export const editionShareAssets: EditionShareAsset[] = [
     height: 1080,
     caption:
       "A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\nhttps://woodhouse.loftwah.com/editions/one-more-round/\nReal controlled gameplay and public demonstration footage. Source dates and limits are visible in the film. Music: Pixel Box Theory by Loftwah.",
-    link: "https://woodhouse.loftwah.com/editions/one-more-round/",
+    link: `${SITE_ORIGIN}/editions/one-more-round/`,
     note: "33-second edit · real product footage · captions in the picture",
     alt: "One more round edition film: a table decision, a Tide Leviathan catch, a board clear, squad combat, music and an app composition."
   },
@@ -77,7 +78,7 @@ export const editionShareAssets: EditionShareAsset[] = [
     height: 1920,
     caption:
       "A card table, an aimed shot, a board to clear and a squad to choose. Find your next game, hear LoftwahFM and try an App Composer composition.\nhttps://woodhouse.loftwah.com/editions/one-more-round/\nReal controlled gameplay and public demonstration footage. Source dates and limits are visible in the film. Music: Pixel Box Theory by Loftwah.",
-    link: "https://woodhouse.loftwah.com/editions/one-more-round/",
+    link: `${SITE_ORIGIN}/editions/one-more-round/`,
     note: "33-second edit · real product footage · captions in the picture",
     alt: "One more round edition film: a table decision, a Tide Leviathan catch, a board clear, squad combat, music and an app composition."
   },

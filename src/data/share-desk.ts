@@ -1,4 +1,5 @@
 import type { WoodhouseProject } from "../content/repository";
+import { SITE_ORIGIN } from "./site-origin.ts";
 const sharePriorities = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
 export function orderShareProjects(projects: WoodhouseProject[]) {
   return [...projects].sort((a, b) => {
@@ -21,7 +22,7 @@ export function projectCaption(project: WoodhouseProject) {
   return shareCaption(
     `${project.name}, from Loftwah.`,
     project.siteOgDescription ?? project.summary,
-    project.siteUrl ?? `https://woodhouse.loftwah.com/projects/${project.slug}/`
+    project.siteUrl ?? `${SITE_ORIGIN}/projects/${project.slug}/`
   );
 }
 // Only the currently reviewed public image publishers, never a caller-provided URL.

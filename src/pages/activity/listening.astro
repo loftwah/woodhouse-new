@@ -1,6 +1,7 @@
 ---
 /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- A labelled overflow region needs keyboard scroll access. */
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ActivitySharing from "../../components/ActivitySharing.astro";
 import {
   activityLink,
@@ -57,7 +58,7 @@ const canShare = !!report && (composite || !!selected);
 const metadataPath =
   report && (requestedSnapshot !== undefined || selected)
     ? activityLink(selected, report.snapshot)
-        .replace("https://woodhouse.loftwah.com", "")
+        .replace(SITE_ORIGIN, "")
         .replace("/activity/", "/activity/listening/")
     : "/activity/listening/";
 ---
@@ -253,7 +254,7 @@ const metadataPath =
     button.hidden = false;
     button.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText("https://woodhouse.loftwah.com/activity/");
+        await navigator.clipboard.writeText(`/activity/`);
         status.textContent = "Link copied.";
       } catch {
         status.textContent = "Use the Share Scores & listening link to copy the address.";

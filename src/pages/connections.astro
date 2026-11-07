@@ -1,5 +1,6 @@
 ---
 import EditionInvitation from "../components/EditionInvitation.astro";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ReportShare from "../components/ReportShare.astro";
 import type { D1Database } from "@cloudflare/workers-types";
@@ -124,7 +125,7 @@ const latestLink = internal(storyLink(story));
 <BaseLayout
   title={`${story.title} | Connected products`}
   description={story.benefit}
-  path={canonical.replace("https://woodhouse.loftwah.com", "")}
+  path={canonical.replace(SITE_ORIGIN, "")}
   currentPath="/factory/"
   image={image}
   imageAlt={`${story.name}: ${observed.display} · ${story.label}. ${period.from} to ${period.to} UTC.`}

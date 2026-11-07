@@ -1,7 +1,8 @@
 import type { APIRoute } from "astro";
+import { SITE_ORIGIN } from "../data/site-origin.ts";
 
 export const prerender = false;
-const siteOrigin = new URL(import.meta.env.SITE ?? "https://woodhouse.loftwah.com").origin;
+const siteOrigin = new URL(import.meta.env.SITE ?? SITE_ORIGIN).origin;
 const preview = new URL(siteOrigin).hostname.endsWith(".workers.dev");
 
 export const GET: APIRoute = () => {
