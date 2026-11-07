@@ -1,14 +1,18 @@
 # Woodhouse Stitch prompt pack
 
-Reviewed 6 November 2026. Copy each prompt into the Woodhouse Stitch project
+Reviewed 7 November 2026. Copy each prompt into the Woodhouse Stitch project
 (`projects/2818325185592691947`) in order. The project's design system is `Woodhouse`; use it for
 every screen so the foundational tokens stay consistent.
 
 The first generation pass invented metrics, projects and statuses. It was rejected. The rules below
 exist because that happened: **do not invent**. Read
 [`stitch/README.md`](stitch/README.md) for the review record and the screens already generated.
-The unfinished prompts are parked in
-[issue #170](https://github.com/loftwah/woodhouse-new/issues/170).
+
+Status after the 7 November 2026 pass: prompts 00–08 are generated; 06 was corrected twice and is
+accepted. Prompt 07 (both screens), 09 (both), 12, 14 and 15 are generated and recorded. Prompt 11
+produced Factory and Connections only; prompt 13 produced the 390px projects catalogue only. The
+rest of 11 and 13, and prompts 16/16B, remain manual. Every new screen needed at least one
+correction for invented chrome — see the finding in `stitch/README.md` before generating.
 
 ## Non-negotiable content rules for every prompt
 
@@ -26,6 +30,23 @@ The unfinished prompts are parked in
 - Every number must belong to the screen's supplied context. Missing stays missing; a reported
   zero stays zero; different units are never added into one total.
 - Phones are composed, not squeezed: author the reading order and keep 44px targets.
+
+### Banned chrome — added 7 November 2026
+
+Stitch adds an invented instrument layer to thin editorial pages even when told not to invent. Ban
+it by name in the prompt, then name the literal strings to delete in one correction pass:
+
+- no status footer (`SYSTEM STATUS: ONLINE`, `ALL SYSTEMS NOMINAL`, `AUTONOMOUS BUILD RIG`), no
+  rig, revision or build id;
+- no document, plate, figure or register ids (`DOC-ID`, `REF-048`, `REGISTER REF`, `SEC 01`,
+  `PLATE 01`, `FIG 1.0`, `SPEC-REF`);
+- no percentage, score, ratio, uptime, latency or "integrity" figure that the prompt did not supply;
+- no internal codenames used as instrument labels (`CODES ENVIRONMENT`, `ARTIFACT CAPTURE`,
+  `EDITORIAL REGISTER`);
+- no second footer link set (`Archive 2024`, `Telemetry logs`, `Index register`, `Spec sheets`,
+  `Security compliance`).
+
+Verify by downloading the generated HTML and searching it, not by reading the screenshot.
 
 ---
 
@@ -196,6 +217,11 @@ source limits.
 Footer as the site.
 
 ## Prompt 06 — Analytics
+
+Executed 7 November 2026 and accepted as `446563288c1549bbb56b520ca8436857`
+(`screens/05-analytics.jpg`). Two correction passes were needed: the first fixed the figures and
+removed the benchmark/ISO chrome but kept `CADENCE: 7-DAY INTERVAL`, a `REGISTER REFS` rail label and
+an invented reading-notes panel; the second removed them.
 
 Design `/activity/`, the analytics research workbench.
 
