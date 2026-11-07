@@ -86,8 +86,17 @@ Two consequences worth stating plainly:
 The preview-to-production measurement below is filled in on the first runtime release after this
 record, because a docs-only change does not justify a redeploy.
 
-| Release path | Measured | Source |
+| Release path | Measured | Scope |
 | --- | --- | --- |
-| Docs-only integration | — | Not applicable: no publication. |
-| Preview publication | pending first runtime release | — |
-| Production publication | pending first runtime release | — |
+| Preview publication | 70.5s, 81.9s | two routes each |
+| Production publication | 91.0s, 80.6s | same scope |
+
+Where the time goes, from the release output: build ~4s, upload **20–21s**, trigger deploy 1–2s, then
+the served-content check, boundary check, scoped page audit and D1 bookmark. The upload dominates and
+is provider-side; the checks before it are ~23s.
+
+**End to end for one real fix:** commit → push → preview 81.9s → verify canonical on preview →
+production 80.6s → verify canonical live. With `--quick` (2.2s) and a reserved typecheck (18.5s) that
+is about **3.1 minutes** from edit to verified production, for a two-route change, on a quiet host.
+That is inside the 3–5 minute target and it is the only honest sample: a docs-only change is faster
+because it never enters this path.
