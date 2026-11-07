@@ -190,3 +190,48 @@ the base-layout pair is retained.)
   instantly.
 - Cross-repo project-local audits and the portfolio summary remain with #163's linked tickets; this
   record covers Woodhouse only.
+
+## Portfolio summary — reviewed 8 November 2026
+
+This is the #163 cross-project read of the 13 linked tickets. It separates measured wins from
+intentional sequencing and from tickets that still have no evidence. A ticket being closed is not by
+itself evidence; the disposition below is based on what the ticket records.
+
+### Confirmed wins with measured or structural evidence
+
+| Ticket | Evidence | Limit |
+| --- | --- | --- |
+| [App Composer #407](https://github.com/loftwah/app-composer/issues/407) | `readResourceInventory` moved from three serial D1 statements to one concurrent stage: **126.5 → 42.2 ms median** with a fake D1 adding 40 ms per read (3.0×). Overview scope reads, `/api/composition.json` sources/releases and the published-stack card identity also overlapped. Release PR #413, main `703a8fc5`, Worker `3b263d3c`. | Local Node harness, not a production p95. |
+| [Fighter #410](https://github.com/loftwah/fighter/issues/410) | Portfolio-analytics manifest read now starts with three independent D1 aggregates. Synthetic fixed-delay span: **p50 44.5 → 22.4 ms, p95 53.6 → 23.7 ms**. Production-verified SHA `97cd2871`, live smoke 130 ms TTFB. | Synthetic spans, not production percentiles. Player-facing paths were an evidence-backed no-op. |
+| [SHOALSHOT #711](https://github.com/loftwah/shoalshot/issues/711) | Phaser boot stopped fetching every launcher rig and 18 specimens while Home was DOM-owned. Production first load **8,578 → 2,501 KB**, **74 → 29 requests**; Home interactive on 1.6 Mbps/4× CPU **5,351 → 1,987 KB**. | Bounded device/throttle sample, not field data. |
+| [Protocol 11 #422](https://github.com/loftwah/protocol-11/issues/422) | Seven serial table stylesheet imports replaced by one ordered `table-app.css` chunk (75,675 bytes), with the cascade guarded by a test. Fresh lab sample: LCP 2,036 ms, CLS 0, INP 56 ms. | Lab sample, not field percentiles; no further waterfall justified. |
+| [Bubbles #1581](https://github.com/loftwah/bubbles/issues/1581) | Leaderboard top page and total now start together (`Promise.all`), with a barrier test proving both statements are in flight and the existing 29 cloud leaderboard tests green. | No real-provider p50/p95; the ticket’s own last comment says the measured outcome report remains open. Closed with that gap stated. |
+| [Foilbury #3](https://github.com/loftwah/card-collector-bot/issues/3) | Local Chromium and route measurements: `/play` images **6.9 MB → 0.9 MB**, a fully derived collection **1.36 MB → 94 KB**, showcase videos no longer preload 3.7 MB, serial collection progress loop removed. Deployed with the 2026/11/04 release (Worker `4da539c4`). | Production percentile/field monitoring is not claimed; the ticket remains open for that residual. |
+| [Woodhouse #163](https://github.com/loftwah/woodhouse-new/issues/163) | `localAnalytics` six-statement stage plus five independent request pairs; dispatch-order test and rendered-output equality recorded above. | One uncontrolled latency sample; no p95 or load claim. |
+
+### Intentionally sequential
+
+| Project | Sequence retained | Why |
+| --- | --- | --- |
+| App Composer | release/promotion/migrations/provider mutations; dependent readiness probes; sitemap cursor pagination; four Overview problem-source reads with the inventory read | Mutations and gates are ordered; the four extra reads could exceed D1’s six simultaneous connections. |
+| Bubbles | rate limit before leaderboard reads; auth/session checks and result-publication writes | Admission and publication ordering are part of the contract. |
+| Fighter | fight-start art wait; analytics event POST; character suggestions | Product-authorised asset wait; event order; rate-limit → reserve → email → confirm is transactional. |
+| Protocol 11 | single ordered `table-app.css` import before React render; synchronous session/local-save restore | The stylesheet is required before render; restoration is not asynchronous. |
+| Woodhouse | engagement admission → storage, report digest → insert, cron rollup → report, per-IP → global enquiry counters, persist → notify | Recorded with call sites in the section above. |
+| Pirates #495 | all optimisation | The ticket is explicitly parity-gated/deferred; source parity and qualification override opportunistic speedups. |
+
+### Unfixed blockers — tickets with no evidence
+
+These tickets are open and record no callsite inventory, measurement, patch or explicit deferral.
+#163 stays open until each has evidence or a stated deferral the issue allows:
+
+- [LoftwahFM #328](https://github.com/loftwah/loftwahfm/issues/328) — open, no comments.
+- [Asset Hunter #124](https://github.com/loftwah/asset-hunter/issues/124) — open, no comments.
+- [MAX #141](https://github.com/loftwah/max/issues/141) — open, no comments.
+- [Social Club #44](https://github.com/loftwah/club/issues/44) — open, no comments.
+- [Liferaft #4](https://github.com/loftwah/liferaft/issues/4) — open, no comments.
+- [Bogan Hustler #19](https://github.com/loftwah/bogan_hustler/issues/19) — open, no comments.
+
+Pirates #495 is not counted as a blocker because its own ticket explicitly defers the work behind
+source parity. Bubbles #1581 and Foilbury #3 have evidence but retain stated measurement limits;
+those limits are recorded above rather than converted into a claim of a production speedup.
