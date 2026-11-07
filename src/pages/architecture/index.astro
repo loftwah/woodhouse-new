@@ -1,413 +1,392 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { listPublicSnapshots } from "../../content/repository";
+import D2Diagram from "../../components/D2Diagram.astro";
+import { listProjectRecords } from "../../content/repository";
 import { formatReviewDate } from "../../data/review-date";
+import { lifecycleLabel } from "../../data/project-lifecycle";
+import {
+  atlasGroups,
+  atlasProfiles,
+  atlasRelationships,
+  atlasReview,
+  atlasProfile
+} from "../../data/architecture-atlas";
+import "../../styles/architecture-atlas.css";
 
 export const prerender = false;
-const snapshotResult = await listPublicSnapshots();
-const currentReview = formatReviewDate(snapshotResult.snapshots[0]?.data.reviewed_at);
-if (Astro.cache?.enabled) Astro.cache.set(snapshotResult.cacheHint);
+const result = await listProjectRecords();
+if (result.error)
+  return new Response("Unable to load the reviewed project catalogue.", {
+    status: 503,
+    headers: { "cache-control": "private, no-store" }
+  });
+const catalogue = result.projects;
+if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
+
+// The catalogue is authoritative for identity and lifecycle. The atlas adds
+// reviewed architecture facts; a catalogue project without a profile must stay
+// visible as unassessed rather than disappear from the coverage claim.
+const lanes = atlasGroups
+  .map((group) => ({
+    group,
+    projects: catalogue
+      .filter((project) => atlasProfile(project.slug)?.group === group.key)
+      .sort((a, b) => a.index.localeCompare(b.index))
+      .map((project) => ({ project, profile: atlasProfile(project.slug) }))
+  }))
+  .filter((lane) => lane.projects.length > 0);
+const assessed = catalogue.filter((project) => atlasProfile(project.slug)).length;
+const unassessed = catalogue.filter((project) => !atlasProfile(project.slug));
+const relationships = atlasRelationships.filter(
+  (relationship) => atlasProfile(relationship.from) && atlasProfile(relationship.to)
+);
+const deepDives = atlasProfiles.filter((profile) => profile.deepDive);
+const groupParam = Astro.url.searchParams.get("group");
+const statusParam = Astro.url.searchParams.get("status");
+const activeGroup = atlasGroups.find((group) => group.key === groupParam)?.key ?? null;
+const activeStatus = ["live", "demo", "planned", "unknown"].includes(statusParam ?? "")
+  ? statusParam
+  : null;
+const visibleLanes = lanes
+  .filter((lane) => !activeGroup || lane.group.key === activeGroup)
+  .map((lane) => ({
+    ...lane,
+    projects: lane.projects.filter(
+      ({ profile }) => !activeStatus || profile?.status === activeStatus
+    )
+  }))
+  .filter((lane) => lane.projects.length > 0);
+const shownCount = visibleLanes.reduce((total, lane) => total + lane.projects.length, 0);
+function filterHref(group: string | null, status: string | null) {
+  const query = new URLSearchParams();
+  if (group) query.set("group", group);
+  if (status) query.set("status", status);
+  return `/architecture/${query.size ? `?${query}#projects` : "#projects"}`;
+}
+const reviewLabel = formatReviewDate(atlasReview.date) ?? atlasReview.display;
+const statusLabel = (status: string) =>
+  status === "live" ? "Live" : status.charAt(0).toUpperCase() + status.slice(1);
+const nameOf = (slug: string) => atlasProfile(slug)?.name ?? slug;
+const linked = (slug: string) =>
+  slug === "woodhouse" ? "/architecture/woodhouse/" : `/architecture/${slug}/`;
 ---
 
 <BaseLayout
-  title="How Woodhouse works · Architecture"
-  description="Independent projects, checked evidence, edited stories and a dated public record. See how work becomes a Woodhouse page, and who owns each part."
+  title="Portfolio architecture · How every Loftwah project is built"
+  description="How every Loftwah project is built and connected: the verified stack, runtime, storage, identity and delivery behind twelve independent products, with the unknowns stated."
   path="/architecture/"
   image="/og/factory-workshop-20261018.jpg"
 >
-  <section class="container architecture-intro">
+  <section class="container atlas-intro">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">WOODHOUSE</a>
       <span>/</span>
       <span>Architecture</span>
     </nav>
-    <p class="eyebrow">How Woodhouse works</p>
-    <h1>
-      A window into
+    <p class="eyebrow">Portfolio architecture</p>
+    <h1 class="page-title">
+      Twelve products.
       <br />
-      the work.
+      <em>Separate systems.</em>
     </h1>
     <p class="lead">
-      Woodhouse brings independently run games, music and tools into one place. We check the
-      evidence, edit what is useful and publish a dated account that leads you to the real product.
+      Woodhouse publishes the record, not the machine room. This atlas explains how each project is
+      actually built, which ones share a capability, and what nobody has verified yet.
     </p>
-  </section>
-  <section class="container" aria-labelledby="publication-heading">
-    <figure class="publication-flow">
-      <figcaption>
-        <h2 id="publication-heading">From project work to a public page</h2>
-        <p>Review is the step that makes material ready to publish.</p>
-      </figcaption>
-      <ol class="flow-steps">
-        <li>
-          <span class="step-number" aria-hidden="true">
-            01
-          </span>
-          <h3>Projects make things</h3>
-          <p>Each product owns its experience, source, artwork and releases.</p>
-          <span class="handoff">Evidence enters review</span>
-        </li>
-        <li class="review-step">
-          <span class="step-number" aria-hidden="true">
-            02
-          </span>
-          <h3>We check and edit</h3>
-          <p>Check what actually works. Choose the story. Remove private material.</p>
-          <span class="handoff">Explicit publication decision</span>
-        </li>
-        <li>
-          <span class="step-number" aria-hidden="true">
-            03
-          </span>
-          <h3>Keep a public record</h3>
-          <p>Approved summaries, evidence, media and review dates live in the editorial system.</p>
-          <span class="handoff">Published content only</span>
-        </li>
-        <li>
-          <span class="step-number" aria-hidden="true">
-            04
-          </span>
-          <h3>You read and explore</h3>
-          <p>Woodhouse serves the page. Follow its links to try the independent product.</p>
-          <span class="handoff">
-            <a href="/projects/">Explore the projects →</a>
-          </span>
-        </li>
-      </ol>
-      <p class="flow-boundary">
-        <strong>Private inputs need review.</strong> An editor can derive a public-safe summary from
-        private work. Original issue bodies, conversations and credentials stay outside public
-        content; they have no direct publishing route.
+    <div class="atlas-intro__aside">
+      <p>
+        <strong>Reviewed {reviewLabel}.</strong> Project identity and lifecycle come from the
+        reviewed Woodhouse catalogue. Architecture facts come from each project's own source tree
+        and public deployment. This is a dated projection of that review, not a live code scanner.
       </p>
-      <a class="flow-source" href="/diagrams/woodhouse-publication.d2">
-        Editable technical diagram (D2 source) ↗
-      </a>
-    </figure>
+      <p>
+        Looking for something to use? <a href="/projects/">The project dossiers</a> are the product
+        record. Want to try a working connection? <a href="/factory/">The Factory</a> is the bench.
+        This page is the engineering underneath both.
+      </p>
+    </div>
+    <ul class="atlas-legend" aria-label="Status legend">
+      <li>
+        <span class="atlas-key atlas-key--live" aria-hidden="true"></span>Live: a public route
+        answered at review
+      </li>
+      <li>
+        <span class="atlas-key atlas-key--demo" aria-hidden="true"></span>Demo or prototype
+      </li>
+      <li>
+        <span class="atlas-key atlas-key--planned" aria-hidden="true"></span>Planned, not serving
+      </li>
+      <li>
+        <span class="atlas-key atlas-key--unknown" aria-hidden="true"></span>Unknown or withheld
+      </li>
+    </ul>
   </section>
-  <section class="section">
-    <div class="container reading-grid">
-      <div>
-        <p class="eyebrow">Who owns what?</p>
-        <h2>Each part has a job.</h2>
+
+  <section class="section" aria-labelledby="atlas-plate-heading">
+    <div class="container">
+      <div class="atlas-section__heading">
+        <h2 id="atlas-plate-heading">The whole portfolio on one plate.</h2>
         <p>
-          Woodhouse connects the portfolio. Each game, station or tool keeps control of its own
-          product and release decisions.
+          Every project in the current catalogue, grouped by what it does, plus the publisher. The
+          plate draws the shared capability the source proves; the ledger below carries every
+          verified relationship, including measurement and contract reads.
         </p>
-        <a href="/factory/">See useful connections in the Factory →</a>
       </div>
-      <dl class="roles">
+      <D2Diagram
+        title="Twelve product boundaries and the publisher"
+        description="Twelve Loftwah projects plus Woodhouse, grouped as play, listen, build, collect, everyday tools and publish. Each node carries a live, demo, planned or unknown label. Four games use one LoftwahFM radio client; the text transcript repeats the whole picture."
+        desktop="/images/diagrams/portfolio-atlas.svg"
+        mobile="/images/diagrams/portfolio-atlas-mobile.svg"
+        caption="A product boundary is not a deployment boundary: each profile names its own runtime and data. Reviewed 7 November 2026."
+        className="atlas-plate"
+        priority={true}
+        mobileBreakpoint={900}
+      >
+        {lanes.map((lane) => (
+          <div>
+            <p>
+              <strong>{lane.group.label}</strong> — {lane.group.note}
+            </p>
+            <ul>
+              {lane.projects.map(({ project, profile }) => (
+                <li>
+                  {project.name}: {profile?.role} Status: {profile?.status ?? "unassessed"}.
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
         <div>
-          <dt>The independent products</dt>
-          <dd>
-            The places you play, listen or create. Their sites own current product identity and
-            artwork.
-          </dd>
+          <p>
+            <strong>Verified capability relationships</strong>
+          </p>
+          <ul>
+            {relationships
+              .filter((relationship) => relationship.plate !== false)
+              .map((relationship) => (
+                <li>
+                  {nameOf(relationship.from)} {relationship.verb} {nameOf(relationship.to)}:{" "}
+                  {relationship.short}.
+                </li>
+              ))}
+          </ul>
         </div>
-        <div>
-          <dt>GitHub</dt>
-          <dd>
-            The authority for source code, issues and pull requests. Many repositories are private;
-            Woodhouse publishes reviewed summaries.
-          </dd>
-        </div>
-        <div>
-          <dt>Editorial review &amp; EmDash</dt>
-          <dd>
-            Editors decide what is safe and useful to publish. EmDash, the content system, stores
-            structured records and their publishing state.
-          </dd>
-        </div>
-        <div>
-          <dt>Astro &amp; Cloudflare</dt>
-          <dd>
-            Astro supplies the page design. A Cloudflare Worker reads published records and renders
-            the public page; static assets are delivered alongside it.
-          </dd>
-        </div>
-        <div>
-          <dt>Your browser</dt>
-          <dd>
-            Displays the page and runs its local interactions. Following a product link takes you to
-            that product's own experience.
-          </dd>
-        </div>
-      </dl>
+      </D2Diagram>
     </div>
   </section>
-  <section class="section paper-section">
-    <div class="container reading-grid">
-      <div>
-        <p class="eyebrow">Reading the evidence</p>
-        <h2>A date tells you what was checked.</h2>
+
+  <section class="section paper-section" id="projects" aria-labelledby="register-heading">
+    <div class="container">
+      <div class="atlas-section__heading">
+        <h2 id="register-heading">Every project, by what it does.</h2>
         <p>
-          {currentReview
-            ? `The latest portfolio snapshot was reviewed ${currentReview}.`
-            : "Each portfolio snapshot carries its own review date."}{" "}
-          Project states belong to that review. Loading this page today does not verify a new
-          release or move a project's review date forward.
-        </p>
-        <p>
-          New evidence needs another editorial review. Earlier editions remain available as history.
+          Each row opens a profile with the stack, runtime, storage, identity, delivery route and
+          the unknowns. {assessed} of {catalogue.length} catalogue projects are assessed in this
+          review.
         </p>
       </div>
-      <div class="reading-notes">
-        <h3>What visitors can access</h3>
-        <p>
-          Published pages, public evidence, approved images and read-only agent views. The live
-          publication keeps the editorial office, authoring API and draft previews closed.
-        </p>
-        <h3>What the numbers mean</h3>
-        <p>
-          Analytics has a separate, limited collection endpoint. Its published aggregates explain
-          their coverage; a click, a product visit and a useful action are different measurements.
-        </p>
-        <p>
-          <a href="/doctrine/">Read the publishing principles →</a>
-        </p>
-      </div>
-    </div>
-  </section>
-  <section class="section">
-    <div class="container technical-details">
-      <h2>Under the page</h2>
-      <p>The technical details are here when you need them.</p>
-      <details>
-        <summary>What happens at build time, and what happens when I visit?</summary>
-        <div>
-          <p>
-            A code release builds the page templates, styles, scripts and static images. On a server
-            render, Astro queries published EmDash records. Cached pages or query results may be
-            reused, so a request does not always make a fresh database read.
-          </p>
-          <p>
-            D1 stores editorial records. R2 stores approved editorial media. Existing analytics
-            tables and their limited collection endpoint are separate from CMS authoring; D1 is not
-            an empty or editorial-only database.
-          </p>
-          <p>
-            This production release exposes the reading surfaces. Editorial access and publishing
-            schedules are gated separately; installing a CMS does not mean its public authoring
-            routes are open.
-          </p>
-          <p>
-            <a href="https://docs.emdashcms.com/guides/querying-content/">
-              EmDash's published-content and rendering contract ↗
+      <nav class="atlas-filters" aria-label="Filter the project register">
+        <p class="atlas-filters__label">Group</p>
+        <ul>
+          <li>
+            <a
+              href={filterHref(null, activeStatus)}
+              aria-current={!activeGroup ? "true" : undefined}
+            >
+              All
             </a>
-          </p>
-        </div>
-      </details>
-      <details>
-        <summary>Where do product images come from?</summary>
-        <div>
-          <p>
-            Current product artwork follows the producer's own sharing metadata. A bounded
-            request-time read checks approved product destinations and caches the result for five
-            minutes. If that read fails, the last resolved image or reviewed record remains
-            available. This presentation refresh does not change the reviewed project status.
-          </p>
-          <p>
-            Optional Woodhouse campaign images and dossier illustrations keep their own credits. An
-            image failure must not present a Woodhouse illustration as the producer's canonical art.
-          </p>
-          <p>
-            <a href="/share/">Browse the artwork and its sources →</a>
-          </p>
-        </div>
-      </details>
-      <details>
-        <summary>What can the public agent view do?</summary>
-        <div>
-          <p>
-            Agent Reception makes the same reviewed public information easier for software to read.
-            It cannot query private repositories, run tools or publish an update. The authenticated
-            editorial interface is a separate capability.
-          </p>
-          <p>
-            <a href="/agents/">Visit Agent Reception →</a>
-          </p>
-        </div>
-      </details>
+          </li>
+          {atlasGroups
+            .filter((group) => lanes.some((lane) => lane.group.key === group.key))
+            .map((group) => (
+              <li>
+                <a
+                  href={filterHref(group.key, activeStatus)}
+                  aria-current={activeGroup === group.key ? "true" : undefined}
+                >
+                  {group.label}
+                </a>
+              </li>
+            ))}
+        </ul>
+        <p class="atlas-filters__label">Status</p>
+        <ul>
+          <li>
+            <a
+              href={filterHref(activeGroup, null)}
+              aria-current={!activeStatus ? "true" : undefined}
+            >
+              Any
+            </a>
+          </li>
+          {["live", "demo", "planned", "unknown"].map((status) => (
+            <li>
+              <a
+                href={filterHref(activeGroup, status)}
+                aria-current={activeStatus === status ? "true" : undefined}
+              >
+                {statusLabel(status)}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <p class="atlas-filter-count" role="status">
+        Showing {shownCount} of {catalogue.length} catalogue projects
+        {activeGroup ? ` in ${atlasGroups.find((group) => group.key === activeGroup)?.label}` : ""}
+        {activeStatus ? ` with status ${statusLabel(activeStatus)}` : ""}.
+      </p>
+      {visibleLanes.length === 0 && (
+        <p class="atlas-empty">
+          No project in the current catalogue matches that filter.{" "}
+          <a href="/architecture/#projects">Clear the filter</a> to see the whole register.
+        </p>
+      )}
+      {visibleLanes.map((lane) => (
+        <section class="atlas-lane" aria-labelledby={`lane-${lane.group.key}`}>
+          <div class="atlas-lane__heading">
+            <h3 id={`lane-${lane.group.key}`}>{lane.group.label}</h3>
+            <p>{lane.group.note}</p>
+          </div>
+          <ul class="atlas-rows">
+            {lane.projects.map(({ project, profile }) => (
+              <li class="atlas-row">
+                <div class="atlas-row__identity">
+                  <a class="atlas-row__name" href={`/architecture/${project.slug}/`}>
+                    {project.name}
+                  </a>
+                  <p class="atlas-row__role">
+                    {profile?.role ?? "Architecture not yet assessed in this review."}
+                  </p>
+                  {profile && (
+                    <ul class="atlas-row__stack" aria-label="Verified stack summary">
+                      {profile.tags.map((tag) => (
+                        <li>{tag}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div class="atlas-row__meta">
+                  {profile ? (
+                    <span class={`atlas-status atlas-status--${profile.status}`}>
+                      {statusLabel(profile.status)}
+                    </span>
+                  ) : (
+                    <span class="atlas-status atlas-status--unknown">Unassessed</span>
+                  )}
+                  {lifecycleLabel(project.lifecycle) && (
+                    <span class="atlas-row__lifecycle">{lifecycleLabel(project.lifecycle)}</span>
+                  )}
+                  <span class="atlas-row__review">
+                    Reviewed{" "}
+                    {formatReviewDate(profile?.reviewDate ?? atlasReview.date) ?? reviewLabel}
+                  </span>
+                </div>
+                <a class="atlas-row__link" href={`/architecture/${project.slug}/`}>
+                  Architecture <span aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+      {unassessed.length > 0 && (
+        <p>
+          <strong>Not yet assessed:</strong> {unassessed.map((project) => project.name).join(", ")}.
+          These stay in the catalogue record and make no architecture claim.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="connections-heading">
+    <div class="container">
+      <div class="atlas-section__heading">
+        <h2 id="connections-heading">Where the projects actually connect.</h2>
+        <p>
+          Most of this portfolio is independent by design. These are the relationships the source
+          proves. Everything else is a link between pages, not a runtime dependency.
+        </p>
+      </div>
+      <ol class="atlas-ledger">
+        {relationships.map((relationship) => (
+          <li class="atlas-ledger__item">
+            <p class="atlas-ledger__route">
+              <a href={linked(relationship.from)}>{nameOf(relationship.from)}</a>
+              <span>{relationship.verb}</span>
+              <a href={linked(relationship.to)}>{nameOf(relationship.to)}</a>
+              {relationship.pair && <span class="atlas-ledger__pair">two-way</span>}
+            </p>
+            <p class="atlas-ledger__detail">{relationship.detail}</p>
+            <p class="atlas-ledger__evidence">
+              <strong>Evidence:</strong> {relationship.evidence}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="deep-dives-heading">
+    <div class="container">
+      <div class="atlas-section__heading">
+        <h2 id="deep-dives-heading">Four systems, taken apart.</h2>
+        <p>
+          The profiles are not one checklist copied twelve times. These four carry a longer
+          explanation because their engineering is materially different from the rest.
+        </p>
+      </div>
+      <ul class="atlas-rows">
+        {deepDives.map((profile) => (
+          <li class="atlas-row">
+            <div class="atlas-row__identity">
+              <a class="atlas-row__name" href={`/architecture/${profile.slug}/`}>
+                {profile.name}
+              </a>
+              <p class="atlas-row__role">{profile.deepDiveReason}</p>
+            </div>
+            <div class="atlas-row__meta">
+              <span class={`atlas-status atlas-status--${profile.status}`}>
+                {statusLabel(profile.status)}
+              </span>
+            </div>
+            <a class="atlas-row__link" href={`/architecture/${profile.slug}/`}>
+              Read the deep dive <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section paper-section" aria-labelledby="reading-heading">
+    <div class="container atlas-notes">
+      <div>
+        <h2 id="reading-heading">What this atlas can tell you.</h2>
+        <p>
+          A verified value was read from that project's own configuration or source at the review
+          date, or observed from its public deployment. Each profile names the evidence beside the
+          claim.
+        </p>
+        <p>
+          A relationship is drawn only when the consumer's source or a published consumer contract
+          proves it. A shared colour, a link in a footer or a product idea is not a relationship.
+        </p>
+      </div>
+      <div>
+        <h2>What it cannot tell you.</h2>
+        <p>
+          This is not a live inventory. It does not read private repositories at request time, prove
+          production health, or turn a README ambition into a shipped node. Unknown means nobody has
+          verified it for this review.
+        </p>
+        <p>
+          Deployment status and product lifecycle are separate: a retired product can still serve a
+          page, and a live page is not evidence of current development.{" "}
+          <a href="/architecture/woodhouse/">Woodhouse's own architecture</a> explains how this
+          published record is produced.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
-
-<style>
-  .architecture-intro {
-    padding-block: 2.5rem 2rem;
-  }
-  .eyebrow {
-    color: var(--brass);
-    font: 700 0.75rem var(--mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .architecture-intro h1 {
-    font: 700 clamp(3rem, 6vw, 5.75rem)/0.98 var(--display);
-    letter-spacing: -0.045em;
-    margin: 0.75rem 0 1.25rem;
-  }
-  .lead {
-    max-width: 52rem;
-    font-size: clamp(1.1rem, 1.7vw, 1.35rem);
-    color: var(--copy);
-    line-height: 1.6;
-  }
-  .publication-flow {
-    margin: 0;
-    border: 1px solid var(--line-dark);
-    background: var(--surface);
-    padding: clamp(1rem, 2vw, 2rem);
-  }
-  .publication-flow figcaption {
-    margin-bottom: 1.5rem;
-  }
-  .publication-flow h2 {
-    margin: 0;
-    font: 700 clamp(1.5rem, 2.5vw, 2.25rem)/1.15 var(--display);
-  }
-  .publication-flow figcaption p {
-    margin: 0.5rem 0 0;
-    color: var(--copy-soft);
-  }
-  .flow-steps {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    gap: 1rem;
-  }
-  .flow-steps li {
-    min-width: 0;
-    border-top: 2px solid var(--line-dark);
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
-  .flow-steps .review-step {
-    border-color: var(--brass);
-  }
-  .step-number {
-    font: 700 2.5rem/1 var(--display);
-    color: var(--copy-soft);
-  }
-  .review-step .step-number {
-    color: var(--brass);
-  }
-  .publication-flow h3 {
-    font: 700 1.2rem/1.2 var(--display);
-    margin: 0.8rem 0 0.4rem;
-  }
-  .flow-steps p {
-    color: var(--copy);
-    margin: 0 0 1.25rem;
-  }
-  .handoff {
-    margin-top: auto;
-    font-size: 0.8rem;
-    color: var(--copy-soft);
-  }
-  .handoff a {
-    color: var(--brass);
-  }
-  .flow-boundary {
-    margin: 1.5rem 0 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--line-dark);
-    max-width: 70rem;
-    font-size: 0.95rem;
-    color: var(--copy);
-  }
-  .flow-boundary strong {
-    color: var(--paper);
-  }
-  .flow-source {
-    font-size: 0.8rem;
-    color: var(--copy-soft);
-  }
-  .reading-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-    gap: clamp(2rem, 5vw, 6rem);
-  }
-  .reading-grid h2,
-  .technical-details h2 {
-    font: 700 clamp(2rem, 3vw, 3rem)/1.1 var(--display);
-    margin: 0.7rem 0 1.25rem;
-  }
-  .reading-grid p,
-  .roles dd,
-  .technical-details p {
-    color: var(--copy);
-  }
-  .roles {
-    margin: 0;
-  }
-  .roles > div {
-    border-top: 1px solid var(--line-dark);
-    padding-block: 1rem;
-  }
-  .roles dt {
-    font-weight: 700;
-  }
-  .roles dd {
-    margin: 0.35rem 0 0;
-  }
-  .reading-notes h3 {
-    margin-top: 0;
-  }
-  .reading-notes h3:not(:first-child) {
-    margin-top: 2rem;
-  }
-  .technical-details {
-    max-width: 68rem;
-  }
-  .technical-details details {
-    border-top: 1px solid var(--line-dark);
-  }
-  .technical-details summary {
-    padding: 1.2rem 0;
-    cursor: pointer;
-    font-weight: 700;
-  }
-  .technical-details details > div {
-    padding: 0 0 1rem;
-    max-width: 54rem;
-  }
-  @media (max-width: 1000px) {
-    .flow-steps {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 2rem;
-    }
-  }
-  @media (max-width: 760px) {
-    .architecture-intro {
-      padding-top: 1.5rem;
-    }
-    .reading-grid {
-      grid-template-columns: 1fr;
-    }
-    .flow-steps {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    .flow-steps li {
-      display: grid;
-      grid-template-columns: 2.5rem minmax(0, 1fr);
-      column-gap: 0.8rem;
-    }
-    .step-number {
-      grid-row: span 3;
-      font-size: 2rem;
-    }
-    .publication-flow h3 {
-      margin-top: 0;
-    }
-    .flow-steps p {
-      margin-bottom: 0.5rem;
-    }
-    .handoff {
-      grid-column: 2;
-    }
-  }
-</style>

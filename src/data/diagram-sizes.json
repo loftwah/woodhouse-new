@@ -55,6 +55,14 @@
     "width": 1536,
     "height": 1024
   },
+  "portfolio-atlas-mobile": {
+    "width": 720,
+    "height": 1548
+  },
+  "portfolio-atlas": {
+    "width": 1600,
+    "height": 1216
+  },
   "project-network-mobile": {
     "width": 360,
     "height": 1931

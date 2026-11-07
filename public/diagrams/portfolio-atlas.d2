@@ -1,0 +1,63 @@
+# Portfolio architecture atlas — editable system model.
+# Reviewed 7 November 2026. This is the same topology as the published plate,
+# which is generated from src/data/architecture-atlas.ts. Edges exist only
+# where source proves a relationship; the HTML page carries the evidence.
+# Twelve product nodes plus the Woodhouse publisher.
+
+vars: {d2-config: {layout-engine: elk; theme-id: 0; pad: 12}}
+direction: down
+
+style.fill: "#080D19"
+*.style.fill: "#0F182A"
+*.style.stroke: "#79D8FF"
+*.style.font-color: "#EAF0FA"
+*.style.font-size: 17
+
+title: "PORTFOLIO ARCHITECTURE" {shape: text; near: top-center; style.font-size: 34; style.bold: true}
+subtitle: "Twelve products and the publisher. Arrows are verified relationships, not a shared platform." {shape: text; near: top-center; style.font-size: 17; style.font-color: "#A9B8D0"}
+
+play: "PLAY" {
+  direction: right
+  bubbles: "Bubbles\nLocal-first game + optional cloud\nLIVE"
+  fighter: "Fighter\nGame + D1 service\nLIVE"
+  shoalshot: "SHOALSHOT\nStatic arcade\nLIVE"
+  protocol: "Protocol 11\nDurable Object table\nLIVE"
+  pirates: "Pirates\nSource reconstruction\nPAUSED"
+}
+
+listen: "LISTEN" {
+  direction: right
+  fm: "LoftwahFM\nMusic, stations, radio client\nLIVE"
+}
+
+build: "BUILD" {
+  direction: right
+  composer: "App Composer\nAgent-operated builds + services\nLIVE"
+  hunter: "Asset Hunter\nRights-aware catalogue\nRETIRED"
+}
+
+collect: "COLLECT" {
+  direction: right
+  foilbury: "Foilbury\nCard showcase + Discord bot\nLIVE"
+}
+
+everyday: "EVERYDAY" {
+  direction: right
+  max: "MAX\nCompanion site + simulator\nLIVE / HARDWARE PROTOTYPE"
+  club: "Plans With You\nCalendar protection\nRETIRED"
+  raft: "Liferaft\nOffline Electron recovery\nLIVE"
+}
+
+publish: "PUBLISH" {
+  direction: right
+  house: "Woodhouse\nReviewed public record\nLIVE"
+}
+
+bubbles -> fm: "radio client 1.2.0 · two-way"
+fighter -> fm: "radio client 1.2.0 · two-way"
+shoalshot -> fm: "radio client 1.2.0 · two-way"
+protocol -> fm: "radio client 1.2.0 · two-way"
+protocol -> house: "engagement ingress"
+house -> composer: "guestbook contract"
+
+note: "Status means deployment at review, not product lifecycle. Paused and retired labels come from the reviewed catalogue. Measurement-only reads are listed in the page ledger, not drawn here." {shape: text; near: bottom-center; style.font-size: 15; style.font-color: "#A9B8D0"}

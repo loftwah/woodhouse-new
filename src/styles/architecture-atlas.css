@@ -1,0 +1,793 @@
+/*
+ * The portfolio architecture atlas.
+ *
+ * /projects/ answers "what can I use?", /factory/ answers "what can I try?",
+ * and this surface answers "how is it built and what actually connects?".
+ * The layout therefore reads as an engineering register: lanes by product
+ * purpose, one row per project, a text ledger for every drawn relationship,
+ * and a per-project fact table that keeps verified values beside unknowns.
+ * Nothing here depends on hover, and no state is carried by colour alone.
+ */
+
+.atlas-intro {
+  padding-block: 2.5rem 2rem;
+}
+
+.atlas-intro .lead {
+  max-width: 52rem;
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--copy);
+}
+
+.atlas-intro__aside {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  max-width: 58rem;
+  color: var(--copy-soft);
+}
+
+.atlas-intro__aside strong {
+  color: var(--paper);
+}
+
+.atlas-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 1rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.atlas-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 600 0.78rem/1.3 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--copy-soft);
+}
+
+.atlas-legend .atlas-key {
+  width: 0.65rem;
+  height: 0.65rem;
+  border: 1px solid currentColor;
+  display: inline-block;
+  flex: none;
+}
+
+.atlas-key--live {
+  color: var(--accent-link);
+  background: color-mix(in srgb, var(--accent-link) 25%, transparent);
+}
+
+.atlas-key--demo {
+  color: var(--amber);
+  background: color-mix(in srgb, var(--amber) 25%, transparent);
+}
+
+.atlas-key--planned {
+  color: var(--electric);
+  background: color-mix(in srgb, var(--electric) 25%, transparent);
+}
+
+.atlas-key--unknown {
+  color: var(--copy-soft);
+  background: transparent;
+}
+
+.atlas-section {
+  padding-block: clamp(2rem, 4vw, 3.5rem);
+}
+
+.atlas-section__heading {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 60rem;
+  margin-bottom: 1.75rem;
+}
+
+.atlas-section__heading h2 {
+  margin: 0;
+  font: 700 clamp(1.75rem, 3vw, 2.75rem) / 1.08 var(--display);
+  letter-spacing: -0.03em;
+}
+
+.atlas-section__heading p {
+  margin: 0;
+  max-width: 48rem;
+  color: var(--copy-soft);
+  line-height: 1.6;
+}
+
+/* The generated portfolio plate ------------------------------------------ */
+
+.atlas-plate {
+  margin: 0;
+  border: 1px solid var(--line-dark);
+  background: var(--surface);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.atlas-plate picture,
+.atlas-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.atlas-plate figcaption {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.atlas-plate figcaption strong {
+  font: 700 1rem/1.4 var(--display);
+}
+
+.atlas-plate figcaption span {
+  color: var(--copy-soft);
+  line-height: 1.55;
+}
+
+.atlas-plate__source {
+  justify-self: start;
+  font: 600 0.78rem/1.4 var(--mono);
+  color: var(--accent-link);
+}
+
+/* The lane register ------------------------------------------------------- */
+
+.atlas-lane {
+  border-top: 2px solid var(--line-dark);
+  padding-top: 1rem;
+  margin-top: clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.atlas-lane:first-of-type {
+  margin-top: 0;
+}
+
+.atlas-lane__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin: 0 0 0.35rem;
+}
+
+.atlas-lane__heading h3 {
+  margin: 0;
+  font: 700 1.1rem/1.2 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.atlas-lane__heading p {
+  margin: 0;
+  color: var(--copy-soft);
+  font-size: 0.92rem;
+}
+
+.atlas-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.atlas-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 0.35rem 1.5rem;
+  align-items: start;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.atlas-row__identity {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.atlas-row__name {
+  font: 700 clamp(1.15rem, 1.6vw, 1.4rem) / 1.2 var(--display);
+  color: var(--paper);
+  text-decoration: none;
+  justify-self: start;
+}
+
+.atlas-row__name:hover,
+.atlas-row__name:focus-visible {
+  color: var(--brass);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.atlas-row__role {
+  color: var(--copy-soft);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.atlas-row__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.55rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atlas-row__stack li {
+  font: 500 0.72rem/1.4 var(--mono);
+  color: var(--copy-soft);
+  border: 1px solid var(--line);
+  padding: 0.1rem 0.4rem;
+}
+
+.atlas-row__meta {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: end;
+  text-align: right;
+  min-width: 0;
+}
+
+.atlas-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font: 700 0.72rem/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.atlas-status::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid currentColor;
+  flex: none;
+}
+
+.atlas-status--live::before {
+  background: color-mix(in srgb, var(--accent-link) 35%, transparent);
+}
+
+.atlas-status--demo::before {
+  background: color-mix(in srgb, var(--amber) 35%, transparent);
+}
+
+.atlas-status--planned::before {
+  background: color-mix(in srgb, var(--electric) 35%, transparent);
+}
+
+.atlas-status--unknown::before {
+  background: transparent;
+}
+
+.atlas-row__review {
+  font: 500 0.72rem/1.4 var(--mono);
+  color: var(--copy-soft);
+}
+
+.atlas-row__link {
+  justify-self: start;
+  font: 600 0.8rem/1.3 var(--mono);
+  color: var(--accent-link);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.atlas-row__link:hover,
+.atlas-row__link:focus-visible {
+  color: var(--brass);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.atlas-row__lifecycle {
+  font: 700 0.68rem/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+/* Connection ledger ------------------------------------------------------- */
+
+.atlas-ledger {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-dark);
+}
+
+.atlas-ledger__item {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.atlas-ledger__route {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.6rem;
+  font: 700 0.95rem/1.4 var(--mono);
+  color: var(--paper);
+}
+
+.atlas-ledger__route .atlas-ledger__arrow {
+  color: var(--brass);
+}
+
+.atlas-ledger__route a {
+  color: var(--paper);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.atlas-ledger__route a:hover,
+.atlas-ledger__route a:focus-visible {
+  color: var(--brass);
+  border-color: var(--brass);
+}
+
+.atlas-ledger__detail {
+  margin: 0;
+  color: var(--copy-soft);
+  line-height: 1.55;
+}
+
+.atlas-ledger__evidence {
+  font: 500 0.74rem/1.5 var(--mono);
+  color: var(--copy-soft);
+  overflow-wrap: anywhere;
+}
+
+.atlas-ledger__evidence strong {
+  color: var(--paper);
+}
+
+.atlas-ledger__pair {
+  display: inline-block;
+  font: 700 0.68rem/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--brass);
+  padding: 0.15rem 0.4rem;
+}
+
+/* Reading notes ----------------------------------------------------------- */
+
+.atlas-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.atlas-notes h3 {
+  margin: 0 0 0.5rem;
+  font: 700 1.15rem/1.3 var(--display);
+}
+
+.atlas-notes p {
+  margin: 0 0 0.75rem;
+  color: var(--copy-soft);
+  line-height: 1.6;
+}
+
+/* Per-project profile ----------------------------------------------------- */
+
+.profile-head {
+  display: grid;
+  gap: 1.5rem;
+  padding-block: 2.25rem 1.75rem;
+}
+
+.profile-head__title {
+  margin: 0;
+  font: 700 clamp(2.6rem, 6vw, 5rem) / 0.98 var(--display);
+  letter-spacing: -0.045em;
+}
+
+.profile-head__role {
+  max-width: 46rem;
+  margin: 0;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  line-height: 1.55;
+  color: var(--copy);
+}
+
+.profile-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font: 500 0.78rem/1.4 var(--mono);
+  color: var(--copy-soft);
+}
+
+.profile-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+}
+
+.profile-head__actions a {
+  font: 600 0.9rem/1.4 var(--mono);
+  color: var(--accent-link);
+  text-decoration: none;
+}
+
+.profile-head__actions a:hover,
+.profile-head__actions a:focus-visible {
+  color: var(--brass);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.profile-body > section + section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.profile-body h2 {
+  margin: 0 0 0.85rem;
+  font: 700 clamp(1.45rem, 2.3vw, 2rem) / 1.15 var(--display);
+  letter-spacing: -0.02em;
+}
+
+.profile-body p {
+  margin: 0 0 0.9rem;
+  line-height: 1.65;
+  color: var(--copy);
+}
+
+.profile-body p:last-child {
+  margin-bottom: 0;
+}
+
+.profile-facts {
+  margin: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line-dark);
+}
+
+.profile-facts > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.42fr) minmax(0, 1fr);
+  gap: 0.35rem 1.25rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.profile-facts dt {
+  font: 700 0.74rem/1.5 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.profile-facts dd {
+  margin: 0;
+  color: var(--copy);
+  line-height: 1.55;
+}
+
+.profile-facts dd small {
+  display: block;
+  margin-top: 0.2rem;
+  font: 500 0.72rem/1.5 var(--mono);
+  color: var(--copy-soft);
+}
+
+.profile-rail {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.rail-card {
+  border: 1px solid var(--line-dark);
+  background: var(--surface);
+  padding: 1.1rem 1.2rem;
+}
+
+.rail-card h2,
+.rail-card h3 {
+  margin: 0 0 0.6rem;
+  font: 700 0.8rem/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.rail-card p,
+.rail-card li {
+  color: var(--copy-soft);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.rail-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.rail-links {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail-links a {
+  font: 600 0.85rem/1.4 var(--mono);
+  color: var(--accent-link);
+  text-decoration: none;
+}
+
+.rail-links a:hover,
+.rail-links a:focus-visible {
+  color: var(--brass);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* System stack ------------------------------------------------------------ */
+
+.system-stack {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: stack;
+}
+
+.system-stack__part {
+  counter-increment: stack;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 0 1rem;
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--line-dark);
+}
+
+.system-stack__part:last-child {
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.system-stack__part::before {
+  content: counter(stack, decimal-leading-zero);
+  font: 700 1.35rem/1.1 var(--display);
+  color: var(--copy-soft);
+}
+
+.system-stack__part strong {
+  display: block;
+  font: 700 1rem/1.35 var(--display);
+  color: var(--paper);
+}
+
+.system-stack__part span {
+  display: block;
+  color: var(--copy-soft);
+  line-height: 1.55;
+  font-size: 0.94rem;
+}
+
+.system-stack__part small {
+  display: block;
+  margin-top: 0.25rem;
+  font: 500 0.72rem/1.5 var(--mono);
+  color: var(--copy-soft);
+  overflow-wrap: anywhere;
+}
+
+/* Deep-dive reasoning ----------------------------------------------------- */
+
+.decisions {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.decisions li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--line-dark);
+}
+
+.decisions strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font: 700 1rem/1.4 var(--display);
+  color: var(--paper);
+}
+
+.decisions p {
+  margin: 0;
+  color: var(--copy-soft);
+  line-height: 1.6;
+}
+
+.unknowns {
+  border: 1px dashed var(--line-dark);
+  padding: 1.1rem 1.2rem;
+}
+
+.unknowns h2,
+.unknowns h3 {
+  margin: 0 0 0.5rem;
+  font: 700 0.8rem/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.unknowns ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--copy-soft);
+  line-height: 1.6;
+}
+
+.unknowns li + li {
+  margin-top: 0.4rem;
+}
+
+/* Footer navigation between profiles -------------------------------------- */
+
+.atlas-pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2rem;
+  border-top: 2px solid var(--line-dark);
+}
+
+.atlas-pager a {
+  font: 600 0.9rem/1.4 var(--mono);
+  color: var(--accent-link);
+  text-decoration: none;
+}
+
+.atlas-pager a:hover,
+.atlas-pager a:focus-visible {
+  color: var(--brass);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .profile-rail {
+    position: static;
+  }
+
+  .atlas-notes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .atlas-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+  }
+
+  .atlas-row__meta {
+    grid-auto-flow: column;
+    justify-content: start;
+    justify-items: start;
+    text-align: left;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .atlas-row__link {
+    white-space: normal;
+  }
+
+  .profile-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
+}
+
+/* Native, URL-addressable register filters ------------------------------- */
+
+.atlas-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.atlas-filters__label {
+  margin: 0;
+  font: 700 0.72rem/1.3 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+.atlas-filters ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atlas-filters a {
+  display: inline-block;
+  border: 1px solid var(--line);
+  padding: 0.22rem 0.55rem;
+  font: 600 0.72rem/1.3 var(--mono);
+  color: var(--copy);
+  text-decoration: none;
+}
+
+.atlas-filters a:hover,
+.atlas-filters a:focus-visible {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.atlas-filters a[aria-current="true"] {
+  border-color: var(--brass);
+  background: var(--brass);
+  color: var(--ink);
+}
+
+.atlas-filter-count {
+  margin: 0 0 1.25rem;
+  font: 500 0.75rem/1.5 var(--mono);
+  color: var(--copy-soft);
+}
+
+.atlas-empty {
+  border: 1px dashed var(--line-dark);
+  padding: 1rem 1.1rem;
+  color: var(--copy-soft);
+}

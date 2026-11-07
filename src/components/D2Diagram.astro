@@ -12,6 +12,8 @@ type Props = {
   caption?: string;
   className?: string;
   priority?: boolean;
+  /** Width at which the phone composition replaces the wide plate. */
+  mobileBreakpoint?: number;
 };
 
 const {
@@ -22,7 +24,8 @@ const {
   id,
   caption,
   className = "",
-  priority = false
+  priority = false,
+  mobileBreakpoint = 760
 } = Astro.props;
 const hasTranscript = Astro.slots.has("default");
 const sizeOf = (src: string) => sizes[src.replace(/^.*\//, "").replace(/\.svg$/, "")];
@@ -36,7 +39,7 @@ const style =
 
 <figure id={id} class={`d2-diagram ${className}`} style={style}>
   <picture>
-    <source media="(max-width: 760px)" srcset={mobile} />
+    <source media={`(max-width: ${mobileBreakpoint}px)`} srcset={mobile} />
     <img
       src={desktop}
       alt={description}
