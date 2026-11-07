@@ -64,7 +64,9 @@
     "figures": "node scripts/render-article-figures.mjs",
     "figures:check": "node scripts/render-article-figures.mjs --check",
     "deploy:publication": "node scripts/deploy-publication.mjs",
-    "edition:rehearse": "node scripts/rehearse-edition.mjs"
+    "edition:rehearse": "node scripts/rehearse-edition.mjs",
+    "showcase:delivery": "node scripts/showcase-delivery.mjs",
+    "test:showcase": "node --test scripts/discord-showcase.test.mjs scripts/showcase-delivery.test.mjs scripts/showcase-publication.test.mjs"
   },
   "emdash": {
     "seed": "seed/seed.json"

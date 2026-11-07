@@ -9,6 +9,7 @@ import { computeSourceDigest } from "./source-digest.mjs";
 import { awaitBuildIdentity } from "./verify-build-identity.mjs";
 import { assertPublicationContent, previewReceiptIsFresh } from "./publication-content.mjs";
 import { publicationAuditScope, auditScopeArguments } from "./publication-audit-scope.mjs";
+import { showcasePublication } from "./showcase-publication.mjs";
 
 const root = process.cwd();
 const environment = process.argv.filter((arg) => arg !== "--")[2];
@@ -374,3 +375,7 @@ await chmod(receiptPath, 0o600);
 console.log(
   `Public journal verified at ${target.origin}; Worker ${workerVersion} serves 100% traffic.`
 );
+const showcase = await showcasePublication(manifest);
+if (!["not_production", "not_prepared"].includes(showcase.status)) {
+  console.log("Discord showcase: " + JSON.stringify(showcase));
+}
