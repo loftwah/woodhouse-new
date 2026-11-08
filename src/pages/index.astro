@@ -126,8 +126,13 @@ export const prerender = false;
     </section>
     <div class="publication-dateline">
       <span>
-        Newest portfolio review{" "}
+        Newest project review{" "}
         <time datetime={readout.reviewDate ?? undefined}>{reviewDateLabel}</time>
+        {readout.olderCount > 0 && (
+          <span class="publication-dateline__note">
+            {readout.olderCount} of {projects.length} reviewed earlier
+          </span>
+        )}
       </span>
       <span class="publication-dateline__links">
         <a class="text-link" href="/connections/">
@@ -523,6 +528,17 @@ export const prerender = false;
   .publication-dateline time {
     color: var(--paper);
     margin-left: 0.35rem;
+  }
+  .publication-dateline__note {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--muted);
+  }
+  @media (min-width: 720px) {
+    .publication-dateline__note {
+      display: inline;
+      margin: 0 0 0 0.5rem;
+    }
   }
   .start-here {
     padding-top: clamp(3.5rem, 7vw, 6rem);

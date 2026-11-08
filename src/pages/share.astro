@@ -767,7 +767,8 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
   }
 
   // The phone gallery rails scroll horizontally. Open with the selected project
-  // or asset type visible instead of leaving the current choice off-screen.
+  // or asset type visible instead of leaving the current choice off-screen, and
+  // say which edges still hold content so a fade can show the rail continues.
   for (const nav of document.querySelectorAll<HTMLElement>(
     ".showcase-projects, .gallery-controls nav"
   )) {
@@ -775,6 +776,18 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
     if (active && nav.scrollWidth > nav.clientWidth) {
       nav.scrollLeft = Math.max(0, active.offsetLeft - nav.offsetLeft - 8);
     }
+    const updateEdges = () => {
+      const scrollable = nav.scrollWidth > nav.clientWidth + 2;
+      nav.toggleAttribute("data-scrollable", scrollable);
+      nav.toggleAttribute("data-at-start", !scrollable || nav.scrollLeft <= 2);
+      nav.toggleAttribute(
+        "data-at-end",
+        !scrollable || Math.ceil(nav.scrollLeft + nav.clientWidth) >= nav.scrollWidth - 2
+      );
+    };
+    updateEdges();
+    nav.addEventListener("scroll", updateEdges, { passive: true });
+    window.addEventListener("resize", updateEdges, { passive: true });
   }
 
   for (const image of document.querySelectorAll<HTMLImageElement>("[data-gallery-image]")) {
@@ -911,6 +924,36 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
       white-space: nowrap;
       margin: 0 0 0.9rem;
       gap: 0 1rem;
+    }
+    /* A rail that silently continues past the edge looks like a short list. The
+       fade only appears on a scrollable rail, and only on the side that still has
+       content, so the selected item is never hidden behind it. */
+    .showcase-projects[data-scrollable] {
+      scroll-padding-inline: 1rem;
+    }
+    .showcase-projects[data-scrollable]:not([data-at-end]) {
+      -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent);
+      mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent);
+    }
+    .showcase-projects[data-scrollable]:not([data-at-start]):not([data-at-end]) {
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 2rem,
+        #000 calc(100% - 2.5rem),
+        transparent
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 2rem,
+        #000 calc(100% - 2.5rem),
+        transparent
+      );
+    }
+    .showcase-projects[data-scrollable]:not([data-at-start])[data-at-end] {
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 2rem);
+      mask-image: linear-gradient(to right, transparent 0, #000 2rem);
     }
     .showcase-projects a {
       font-size: 0.8rem;
@@ -1154,7 +1197,37 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
       overflow-x: auto;
       padding-right: 2.25rem;
       scrollbar-width: thin;
-      mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2rem), transparent 100%);
+    }
+    .gallery-controls .project-choices[data-scrollable],
+    .gallery-controls .type-choices[data-scrollable] {
+      scroll-padding-inline: 1rem;
+    }
+    .gallery-controls .project-choices[data-scrollable]:not([data-at-end]),
+    .gallery-controls .type-choices[data-scrollable]:not([data-at-end]) {
+      -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2rem), transparent);
+      mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2rem), transparent);
+    }
+    .gallery-controls .project-choices[data-scrollable]:not([data-at-start]):not([data-at-end]),
+    .gallery-controls .type-choices[data-scrollable]:not([data-at-start]):not([data-at-end]) {
+      -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 1.5rem,
+        #000 calc(100% - 2rem),
+        transparent
+      );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0,
+        #000 1.5rem,
+        #000 calc(100% - 2rem),
+        transparent
+      );
+    }
+    .gallery-controls .project-choices[data-scrollable]:not([data-at-start])[data-at-end],
+    .gallery-controls .type-choices[data-scrollable]:not([data-at-start])[data-at-end] {
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.5rem);
+      mask-image: linear-gradient(to right, transparent 0, #000 1.5rem);
     }
     .gallery-controls .project-choices a,
     .gallery-controls .type-choices a {

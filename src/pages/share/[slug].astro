@@ -119,7 +119,12 @@ const hostOf = (href: string) => {
       // caption a person would actually post and the actions belong in one view.
       <section class="work-card" aria-labelledby="work-card-title">
         <figure class="work-card__art">
-          <a href={items[0]!.original} aria-label={`View ${items[0]!.title} full size`}>
+          <a
+            href={items[0]!.original}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`View ${items[0]!.title} full size`}
+          >
             <img
               src={items[0]!.image}
               width={items[0]!.width}
@@ -128,7 +133,7 @@ const hostOf = (href: string) => {
               loading="eager"
               decoding="async"
             />
-            <span class="work-card__view" aria-hidden="true">View full size</span>
+            <span class="work-card__view" aria-hidden="true">View full size ↗</span>
           </a>
           <figcaption>
             <span class="work-card__kind">{items[0]!.kind}</span>
