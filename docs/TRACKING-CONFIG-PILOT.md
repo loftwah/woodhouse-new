@@ -1,6 +1,6 @@
 # Public tracking-configuration pilot
 
-Reviewed 7 November 2026. Finite pilot for [issue #167](https://github.com/loftwah/woodhouse-new/issues/167).
+Reviewed 8 November 2026 (first pass 7 November 2026). Finite pilot for [issue #167](https://github.com/loftwah/woodhouse-new/issues/167).
 It asks one question: can the tracking configuration a public site delivers to a browser tell us
 anything useful about an adjacent product's funnel — and does our own client-side surface leak
 anything it should not?
@@ -129,6 +129,63 @@ The NTS container is the clean example of why visible configuration is not unit 
 No owning-repository defect was found: the four owned documents had no exposure or measurement gap to
 route. Confidence: medium that the instrumentation reading is complete for NTS, low for Poki, high
 that the owned sites expose nothing unexpected.
+
+## Follow-up — shipped client bundles, 8 November 2026
+
+The 7 November pass read delivered **documents**. This follow-up reads the **JavaScript those
+documents ship**, because a private hostname or a token in a bundle is invisible to a document-level
+grep. Retrieved **8 November 2026, 12:13–12:14 Australia/Melbourne (AEDT)** = **01:13–01:14 UTC**.
+
+Method: one `curl` of each origin's HTML, every same-origin `/_astro/*.js` it references, then one
+level of static `import` from those bundles. 35 files, 242 KB total — the whole shipped surface for
+these three entry points, not a sample. No execution, no authentication, no writes.
+
+| Origin | Bundles read | Result |
+| --- | --- | --- |
+| `https://woodhouse.loftwah.com/` | 4 | Clean |
+| `https://fm.loftwah.com/` | 28 | Clean; one benign `127.0.0.1` match |
+| `https://max.loftwah.com/` | 3 | Clean |
+
+### Observed
+
+- **No credential-shaped string** in any of the 35 files: no `sk_live_`/`sk_test_`, `ghp_`,
+  `github_pat_`, `AKIA…`, `-----BEGIN … PRIVATE KEY`, bearer token, `x-api-key`, `client_secret` or
+  `private_key`.
+- **No source map is served.** Every one of the 35 bundles was probed for its `.map` sibling; all
+  returned 404. The bundles are minified without a published map, so internal symbol names and
+  comments are not exposed either.
+- **No third-party measurement.** Case-sensitive search of all three documents and all 35 bundles
+  found no `googletagmanager.com`, `google-analytics.com`, `plausible.io`, `clarity.ms`, `hotjar.com`,
+  `posthog.com`, `matomo`, `segment.com`, `GTM-`, `AW-` or `gtag(`. This extends the 7 November
+  finding to `max.loftwah.com`, which the earlier pass had not covered. An earlier case-insensitive
+  grep appeared to hit `plausible` and `clarity`; both were prose in page copy ("a plausible
+  calendar commitment", "late night clarity"), not instrumentation.
+- **Endpoints in bundles are public by design:** `/api/`, `/api/auth/logout`, `/api/demo`,
+  `/api/waitlist`. No `/_emdash` admin path, no internal hostname.
+- **One `127.0.0.1` occurrence**, in `fm.loftwah.com/Player.BxMQp85A.js`: `Qt()` compares
+  `window.location.hostname` against `localhost`/`127.0.0.1` to label the environment. That is a
+  development detector, not an address the product calls.
+- **Public identifiers are identifiers.** `max@loftwah.com` is the published contact address, and the
+  Turnstile site key `0x4AAAAAAFBJWAvHHcT7V2hI` is present in the MAX page by design. Neither is a
+  secret and neither is reported as an incident.
+- **Third-party script origins are the expected ones.** Woodhouse embeds its own sibling origins
+  (`fm.`, `composer.`, `bubbles.`); MAX loads `challenges.cloudflare.com` for Turnstile; FM loads
+  nothing third-party.
+
+### Unknown
+
+- Behaviour behind authentication. Only the public entry points were read; signed-in portals
+  (`/portal/`, `/settings`, `/admin`) ship different bundles and were not in scope.
+- Runtime values assembled from Cloudflare bindings. A string that is never in the bundle cannot leak
+  from it, but bindings are not visible from outside.
+- Whether a vendor chunk from a CDN carries anything. Only same-origin bundles were read.
+
+### Decision
+
+**No exposure defect found, nothing to route to an owning repository.** The earlier adopt / adapt /
+defer / reject decision stands unchanged. One sentence is worth keeping: for this portfolio the
+cheapest real exposure check is *bundle-level*, and it takes four `curl` calls and three `grep`
+patterns per origin — not a scanner.
 
 ## Repeat this check
 
