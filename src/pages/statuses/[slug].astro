@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import StatusStamp from "../../components/StatusStamp.astro";
 import { getEmDashEntry } from "emdash";
 import { asText } from "../../content/repository";
+import { formatReviewDate } from "../../data/review-date";
 
 export const prerender = false;
 const slug = Astro.params.slug;
@@ -52,10 +53,14 @@ if (isPreview) {
     if (hint) Astro.cache.set(hint);
 }
 const title = asText(status.data, "state") || "Project status";
+const reviewed = formatReviewDate(asText(status.data, "reviewed_at"));
+// A status is a dated record. Two reviews can legitimately share a state label
+// ("Public card cabinet"), so the date keeps their document titles distinct.
+const documentTitle = `${project ? asText(project.data, "name") : projectKey} · ${title}${reviewed ? ` · ${reviewed}` : ""}`;
 ---
 
 <BaseLayout
-  title={`${project ? asText(project.data, "name") : projectKey} · ${title}`}
+  title={documentTitle}
   description={asText(status.data, "current") || "A dated project status preview."}
   path={`/statuses/${status.id}/`}
   type="article"
