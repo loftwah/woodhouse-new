@@ -216,13 +216,12 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           {project.index} / {allProjects.projects.length}
         </dd>
       </dl>
-      {leaderboardProjects.some((entry) => entry.slug === project.slug) && (
+      {leaderboardProjects.some(
+        (entry) => entry.slug === project.slug && entry.lifecycle === "active"
+      ) && (
         <p class="dossier-hero__analytics">
           <a class="text-link" href={`/activity/leaderboards/?project=${project.slug}`}>
-            {project.lifecycle === "active"
-              ? `See where ${project.name} ranks`
-              : `See ${project.name}'s historical GitHub record`}{" "}
-            <span aria-hidden="true">→</span>
+            See where {project.name} ranks <span aria-hidden="true">→</span>
           </a>
         </p>
       )}
