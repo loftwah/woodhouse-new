@@ -73,9 +73,28 @@ function stopActiveChild() {
   }
 }
 
+// Recorded, never enforced. The owner target is three minutes from change to
+// verified production; a number in the output is what makes that checkable, and
+// a slow stage is information for the next run rather than a failed check.
+const stageTimings = [];
+
 function runStage([label, script]) {
   process.stdout.write(`\n== ${label} ==\n`);
-  return spawnOwned(packageManager, ["run", script]);
+  const startedAt = Date.now();
+  return spawnOwned(packageManager, ["run", script]).then((status) => {
+    stageTimings.push([label, Date.now() - startedAt]);
+    return status;
+  });
+}
+
+function reportTimings() {
+  if (!stageTimings.length) return;
+  const total = stageTimings.reduce((sum, [, ms]) => sum + ms, 0);
+  process.stdout.write(
+    `\nVerification timing: ${(total / 1000).toFixed(1)}s — ` +
+      stageTimings.map(([label, ms]) => `${label} ${(ms / 1000).toFixed(1)}s`).join(", ") +
+      "\n"
+  );
 }
 
 /** Hold the shared host slot for exactly this payload, then release it. */
@@ -108,7 +127,11 @@ async function runStages(list) {
 function heavyLane(options) {
   const payload = [process.execPath, self, "--reserved"];
   if (options.stage) payload.push("--stage", options.stage);
-  return reserved(options.stage ?? "typecheck and build", payload, options);
+  const startedAt = Date.now();
+  return reserved(options.stage ?? "typecheck and build", payload, options).then((status) => {
+    stageTimings.push([options.stage ?? "typecheck and build (reserved)", Date.now() - startedAt]);
+    return status;
+  });
 }
 
 /**
@@ -189,6 +212,7 @@ export async function main(argv) {
   } finally {
     process.off("SIGINT", interrupt);
     process.off("SIGTERM", interrupt);
+    reportTimings();
   }
 }
 

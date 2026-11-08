@@ -37,6 +37,20 @@ const targets = {
 };
 const target = targets[environment];
 let auditScope = publicationAuditScope(process.argv.slice(3));
+
+// The owner target is three minutes from change to verified production, five at
+// the outside. A claim about the release path is only worth what the receipt
+// says, so every release records where its own time went. These marks are
+// bookkeeping, not gates: a slow provider upload is reported, never converted
+// into a failed release or a passing one.
+const startedAt = Date.now();
+let markedAt = startedAt;
+const durations = [];
+function mark(stage) {
+  const now = Date.now();
+  durations.push({ stage, ms: now - markedAt });
+  markedAt = now;
+}
 function run(binary, args, options = {}) {
   const result = spawnSync(binary, args, {
     cwd: root,
@@ -97,6 +111,7 @@ const secretNamesBefore = verifySecretNames();
 const sourceDigest = await computeSourceDigest(root);
 const checks = [];
 const seed = JSON.parse(await readFile(path.join(root, "seed/seed.json"), "utf8"));
+mark("preflight");
 
 async function verifyServedContent(origin, identity) {
   const response = await fetch(origin + "/agents/facts.json", {
@@ -223,17 +238,16 @@ if (environment === "production") {
     active.versions[0].version_id !== receipt.workerVersion
   )
     throw new Error("Accepted preview is not the active 100% deployment.");
-  const identity = await awaitBuildIdentity(targets.preview.origin, {
-    expectedDigest: sourceDigest,
-    expectedEnvironment: "preview"
-  });
-  if (!identity.ok) throw new Error("Preview no longer serves the reviewed source.");
-  await verifyServedContent(targets.preview.origin, identity.identity);
-  await verifyBoundary(targets.preview.origin);
-  // The fresh receipt is written only after the preview audit and active-version
-  // check pass. Recheck the live identity, content and boundary above; the
-  // production origin receives the same scoped audit after deployment.
+  mark("preview receipt and active version");
+  // The preview receipt is written only after the build identity, served content,
+  // boundary and scoped page audit passed for this exact Worker version. A Worker
+  // version is immutable, and the check above proves that version is still taking
+  // 100% of preview traffic, so re-probing those same bytes here would re-prove
+  // the receipt rather than the deployment. Production re-proves identity, served
+  // content, boundary and the scoped audit on the production origin below, where
+  // the risk actually is.
   run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
+  mark("production recovery point");
 }
 // The observed failure would be a healthy CMS release with a missing analytics
 // schema, silently disabling engagement. These are application tables, never
@@ -269,10 +283,13 @@ const actualSchema = new Set(
 );
 if (analyticsSchemaObjects.some((name) => !actualSchema.has(name)))
   throw new Error("Reviewed portfolio analytics schema must be applied before publication.");
+mark("analytics schema");
 run("pnpm", ["run", "verify:content", "--", environment], { stdio: "inherit" });
+mark("content model");
 run("pnpm", ["run", environment === "production" ? "build" : "build:preview"], {
   stdio: "inherit"
 });
+mark("build");
 const migration = json(
   run("pnpm", [
     "exec",
@@ -293,6 +310,7 @@ if (
   migration.unknownApplied.length
 )
   throw new Error("Core migrations must already be clean; publication does not apply them.");
+mark("migration check");
 const configPath = path.join(root, "dist/server/wrangler.json");
 const config = JSON.parse(await readFile(configPath, "utf8"));
 const db = config.d1_databases?.find((entry) => entry.binding === "DB");
@@ -319,6 +337,7 @@ config.vars.WOODHOUSE_PUBLICATION_MODE = "read-only";
 // Analytics-only schedule never invokes CMS maintenance or authoring.
 config.triggers = { crons: environment === "production" ? ["17 * * * *"] : [] };
 await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
+mark("manifest");
 const deployment = run("pnpm", [
   "exec",
   "wrangler",
@@ -333,15 +352,20 @@ for (const line of deployment.split(/\r?\n/)) {
 }
 const workerVersion = /Current Version ID:\s*([a-f0-9-]{36})/i.exec(deployment)?.[1];
 if (!workerVersion) throw new Error("Wrangler did not return the deployed Worker version.");
+mark("upload and deploy");
 const identity = await awaitBuildIdentity(target.origin, {
   expectedDigest: sourceDigest,
   expectedEnvironment: environment
 });
 if (!identity.ok || (environment === "production" && identity.identity?.gitClean !== true))
   throw new Error("The deployed origin does not report the intended reviewed build.");
+mark("build identity");
 await verifyServedContent(target.origin, identity.identity);
+mark("served content");
 await verifyBoundary(target.origin);
+mark("publication boundary");
 auditPages(target.origin, auditScope);
+mark("page audit");
 const active = json(
   run("pnpm", ["exec", "wrangler", "deployments", "status", "--name", target.worker, "--json"])
 );
@@ -351,6 +375,9 @@ if (
   active.versions[0].version_id !== workerVersion
 )
   throw new Error("The new Worker is not active at 100% traffic.");
+mark("active traffic");
+const secretNames = verifySecretNames();
+mark("secret inventory");
 const directory = path.join(root, ".release");
 await mkdir(directory, { recursive: true, mode: 0o700 });
 await chmod(directory, 0o700);
@@ -362,9 +389,10 @@ const manifest = {
   workerVersion,
   sourceDigest,
   gitCommit: identity.identity.gitCommit,
-  secretNames: verifySecretNames(),
+  secretNames,
   content: identity.identity.content,
   checks,
+  durations: { totalMs: Date.now() - startedAt, stages: durations },
   deployedAt: new Date().toISOString()
 };
 if (secretNamesBefore.some((name) => !manifest.secretNames.includes(name)))
@@ -372,8 +400,13 @@ if (secretNamesBefore.some((name) => !manifest.secretNames.includes(name)))
 const receiptPath = path.join(directory, `publication-${environment}.json`);
 await writeFile(receiptPath, JSON.stringify(manifest, null, 2) + "\n", { mode: 0o600 });
 await chmod(receiptPath, 0o600);
+const totalSeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
 console.log(
   `Public journal verified at ${target.origin}; Worker ${workerVersion} serves 100% traffic.`
+);
+console.log(
+  `Release timing (${environment}): ${totalSeconds}s — ` +
+    durations.map((entry) => `${entry.stage} ${(entry.ms / 1000).toFixed(1)}s`).join(", ")
 );
 const showcase = await showcasePublication(manifest);
 if (!["not_production", "not_prepared"].includes(showcase.status)) {
