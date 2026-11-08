@@ -1,6 +1,6 @@
 # Verification and release paths
 
-Measured 8 November 2026 on the source at `3b32de4`. This replaces guesswork about how long the
+Measured 8 November 2026 on the source at `5b00812`. This replaces guesswork about how long the
 checks take and which ones a change actually needs. The numbers are observations on one machine, not
 a benchmark or a guarantee.
 
@@ -9,43 +9,42 @@ a benchmark or a guarantee.
 - Apple M4 Pro, macOS, Node v22.23.4, pnpm 12.8.1.
 - Warm `node_modules` and Astro cache, single worktree, no other project holding the shared host
   reservation during the runs.
-- Clean tree at `3b32de4`. Three runs for the light lanes, two for the heavy lane, one for each
-  single stage.
+- Two runs for the quick lane, one for the light lane, one for each single stage, two complete
+  releases.
 - Wall time from process start to exit, including the package-manager start-up. Tests report their
-  own duration (2.04s), which matches the wall time closely.
+  own duration, which matches the wall time closely.
 
 ## Measured
 
 | Path | Command | Runs | Median |
 | --- | --- | --- | --- |
-| Quick feedback | `pnpm run verify -- --quick` | 5.94s, 5.30s, 5.41s | **5.41s** |
-| Light | `pnpm run verify -- --light` | 5.48s, 6.42s, 5.31s | **5.48s** |
-| Heavy | `pnpm run verify -- --heavy` | 28.56s, 27.75s | **28.2s** |
-| Full | light, then heavy | derived | **~34s** |
+| Quick feedback | `pnpm run verify -- --quick` | 6.33s, 6.31s | **6.3s** |
+| Light | `pnpm run verify -- --light` | 6.3s | **6.3s** |
+| Heavy | `pnpm run verify -- --heavy` | derived from the two stages | **~38s** |
+| Full | light, then heavy | derived | **~44s** |
 
 Per-stage attribution:
 
 | Stage | Lane | Measured |
 | --- | --- | --- |
-| EmDash seed validation | light | 0.31s |
-| Lint | light | 3.72s |
-| Tests | light | 2.21s |
-| Astro and TypeScript (`typecheck`) | heavy, reserved | 17.93s |
-| Production build and privacy scan | heavy, reserved | 12.99s |
+| EmDash seed validation | light | 0.3s |
+| Lint | light | 3.3s |
+| Tests | light | 2.9s |
+| Astro and TypeScript (`typecheck`) | heavy, reserved | 20.6s |
+| Production build and privacy scan | heavy, reserved | 17.5s |
+
+The full pipeline grew from ~34s to ~44s, almost all of it in typecheck and build; the retained
+tests grew by under a second. It is still tens of seconds, not minutes. Both lanes now print their own
+timing line, so this table can be re-derived from any run instead of copied forward.
 
 ## What this actually says
 
-- **The light lane and the quick lane are the same lane.** The only difference is the seed
-  validation at 0.31s. Both land at ~5.5s. The distinction costs nothing, but it also buys almost
-  nothing; a change that edits the seed model should still run the light lane.
-- **Typecheck is the single largest cost** at 17.9s, about 48% of the full pipeline. The build is
-  second at 13.0s, about 35%. Together they are 83% of everything.
-- **The full pipeline is ~34s, not minutes.** The 49-second light run recorded in #155 was a
-  different suite; the retained tests are now ~2s of real work. Anyone budgeting minutes for routine
-  verification is budgeting for a pipeline that no longer exists.
-- **The queued wait is a separate quantity.** Every heavy run above took the shared reservation
-  immediately. A blocked run is not a slow pipeline; it is another project holding the slot, and it
-  should be recorded as wait, not cost.
+- **The light lane and the quick lane are the same lane.** The only difference is seed validation at
+  0.3s. A change that edits the seed model should still run the light lane.
+- **Typecheck is the single largest local cost** at ~21s, roughly half of the full pipeline. The
+  build is second at ~18s.
+- **The queued wait is a separate quantity.** A blocked heavy run is another project holding the
+  shared slot; record it as wait, not cost.
 
 ## The route for ordinary changes
 
@@ -64,16 +63,14 @@ There is no hosted CI for this repository, deliberately. The checks run here, on
 the source, the build cache and the failure output.
 
 `pnpm run hooks:install` points `core.hooksPath` at `.githooks`, and `.githooks/pre-push` runs the
-**quick lane** before a push leaves the machine. It takes about five seconds, prints the failing
-output when it fails, and refuses to overwrite a `core.hooksPath` that already points elsewhere.
+**quick lane** before a push leaves the machine. It takes about ten seconds including the push, prints
+the failing output when it fails, and refuses to overwrite a `core.hooksPath` that already points
+elsewhere.
 
 - Bypass a real emergency with `SKIP_LOCAL_CI=1 git push`; the hook says the push is unverified.
 - It runs the quick lane, not the full pipeline. Typecheck and build stay in `pnpm run verify`, because
   a hook that costs 30 seconds is a hook people disable.
 - `pnpm run hooks:check` reports whether it is installed and exits non-zero if not.
-
-First use caught a real lint error in the hook's own installer, which is the behaviour you want from a
-gate.
 
 ## The release path
 
@@ -96,24 +93,67 @@ Two consequences worth stating plainly:
   build proof.** The publication script builds the same tree again. Run `--quick` and
   `--stage typecheck`, then let the release build be the build. That avoids a duplicate build and a
   stale `dist/`.
-- **The release path is dominated by the deploy and the audit, not by the checks.** The checks are
-  ~23s before the release build; the rest is upload, edge propagation, the audit retry and the
-  D1 bookmark.
+- **The release path is dominated by the provider, not by the checks.** Upload and deploy is the
+  largest single stage in every release measured.
 
-The preview-to-production measurement below is filled in on the first runtime release after this
-record, because a docs-only change does not justify a redeploy.
+### Where the time went
 
-| Release path | Measured | Scope |
-| --- | --- | --- |
-| Preview publication | 70.5s, 81.9s | two routes each |
-| Production publication | 91.0s, 80.6s | same scope |
+Each publication writes its own stage timings to `.release/publication-preview.json` and
+`.release/publication-production.json` under `durations`, and prints the same line at the end of the
+run. Two complete releases on the day this record was written:
 
-Where the time goes, from the release output: build ~4s, upload **20–21s**, trigger deploy 1–2s, then
-the served-content check, boundary check, scoped page audit and D1 bookmark. The upload dominates and
-is provider-side; the checks before it are ~23s.
+| Stage | Preview (`6aabbff`) | Production (`6aabbff`) | Preview (`5b00812`) | Production (`5b00812`) |
+| --- | --- | --- | --- | --- |
+| Preflight (secrets, digest, seed) | 2.0s | 1.6s | 1.7s | 2.2s |
+| Preview receipt and active version | — | 4.2s | — | 4.1s |
+| Production recovery point | — | 2.3s | — | 2.7s |
+| Analytics schema | 1.0s | 1.4s | 1.0s | 1.1s |
+| Content model (`verify:content`) | 11.6s | 24.4s | 3.3s | 5.6s |
+| Build and privacy scan | 18.2s | 27.2s | 17.3s | 20.6s |
+| Migration check | 1.7s | 1.5s | 1.6s | 1.9s |
+| Upload and deploy | 45.2s | 41.0s | 37.7s | 40.0s |
+| Build identity | 1.5s | 1.7s | 2.8s | 1.6s |
+| Served content | 1.4s | 3.4s | 4.2s | 4.3s |
+| Publication boundary | 5.1s | 2.4s | 2.7s | 1.7s |
+| Page audit | 10.9s | 11.0s | 11.4s | 10.9s |
+| Active traffic | 1.1s | 0.9s | 0.8s | 1.1s |
+| Secret inventory | 1.1s | 0.9s | 0.9s | 1.1s |
+| **Total** | **100.8s** | **123.8s** | **85.5s** | **98.9s** |
 
-**End to end for one real fix:** commit → push → preview 81.9s → verify canonical on preview →
-production 80.6s → verify canonical live. With `--quick` (2.2s) and a reserved typecheck (18.5s) that
-is about **3.1 minutes** from edit to verified production, for a two-route change, on a quiet host.
-That is inside the 3–5 minute target and it is the only honest sample: a docs-only change is faster
-because it never enters this path.
+The `5b00812` release is faster for one reason: `verify:content` used to open one remote D1 round trip
+per relation, twelve in total, and now sends the same independent read-only statements in four
+batched invocations. The assertions did not change, including the per-relation edge comparison.
+
+### What is proved once, and where
+
+Production used to re-probe the preview before deploying: build identity, served content and ten
+boundary endpoints, on top of the preview receipt it had just read. The preview receipt is only
+written after those checks pass for an immutable Worker version, and the production run already
+confirms that version is still the one taking 100% of preview traffic. Re-running the probes re-proved
+the receipt, not the deployment, and cost ~6s each release. It was removed.
+
+Production still proves identity, served content, the publication boundary and the same scoped page
+audit on the production origin, which is the deployment that can actually be wrong. The preview
+receipt, its source digest, its audit scope and its Worker version are still required and still
+checked.
+
+What stays deliberately duplicated, because the environments are separate systems:
+
+- `verify:content` runs against each database. The seed is the same; the stored records are not.
+- The build runs once per environment. The two Workers bind different D1, R2 and KV resources.
+- The page audit runs on both origins. Preview proves the pages; production proves the deployment.
+- The secret inventory is read before and after each deploy, so a lost secret fails the release.
+
+### End to end, measured
+
+| Run | Quick | Typecheck | Push (hook) | Preview | Production | Total |
+| --- | --- | --- | --- | --- | --- | --- |
+| `6aabbff` | 6.3s | 24.0s | 9.8s | 100.8s | 123.8s | **264.7s (4.4 min)** |
+| `5b00812` | 6.2s | 20.6s | 9.8s | 85.5s | 98.9s | **221.0s (3.7 min)** |
+
+Both are under the five-minute ceiling. The three-minute default needs a quiet host and a warm cache;
+the second sample is close to the floor for a two-environment release, because 78s of it is two
+provider uploads and 38s is two builds that cannot be shared.
+
+The honest reading: the checks are not the problem. Together they are ~30s. The release is two
+deploys, and that is what the clock is spent on.

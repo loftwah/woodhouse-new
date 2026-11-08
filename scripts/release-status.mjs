@@ -175,6 +175,21 @@ if (!receipt) {
     );
 }
 
+// The five-minute target is only real if it is visible. Each publication writes
+// its own stage timings; surface the last one here instead of asking an operator
+// to remember a table.
+const lastProduction = await readPrivateJson(".release/publication-production.json");
+if (lastProduction?.durations?.totalMs) {
+  const slowest = [...(lastProduction.durations.stages ?? [])]
+    .sort((a, b) => b.ms - a.ms)
+    .slice(0, 3)
+    .map((entry) => `${entry.stage} ${(entry.ms / 1000).toFixed(1)}s`);
+  console.log(
+    `\nLast production release: ${(lastProduction.durations.totalMs / 1000).toFixed(1)}s; slowest ` +
+      `${slowest.join(", ")}.`
+  );
+}
+
 console.log("");
 for (const item of ready) console.log(`ready   ${item}`);
 for (const item of blocked) console.log(`blocked ${item}`);
