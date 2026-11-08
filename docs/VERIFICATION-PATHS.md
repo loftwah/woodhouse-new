@@ -1,15 +1,15 @@
 # Verification and release paths
 
-Measured 8 November 2026 on the source at `5b00812`. This replaces guesswork about how long the
-checks take and which ones a change actually needs. The numbers are observations on one machine, not
-a benchmark or a guarantee.
+Measured 8 November 2026 across three releases from `6aabbff` to `75f2641`. This replaces guesswork
+about how long the checks take and which ones a change actually needs. The numbers are observations
+on one machine, not a benchmark or a guarantee.
 
 ## Conditions
 
 - Apple M4 Pro, macOS, Node v22.23.4, pnpm 12.8.1.
 - Warm `node_modules` and Astro cache, single worktree, no other project holding the shared host
   reservation during the runs.
-- Two runs for the quick lane, one for the light lane, one for each single stage, two complete
+- Three runs for the quick lane, one for the light lane, one for each single stage, three complete
   releases.
 - Wall time from process start to exit, including the package-manager start-up. Tests report their
   own duration, which matches the wall time closely.
@@ -18,9 +18,9 @@ a benchmark or a guarantee.
 
 | Path | Command | Runs | Median |
 | --- | --- | --- | --- |
-| Quick feedback | `pnpm run verify -- --quick` | 6.33s, 6.31s | **6.3s** |
+| Quick feedback | `pnpm run verify -- --quick` | 6.33s, 6.31s, 5.77s | **6.2s** |
 | Light | `pnpm run verify -- --light` | 6.3s | **6.3s** |
-| Heavy | `pnpm run verify -- --heavy` | derived from the two stages | **~38s** |
+| Heavy | `pnpm run verify -- --heavy` | derived from the two stage medians | **~38s** |
 | Full | light, then heavy | derived | **~44s** |
 
 Per-stage attribution:
@@ -30,12 +30,14 @@ Per-stage attribution:
 | EmDash seed validation | light | 0.3s |
 | Lint | light | 3.3s |
 | Tests | light | 2.9s |
-| Astro and TypeScript (`typecheck`) | heavy, reserved | 20.6s |
-| Production build and privacy scan | heavy, reserved | 17.5s |
+| Astro and TypeScript (`typecheck`) | heavy, reserved | 15.4s, 20.6s, 24.0s |
+| Production build and privacy scan | heavy, reserved | 17.3s, 17.5s, 27.2s |
 
 The full pipeline grew from ~34s to ~44s, almost all of it in typecheck and build; the retained
 tests grew by under a second. It is still tens of seconds, not minutes. Both lanes now print their own
-timing line, so this table can be re-derived from any run instead of copied forward.
+timing line, so this table can be re-derived from any run instead of copied forward. The spread
+between the fastest and slowest typecheck or build is real machine variance, not a different command;
+budget for the slow end.
 
 ## What this actually says
 
@@ -100,29 +102,30 @@ Two consequences worth stating plainly:
 
 Each publication writes its own stage timings to `.release/publication-preview.json` and
 `.release/publication-production.json` under `durations`, and prints the same line at the end of the
-run. Two complete releases on the day this record was written:
+run. Three complete releases on the day this record was written:
 
-| Stage | Preview (`6aabbff`) | Production (`6aabbff`) | Preview (`5b00812`) | Production (`5b00812`) |
-| --- | --- | --- | --- | --- |
-| Preflight (secrets, digest, seed) | 2.0s | 1.6s | 1.7s | 2.2s |
-| Preview receipt and active version | — | 4.2s | — | 4.1s |
-| Production recovery point | — | 2.3s | — | 2.7s |
-| Analytics schema | 1.0s | 1.4s | 1.0s | 1.1s |
-| Content model (`verify:content`) | 11.6s | 24.4s | 3.3s | 5.6s |
-| Build and privacy scan | 18.2s | 27.2s | 17.3s | 20.6s |
-| Migration check | 1.7s | 1.5s | 1.6s | 1.9s |
-| Upload and deploy | 45.2s | 41.0s | 37.7s | 40.0s |
-| Build identity | 1.5s | 1.7s | 2.8s | 1.6s |
-| Served content | 1.4s | 3.4s | 4.2s | 4.3s |
-| Publication boundary | 5.1s | 2.4s | 2.7s | 1.7s |
-| Page audit | 10.9s | 11.0s | 11.4s | 10.9s |
-| Active traffic | 1.1s | 0.9s | 0.8s | 1.1s |
-| Secret inventory | 1.1s | 0.9s | 0.9s | 1.1s |
-| **Total** | **100.8s** | **123.8s** | **85.5s** | **98.9s** |
+| Stage | Preview, range of 3 | Production, range of 3 |
+| --- | --- | --- |
+| Preflight (secrets, digest, seed) | 1.7–4.0s | 1.6–2.3s |
+| Preview receipt and active version | — | 3.6–4.2s |
+| Production recovery point | — | 2.3–2.7s |
+| Analytics schema | 1.0–1.4s | 1.0–1.1s |
+| Content model (`verify:content`) | 3.3–4.6s | 4.9–5.6s |
+| Build and privacy scan | 17.3–27.0s | 20.5–27.2s |
+| Migration check | 1.6–2.0s | 1.5–1.9s |
+| Upload and deploy | 37.7–45.2s | 40.0–43.5s |
+| Build identity | 1.4–2.8s | 0.6–1.7s |
+| Served content | 1.4–4.2s | 2.4–4.3s |
+| Publication boundary | 1.5–5.1s | 1.7–2.6s |
+| Page audit | 10.9–14.1s | 10.9–11.7s |
+| Active traffic | 0.8–1.1s | 0.9–1.1s |
+| Secret inventory | 0.9–1.1s | 0.9–1.1s |
+| **Total** | **85.5–102.1s** | **98.9–123.8s** |
 
-The `5b00812` release is faster for one reason: `verify:content` used to open one remote D1 round trip
-per relation, twelve in total, and now sends the same independent read-only statements in four
-batched invocations. The assertions did not change, including the per-relation edge comparison.
+The first of the three releases paid for something the later two did not: `verify:content` used to
+open one remote D1 round trip per relation, twelve in total. The same independent read-only statements
+now travel in four batched invocations, which took that stage from 11.6s and 24.4s to 3.3–4.9s. The
+assertions did not change, including the per-relation edge comparison.
 
 ### What is proved once, and where
 
@@ -150,10 +153,18 @@ What stays deliberately duplicated, because the environments are separate system
 | --- | --- | --- | --- | --- | --- | --- |
 | `6aabbff` | 6.3s | 24.0s | 9.8s | 100.8s | 123.8s | **264.7s (4.4 min)** |
 | `5b00812` | 6.2s | 20.6s | 9.8s | 85.5s | 98.9s | **221.0s (3.7 min)** |
+| `75f2641` | 5.8s | 15.4s | 9.8s | 102.1s | 99.3s | **232.4s (3.9 min)** |
 
-Both are under the five-minute ceiling. The three-minute default needs a quiet host and a warm cache;
-the second sample is close to the floor for a two-environment release, because 78s of it is two
-provider uploads and 38s is two builds that cannot be shared.
+The push figure includes the pre-push hook's own quick lane, so the first column double-counts a run
+that the hook would otherwise do. A flow that relies on the hook alone saves those seconds; the
+conservative total above keeps them.
 
-The honest reading: the checks are not the problem. Together they are ~30s. The release is two
-deploys, and that is what the clock is spent on.
+All three are under the five-minute ceiling, worst case 4.4 minutes. The three-minute default needs a
+quiet host and a warm cache, and it is reachable on a good run, but it is not the number to plan
+against: 78–86s of every release is two provider uploads and 38–48s is two builds that cannot be
+shared. The second sample is close to the floor for a two-environment release.
+
+The honest reading: the checks are not the problem. Together they are 20–30s. The release is two
+deploys, and that is what the clock is spent on. The only remaining lever is publishing fewer
+environments for a given change, which is a decision about what preview is for, not a number to reach
+by quietly dropping a check.
