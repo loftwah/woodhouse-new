@@ -18,6 +18,17 @@ test("ordinary engineering states and unknown input stay active or unknown", () 
   assert.equal(projectLifecycle(null), "unknown");
 });
 
+test("a blank status is unreviewed, not evidence of active work", () => {
+  for (const value of ["", "   ", "\n\t"]) assert.equal(projectLifecycle(value), "unknown");
+  assert.deepEqual(
+    activeProjects([
+      { slug: "blank", lifecycle: projectLifecycle("") },
+      { slug: "active", lifecycle: projectLifecycle("Final convergence") }
+    ]).map((project) => project.slug),
+    ["active"]
+  );
+});
+
 test("an unknown lifecycle never joins the active roster by default", () => {
   const projects = [
     { slug: "a", lifecycle: "active" as const },
@@ -41,8 +52,23 @@ test("paused and retired projects send readers to their dossier, not a live prod
     };
     assert.equal(projectAction(project).action, "See");
     assert.equal(projectActionHref(project), "/projects/asset-hunter/");
-    assert.match(projectAction(project).availability, /26 October 2026/);
   }
+  assert.match(
+    projectAction({ slug: "asset-hunter", lifecycle: "retired" }).availability,
+    /26 October 2026/
+  );
+});
+
+test("a lifecycle change cannot inherit the other state's dated sentence", () => {
+  const paused = projectAction({ slug: "asset-hunter", lifecycle: "paused" });
+  assert.equal(paused.action, "See");
+  assert.doesNotMatch(paused.availability, /Retired/);
+  assert.match(paused.availability, /^Paused\./);
+
+  const retired = projectAction({ slug: "pirates", lifecycle: "retired" });
+  assert.equal(retired.action, "See");
+  assert.doesNotMatch(retired.availability, /Paused/);
+  assert.match(retired.availability, /^Retired\./);
 });
 
 test("an active project keeps its published action and destination", () => {

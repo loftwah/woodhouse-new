@@ -244,6 +244,10 @@ class PatchBench {
   private musicMeter: AnalyserNode | null = null;
   private radio: RadioClient | null = null;
   private radioReady = false;
+  private musicPreparing = false;
+  private musicFailed = false;
+  private musicSession = 0;
+  private stationRequest = 0;
   private sdkLoading: Promise<RadioModule> | null = null;
 
   /* Game */
@@ -334,6 +338,7 @@ class PatchBench {
     window.addEventListener("scroll", this.onScroll, { passive: true });
     document.addEventListener("visibilitychange", this.onVisibility);
     window.addEventListener("pagehide", this.onPageHide);
+    window.addEventListener("pageshow", this.onPageShow);
   }
 
   /**
@@ -654,7 +659,9 @@ class PatchBench {
       // direct call inside the visitor's gesture.
       void this.prepareMusic();
       if (this.waiting) this.announceWaiting();
-      this.say("The bench is open. Take it apart to separate the run, its effects and the music.");
+      this.say(
+        "The bench is open, with the run, its effects and the music apart. Reassemble it to bring them together."
+      );
     } else {
       this.setSeparation(0);
       this.setFocus(null);
@@ -1426,6 +1433,12 @@ class PatchBench {
   private async prepareMusic(): Promise<void> {
     const retry = pick<HTMLButtonElement>(this.root, "[data-music-retry]");
     const play = pick<HTMLButtonElement>(this.root, "[data-music-play]");
+    // Opening the bench and pressing Play can race. One preparation owns the
+    // client; the other waits for the same attempt instead of creating a second.
+    if (this.musicPreparing) return;
+    this.musicPreparing = true;
+    this.musicFailed = false;
+    const session = ++this.musicSession;
     if (retry) retry.hidden = true;
     this.setMusicMessage("Preparing the station…");
     try {
@@ -1433,6 +1446,9 @@ class PatchBench {
       if (!context) throw new Error("no_audio_context");
       if (!this.radio) {
         const module = await this.loadSdk();
+        // The page may have left (or started another attempt) while the SDK was
+        // loading. Do not build a transport for a session that no longer exists.
+        if (session !== this.musicSession) return;
         const audio = new Audio();
         audio.preload = "none";
         if (!this.musicBus) throw new Error("no_music_bus");
@@ -1454,15 +1470,20 @@ class PatchBench {
         this.radio.subscribe((snapshot) => this.renderMusic(snapshot));
       }
       await this.fillStations();
+      if (session !== this.musicSession) return;
       // A station that could not be prepared must not be reported as ready.
       const prepared = await this.selectStation();
-      this.radioReady = prepared;
+      if (prepared === "stale" || session !== this.musicSession) return;
+      this.radioReady = prepared === "ready";
       this.renderMusic();
     } catch {
       this.radioReady = false;
+      this.musicFailed = true;
       this.setMusicMessage("Music unavailable. The run and its effects keep working.");
       if (retry) retry.hidden = false;
       if (play) play.disabled = true;
+    } finally {
+      this.musicPreparing = false;
     }
   }
 
@@ -1500,19 +1521,27 @@ class PatchBench {
     select.value = wanted;
   }
 
-  private async selectStation(): Promise<boolean> {
-    if (!this.radio) return false;
-    const manifest = `${STATION_MANIFEST}/${this.station}/current`;
+  private async selectStation(): Promise<"ready" | "failed" | "stale"> {
+    if (!this.radio) return "failed";
+    const station = this.station;
+    const request = ++this.stationRequest;
+    const manifest = `${STATION_MANIFEST}/${station}/current`;
     try {
-      await this.radio.selectStation(manifest, this.station);
+      await this.radio.selectStation(manifest, station);
+      // A newer station change owns the interface. A late success from the
+      // previous one must not mark the newly selected station ready.
+      if (request !== this.stationRequest) return "stale";
       this.radioReady = true;
+      this.musicFailed = false;
       this.renderMusic();
-      return true;
+      return "ready";
     } catch {
+      if (request !== this.stationRequest) return "stale";
       this.radioReady = false;
+      this.musicFailed = true;
       this.setMusicMessage("That station could not be prepared. The run keeps working.");
       this.renderMusic();
-      return false;
+      return "failed";
     }
   }
 
@@ -1526,7 +1555,13 @@ class PatchBench {
     if (!this.radio) await this.prepareMusic();
     if (!this.radio) return;
     if (!this.radioReady) {
-      this.setMusicMessage("The station is still preparing. Try again in a moment.");
+      this.setMusicMessage(
+        this.musicPreparing
+          ? "The station is still preparing. Try again in a moment."
+          : this.musicFailed
+            ? "The station could not be prepared. Use the retry control to try it again."
+            : "The station is not ready yet. Try again in a moment."
+      );
       return;
     }
     if (!this.musicConnected) {
@@ -1579,7 +1614,22 @@ class PatchBench {
 
   private renderMusic(snapshot?: RadioSnapshot) {
     const current = snapshot ?? this.radio?.snapshot();
-    if (!current) return;
+    if (!current) {
+      // No client yet (first load or a back/forward restore). The surface still
+      // has to agree with the link: Play prepares the station when connected.
+      const play = pick<HTMLButtonElement>(this.root, "[data-music-play]");
+      const pause = pick<HTMLButtonElement>(this.root, "[data-music-pause]");
+      const mute = pick<HTMLButtonElement>(this.root, "[data-music-mute]");
+      if (play) {
+        play.disabled = !this.musicConnected;
+        play.textContent = "Play the music";
+      }
+      if (pause) pause.disabled = true;
+      if (mute) mute.disabled = true;
+      if (!this.musicConnected)
+        this.setMusicMessage("The link is open. The soundtrack is stopped; the run continues.");
+      return;
+    }
     const play = pick<HTMLButtonElement>(this.root, "[data-music-play]");
     const pause = pick<HTMLButtonElement>(this.root, "[data-music-pause]");
     const mute = pick<HTMLButtonElement>(this.root, "[data-music-mute]");
@@ -1665,6 +1715,9 @@ class PatchBench {
 
   private onPageHide = () => {
     this.stop();
+    // Retire any preparation that is still in flight before releasing the client.
+    this.musicSession += 1;
+    this.musicPreparing = false;
     this.radio?.suspend();
     // The exhibit owns the audio graph it created, so it releases it. The
     // client's own teardown removes its nodes; the context belongs to this page.
@@ -1676,6 +1729,43 @@ class PatchBench {
     this.radio = null;
     this.radioReady = false;
   };
+
+  /**
+   * A back/forward-cache restore keeps the DOM but not the frame loop or the
+   * audio client pagehide released. Restart the loop and replace the stale music
+   * labels with an honest "not prepared" surface; the next Play prepares again.
+   */
+  private onPageShow = (event: PageTransitionEvent) => {
+    if (!event.persisted) return;
+    this.ensureRunning();
+    this.resetMusicSurface();
+  };
+
+  private resetMusicSurface() {
+    this.stationRequest += 1;
+    this.musicFailed = false;
+    this.musicPreparing = false;
+    const title = pick<HTMLElement>(this.root, "[data-music-title]");
+    const phase = pick<HTMLElement>(this.root, "[data-music-phase]");
+    const play = pick<HTMLButtonElement>(this.root, "[data-music-play]");
+    const pause = pick<HTMLButtonElement>(this.root, "[data-music-pause]");
+    const mute = pick<HTMLButtonElement>(this.root, "[data-music-mute]");
+    const retry = pick<HTMLButtonElement>(this.root, "[data-music-retry]");
+    if (title) title.textContent = "No track yet";
+    if (phase) phase.textContent = this.musicConnected ? "not prepared" : "link open";
+    if (play) {
+      play.disabled = !this.musicConnected;
+      play.textContent = "Play the music";
+    }
+    if (pause) pause.disabled = true;
+    if (mute) mute.disabled = true;
+    if (retry) retry.hidden = true;
+    this.setMusicMessage(
+      this.musicConnected
+        ? "The bench is back. Press Play to prepare the soundtrack again."
+        : "The link is open. The soundtrack is stopped; the run continues."
+    );
+  }
 
   /** Apply a deep-linked state once the scene exists. */
   begin() {

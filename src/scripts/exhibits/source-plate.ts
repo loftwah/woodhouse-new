@@ -173,9 +173,19 @@ class SourcePlate {
             : "The published contract could not be read.";
     }
     if (!item) {
+      if (loading) {
+        loading.hidden = false;
+        loading.textContent = "The published contract could not be read.";
+      }
       if (sourceImage) sourceImage.removeAttribute("src");
       if (sourceTitle) sourceTitle.textContent = "No contribution available.";
+      if (sourceState) {
+        sourceState.textContent = "No source item is available to show.";
+        sourceState.dataset.state = "unavailable";
+      }
       if (composedCardElement) composedCardElement.hidden = true;
+      const hideControl = pick<HTMLButtonElement>(this.root, "[data-plate-hide]");
+      if (hideControl) hideControl.disabled = true;
       if (composedEmpty) {
         composedEmpty.hidden = false;
         // The plate must say why it is empty. An unexplained empty frame
@@ -184,6 +194,9 @@ class SourcePlate {
       }
       return;
     }
+
+    const hideControl = pick<HTMLButtonElement>(this.root, "[data-plate-hide]");
+    if (hideControl) hideControl.disabled = false;
 
     const publicVisible = composedCard(item, this.hidden).visible;
     if (sourceImage) {

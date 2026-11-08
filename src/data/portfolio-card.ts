@@ -131,12 +131,14 @@ export function reportSvg(
   const qualifier = (row: (typeof rows)[number]) => reportQualifier(row.metric, row.report, period);
   // A highlighted week comes from the same retained history the page reads, so the
   // page, caption and all three images state the same week, previous period and
-  // record basis rather than the narrow figure alone.
+  // record basis rather than the narrow figure alone. The report window's end is
+  // the evaluation clock: a frozen or historical report must not be judged
+  // against the day it was assembled.
   const focus = highlightedWeek
     ? weeklyHighlights(
         report.projects,
         names,
-        Date.parse(report.createdAt),
+        Date.parse(report.period?.to ?? report.createdAt.slice(0, 10)),
         report.history
       ).highlights.find(
         (highlight) =>

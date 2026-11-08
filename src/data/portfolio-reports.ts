@@ -17,7 +17,7 @@ import {
 } from "./portfolio-analytics.ts";
 import { parseReportReleases } from "./analytics-context.ts";
 import { localAnalytics } from "./engagement.ts";
-import { overviewMeasures } from "./analytics-workbench.ts";
+import { overviewMeasures, supportsMeasure } from "./analytics-workbench.ts";
 
 const reportIdPattern = /^[a-f0-9]{24}$/;
 /**
@@ -86,7 +86,9 @@ export async function readPortfolioReport(
       ...(history ? { history } : {}),
       ...(releases ? { releases } : {}),
       ...(report.analysis?.schema === "woodhouse.weekly-analysis/1"
-        ? { analysis: analysePortfolio(safe.projects, Date.parse(safe.createdAt)) }
+        ? {
+            analysis: analysePortfolio(safe.projects, Date.parse(period.to), supportsMeasure)
+          }
         : {})
     };
   } catch {
@@ -220,7 +222,9 @@ export async function createPortfolioReport(
     projects,
     ...(history ? { history } : {}),
     ...(releases ? { releases } : {}),
-    analysis: analysePortfolio(projects, now)
+    // The selected window's end is the analysis clock, so a report requested for
+    // an earlier range compares the weeks that range actually contains.
+    analysis: analysePortfolio(projects, Date.parse(period.to), supportsMeasure)
   };
   await db
     .prepare("INSERT OR IGNORE INTO wh_analytics_reports(id,created_at,days,body) VALUES(?,?,?,?)")
@@ -245,7 +249,12 @@ export function projectReport(
     : undefined;
   if (history?.entries.length) result.history = history;
   else delete result.history;
-  if (result.analysis) result.analysis = analysePortfolio(projects, Date.parse(report.createdAt));
+  if (result.analysis)
+    result.analysis = analysePortfolio(
+      projects,
+      Date.parse(report.period?.to ?? report.createdAt.slice(0, 10)),
+      supportsMeasure
+    );
   return result;
 }
 export function reportLink(id: string, project?: string | null) {

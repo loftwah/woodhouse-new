@@ -1,6 +1,7 @@
 ---
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
+import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
 import {
   publicCampaignItems,
   campaignSocial,
@@ -37,7 +38,6 @@ import {
   galleryPage,
   availableProjectTypes,
   defaultProjectType,
-  projectActionLabel,
   projectViewRedirect,
   projectGalleryTypes,
   kitURL,
@@ -149,8 +149,7 @@ const houseImages = [
     name: "Dean Lofts",
     image: "/og/dean.jpg",
     link: "/dean/",
-    caption:
-      `Meet the human behind the Loftwah software factory.\n${SITE_ORIGIN}/dean/`
+    caption: `Meet the human behind the Loftwah software factory.\n${SITE_ORIGIN}/dean/`
   }
 ];
 const smallAssets = [
@@ -310,28 +309,18 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
           <section class="motion-selection" aria-labelledby="motion-title">
             <h2 id="motion-title">In motion.</h2>
             <div class="motion-gallery">
-              {showcaseClips.map((asset) => (
-                <div>
-                  <GameMedia
-                    asset={asset}
-                    destination={
-                      projects.find((project) => project.slug === asset.project)?.siteUrl ??
-                      "/share/"
-                    }
-                  />
-                  <a
-                    class="motion-action"
-                    href={shareNavigation(
-                      projects.find((project) => project.slug === asset.project)?.siteUrl ??
-                        "/share/",
-                      Astro.url.searchParams
-                    )}
-                  >
-                    {projectActionLabel(asset.project)}{" "}
-                    {projects.find((project) => project.slug === asset.project)?.name}
-                  </a>
-                </div>
-              ))}
+              {showcaseClips.map((asset) => {
+                const project = projects.find((item) => item.slug === asset.project);
+                const href = project ? projectActionHref(project) : "/share/";
+                return (
+                  <div>
+                    <GameMedia asset={asset} destination={href} />
+                    <a class="motion-action" href={shareNavigation(href, Astro.url.searchParams)}>
+                      {project ? projectActionLabel(project) : "Open project"}
+                    </a>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
@@ -464,7 +453,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                   Download image pack
                 </a>
               )}
-              {selected && <a href={selected.siteUrl}>{projectActionLabel(selected.slug)}</a>}
+              {selected && <a href={projectActionHref(selected)}>{projectActionLabel(selected)}</a>}
             </div>
           )}
           {collection.total ? (
@@ -489,14 +478,19 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             <p class="result-count">No {viewLabel.toLowerCase()} in this collection.</p>
           )}
           <div class:list={["gallery", { "art-gallery": view === "artwork" }]}>
-            {visibleMedia.map((asset, index) => (
-              <GameMedia
-                asset={asset}
-                destination={projects.find((p) => p.slug === asset.project)?.siteUrl ?? "/share/"}
-                preview={previewSet.has(asset.id) ? `/share/previews/${asset.id}.webp` : undefined}
-                eager={index < 3}
-              />
-            ))}
+            {visibleMedia.map((asset, index) => {
+              const project = projects.find((item) => item.slug === asset.project);
+              return (
+                <GameMedia
+                  asset={asset}
+                  destination={project ? projectActionHref(project) : "/share/"}
+                  preview={
+                    previewSet.has(asset.id) ? `/share/previews/${asset.id}.webp` : undefined
+                  }
+                  eager={index < 3}
+                />
+              );
+            })}
           </div>
         </section>
       )}
@@ -509,8 +503,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             {visibleProjects.map((project, index) => {
               const metadata = getSiteMetadata(project);
               const fallback = getArtworkFallback(project);
-              const destination =
-                project.siteUrl ?? `${SITE_ORIGIN}/projects/${project.slug}/`;
+              const destination = projectActionHref(project);
               return (
                 <figure id={`project-${project.slug}`}>
                   <a
@@ -555,7 +548,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                     link={destination}
                   />
                   <div class="asset-links">
-                    <a href={destination}>{projectActionLabel(project.slug)}</a>
+                    <a href={destination}>{projectActionLabel(project)}</a>
                     <a href={kitURL(project.slug, view)}>Link to this kit</a>
                     {project.slug === "shoalshot" && nativeSharing && (
                       <a href={destination}>Play & share a dive</a>

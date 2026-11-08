@@ -27,7 +27,10 @@ const reviewed: Record<string, ProjectAction> = {
   fighter: { action: "Play", availability: "Playable now in your browser." },
   bubbles: { action: "Play", availability: "Playable now in your browser." },
   liferaft: { action: "Open", availability: "Explore the repository and desktop downloads." },
-  foilbury: { action: "Open", availability: "The public shelf is open; signing in only adds your own album." },
+  foilbury: {
+    action: "Open",
+    availability: "The public shelf is open; signing in only adds your own album."
+  },
   "protocol-11": { action: "Play", availability: "Playable now in your browser." },
   shoalshot: {
     action: "Play",
@@ -60,19 +63,29 @@ const reviewed: Record<string, ProjectAction> = {
  * Reviewed copy for a project that is paused or retired. The action is always
  * the dossier, never a live product surface: a reader can inspect the history
  * without being sent to a product the portfolio is no longer recommending.
+ *
+ * Each entry records the lifecycle it was written for. A project that changes
+ * between Paused and Retired must not inherit the other state's dated sentence,
+ * so a mismatched entry falls back to the state's own wording.
  */
-const closedLifecycle: Record<string, { action: ProjectAction["action"]; availability: string }> = {
+const closedLifecycle: Record<
+  string,
+  { lifecycle: "paused" | "retired"; action: ProjectAction["action"]; availability: string }
+> = {
   "social-club": {
+    lifecycle: "retired",
     action: "See",
     availability:
       "Retired 26 October 2026. The dossier, evidence and dated campaign artwork remain; no new active work is planned."
   },
   "asset-hunter": {
+    lifecycle: "retired",
     action: "See",
     availability:
       "Retired 26 October 2026. The catalogue and past evidence remain as a dated record, not a current recommendation."
   },
   pirates: {
+    lifecycle: "paused",
     action: "See",
     availability:
       "Paused indefinitely on 26 October 2026. The reconstruction and its evidence remain; this is not a cancellation."
@@ -84,15 +97,15 @@ function lifecycleAction(
   lifecycle: ProjectLifecycle | undefined
 ): ProjectAction | null {
   if (lifecycle !== "paused" && lifecycle !== "retired") return null;
-  return (
-    closedLifecycle[slug] ?? {
-      action: "See",
-      availability:
-        lifecycle === "retired"
-          ? "Retired. The dossier and its history remain; there is no current active build."
-          : "Paused. The dossier and its history remain; this is not a cancellation."
-    }
-  );
+  const reviewed = closedLifecycle[slug];
+  if (reviewed?.lifecycle === lifecycle) return reviewed;
+  return {
+    action: "See",
+    availability:
+      lifecycle === "retired"
+        ? "Retired. The dossier and its history remain; there is no current active build."
+        : "Paused. The dossier and its history remain; this is not a cancellation."
+  };
 }
 
 /**

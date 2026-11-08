@@ -48,6 +48,8 @@ export type DiscoveryStory = {
   firstObserved: string | null;
   lastObserved: string | null;
   coverage: StoryCoverage;
+  /** A total arrived without daily rows; coverage and comparison cannot be checked. */
+  totalOnly: boolean;
   coverageLabel: string;
   recent: StoryWindow;
   prior: StoryWindow;
@@ -140,15 +142,22 @@ export function discoveryStory(input: {
   const firstObserved = daily.find((point) => point.value !== null)?.date ?? null;
   const lastObserved = [...daily].reverse().find((point) => point.value !== null)?.date ?? null;
   const value = metric?.value ?? null;
-  const coverage = value === null ? "unavailable" : coverageState(observedDays, dates.length);
+  // A period total can arrive without any daily rows. Treat that as a limited
+  // coverage state rather than printing "42 clicks" beside "0 of 7 days
+  // counted": the total is real, but its daily coverage cannot be checked.
+  const totalOnly = value !== null && observedDays === 0;
+  const coverage: StoryCoverage =
+    value === null ? "unavailable" : coverageState(observedDays, dates.length);
   const coverageLabel =
     value === null
       ? "No click count for these dates"
-      : coverage === "observed"
-        ? period.complete
-          ? `All ${dates.length} days counted`
-          : "All days so far counted; today is still being counted"
-        : `${observedDays} of ${dates.length} days counted; the rest are missing`;
+      : totalOnly
+        ? "A total was supplied without daily history, so coverage cannot be checked"
+        : coverage === "observed"
+          ? period.complete
+            ? `All ${dates.length} days counted`
+            : "All days so far counted; today is still being counted"
+          : `${observedDays} of ${dates.length} days counted; the rest are missing`;
   const recent = windowSlice(metric, dates.slice(-7));
   const prior = windowSlice(metric, dates.slice(-14, -7));
   const eligible =
@@ -172,9 +181,11 @@ export function discoveryStory(input: {
       ? source
         ? `No click count was kept for ${name} in these dates. That is missing evidence, not a measured zero.`
         : "Woodhouse did not provide click numbers for these dates, so no count is claimed."
-      : coverage === "partial"
-        ? `Counting began ${firstObserved}; ${observedDays} of ${dates.length} days have data, so earlier days are missing rather than zero.`
-        : "";
+      : totalOnly
+        ? `A total was supplied for ${name}, but no daily history came with it, so coverage and the week-on-week comparison cannot be checked.`
+        : coverage === "partial"
+          ? `Counting began ${firstObserved}; ${observedDays} of ${dates.length} days have data, so earlier days are missing rather than zero.`
+          : "";
   const comparisonReason =
     value === null
       ? "No click count, so no comparison is claimed."
@@ -212,7 +223,7 @@ export function discoveryStory(input: {
   const establishes =
     value === null
       ? reason
-      : `${plural(value, "recorded click", "recorded clicks")} from Woodhouse to ${name} between ${period.from} and ${period.to} UTC${coverage === "partial" ? `, across ${observedDays} of ${dates.length} days with data` : ""}.`;
+      : `${plural(value, "recorded click", "recorded clicks")} from Woodhouse to ${name} between ${period.from} and ${period.to} UTC${coverage === "partial" && firstObserved ? `, across ${observedDays} of ${dates.length} days with data` : ""}.`;
   return {
     slug,
     name,
@@ -227,6 +238,7 @@ export function discoveryStory(input: {
     firstObserved,
     lastObserved,
     coverage,
+    totalOnly,
     coverageLabel,
     recent,
     prior,

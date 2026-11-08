@@ -11,6 +11,7 @@ import {
   applyDemoEvent,
   createDemoOrder,
   demoFixtures,
+  demoOrderTimeline,
   demoSeller,
   merchCandidates,
   merchProducts,
@@ -180,6 +181,15 @@ function checkoutId() {
   }
 }
 
+/** A payment attempt has settled, so the next checkout is a new order. */
+function closeCheckoutSession() {
+  try {
+    sessionStorage.removeItem(CHECKOUT_KEY);
+  } catch {
+    /* The order still belongs to this checkout for this page view. */
+  }
+}
+
 function eventFor(order: DemoOrder, type: DemoEventType, amountCents?: number): DemoEvent {
   return {
     id: `evt-${crypto.randomUUID()}`,
@@ -310,13 +320,14 @@ function renderCheckout() {
   const host = document.querySelector<HTMLElement>("[data-checkout-summary]");
   if (!host) return;
   const summary = cartSummary(cart());
+  const button = document.querySelector<HTMLButtonElement>("[data-place-order]");
   if (!summary.priced.length) {
     host.innerHTML =
       '<p class="shop-empty">There is nothing to check out. <a href="/shop/">Browse the demo catalogue</a>.</p>';
-    const button = document.querySelector<HTMLButtonElement>("[data-place-order]");
     if (button) button.disabled = true;
     return;
   }
+  if (button) button.disabled = false;
   host.innerHTML = `
     <ul class="checkout-lines">
       ${summary.priced
@@ -369,13 +380,12 @@ function initCheckout() {
             : eventFor(order, "payment.cancelled");
       const result = applyDemoEvent(order, event);
       saveOrder(result.order);
-      if (result.accepted && result.order.status === "paid") {
-        saveCart([]);
-        try {
-          sessionStorage.removeItem(CHECKOUT_KEY);
-        } catch {
-          /* ignore */
-        }
+      // Paid, failed and cancelled all end this checkout attempt. Keeping the
+      // checkout id after a failure pinned the tab to a terminal order and made
+      // every later attempt bounce back to it, with no way to start again.
+      if (result.accepted && result.order.status !== "pending") {
+        if (result.order.status === "paid") saveCart([]);
+        closeCheckoutSession();
       }
       window.location.href = `/shop/order/?id=${encodeURIComponent(result.order.id)}`;
     } catch (error) {
@@ -386,6 +396,14 @@ function initCheckout() {
       }
       button.disabled = false;
     }
+  });
+  // Back/forward cache restores the page with the button still disabled from a
+  // click that navigated away. Reconcile the visible state instead of leaving
+  // the checkout permanently unsubmittable.
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    if (note) note.hidden = true;
+    renderCheckout();
   });
 }
 
@@ -399,15 +417,7 @@ function renderOrder() {
       '<p class="shop-empty">No demo order with that reference exists in this browser. <a href="/shop/">Return to the demo catalogue</a>.</p>';
     return;
   }
-  const stages: DemoOrder["status"][] = [
-    "pending",
-    "paid",
-    "fulfilment_confirmed",
-    "print_requested",
-    "printed",
-    "shipped"
-  ];
-  const stageIndex = stages.indexOf(order.status);
+  const stages = demoOrderTimeline(order);
   host.innerHTML = `
     <p class="shop-eyebrow">Demo order ${escapeHtml(order.id)}</p>
     <h1>${escapeHtml(statusLabel(order.status))}</h1>
@@ -415,9 +425,9 @@ function renderOrder() {
     <ol class="order-timeline">
       ${stages
         .map(
-          (stage, index) => `
-        <li class="${index < stageIndex ? "is-done" : index === stageIndex ? "is-current" : ""}">
-          <span>${escapeHtml(statusLabel(stage))}</span>
+          (stage) => `
+        <li class="${stage.state === "done" ? "is-done" : stage.state === "current" ? "is-current" : stage.state === "terminal" ? "is-terminal" : ""}">
+          <span>${escapeHtml(statusLabel(stage.status))}</span>
         </li>`
         )
         .join("")}

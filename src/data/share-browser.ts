@@ -87,17 +87,6 @@ export function defaultProjectType(slug: string): ProjectGalleryType {
 }
 
 /**
- * The action a visitor can take on a project, derived once for the share desk.
- * A game is played, FM is listened to and everything else is opened; a
- * screenshot grid for an app must not offer "Play".
- */
-export function projectActionLabel(slug: string) {
-  if (["fighter", "shoalshot", "protocol-11", "bubbles"].includes(slug)) return "Play";
-  if (slug === "loftwahfm") return "Listen";
-  return "Open project";
-}
-
-/**
  * The canonical link to the kit the reader is currently looking at: the same
  * project on the same category they can see. An explicit `type=` is kept, so
  * "Link to this kit" never silently swaps a screenshot kit for a link card. A

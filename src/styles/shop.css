@@ -582,6 +582,11 @@
   color: var(--brass);
 }
 
+.order-timeline li.is-terminal {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
 .order-log {
   max-width: 44rem;
   margin: 0.75rem 0 1.5rem;

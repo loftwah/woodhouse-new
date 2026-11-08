@@ -107,7 +107,9 @@ test("session markers count once across different event ids, active seconds cann
   await collectEngagement(request(payload("active_time", { seconds: 30 })), db, now + 5000);
   let report = await localAnalytics(db, "shoalshot", 7, now + 5000);
   assert.equal(report.metrics.find((m) => m.key === "visits")?.value, 1);
-  assert.equal(report.metrics.find((m) => m.key === "active_seconds")?.value, 0);
+  // The 30-second claim could not fit inside the session's wall time, so no
+  // active-time row was accepted. That is "not measured", not a measured zero.
+  assert.equal(report.metrics.find((m) => m.key === "active_seconds")?.value, null);
   const tick = payload("active_time", { seconds: 20 });
   await collectEngagement(request(tick), db, now + 21000);
   await collectEngagement(request(tick), db, now + 22000);
@@ -1191,25 +1193,32 @@ test("mode subtotals reconcile exactly with their overall measure across a day b
     const total = modeMetric(report, parent)!;
     const totalExpected = Object.values(parts).reduce((sum, value) => sum + value, 0);
     assert.equal(total.value, totalExpected, parent);
+    const expectedQuality = total.daily[0]!.date === complete.from ? "exact" : "partial";
     let windowSum = 0;
     for (const [mode, value] of Object.entries(parts)) {
       const metric = modeMetric(report, `${parent}_${mode}`)!;
       assert.equal(metric.value, value, `${parent}_${mode}`);
       assert.equal(metric.unit, total.unit);
-      assert.equal(metric.quality, "exact", `${parent}_${mode} covers the whole window`);
+      assert.equal(
+        metric.quality,
+        expectedQuality,
+        `${parent}_${mode} covers the days its counter exists`
+      );
       windowSum += metric.value!;
     }
     // The subtotals of the window are the overall figure, not a second measurement.
     assert.equal(windowSum, total.value, `${parent} window reconciliation`);
-    // Every UTC day reconciles too, including the empty days after the last event
-    // and the day the first events landed on.
-    for (const date of dateDays(complete)) {
+    // Every UTC day reconciles too, from the day this counter begins. Earlier
+    // days are gaps: a counter added later cannot claim a measured zero before
+    // its first row.
+    const coveredFrom = total.daily[0]!.date;
+    for (const date of dateDays(complete).filter((day) => day >= coveredFrom)) {
       const dayParts = playModes.map(
         (mode) => dailyOf(report, `${parent}_${mode}`).find((point) => point.date === date)?.value
       );
       assert(
         dayParts.every((value) => value !== undefined),
-        `${parent}_* is zero-filled from the split's own start, not before it`
+        `${parent}_* is zero-filled from the counter's own start, not before it`
       );
       assert.equal(
         dayParts.reduce((sum, value) => sum + value!, 0),
@@ -1237,13 +1246,12 @@ test("mode subtotals reconcile exactly with their overall measure across a day b
       ["2026-10-15", 0]
     ]
   );
-  // A mode that received no event at all is a measured zero from the day the split
-  // exists, and its parent is zero on the same days: the partition stays exact.
+  // A mode that received no event at all is a measured zero from the day its
+  // counter exists, and its parent is zero on the same days: the partition stays
+  // exact. Earlier days are gaps for both, not claimed zeros.
   assert.deepEqual(
     dailyOf(report, "game_completions_journey").map((point) => [point.date, point.value]),
     [
-      ["2026-10-10", 0],
-      ["2026-10-11", 0],
       ["2026-10-12", 0],
       ["2026-10-13", 0],
       ["2026-10-14", 0],
@@ -1253,8 +1261,6 @@ test("mode subtotals reconcile exactly with their overall measure across a day b
   assert.deepEqual(
     dailyOf(report, "game_completions").map((point) => [point.date, point.value]),
     [
-      ["2026-10-10", 0],
-      ["2026-10-11", 0],
       ["2026-10-12", 1],
       ["2026-10-13", 0],
       ["2026-10-14", 0],
@@ -1336,6 +1342,37 @@ test("a mode split that begins after its overall counter renders gaps, not zero-
     0,
     "expired history is not guessed from the overall counter"
   );
+});
+
+test("a base counter added later is not zero-filled back to the project's first day", async () => {
+  const { db, sqlite } = database();
+  // The project began with starts, but completions only have a durable row from
+  // the fifth. A zero before that day would claim measured silence.
+  sqlite
+    .prepare("INSERT INTO wh_analytics_daily(project,day,metric,value) VALUES(?,?,?,?)")
+    .run("shoalshot", "2026-10-01", "game_start", 3);
+  sqlite
+    .prepare("INSERT INTO wh_analytics_daily(project,day,metric,value) VALUES(?,?,?,?)")
+    .run("shoalshot", "2026-10-05", "game_complete", 2);
+  const window = windowOf("2026-10-01", "2026-10-07");
+  const report = await localAnalytics(db, "shoalshot", window.days, now, window);
+
+  const starts = report.metrics.find((metric) => metric.key === "game_starts")!;
+  assert.equal(starts.daily.length, 7);
+  assert.equal(starts.value, 3);
+  assert.equal(starts.quality, "exact");
+
+  const completions = report.metrics.find((metric) => metric.key === "game_completions")!;
+  assert.deepEqual(completions.daily, [
+    { date: "2026-10-05", value: 2 },
+    { date: "2026-10-06", value: 0 },
+    { date: "2026-10-07", value: 0 }
+  ]);
+  assert.equal(completions.value, 2);
+
+  const replays = report.metrics.find((metric) => metric.key === "game_replays")!;
+  assert.equal(replays.value, null);
+  assert.deepEqual(replays.daily, []);
 });
 
 test("a project with no accepted gameplay publishes no mode metric and no false zero", async () => {

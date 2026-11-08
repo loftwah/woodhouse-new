@@ -520,7 +520,15 @@ export function parseReportHistory(
 /** Scheduled snapshots and readers use the same conservative, versioned analysis. */
 export function analysePortfolio(
   projects: PortfolioReport["projects"],
-  now = Date.now()
+  now = Date.now(),
+  /**
+   * Whether a measure means the same thing for this product. A shared source
+   * key is not enough: Woodhouse's `active_seconds` is site attention, not
+   * gameplay, and is deliberately absent from its audience view. The default
+   * keeps the function usable in isolation; every public caller supplies the
+   * product-view rule.
+   */
+  applies: (project: AnalyticsProject, key: string) => boolean = () => true
 ): PortfolioAnalysis {
   const findings: PortfolioAnalysis["findings"] = [];
   for (const { project, report } of projects) {
@@ -543,6 +551,7 @@ export function analysePortfolio(
         ].includes(metric.key)
       )
         continue;
+      if (!applies(project, metric.key)) continue;
       const week = weeklyRecord(metric, report.coverage, now);
       if (
         !week ||

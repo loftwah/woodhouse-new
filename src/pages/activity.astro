@@ -385,12 +385,19 @@ const cleanDays = metricRows.map(
   (r) => days.filter((day) => dailyStatus(r.data, r.metric, day) === "clean").length
 );
 const longestClean = Math.max(0, ...cleanDays);
-// The last complete week is evaluated against the frozen report's own capture
-// time, so a saved snapshot keeps describing the same weeks after it is reopened.
+// The last complete week is evaluated against the end of the report's own
+// window, not the moment the report happened to be assembled. A report for an
+// earlier date range must compare the weeks its data covers; anchoring at
+// createdAt made every historical report claim no comparison existed.
 // Retained lookback history is preferred, so a seven-day report can still show
 // the comparison it was created from.
 const weekly = report
-  ? weeklyHighlights(report.projects, names, Date.parse(report.createdAt), report.history)
+  ? weeklyHighlights(
+      report.projects,
+      names,
+      Date.parse(report.period?.to ?? report.createdAt.slice(0, 10)),
+      report.history
+    )
   : { highlights: [], gaps: [] };
 // `?week=<monday>` names the highlighted week a shared link was created from. An
 // unknown, malformed or non-matching value is dropped rather than rendered as a

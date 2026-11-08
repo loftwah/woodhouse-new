@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import type { WoodhouseProject } from "../content/repository";
 import { dispatchSocialCard } from "../data/social-cards";
 import { formatReviewDate } from "../data/review-date";
-import { projectActionLabel } from "../data/share-browser";
+import { projectAction, projectActionHref, projectActionLabel } from "../data/project-actions";
 import { publicCampaignItems, campaignCollectionPath } from "../data/showcase-public";
 import { liveProjectArtwork } from "../data/live-project-artwork";
 import {
@@ -43,13 +43,18 @@ const lead =
 const leadProject = lead ? published.get(lead.slug) : undefined;
 const heroImage = leadProject?.previewImage;
 const actionLabel = (entry: EditionEntry) => {
-  const label = projectActionLabel(entry.slug);
-  return label === "Open project"
-    ? `Open ${published.get(entry.slug)?.name ?? entry.slug}`
-    : `${label} ${published.get(entry.slug)?.name ?? entry.slug}`;
+  const project = published.get(entry.slug);
+  return project ? projectActionLabel(project) : entry.slug;
 };
 const dossier = (entry: EditionEntry) => `/projects/${entry.slug}/`;
-const site = (entry: EditionEntry) => published.get(entry.slug)?.siteUrl ?? null;
+const actionHref = (entry: EditionEntry) => {
+  const project = published.get(entry.slug);
+  return project ? projectActionHref(project) : dossier(entry);
+};
+const hasLiveAction = (entry: EditionEntry) => {
+  const project = published.get(entry.slug);
+  return project ? projectAction(project).action !== "See" : false;
+};
 const artworkAlt = (entry: EditionEntry) => {
   const project = published.get(entry.slug);
   return project?.previewAlt ?? `${project?.name ?? entry.slug} artwork from its own site.`;
@@ -142,7 +147,7 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
             <strong>{leadProject.name}.</strong> <a href={dossier(lead)}>The full record</a>
           </span>
           <span class="wwb-credit">
-            <a href={site(lead) ?? dossier(lead)}>{leadProject.name}</a>
+            <a href={actionHref(lead)}>{leadProject.name}</a>
             {leadProject.previewCaption
               ? ` · ${leadProject.previewCaption}`
               : " · artwork reviewed for this edition"}
@@ -163,7 +168,7 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
           <ol class="wwb-entries">
             {entries.map((entry) => {
               const project = published.get(entry.slug)!;
-              const href = site(entry);
+              const href = actionHref(entry);
               return (
                 <li class="wwb-entry" id={`project-${entry.slug}`}>
                   <div class="wwb-entry__media">
@@ -195,7 +200,7 @@ const card = firstEdition ? "/og/what-we-built-20261025-v2.jpg" : dispatchSocial
                       <strong>Where that stands:</strong> {entry.basis}
                     </p>
                     <div class="wwb-entry__actions">
-                      {href && (
+                      {hasLiveAction(entry) && (
                         <a class="wwb-action" href={href} target="_blank" rel="noopener noreferrer">
                           {actionLabel(entry)}
                           <span aria-hidden="true"> ↗</span>

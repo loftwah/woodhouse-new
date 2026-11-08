@@ -689,8 +689,10 @@ export function modeBreakdowns(
 }
 /**
  * The one sentence a reader needs under the mode split. Kept here rather than in
- * the page so the three states — covered, partially covered and not reconciling —
- * are testable and cannot drift from the arithmetic the rows were built from.
+ * the page so the four states — covered, partially covered, not reconciling and
+ * not checkable — are testable and cannot drift from the arithmetic the rows
+ * were built from. An unchecked split (a missing mode or total) is not a
+ * successful reconciliation and must not be described as one.
  */
 export function modeSplitNote(rows: ModeBreakdown[]): string {
   if (!rows.length) return "";
@@ -701,6 +703,9 @@ export function modeSplitNote(rows: ModeBreakdown[]): string {
     return `${incomplete.map((row) => row.label).join(", ")} currently ${
       incomplete.length === 1 ? "does" : "do"
     } not add up to the overall figure, so the split is incomplete for these dates. ${sessions}`;
+  const unchecked = rows.filter((row) => row.reconciles === null);
+  if (unchecked.length)
+    return `The split for ${unchecked.map((row) => row.label).join(", ")} could not be checked for these dates, because a mode or the overall figure is unavailable. No reconciliation is claimed. ${sessions}`;
   if (rows.every((row) => row.coversWindow))
     return `Every split covers this whole window, and the mode subtotals sum to the overall figure above them. ${sessions}`;
   const from = [...new Set(rows.map((row) => row.from).filter(Boolean))].sort();
@@ -859,9 +864,12 @@ export function weeklyHighlights(
     );
     const metric = report.metrics.find((m) => m.key === primary!.key);
     // The retained lookback is preferred: a short report's own window cannot
-    // contain two complete weeks, and the comparison must survive freezing.
+    // contain two complete weeks, and the comparison must survive freezing. If
+    // the retained block cannot produce the week, fall back to the report's own
+    // metric rather than discarding a valid comparison.
     const week = retained
-      ? weeklyRecordFromHistory(retained, now)
+      ? (weeklyRecordFromHistory(retained, now) ??
+        (metric ? weeklyRecord(metric, report.coverage, now) : null))
       : metric
         ? weeklyRecord(metric, report.coverage, now)
         : null;
@@ -871,7 +879,9 @@ export function weeklyHighlights(
         name,
         reason: metric
           ? weeklyGapReason(metric, report.coverage, primary!)
-          : `${primary!.label} is not in this source report`
+          : retained
+            ? "The retained history does not contain two complete comparable weeks"
+            : `${primary!.label} is not in this source report`
       });
       continue;
     }

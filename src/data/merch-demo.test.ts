@@ -4,6 +4,7 @@ import {
   applyDemoEvent,
   createDemoOrder,
   demoFixtures,
+  demoOrderTimeline,
   merchCandidates,
   merchProducts,
   processDemoEvents
@@ -38,6 +39,19 @@ test("the same product and variant never becomes two order lines", () => {
   assert.equal(order.lines.length, 1);
   assert.equal(order.lines[0]?.quantity, 2);
   assert.equal(order.subtotalCents, 11800);
+});
+
+test("an invalid quantity is refused instead of creating an unpayable order", () => {
+  for (const quantity of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+    assert.throws(
+      () =>
+        createDemoOrder("checkout-invalid", [
+          { productSlug: "workshop-poster", variantId: "a2", quantity }
+        ]),
+      /positive, finite quantity/,
+      String(quantity)
+    );
+  }
 });
 
 test("a duplicate payment event cannot charge twice", () => {
@@ -195,4 +209,67 @@ test("one demo order never becomes two charges or two prints", () => {
   assert.equal(result.order.paymentEventId, "evt-1");
   assert.equal(result.order.printActionId, "evt-3");
   assert.equal(result.results.filter((item) => item.accepted).length, 3);
+});
+
+test("a refund must match the one charge and keeps the stages it reached", () => {
+  const fixture = demoFixtures.refundAndDuplicatePrint("checkout-10");
+  const paid = applyDemoEvent(fixture.order, {
+    id: "evt-pay",
+    orderId: fixture.order.id,
+    type: "payment.succeeded",
+    environment: "demo",
+    signature: "demo-valid",
+    account: "woodhouse-demo",
+    amountCents: fixture.order.totalCents
+  });
+  assert.equal(paid.accepted, true);
+  const short = applyDemoEvent(paid.order, {
+    id: "evt-refund-short",
+    orderId: fixture.order.id,
+    type: "payment.refunded",
+    environment: "demo",
+    signature: "demo-valid",
+    account: "woodhouse-demo",
+    amountCents: 1
+  });
+  assert.equal(short.accepted, false);
+  assert.match(short.reason, /refund amount/);
+
+  const { order } = processDemoEvents(fixture.order, fixture.events);
+  assert.equal(order.status, "refunded");
+  assert.equal(order.refundedFrom, "print_requested");
+  assert.deepEqual(
+    demoOrderTimeline(order).map((stage) => [stage.status, stage.state]),
+    [
+      ["pending", "done"],
+      ["paid", "done"],
+      ["fulfilment_confirmed", "done"],
+      ["print_requested", "done"],
+      ["refunded", "terminal"]
+    ]
+  );
+});
+
+test("a failed or cancelled order keeps a visible terminal timeline", () => {
+  for (const type of ["payment.failed", "payment.cancelled"] as const) {
+    const order = createDemoOrder(`checkout-${type}-timeline`, [
+      { productSlug: "workshop-poster", variantId: "a2", quantity: 1 }
+    ]);
+    const result = applyDemoEvent(order, {
+      id: `evt-${type}`,
+      orderId: order.id,
+      type,
+      environment: "demo",
+      signature: "demo-valid",
+      account: "woodhouse-demo"
+    });
+    assert.equal(result.accepted, true);
+    assert.deepEqual(
+      demoOrderTimeline(result.order).map((stage) => [stage.status, stage.state]),
+      [
+        ["pending", "done"],
+        [type === "payment.failed" ? "failed" : "cancelled", "terminal"]
+      ]
+    );
+  }
 });

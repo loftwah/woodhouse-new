@@ -226,6 +226,47 @@ type DemoOrderStatus =
   | "printed"
   | "shipped";
 
+/** The states a successful payment can pass through, in order. */
+export const demoOrderStages = [
+  "pending",
+  "paid",
+  "fulfilment_confirmed",
+  "print_requested",
+  "printed",
+  "shipped"
+] as const satisfies readonly DemoOrderStatus[];
+
+export type DemoOrderStage = {
+  status: DemoOrderStatus;
+  state: "done" | "current" | "upcoming" | "terminal";
+};
+
+/**
+ * The order's visible timeline. A terminal failure or refund is a real state,
+ * not an empty timeline: show the stages the order actually reached, then the
+ * terminal state. `refundedFrom` records how far a refund had progressed.
+ */
+export function demoOrderTimeline(order: DemoOrder): DemoOrderStage[] {
+  const terminal =
+    order.status === "failed" || order.status === "cancelled" || order.status === "refunded";
+  if (!terminal) {
+    const index = demoOrderStages.indexOf(order.status as (typeof demoOrderStages)[number]);
+    return demoOrderStages.map((status, position) => ({
+      status,
+      state: position < index ? "done" : position === index ? "current" : "upcoming"
+    }));
+  }
+  const reached =
+    order.status === "refunded" ? (order.refundedFrom ?? "pending") : ("pending" as const);
+  const reachedIndex = demoOrderStages.indexOf(reached as (typeof demoOrderStages)[number]);
+  return [
+    ...demoOrderStages
+      .slice(0, reachedIndex + 1)
+      .map((status) => ({ status, state: "done" as const })),
+    { status: order.status, state: "terminal" }
+  ];
+}
+
 export type DemoOrder = {
   id: string;
   /** The checkout that owns this order; retries with the same id reuse it. */
@@ -239,6 +280,8 @@ export type DemoOrder = {
   /** The one accepted payment event, if any. */
   paymentEventId: string | null;
   refundEventId: string | null;
+  /** The stage a refund was applied from, so the timeline keeps the history. */
+  refundedFrom?: DemoOrderStatus;
   /** A separate authority from payment: nothing can be printed without it. */
   fulfilmentAuthorised: boolean;
   /** The one accepted print action, if any. */
@@ -300,6 +343,8 @@ export function createDemoOrder(
     const variant = product?.variants.find((item) => item.id === line.variantId);
     if (!product || !variant)
       throw new Error(`Unknown demo product or variant: ${line.productSlug}/${line.variantId}.`);
+    if (!Number.isFinite(line.quantity) || line.quantity <= 0)
+      throw new Error("A demo order needs a positive, finite quantity on every line.");
     const quantity = Math.max(1, Math.min(10, Math.trunc(line.quantity)));
     const key = `${line.productSlug}:${line.variantId}`;
     const existing = seen.get(key);
@@ -398,8 +443,12 @@ export function applyDemoEvent(order: DemoOrder, event: DemoEvent): EventResult 
     case "payment.refunded": {
       if (!refundable.has(order.status))
         return reject("only a paid, unshipped order can be refunded");
+      // A refund is for the one charge on this order. A partial or unknown
+      // amount must not move the whole order to a terminal refunded state.
+      if (event.amountCents !== undefined && event.amountCents !== order.totalCents)
+        return reject("the refund amount does not match the demo order total");
       return accept(
-        { status: "refunded", refundEventId: event.id },
+        { status: "refunded", refundEventId: event.id, refundedFrom: order.status },
         "Refund recorded once. No second refund can be applied."
       );
     }

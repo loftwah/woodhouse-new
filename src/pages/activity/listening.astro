@@ -254,7 +254,7 @@ const metadataPath =
     button.hidden = false;
     button.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(`/activity/`);
+        await navigator.clipboard.writeText(window.location.href);
         status.textContent = "Link copied.";
       } catch {
         status.textContent = "Use the Share Scores & listening link to copy the address.";

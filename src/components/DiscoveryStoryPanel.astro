@@ -69,15 +69,17 @@ const headingId =
       <dd>
         {story.coverageLabel}
         <small>
-          {story.coverage === "partial" && story.firstObserved
-            ? `Counting began ${dateLabel(story.firstObserved)}`
-            : story.coverage === "unavailable"
-              ? story.reason.startsWith("Woodhouse did not provide")
-                ? "No data from Woodhouse"
-                : "No click count"
-              : story.period.complete
-                ? "Every day counted"
-                : "Today is still being counted"}
+          {story.totalOnly
+            ? "Total only; daily coverage unknown"
+            : story.coverage === "partial" && story.firstObserved
+              ? `Counting began ${dateLabel(story.firstObserved)}`
+              : story.coverage === "unavailable"
+                ? story.reason.startsWith("Woodhouse did not provide")
+                  ? "No data from Woodhouse"
+                  : "No click count"
+                : story.period.complete
+                  ? "Every day counted"
+                  : "Today is still being counted"}
         </small>
       </dd>
     </div>

@@ -23,7 +23,12 @@ const lifecycleStates: Record<string, ProjectLifecycle> = {
 /** Map a current status label to a portfolio lifecycle. */
 export function projectLifecycle(value: unknown): ProjectLifecycle {
   if (typeof value !== "string") return "unknown";
-  return lifecycleStates[value.trim()] ?? "active";
+  const status = value.trim();
+  // A missing status is not an explicit statement of active work. Only a real
+  // engineering label falls through to `active`; blank or whitespace-only text
+  // stays unreviewed so it cannot join current work by omission.
+  if (!status) return "unknown";
+  return lifecycleStates[status] ?? "active";
 }
 
 /** Only an explicit `active` record joins current work, counts and rankings. */

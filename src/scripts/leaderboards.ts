@@ -90,6 +90,9 @@ if (root) {
       if (typeof navigator.share === "function" && !shareImage.ready)
         say("Preparing your image…", ticket);
       const result = await shareImage.share();
+      // A newer action owns the page: do not move focus or scroll on behalf of
+      // a share whose status is already suppressed.
+      if (ticket !== operation) return;
       if (result === "busy") {
         say("Still preparing your image. Try again when it’s ready.", ticket);
         return;

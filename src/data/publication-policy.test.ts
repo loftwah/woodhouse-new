@@ -25,6 +25,10 @@ test("CMS, encoded CMS, preview and every mutation are stopped before the handle
     "/%5Femdash/admin",
     "/_emdash%2Fapi/content",
     "/_emdash//api/media/file/x",
+    "/..%2f_emdash/admin",
+    "/%2e%2e/_emdash/admin",
+    "/foo/..%2f_emdash/admin",
+    "/_emdash%5cadmin",
     "/?%5Fpreview=token"
   ])
     assert.equal(publicationRequestAllowed(new Request(origin + pathname)), false, pathname);

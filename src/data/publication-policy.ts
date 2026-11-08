@@ -26,6 +26,11 @@ export function publicationRequestAllowed(request: Request): boolean {
   } catch {
     return false;
   }
+  // Decoding can reveal a traversal the URL parser left encoded (`..%2f`).
+  // Collapse nothing: a path with a dot segment or a backslash is refused
+  // outright, so a router that resolves it cannot reach the CMS behind the gate.
+  if (pathname.split("/").some((segment) => segment === "." || segment === "..")) return false;
+  if (pathname.includes("\\") || pathname.includes("\0")) return false;
   if (pathname === "/_emdash" || pathname.startsWith("/_emdash/")) return false;
   if (url.searchParams.has("_preview")) return false;
   // Astro trims cookie names and decodes values. Refuse the edit-mode cookie

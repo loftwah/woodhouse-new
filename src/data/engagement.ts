@@ -434,14 +434,12 @@ export async function localAnalytics(
       )
       .bind(project, period.from, period.to)
       .all<{ day: string; metric: string; value: number }>(),
-    splitModes.length
-      ? db
-          .prepare(
-            "SELECT metric, MIN(day) AS day FROM wh_analytics_daily WHERE project=? GROUP BY metric"
-          )
-          .bind(project)
-          .all<{ metric: string; day: string }>()
-      : null,
+    db
+      .prepare(
+        "SELECT metric, MIN(day) AS day FROM wh_analytics_daily WHERE project=? GROUP BY metric ORDER BY day"
+      )
+      .bind(project)
+      .all<{ metric: string; day: string }>(),
     project === "woodhouse"
       ? db
           .prepare("SELECT started_at FROM wh_analytics_browser_coverage WHERE project=?")
@@ -458,16 +456,20 @@ export async function localAnalytics(
       : null
   ]);
   const started = first?.day ?? null;
+  // A metric's own first day, not the project's. A counter added later must not
+  // inherit weeks of fabricated zeros back to the project's first event.
+  const metricStarts = new Map(starts.results.map((row) => [row.metric, row.day]));
   const metrics: Metric[] = Object.entries(definitions)
     .filter(([kind]) =>
       project === "woodhouse" ? !kind.startsWith("game_") : kind !== "project_open"
     )
     .map(([kind, d]) => {
       const daily: Metric["daily"] = [];
-      if (started)
+      const metricStarted = metricStarts.get(kind) ?? null;
+      if (metricStarted)
         for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
           const date = new Date(t).toISOString().slice(0, 10);
-          if (date < started) continue;
+          if (date < metricStarted) continue;
           daily.push({
             date,
             value: rows.results.find((r) => r.day === date && r.metric === kind)?.value ?? 0
@@ -488,23 +490,28 @@ export async function localAnalytics(
   // missing row for a mode is a measured zero for that mode, because the counter
   // is written for every accepted event that mode receives, and the partition of
   // the parent counter stays exact.
-  const splitStarts = new Map<string, string>();
   let splitFrom: string | undefined;
-  if (splitModes.length && starts) {
-    for (const row of starts.results) splitStarts.set(row.metric, row.day);
+  if (splitModes.length && metricStarts.size) {
     splitFrom = gameplayKindMeasures
-      .flatMap((kind) => splitModes.map((mode) => splitStarts.get(modeMetricName(kind.kind, mode))))
+      .flatMap((kind) =>
+        splitModes.map((mode) => metricStarts.get(modeMetricName(kind.kind, mode)))
+      )
       .filter((day): day is string => typeof day === "string")
       .sort()[0];
   }
   for (const kind of gameplayKindMeasures) {
     if (!splitFrom) break;
+    // A split cannot begin before its overall counter does. Aligning the two
+    // keeps the parent and its subtotals covering the same days, so the
+    // partition is exact over the days it claims and earlier days stay gaps.
+    const parentStart = metricStarts.get(kind.kind);
+    const kindFrom = parentStart && parentStart > splitFrom ? parentStart : splitFrom;
     for (const mode of splitModes) {
       const name = modeMetricName(kind.kind, mode);
       const daily: Metric["daily"] = [];
       for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
         const date = new Date(t).toISOString().slice(0, 10);
-        if (date < splitFrom) continue;
+        if (date < kindFrom) continue;
         daily.push({
           date,
           value: rows.results.find((r) => r.day === date && r.metric === name)?.value ?? 0
@@ -613,15 +620,17 @@ export async function localAnalytics(
       bySlug.get(slug)!.set(row.day, row.value);
     }
     for (const [slug, days] of bySlug) {
+      const key = `referral_${slug.replaceAll("-", "_")}`;
+      const metricStarted = metricStarts.get(key) ?? null;
       const daily: Metric["daily"] = [];
-      if (started)
+      if (metricStarted)
         for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
           const date = new Date(t).toISOString().slice(0, 10);
-          if (date < started) continue;
+          if (date < metricStarted) continue;
           daily.push({ date, value: days.get(date) ?? 0 });
         }
       metrics.push({
-        key: `referral_${slug.replaceAll("-", "_")}`,
+        key,
         label: `Referrals to ${slug}`,
         unit: "count",
         value: daily.length ? daily.reduce((s, r) => s + r.value, 0) : null,

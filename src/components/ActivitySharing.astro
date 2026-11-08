@@ -92,6 +92,7 @@ const caption = !selected
     const copy = root.querySelector<HTMLButtonElement>("[data-copy-caption]");
     const status = root.querySelector<HTMLElement>("[data-image-status]");
     let prepared: File | undefined;
+    let sharing = false;
     const update = (text: string) => {
       if (status) status.textContent = text;
     };
@@ -127,6 +128,13 @@ const caption = !selected
         });
       share.addEventListener("click", async () => {
         if (!prepared) return;
+        // A native share sheet stays open until the person finishes with it.
+        // A second activation must acknowledge that, not report a false failure.
+        if (sharing) {
+          update("Your device is still finishing the last share.");
+          return;
+        }
+        sharing = true;
         try {
           await navigator.share({
             files: [prepared],
@@ -141,14 +149,21 @@ const caption = !selected
             return;
           }
           update("Sharing is unavailable here. Use Download image, then Copy caption + link.");
+        } finally {
+          sharing = false;
         }
       });
     }
     const image = root.querySelector<HTMLImageElement>("img");
-    image?.addEventListener("error", () => {
+    const unavailable = () => {
+      if (!image) return;
       image.hidden = true;
       update("The image is unavailable. Open the listening report for the latest source.");
-    });
+    };
+    image?.addEventListener("error", unavailable);
+    // A cached image can fail before this module runs. Check the settled state
+    // once so a broken frame cannot stay beside working share controls.
+    if (image?.complete && image.naturalWidth === 0) unavailable();
   }
 </script>
 <style>

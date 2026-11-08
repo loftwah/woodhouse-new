@@ -74,20 +74,27 @@ test("woodhouse issues its independent reads together, then the gated browser pa
   const report = localAnalytics(db, "woodhouse", 7, now);
 
   // Nothing in the first stage answers anything else: the collection start, the
-  // daily rows, the browser coverage start and the referral rows all depend on
-  // the project and window only. All four are dispatched before any can resolve.
-  assert.deepEqual(dispatched, ["daily-start", "daily-rows", "browser-start", "referral-rows"]);
+  // daily rows, each metric's own start, the browser coverage start and the
+  // referral rows all depend on the project and window only. All five are
+  // dispatched before any can resolve.
+  assert.deepEqual(dispatched, [
+    "daily-start",
+    "daily-rows",
+    "mode-starts",
+    "browser-start",
+    "referral-rows"
+  ]);
 
   await flush();
   // The browser daily series and its period totals read the same table and are
   // only allowed once coverage exists; they now share one stage.
-  assert.deepEqual(dispatched.slice(4), ["browser-daily", "browser-totals"]);
+  assert.deepEqual(dispatched.slice(5), ["browser-daily", "browser-totals"]);
 
   await flush();
   const result = await report;
   assert.equal(result.project, "woodhouse");
   assert.equal(result.metrics.find((metric) => metric.key === "browsers")?.value, 0);
-  assert.equal(dispatched.length, 6);
+  assert.equal(dispatched.length, 7);
 });
 
 test("game projects read only what their modes and consent support", async () => {
@@ -106,16 +113,32 @@ test("a consenting-visit gap still suppresses the browser reads", async () => {
   const { db, dispatched, flush } = gatedDatabase({ ...baseAnswers(), "browser-start": null });
   const report = localAnalytics(db, "woodhouse", 7, now);
 
-  assert.deepEqual(dispatched, ["daily-start", "daily-rows", "browser-start", "referral-rows"]);
+  assert.deepEqual(dispatched, [
+    "daily-start",
+    "daily-rows",
+    "mode-starts",
+    "browser-start",
+    "referral-rows"
+  ]);
   await flush();
   const result = await report;
-  assert.deepEqual(dispatched, ["daily-start", "daily-rows", "browser-start", "referral-rows"]);
+  assert.deepEqual(dispatched, [
+    "daily-start",
+    "daily-rows",
+    "mode-starts",
+    "browser-start",
+    "referral-rows"
+  ]);
   assert.match(result.coverage.limitations.join(" "), /has not yet received a consenting visit/);
 });
 
 test("referral rows found in the same independent stage still become their own measure", async () => {
   const { db, flush } = gatedDatabase({
     ...baseAnswers(),
+    "mode-starts": {
+      results: [{ metric: "referral_bubbles", day: period.from }],
+      success: true
+    },
     "browser-start": { started_at: Math.floor(now / 1000) - 5 * 86400 },
     "referral-rows": {
       results: [{ metric: "referral_bubbles", day: period.from, value: 2 }],

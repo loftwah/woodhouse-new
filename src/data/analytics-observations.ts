@@ -172,7 +172,10 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   const periodLabel = `${dateLabel(window.from)}–${dateLabel(window.to)}`;
 
   const week = pickWeek(input.weekly);
-  const weekInsideWindow = week ? week.to >= window.from : false;
+  // The card presents the week as "for these dates". A week that only overlaps
+  // the selected window would describe days the reader did not choose, so the
+  // whole Monday–Sunday period must sit inside it.
+  const weekInsideWindow = week ? week.from >= window.from && week.to <= window.to : false;
   if (week && weekInsideWindow) {
     const valueLabel = formatMetric({ value: week.value, unit: week.unit });
     const previous = formatMetric({ value: week.previous, unit: week.unit });
