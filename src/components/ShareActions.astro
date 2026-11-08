@@ -169,6 +169,10 @@ const {
       download.removeAttribute("aria-disabled");
       delete download.dataset.state;
     };
+    // A component with no fallback is already resolved on arrival. Apply the
+    // filename rule before the first click; otherwise the server-rendered guess
+    // is what the browser saves.
+    applyResolvedDownload();
     const markDownloadFailed = () => {
       if (!download) return;
       download.setAttribute("aria-disabled", "true");
