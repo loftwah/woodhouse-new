@@ -26,7 +26,7 @@ if (process.argv.includes("--responsive-previews")) {
     ]);
   writeFileSync(
     `${directory}provenance.txt`,
-    "Reviewed 26 October 2026 (AEDT). Responsive derivatives of the already published Woodhouse campaign JPEGs, resized without cropping by the existing renderer. Reproduce: node scripts/render-showcase-campaign.mjs --responsive-previews. Full previews, source masters and historical URLs are unchanged.\n"
+    "Reviewed 26 October 2026 (AEDT); Foilbury derivatives added 8 November 2026. Responsive derivatives of the already published Woodhouse campaign and product JPEGs, resized without cropping by the existing renderer. Reproduce: node scripts/render-showcase-campaign.mjs --responsive-previews. Full previews, source masters and historical URLs are unchanged.\n"
   );
   process.exit(0);
 }

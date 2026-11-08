@@ -238,7 +238,11 @@ const typeLabel = (key: GalleryType) => galleryTypes.find(([k]) => k === key)![1
 const selectedTypes = selected ? availableProjectTypes(selected.slug) : [];
 const previewSet = new Set(sharePreviews);
 const pagePath = canonicalGalleryURL(selected?.slug, view, collection.page);
-const kitProjects = projects.filter((p) => gameMedia.some((asset) => asset.project === p.slug));
+// Every published project has at least its link card, so the archive's project
+// filter and rail list the whole portfolio. Before this, a project whose only
+// reviewed kit was that card — Foilbury, then Liferaft — could be reached from
+// the link-card page but not selected from the archive.
+const kitProjects = projects;
 const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );

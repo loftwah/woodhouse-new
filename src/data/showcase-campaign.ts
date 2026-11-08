@@ -140,6 +140,27 @@ export const campaignItems: CampaignItem[] = [
     "https://fm.loftwah.com/",
     "Listen"
   ),
+  // Foilbury publishes its own showcase stills. These are the product's images,
+  // not Woodhouse compositions: copied whole, credited to the product and dated
+  // to its export. Its link card still uses the product's declared OG artwork.
+  {
+    id: "foilbury-characters-worth-keeping",
+    project: "foilbury",
+    title: "Foilbury · Characters worth keeping",
+    alt: "Foilbury's published public-showcase still: the line Characters worth keeping beside a real Drop Bear card from the Fighter collection, with its designed back, serial and PUBLIC-SAFE label.",
+    caption:
+      "Characters worth keeping. Browse Foilbury's public cabinet, open a capsule and keep the copy — serial, finish and all. Drop Bear is a real card from the Fighter collection.\nhttps://foilbury.loftwah.com/",
+    image: "/campaign/20261108/foilbury-characters-worth-keeping.jpg",
+    original: "/campaign/20261108/foilbury-characters-worth-keeping-original.png",
+    width: 1920,
+    height: 1080,
+    reviewedAt: "2026-11-08",
+    credit: "Foilbury · published still of real production card renders, 3 November 2026",
+    kind: "production screenshot",
+    href: "https://foilbury.loftwah.com/",
+    action: "Explore",
+    source: "https://woodhouse.loftwah.com/campaign/20261108/provenance.txt"
+  },
   refined(
     item(
       "woodhouse-play-make-listen",

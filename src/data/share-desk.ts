@@ -1,6 +1,16 @@
 import type { WoodhouseProject } from "../content/repository";
 import { SITE_ORIGIN } from "./site-origin.ts";
-const sharePriorities = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm"];
+/**
+ * Presentation order for the share desk, which is not the dossier order.
+ *
+ * The first five are the products a stranger can act on immediately: four games
+ * and the music player. Foilbury follows them because it is the next product
+ * with a public surface someone can browse without an account — a card cabinet
+ * with real artwork — while MAX, App Composer, Asset Hunter and the paused work
+ * need more explanation than a share card can carry. Everything after that keeps
+ * the dossier index order.
+ */
+const sharePriorities = ["fighter", "shoalshot", "protocol-11", "bubbles", "loftwahfm", "foilbury"];
 export function orderShareProjects(projects: WoodhouseProject[]) {
   return [...projects].sort((a, b) => {
     const rank = (id: string) => {
@@ -3922,5 +3932,23 @@ export const gameMedia: ShareMedia[] = [
     sha256: "a6f62c72ac0b52b2285001921bed8d08c9ce8adc537dd250e00f9e9b3dec6fa9",
     bytes: 56795,
     reviewedAt: "2026-10-12"
+  },
+  {
+    id: "foilbury-drop-bear-four-ways",
+    project: "foilbury",
+    title: "Drop Bear, four ways",
+    file: "/share/foilbury/drop-bear-four-ways-1920x1080.png",
+    kind: "image",
+    width: 1920,
+    height: 1080,
+    alt: "Foilbury's published finish plate: the same Drop Bear card in Plain, Silver, Gold and Diamond finishes, labelled with the real render names beneath each card.",
+    credit: "Foilbury",
+    note: "Published finish plate · 3 November 2026",
+    category: "art",
+    caption:
+      "One card, four finishes. Plain, Silver, Gold and Diamond versions of the same public Foilbury card.\nhttps://foilbury.loftwah.com/showcase",
+    sha256: "89af3d5104347c364f0cf9919b3f29f9228907312a873ba09a0697222d56a263",
+    bytes: 1666296,
+    reviewedAt: "2026-11-08"
   }
 ];

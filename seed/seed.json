@@ -2213,18 +2213,18 @@
         "data": {
           "name": "Foilbury",
           "index": "11",
-          "discipline": "Collectible cards - public showcase",
+          "discipline": "Collectible cards · public showcase",
           "title": "A cabinet of collectible cards.",
-          "summary": "Foilbury is a collectible-card cabinet for exploring cards from Loftwah original worlds. Its public showcase is available in a browser; members have a separate album.",
-          "why": "The public cabinet gives a visitor a place to inspect the cards before deciding whether to join.",
+          "summary": "Foilbury is a free collectible-card album for original characters: browse the public cabinet, open a capsule and keep the copy, its finish and its serial. It's for anyone who likes collecting character art from the Loftwah worlds, and the public shelf is open without an account.",
+          "why": "The cards are the point: original character art, a designed back, several finishes and a serial that belongs to the person who opened it. You can walk the public shelf before deciding whether a collection is for you.",
           "teaches": "A public showcase is distinct from a member's private collection.",
           "site_url": "https://foilbury.loftwah.com/",
           "site_og_image": "https://foilbury.loftwah.com/brand/social-preview.jpg",
-          "site_og_title": "Foilbury - a collector cabinet",
-          "site_og_description": "A collectible-card album and public showcase of Loftwah original worlds.",
+          "site_og_title": "Foilbury — a personal card library",
+          "site_og_description": "A free collectible-card album for approved original worlds. Browse the public shelf, open a capsule and keep the cards you love.",
           "site_favicon": "https://foilbury.loftwah.com/brand/favicon-32.png",
-          "preview_alt": "Foilbury promotional artwork from its public website.",
-          "preview_caption": "Foilbury public preview - reviewed 6 November 2026",
+          "preview_alt": "Foilbury's own social preview: its mark and wordmark above the line Characters worth keeping, with free to play, member album and original worlds beneath.",
+          "preview_caption": "Foilbury's own social preview · reviewed 8 November 2026",
           "public_safe": true
         }
       }
@@ -2487,6 +2487,19 @@
           "source_description": "Foilbury public website, metadata and public repository, reviewed 6 November 2026 in Melbourne.",
           "scope": "The public card cabinet and producer-owned preview artwork.",
           "editorial_notes": "Public presentation is distinct from private inventories and from a verified player or Discord journey.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-11-08-foilbury-cabinet",
+        "slug": "2026-11-08-foilbury-cabinet",
+        "status": "published",
+        "data": {
+          "title": "Foilbury public cabinet · 8 November 2026",
+          "reviewed_at": "2026-11-08",
+          "source_description": "Foilbury's public home page, its public cabinet at /cabinet, its published showcase export and its own social-preview declaration, reviewed 8 November 2026 in Melbourne.",
+          "scope": "The public card shelf, the four collections it lists and the product-owned preview and showcase stills.",
+          "editorial_notes": "A public presentation review. No signed-in journey, draw, private inventory, Discord interaction or purchase was observed, and the product's own member surfaces keep their separate evidence.",
           "public_safe": true
         }
       },
@@ -3603,6 +3616,25 @@
           "next_proof": "Verify complete player and Discord journeys, including the boundaries around private collections.",
           "proof_boundary": "Public site and metadata observed on 6 November 2026. This does not establish private inventory access, a completed draw, Discord interaction or player adoption.",
           "reviewed_at": "2026-11-06",
+          "sort_order": 1,
+          "public_safe": true
+        }
+      },
+      {
+        "id": "status-foilbury-2026-11-08",
+        "slug": "foilbury-2026-11-08",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-foilbury",
+          "snapshot": "$ref:snapshot-2026-11-08-foilbury-cabinet",
+          "project_key": "foilbury",
+          "snapshot_key": "2026-11-08-foilbury-cabinet",
+          "state": "Public card cabinet",
+          "state_tone": "active",
+          "current": "The public cabinet lists Bubbles, Fighter, Protocol 11 and a shared-characters collection, and its card pages open without an account. Signing in runs through Discord, a one-use email link or a passkey; member albums and serials stay private to the person who opened them.",
+          "next_proof": "Verify the complete signed-in and Discord journeys, including the boundaries around private collections and a real draw.",
+          "proof_boundary": "The public shelf, its card pages, the product's showcase export and its declared social preview were observed on 8 November 2026 as an anonymous visitor. This does not establish a completed draw, member inventory access, a Discord interaction, a purchase or player adoption.",
+          "reviewed_at": "2026-11-08",
           "sort_order": 1,
           "public_safe": true
         }

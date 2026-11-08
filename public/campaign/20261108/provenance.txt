@@ -1,0 +1,32 @@
+WOODHOUSE — FOILBURY PUBLIC-SHOWCASE STILLS
+Reviewed 8 November 2026 (Australia/Melbourne)
+
+Two stills the Foilbury product publishes about itself. Both are copied byte for
+byte from that product's reviewed public-showcase export. Woodhouse composed
+nothing here and added no type, crop or edit. They are gallery material beside
+Foilbury's own link card; they do not replace the social preview the product
+declares for itself.
+
+SOURCE
+Foilbury public showcase export (pnpm export:showcase), 3 November 2026:
+https://foilbury.loftwah.com/media/showcase/manifest.json
+Repository loftwah/card-collector-bot, public/media/showcase/.
+The export manifest admits approved public-showcase renders only; private
+opening replays and member screenshots stay with the product.
+
+FILES
+public/campaign/20261108/foilbury-characters-worth-keeping-original.png
+  source card-16x9-1920.png
+  sha256 752e70ab7689f66271188754be1509c07575586d9754db84e6132bd2d89fba1b
+  The .jpg beside it is a bounded 1200px gallery preview of the same image,
+  resized without cropping.
+public/share/foilbury/drop-bear-four-ways-1920x1080.png
+  source finish-mastery-16x9-1920.png
+  sha256 89af3d5104347c364f0cf9919b3f29f9228907312a873ba09a0697222d56a263
+  Kept whole; the share gallery derives a bounded WebP preview from it.
+Card identity: Drop Bear, Fighter collection. Real published renders, not staged
+samples.
+
+NOT CLAIMED
+A promotional still does not establish a draw, an owned inventory, a serial, a
+purchase or player adoption.
