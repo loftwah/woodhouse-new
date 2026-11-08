@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
+import ShareActions from "../../components/ShareActions.astro";
 import { listProjectRecords } from "../../content/repository";
 import {
   publicCampaignItems,
@@ -9,7 +10,7 @@ import {
   campaignSocial
 } from "../../data/showcase-public";
 import { toJsonLd } from "../../data/safe-json";
-import { socialCardFor } from "../../data/site-metadata";
+import { socialCardFor, getSiteMetadata } from "../../data/site-metadata";
 import { liveProjectArtwork } from "../../data/live-project-artwork";
 
 export const prerender = false;
@@ -38,6 +39,22 @@ const social = campaignSocial(items)!;
 const productSocial = project ? socialCardFor(project) : null;
 const path = campaignCollectionPath(slug);
 const origin = Astro.site?.origin ?? SITE_ORIGIN;
+// The ready-to-post caption ends with its destination. On the page that
+// destination is a real link a few pixels away, so the displayed caption drops
+// the bare address while the copyable text keeps it.
+const captionText = (caption: string) =>
+  caption
+    .split("\n")
+    .filter((line) => !/^https?:\/\/\S+$/.test(line.trim()))
+    .join("\n")
+    .trim();
+const hostOf = (href: string) => {
+  try {
+    return new URL(href).hostname;
+  } catch {
+    return new URL(href, origin).hostname;
+  }
+};
 ---
 
 <BaseLayout
@@ -82,7 +99,9 @@ const origin = Astro.site?.origin ?? SITE_ORIGIN;
         {name}
         <span>Artwork & screenshots</span>
       </h1>
-      <p>{project?.summary ?? "Games, software and music. A selection from the things we make."}</p>
+      <p>
+        {project?.title ?? "Games, software and music. A selection from the things we make."}
+      </p>
       <div class="collection__links">
         <a href={project?.siteUrl ?? "/"}>
           {items[0]?.action ?? "Explore"} {name} ↗
@@ -95,13 +114,87 @@ const origin = Astro.site?.origin ?? SITE_ORIGIN;
         </a>
       </div>
     </header>
-    <ShowcaseGallery items={items} />
+    {items.length === 1 ? (
+      // One reviewed work is a share card, not a gallery grid: the artwork, the
+      // caption a person would actually post and the actions belong in one view.
+      <section class="work-card" aria-labelledby="work-card-title">
+        <figure class="work-card__art">
+          <a href={items[0]!.original} aria-label={`View ${items[0]!.title} full size`}>
+            <img
+              src={items[0]!.image}
+              width={items[0]!.width}
+              height={items[0]!.height}
+              alt={items[0]!.alt}
+              loading="eager"
+              decoding="async"
+            />
+            <span class="work-card__view" aria-hidden="true">View full size</span>
+          </a>
+          <figcaption>
+            <span class="work-card__kind">{items[0]!.kind}</span>
+            {items[0]!.credit} · reviewed {items[0]!.reviewedAt}
+          </figcaption>
+        </figure>
+        <div class="work-card__body">
+          <p class="work-card__eyebrow">Share card</p>
+          <h2 id="work-card-title">{items[0]!.title}</h2>
+          <p class="work-card__caption">{captionText(items[0]!.caption)}</p>
+          <ShareActions
+            caption={items[0]!.caption}
+            image={items[0]!.original}
+            shareSource={items[0]!.image}
+            filename={items[0]!.original.split("/").pop() ?? `${items[0]!.id}.jpg`}
+            link={items[0]!.href}
+          />
+          {items[0]!.landscapeImage && (
+            <a class="work-card__poster" href={items[0]!.landscapeImage} download>
+              Download the landscape poster
+            </a>
+          )}
+          {productSocial?.fromProduct && (
+            // The page's own social metadata is the product's declared image, so
+            // the reader can see exactly what the link will look like before it
+            // is posted. A Woodhouse-drawn card is not previewed as a product's.
+            <div class="work-card__preview">
+              <p>Link preview</p>
+              <a class="work-card__unfurl" href={items[0]!.href}>
+                <img
+                  src={productSocial.image}
+                  width={productSocial.width}
+                  height={productSocial.height}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  data-unfurl-image
+                />
+                <span>
+                  <strong>{getSiteMetadata(project!).title}</strong>
+                  <small>{hostOf(items[0]!.href)}</small>
+                </span>
+              </a>
+            </div>
+          )}
+        </div>
+      </section>
+    ) : (
+      <ShowcaseGallery items={items} />
+    )}
     <p class="collection__note">
-      Promotional compositions and production captures are labelled individually. Open an image for
-      its credit, caption and original download.
+      Promotional compositions and product captures are labelled individually. The caption is ready
+      to post; the original file is the full-size download.
     </p>
   </div>
 </BaseLayout>
+
+<script>
+  // A product can move or withdraw the image its own page declares. The preview
+  // keeps its title and address and drops the thumbnail, rather than showing a
+  // broken image under a label that promised a picture.
+  for (const image of document.querySelectorAll<HTMLImageElement>("[data-unfurl-image]"))
+    image.addEventListener("error", () =>
+      image.closest(".work-card__unfurl")?.classList.add("unfurl-missing")
+    );
+</script>
 
 <style>
   .collection {
@@ -129,6 +222,135 @@ const origin = Astro.site?.origin ?? SITE_ORIGIN;
     max-width: 68ch;
     line-height: 1.6;
   }
+  .work-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .work-card__art {
+    margin: 0;
+    min-width: 0;
+  }
+  .work-card__art a {
+    display: block;
+    position: relative;
+    background: var(--surface);
+  }
+  .work-card__art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: min(64dvh, 620px);
+    object-fit: contain;
+  }
+  .work-card__view {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    padding: 0.25rem 0.7rem;
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 0.75rem;
+  }
+  .work-card__art figcaption {
+    padding-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+  .work-card__kind {
+    display: block;
+    font-family: var(--mono, inherit);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--copy-soft);
+  }
+  .work-card__body {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    min-width: 0;
+  }
+  .work-card__eyebrow {
+    margin: 0;
+    color: var(--acid);
+    font-family: var(--mono, inherit);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .work-card__body h2 {
+    font: 600 clamp(1.6rem, 2.6vw, 2.35rem)/1.1 var(--display);
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .work-card__caption {
+    margin: 0;
+    max-width: 46ch;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+  .work-card__poster {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+    text-underline-offset: 0.25em;
+  }
+  .work-card__preview {
+    margin-top: 0.35rem;
+  }
+  .work-card__preview > p {
+    margin: 0 0 0.4rem;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .work-card__unfurl {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 0.8rem;
+    align-items: center;
+    padding: 0.6rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+  }
+  .work-card__unfurl img {
+    display: block;
+    width: 132px;
+    height: auto;
+  }
+  .work-card__unfurl.unfurl-missing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .work-card__unfurl.unfurl-missing img {
+    display: none;
+  }
+  .work-card__unfurl span {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .work-card__unfurl strong {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  .work-card__unfurl small {
+    color: var(--muted);
+    font-family: var(--mono, inherit);
+    font-size: 0.7rem;
+  }
   .collection__links {
     display: flex;
     flex-wrap: wrap;
@@ -149,5 +371,13 @@ const origin = Astro.site?.origin ?? SITE_ORIGIN;
     font-size: 0.875rem;
     line-height: 1.6;
     margin-block: 2rem;
+  }
+  @media (max-width: 860px) {
+    .work-card {
+      grid-template-columns: 1fr;
+    }
+    .work-card__art img {
+      max-height: none;
+    }
   }
 </style>

@@ -47,6 +47,9 @@ const {
     <button type="button" data-copy hidden>
       {label}
     </button>
+    <button type="button" data-copy-link hidden>
+      Copy link
+    </button>
     <button type="button" data-device-share hidden>
       Share
     </button>
@@ -80,6 +83,7 @@ const {
     const status = root.querySelector<HTMLElement>("[data-status]");
     const text = root.querySelector<HTMLTextAreaElement>("textarea");
     const copy = root.querySelector<HTMLButtonElement>("[data-copy]");
+    const copyLink = root.querySelector<HTMLButtonElement>("[data-copy-link]");
     const copyImage = root.querySelector<HTMLButtonElement>("[data-copy-image]");
     const share = root.querySelector<HTMLButtonElement>("[data-device-share]");
     const download = root.querySelector<HTMLAnchorElement>(".download");
@@ -343,6 +347,55 @@ const {
           copy.removeAttribute("aria-busy");
           copy.removeAttribute("aria-disabled");
           delete copy.dataset.pending;
+        }
+      });
+    }
+
+    // A person sharing a page often wants the address on its own: the post is for
+    // the image, and the link is for a message, a bio or a reply. It gets its own
+    // confirmation because "copied" has to mean the thing that was pressed.
+    if (copyLink && navigator.clipboard?.writeText) {
+      copyLink.hidden = false;
+      const idleLabel = copyLink.textContent?.trim() || "Copy link";
+      const labelIntent = createOperationIntent();
+      let resetTimer = 0;
+      copyLink.addEventListener("click", async () => {
+        if (copyLink.dataset.pending === "true") {
+          say("Still copying the link.");
+          return;
+        }
+        const token = statusIntent.begin();
+        const labelToken = labelIntent.begin();
+        const link = absolute(root.dataset.link ?? location.href);
+        copyLink.dataset.pending = "true";
+        copyLink.setAttribute("aria-busy", "true");
+        copyLink.setAttribute("aria-disabled", "true");
+        copyLink.textContent = "Copying…";
+        say("Copying the link…", token);
+        window.clearTimeout(resetTimer);
+        try {
+          await withDeadline(navigator.clipboard.writeText(link), textDeadline);
+          if (labelIntent.isCurrent(labelToken)) {
+            copyLink.dataset.state = "copied";
+            copyLink.textContent = "Link copied";
+            resetTimer = window.setTimeout(() => {
+              if (!labelIntent.isCurrent(labelToken)) return;
+              if (copyLink.dataset.pending === "true") return;
+              copyLink.textContent = idleLabel;
+              delete copyLink.dataset.state;
+            }, resetDelay);
+          }
+          say(`Link copied. ${link}`, token);
+        } catch (error) {
+          if (labelIntent.isCurrent(labelToken)) {
+            copyLink.textContent = idleLabel;
+            delete copyLink.dataset.state;
+          }
+          say(clipboardFailureMessage(clipboardProblem(error), "link"), token);
+        } finally {
+          copyLink.removeAttribute("aria-busy");
+          copyLink.removeAttribute("aria-disabled");
+          delete copyLink.dataset.pending;
         }
       });
     }

@@ -44,13 +44,20 @@ export function clipboardProblem(error: unknown): ClipboardProblem {
 
 export function clipboardFailureMessage(
   problem: ClipboardProblem,
-  scope: "image" | "post"
+  scope: "image" | "post" | "link"
 ): string {
   if (scope === "image") {
     if (problem === "blocked") return "Clipboard access was blocked. Use Download instead.";
     if (problem === "timed-out")
       return "The image copy timed out. Use Download if you cannot paste the image.";
     return "The image could not be prepared for the clipboard. Use Download instead.";
+  }
+  if (scope === "link") {
+    if (problem === "blocked")
+      return "Clipboard access was blocked. The address is in your browser's address bar.";
+    if (problem === "timed-out")
+      return "The clipboard did not confirm the copy. Copy the address from the address bar.";
+    return "Could not copy the link automatically. Copy the address from the address bar.";
   }
   const recovery = "The post is open below; copy it from there.";
   if (problem === "blocked") return `Clipboard access was blocked. ${recovery}`;

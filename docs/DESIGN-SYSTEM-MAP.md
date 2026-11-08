@@ -19,7 +19,7 @@ production page. A design or a story never overrides the live route.
 | Listening | `/activity/listening/` | 07 | `MeasurementNavigation`, `FMListening` | — | https://woodhouse.loftwah.com/activity/listening/ |
 | Measurement choices | `/activity/measurement/` | 06/07 | consent and definition markup | — | https://woodhouse.loftwah.com/activity/measurement/ |
 | Share gallery | `/share/` | 06 | `ShowcaseGallery`, `GameMedia`, `ShareActions`, `GalleryPagination` | `Media/Showcase gallery`, `Media/Game media`, `Media/Share actions`, `Media/Gallery pagination` | https://woodhouse.loftwah.com/share/ |
-| Project share collection | `/share/[slug]/` | 06 | same as gallery | same as gallery | https://woodhouse.loftwah.com/share/bubbles/ |
+| Project share collection | `/share/[slug]/` | 06 | `ShowcaseGallery` for a multi-work collection; one reviewed work renders as a share card (artwork, visible caption, `ShareActions`, product link preview) with `SITE_METADATA` | same as gallery | https://woodhouse.loftwah.com/share/bubbles/ |
 | Exhibits index | `/exhibits/` | 10 | `FactoryPlate` | — | https://woodhouse.loftwah.com/exhibits/ |
 | Patch bench | `/exhibits/patch-bench/` | 10 | exhibit scripts, `FMListening` | — | https://woodhouse.loftwah.com/exhibits/patch-bench/ |
 | Source plate | `/exhibits/source-plate/` | 10 | exhibit scripts, `D2Diagram` | — | https://woodhouse.loftwah.com/exhibits/source-plate/ |
