@@ -8,8 +8,10 @@ import {
   type ReportingWindow
 } from "./portfolio-analytics.ts";
 import {
+  dailyStatus,
   modeSplitNote,
   overviewMeasures,
+  reportQualifier,
   weeklyHighlights,
   type ModeBreakdown
 } from "./analytics-workbench.ts";
@@ -230,5 +232,22 @@ test("analysis only reports measures the product view supports", () => {
     analysePortfolio(projects, Date.parse("2026-07-30"), (_, key) => key !== "game_starts").findings
       .length,
     0
+  );
+});
+
+test("a missing comparable-history boundary is unknown, not old test data", () => {
+  const report = gameReport();
+  report.coverage.comparableFrom = null;
+  const metric = report.metrics[0]!;
+  const day = metric.daily[0]!.date;
+  assert.equal(dailyStatus(report, metric, day), "unknown");
+  assert.equal(
+    reportQualifier(metric, report, {
+      from: "2026-07-06",
+      to: "2026-07-26",
+      days: 21,
+      complete: true
+    }),
+    "Comparable history unknown"
   );
 });

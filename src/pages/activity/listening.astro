@@ -33,6 +33,13 @@ if (result.error)
     status: 503,
     headers: { "cache-control": "no-store" }
   });
+// A saved link names an exact hour. If the source answers with a different
+// snapshot, the page must not silently show different data under the old link.
+if (requestedSnapshot && report && report.snapshot !== requestedSnapshot)
+  return new Response("This listening snapshot is no longer available.", {
+    status: 404,
+    headers: { "cache-control": "no-store" }
+  });
 if (!report) Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
   if (!report) {

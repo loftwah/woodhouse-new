@@ -591,6 +591,9 @@
 .legacy {
   background: #a57d45;
 }
+.unknown {
+  background: #6a6f7a;
+}
 .bounded {
   background: #7167a8;
 }

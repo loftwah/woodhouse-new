@@ -273,3 +273,60 @@ test("a failed or cancelled order keeps a visible terminal timeline", () => {
     );
   }
 });
+
+test("a print completion must belong to the accepted print action", () => {
+  const order = createDemoOrder("checkout-print-identity", [
+    { productSlug: "workshop-poster", variantId: "a2", quantity: 1 }
+  ]);
+  const base = {
+    orderId: order.id,
+    environment: "demo" as const,
+    signature: "demo-valid" as const,
+    account: "woodhouse-demo"
+  };
+  const paid = applyDemoEvent(order, {
+    ...base,
+    id: "evt-pay",
+    type: "payment.succeeded",
+    amountCents: order.totalCents
+  }).order;
+  const confirmed = applyDemoEvent(paid, {
+    ...base,
+    id: "evt-confirm",
+    type: "fulfilment.confirmed"
+  }).order;
+  const requested = applyDemoEvent(confirmed, {
+    ...base,
+    id: "evt-print",
+    type: "print.requested"
+  });
+  assert.equal(requested.accepted, true);
+  assert.equal(requested.order.fulfilmentAuthorised, true);
+
+  const wrong = applyDemoEvent(requested.order, {
+    ...base,
+    id: "evt-complete-other",
+    type: "print.completed",
+    printActionId: "evt-another-job"
+  });
+  assert.equal(wrong.accepted, false);
+  assert.match(wrong.reason, /does not belong/);
+  assert.equal(wrong.order.status, "print_requested");
+
+  const completed = applyDemoEvent(requested.order, {
+    ...base,
+    id: "evt-complete",
+    type: "print.completed",
+    printActionId: "evt-print"
+  });
+  assert.equal(completed.accepted, true);
+  assert.equal(completed.order.status, "printed");
+
+  const refunded = applyDemoEvent(completed.order, {
+    ...base,
+    id: "evt-refund",
+    type: "payment.refunded"
+  });
+  assert.equal(refunded.accepted, true);
+  assert.equal(refunded.order.fulfilmentAuthorised, false);
+});

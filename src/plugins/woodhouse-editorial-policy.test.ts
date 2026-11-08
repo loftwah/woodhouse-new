@@ -54,10 +54,79 @@ test("editorial policy keeps conversation source review and structured dispatch 
   );
   assert.match(
     publicationBlock(
-      event("dispatches", { public_safe: true, title: "Note", deck: "A short note.", content: [] })
+      event("dispatches", {
+        public_safe: true,
+        title: "Note",
+        kind: "Field note",
+        deck: "A short note.",
+        review_date: "2026-10-03",
+        source_reference: "Reviewed on preview.",
+        lead: "What we believed.",
+        lesson: "What we learned.",
+        content: []
+      })
     ) ?? "",
     /at least one Woodhouse editorial block/
   );
+});
+
+test("a future review date is not a review that has happened", () => {
+  const future = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
+  assert.match(
+    publicationBlock(
+      event("evidence_records", {
+        public_safe: true,
+        reviewed_at: future,
+        proof_boundary: "Limited."
+      })
+    ) ?? "",
+    /valid review date/
+  );
+});
+
+test("a dispatch cannot publish with fields its public reader will discard", () => {
+  const complete = {
+    public_safe: true,
+    title: "Dispatch",
+    kind: "Field note",
+    deck: "A reviewed summary.",
+    review_date: "2026-10-03",
+    source_reference: "Reviewed on preview.",
+    lead: "What we believed.",
+    lesson: "What we learned.",
+    content: [{ _type: "prose", content: [] }]
+  };
+  assert.equal(publicationBlock(event("dispatches", complete)), undefined);
+  for (const field of ["kind", "review_date", "source_reference", "lead", "lesson"]) {
+    const incomplete = { ...complete, [field]: "" };
+    assert.match(
+      publicationBlock(event("dispatches", incomplete)) ?? "",
+      /dispatch kind, review date, source, lead and lesson/,
+      field
+    );
+  }
+});
+
+test("a project status cannot publish without the fields its project reader needs", () => {
+  const complete = {
+    public_safe: true,
+    project_key: "bubbles",
+    snapshot_key: "2026-11-08-bubbles",
+    state: "Public build",
+    current: "The reviewed build is public.",
+    next_proof: "Check the next release.",
+    proof_boundary: "Does not establish adoption.",
+    reviewed_at: "2026-11-08"
+  };
+  assert.equal(publicationBlock(event("project_statuses", complete)), undefined);
+  for (const field of ["project_key", "snapshot_key", "state", "current", "next_proof"]) {
+    const incomplete = { ...complete, [field]: "" };
+    assert.match(
+      publicationBlock(event("project_statuses", incomplete)) ?? "",
+      /project, snapshot, state, current read and next proof/,
+      field
+    );
+  }
 });
 
 test("valid reviewed records pass and unrelated collections are untouched", () => {

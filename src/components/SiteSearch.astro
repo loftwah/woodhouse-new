@@ -239,10 +239,14 @@ const pages: SearchPage[] = [
     const open = () => {
       if (!dialog.open) {
         const active = document.activeElement;
+        const trigger = document.querySelector < HTMLElement > "[data-site-search-open]";
+        const triggerVisible = Boolean(trigger && trigger.offsetParent !== null);
         returnFocusTo =
           active instanceof HTMLElement && active !== document.body
             ? active
-            : document.querySelector("[data-site-search-open]");
+            : triggerVisible
+              ? trigger
+              : null;
         dialog.showModal();
       }
       input.value = "";

@@ -198,6 +198,9 @@ function eventFor(order: DemoOrder, type: DemoEventType, amountCents?: number): 
     environment: "demo",
     signature: "demo-valid",
     account: demoSeller.account,
+    ...(type === "print.completed" && order.printActionId
+      ? { printActionId: order.printActionId }
+      : {}),
     ...(amountCents === undefined ? {} : { amountCents })
   };
 }

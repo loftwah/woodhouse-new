@@ -368,6 +368,7 @@ const dailyCoverageLabels = {
   bounded: "Count may be capped",
   sampled: "Estimated from a sample",
   legacy: "Includes old test data",
+  unknown: "Comparable history unknown",
   missing: "No data"
 } as const;
 export function dailyCoverageLabel(status: string) {
@@ -581,8 +582,8 @@ export function dailyStatus(
     day >= report.coverage.through.slice(0, 10)
   )
     return "partial";
-  if (!report.coverage.comparableFrom || day <= report.coverage.comparableFrom.slice(0, 10))
-    return "legacy";
+  if (!report.coverage.comparableFrom) return "unknown";
+  if (day <= report.coverage.comparableFrom.slice(0, 10)) return "legacy";
   return "clean";
 }
 type DiscoveryCoverage = "observed" | "partial" | "unavailable";
@@ -954,6 +955,8 @@ export function reportQualifier(
   if (metric.quality === "sampled" || report?.coverage.quality === "sampled")
     return "Estimated from a sample";
   if (report?.coverage.quality === "unavailable") return "Missing days unknown";
+  if (dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "unknown"))
+    return "Comparable history unknown";
   if (dateDays(period).some((day) => dailyStatus(report ?? null, metric, day) === "legacy"))
     return "Includes old test data";
   if (

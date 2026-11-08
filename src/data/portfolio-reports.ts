@@ -69,7 +69,9 @@ export async function readPortfolioReport(
     const history = parseReportHistory(
       report.history,
       new Set(safe.projects.map((r) => r.project)),
-      savedAt
+      savedAt,
+      91,
+      period.to
     );
     const releases = parseReportReleases(
       report.releases,
@@ -169,12 +171,17 @@ export async function createPortfolioReport(
     .first<{ id: string }>();
   if (recent) {
     const report = await readPortfolioReport(db, recent.id);
+    const local = report?.projects.filter((entry) =>
+      ["woodhouse", "shoalshot", "protocol-11"].includes(entry.project)
+    );
     if (
       report &&
       (releaseNotes === undefined || report.releases !== undefined) &&
-      report.projects
-        .filter((entry) => ["woodhouse", "shoalshot", "protocol-11"].includes(entry.project))
-        .every((entry) => entry.report?.source.revision === producerRevision())
+      // A report that contains none of the locally produced projects cannot
+      // prove the producer revision, so it is not safe to reuse as current.
+      local !== undefined &&
+      local.length > 0 &&
+      local.every((entry) => entry.report?.source.revision === producerRevision())
     )
       return report;
   }

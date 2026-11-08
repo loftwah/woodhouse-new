@@ -440,9 +440,12 @@ export function parseReportHistory(
   raw: unknown,
   publicProjects: Set<string>,
   now = Date.now(),
-  maximumDays = 91
+  maximumDays = 91,
+  /** The report window's end; a retained block from another period is not this report's history. */
+  expectedTo?: string
 ): ReportHistory | null {
   if (!isObject(raw) || !isoDay(raw.from) || !isoDay(raw.to) || raw.from > raw.to) return null;
+  if (expectedTo && raw.to !== expectedTo) return null;
   const days = (Date.parse(raw.to) - Date.parse(raw.from)) / 86400000 + 1;
   if (!Number.isSafeInteger(days) || days < 7 || days > maximumDays) return null;
   if (raw.to > new Date(now).toISOString().slice(0, 10)) return null;

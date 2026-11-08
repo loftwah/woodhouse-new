@@ -42,7 +42,12 @@ function validDate(value: string): boolean {
 }
 
 export function portfolioReadout(projects: PortfolioReview[]): PortfolioReadout {
-  const dated = projects.filter((project) => validDate(project.reviewDate));
+  // A future review date is not evidence of a review that happened. Filter it
+  // from the readout rather than letting it become "Newest project review".
+  const today = new Date().toISOString().slice(0, 10);
+  const dated = projects.filter(
+    (project) => validDate(project.reviewDate) && project.reviewDate.trim() <= today
+  );
   if (!dated.length) {
     return {
       reviewDate: null,

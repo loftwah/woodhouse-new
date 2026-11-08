@@ -59,6 +59,18 @@ async function increment(
   return false;
 }
 
+/** Return a consumed allowance when a later, shared limit refuses the request. */
+async function decrement(ctx: Pick<PluginContext, "kv">, key: string): Promise<void> {
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const current = await ctx.kv.getVersioned(key);
+    const count =
+      isRecord(current?.value) && typeof current.value.count === "number" ? current.value.count : 0;
+    if (count <= 0) return;
+    const result = await ctx.kv.compareAndSet(key, current?.revision ?? null, { count: count - 1 });
+    if (result.applied) return;
+  }
+}
+
 async function allowRequest(
   routeCtx: Pick<SandboxedRouteContext, "requestMeta">,
   ctx: Pick<PluginContext, "kv">
@@ -79,8 +91,14 @@ async function allowRequest(
     global.value.count >= 100
   )
     return false;
-  if (!(await increment(ctx, `${prefix}${ipHash}`, 3))) return false;
-  return increment(ctx, `${prefix}all`, 100);
+  const ipKey = `${prefix}${ipHash}`;
+  if (!(await increment(ctx, ipKey, 3))) return false;
+  // The shared limit can still refuse after the per-IP allowance was spent.
+  // Give the allowance back so a global condition does not lock this visitor
+  // out for the rest of the hour.
+  if (await increment(ctx, `${prefix}all`, 100)) return true;
+  await decrement(ctx, ipKey);
+  return false;
 }
 
 function formMarkupResponse() {

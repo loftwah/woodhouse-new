@@ -9,8 +9,15 @@ import { searchTextFromBlocks } from "../data/search-text";
 import { aliasesFor } from "../data/search-intent";
 import { projectLifecycle } from "../data/project-lifecycle";
 import type { ProjectLifecycle } from "../data/project-lifecycle";
-import type { Dispatch, FactorySnapshot, Project, ProjectStatuse } from "../../emdash-env";
-
+import type {
+  Conversation,
+  Dispatch,
+  EvidenceRecord,
+  FactorySnapshot,
+  Incident,
+  Project,
+  ProjectStatuse
+} from "../../emdash-env";
 export type WoodhouseProject = {
   slug: string;
   name: string;
@@ -328,21 +335,56 @@ export async function getProjectRecord(slug: string) {
   };
 }
 
+/**
+ * Read every published record, not just the first page.
+ *
+ * The EmDash collection query returns at most 100 rows. The public read model
+ * silently dropped any project whose latest status fell outside that window,
+ * so older projects disappeared as reviews accumulated. Follow `nextCursor`
+ * until the collection is exhausted; the order still comes from the query.
+ */
+async function listAllPublished<T>(
+  collection:
+    | "projects"
+    | "project_statuses"
+    | "factory_snapshots"
+    | "evidence_records"
+    | "incidents"
+    | "conversations",
+  orderBy: Record<string, "asc" | "desc">
+): Promise<{ entries: ContentEntry<T>[]; error: Error | undefined; cacheHints: CacheHint[] }> {
+  const entries: ContentEntry<T>[] = [];
+  const cacheHints: CacheHint[] = [];
+  let cursor: string | undefined;
+  do {
+    const result = await getEmDashCollection(collection, {
+      status: "published",
+      orderBy,
+      limit: 100,
+      ...(cursor ? { cursor } : {})
+    });
+    cacheHints.push(result.cacheHint);
+    if (result.error) return { entries: [], error: result.error, cacheHints };
+    entries.push(...(result.entries as ContentEntry<T>[]));
+    cursor = result.nextCursor;
+  } while (cursor);
+  return { entries, error: undefined, cacheHints };
+}
+
 export async function listProjectRecords() {
   const [projectResult, statusResult, snapshotResult] = await Promise.all([
-    getEmDashCollection("projects", { status: "published", orderBy: { name: "asc" }, limit: 100 }),
-    getEmDashCollection("project_statuses", {
-      status: "published",
-      orderBy: { reviewed_at: "desc", sort_order: "desc" },
-      limit: 100
+    listAllPublished<Project>("projects", { name: "asc" }),
+    listAllPublished<ProjectStatuse>("project_statuses", {
+      reviewed_at: "desc",
+      sort_order: "desc"
     }),
-    getEmDashCollection("factory_snapshots", {
-      status: "published",
-      orderBy: { reviewed_at: "desc" },
-      limit: 100
-    })
+    listAllPublished<FactorySnapshot>("factory_snapshots", { reviewed_at: "desc" })
   ]);
-  const cacheHints = [projectResult.cacheHint, statusResult.cacheHint, snapshotResult.cacheHint];
+  const cacheHints = [
+    ...projectResult.cacheHints,
+    ...statusResult.cacheHints,
+    ...snapshotResult.cacheHints
+  ];
   const error = projectResult.error ?? statusResult.error ?? snapshotResult.error;
   if (error) return { projects: [], error, cacheHints };
 
@@ -371,69 +413,58 @@ export async function listProjectRecords() {
 }
 
 export async function listPublicStatusRecords() {
-  const result = await getEmDashCollection("project_statuses", {
-    status: "published",
-    orderBy: { reviewed_at: "desc", sort_order: "desc" },
-    limit: 100
+  const result = await listAllPublished<ProjectStatuse>("project_statuses", {
+    reviewed_at: "desc",
+    sort_order: "desc"
   });
   return {
     statuses: result.entries.filter((item) => item.data.public_safe),
     error: result.error,
-    cacheHint: result.cacheHint
+    cacheHint: mergeCacheHints(...result.cacheHints)
   };
 }
 
 export async function listPublicSnapshots() {
-  const result = await getEmDashCollection("factory_snapshots", {
-    status: "published",
-    orderBy: { reviewed_at: "desc" },
-    limit: 100
+  const result = await listAllPublished<FactorySnapshot>("factory_snapshots", {
+    reviewed_at: "desc"
   });
   return {
     snapshots: result.entries.filter((item) => item.data.public_safe),
     error: result.error,
-    cacheHint: result.cacheHint
+    cacheHint: mergeCacheHints(...result.cacheHints)
   };
 }
 
 export async function listPublicEvidence() {
-  const result = await getEmDashCollection("evidence_records", {
-    status: "published",
-    orderBy: { reviewed_at: "desc" },
-    limit: 100
+  const result = await listAllPublished<EvidenceRecord>("evidence_records", {
+    reviewed_at: "desc"
   });
   return {
     evidence: result.entries.filter((item) => item.data.public_safe),
     error: result.error,
-    cacheHint: result.cacheHint
+    cacheHint: mergeCacheHints(...result.cacheHints)
   };
 }
 
 export async function listPublicIncidents() {
-  const result = await getEmDashCollection("incidents", {
-    status: "published",
-    orderBy: { reviewed_at: "desc" },
-    limit: 100
-  });
+  const result = await listAllPublished<Incident>("incidents", { reviewed_at: "desc" });
   return {
     incidents: result.entries.filter((item) => item.data.public_safe),
     error: result.error,
-    cacheHint: result.cacheHint
+    cacheHint: mergeCacheHints(...result.cacheHints)
   };
 }
 
 export async function listPublicConversations() {
-  const result = await getEmDashCollection("conversations", {
-    status: "published",
-    orderBy: { reviewed_at: "desc" },
-    limit: 100
+  const result = await listAllPublished<Conversation>("conversations", {
+    reviewed_at: "desc"
   });
   return {
     conversations: result.entries.filter(
       (item) => item.data.public_safe && item.data.source_reviewed
     ),
     error: result.error,
-    cacheHint: result.cacheHint
+    cacheHint: mergeCacheHints(...result.cacheHints)
   };
 }
 

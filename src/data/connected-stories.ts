@@ -205,18 +205,14 @@ export function outcomeFindings(
     .map((story) => ({ story, observed: outcomeEvidence(report, story, period) }));
   const group = ({ observed }: (typeof findings)[number]) => {
     if (observed.value === null || observed.quality === "unavailable") return 3;
-    if (observed.statuses.includes("legacy")) return 2;
+    if (observed.statuses.includes("legacy") || observed.statuses.includes("unknown")) return 2;
     return observed.value > 0 ? 0 : 1;
   };
   return findings.toSorted(
     (a, b) => group(a) - group(b) || order.indexOf(a.story.key) - order.indexOf(b.story.key)
   );
 }
-export function storyLink(
-  story: OutcomeStory,
-  reportId?: string,
-  origin = SITE_ORIGIN
-) {
+export function storyLink(story: OutcomeStory, reportId?: string, origin = SITE_ORIGIN) {
   const url = new URL("/connections/", origin);
   url.searchParams.set("story", story.key);
   if (reportId) url.searchParams.set("report", reportId);

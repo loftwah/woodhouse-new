@@ -73,7 +73,7 @@ export const merchProducts: MerchProduct[] = [
       }
     ],
     productionNote: "Uncoated 200 gsm paper, poster tube. Supplier and finish are not chosen.",
-    shippingNote: "Estimated $12 within Australia. No shipping rate has been quoted.",
+    shippingNote: "A flat $12 demo estimate applies at checkout. No shipping rate has been quoted.",
     taxNote: "GST is an estimate included for the demo; no tax calculation is connected.",
     marginNote: "Margin is not shown because no supplier quote exists.",
     approval: "approved",
@@ -100,7 +100,7 @@ export const merchProducts: MerchProduct[] = [
     ],
     productionNote:
       "Heavyweight cotton, front print. Supplier, blank and print method are not chosen.",
-    shippingNote: "Estimated $10 within Australia. No shipping rate has been quoted.",
+    shippingNote: "A flat $12 demo estimate applies at checkout. No shipping rate has been quoted.",
     taxNote: "GST is an estimate included for the demo; no tax calculation is connected.",
     marginNote: "Margin is not shown because no supplier quote exists.",
     approval: "approved",
@@ -125,7 +125,7 @@ export const merchProducts: MerchProduct[] = [
       { id: "pair", label: "Two sheets", priceCents: 2000, availability: "Demo stock · 20" }
     ],
     productionNote: "A6 vinyl sheet, matte laminate. Supplier and durability are not verified.",
-    shippingNote: "Estimated $5 within Australia. No shipping rate has been quoted.",
+    shippingNote: "A flat $12 demo estimate applies at checkout. No shipping rate has been quoted.",
     taxNote: "GST is an estimate included for the demo; no tax calculation is connected.",
     marginNote: "Margin is not shown because no supplier quote exists.",
     approval: "approved",
@@ -150,7 +150,7 @@ export const merchProducts: MerchProduct[] = [
       { id: "a2", label: "A2 · 420 × 594 mm", priceCents: 5900, availability: "Demo stock · 9" }
     ],
     productionNote: "Matte 250 gsm art paper. Supplier and colour proof are not chosen.",
-    shippingNote: "Estimated $12 within Australia. No shipping rate has been quoted.",
+    shippingNote: "A flat $12 demo estimate applies at checkout. No shipping rate has been quoted.",
     taxNote: "GST is an estimate included for the demo; no tax calculation is connected.",
     marginNote: "Margin is not shown because no supplier quote exists.",
     approval: "approved",
@@ -183,7 +183,7 @@ export const merchCandidates: MerchProduct[] = [
       }
     ],
     productionNote: "A6 uncoated cards. Supplier and finish are not chosen.",
-    shippingNote: "Estimated $6 within Australia. No shipping rate has been quoted.",
+    shippingNote: "A flat $12 demo estimate applies at checkout. No shipping rate has been quoted.",
     taxNote: "GST is an estimate included for the demo; no tax calculation is connected.",
     marginNote: "Margin is not shown because no supplier quote exists.",
     approval: "candidate",
@@ -309,6 +309,8 @@ export type DemoEvent = {
   signature: "demo-valid" | "demo-invalid";
   account: string;
   amountCents?: number;
+  /** The accepted print action a completion event refers to. */
+  printActionId?: string;
 };
 
 export type EventResult = {
@@ -448,7 +450,12 @@ export function applyDemoEvent(order: DemoOrder, event: DemoEvent): EventResult 
       if (event.amountCents !== undefined && event.amountCents !== order.totalCents)
         return reject("the refund amount does not match the demo order total");
       return accept(
-        { status: "refunded", refundEventId: event.id, refundedFrom: order.status },
+        {
+          status: "refunded",
+          refundEventId: event.id,
+          refundedFrom: order.status,
+          fulfilmentAuthorised: false
+        },
         "Refund recorded once. No second refund can be applied."
       );
     }
@@ -471,6 +478,9 @@ export function applyDemoEvent(order: DemoOrder, event: DemoEvent): EventResult 
     }
     case "print.completed": {
       if (order.status !== "print_requested") return reject("no print action is waiting");
+      // A completion from another job must not mark this order printed.
+      if (order.printActionId !== event.printActionId)
+        return reject("this completion does not belong to the accepted print action");
       return accept({ status: "printed" }, "Print completed for the existing print action.");
     }
     case "shipped": {

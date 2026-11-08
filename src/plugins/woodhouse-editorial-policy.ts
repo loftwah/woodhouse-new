@@ -55,7 +55,19 @@ const incidentFields: readonly PublicTextField[] = [
   "factory_change"
 ];
 
-const projectFields: readonly PublicTextField[] = ["name", "title", "summary"];
+const projectFields: readonly string[] = [
+  "name",
+  "index",
+  "discipline",
+  "title",
+  "summary",
+  "why",
+  "teaches"
+];
+
+const statusFields = ["project_key", "snapshot_key", "state", "current", "next_proof"] as const;
+
+const dispatchFields = ["kind", "review_date", "source_reference", "lead", "lesson"] as const;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -65,7 +77,7 @@ function isControlledCollection(value: string): value is ControlledCollection {
   return controlledCollections.some((collection) => collection === value);
 }
 
-function hasText(data: Record<string, unknown>, field: PublicTextField): boolean {
+function hasText(data: Record<string, unknown>, field: string): boolean {
   const value = data[field];
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -73,7 +85,13 @@ function hasText(data: Record<string, unknown>, field: PublicTextField): boolean
 function validReviewDate(value: unknown): boolean {
   if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const date = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
+  // A review is a dated observation of something that already happened. A
+  // future date is not evidence and would let a record claim a review that has
+  // not occurred; refuse it rather than presenting it as the newest review.
+  const today = new Date().toISOString().slice(0, 10);
+  return (
+    !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value && value <= today
+  );
 }
 
 // Surfaces a human can publish from: the Admin's own API and the visual editor.
@@ -118,7 +136,13 @@ export function publicationBlock(
     return "Describe what this record does not prove before publishing.";
   }
   if (event.collection === "projects" && !projectFields.every((field) => hasText(data, field))) {
-    return "Add the project name, dossier title and public summary before publishing.";
+    return "Complete the project name, index, discipline, dossier title, summary, purpose and lesson before publishing.";
+  }
+  if (
+    event.collection === "project_statuses" &&
+    !statusFields.every((field) => hasText(data, field))
+  ) {
+    return "Complete the project, snapshot, state, current read and next proof before publishing.";
   }
   if (event.collection === "factory_snapshots" && !hasText(data, "source_description")) {
     return "Describe the reviewed source snapshot before publishing.";
@@ -126,6 +150,11 @@ export function publicationBlock(
   if (event.collection === "dispatches") {
     if (!hasText(data, "deck"))
       return "Add a short public summary before publishing this dispatch.";
+    if (
+      !dispatchFields.every((field) => hasText(data, field)) ||
+      !validReviewDate(data.review_date)
+    )
+      return "Complete the dispatch kind, review date, source, lead and lesson before publishing.";
     if (!Array.isArray(data.content) || data.content.length === 0)
       return "Add at least one Woodhouse editorial block before publishing.";
   }

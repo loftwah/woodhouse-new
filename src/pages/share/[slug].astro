@@ -99,9 +99,7 @@ const hostOf = (href: string) => {
         {name}
         <span>Artwork & screenshots</span>
       </h1>
-      <p>
-        {project?.title ?? "Games, software and music. A selection from the things we make."}
-      </p>
+      <p>{project?.title ?? "Games, software and music. A selection from the things we make."}</p>
       <div class="collection__links">
         <a href={project?.siteUrl ?? "/"}>
           {items[0]?.action ?? "Explore"} {name} ↗
@@ -133,7 +131,9 @@ const hostOf = (href: string) => {
               loading="eager"
               decoding="async"
             />
-            <span class="work-card__view" aria-hidden="true">View full size ↗</span>
+            <span class="work-card__view" aria-hidden="true">
+              View full size ↗
+            </span>
           </a>
           <figcaption>
             <span class="work-card__kind">{items[0]!.kind}</span>
@@ -195,10 +195,13 @@ const hostOf = (href: string) => {
   // A product can move or withdraw the image its own page declares. The preview
   // keeps its title and address and drops the thumbnail, rather than showing a
   // broken image under a label that promised a picture.
-  for (const image of document.querySelectorAll<HTMLImageElement>("[data-unfurl-image]"))
-    image.addEventListener("error", () =>
-      image.closest(".work-card__unfurl")?.classList.add("unfurl-missing")
-    );
+  for (const image of document.querySelectorAll<HTMLImageElement>("[data-unfurl-image]")) {
+    const missing = () => image.closest(".work-card__unfurl")?.classList.add("unfurl-missing");
+    image.addEventListener("error", missing);
+    // A cached image can fail before this module runs; check the settled state
+    // once so the broken frame cannot survive without an error event.
+    if (image.complete && image.naturalWidth === 0) missing();
+  }
 </script>
 
 <style>

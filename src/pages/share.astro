@@ -810,7 +810,14 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
           credit.textContent = image.dataset.fallbackCredit ?? "Illustration by Woodhouse";
         return;
       }
-      if (label) label.textContent = "Open original image";
+      // Both the project asset and the reviewed fallback failed. Remove the
+      // action rather than offering a link to a file the page knows is missing.
+      const link = image.closest("a");
+      if (link) {
+        link.removeAttribute("href");
+        link.setAttribute("aria-disabled", "true");
+      }
+      if (label) label.textContent = "Image unavailable";
     };
     image.addEventListener("error", unavailable);
     // An eager image may already have failed before this module attaches.
