@@ -15,7 +15,13 @@ function parseJsonOutput(output) {
   return JSON.parse(output.slice(offset));
 }
 
-function query(database, sql) {
+// Every readiness statement is read-only and independent, so one wrangler
+// invocation can carry all of them. The previous shape spent one ~1.3s remote
+// round trip per relation: twelve sequential calls for assertions that fit in
+// three. The assertions are unchanged, including the per-relation comparison;
+// only the transport is batched.
+function queryBatches(database, statements) {
+  const sql = statements.map((statement) => statement.trim().replace(/;$/, "")).join(";\n");
   const result = spawnSync(
     "pnpm",
     ["exec", "wrangler", "d1", "execute", database, "--remote", "--json", "--command", sql],
@@ -28,7 +34,13 @@ function query(database, sql) {
   if (result.status !== 0) throw new Error("Cloudflare D1 readiness query failed.");
   const parsed = parseJsonOutput(result.stdout);
   const batches = Array.isArray(parsed) ? parsed : [parsed];
-  return batches.flatMap((batch) => batch.results ?? []);
+  if (batches.length !== statements.length)
+    throw new Error("Cloudflare D1 returned a different number of result sets than queries.");
+  return batches.map((batch) => batch.results ?? []);
+}
+
+function query(database, sql) {
+  return queryBatches(database, [sql])[0];
 }
 
 function publicSlugs(seed, collection) {
@@ -96,12 +108,12 @@ function expectedSeedReferences(seed) {
 
 function verifySeedReferences(database, seed) {
   const mismatches = [];
-  let verifiedRelations = 0;
-  for (const { relation, parents, expected } of expectedSeedReferences(seed)) {
+  const relations = expectedSeedReferences(seed);
+  const statements = relations.map(({ relation, parents }) => {
     const parentSlugs = parents.map((entry) => entry.slug);
     const parentTable = sqliteTable(relation.parentCollection);
     const childTable = sqliteTable(relation.childCollection);
-    const sql = [
+    return [
       "SELECT p.slug AS parent_slug,c.slug AS child_slug",
       "FROM _emdash_content_references r",
       "JOIN _emdash_relations rel ON rel.id=r.relation_id",
@@ -110,17 +122,19 @@ function verifySeedReferences(database, seed) {
       "WHERE rel.slug=" + quoteSql(relation.slug),
       "AND p.slug IN (" + slugList(parentSlugs) + ")"
     ].join(" ");
+  });
+  const resultSets = queryBatches(database, statements);
+  relations.forEach(({ relation, expected }, index) => {
     const actual = new Set(
-      query(database, sql).map((row) => `${row.parent_slug}\u0000${row.child_slug}`)
+      (resultSets[index] ?? []).map((row) => `${row.parent_slug}\u0000${row.child_slug}`)
     );
     for (const edge of expected)
       if (!actual.has(edge)) mismatches.push(`${relation.slug}:${edge.replace("\u0000", "->")}`);
     for (const edge of actual)
       if (!expected.has(edge))
         mismatches.push(`${relation.slug}:${edge.replace("\u0000", "->")} (unexpected)`);
-    verifiedRelations += 1;
-  }
-  return { mismatches, verifiedRelations };
+  });
+  return { mismatches, verifiedRelations: relations.length };
 }
 
 function publicContentQuery(seed) {
@@ -183,20 +197,19 @@ function publicContentQuery(seed) {
 
 export function verifyDatabaseReadiness(database, seed) {
   const collectionSlugs = seed.collections.map((collection) => collection.slug);
-  const liveCollections = query(
-    database,
+  const relationSlugs = seed.relations.map((relation) => relation.slug);
+  const [liveCollections, liveFields, relationRows] = queryBatches(database, [
     "SELECT slug FROM _emdash_collections WHERE slug IN (" +
       collectionSlugs.map(quoteSql).join(",") +
-      ") ORDER BY slug"
-  );
-  const collectionSet = new Set(liveCollections.map((row) => row.slug));
-
-  const liveFields = query(
-    database,
+      ") ORDER BY slug",
     'SELECT c.slug AS collection_slug,f.slug AS field_slug,f.type,f.required,f.default_value,f.validation,f.searchable,f."unique" AS unique_field,f.indexed FROM _emdash_collections c JOIN _emdash_fields f ON f.collection_id=c.id WHERE c.slug IN (' +
       collectionSlugs.map(quoteSql).join(",") +
-      ") ORDER BY c.slug,f.slug"
-  );
+      ") ORDER BY c.slug,f.slug",
+    "SELECT slug,parent_collection,child_collection FROM _emdash_relations WHERE slug IN (" +
+      relationSlugs.map(quoteSql).join(",") +
+      ") ORDER BY slug"
+  ]);
+  const collectionSet = new Set(liveCollections.map((row) => row.slug));
   const actualFields = new Map(
     liveFields.map((field) => [field.collection_slug + "/" + field.field_slug, field])
   );
@@ -251,13 +264,6 @@ export function verifyDatabaseReadiness(database, seed) {
     .filter((entry) => !fieldMatches(entry))
     .map(({ collection, field }) => collection.slug + "." + field.slug);
 
-  const relationSlugs = seed.relations.map((relation) => relation.slug);
-  const relationRows = query(
-    database,
-    "SELECT slug,parent_collection,child_collection FROM _emdash_relations WHERE slug IN (" +
-      relationSlugs.map(quoteSql).join(",") +
-      ") ORDER BY slug"
-  );
   const actualRelations = new Set(
     relationRows.map(
       (relation) =>
