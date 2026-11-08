@@ -239,23 +239,30 @@ conclusion is the deliverable, and each ticket records the inventory that suppor
   calls. Persistence is `localStorage`, the "async" thunks are synchronous payload creators, and the
   only awaited browser promise is `HTMLMediaElement.play()` under a single audio owner. No patch.
 
-### Blocked on an archived repository — no evidence can be recorded on the ticket
+### Parked by the owner — archived repositories
 
-Both repositories below are **archived on GitHub**, so their `main` is read-only: a change cannot be
-integrated, and an issue comment or close cannot be posted. The work and the evidence exist locally,
-and the ticket cannot receive them until the repository is unarchived.
+MP parked both of these deliberately. Archiving makes `main` read-only, so a change cannot be
+integrated and an issue comment or close cannot be posted; the tickets stay open as the record of
+work that is finished but cannot land while the projects are parked. **This is a decision, not an
+outstanding task.** The work is preserved so that resuming either project costs a push, a deploy and
+a verification — not another audit.
 
-| Ticket | Local state | Exact pending step |
+| Ticket | Local state | Resuming costs |
 | --- | --- | --- |
-| [Asset Hunter #124](https://github.com/loftwah/asset-hunter/issues/124) | Branch `perf/124-page-reads` at `8edfa35` in `/Users/deanlofts/gits/asset-hunter`. The finding is real: **Effect 4's `Effect.all` defaults to concurrency 1**, so every "parallel" read set in the repo (wall, collections index, possibility page, `/api/catalogue.json`, both curator pages) was sequential. Fixed with explicit concurrency plus `src/lib/page-reads.ts` and `tests/page-reads.test.ts`; `npm run verify` 1,154/1,154 passed locally. One deploy was made and then **rolled back** to Worker `8372bf85` because production must not run a commit that is not on `main`. Controlled span: wall **83.5 → 42.3 ms**, possibility page **167.7 → 41.6 ms**. | Unarchive `loftwah/asset-hunter`, then push `perf/124-page-reads`, deploy, run `npm run verify:prod`, and post the evidence. |
-| [Social Club #44](https://github.com/loftwah/club/issues/44) | Branch `perf/44-portal-reads` at `f4a1db8` in `/Users/deanlofts/gits/club`. The portal home awaited eight independent reads and read `member_facts` twice; `readPortalHome` now reads them in one stage and `usableFacts` keeps the single "safe to use in copy" rule. `mise run acceptance`-equivalent `node scripts/acceptance.mjs` passed; unit 65/65 and integration 74/74 passed; typecheck and lint clean. Not deployed. | Unarchive `loftwah/club`, then push the branch, deploy the built Worker, and post the evidence. |
+| [Asset Hunter #124](https://github.com/loftwah/asset-hunter/issues/124) | Branch `perf/124-page-reads` at `8edfa35` in `/Users/deanlofts/gits/asset-hunter`. The finding is real: **Effect 4's `Effect.all` defaults to concurrency 1**, so every "parallel" read set in the repo (wall, collections index, possibility page, `/api/catalogue.json`, both curator pages) was sequential. Fixed with explicit concurrency plus `src/lib/page-reads.ts` and `tests/page-reads.test.ts`; `npm run verify` 1,154/1,154 passed locally. One deploy was made and then **rolled back** to Worker `8372bf85` because production must not run a commit that is not on `main`. Controlled span: wall **83.5 → 42.3 ms**, possibility page **167.7 → 41.6 ms**. | Unarchive, push `perf/124-page-reads`, deploy, `npm run verify:prod`, post the evidence. |
+| [Social Club #44](https://github.com/loftwah/club/issues/44) | Branch `perf/44-portal-reads` at `f4a1db8` in `/Users/deanlofts/gits/club`. The portal home awaited eight independent reads and read `member_facts` twice; `readPortalHome` now reads them in one stage and `usableFacts` keeps the single "safe to use in copy" rule. `node scripts/acceptance.mjs` passed; unit 65/65 and integration 74/74 passed; typecheck and lint clean. Not deployed. | Unarchive, push the branch, deploy the built Worker, post the evidence. |
 
 ### Portfolio position
 
-Four of the six blockers now have evidence: two are production-verified (LoftwahFM #328, MAX #141)
-and two are explicit no-ops the tickets allow (Liferaft #4, Bogan Hustler #19). Two are blocked by an
-owner-level action (unarchiving Asset Hunter and Social Club) rather than by missing analysis.
-#163 therefore stays open.
+Four of the six blockers now have evidence and are closed: two production-verified (LoftwahFM #328,
+MAX #141) and two explicit no-ops their tickets allow (Liferaft #4, Bogan Hustler #19). Two are parked
+with their work finished and preserved (Asset Hunter #124, Social Club #44).
+
+#163 stays open on those two. That is the honest state rather than a completed portfolio: the audits
+were done and the patches exist, but two repositories are deliberately not accepting changes. If MP
+would rather the tracker reflect "portfolio audited, two projects parked" than "six of six landed",
+closing #163 is a one-line decision — the evidence for the four delivered tickets is already on each
+ticket.
 
 Pirates #495 is not counted as a blocker because its own ticket explicitly defers the work behind
 source parity. Bubbles #1581 and Foilbury #3 have evidence but retain stated measurement limits;
