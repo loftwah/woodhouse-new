@@ -83,6 +83,7 @@ const productName = (slug: string) =>
             caption={item.caption}
             image={item.original}
             shareSource={item.image}
+            fallbackImage={item.image}
             filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
             link={item.href}
           />
@@ -129,7 +130,7 @@ const productName = (slug: string) =>
             <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
               {item.action} {productName(item.project)}
             </a>
-            <a href={item.original} download>
+            <a href={item.original} data-viewer-download download>
               Download original
             </a>
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
@@ -164,6 +165,12 @@ const productName = (slug: string) =>
           image.onload = null;
           image.onerror = null;
           if (image.dataset.viewerPreview) image.src = image.dataset.viewerPreview;
+          // The download must follow the asset the viewer can actually show.
+          const download = dialog.querySelector<HTMLAnchorElement>("[data-viewer-download]");
+          if (download && image.dataset.viewerPreview) {
+            download.href = image.dataset.viewerPreview;
+            download.textContent = "Download gallery preview";
+          }
           if (status)
             status.textContent = "The original image is unavailable. Showing the gallery preview.";
         };

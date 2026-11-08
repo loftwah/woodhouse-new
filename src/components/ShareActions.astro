@@ -148,13 +148,24 @@ const {
     const applyResolvedDownload = () => {
       if (!download || resolution !== "ready") return;
       download.href = resolvedImage;
-      download.setAttribute(
-        "download",
-        (root.dataset.filename ?? "loftwah-social.jpg").replace(
-          /\.[^.]+$/,
-          extensionOf(resolvedImage) || ".jpg"
-        )
-      );
+      const extension = extensionOf(resolvedImage);
+      if (extension) {
+        download.setAttribute(
+          "download",
+          (root.dataset.filename ?? "loftwah-social.jpg").replace(/\.[^.]+$/, extension)
+        );
+      } else {
+        // The share-image API sets the real media type and a matching
+        // Content-Disposition filename. Guessing `.jpg` here renamed WebP bytes
+        // and overrode the server's honest name.
+        try {
+          if (new URL(resolvedImage, location.href).pathname === "/api/share-image")
+            download.removeAttribute("download");
+          else download.setAttribute("download", root.dataset.filename ?? "loftwah-social.jpg");
+        } catch {
+          download.setAttribute("download", root.dataset.filename ?? "loftwah-social.jpg");
+        }
+      }
       download.removeAttribute("aria-disabled");
       delete download.dataset.state;
     };
