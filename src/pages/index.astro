@@ -266,24 +266,30 @@ export const prerender = false;
         class="home-fm"
         aria-label="LoftwahFM listening and shared music"
       >
-        <FMListening capability={fmCapability} />
-        <figure data-project-artwork>
-          <a href={fmCapability.listening.href} aria-label="Listen to LoftwahFM">
-            <img
-              src={fmMetadata.image}
-              width="1200"
-              height="630"
-              alt={fm.previewAlt ?? "Artwork from LoftwahFM."}
-              loading="lazy"
-              decoding="async"
-              data-fallback-src="/og/projects/loftwahfm.svg"
-              data-fallback-alt="Woodhouse illustration for LoftwahFM."
-            />
-          </a>
-          <figcaption>
-            <span data-artwork-status>Artwork from LoftwahFM</span>
-          </figcaption>
-        </figure>
+        <p class="section-index">
+          <span>03 / The sound</span>
+          <span>Stations, shows, player</span>
+        </p>
+        <div class="home-fm__grid">
+          <FMListening capability={fmCapability} />
+          <figure data-project-artwork>
+            <a href={fmCapability.listening.href} aria-label="Listen to LoftwahFM">
+              <img
+                src={fmMetadata.image}
+                width="1200"
+                height="630"
+                alt={fm.previewAlt ?? "Artwork from LoftwahFM."}
+                loading="lazy"
+                decoding="async"
+                data-fallback-src="/og/projects/loftwahfm.svg"
+                data-fallback-alt="Woodhouse illustration for LoftwahFM."
+              />
+            </a>
+            <figcaption>
+              <span data-artwork-status>Artwork from LoftwahFM</span>
+            </figcaption>
+          </figure>
+        </div>
       </section>
     )}
 
@@ -317,7 +323,7 @@ export const prerender = false;
 
     <section class="portfolio-register" aria-labelledby="register-title">
       <p class="section-index">
-        <span>03 / The collection</span>
+        <span>04 / The collection</span>
         <span>
           {active.length} active · {projects.length} in the record
         </span>
@@ -363,7 +369,7 @@ export const prerender = false;
 
     <section class="publication-notes" aria-labelledby="notes-title">
       <p class="section-index">
-        <span>04 / From the workshop</span>
+        <span>05 / From the workshop</span>
         <span>The story behind the screen</span>
       </p>
       <div class="publication-heading">
@@ -392,7 +398,7 @@ export const prerender = false;
 
     <section class="publication-system" aria-labelledby="system-title">
       <p class="section-index">
-        <span>05 / How it connects</span>
+        <span>06 / How it connects</span>
         <span>One factory, independent products</span>
       </p>
       <div class="publication-heading">
@@ -486,9 +492,9 @@ export const prerender = false;
       90deg,
       var(--ink) 0%,
       rgba(8, 13, 25, 0.94) 15%,
-      rgba(8, 13, 25, 0.68) 34%,
-      rgba(8, 13, 25, 0.12) 64%,
-      transparent 85%
+      rgba(8, 13, 25, 0.76) 34%,
+      rgba(8, 13, 25, 0.2) 64%,
+      transparent 88%
     );
   }
   .signature-hero__inner {
@@ -604,6 +610,7 @@ export const prerender = false;
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
   }
   .signature-hero__scroll > span {
     display: grid;
@@ -797,11 +804,28 @@ export const prerender = false;
     font-size: 0.85rem;
   }
   .home-fm {
+    padding-top: clamp(5rem, 10vw, 9rem);
+  }
+  .home-fm__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 4rem;
     align-items: center;
-    padding-block: 5rem;
+    padding-block: 0 1rem;
+  }
+  /* The shared player keeps its own contract; the homepage promotes it from a
+     footnote to a chapter so the sound section carries the same scale as its
+     neighbours. */
+  .home-fm__grid :global(.fm-listening) {
+    margin-block: 0;
+    padding-block: 0;
+    border-block: 0;
+  }
+  .home-fm__grid :global(.fm-listening h2) {
+    max-width: 18ch;
+    margin: 0 0 1.5rem;
+    font: 500 clamp(2.6rem, 4.4vw, 4.4rem)/1.03 var(--display);
+    letter-spacing: -0.05em;
   }
   .home-fm figure {
     margin: 0;
@@ -1107,14 +1131,20 @@ export const prerender = false;
       margin: 4.5rem calc(-1 * var(--gutter)) 0;
       padding: 2rem var(--gutter) 2.5rem;
     }
+    .exhibits-band .publication-heading {
+      align-items: flex-start;
+    }
     .exhibits-band__links {
       gap: 1rem 1.5rem;
       font-size: 0.8rem;
     }
     .home-fm {
+      padding-top: 4.5rem;
+    }
+    .home-fm__grid {
       grid-template-columns: 1fr;
       gap: 2rem;
-      padding-block: 3rem;
+      padding-block: 0;
     }
     .home-fm figure {
       order: -1;
@@ -1197,6 +1227,9 @@ export const prerender = false;
     }
     .signature-hero__story {
       font-size: 0.8rem;
+    }
+    .signature-hero__foot {
+      gap: 0.15rem 1rem;
     }
   }
   @media (min-width: 761px) and (max-height: 700px) {

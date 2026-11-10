@@ -28,9 +28,10 @@ The homepage now uses a full-width opening: the living fibre artwork and the lar
 headline occupy one composition, with a quiet reading zone and one primary route into the work.
 Navigation rests above that scene. The first product is a large editorial spread; two complementary
 products follow. Numbered chapter rules, varied section scale and generous space provide a
-reading rhythm through exhibits, the complete collection, stories and the factory explanation.
-The current edition remains available after the usable products. Product artwork retains its
-native composition and provenance.
+reading rhythm through exhibits, the sound chapter, the complete collection, stories and the factory
+explanation. The current edition remains available after the usable products. Product artwork retains
+its native composition and provenance. The shared radio player keeps its own component contract; the
+homepage promotes its heading to chapter scale rather than duplicating it.
 
 The narrow composition puts the heading, explanation and action first, then opens up the sculpture
 beneath them. The figure’s pause and honest status stay separate from the canvas. The immersive

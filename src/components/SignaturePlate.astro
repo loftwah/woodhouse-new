@@ -382,7 +382,11 @@ const { class: className, immersive = false } = Astro.props;
   }
   .signature-plate--immersive .signature-plate__control {
     position: absolute;
-    right: calc(16% + var(--gutter, 1.25rem));
+    /* The control is positioned against the stage, which is 98% of the plate's
+       width and overhangs it by 16% on the right. 16/98 puts the pause control on
+       the caption's right edge at every width, including the 1440 reading
+       container on wide screens. */
+    right: calc(16.3265% + max(var(--gutter, 1.25rem), (100vw - 1440px) / 2));
     bottom: 10rem;
   }
   .signature-plate--immersive .signature-plate__control button {
