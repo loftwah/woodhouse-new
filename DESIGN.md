@@ -16,6 +16,29 @@ Woodhouse is an evidence-led public journal for a small software factory. Its wo
 
 The site is dark by design on every device. Do not follow the operating-system appearance, read or write a theme preference, offer a theme switch, or show a light surface between navigations.
 
+## Homepage composition — MP direction, 2026/11/10 (Australia/Melbourne and UTC)
+
+MP supplied [0.security](https://0.security/) as the current visual quality reference and prioritised
+Woodhouse and App Composer. The reference is a standard of composition, scale, depth and finish;
+its branding, artwork and copy are not Woodhouse assets. This owner direction supersedes the
+former narrow two-column homepage framing, while retaining Woodhouse’s ink, acid and local
+Bricolage identity and the existing product, accessibility and publication boundaries.
+
+The homepage now uses a full-width opening: the living fibre artwork and the large semantic
+headline occupy one composition, with a quiet reading zone and one primary route into the work.
+Navigation rests above that scene. The first product is a large editorial spread; two complementary
+products follow. Numbered chapter rules, varied section scale and generous space provide a
+reading rhythm through exhibits, the complete collection, stories and the factory explanation.
+The current edition remains available after the usable products. Product artwork retains its
+native composition and provenance.
+
+The narrow composition puts the heading, explanation and action first, then opens up the sculpture
+beneath them. The figure’s pause and honest status stay separate from the canvas. The immersive
+variant changes presentation only: the existing renderer, fallback, context recovery, pointer
+ownership, reduced-motion and offscreen lifecycle remain intact. No animated text entrance or
+scroll interception hides useful content. This source describes the implementation direction;
+actual browser inspection, production identity and MP’s visual acceptance remain separate evidence.
+
 ## Colour and material
 
 - Ink `#080D19` is the page ground. Raised surfaces stay within the same dark family: `#0F182A`, `#111A2C`, and `#17233A`.
@@ -307,7 +330,6 @@ actions, then the invitation. Nothing is hidden, and the reading order matches t
 desktop argument. The edition card is set over the site's own fibre lens with no
 project count or relative date to go stale. Share actions are link and caption
 only, with honest copy feedback; the image is a separate download.
-
 
 ## Share showcase — reviewed 25 October 2026
 

@@ -8,12 +8,16 @@ import { LOOM_STRANDS } from "../scripts/signature/loom";
  */
 type Props = {
   class?: string;
+  immersive?: boolean;
 };
 
-const { class: className } = Astro.props;
+const { class: className, immersive = false } = Astro.props;
 ---
 
-<figure class:list={["signature-plate", className]} data-signature-plate>
+<figure
+  class:list={["signature-plate", { "signature-plate--immersive": immersive }, className]}
+  data-signature-plate
+>
   <div class="signature-plate__stage" data-signature-stage data-live="false">
     <picture>
       <source media="(max-width: 760px)" srcset="/signature/loom-phone.jpg" />
@@ -44,8 +48,9 @@ const { class: className } = Astro.props;
   <figcaption>
     <span class="signature-plate__title">The loom</span>
     <span class="signature-plate__note">
-      {LOOM_STRANDS} tensioned fibres, a machined tension frame and one raking light. Move across
-      the warp and brush through them; they spring back.
+      {immersive
+        ? `${LOOM_STRANDS} fibres. Move through them; they spring back.`
+        : `${LOOM_STRANDS} tensioned fibres, a machined tension frame and one raking light. Move across the warp and brush through them; they spring back.`}
     </span>
     <span class="signature-plate__status" role="status" data-signature-status></span>
   </figcaption>
@@ -355,6 +360,92 @@ const { class: className } = Astro.props;
     /* The plate bleeds to the viewport edge on phones; the caption must not. */
     .signature-plate figcaption {
       padding-inline: var(--gutter, 1.25rem);
+    }
+  }
+  .signature-plate--immersive {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
+  .signature-plate--immersive .signature-plate__stage {
+    position: absolute;
+    inset: -12% -16% 0 18%;
+    height: auto;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+  .signature-plate--immersive .signature-plate__stage::after {
+    background: radial-gradient(ellipse at 55% 48%, transparent 25%, rgba(8, 13, 25, 0.62) 82%);
+  }
+  .signature-plate--immersive .signature-plate__rig {
+    opacity: 0.2;
+  }
+  .signature-plate--immersive .signature-plate__control {
+    position: absolute;
+    right: calc(16% + var(--gutter, 1.25rem));
+    bottom: 10rem;
+  }
+  .signature-plate--immersive .signature-plate__control button {
+    min-height: 2.75rem;
+    border-radius: 0;
+    border-color: var(--line-dark);
+    background: rgba(8, 13, 25, 0.78);
+    backdrop-filter: none;
+    color: var(--copy);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+  .signature-plate--immersive figcaption {
+    position: absolute;
+    right: var(--gutter, 1.25rem);
+    bottom: 6rem;
+    left: auto;
+    width: min(25rem, 35%);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 0.7rem;
+  }
+  .signature-plate--immersive .signature-plate__title {
+    font-size: 0.61rem;
+  }
+  .signature-plate--immersive .signature-plate__note {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .signature-plate--immersive .signature-plate__status {
+    min-height: 0;
+  }
+  .signature-plate--immersive .signature-plate__status:empty {
+    display: none;
+  }
+  @media (min-width: 1700px) {
+    .signature-plate--immersive figcaption {
+      right: max(var(--gutter), calc((100vw - 1440px) / 2));
+    }
+  }
+  @media (max-width: 760px) {
+    .signature-plate--immersive .signature-plate__stage {
+      inset: auto 0 2.5rem;
+      height: min(32rem, 100vw);
+      aspect-ratio: auto;
+    }
+    .signature-plate--immersive .signature-plate__rig {
+      opacity: 0.15;
+    }
+    .signature-plate--immersive .signature-plate__control {
+      right: var(--gutter);
+      bottom: 7.5rem;
+    }
+    .signature-plate--immersive figcaption {
+      right: var(--gutter);
+      bottom: 6.5rem;
+      left: var(--gutter);
+      width: auto;
+      padding: 0;
+    }
+    .signature-plate--immersive .signature-plate__note {
+      font-size: 0.65rem;
     }
   }
 </style>

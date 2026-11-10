@@ -6,7 +6,7 @@ production page. A design or a story never overrides the live route.
 
 | Screen | Route | Stitch | Production component(s) | Storybook | Live |
 | --- | --- | --- | --- | --- | --- |
-| Homepage | `/` | 01, 08 | `BaseLayout`, `SiteHeader`, `SignaturePlate`, `EditionInvitation`, `ProjectRow`, `FMListening`, `ProjectNetwork`, `SiteFooter` | `Foundations/Signature plate`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/ |
+| Homepage | `/` | 01, 08 (historical); 0.security quality reference, 2026/11/10 | `BaseLayout` (home shell), `SiteHeader`, `SignaturePlate` (immersive variant), homepage product spreads, `EditionInvitation`, `FMListening`, `ProjectNetwork`, `SiteFooter` | `Foundations/Signature plate`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/ |
 | Projects catalogue | `/projects/` | 02 | `ProjectRow`, `EditionInvitation`, `StatusStamp` | `Portfolio/Project row`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/projects/ |
 | Project record | `/projects/[slug]/` | 03 | `ProjectRow`, `StatusStamp`, `CapabilityRecord`, `GameMedia`, `EditorialBlocks`, `D2Diagram` | `Portfolio/Project row`, `Editorial/*` | https://woodhouse.loftwah.com/projects/bubbles/ |
 | Stories index | `/dispatches/` | 04 | edition callout, dispatch ledger | `Compositions/Article reading` | https://woodhouse.loftwah.com/dispatches/ |
@@ -48,3 +48,8 @@ production page. A design or a story never overrides the live route.
 - Update the Stitch screen ID when a screen is superseded; keep the old ID in
   [`stitch/README.md`](stitch/README.md) as rejected work.
 - Do not turn this into a registry, a service or a generated dashboard. It is a reading aid.
+
+Homepage composition revised 2026/11/10 (Australia/Melbourne and UTC): full-width living artwork,
+semantic display headline, product-first editorial spreads and chapter rhythm. The existing
+signature renderer and public content boundaries are unchanged. See the dated homepage section in
+[DESIGN.md](../DESIGN.md). Source presence is not production verification.

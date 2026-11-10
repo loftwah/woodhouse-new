@@ -35,6 +35,7 @@ type Props = {
   robots?: string;
   noindex?: boolean;
   analyticsWorkbench?: boolean;
+  homeExperience?: boolean;
 };
 
 const {
@@ -220,7 +221,7 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
     </script>
     <MeasurementNavigation />
   </head>
-  <body>
+  <body class:list={{ "woodhouse-home": Astro.props.homeExperience }}>
     {Astro.props.analyticsWorkbench && (
       <Fragment
         set:html={
