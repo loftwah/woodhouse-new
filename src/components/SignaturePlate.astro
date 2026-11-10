@@ -434,6 +434,12 @@ const { class: className, immersive = false } = Astro.props;
       height: min(32rem, 100vw);
       aspect-ratio: auto;
     }
+    /* On phones the plate is a full-width band and the caption sits on its lower
+       edge. Deepen the plate's own bottom scrim there so the fibre tail cannot
+       wash out the caption and the hero's bottom links. */
+    .signature-plate--immersive .signature-plate__stage::after {
+      background: linear-gradient(180deg, transparent 60%, rgba(8, 13, 25, 0.86) 100%);
+    }
     .signature-plate--immersive .signature-plate__rig {
       opacity: 0.15;
     }
