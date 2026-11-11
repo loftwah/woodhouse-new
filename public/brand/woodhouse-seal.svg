@@ -1,10 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img" aria-labelledby="seal-title">
-  <title id="seal-title">The Woodhouse seal: four bars narrowing to a point, held between two rails, with the fibre passing through.</title>
-  <!-- Drawn on a 36-unit grid. Two treatments only: ink on paper, or acid (#e9ff49) on ink (#080d19). -->
-  <g fill="none" stroke="currentColor" stroke-linecap="butt">
-    <circle cx="18" cy="18" r="15.25" stroke-width="1" />
-    <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" stroke-width="1" />
-    <path d="M10.5 9.75v16.5M25.5 9.75v16.5" stroke-width=".65" />
-  </g>
-  <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="seal-title" role="img" viewBox="0 0 36 36"><title id="seal-title">The Woodhouse seal: four bars narrowing to a point, held between two rails, with the fibre passing through.</title><g fill="none" stroke="currentColor" stroke-linecap="butt"><circle cx="18" cy="18" r="15.25" stroke-width="1"/><path stroke-width="1" d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4"/><path stroke-width=".65" d="M10.5 9.75v16.5M25.5 9.75v16.5"/></g><circle cx="18" cy="8.4" r="1.1" fill="currentColor"/></svg>
