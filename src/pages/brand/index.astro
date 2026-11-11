@@ -495,10 +495,118 @@ const voice = [
       </div>
     </section>
 
-    <section class="house__section" aria-labelledby="motion">
+    <section class="house__section" aria-labelledby="applications">
       <div class="container house__grid">
         <p class="house__index" aria-hidden="true">
           07
+        </p>
+        <div class="house__body">
+          <h2 id="applications">Where it goes</h2>
+          <p>
+            A face that only appears in its own specimen is a specimen, not a brand. These are the
+            places it actually lands: a poster, the two formats the factory posts in, the seal in
+            both permitted treatments, and a card. Every one is rendered from the same font file by
+            a build script, so none of them can drift from the drawing.
+          </p>
+          <div class="apps">
+            <figure class="apps__item">
+              <a href="/brand/loom-poster.png" download>
+                <img
+                  src="/brand/loom-poster.png"
+                  width="2480"
+                  height="3508"
+                  loading="lazy"
+                  alt="Poster on ink: ONE FIBRE set in acid-green Loom Display, a rule with the face's measurements beneath, and a cropped outline of the letter O at the lower right."
+                />
+              </a>
+              <figcaption>
+                <span>Poster</span> A2, 2480 × 3508. The whole case for the face in two words.
+              </figcaption>
+            </figure>
+            <figure class="apps__item">
+              <a href="/brand/loom-social-square.png" download>
+                <img
+                  src="/brand/loom-social-square.png"
+                  width="1080"
+                  height="1080"
+                  loading="lazy"
+                  alt="Square image: the Woodhouse seal large in acid green above the word WOODHOUSE, with the factory descriptor along the bottom."
+                />
+              </a>
+              <figcaption>
+                <span>Square</span> 1080 × 1080. The seal, doing the whole job.
+              </figcaption>
+            </figure>
+            <figure class="apps__item">
+              <a href="/brand/loom-social-portrait.png" download>
+                <img
+                  src="/brand/loom-social-portrait.png"
+                  width="1080"
+                  height="1350"
+                  loading="lazy"
+                  alt="Portrait image: EVIDENCE. NOT ENTHUSIASM set in Loom Display, with NOT in acid green, above a full-width rule."
+                />
+              </a>
+              <figcaption>
+                <span>Portrait</span> 1080 × 1350. A line the factory can actually stand behind.
+              </figcaption>
+            </figure>
+            <figure class="apps__item">
+              <a href="/brand/loom-seal-acid.png" download>
+                <img
+                  src="/brand/loom-seal-acid.png"
+                  width="1080"
+                  height="1080"
+                  loading="lazy"
+                  alt="The seal inverted: ink lines on a flat acid-green field, with the words Ink on paper, Acid on ink, Nothing else."
+                />
+              </a>
+              <figcaption>
+                <span>Inverted</span> 1080 × 1080. The second permitted treatment, proved rather
+                than described.
+              </figcaption>
+            </figure>
+            <figure class="apps__item">
+              <a href="/brand/loom-card-front.png" download>
+                <img
+                  src="/brand/loom-card-front.png"
+                  width="1004"
+                  height="650"
+                  loading="lazy"
+                  alt="Business card front on ink: the seal beside WOODHOUSE, the factory descriptor beneath, and Dean Lofts, Melbourne at the foot."
+                />
+              </a>
+              <figcaption>
+                <span>Card, front</span> 85 × 55mm at 300dpi. The name and nothing else.
+              </figcaption>
+            </figure>
+            <figure class="apps__item">
+              <a href="/brand/loom-card-back.png" download>
+                <img
+                  src="/brand/loom-card-back.png"
+                  width="1004"
+                  height="650"
+                  loading="lazy"
+                  alt="Business card back on ink: the seal centred above the address woodhouse.loftwah.com."
+                />
+              </a>
+              <figcaption>
+                <span>Card, back</span> Where to find the work, in one line.
+              </figcaption>
+            </figure>
+          </div>
+          <p class="house__note">
+            Every file here is a real download at full size, with no watermark and no account. They
+            are generated, not hand-exported, so the next change to the face rebuilds all six.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="motion">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          08
         </p>
         <div class="house__body">
           <h2 id="motion">Three motion laws</h2>
@@ -520,7 +628,7 @@ const voice = [
     <section class="house__section" aria-labelledby="voice">
       <div class="container house__grid">
         <p class="house__index" aria-hidden="true">
-          08
+          09
         </p>
         <div class="house__body">
           <h2 id="voice">Voice</h2>
@@ -540,7 +648,7 @@ const voice = [
     <section class="house__section" aria-labelledby="files">
       <div class="container house__grid">
         <p class="house__index" aria-hidden="true">
-          09
+          10
         </p>
         <div class="house__body">
           <h2 id="files">Take it</h2>
@@ -644,7 +752,7 @@ const voice = [
     <section class="house__section house__review" aria-labelledby="review">
       <div class="container house__grid">
         <p class="house__index" aria-hidden="true">
-          10
+          11
         </p>
         <div class="house__body">
           <h2 id="review">What is decided, and what is not</h2>
@@ -975,6 +1083,53 @@ const voice = [
     color: var(--paper);
   }
 
+  .apps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(1rem, 2vw, 1.8rem);
+    margin-top: clamp(1.6rem, 3vw, 2.4rem);
+  }
+
+  .apps__item {
+    margin: 0;
+  }
+
+  .apps a {
+    display: block;
+    border: 1px solid var(--rule);
+    background: var(--surface-deep);
+    transition: border-color 120ms ease;
+  }
+
+  .apps a:hover,
+  .apps a:focus-visible {
+    border-color: var(--brass);
+  }
+
+  .apps img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .apps figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: var(--paper-muted);
+  }
+
+  .apps figcaption span {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brass);
+  }
+
   .house__mark-row {
     display: grid;
     grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
@@ -1284,6 +1439,10 @@ const voice = [
       grid-template-columns: repeat(9, minmax(0, 1fr));
     }
 
+    .apps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .house__hero-grid,
     .house__plates,
     .triad,
@@ -1334,6 +1493,10 @@ const voice = [
   }
 
   @media (max-width: 520px) {
+    .apps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
     .house__mark-row {
       grid-template-columns: minmax(0, 1fr);
     }

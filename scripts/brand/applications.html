@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Loom applications</title>
+    <style>
+      @font-face {
+        font-family: "Loom Display";
+        src: url("../../public/fonts/loom-display.woff2") format("woff2");
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { background: #080d19; }
+      body { width: max-content; }
+      .piece {
+        position: relative;
+        overflow: hidden;
+        background: #080d19;
+        color: #f4f7fd;
+        font-family: "Loom Display", sans-serif;
+        display: none;
+      }
+      .piece.on { display: block; }
+      .mono {
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: #a9b8d0;
+      }
+      .acid { color: #e9ff49; }
+      svg { display: block; }
+
+      /* ---------- A2 poster ---------- */
+      #poster { width: 2480px; height: 3508px; padding: 200px 190px 170px; }
+      #poster .top { display: flex; justify-content: space-between; align-items: flex-start; }
+      #poster .top .mono { font-size: 34px; letter-spacing: 0.2em; }
+      #poster h1 {
+        font-weight: 400;
+        font-size: 690px;
+        line-height: 0.79;
+        letter-spacing: -0.015em;
+        color: #e9ff49;
+        margin-top: 300px;
+      }
+      #poster .rule { height: 3px; background: rgba(218, 231, 255, 0.45); margin-top: 120px; }
+      #poster .spec {
+        display: flex;
+        justify-content: space-between;
+        gap: 80px;
+        margin-top: 70px;
+      }
+      #poster .spec p { font-size: 30px; line-height: 2; }
+      #poster .spec .right { text-align: right; }
+      #poster .o {
+        position: absolute;
+        right: -420px;
+        bottom: -520px;
+        width: 1500px;
+        opacity: 0.5;
+      }
+      #poster .foot {
+        position: absolute;
+        left: 190px;
+        right: 190px;
+        bottom: 170px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 28px;
+      }
+
+      /* ---------- square seal ---------- */
+      #square { width: 1080px; height: 1080px; padding: 96px; }
+      #square .wrap {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 74px;
+      }
+      #square .seal { width: 470px; color: #e9ff49; }
+      #square .word { font-size: 92px; letter-spacing: 0.22em; color: #f4f7fd; }
+      #square .foot {
+        position: absolute;
+        left: 96px;
+        right: 96px;
+        bottom: 72px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+      }
+
+      /* ---------- portrait ---------- */
+      #portrait { width: 1080px; height: 1350px; padding: 96px 72px; }
+      #portrait h1 {
+        font-weight: 400;
+        font-size: 142px;
+        line-height: 0.92;
+        letter-spacing: -0.01em;
+        margin-top: 300px;
+        color: #f4f7fd;
+      }
+      #portrait h1 em { font-style: normal; color: #e9ff49; }
+      #portrait .rule {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        bottom: 156px;
+        height: 2px;
+        background: rgba(218, 231, 255, 0.4);
+      }
+      #portrait .foot {
+        position: absolute;
+        left: 96px;
+        right: 96px;
+        bottom: 88px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+      }
+
+      /* ---------- inverted plate ---------- */
+      #inverted { width: 1080px; height: 1080px; padding: 96px; background: #e9ff49; color: #080d19; }
+      #inverted .wrap {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 70px;
+      }
+      #inverted .seal { width: 470px; color: #080d19; }
+      #inverted .mono { color: #080d19; font-size: 26px; text-align: center; line-height: 1.9; }
+
+      /* ---------- cards ---------- */
+      #card-front, #card-back { width: 1004px; height: 650px; padding: 64px 68px; }
+      #card-front .row { display: flex; align-items: center; gap: 26px; }
+      #card-front .seal { width: 78px; color: #e9ff49; }
+      #card-front .word { font-size: 66px; letter-spacing: 0.02em; color: #f4f7fd; }
+      #card-front .desc { margin-top: 12px; font-size: 20px; letter-spacing: 0.22em; }
+      #card-front .foot {
+        position: absolute;
+        left: 68px;
+        bottom: 58px;
+        font-size: 20px;
+        letter-spacing: 0.16em;
+      }
+      #card-back {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 44px;
+      }
+      #card-back .seal { width: 190px; color: #e9ff49; }
+      #card-back .mono { font-size: 22px; letter-spacing: 0.2em; }
+    </style>
+  </head>
+  <body>
+    <section class="piece" id="poster">
+      <div class="top">
+        <p class="mono">The Woodhouse house face</p>
+        <p class="mono acid">Loom Display · 11.11.2026</p>
+      </div>
+      <h1>ONE<br />FIBRE</h1>
+      <div class="rule"></div>
+      <div class="spec">
+        <p>84 / 1000 FIBRE<br />SUPERELLIPSE 2.55<br />BEVELLED JOINTS</p>
+        <p class="right">26 CAPITALS<br />10 FIGURES<br />18 MARKS</p>
+      </div>
+      <svg class="o" viewBox="0 0 588 720" aria-hidden="true">
+        <path id="poster-o" fill="none" stroke="#e9ff49" stroke-width="10" />
+      </svg>
+      <div class="foot mono">
+        <span>woodhouse.loftwah.com/brand</span>
+        <span>Drawn, not licensed</span>
+      </div>
+    </section>
+
+    <section class="piece" id="square">
+      <div class="wrap">
+        <svg class="seal" viewBox="0 0 36 36" aria-hidden="true">
+          <g fill="none" stroke="currentColor">
+            <circle cx="18" cy="18" r="15.25" stroke-width="1" />
+            <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" stroke-width="1" />
+            <path d="M10.5 9.75v16.5M25.5 9.75v16.5" stroke-width=".65" />
+          </g>
+          <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+        </svg>
+        <p class="word">WOODHOUSE</p>
+      </div>
+      <div class="foot mono">
+        <span>The Loftwah Software Factory</span>
+        <span>Est. 2026</span>
+      </div>
+    </section>
+
+    <section class="piece" id="portrait">
+      <h1>EVIDENCE,<br /><em>NOT</em><br />ENTHUSIASM</h1>
+      <div class="rule"></div>
+      <div class="foot mono">
+        <span>Loom Display</span>
+        <span>11 November 2026</span>
+      </div>
+    </section>
+
+    <section class="piece" id="inverted">
+      <div class="wrap">
+        <svg class="seal" viewBox="0 0 36 36" aria-hidden="true">
+          <g fill="none" stroke="currentColor">
+            <circle cx="18" cy="18" r="15.25" stroke-width="1" />
+            <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" stroke-width="1" />
+            <path d="M10.5 9.75v16.5M25.5 9.75v16.5" stroke-width=".65" />
+          </g>
+          <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+        </svg>
+        <p class="mono">Ink on paper<br />Acid on ink<br />Nothing else</p>
+      </div>
+    </section>
+
+    <section class="piece" id="card-front">
+      <div class="row">
+        <svg class="seal" viewBox="0 0 36 36" aria-hidden="true">
+          <g fill="none" stroke="currentColor">
+            <circle cx="18" cy="18" r="15.25" stroke-width="1" />
+            <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" stroke-width="1" />
+            <path d="M10.5 9.75v16.5M25.5 9.75v16.5" stroke-width=".65" />
+          </g>
+          <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+        </svg>
+        <p class="word">WOODHOUSE</p>
+      </div>
+      <p class="desc mono">The Loftwah Software Factory</p>
+      <p class="foot mono">Dean Lofts · Melbourne</p>
+    </section>
+
+    <section class="piece" id="card-back">
+      <svg class="seal" viewBox="0 0 36 36" aria-hidden="true">
+        <g fill="none" stroke="currentColor">
+          <circle cx="18" cy="18" r="15.25" stroke-width="1" />
+          <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" stroke-width="1" />
+          <path d="M10.5 9.75v16.5M25.5 9.75v16.5" stroke-width=".65" />
+        </g>
+        <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+      </svg>
+      <p class="mono">woodhouse.loftwah.com</p>
+    </section>
+
+    <script>
+      // The poster's O is the letter, not an ellipse: same exponent as the font.
+      const superellipse = (cx, cy, rx, ry, n = 2.55, count = 240) => {
+        const power = 2 / n;
+        let d = "";
+        for (let i = 0; i <= count; i += 1) {
+          const a = (i / count) * Math.PI * 2;
+          const c = Math.cos(a);
+          const s = Math.sin(a);
+          const x = cx + rx * Math.sign(c) * Math.abs(c) ** power;
+          const y = cy + ry * Math.sign(s) * Math.abs(s) ** power;
+          d += `${i === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+        }
+        return `${d}Z`;
+      };
+      document.getElementById("poster-o")?.setAttribute("d", superellipse(294, 360, 252, 318));
+
+      const piece = new URLSearchParams(location.search).get("piece") ?? "poster";
+      document.getElementById(piece)?.classList.add("on");
+    </script>
+  </body>
+</html>
