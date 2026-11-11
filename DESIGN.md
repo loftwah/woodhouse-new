@@ -71,6 +71,23 @@ it owns its markup, its states and its copy; the CSS it uses comes from the toke
 - Monospace is reserved for identifiers, source labels and compact technical detail.
 - Sentence case carries prose. Uppercase is for short diagram labels, never whole paragraphs.
 
+## House face — reviewed 11 November 2026
+
+The factory has a typeface of its own. **Loom Display** is an all-caps display cut drawn in
+`scripts/brand/loom-font.py` and rebuilt from that file, not exported from a design tool: one
+84-unit fibre on a 1000-unit em, a 700-unit cap with 10 units of overshoot on rounds, superellipse
+curves at exponent 2.55, and bevelled rather than mitred straight joints. It covers the twenty-six
+capitals, the figures and eighteen marks; lowercase sets as capitals.
+
+The split is exact and deliberate: **Loom names, Bricolage argues.** Loom sets the wordmark, the
+chapter numerals on `/brand/`, the film and the brand assets. Editorial headlines and story titles
+stay in Bricolage, as directed on 10 November. A third display face would be a failure of this rule,
+not an addition to it.
+
+The seal is unchanged. Its construction, clear space, minimum size and two approved colour
+treatments are recorded on `/brand/` with the palette's measured contrast. Those page statements are
+the current kit; this section records the decision behind them.
+
 ## Composition
 
 - The homepage identifies the human operator and coding agents, then leads with the project that moved most in the current review. A dated portfolio report, a compact dossier register and recent dispatches form the reading path. The D2 work map and release/evidence flow follow as an explanation of the system; both remain available on phones.

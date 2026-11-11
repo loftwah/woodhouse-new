@@ -1,0 +1,1347 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import glyphData from "../../data/loom-glyphs.json";
+
+export const prerender = false;
+
+type Contour = [number, number][];
+
+const glyphs = glyphData.glyphs as unknown as Record<
+  string,
+  { advance: number; contours: Contour[] }
+>;
+
+const outline = (name: string) => path(glyphs[name]?.contours ?? []);
+
+const path = (contours: Contour[], digits = 1) =>
+  contours
+    .map(
+      (contour) =>
+        `M${contour.map(([x, y]) => `${x.toFixed(digits)} ${y.toFixed(digits)}`).join("L")}Z`
+    )
+    .join("");
+
+/* The centreline the font's 84-unit stroke is offset from. Same exponent, same ellipse. */
+const superellipsePath = (cx: number, cy: number, rx: number, ry: number, exponent = 2.55) => {
+  const points: string[] = [];
+  const power = 2 / exponent;
+  for (let step = 0; step <= 96; step += 1) {
+    const angle = (step / 96) * Math.PI * 2;
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    const x = cx + rx * Math.sign(cos) * Math.abs(cos) ** power;
+    const y = cy + ry * Math.sign(sin) * Math.abs(sin) ** power;
+    points.push(`${x.toFixed(1)} ${y.toFixed(1)}`);
+  }
+  return `M${points.join("L")}Z`;
+};
+
+/* Measured contrast, not a remembered number: WCAG 2.2 relative luminance. */
+const channel = (hex: string, index: number) => {
+  const c = parseInt(hex.slice(index, index + 2), 16) / 255;
+  return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+};
+const luminance = (hex: string) =>
+  0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
+const contrast = (foreground: string, background: string) => {
+  const light = Math.max(luminance(foreground), luminance(background));
+  const dark = Math.min(luminance(foreground), luminance(background));
+  return (light + 0.05) / (dark + 0.05);
+};
+
+const ink = "#080d19";
+const swatches = [
+  {
+    name: "Ink",
+    hex: "#080d19",
+    role: "The page ground. Every surface sits above it, not beside it."
+  },
+  {
+    name: "Paper",
+    hex: "#f4f7fd",
+    role: "Type on ink. Never a paper background, never a light theme."
+  },
+  {
+    name: "Acid",
+    hex: "#e9ff49",
+    role: "Human direction, and the name of the house. The only accent that means a person decided."
+  },
+  { name: "Cyan", hex: "#79d8ff", role: "A real system path: a link, a source, a measured line." },
+  { name: "Cobalt", hex: "#647dff", role: "Evidence and reference. Never a button." },
+  { name: "Coral", hex: "#ff746a", role: "A stop, a boundary, a thing that does not continue." }
+].map((swatch) => ({ ...swatch, ratio: contrast(swatch.hex, ink).toFixed(2) }));
+
+const laws = [
+  {
+    index: "01",
+    title: "One fibre",
+    body: "84 units on a 1000-unit em. Every stroke in every letter is that width, at every size, in every weight — because there is only one weight."
+  },
+  {
+    index: "02",
+    title: "A 700-unit cap, a 10-unit overshoot",
+    body: "Flat letters stand exactly on the baseline and stop exactly at the cap line. Rounds pass it by ten units, which is what makes them look level rather than short."
+  },
+  {
+    index: "03",
+    title: "Superellipse, exponent 2.55",
+    body: "2 is a circle. 4 is a squircle. 2.55 sits between them: a curve that has been bent and is holding its shape. Every round form is sampled from that equation."
+  },
+  {
+    index: "04",
+    title: "Bevelled joints",
+    body: "Where two straight strokes meet, the corner is cut flat. Nothing is sharpened into a point the drawing did not ask for. A corner here is fabricated, not grown."
+  }
+];
+
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const figures = "0123456789".split("");
+const punctuation = [
+  ".",
+  ",",
+  ":",
+  ";",
+  "!",
+  "?",
+  "'",
+  '"',
+  "‘",
+  "(",
+  ")",
+  "-",
+  "–",
+  "—",
+  "/",
+  "+",
+  "=",
+  "•"
+];
+
+const typeStack = [
+  {
+    role: "The name",
+    face: "Loom Display",
+    use: "The wordmark, chapter numerals, the film, this page's headlines."
+  },
+  {
+    role: "The argument",
+    face: "Bricolage Grotesque",
+    use: "Editorial headings and story titles across the site, as directed on 10 November."
+  },
+  {
+    role: "The reading",
+    face: "System sans",
+    use: "Prose at 65–75 characters. The default for anything longer than a headline."
+  },
+  {
+    role: "The evidence",
+    face: "Monospace",
+    use: "Identifiers, dates, file names, measured values. Never whole sentences."
+  }
+];
+
+const motions = [
+  {
+    index: "I",
+    title: "A position is a spring",
+    body: "A reversal follows the new intention, not the old timeline. If a visitor changes their mind halfway, the scene changes halfway."
+  },
+  {
+    index: "II",
+    title: "One audio owner",
+    body: "One transport, one set of effects, one music bus. Sound starts on a deliberate gesture and never on load."
+  },
+  {
+    index: "III",
+    title: "Reduced motion loses nothing",
+    body: "The springs snap, the idle movement stops, and every control, label and explanation stays exactly where it was."
+  }
+];
+
+const voice = [
+  "Say the number. A review date, a version, a count, a limit. If it cannot be sourced, it does not go in the sentence.",
+  "Name the failure before the fix. What broke, who it affected, what it cost, then what changed.",
+  'Delete the adjective you would not defend in a room. "Robust", "seamless" and "powerful" are the first three.',
+  "Sentence case for prose, uppercase for short labels. Never a paragraph in capitals.",
+  "Put the limitation beside the claim it limits, not in a footnote that the reader will never reach."
+];
+---
+
+<BaseLayout
+  title="The house identity"
+  description="Loom Display, the Woodhouse seal, the palette and the rules that hold them: the brand kit for the Loftwah Software Factory, reviewed 11 November 2026."
+  path="/brand/"
+  currentPath="/brand/"
+  image="/og/brand-20261111.png"
+  imageAlt="Acid-green Loom Display lettering reading LOOM on ink, above the Woodhouse seal."
+>
+  <Fragment slot="head">
+    <link rel="preload" href="/fonts/loom-display.woff2" as="font" type="font/woff2" crossorigin />
+  </Fragment>
+
+  <article class="house">
+    <header class="house__hero">
+      <div class="container">
+        <p class="house__name" aria-hidden="true">
+          LOOM
+        </p>
+        <h1 class="house__title">
+          One face,
+          <br />
+          drawn here.
+        </h1>
+        <div class="house__hero-grid">
+          <p class="house__lede">
+            Woodhouse has a typeface of its own. It is called <strong>Loom Display</strong>: an
+            all-caps cut drawn from a single 84-unit stroke, the same width as one fibre in the
+            homepage sculpture. This page is the kit: what to use, how it behaves, and what it
+            refuses to do.
+          </p>
+          <dl class="house__counts">
+            <div>
+              <dt>Reviewed</dt>
+              <dd>11 November 2026</dd>
+            </div>
+            <div>
+              <dt>Typeface</dt>
+              <dd>Loom Display</dd>
+            </div>
+            <div>
+              <dt>Colours</dt>
+              <dd>Six, with six jobs</dd>
+            </div>
+            <div>
+              <dt>Motion laws</dt>
+              <dd>Three</dd>
+            </div>
+            <div>
+              <dt>Voice rules</dt>
+              <dd>Five</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </header>
+
+    <section class="house__section" aria-labelledby="why">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          01
+        </p>
+        <div class="house__body">
+          <h2 id="why">A house face is a small, strange claim.</h2>
+          <p>
+            It does no work. It answers no question. It is the only object in the factory that stays
+            identical whether or not anything shipped that week — which is exactly why it is worth
+            drawing instead of downloading.
+          </p>
+          <p>
+            Everything else here changes: the products, their artwork, their colours, their release
+            notes. The face does not. It is the one place where the factory says the same thing on a
+            bad week as on a good one.
+          </p>
+          <p class="house__asidel">
+            A typeface does not make the work better. It makes it recognisable, which is a smaller
+            claim and a truer one.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="drawing">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          02
+        </p>
+        <div class="house__body">
+          <h2 id="drawing">Four decisions, and then the alphabet.</h2>
+          <p>
+            Loom is not drawn letter by letter and tuned by eye. It is drawn from four decisions.
+            Change one and you have a different typeface; keep them and you can draw a letter you
+            have not drawn yet.
+          </p>
+          <dl class="house__laws">
+            {laws.map((law) => (
+              <div class="house__law">
+                <dt>
+                  <span>{law.index}</span>
+                  {law.title}
+                </dt>
+                <dd>{law.body}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div class="house__plates">
+            <figure class="house__plate">
+              <svg viewBox="0 0 700 800" role="img" aria-labelledby="plate-o-title">
+                <title id="plate-o-title">
+                  The letter O: the filled glyph, its centreline superellipse, and the 84-unit
+                  stroke width marked between the outer and inner edge.
+                </title>
+                <g transform="translate(56 736) scale(1 -1)">
+                  <path d={outline("O")} class="plate__ink" />
+                  <path d={superellipsePath(294, 350, 252, 318)} class="plate__spine" />
+                  <path d="M504 350 L588 350" class="plate__dimension" />
+                  <path d="M504 332 L504 368 M588 332 L588 368" class="plate__dimension" />
+                </g>
+              </svg>
+              <figcaption>
+                <span>O</span> One spine, offset by 42 units each way. The counter is the same
+                equation at 210 × 276.
+              </figcaption>
+            </figure>
+
+            <figure class="house__plate">
+              <svg viewBox="0 0 700 800" role="img" aria-labelledby="plate-a-title">
+                <title id="plate-a-title">
+                  The letter A: two strokes meeting at a bevelled apex, with the crossbar trimmed to
+                  the inner edges.
+                </title>
+                <g transform="translate(56 736) scale(1 -1)">
+                  <path d={outline("A")} class="plate__ink" />
+                  <path d="M16 -64 L282 744" class="plate__spine" />
+                  <path d="M544 -64 L278 744" class="plate__spine" />
+                  <path d="M150 700 L290 700" class="plate__bevel" />
+                </g>
+              </svg>
+              <figcaption>
+                <span>A</span> Two bands, one bar. Where they meet above the cap line, the corner is
+                cut — the bevel is the letter's top edge, not an error in it.
+              </figcaption>
+            </figure>
+          </div>
+
+          <p class="house__note">
+            Why 2.55? Because 2 is a circle and 4 is a squircle, and the loom's silhouette sits
+            between them. It was chosen by eye against the sculpture, then kept everywhere. It is a
+            drawing decision, not a measurement of anything.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="specimen">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          03
+        </p>
+        <div class="house__body">
+          <h2 id="specimen">Set it large, set it once.</h2>
+          <p>
+            Loom is a display face. It wants a short line, a big size and one idea. Below 20px it
+            loses the bevels that give it its character, so it does not go there.
+          </p>
+          <div class="specimen">
+            <p class="specimen__row specimen__row--xl">Evidence</p>
+            <p class="specimen__row specimen__row--l">Not enthusiasm</p>
+            <p class="specimen__row specimen__row--m">Melbourne, 37.8136 S</p>
+            <p class="specimen__row specimen__row--s">Reviewed 11 November 2026</p>
+          </div>
+
+          <div class="glyph-grid" aria-label="Drawn characters: capitals, figures and punctuation">
+            {alphabet.map((letter) => (
+              <span>{letter}</span>
+            ))}
+            {figures.map((figure) => (
+              <span>{figure}</span>
+            ))}
+            {punctuation.map((mark) => (
+              <span>{mark}</span>
+            ))}
+          </div>
+
+          <p class="house__note">
+            55 glyphs. <strong>Not drawn:</strong> ampersand, at, percent, hash, asterisk, and every
+            lowercase letter. Lowercase input sets as capitals, which is what an all-caps face
+            should do. A line that needs the missing characters sets in Bricolage; that is the edge
+            of the face, not a defect in it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="mark">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          04
+        </p>
+        <div class="house__body">
+          <h2 id="mark">The seal</h2>
+          <p>
+            A section through a bundle: four bars narrowing to a point, held between two rails, with
+            the fibre passing through. It is drawn on a 36-unit grid and it has not changed since
+            the first build.
+          </p>
+          <div class="house__mark-row">
+            <svg
+              class="house__mark-large"
+              viewBox="0 0 36 36"
+              role="img"
+              aria-label="The Woodhouse seal, enlarged"
+            >
+              <circle
+                cx="18"
+                cy="18"
+                r="15.25"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+              <path
+                d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+              />
+              <path
+                d="M10.5 9.75v16.5M25.5 9.75v16.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width=".65"
+              />
+              <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+            </svg>
+            <ul class="house__mark-rules">
+              <li>
+                <strong>Clear space</strong> half the seal's width on every side, and nothing else
+                inside it.
+              </li>
+              <li>
+                <strong>Minimum size</strong> 24px on screen, 8mm in print. Below that the bars
+                merge.
+              </li>
+              <li>
+                <strong>Two colours only</strong> ink on paper, or acid on ink. No gradients, no
+                photography behind it, no rotation.
+              </li>
+              <li>
+                <strong>Do not redraw</strong> the bars, close the rails or add a lens flare. It is
+                a section, not a logo experiment.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="colour">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          05
+        </p>
+        <div class="house__body">
+          <h2 id="colour">Six colours, six jobs.</h2>
+          <p>
+            Measured contrast against ink, not assumed. A colour never carries a state on its own:
+            every dot has a word beside it.
+          </p>
+          <table class="swatches">
+            <caption class="visually-hidden">
+              Palette, with each colour's role and measured contrast against ink
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Colour</th>
+                <th scope="col">Hex</th>
+                <th scope="col">Contrast on ink</th>
+                <th scope="col">Job</th>
+              </tr>
+            </thead>
+            <tbody>
+              {swatches.map((swatch) => (
+                <tr>
+                  <th scope="row">
+                    <i style={`background:${swatch.hex}`} aria-hidden="true"></i>
+                    {swatch.name}
+                  </th>
+                  <td>
+                    <code>{swatch.hex}</code>
+                  </td>
+                  <td class="swatches__ratio">{swatch.ratio}:1</td>
+                  <td>{swatch.role}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="type-in-use">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          06
+        </p>
+        <div class="house__body">
+          <h2 id="type-in-use">Loom names. Bricolage argues.</h2>
+          <p>
+            Two display faces is one too many unless the split is exact. Loom sets what the thing is
+            called. Bricolage sets what is being claimed about it, because a story headline needs
+            lowercase and a long line.
+          </p>
+          <dl class="stack">
+            {typeStack.map((row) => (
+              <div class="stack__row">
+                <dt>{row.role}</dt>
+                <dd>
+                  <strong>{row.face}</strong>
+                  {row.use}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="motion">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          07
+        </p>
+        <div class="house__body">
+          <h2 id="motion">Three motion laws</h2>
+          <div class="triad">
+            {motions.map((motion) => (
+              <div class="triad__item">
+                <p class="triad__index" aria-hidden="true">
+                  {motion.index}
+                </p>
+                <h3>{motion.title}</h3>
+                <p>{motion.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="voice">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          08
+        </p>
+        <div class="house__body">
+          <h2 id="voice">Voice</h2>
+          <ol class="voice">
+            {voice.map((rule) => (
+              <li>{rule}</li>
+            ))}
+          </ol>
+          <p class="house__note">
+            The longer version, with the editing routine, is in
+            <a href="https://github.com/loftwah/woodhouse-new/blob/main/UNSLOP.md">UNSLOP.md</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section" aria-labelledby="files">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          09
+        </p>
+        <div class="house__body">
+          <h2 id="files">Take it</h2>
+          <p>
+            The binaries are the drawing, not a picture of it. Both are generated by
+            <code>scripts/brand/loom-font.py</code>, so the source of truth is a file in the
+            repository and not an export someone has to remember to refresh.
+          </p>
+          <ul class="files">
+            <li>
+              <a href="/fonts/loom-display.woff2" download>
+                loom-display.woff2
+              </a>
+              <span>4.9 KB · web</span>
+            </li>
+            <li>
+              <a href="/fonts/loom-display.ttf" download>
+                loom-display.ttf
+              </a>
+              <span>14.7 KB · desktop</span>
+            </li>
+            <li>
+              <a href="/brand/woodhouse-seal.svg" download>
+                woodhouse-seal.svg
+              </a>
+              <span>1 file · mark</span>
+            </li>
+            <li>
+              <a href="/brand/loom-film.mp4" download>
+                loom-film.mp4
+              </a>
+              <span>One fibre · 68 seconds</span>
+            </li>
+          </ul>
+          <p class="house__note">
+            Released with this repository under the MIT licence. The name of the typeface and the
+            seal are the factory's; the outlines are yours to read, learn from and use.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section house__section--film" aria-labelledby="film">
+      <div class="container">
+        <p class="house__index" aria-hidden="true">
+          Film
+        </p>
+        <div class="house__film">
+          <div>
+            <h2 id="film">One fibre</h2>
+            <p>
+              Sixty-eight seconds on how the face was drawn: the stroke, the curve, the cut, and the
+              alphabet that comes out of them. No sound, so it starts when you tell it to.
+            </p>
+            <details class="house__transcript">
+              <summary>Read the film</summary>
+              <div>
+                <p>
+                  <strong>00:00</strong> A letter is a stroke that has been asked to hold a shape.
+                </p>
+                <p>
+                  <strong>00:08</strong> This is one fibre: 84 units wide, on a thousand-unit em.
+                </p>
+                <p>
+                  <strong>00:16</strong> It bends. A circle would be exponent two; a squircle, four.
+                  This is 2.55, so the curve has a memory of being pulled.
+                </p>
+                <p>
+                  <strong>00:30</strong> Where two straight strokes meet, the corner is cut. Bevel,
+                  never miter. The letter is fabricated.
+                </p>
+                <p>
+                  <strong>00:44</strong> Twenty-six of those decisions, then the figures, then the
+                  marks a headline needs.
+                </p>
+                <p>
+                  <strong>00:58</strong> Loom Display. Drawn for Woodhouse, 11 November 2026.
+                </p>
+              </div>
+            </details>
+          </div>
+          <video
+            class="house__video"
+            controls
+            preload="none"
+            poster="/brand/loom-film-poster.jpg"
+            width="1280"
+            height="720"
+          >
+            <source src="/brand/loom-film.mp4" type="video/mp4" />
+            <track kind="captions" src="/brand/loom-film.en.vtt" srclang="en" label="English" />
+            <p>
+              Your browser will not play the film. <a href="/brand/loom-film.mp4">Download it</a>
+              instead.
+            </p>
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <section class="house__section house__review" aria-labelledby="review">
+      <div class="container house__grid">
+        <p class="house__index" aria-hidden="true">
+          10
+        </p>
+        <div class="house__body">
+          <h2 id="review">What is decided, and what is not</h2>
+          <p>
+            <strong>Decided 11 November 2026:</strong> the face, its four laws, the seal's
+            construction, the palette's six jobs and the two-display-face split.
+          </p>
+          <p>
+            <strong>Not decided:</strong> nothing on this page changes an existing page's
+            typography. The site keeps Bricolage for editorial headlines, as directed on 10
+            November. Share cards still set their project names in Bricolage until that renderer is
+            re-checked with Loom in it.
+          </p>
+          <p class="house__note">
+            Reviewed 11 November 2026. A passing build is not a reader's acceptance, and this page
+            is a reading of the design rather than the design itself.
+          </p>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .house {
+    --loom: "Loom Display", var(--display);
+    --rule: rgba(218, 231, 255, 0.16);
+  }
+
+  @font-face {
+    font-family: "Loom Display";
+    src: url("/fonts/loom-display.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .house__hero {
+    padding: clamp(3rem, 7vw, 6rem) 0 clamp(2.5rem, 5vw, 4rem);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .house__name {
+    font-family: var(--loom);
+    font-size: clamp(5.5rem, 25vw, 21rem);
+    line-height: 0.78;
+    letter-spacing: -0.02em;
+    color: var(--brass);
+    margin: clamp(1.2rem, 3vw, 2.2rem) 0 clamp(1rem, 2vw, 1.6rem);
+    font-weight: 400;
+  }
+
+  .house__title {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 6vw, 5.2rem);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0 0 clamp(2rem, 4vw, 3.4rem);
+    max-width: 18ch;
+  }
+
+  .house__hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: start;
+  }
+
+  .house__lede {
+    font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+    line-height: 1.6;
+    color: var(--copy);
+    max-width: 54ch;
+    margin: 0;
+  }
+
+  .house__lede strong {
+    color: var(--paper);
+  }
+
+  .house__counts {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .house__counts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .house__counts div:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .house__counts dt {
+    color: var(--paper-muted);
+  }
+
+  .house__counts dd {
+    margin: 0;
+    color: var(--brass);
+    text-align: right;
+  }
+
+  .house__section {
+    padding: clamp(2.8rem, 6vw, 5.5rem) 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .house__grid {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 3rem);
+  }
+
+  .house__index {
+    font-family: var(--loom);
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--brass);
+    margin: 0.35rem 0 0;
+    letter-spacing: 0.02em;
+  }
+
+  .house__body h2 {
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 3.6vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    margin: 0 0 clamp(1.1rem, 2vw, 1.8rem);
+    max-width: 24ch;
+  }
+
+  .house__body p {
+    max-width: 66ch;
+    color: var(--copy);
+    margin: 0 0 1rem;
+  }
+
+  .house__asidel {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.1rem;
+    margin-top: 1.8rem !important;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--paper) !important;
+    max-width: 52ch;
+  }
+
+  .house__laws {
+    margin: clamp(1.8rem, 3vw, 2.6rem) 0 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .house__law {
+    display: grid;
+    grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .house__law dt {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .house__law dt span {
+    display: block;
+    color: var(--brass);
+    font-size: 0.68rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .house__law dd {
+    margin: 0;
+    color: var(--copy);
+    max-width: 58ch;
+  }
+
+  .house__plates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin: clamp(2rem, 4vw, 3.4rem) 0 0;
+  }
+
+  .house__plate {
+    margin: 0;
+    border: 1px solid var(--rule);
+    padding: clamp(1rem, 2vw, 1.6rem);
+    background: var(--surface-deep);
+  }
+
+  .house__plate svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .plate__ink {
+    fill: rgba(233, 255, 73, 0.14);
+    stroke: var(--brass);
+    stroke-width: 2;
+    stroke-linejoin: bevel;
+  }
+
+  .plate__spine {
+    fill: none;
+    stroke: var(--accent-link);
+    stroke-width: 2;
+    stroke-dasharray: 9 7;
+    opacity: 0.9;
+  }
+
+  .plate__measure {
+    fill: none;
+    stroke: rgba(218, 231, 255, 0.35);
+    stroke-width: 1.5;
+  }
+
+  .plate__dimension {
+    fill: none;
+    stroke: var(--signal);
+    stroke-width: 3;
+  }
+
+  .plate__bevel {
+    fill: none;
+    stroke: var(--signal);
+    stroke-width: 5;
+  }
+
+  .house__plate figcaption {
+    margin-top: 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--paper-muted);
+  }
+
+  .house__plate figcaption span {
+    font-family: var(--loom);
+    color: var(--brass);
+    margin-right: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .house__note {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--paper-muted);
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+    margin-top: clamp(1.6rem, 3vw, 2.4rem) !important;
+    max-width: 70ch;
+  }
+
+  .specimen {
+    margin: clamp(1.6rem, 3vw, 2.4rem) 0 clamp(1.8rem, 3vw, 2.6rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .specimen__row {
+    font-family: var(--loom);
+    color: var(--brass);
+    margin: 0;
+    padding: clamp(0.5rem, 1.2vw, 1rem) 0;
+    border-bottom: 1px solid var(--rule);
+    line-height: 0.95;
+    letter-spacing: 0.005em;
+  }
+
+  .specimen__row--xl {
+    font-size: clamp(3.4rem, 9vw, 8rem);
+  }
+  .specimen__row--l {
+    font-size: clamp(2.4rem, 6vw, 5rem);
+  }
+  .specimen__row--m {
+    font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+    color: var(--paper);
+  }
+  .specimen__row--s {
+    font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+    color: var(--accent-link);
+  }
+
+  .glyph-grid {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+    border-top: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+
+  .glyph-grid span {
+    font-family: var(--loom);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    color: var(--paper);
+  }
+
+  .house__mark-row {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+    margin-top: clamp(1.5rem, 3vw, 2.4rem);
+  }
+
+  .house__mark-large {
+    width: 100%;
+    height: auto;
+    color: var(--brass);
+    background: var(--surface-deep);
+    border: 1px solid var(--rule);
+    padding: 1.6rem;
+  }
+
+  .house__mark-rules {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .house__mark-rules li {
+    border-top: 1px solid var(--rule);
+    padding-top: 0.9rem;
+    color: var(--copy);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    max-width: 60ch;
+  }
+
+  .house__mark-rules li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .house__mark-rules strong {
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .swatches {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: clamp(1.4rem, 3vw, 2.2rem);
+    font-size: 0.92rem;
+  }
+
+  .swatches th,
+  .swatches td {
+    text-align: left;
+    padding: 0.9rem 0.9rem 0.9rem 0;
+    border-top: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--copy);
+  }
+
+  .swatches thead th {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--paper-muted);
+    border-top: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .swatches tbody th {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--paper);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .swatches i {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    flex: none;
+  }
+
+  .swatches code,
+  .house__body code {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--paper-muted);
+  }
+
+  .swatches__ratio {
+    font-family: var(--mono);
+    color: var(--brass) !important;
+    white-space: nowrap;
+  }
+
+  .stack {
+    margin: clamp(1.4rem, 3vw, 2.2rem) 0 0;
+  }
+
+  .stack__row {
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: 1rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .stack__row dt {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--paper-muted);
+  }
+
+  .stack__row dd {
+    margin: 0;
+    color: var(--copy);
+  }
+
+  .stack__row strong {
+    color: var(--paper);
+    display: block;
+    font-weight: 500;
+  }
+
+  .triad {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.2rem, 3vw, 2.5rem);
+    margin-top: clamp(1.4rem, 3vw, 2rem);
+  }
+
+  .triad__item {
+    border-top: 2px solid var(--brass);
+    padding-top: 0.9rem;
+  }
+
+  .triad__index {
+    font-family: var(--loom);
+    color: var(--brass);
+    font-size: 1.4rem;
+    margin: 0 0 0.5rem !important;
+  }
+
+  .triad__item h3 {
+    font-size: 1.02rem;
+    margin: 0 0 0.5rem;
+    color: var(--paper);
+  }
+
+  .triad__item p {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin: 0 !important;
+  }
+
+  .voice {
+    margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: voice;
+    display: grid;
+    gap: 0;
+  }
+
+  .voice li {
+    counter-increment: voice;
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--rule);
+    color: var(--copy);
+    max-width: 72ch;
+  }
+
+  .voice li::before {
+    content: counter(voice, decimal-leading-zero);
+    font-family: var(--loom);
+    color: var(--brass);
+    font-size: 1rem;
+  }
+
+  .files {
+    list-style: none;
+    padding: 0;
+    margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+
+  .files li {
+    background: var(--ink);
+    padding: 1.1rem 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .files a {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    color: var(--accent-link);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+
+  .files span {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--paper-muted);
+  }
+
+  .house__section--film {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .house__film {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+    margin-top: 1rem;
+  }
+
+  .house__film h2 {
+    font-family: var(--display);
+    font-size: clamp(1.9rem, 3.6vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    margin: 0 0 1rem;
+  }
+
+  .house__film p {
+    color: var(--copy);
+    max-width: 46ch;
+    margin: 0 0 1rem;
+  }
+
+  .house__video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--rule);
+    background: var(--surface-deep);
+  }
+
+  .house__transcript {
+    margin-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+  }
+
+  .house__transcript summary {
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--accent-link);
+  }
+
+  .house__transcript p {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: var(--paper-muted);
+    margin: 0.7rem 0 0;
+    max-width: 60ch;
+  }
+
+  .house__transcript strong {
+    color: var(--brass);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    margin-right: 0.5rem;
+  }
+
+  .house__review {
+    border-bottom: 0;
+  }
+
+  .house__body a {
+    color: var(--accent-link);
+  }
+
+  @media (max-width: 900px) {
+    .glyph-grid {
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+    }
+
+    .house__hero-grid,
+    .house__plates,
+    .triad,
+    .house__film {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .house__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .house__index {
+      margin-bottom: 0.6rem;
+    }
+
+    .house__law,
+    .stack__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.4rem;
+    }
+
+    .house__mark-row {
+      grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    }
+
+    .swatches thead {
+      display: none;
+    }
+
+    .swatches tbody th,
+    .swatches tbody td {
+      display: block;
+      width: 100%;
+      border-top: 1px solid var(--rule);
+    }
+
+    .swatches tbody tr {
+      display: block;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .swatches tbody th,
+    .swatches tbody td {
+      border-top: 0;
+      padding: 0.15rem 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .house__mark-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .house * {
+      scroll-behavior: auto;
+    }
+  }
+</style>

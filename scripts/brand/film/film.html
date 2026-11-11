@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>One fibre</title>
+    <style>
+      @font-face {
+        font-family: "Loom Display";
+        src: url("../../../public/fonts/loom-display.woff2") format("woff2");
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #080d19;
+        color: #f4f7fd;
+      }
+      #stage {
+        position: relative;
+        width: 1280px;
+        height: 720px;
+        padding: 64px 72px;
+        overflow: hidden;
+        font-family: "Loom Display", sans-serif;
+      }
+      .mono {
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        font-size: 13px;
+        color: #8fa0ba;
+      }
+      #chapter { position: absolute; top: 56px; left: 72px; color: #e9ff49; }
+      #chapter b { font-weight: 400; }
+      #caption {
+        position: absolute;
+        left: 72px;
+        bottom: 56px;
+        max-width: 620px;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 15px;
+        line-height: 1.55;
+        letter-spacing: 0.01em;
+        color: #dce6f5;
+        text-transform: none;
+      }
+      #counter {
+        position: absolute;
+        right: 72px;
+        bottom: 56px;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        color: #6d7f99;
+      }
+      svg { position: absolute; inset: 0; width: 1280px; height: 720px; }
+      .spine { fill: none; stroke: #79d8ff; stroke-width: 2.5; }
+      .ink { fill: none; stroke: #e9ff49; }
+      .dim { fill: none; stroke: #ff746a; stroke-width: 3; }
+      #exponent {
+        position: absolute;
+        right: 72px;
+        top: 250px;
+        font-size: 190px;
+        line-height: 1;
+        color: #e9ff49;
+        letter-spacing: -0.02em;
+      }
+      #exponent small {
+        display: block;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 12px;
+        letter-spacing: 0.2em;
+        color: #8fa0ba;
+        margin-top: 14px;
+        text-align: right;
+      }
+      #bevel-label {
+        position: absolute;
+        left: 578px;
+        top: 62px;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        color: #ff746a;
+      }
+      #set {
+        position: absolute;
+        left: 72px;
+        top: 128px;
+        width: 1136px;
+        display: grid;
+        grid-template-columns: repeat(14, 1fr);
+        gap: 2px;
+      }
+      #set span {
+        display: grid;
+        place-items: center;
+        height: 92px;
+        font-size: 54px;
+        color: #e9ff49;
+        border: 1px solid rgba(218, 231, 255, 0.12);
+        opacity: 0;
+      }
+      #set span.mark { color: #79d8ff; font-size: 40px; }
+      #name {
+        position: absolute;
+        left: 72px;
+        top: 250px;
+        width: 1136px;
+      }
+      #name .word {
+        font-size: 148px;
+        line-height: 0.9;
+        letter-spacing: 0.12em;
+        color: #f4f7fd;
+        white-space: nowrap;
+        opacity: 0;
+      }
+      #name .sub {
+        margin-top: 26px;
+        opacity: 0;
+      }
+      #end {
+        position: absolute;
+        left: 72px;
+        top: 250px;
+        width: 1000px;
+      }
+      #end .title { font-size: 96px; letter-spacing: 0.02em; color: #e9ff49; line-height: 1; opacity: 0; }
+      #end .rule { height: 1px; background: rgba(218, 231, 255, 0.3); margin: 28px 0; width: 0; }
+      #end .line { opacity: 0; }
+      #seal { position: absolute; left: 72px; top: 148px; width: 56px; color: #e9ff49; opacity: 0; }
+      #fade { position: absolute; inset: 0; background: #080d19; opacity: 1; }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <svg viewBox="0 0 1280 720" aria-hidden="true">
+        <g transform="translate(640 360)">
+          <path id="o-spine" class="spine" d="" />
+          <path id="o-ink" class="ink" d="" stroke-width="0" />
+          
+          
+          
+        </g>
+        <g id="a-group" transform="translate(420 310)">
+          <path id="a-left" class="ink" stroke-width="0" d="M-140 250 L110 -250" />
+          <path id="a-right" class="ink" stroke-width="0" d="M360 250 L110 -250" />
+          <path id="a-bar" class="ink" stroke-width="0" d="M-40 90 L260 90" />
+          <path id="a-bevel" class="dim" d="M62 -250 L158 -250" opacity="0" />
+        </g>
+      </svg>
+
+      <p id="chapter" class="mono"><b>01</b> · STROKE</p>
+      <p id="caption"></p>
+      <p id="counter" class="mono"></p>
+
+      <div id="exponent" style="opacity: 0">2.00<small>SUPERELLIPSE</small></div>
+      <div id="bevel-label" style="opacity: 0">BEVEL</div>
+
+      <div id="set"></div>
+
+      <div id="name">
+        <p class="word">WOODHOUSE</p>
+        <p class="sub mono">THE LOFTWAH SOFTWARE FACTORY / MELBOURNE</p>
+      </div>
+
+      <div id="end">
+        <p class="title">LOOM DISPLAY</p>
+        <div class="rule"></div>
+        <p class="line mono">DRAWN FOR WOODHOUSE · 11 NOVEMBER 2026</p>
+      </div>
+
+      <svg id="seal" viewBox="0 0 36 36" aria-hidden="true">
+        <circle cx="18" cy="18" r="15.25" fill="none" stroke="currentColor" stroke-width="1" />
+        <path d="M8.5 12.25h19M11 16.5h14M13.5 20.75h9M16 25h4" fill="none" stroke="currentColor" stroke-width="1" />
+        <path d="M10.5 9.75v16.5M25.5 9.75v16.5" fill="none" stroke="currentColor" stroke-width=".65" />
+        <circle cx="18" cy="8.4" r="1.1" fill="currentColor" />
+      </svg>
+
+      <div id="bar" style="position:absolute;left:640px;top:360px;width:520px;height:52px;background:#e9ff49;transform:translate(-50%,-50%) scaleX(0)"></div>
+      <div id="fade"></div>
+    </div>
+
+    <script>
+      const U = 0.62; // stage pixels per font unit
+      const centre = { x: 640, y: 360 };
+
+      const clamp01 = (v) => Math.min(1, Math.max(0, v));
+      const seg = (t, a, b) => clamp01((t - a) / (b - a));
+      const ease = (v) => v * v * (3 - 2 * v);
+      const easeOut = (v) => 1 - (1 - v) ** 3;
+      const mix = (a, b, v) => a + (b - a) * v;
+
+      function superellipse(cx, cy, rx, ry, exponent, samples = 220) {
+        const power = 2 / exponent;
+        let d = "";
+        for (let i = 0; i <= samples; i += 1) {
+          const a = (i / samples) * Math.PI * 2;
+          const c = Math.cos(a);
+          const s = Math.sin(a);
+          const x = cx + rx * Math.sign(c) * Math.abs(c) ** power;
+          const y = cy + ry * Math.sign(s) * Math.abs(s) ** power;
+          d += `${i === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
+        }
+        return d + "Z";
+      }
+
+      const el = {
+        fade: document.getElementById("fade"),
+        chapter: document.getElementById("chapter"),
+        caption: document.getElementById("caption"),
+        counter: document.getElementById("counter"),
+        spine: document.getElementById("o-spine"),
+        oInk: document.getElementById("o-ink"),
+                aGroup: document.getElementById("a-group"),
+        aLeft: document.getElementById("a-left"),
+        aRight: document.getElementById("a-right"),
+        aBar: document.getElementById("a-bar"),
+        aBevel: document.getElementById("a-bevel"),
+        bevelLabel: document.getElementById("bevel-label"),
+        exponent: document.getElementById("exponent"),
+        set: document.getElementById("set"),
+        name: document.getElementById("name"),
+        word: document.querySelector("#name .word"),
+        sub: document.querySelector("#name .sub"),
+        end: document.getElementById("end"),
+        title: document.querySelector("#end .title"),
+        endRule: document.querySelector("#end .rule"),
+        endLine: document.querySelector("#end .line"),
+        seal: document.getElementById("seal"),
+        stage: document.getElementById("stage"),
+      };
+
+      // The set: 26 capitals, 10 figures, 17 marks. Same order as the font.
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      const figures = "0123456789".split("");
+      const marks = [".", ",", ":", ";", "!", "?", "'", "\"", "‘", "(", ")", "–", "—", "/", "+", "=", "•"];
+      el.set.innerHTML =
+        letters.map((c) => `<span>${c}</span>`).join("") +
+        figures.map((c) => `<span>${c}</span>`).join("") +
+        marks.map((c) => `<span class="mark">${c}</span>`).join("");
+      const cells = [...el.set.children];
+
+      const captions = [
+        [0.9, 5.6, "A letter is a stroke that has been asked to hold a shape."],
+        [5.9, 15.6, "This is one fibre: 84 units wide, on a thousand-unit em. It does not get heavier at the bottom, because it is not carrying anything."],
+        [16.4, 26.6, "A circle is exponent two. A squircle is four. This is 2.55, so the curve remembers being pulled."],
+        [27.4, 37.6, "Where two straight strokes meet, the corner is cut flat. Bevel, never miter. A letter here is fabricated, not grown."],
+        [38.4, 51.6, "Twenty-six of those decisions, then the figures, then the eighteen marks a headline needs."],
+        [58.4, 68.0, ""],
+      ];
+
+      function captionAt(t) {
+        for (const [start, end, text] of captions) {
+          if (t >= start && t < end) {
+            const alpha = Math.min(seg(t, start, start + 0.45), 1 - seg(t, end - 0.35, end));
+            return { text, alpha };
+          }
+        }
+        return { text: "", alpha: 0 };
+      }
+
+      const chapters = [
+        [0, "01", "STROKE"],
+        [5.6, "02", "FIBRE"],
+        [16, "03", "CURVE"],
+        [27, "04", "CUT"],
+        [38, "05", "SET"],
+        [52, "06", "NAME"],
+      ];
+
+      function chapterAt(t) {
+        let current = chapters[0];
+        for (const entry of chapters) if (t >= entry[0]) current = entry;
+        return current;
+      }
+
+      window.renderAt = (t) => {
+        // fade in from black and out at the end
+        el.fade.style.opacity = String(1 - seg(t, 0.15, 1.1) + seg(t, 66.4, 67.6));
+
+        const chapter = chapterAt(t);
+        el.chapter.innerHTML = `<b>${chapter[1]}</b> · ${chapter[2]}`;
+        el.chapter.style.opacity = String(clamp01(seg(t, 0.6, 1.4)));
+
+        const caption = captionAt(t);
+        el.caption.textContent = caption.text;
+        el.caption.style.opacity = String(caption.alpha);
+
+        const seconds = Math.floor(t);
+        el.counter.textContent =
+          t < 1 ? "" : `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+
+        // ---- 01: the bar
+        const barIn = ease(seg(t, 0.2, 1.5));
+        const barOut = ease(seg(t, 3.4, 4.4));
+        const bar = document.getElementById("bar");
+        if (bar) {
+          bar.style.opacity = String(barIn * (1 - barOut));
+          bar.style.transform = `translate(-50%, -50%) scaleX(${barIn}) scaleY(${1 - barOut * 0.7})`;
+        }
+
+        // ---- 02: the O
+        const spineIn = ease(seg(t, 5.2, 7.2));
+        const inkIn = ease(seg(t, 7.4, 9.2));
+        const oOut = 1 - seg(t, 16.0, 17.2);
+        const ghost = 1 - 0.86 * seg(t, 16.0, 17.2);
+
+        if (t >= 5.2 && t < 28) {
+          el.spine.setAttribute("d", superellipse(0, 0, 252 * U, 318 * U, 2.55));
+          el.spine.style.strokeDasharray = "2400";
+          el.spine.style.strokeDashoffset = String(2400 * (1 - spineIn));
+          el.spine.style.opacity = String((1 - seg(t, 15.6, 16.8)) * 0.95);
+          el.oInk.setAttribute("d", superellipse(0, 0, 252 * U, 318 * U, 2.55));
+          el.oInk.setAttribute("stroke-width", String(84 * U * inkIn));
+          el.oInk.style.opacity = String(oOut * ghost);
+        } else {
+          el.spine.style.opacity = "0";
+          el.oInk.style.opacity = "0";
+        }
+
+        // ---- 03: the exponent
+        let exponent = 2.55;
+        if (t >= 16) exponent = mix(2, 4, ease(seg(t, 18.2, 20.4)));
+        if (t >= 20.4) exponent = mix(4, 2.55, ease(seg(t, 21.4, 23.0)));
+        const expShow = Math.min(seg(t, 16.6, 17.4), 1 - seg(t, 26.2, 27.0));
+        el.exponent.style.opacity = String(expShow);
+        el.exponent.style.fontSize = `${190 * (0.94 + 0.06 * ease(seg(t, 16.6, 18)))}px`;
+        el.exponent.firstChild.textContent = exponent.toFixed(2);
+
+        const exponentInk = t >= 16.2 ? exponent : 2.55;
+        if (t >= 16.2) {
+          el.oInk.setAttribute("d", superellipse(0, 0, 252 * U, 318 * U, exponentInk));
+          el.oInk.setAttribute("stroke-width", String(84 * U));
+          el.spine.setAttribute("d", superellipse(0, 0, 252 * U, 318 * U, exponentInk));
+          el.oInk.style.opacity = String(0.16 * expShow);
+          el.spine.style.opacity = String(expShow * 0.9);
+          el.spine.style.strokeDasharray = "none";
+          el.spine.style.strokeDashoffset = "0";
+        }
+
+        // ---- 04: the A
+        const aIn = seg(t, 26.8, 27.2);
+        el.aGroup.style.opacity = String(aIn * (1 - seg(t, 37.2, 38.2)));
+        const left = ease(seg(t, 27.4, 29.0));
+        const right = ease(seg(t, 29.0, 30.6));
+        const crossbar = ease(seg(t, 30.8, 32.0));
+        const bevel = ease(seg(t, 32.6, 33.4));
+        el.aLeft.setAttribute("stroke-width", String(84 * U));
+        el.aRight.setAttribute("stroke-width", String(84 * U));
+        el.aBar.setAttribute("stroke-width", String(84 * U));
+        el.aLeft.style.strokeDasharray = "900";
+        el.aLeft.style.strokeDashoffset = String(900 * (1 - left));
+        el.aRight.style.strokeDasharray = "900";
+        el.aRight.style.strokeDashoffset = String(900 * (1 - right));
+        el.aBar.style.strokeDasharray = "340";
+        el.aBar.style.strokeDashoffset = String(340 * (1 - crossbar));
+        el.aBevel.style.opacity = String(bevel);
+        el.bevelLabel.style.opacity = String(bevel);
+        el.bevelLabel.style.opacity = String(bevel * (1 - seg(t, 37.0, 37.8)));
+
+        // ---- 05: the set
+        const setIn = seg(t, 38.0, 38.4);
+        el.set.style.opacity = String(setIn * (1 - seg(t, 51.4, 52.2)));
+        cells.forEach((cell, index) => {
+          const start = 38.2 + index * 0.11;
+          const value = ease(seg(t, start, start + 0.4));
+          cell.style.opacity = String(value * 0.95);
+          cell.style.transform = `translateY(${(1 - value) * 8}px)`;
+        });
+
+        // ---- 06: the name
+        const nameIn = ease(seg(t, 52.4, 53.6));
+        const tracking = mix(0.12, 0.01, ease(seg(t, 52.6, 55.0)));
+        el.name.style.opacity = String(nameIn * (1 - seg(t, 59.2, 60.0)));
+        el.word.style.opacity = String(nameIn);
+        el.word.style.letterSpacing = `${tracking}em`;
+        el.sub.style.opacity = String(ease(seg(t, 54.6, 55.8)));
+
+        // ---- end card
+        const endIn = seg(t, 59.8, 60.2) * (1 - seg(t, 66.2, 67.4));
+        el.end.style.opacity = String(endIn);
+        el.title.style.opacity = String(ease(seg(t, 60.0, 60.9)));
+        el.endRule.style.width = `${100 * ease(seg(t, 60.6, 61.6))}%`;
+        el.endLine.style.opacity = String(ease(seg(t, 61.6, 62.4)));
+        el.seal.style.opacity = String(ease(seg(t, 62.6, 63.6)) * (1 - seg(t, 66.2, 67.0)));
+        el.seal.style.transform = `translateY(${(1 - ease(seg(t, 62.6, 63.6))) * 10}px)`;
+      };
+    </script>
+  </body>
+</html>

@@ -23,6 +23,7 @@ production page. A design or a story never overrides the live route.
 | Exhibits index | `/exhibits/` | 10 | `FactoryPlate` | — | https://woodhouse.loftwah.com/exhibits/ |
 | Patch bench | `/exhibits/patch-bench/` | 10 | exhibit scripts, `FMListening` | — | https://woodhouse.loftwah.com/exhibits/patch-bench/ |
 | Source plate | `/exhibits/source-plate/` | 10 | exhibit scripts, `D2Diagram` | — | https://woodhouse.loftwah.com/exhibits/source-plate/ |
+| House identity | `/brand/` | — | `/brand/` page markup, `BaseLayout`, Loom Display specimen plates, `SiteFooter` link | — | https://woodhouse.loftwah.com/brand/ |
 | Factory | `/factory/` | 11 | `FactoryPlate`, `ProjectNetwork`, `D2Diagram` | — | https://woodhouse.loftwah.com/factory/ |
 | Architecture | `/architecture/` | 09/11 | `D2Diagram`, editorial blocks | — | https://woodhouse.loftwah.com/architecture/ |
 | Agent Reception | `/agents/` | 11 | editorial blocks, `/agents/facts.json` | — | https://woodhouse.loftwah.com/agents/ |

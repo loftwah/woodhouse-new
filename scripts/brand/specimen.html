@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Loom Display — proof</title>
+    <style>
+      @font-face {
+        font-family: "Loom Display";
+        src: url("../../public/fonts/loom-display.woff2") format("woff2");
+        font-weight: 400;
+      }
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        padding: 48px 56px 72px;
+        background: #080d19;
+        color: #dce6f5;
+        font-family: "Loom Display", sans-serif;
+        font-feature-settings: normal;
+      }
+      .row { font-size: 74px; line-height: 1.06; letter-spacing: 0.01em; color: #e9ff49; }
+      .row + .row { margin-top: 10px; }
+      .small { font-size: 34px; color: #79d8ff; margin-top: 28px; letter-spacing: 0.04em; }
+      .micro { font-size: 15px; letter-spacing: 0.16em; color: #a9b8d0; margin-top: 26px; }
+      .display { font-size: 132px; line-height: 0.96; color: #f2f6ff; margin: 44px 0 12px; letter-spacing: -0.01em; }
+      .grid { display: grid; grid-template-columns: repeat(13, 1fr); gap: 4px; margin-top: 40px; }
+      .grid span {
+        border: 1px solid rgba(218, 231, 255, 0.16);
+        aspect-ratio: 1;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 44px; color: #dce6f5;
+      }
+      .note { font-family: ui-monospace, monospace; font-size: 12px; letter-spacing: 0.1em; color: #6d7f99; margin-top: 34px; text-transform: uppercase; }
+    </style>
+  </head>
+  <body>
+    <div class="row">ABCDEFGHIJKLM</div>
+    <div class="row">NOPQRSTUVWXYZ</div>
+    <div class="row">0123456789 .,:;!?()/-</div>
+    <div class="display">THE LOOM<br />BENDS, IT<br />DOES NOT<br />BREAK.</div>
+    <div class="small">SOFTWARE FACTORY / MELBOURNE 37.8136 S</div>
+    <div class="micro">EVIDENCE, NOT ENTHUSIASM — 11 NOV 2026</div>
+    <div class="grid" id="grid"></div>
+    <p class="note">Loom Display · 84/700 fibre · superellipse 2.55 · bevelled joints</p>
+    <script>
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,:;!?'\"()-–—/+=".split("");
+      document.getElementById("grid").innerHTML = chars
+        .map((c) => `<span>${c.replace("&", "&amp;").replace("<", "&lt;")}</span>`)
+        .join("");
+    </script>
+  </body>
+</html>
