@@ -331,40 +331,30 @@ if (payload) {
       const findingNote = focusNote?.textContent ?? "";
       const allDatesNote = `Showing all ${data.period.days} days, ${data.period.from} to ${data.period.to}.`;
       let showingFinding = Boolean(data.focus);
-      let applyingFocus = false;
       reset.addEventListener("click", () => {
-        if (data.focus && !showingFinding) {
-          applyingFocus = true;
-          chart.dispatchAction({
+        const finding = data.focus && !showingFinding ? data.focus : null;
+        chart.dispatchAction(
+          {
             type: "dataZoom",
-            startValue: data.focus.start,
-            endValue: data.focus.end
-          });
-          if (focusNote) focusNote.textContent = findingNote;
-          reset.textContent = `Show all ${data.period.days} days`;
-          showingFinding = true;
-          requestAnimationFrame(() => {
-            applyingFocus = false;
-          });
-          return;
-        }
-        chart.dispatchAction({ type: "dataZoom", start: 0, end: 100 });
-        if (focusNote) focusNote.textContent = allDatesNote;
-        reset.textContent = data.focus ? "Show finding week" : "Reset zoom";
-        showingFinding = false;
+            startValue: finding?.start ?? 0,
+            endValue: finding?.end ?? dates.length - 1
+          },
+          { silent: true }
+        );
+        showingFinding = Boolean(finding);
+        if (focusNote) focusNote.textContent = finding ? findingNote : allDatesNote;
+        reset.textContent = finding
+          ? `Show all ${data.period.days} days`
+          : data.focus
+            ? "Show finding week"
+            : "Reset zoom";
       });
       if (focusNote && data.focus) {
-        // The initial setOption fires `datazoom`; let that settle before treating
-        // a later zoom as the reader's own change.
-        let readerZoomed = false;
-        requestAnimationFrame(() => {
-          readerZoomed = true;
-        });
         chart.on("datazoom", () => {
-          if (!readerZoomed || applyingFocus || focusNote.textContent?.startsWith("Showing all"))
-            return;
+          showingFinding = false;
+          reset.textContent = "Show finding week";
           focusNote.textContent =
-            "Showing the dates you selected. Use the button above to return to the finding.";
+            "Showing the dates you selected. Choose Show finding week to return.";
         });
       }
       document.querySelectorAll<HTMLButtonElement>("[data-chart-type]").forEach((button) =>
@@ -372,7 +362,8 @@ if (payload) {
           document
             .querySelectorAll("[data-chart-type]")
             .forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-          chart.setOption(build(button.dataset.chartType as "line" | "bar"), { notMerge: true });
+          const { xAxis, series } = build(button.dataset.chartType as "line" | "bar");
+          chart.setOption({ xAxis, series }, { replaceMerge: ["series"] });
         })
       );
       chart.on("updateAxisPointer", (event: unknown) => {
