@@ -49,7 +49,7 @@ const imageAlt = !selected
 
 <BaseLayout
   title="Social preview"
-  description="Preview campaign artwork in six social placements and download the exact file."
+  description="Preview campaign artwork in seven social placements and download the exact file."
   path={path}
   currentPath="/share/"
 >
@@ -279,6 +279,9 @@ const imageAlt = !selected
       transparent 12% 88%,
       rgb(0 0 0 / 68%) 88%
     );
+  }
+  [data-platform="discord"] .edge-guide {
+    background: linear-gradient(to bottom, rgb(0 0 0 / 68%) 8.89%, transparent 8.89%);
   }
   [data-platform="tiktok"] .edge-guide {
     background:
