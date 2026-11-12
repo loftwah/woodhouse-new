@@ -21,6 +21,14 @@ The product is not optimised to look like a portfolio. It is designed to be Wood
 
 ## Writing that earns a reader's time
 
+Voice source reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC:
+[The Loftwah Voice v1.0](docs/LOFTWAH-VOICE.md) is MP's accepted verbal source. Its concrete
+naming, spelling and tone rules take precedence over older local prose unless a newer MP
+instruction changes them. Use the relevant surface and product dialect; the argument, brief,
+draft and editing routine below remains the editorial procedure. Preserve accepted local visual
+identities and verify factual claims in example copy. [#204](https://github.com/loftwah/woodhouse-new/issues/204)
+owns application and adoption.
+
 Reviewed 18 October 2026. The observed failure is treating a technically accurate release summary
 as a compelling project story. An article needs an argument, a useful example and editorial judgement.
 

@@ -55,6 +55,11 @@ do not turn a release log into an article by adding attitude. Keep reusable edit
 that existing section, with their review date, rather than creating another style guide or relying
 on MP to repeat the feedback. These rules apply across the project series in PRODUCT.md.
 
+For copy, UI text, character writing or artwork briefs, also read the relevant parts of
+[The Loftwah Voice v1.0](docs/LOFTWAH-VOICE.md) and the owning product's accepted visual/character
+references. Use the source through the existing editorial routine; backend-only work does not
+need the full guide. [#204](https://github.com/loftwah/woodhouse-new/issues/204) tracks adoption.
+
 ## Routing and verification — reviewed 16 October 2026
 
 [docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here. Apply the delivery contract above when older guidance imposes routine checkpoint stops or duplicated qualification.
