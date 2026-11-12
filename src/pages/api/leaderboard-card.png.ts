@@ -21,7 +21,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
   cache.set(false);
   const format = url.searchParams.get("format") ?? "landscape";
   const version = url.searchParams.get("v");
-  const edition = version === "3" ? 3 : version === "2" ? 2 : 1;
+  const edition = version === "4" ? 4 : version === "3" ? 3 : version === "2" ? 2 : 1;
   const project = url.searchParams.get("project") ?? undefined;
   const reportId = url.searchParams.get("report");
   const includeRetired = url.searchParams.get("includeRetired") === "1";
@@ -94,7 +94,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
             "x-content-type-options": "nosniff",
             ...(url.searchParams.has("download")
               ? {
-                  "content-disposition": `attachment; filename="${edition === 3 ? `woodhouse-${project ?? "leaderboards"}-${selectedDays(url.searchParams.get("days"))}days-${measureKey(url.searchParams.get("measure"))}-${report.through}-${format}` : edition === 2 ? `woodhouse-${project ?? "github-rankings"}-${selectedDays(url.searchParams.get("days"))}days-${measureKey(url.searchParams.get("measure"))}-${report.through}-${format}` : `woodhouse-${project ?? "leaderboard"}-${report.id}-${format}`}.png"`
+                  "content-disposition": `attachment; filename="${edition >= 3 ? `woodhouse-${project ?? "leaderboards"}-${selectedDays(url.searchParams.get("days"))}days-${measureKey(url.searchParams.get("measure"))}-${report.through}-${format}` : edition === 2 ? `woodhouse-${project ?? "github-rankings"}-${selectedDays(url.searchParams.get("days"))}days-${measureKey(url.searchParams.get("measure"))}-${report.through}-${format}` : `woodhouse-${project ?? "leaderboard"}-${report.id}-${format}`}.png"`
                 }
               : {})
           }

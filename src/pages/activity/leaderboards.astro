@@ -43,23 +43,27 @@ const project = Astro.url.searchParams.get("project") ?? undefined;
 if (project && (!safeProject(project) || !admitted.has(project)))
   return new Response("Project unavailable.", { status: 404 });
 // A retired project keeps a reachable historical view; the current board does
-// not rank it. Explicit saved reports retain their original membership.
+// not rank it. A shared link preserves an explicit retired scope, but simply
+// requesting a saved report must not add paused projects to a current board.
+const requestedRetired = Astro.url.searchParams.get("includeRetired") === "1";
 const includeRetired =
-  Boolean(requested) || Boolean(project && safeProject(project)?.lifecycle !== "active");
+  requestedRetired || Boolean(project && safeProject(project)?.lifecycle !== "active");
 const ranked = snapshot ? rankedProjects(snapshot, days, measure, { includeRetired }) : null;
 const focused = ranked?.rows.find((r) => r.slug === project);
 if (project && !focused)
   return new Response("This project is not in this saved report.", { status: 404 });
 const selected = rankingMeasures.find((m) => m.key === measure)!;
 const link = snapshot
-  ? leaderboardLink(snapshot.id, days, measure, project)
+  ? leaderboardLink(snapshot.id, days, measure, project, includeRetired)
   : "/activity/leaderboards/";
 const caption = snapshot
   ? leaderboardCaption(snapshot, days, measure, project, { includeRetired })
   : "";
-const shareLink = snapshot ? leaderboardShareLink(snapshot.id, days, measure, project) : link;
+const shareLink = snapshot
+  ? leaderboardShareLink(snapshot.id, days, measure, project, includeRetired)
+  : link;
 const image = snapshot
-  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: "3", ...(project ? { project } : {}), ...(includeRetired ? { includeRetired: "1" } : {}) })}`
+  ? `/api/leaderboard-card.png?${new URLSearchParams({ report: snapshot.id, days: String(days), measure, v: project ? "3" : "4", ...(project ? { project } : {}), ...(includeRetired ? { includeRetired: "1" } : {}) })}`
   : "";
 const stale = !requested && snapshot && snapshot.through < completeWindow(28).to;
 function href(updates: Record<string, string | null>) {
@@ -67,7 +71,8 @@ function href(updates: Record<string, string | null>) {
     ...(snapshot ? { report: snapshot.id } : {}),
     days: String(days),
     measure,
-    ...(project ? { project } : {})
+    ...(project ? { project } : {}),
+    ...(includeRetired ? { includeRetired: "1" } : {})
   });
   for (const [key, value] of Object.entries(updates)) {
     if (value === null) p.delete(key);

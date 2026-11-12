@@ -228,10 +228,12 @@ export function leaderboardLink(
   id: string,
   days: number,
   measure: RankingMeasure,
-  project?: string
+  project?: string,
+  includeRetired = false
 ) {
   const params = new URLSearchParams({ report: id, days: String(days), measure });
   if (project) params.set("project", project);
+  if (includeRetired) params.set("includeRetired", "1");
   return `/activity/leaderboards/?${params}`;
 }
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

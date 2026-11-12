@@ -6,6 +6,7 @@ export const GET: APIRoute = ({ params, url, redirect, cache }) => {
   const view = readLeaderboardShareLink(params.view ?? "");
   if (!view) return new Response("Link unavailable.", { status: 404 });
   const target = new URL(view.href, url.origin);
+  if (url.searchParams.get("retired") === "1") target.searchParams.set("includeRetired", "1");
   if (url.searchParams.get("analytics") === "off") target.searchParams.set("analytics", "off");
   if (url.searchParams.has("qa")) target.searchParams.set("qa", url.searchParams.get("qa") ?? "");
   return redirect(target.pathname + target.search, 302);
