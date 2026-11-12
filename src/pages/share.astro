@@ -1,5 +1,5 @@
 ---
-import { productSocialCampaign } from "../data/showcase-product-social";
+import { fieldNotesCampaign, productSocialCampaign } from "../data/showcase-product-social";
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
@@ -269,12 +269,15 @@ const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
 const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
+const newPacks = freshWork.filter((item) => fieldNotesCampaign.includes(item));
 const productPacks = freshWork.filter((item) => productSocialCampaign.includes(item));
-const latestWork = productPacks.length
-  ? productPacks
-  : freshWork.length
-    ? freshWork
-    : featuredCampaign;
+const latestWork = newPacks.length
+  ? newPacks
+  : productPacks.length
+    ? productPacks
+    : freshWork.length
+      ? freshWork
+      : featuredCampaign;
 const latestIds = new Set(latestWork.map(({ id }) => id));
 const earlierWork = featuredCampaign.filter(({ id }) => !latestIds.has(id));
 const featuredSocial = campaignSocial(latestWork);
