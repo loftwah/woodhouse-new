@@ -51,9 +51,9 @@ export const prerender = false;
         <a class="not-found__primary" href="/">
           Return to the front door <span aria-hidden="true">↗</span>
         </a>
-        <button class="not-found__search" type="button" data-site-search-open>
+        <a class="not-found__search" href="/search/" data-site-search-open>
           Search Woodhouse <kbd>⌘ K</kbd>
-        </button>
+        </a>
       </div>
       <p class="not-found__note">
         Looking for a project? The <a href="/projects/">project ledger</a> lists every published
@@ -123,6 +123,7 @@ export const prerender = false;
     background: transparent;
   }
   .not-found__search {
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.7rem;

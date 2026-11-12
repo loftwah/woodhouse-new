@@ -64,16 +64,14 @@ const mobileLinks = withShareFallback(
           </span>
         </summary>
         <nav aria-label="More Woodhouse pages">
-          <button
+          <a
             class="mobile-index__search"
-            type="button"
+            href="/search/"
             data-site-search-open
-            aria-haspopup="dialog"
-            aria-controls="woodhouse-search"
             aria-keyshortcuts="Meta+K Control+K"
           >
             Search Woodhouse <kbd>⌘ K</kbd>
-          </button>
+          </a>
           {mobileLinks.map((link) => (
             <a
               href={link.url}
@@ -95,6 +93,7 @@ const mobileLinks = withShareFallback(
     display: none;
   }
   .mobile-index__search {
+    text-decoration: none;
     display: none;
     width: 100%;
     min-height: 3rem;
