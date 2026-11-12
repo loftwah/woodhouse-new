@@ -1,0 +1,77 @@
+Woodhouse project studies · reviewed 13 November 2026 AEDT
+
+These are editorial illustrations made with Codex ImageGen using published project artwork as references.
+Each original PNG is the untouched generator output. Social JPEGs and gallery previews only resize and encode it.
+Each work links to the product or feature that supplied its subject.
+
+A light for Moss
+https://foilbury.loftwah.com/cabinet/moss
+Foilbury’s published Moss portrait supplied the character and clothing. The block-print style is an editorial interpretation.
+Placement: Portrait feed, 1080 × 1350. Original: 1122 × 1402.
+ImageGen brief: 4:5 portrait, 1122x1402 if supported. Preserve Foilbury Moss's cap, teal hoodie and leaf pendant, redraw as a bold handmade three-colour linocut for an independent print fair. Moss is seated on a cabinet shelf with a leaf lantern, surrounded by rough woodblock shapes and amber shadows. Warm cream paper, soot, moss green, saffron, visible ink relief. Large uncomplicated shapes. Entirely text-free, no lettering, logos or fake card.
+
+Use the wall
+https://bubbles.loftwah.com/
+The published Bubbles cabinet and Classic bank shot supplied the mascot, bubble symbols and subject.
+Placement: Story still, 1080 × 1920. Original: 941 × 1670.
+ImageGen brief: 9:16 vertical, 941x1672 if supported. Bubbles bank-shot inspiration. Art-direct a Japanese screenprinted arcade instruction card, cobalt and chartreuse over hot coral. One cyan trajectory comes from a small launcher, touches the side wall, then joins a matching cluster of three unmistakably coloured round symbols. Keep that path simple and legible. Fizz appears as a small one-eyed glass bubble near the cabinet controls. Put only the exact large title ‘USE THE WALL’ into the same ink as the illustration. No other text, no invented UI. Safe centre framing for a vertical social feed. Follow-up ImageGen edit corrected the cyan trajectory: one connected line from the launcher to the right inner wall, then up-left to the matching cyan cluster. Preserve the original screenprint and lettering.
+
+Glimmerfin field plate
+https://shoalshot.loftwah.com/
+The published Glimmerfin and Tide Pool references supplied the specimen and its habitat.
+Placement: Portrait feed, 1080 × 1350. Original: 1122 × 1402.
+ImageGen brief: 4:5 portrait, 1122x1402 if supported. SHOALSHOT creature inspiration for the Tide Pool, preserving the Glimmerfin's silver-blue fish shape from the reference. A field-guide plate in cobalt cyanotype and a single copper ink, three overlapping states of the same fish from blueprint outline to detailed illustration, tide pool rock and eelgrass specimen borders. Big contrast and one bold silhouette that reads small. No lettering, arrows with words, numbers, logos or invented game UI.
+
+Links and a guestbook
+https://composer.loftwah.com/creator-hub
+The public Creator Hub supplied the links and guestbook. The paper sculpture interprets those two parts.
+Placement: Portrait feed, 1080 × 1350. Original: 1122 × 1402.
+ImageGen brief: 4:5 portrait, 1122x1402 if supported. App Composer Creator Hub feature inspiration. A warm tangible paper sculpture: an orange folded personal links page slots into a dark plum guestbook and small cream visitor slips emerge. One readable exact short title ‘LINKS AND A GUESTBOOK’ is cut directly out of the cream paper and casts real shadows. Type fully inside the artwork. No other words, logos, fictional interface or extra marks.
+
+Through the workshop wall
+https://woodhouse.loftwah.com/
+References came from the published Woodhouse workshop artwork, drawing on Bubbles, SHOALSHOT and LoftwahFM.
+Placement: Discord banner, 1920 × 1080. Original: 1672 × 941.
+ImageGen brief: 16:9 wide, 1672x941 if supported. A new Woodhouse community banner, imaginative sectional model of the workshop after hours with an arcade cabinet, record deck and tiny glowing reef on three separate illuminated timber shelves, connected by a single curved yellow wire. Architecture museum maquette under tungsten lights, rich shadows, material contrast, compelling silhouette at 320 px. Upper fifth quiet dark ink blue for Discord UI. Entirely text-free, no words, logos, numbers or fake UI.
+
+Moss under foil
+https://foilbury.loftwah.com/cabinet/moss
+Foilbury’s public Moss portrait and holographic finish supplied the character and reflective material.
+Placement: Square feed, 1080 × 1080. Original: 1254 × 1254.
+ImageGen brief: Square 1:1, 1254x1254 if supported. Preserve Foilbury Moss's rabbit face, teal hoodie, brown cap and leaf pendant. Editorial macro illustration of Moss peeking through an open copper collector cabinet, with a narrow rainbow prism reflecting across the metal surround. Intimate jeweller's catalogue lighting, deep bottle green and jewel tones, textured oil paint. This is a character and finish study, no playing card, fictional stats, words or logos.
+
+The missing attachment
+https://liferaft.loftwah.com/
+The public Liferaft recovery artwork and synthetic local archive supplied the attachment-recovery subject.
+Placement: Portrait feed, 1080 × 1350. Original: 1122 × 1402.
+ImageGen brief: 4:5 portrait, 1122x1402 if supported. Liferaft editorial concept: a tiny rescue line lifts one amber paper attachment from a dark shoal of old emails into daylight. Archive box, loose envelope, magnifier and orange attachment shape make the metaphor easy to read. Style a handmade editorial cut-paper collage, ragged cream edges, ink black, warm orange and deep teal. Completely text-free, no fake interface, no people or logos.
+
+Battle Blast bill
+https://fighter.loftwah.com/
+The public Battle Blast tutorial and Viking and Grim Reaper portraits supplied the pairing.
+Placement: Landscape, 1600 × 900. Original: 1672 × 941.
+ImageGen brief: 16:9, 1672x941 if supported. One colour wrestling handbill in hot lemon and bruised purple for the actual Fighter Battle Blast matchup. Recognisable cartoon Viking and Grim Reaper as exaggerated carved wooden puppet faces facing one another, no weapons or injury. Solid poster depth, spectacular strong silhouettes. The only words are the exact ‘BATTLE BLAST’ punched into the centre like carved circus type. Keep bottom-right clear of important type. No subtitles, logos, or logos resembling brands.
+
+First draw at the Classic table
+https://protocol11.loftwah.com/
+A staged local Classic table supplied the draw pile, hand and discard pile. The artwork illustrates the table.
+Placement: Square feed, 1080 × 1080. Original: 1254 × 1254.
+ImageGen brief: Square 1:1, 1254x1254 if supported. Protocol 11 Classic-table inspiration. A 1960s Swiss design studio photograph of a green felt table with one fanned hand, a face-down draw pile, and a single neatly offset discard, all arranged around the natural diamond of the table. Moss felt, cream cards, red lacquer, hard afternoon light, slightly imperfect handmade screen-print treatment. Avoid any readable numbers, lettering, score, logo or fake game UI. A quiet image about choosing which card to draw.
+
+Cartridge Club sleeve
+https://fm.loftwah.com/radio?station=cartridge-club
+The published Cartridge Club sleeve and station supplied the name and game-music subject.
+Placement: Square feed, 1080 × 1080. Original: 1254 × 1254.
+ImageGen brief: Square 1:1, 1254x1254 if supported. Independent record sleeve inspiration for LoftwahFM Cartridge Club. Turn one game cartridge into a studio sampler with three illuminated pads, vinyl disc grooves around it, a clipped wire running towards the margin. Make it feel like a found 1990s risograph sleeve, smoky orange, cream, and espresso, visible offset ink. The exact words ‘CARTRIDGE CLUB’ appear once in substantial hand-cut typography. No extra text, track numbers, labels, timestamps or logos.
+
+Find MAX in the simulator
+https://max.loftwah.com/demo
+The public MAX browser simulator supplied the locator subject. The drawing is an editorial illustration of simulated behaviour.
+Placement: Landscape, 1600 × 900. Original: 1672 × 941.
+ImageGen brief: 16:9 wide, 1672x941 if supported. MAX browser simulator locator editorial image. An abstract graphite isometric floor plan of one ordinary apartment, with one amber point and precisely three expanding amber signal rings inside it. Centre the rooms, leave air around them. Smooth matte architectural model and optical light, contemporary industrial-design editorial photograph. The only words, integrated as a small glowing title at lower left, are exactly ‘BROWSER SIMULATOR’. No actual hardware, robots, extra words, logos or UI.
+
+Fizz in the cabinet
+https://bubbles.loftwah.com/
+The public Bubbles cabinet art supplied Fizz, the arcade cabinet and the bubble symbols.
+Placement: Discord banner, 1920 × 1080. Original: 1672 × 941.
+ImageGen brief: 16:9 wide, 1672x941 if supported. A charming handmade miniature Bubbles cabinet lit from inside in an otherwise dark, after-closing arcade. A handful of real round Bubbles symbols glow through the glass and tiny one-eyed violet Fizz reflects in the bezel. Direction is stop-motion practical miniature photography, lapis and violet with small acid lime highlights. Keep the top fifth plain dark navy and the main objects below it for a Discord banner. Completely text-free and logo-free. No crowds.
