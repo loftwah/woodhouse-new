@@ -326,7 +326,7 @@ export function reportSvg(
         text(
           pad,
           figureY + 66,
-          finding ? qualifier(r) : `${periodState(period.complete)} · ${period.days} days`,
+          finding ? "All 7 days counted" : `${periodState(period.complete)} · ${period.days} days`,
           17,
           "#a9b8d0"
         );
@@ -397,7 +397,13 @@ export function reportSvg(
       line(y) +
       `<circle cx="${pad + 5}" cy="${y + 27}" r="5" fill="${r.colour}"/>` +
       text(pad + 22, y + 32, r.name, 24, "#f4f7fd", 500) +
-      text(portrait ? 520 : 500, y + 32, qualifier(r), 17, "#a9b8d0") +
+      text(
+        portrait ? 520 : 500,
+        y + 32,
+        finding ? "All 7 days counted" : qualifier(r),
+        17,
+        "#a9b8d0"
+      ) +
       text(
         w - pad - 190,
         y + 32,
@@ -508,9 +514,7 @@ export function reportSvg(
       pad,
       foot + 17,
       `${reportCount(supplied, applicable, overview)}. ${
-        finding
-          ? "Every day in this finding's week was counted."
-          : periodState(period.complete) + "."
+        finding ? "All 7 days counted." : periodState(period.complete) + "."
       }`,
       landscape ? 17 : 23,
       "#b4c0d2"

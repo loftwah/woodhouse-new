@@ -1030,10 +1030,20 @@ const dataPayload = {
                 {!overview && selected && (
                   <p class="selected-total">
                     <strong>
-                      {metricRows[0]?.metric ? formatMetric(metricRows[0].metric) : "—"}
+                      {week
+                        ? formatMetric({ value: week.value, unit: week.unit })
+                        : metricRows[0]?.metric
+                          ? formatMetric(metricRows[0].metric)
+                          : "—"}
                     </strong>
                     <span>
-                      {reportQualifier(metricRows[0]?.metric, metricRows[0]?.data ?? null, window)}
+                      {week
+                        ? "All 7 days counted"
+                        : reportQualifier(
+                            metricRows[0]?.metric,
+                            metricRows[0]?.data ?? null,
+                            window
+                          )}
                     </span>
                   </p>
                 )}
