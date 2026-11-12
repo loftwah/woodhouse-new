@@ -104,6 +104,11 @@ const productName = (slug: string) =>
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
           {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {item.socialPack && (
+            <a class="collection-link" href={item.socialPack} download>
+              Download social pack
+            </a>
+          )}
           {item.landscapeImage && (
             <a class="collection-link" href={item.landscapeImage} download>
               Download landscape poster

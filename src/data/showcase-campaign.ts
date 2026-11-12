@@ -1,3 +1,4 @@
+import { productSocialCampaign } from "./showcase-product-social.ts";
 import { contactStudyWorks } from "./showcase-contact-studies.ts";
 import { artworkRefresh } from "./showcase-refresh.ts";
 import { currentCampaign } from "./showcase-current.ts";
@@ -6,6 +7,7 @@ import { currentCampaign } from "./showcase-current.ts";
  * Assets contain published artwork or staged production captures, never visitor records.
  */
 export type CampaignFormat = {
+  title?: string;
   label: string;
   image: string;
   width: number;
@@ -84,6 +86,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...productSocialCampaign,
   ...contactStudyWorks,
   ...artworkRefresh,
   ...currentCampaign,

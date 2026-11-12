@@ -67,6 +67,7 @@ export const contactStudyWorks: CampaignItem[] = studies.map(
     width: 1122,
     height: 1402,
     reviewedAt,
+    archived: true,
     addedAt: "2026-11-12T08:22:00Z",
     credit: "Contact Studies · original Codex ImageGen artwork",
     kind: "editorial composition",
