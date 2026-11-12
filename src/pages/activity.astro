@@ -977,7 +977,9 @@ const dataPayload = {
                         {finding.kind === "week" ? finding.period : "Recorded outbound clicks"}
                       </p>
                       <div class="change-notes__actions">
-                        <a href={finding.href}>{finding.linkLabel}</a>
+                        <a href={finding.href} aria-label={`Explore: ${finding.headline}`}>
+                          Explore
+                        </a>
                         {finding.shareHref && (
                           <a
                             href={finding.shareHref}
@@ -991,6 +993,12 @@ const dataPayload = {
                   ))}
                 </ul>
               </section>
+            )}
+            {overview && report && changeFindings.length === 0 && (
+              <p class="change-notes__quiet">
+                A quiet period for comparisons.{" "}
+                <a href={pageLink({ view: "stories" })}>See the evidence in Stories</a>.
+              </p>
             )}
             <section class="main-chart" aria-labelledby="trend-heading">
               {!overview && selected && (
@@ -1038,11 +1046,12 @@ const dataPayload = {
                       ? measure.label
                       : `${selected ? names.get(selected) : "Projects"} · ${measure.label}`}
                   </h2>
-                  <p>
-                    {overview
-                      ? "Each project's own measure · same UTC dates"
-                      : `${unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · blank means no data`}
-                  </p>
+                  {!overview && (
+                    <p>
+                      {unit === "seconds" ? "Seconds per UTC day" : "Count per UTC day"} · blank
+                      means no data
+                    </p>
+                  )}
                   {!overview && selected && (
                     <p class="project-paths">
                       <a href={`/projects/${selected}/`}>
@@ -1102,7 +1111,7 @@ const dataPayload = {
               {overview ? (
                 <div class="summary-table-wrap">
                   <table class="summary-table">
-                    <caption>Each project's own measure · daily shapes use their own scale</caption>
+                    <caption>Each daily trend has its own scale</caption>
                     <thead>
                       <tr>
                         <th scope="col">Project and measure</th>

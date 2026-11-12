@@ -2557,7 +2557,12 @@
   color: var(--chart-cyan);
 }
 .change-notes__actions a + a {
+  min-width: 44px;
   color: var(--acid);
+}
+.change-notes__quiet {
+  padding-block-start: 0.75rem;
+  color: var(--muted);
 }
 
 .project-paths {
@@ -2592,8 +2597,20 @@
     text-align: start;
   }
   .change-notes__list {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
     gap: 0.5rem;
+  }
+  .change-notes__list > li {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 0.55rem;
+  }
+  .change-notes__headline {
+    font-size: 0.9rem;
+  }
+  .change-notes__actions {
+    margin-top: auto;
+    column-gap: 0.65rem;
   }
   .summary-table tbody a {
     min-height: 44px;

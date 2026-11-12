@@ -204,11 +204,11 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       colour: colours[week.project] ?? "#b4c0d2",
       kicker: `${week.name} · ${week.measure.label}`,
       headline: week.newBest
-        ? `A new best for ${week.name}: ${valueLabel} ${week.measure.label.toLowerCase()} in a complete week, against ${previous} the week before.`
+        ? `${week.name} set a weekly best with ${valueLabel} ${week.measure.label.toLowerCase()}, up from ${previous}.`
         : `${week.name}'s ${week.measure.label.toLowerCase()} ${movement}.`,
       figure: valueLabel,
       unitLabel: week.measure.label,
-      period: `${dateLabel(week.from)}–${dateLabel(week.to)} · full Monday–Sunday week, UTC`,
+      period: `${dateLabel(week.from)}–${dateLabel(week.to)} · UTC`,
       comparison:
         week.changePercent === null
           ? `No earlier week had a usable baseline, so no percentage is claimed.`
@@ -280,7 +280,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       name: "Woodhouse",
       colour: colours.woodhouse ?? "#b4c0d2",
       kicker: `Project discovery · ${topDestination.name}`,
-      headline: `${topDestination.name} was the project readers opened most from Woodhouse: ${clicks}.`,
+      headline: `${topDestination.name} led with ${clicks} from Woodhouse.`,
       figure: topDestination.value.toLocaleString("en-AU"),
       unitLabel: "clicks from Woodhouse",
       period: periodLabel,
