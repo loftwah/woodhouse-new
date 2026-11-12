@@ -1,6 +1,6 @@
 # The Loftwah Voice
 
-**v1.0 · source reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC · owner: MP**
+**v1.0 · source reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC · owner: Dean**
 
 ## Use this source
 
@@ -27,6 +27,11 @@ it does not remove approved visual characters. Reconcile intentionally authored 
 fiction in the owning project's existing character/creative record and follow the latest MP
 direction. Do not silently erase accepted material or assume permission for character narration
 on unrelated surfaces.
+
+The supplied appendix also specifies: **"Bubbles: coin-op cabinet; no mascot voice in Classic
+gameplay."** Preserve that operational constraint here. [Bubbles #1727](https://github.com/loftwah/bubbles/issues/1727)
+owns explicit reconciliation with current scenes under the latest MP direction. This source
+reference makes no scene exception or character-removal decision.
 
 Names in the guide do not authorise account, URL, historical credit or identifier changes.
 Preserve literal identities where the task requires them. A linked source is not proof that
