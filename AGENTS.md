@@ -44,6 +44,8 @@ Naming MP confers no authority; the current task does. Preserve actual security,
 
 Read PRODUCT.md, DESIGN.md, UNSLOP.md and ARCHITECTURE.md as relevant to the product change; do not reload unrelated authorities for a small follow-up.
 
+For project references and model handoffs, use [the existing operator index](docs/AGENT_INDEX.md#references-planning-and-review) and [shared creation direction](PRODUCT.md#shared-creation-direction). Keep selected context and accepted previews reusable; apply the established proportional delivery rules.
+
 ## Editorial work — reviewed 18 October 2026
 
 Before drafting or editing an article, dispatch, project introduction, caption or promotional copy,

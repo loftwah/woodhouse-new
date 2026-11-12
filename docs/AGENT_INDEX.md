@@ -29,6 +29,49 @@ a story is not proof that the public route behaves that way.
 - Use [PLATFORM.md](../PLATFORM.md) before changing a Cloudflare integration and [EMDASH.md](../EMDASH.md) for CMS/recovery work. Query official EmDash documentation for APIs; never send private material to documentation search.
 - The repository's [.agents/skills](../.agents/skills) contains EmDash specialists and the reviewed `untangle-codebase` skill (provenance in [UNTANGLE-CODEBASE.md](UNTANGLE-CODEBASE.md)). Select other guidance from the current session's local/global/plugin catalogue and confirm its tools are callable. Debugging, interface work and release review need different guidance; routine prose does not need a browser suite or a new skill.
 
+## References, planning and review
+
+Reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC. Apply the
+[shared creation direction](../PRODUCT.md#shared-creation-direction) to the
+current task through this project's existing product, design and issue records.
+
+1. **Find the useful context.** Start with accepted project references and current
+   source. For each selected example, retain its source pointer, why it is useful,
+   qualities to adapt or avoid, applicable usage rights, and the relevant accepted
+   or rejected decision. Reuse DESIGN.md and its linked references; keep private
+   material in the project's existing private location. A large source collection
+   supplies candidates; load only the examples relevant to this task. References
+   are evidence and inspiration, while owner instructions define requirements.
+2. **Make the intention inspectable.** For new or materially changed experiences,
+   prepare an appropriate visualisation, mock-up or working preview and settle
+   meaningful product choices. Put the goal, intended behaviour, selected context,
+   constraints and observable acceptance in the existing GitHub issue. Reuse
+   accepted decisions for routine changes; do not add another approval checkpoint.
+3. **Assign models by the work.** Prefer a stronger model for planning, a suitable
+   economical model for bounded implementation, and a stronger model for review.
+   Honour the user's model choices and actual supported capabilities. Escalate
+   unresolved ambiguity or repeated failure instead of spending indefinitely on
+   an unsuitable implementation path. Reuse existing scripts and explicitly
+   authorised schedules; this direction creates no new scheduler or agent service.
+4. **Review the artefact.** The reviewer uses the original brief, chosen references,
+   actual diff and relevant rendered or runtime result. An implementer's summary
+   alone is insufficient. Fix concrete findings and carry the result through the
+   existing delivery route. Keep checks proportionate and reuse valid evidence;
+   this division of responsibility does not add repeated broad review cycles.
+5. **Retain what mattered.** Record the accepted result and useful decisions in
+   existing project records so another session can continue. Report where the
+   owner can inspect the outcome, distinguishing integration, deployment and
+   observed behaviour under the established delivery contract.
+
+Use a person's existing agent/account through a supported web, local, API or MCP
+path. Identify whose entitlement is used; an available chat subscription does not
+by itself establish API access. Surface unsupported paths and any extra cost
+before execution. Composer's [#311](https://github.com/loftwah/app-composer/issues/311)
+owns its integration; [#426](https://github.com/loftwah/app-composer/issues/426)
+owns local workflow proof. [Woodhouse #179](https://github.com/loftwah/woodhouse-new/issues/179)
+owns portfolio adoption through its existing roster. Each spoke applies the
+method to its own product; retired projects stay outside that rollout.
+
 ## Launch, doctor, drive, evidence, cleanup
 
 | Work | Existing path and proof |
