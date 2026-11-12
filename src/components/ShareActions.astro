@@ -730,4 +730,17 @@ const AdditionalActions = gallery ? "details" : "div";
     color: var(--paper);
     border: 1px solid var(--line);
   }
+  @media (max-width: 700px) {
+    /* Two-up gallery cards keep Download and Copy image on one row without
+       shrinking either target below 44px. The wider caption controls stay
+       full width because their labels need the room. */
+    :global(.showcase-wall.compact .showcase-work figcaption) .actions a,
+    :global(.showcase-wall.compact .showcase-work figcaption) .actions button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-inline: 0.35rem;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+  }
 </style>
