@@ -24,6 +24,7 @@ const preset =
 const names = new Map(result.projects.map(({ slug, name }) => [slug, name]));
 const works = result.error ? [] : publicCampaignItems([...names.keys()]);
 const choices = works.flatMap((work) => {
+  if (work.archived) return [];
   const file = work.formats?.find(({ label }) => label === preset.format);
   return file ? [{ work, file }] : [];
 });

@@ -33,3 +33,18 @@ with an approximate control overlay. Facebook uses a 1080×1080 square feed phot
 The selection comes from the published campaign and includes only matching downloadable files.
 The guides are local previews. Native clients can change their crop, controls and placement.
 LinkedIn link cards, Facebook covers, Instagram Reels and YouTube Shorts have separate needs.
+
+## Newest artwork and Foilbury review
+
+Reviewed 12 November 2026. The Foilbury Moss portrait decoded on production. Its gallery capture
+cut off the bottom of the card, and it had become the default Instagram preview. Light on foil is
+a new editorial material study that leads the collection and the Instagram preview. The Moss
+capture and older Foilbury showcase piece now sit under Earlier artwork. Their URLs still resolve.
+The current Foilbury ZIP holds only the new portrait and square exports. The Foilbury native artwork
+programme remains with [Foilbury #39](https://github.com/loftwah/card-collector-bot/issues/39).
+
+On the dial and Where the tide turns are new editorial images for LoftwahFM and SHOALSHOT. New
+campaign entries sort by addition time and older entries by their recorded review date. Same-date
+historical ties retain their editorial order. The earlier Foilbury pieces are kept out of the
+current search results, social picker and updated pack. The [public source notes](https://woodhouse.loftwah.com/campaign/20261112-refresh/provenance.txt)
+record the exact ImageGen prompts.

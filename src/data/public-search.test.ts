@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { campaignSearchItems } from "./showcase-public.ts";
+import { campaignSearchItems, publicCampaignItems } from "./showcase-public.ts";
 
 import {
   publicSearchPages,
@@ -72,4 +72,27 @@ test("campaign search finds published pieces by placement and exact dimensions",
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
   }
   assert(!entries.some(({ href }) => href.startsWith("/share/foilbury/")));
+});
+
+test("fresh work leads on the same review date and archived Foilbury art is off the current index", () => {
+  const items = publicCampaignItems(["foilbury", "loftwahfm", "shoalshot"]);
+  assert.deepEqual(
+    items.slice(0, 3).map(({ id }) => id),
+    ["november-studio-foilbury", "november-studio-fm", "november-studio-tide"]
+  );
+  const foilbury = items.filter(({ project }) => project === "foilbury");
+  assert.deepEqual(
+    foilbury.map(({ id, archived }) => [id, Boolean(archived)]),
+    [
+      ["november-studio-foilbury", false],
+      ["november-foilbury", true],
+      ["foilbury-characters-worth-keeping", true]
+    ]
+  );
+  assert.deepEqual(
+    campaignSearchItems([{ slug: "foilbury", name: "Foilbury" }])
+      .filter(({ href }) => href.startsWith("/share/foilbury/"))
+      .map(({ href }) => href),
+    ["/share/foilbury/#november-studio-foilbury"]
+  );
 });

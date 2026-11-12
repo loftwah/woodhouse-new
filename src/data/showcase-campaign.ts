@@ -1,3 +1,4 @@
+import { artworkRefresh } from "./showcase-refresh.ts";
 import { currentCampaign } from "./showcase-current.ts";
 
 /** Reviewed 25 October 2026. Woodhouse editorial campaign, separate from native OG art.
@@ -21,6 +22,9 @@ export type CampaignItem = {
   width: number;
   height: number;
   reviewedAt: string;
+  addedAt?: string;
+  archived?: true;
+  socialPack?: string;
   credit: string;
   kind: "editorial composition" | "production screenshot";
   href: string;
@@ -79,6 +83,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...artworkRefresh,
   ...currentCampaign,
   item(
     "shoalshot-lantern-ray",
@@ -157,6 +162,7 @@ export const campaignItems: CampaignItem[] = [
   // to its export. Its link card still uses the product's declared OG artwork.
   {
     id: "foilbury-characters-worth-keeping",
+    archived: true,
     project: "foilbury",
     title: "Foilbury · Characters worth keeping",
     alt: "Foilbury's published public-showcase still: the line Characters worth keeping beside a real Drop Bear card from the Fighter collection, with its designed back, serial and PUBLIC-SAFE label.",

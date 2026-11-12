@@ -17,6 +17,7 @@ type Work = Pick<
   files: readonly [Placement, ...Placement[]];
   credit: string;
   kind?: CampaignItem["kind"];
+  archived?: true;
 };
 
 const works: Work[] = [
@@ -83,6 +84,7 @@ const works: Work[] = [
   },
   {
     id: "foilbury",
+    archived: true,
     project: "foilbury",
     title: "Moss, in holographic",
     alt: "Foilbury's Moss card, a rabbit wearing a hood and hat, shown in the holographic finish in the public cabinet.",

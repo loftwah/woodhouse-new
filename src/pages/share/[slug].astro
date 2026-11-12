@@ -39,9 +39,13 @@ const dossierHref = project ? `/projects/${slug}/` : null;
 const archiveHref = project
   ? `/share/?${new URLSearchParams({ project: slug, type: defaultProjectType(slug) })}`
   : "/share/?type=factory";
-const socialPack = items.some((item) => item.formats)
-  ? `/campaign/20261112/${slug}-social-pack.zip`
-  : undefined;
+const currentItems = items.filter((item) => !item.archived);
+const archivedItems = items.filter((item) => item.archived);
+const socialPack =
+  items.find((item) => !item.archived && item.socialPack)?.socialPack ??
+  (items.some((item) => item.formats && !item.archived)
+    ? `/campaign/20261112/${slug}-social-pack.zip`
+    : undefined);
 const collectionLabel = items.length ? "Artwork & screenshots" : "Link card";
 const title = `${name} — ${collectionLabel.toLowerCase()}`;
 const description = project
@@ -213,7 +217,15 @@ const hostOf = (href: string) => {
         </div>
       </section>
     ) : (
-      <ShowcaseGallery items={items} />
+      <>
+        <ShowcaseGallery items={currentItems} />
+        {archivedItems.length > 0 && (
+          <section class="earlier-artwork" aria-labelledby="earlier-artwork-title">
+            <h2 id="earlier-artwork-title">Earlier artwork</h2>
+            <ShowcaseGallery items={archivedItems} eager={false} />
+          </section>
+        )}
+      </>
     )}
     {items.length > 0 && productSocial?.fromProduct && (
       // The page's own social metadata is the product's declared image, so
@@ -428,6 +440,9 @@ const hostOf = (href: string) => {
   }
   .collection__links a:first-child {
     color: var(--acid);
+  }
+  .earlier-artwork {
+    margin-block: 3rem;
   }
   .collection__note {
     color: var(--copy-soft);

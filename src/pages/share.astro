@@ -267,9 +267,11 @@ const kitProjects = projects;
 const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
-const freshWork = featuredCampaign.filter((item) => item.formats);
+const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
 const latestWork = freshWork.length ? freshWork : featuredCampaign;
-const earlierWork = freshWork.length ? featuredCampaign.filter((item) => !item.formats) : [];
+const earlierWork = freshWork.length
+  ? featuredCampaign.filter((item) => !item.formats || item.archived)
+  : [];
 const featuredSocial = campaignSocial(latestWork);
 const showcaseClips = gameMedia.filter(
   (asset) =>

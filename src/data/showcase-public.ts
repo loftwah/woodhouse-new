@@ -15,11 +15,16 @@ export function campaignResponsiveImage(item: CampaignItem) {
 /** A campaign never overrides the CMS publication decision, including a composite's inputs. */
 export function publicCampaignItems(projectSlugs: string[]): CampaignItem[] {
   const published = new Set(projectSlugs);
-  return campaignItems.filter(
-    (item) =>
-      (item.project === "woodhouse" || published.has(item.project)) &&
-      (item.requiredProjects ?? []).every((slug) => published.has(slug))
-  );
+  return campaignItems
+    .filter(
+      (item) =>
+        (item.project === "woodhouse" || published.has(item.project)) &&
+        (item.requiredProjects ?? []).every((slug) => published.has(slug))
+    )
+    .sort((a, b) => {
+      const archiveOrder = Number(Boolean(a.archived)) - Number(Boolean(b.archived));
+      return archiveOrder || (b.addedAt ?? b.reviewedAt).localeCompare(a.addedAt ?? a.reviewedAt);
+    });
 }
 
 export function campaignCollectionPath(slug: string) {
@@ -68,7 +73,7 @@ export function campaignSearchItems(
 ): PublicSearchItem[] {
   const names = new Map(projects.map(({ slug, name }) => [slug, name]));
   return publicCampaignItems([...names.keys()]).flatMap((item) => {
-    if (!item.formats?.length) return [];
+    if (item.archived || !item.formats?.length) return [];
     const formats = item.formats.map(({ label, width, height }) => `${label} ${width} × ${height}`);
     return [
       {
