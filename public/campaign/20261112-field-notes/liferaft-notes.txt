@@ -1,0 +1,14 @@
+Liferaft · Woodhouse Field Notes
+12 November 2026
+
+Second campaign with new ImageGen artwork. Original logos, renders and screen captures are composited separately.
+
+Earlier campaign source record for the reused official artwork and marks:
+# Liferaft
+- Title A | Find the missing attachment
+- Title B | Search your old mail
+- Caption | Open an MBOX archive on your desktop and pull out the attachment you need.
+- Source | Liferaft v0.1.2 at `1ef74b8f22ea6ee3b2bd7895981ec30e5301350f`, https://github.com/loftwah/liferaft/releases/tag/v0.1.2. Real release screenshot of the synthetic fixture, cropped to remove the desktop archive-path panel. The visible match is invoice-final.pdf and the UI shows actual attachment export.
+- Logo | Real v0.1.2 `src/renderer/assets/icons/liferaft-icon-512.png`, orange/white rescue raft with blue waves, supplied with native white field. Repository MIT license.
+- Artwork A | Codex ImageGen, marine-blue and orange rescue-chart poster background informed by the Liferaft icon and the cream app palette.
+- Artwork B | Codex ImageGen, one orange folder pulled out of an archive, using the same official product colours. Actual app UI is composited separately.

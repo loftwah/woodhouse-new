@@ -1,0 +1,16 @@
+SHOALSHOT · Woodhouse Field Notes
+12 November 2026
+
+Second campaign with new ImageGen artwork. Original logos, renders and screen captures are composited separately.
+The field guide illustration references the product's published Glimmerfin specimen.
+
+Earlier campaign source record for the reused official artwork and marks:
+# SHOALSHOT
+
+A. Glimmerfin in the shallows.
+B. Into the Tide Pool.
+Caption. Pick a line through the reef and see what moves. Play SHOALSHOT at https://shoalshot.loftwah.com/.
+
+The silver-blue Glimmerfin with the yellow tail is an actual species from the game. A is a close turn through cyan water. B puts a school in an illuminated reef channel. Both are Codex ImageGen campaign illustrations, based on the native species plate and game environment. The images do not depict earned results.
+
+First-party sources at loftwah/fishing-diary commit 66fd276389a01f96cc7e1dce442b841db5aaa48d. The official mark is assets/ui/brand/shoalshot-wordmark-20261012.webp. Native references are assets/ui/art/specimens/glimmerfin.webp and assets/backgrounds/tide_pool/dive-water-base-deep-tide-20260929.webp. The staged opening capture comes from the November Share campaign, produced on https://shoalshot.loftwah.com/. The game art and wordmark remain project material. No outside assets.

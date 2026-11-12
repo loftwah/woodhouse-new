@@ -1,4 +1,4 @@
-import { productSocialCampaign } from "./showcase-product-social.ts";
+import { fieldNotesCampaign, productSocialCampaign } from "./showcase-product-social.ts";
 import { contactStudyWorks } from "./showcase-contact-studies.ts";
 import { artworkRefresh } from "./showcase-refresh.ts";
 import { currentCampaign } from "./showcase-current.ts";
@@ -86,6 +86,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...fieldNotesCampaign,
   ...productSocialCampaign,
   ...contactStudyWorks,
   ...artworkRefresh,

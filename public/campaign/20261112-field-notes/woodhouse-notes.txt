@@ -1,0 +1,10 @@
+Woodhouse · Woodhouse Field Notes
+12 November 2026
+
+Second campaign with new ImageGen artwork. Original logos, renders and screen captures are composited separately.
+
+Earlier campaign source record for the reused official artwork and marks:
+Woodhouse
+Logo: public/brand/loom-seal-acid.png, existing Woodhouse seal.
+Native image: staged https://woodhouse.loftwah.com/ homepage with published factory art.
+ImageGen art: two original views using public/images/founding-workshop-20261018.webp as reference. A front elevation and an overhead maker's bench. Both are editorial illustrations.

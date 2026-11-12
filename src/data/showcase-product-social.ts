@@ -1,6 +1,5 @@
 import type { CampaignItem } from "./showcase-campaign.ts";
 
-const base = "/campaign/20261112-products";
 const placements = {
   feed: { label: "Portrait feed", width: 1080, height: 1350 },
   square: { label: "Square feed", width: 1080, height: 1080 },
@@ -164,33 +163,186 @@ const projects = [
   }
 ] as const;
 
-export const productSocialCampaign: CampaignItem[] = projects.map(
-  ({ slug, name, alt, caption, href, action, headlines }) => {
-    const formats = (Object.keys(placements) as Array<keyof typeof placements>).map((key) => ({
+const fieldNotes = [
+  {
+    slug: "bubbles",
+    caption: "Start Puzzles and try First Spark. The wall is there to be used.",
+    alt: "A lime arcade instruction card with Fizz and a staged First Spark puzzle board.",
+    headlines: {
+      square: "Find the gap.",
+      story: "Try First Spark",
+      wide: "The puzzle board",
+      "x-header": "Take the bank shot",
+      feed: "First Spark"
+    }
+  },
+  {
+    slug: "shoalshot",
+    caption: "Take a slow pass through the Tide Pool and keep an eye out for the Glimmerfin.",
+    alt: "A turquoise and cream SHOALSHOT field guide with a Glimmerfin over a reef.",
+    headlines: {
+      square: "Glimmerfin",
+      story: "Look between the rocks",
+      wide: "A pass through the reef",
+      "x-header": "A closer look at the Tide Pool",
+      feed: "Fish of the Tide Pool"
+    }
+  },
+  {
+    slug: "foilbury",
+    caption: "Flip Moss over in the cabinet, then give the foil a tilt.",
+    alt: "The actual Moss holographic card and its reverse in a brass-green Foilbury catalogue plate.",
+    headlines: {
+      square: "The reverse",
+      story: "Tilt the foil",
+      wide: "Inside the Moss cabinet",
+      "x-header": "Open the cabinet",
+      feed: "Moss, front and back"
+    }
+  },
+  {
+    slug: "fighter",
+    caption:
+      "Open the Battle Blast tutorial and see what Viking and Grim Reaper bring into the ring.",
+    alt: "Fighter's Viking and Grim Reaper in ochre and purple print beside the actual matchup.",
+    headlines: {
+      square: "Viking and Grim Reaper",
+      story: "Start Battle Blast",
+      wide: "The opening matchup",
+      "x-header": "See you in the ring",
+      feed: "Across the ring"
+    }
+  },
+  {
+    slug: "loftwahfm",
+    caption: "Put Night Signal on and leave it running while you finish what you’re making.",
+    alt: "The LoftwahFM Night Signal station art against a red-orange and black record-shop flyer.",
+    href: "https://fm.loftwah.com/radio?station=night-signal",
+    headlines: {
+      square: "After dark",
+      story: "Leave the dial here",
+      wide: "On Night Signal",
+      "x-header": "Back-room radio",
+      feed: "Night Signal"
+    }
+  },
+  {
+    slug: "protocol-11",
+    caption: "Start a local Classic table and see what comes together in your opening hand.",
+    alt: "A Protocol 11 poster with Deco arcs, green felt, and the actual Classic table.",
+    headlines: {
+      square: "Arrange the hand",
+      story: "Draw one card",
+      wide: "Classic at the table",
+      "x-header": "Pull up a chair",
+      feed: "What fits your hand?"
+    }
+  },
+  {
+    slug: "app-composer",
+    caption: "Open Mara Quinn’s demo and see how a profile and a guestbook work together.",
+    alt: "App Composer's real public Creator Hub on a cream, orange and plum quick-start poster.",
+    headlines: {
+      square: "One profile, one guestbook",
+      story: "Open the Creator Hub",
+      wide: "Mara Quinn's demo",
+      "x-header": "Make a home for your links",
+      feed: "A page of your own"
+    }
+  },
+  {
+    slug: "max",
+    caption: "Use Find MAX to hear the locator in the browser simulator.",
+    alt: "The actual MAX simulator on a graphite floor-plan illustration with amber signal rings.",
+    headlines: {
+      square: "Send a locator ping",
+      story: "Listen for the ping",
+      wide: "Try Find MAX",
+      "x-header": "Find MAX on the web",
+      feed: "Where's MAX?"
+    }
+  },
+  {
+    slug: "liferaft",
+    caption: "Open your MBOX archive and search for the attachment you remember.",
+    alt: "A Liferaft screenshot on a cream-and-navy maritime chart with an orange rescue basket.",
+    headlines: {
+      square: "Find that old attachment",
+      story: "Search the archive",
+      wide: "From MBOX to attachment",
+      "x-header": "Old mail, found again",
+      feed: "An email worth keeping"
+    }
+  },
+  {
+    slug: "woodhouse",
+    caption: "Have a look around the workshop. There’s a game to play and a station to put on.",
+    alt: "A Woodhouse cutaway illustration with a record deck, reef and arcade cabinet in open wooden drawers.",
+    headlines: {
+      square: "The workshop, opened up",
+      story: "Go through the drawers",
+      wide: "Games and radio from the bench",
+      "x-header": "The Loftwah Software Factory",
+      feed: "What's on the bench"
+    }
+  }
+] as const;
+
+type ProductWork = {
+  slug: string;
+  name: string;
+  alt: string;
+  caption: string;
+  href: string;
+  action: CampaignItem["action"];
+  headlines: Record<keyof typeof placements, string>;
+};
+
+function productCampaign(
+  works: readonly ProductWork[],
+  base: string,
+  prefix: string,
+  addedAt: string
+): CampaignItem[] {
+  return works.map(({ slug, name, alt, caption, href, action, headlines }) => ({
+    id: `${prefix}-${slug}`,
+    project: slug,
+    title: headlines.feed,
+    alt,
+    caption: `${caption}\n${href}`,
+    href,
+    action,
+    image: `${base}/${slug}-preview.jpg`,
+    thumbnail: `${base}/${slug}-thumb.jpg`,
+    original: `${base}/${slug}-feed.jpg`,
+    width: placements.feed.width,
+    height: placements.feed.height,
+    reviewedAt: "2026-11-12",
+    addedAt,
+    credit: "Woodhouse · official product sources and Codex ImageGen campaign illustration",
+    kind: "editorial composition",
+    source: `${base}/${slug}-notes.txt`,
+    socialPack: `${base}/${slug}-social-pack.zip`,
+    formats: (Object.keys(placements) as Array<keyof typeof placements>).map((key) => ({
       ...placements[key],
       image: `${base}/${slug}-${key}.jpg`,
       title: `${name} · ${headlines[key]}`
-    }));
-    return {
-      id: `product-social-${slug}`,
-      project: slug,
-      title: headlines.feed,
-      alt,
-      caption: `${caption}\n${href}`,
-      href,
-      action,
-      image: `${base}/${slug}-preview.jpg`,
-      thumbnail: `${base}/${slug}-thumb.jpg`,
-      original: `${base}/${slug}-feed.jpg`,
-      width: placements.feed.width,
-      height: placements.feed.height,
-      reviewedAt: "2026-11-12",
-      addedAt: "2026-11-12T12:17:00Z",
-      credit: "Woodhouse · official product sources and Codex ImageGen campaign illustration",
-      kind: "editorial composition",
-      source: `${base}/${slug}-notes.txt`,
-      socialPack: `${base}/${slug}-social-pack.zip`,
-      formats
-    };
-  }
+    }))
+  }));
+}
+
+export const productSocialCampaign = productCampaign(
+  projects,
+  "/campaign/20261112-products",
+  "product-social",
+  "2026-11-12T12:17:00Z"
+);
+
+const productsBySlug = new Map(projects.map((project) => [project.slug, project]));
+
+export const fieldNotesCampaign = productCampaign(
+  fieldNotes.map((note) => ({ ...productsBySlug.get(note.slug)!, ...note })),
+  "/campaign/20261112-field-notes",
+  "field-notes",
+  "2026-11-12T12:32:00Z"
 );

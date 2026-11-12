@@ -72,3 +72,7 @@ For a new batch:
 3. Compose each placement around its actual frame. Leave X header content away from its trimmed edges and put TikTok's essential content away from its controls. Keep native gameplay, cards and UI as separate images. Carry qualifiers such as MAX's **Browser simulator** inside the image.
 4. Read every export around 300 px wide. The name and subject should still read when the caption is absent. Hold weak pieces back and fix any cut-off card, wrong logo, invented interface, broken character or mismatched crop. Check the five files, source note and downloadable ZIP byte for byte.
 5. Verify the gallery and platform picker in production. Keep stable archive URLs and leave the project's own unfurl artwork under its control. Test on-platform crops separately if posting.
+
+### Field Notes
+
+The second batch adds 50 files using ten new reference-led ImageGen illustrations. It covers First Spark in Bubbles, the SHOALSHOT Glimmerfin, the front and reverse of a Foilbury card, the Fighter opening matchup, Night Signal on LoftwahFM, a Classic table in Protocol 11, App Composer's Creator Hub, MAX's browser locator, Liferaft's attachment search and a cutaway of Woodhouse. The first batch keeps its URLs, its ZIPs and its entries in the platform picker. Each Field Notes pack has its own ZIP and source note.
