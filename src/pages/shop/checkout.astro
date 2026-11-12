@@ -52,7 +52,10 @@ export const prerender = false;
           <button class="shop-action" type="button" data-place-order>
             Place demo order
           </button>
-          <p class="shop-feedback" data-checkout-note hidden></p>
+          <p class="shop-feedback" data-checkout-note role="status" hidden></p>
+          <a href="/shop/order/" data-checkout-recovery hidden>
+            Open the saved demo order
+          </a>
           <p class="shop-estimate">
             No card fields, no name, no address, no email. This is a fixture, not a checkout.
           </p>
