@@ -10,7 +10,8 @@ export function leaderboardShareLink(
   id: string,
   days: number,
   measure: RankingMeasure,
-  project?: string
+  project?: string,
+  includeRetired = false
 ) {
   if (!/^[a-f0-9]{24}$/.test(id)) throw Error("Invalid report");
   const code = btoa(
@@ -21,7 +22,8 @@ export function leaderboardShareLink(
   )
     .replaceAll("+", "-")
     .replaceAll("/", "_");
-  return `/l/${[code, ...(days === 28 ? [] : [String(days)]), ...(measure === "merged" ? [] : [measure]), ...(project ? [project] : [])].join("/")}/`;
+  const href = `/l/${[code, ...(days === 28 ? [] : [String(days)]), ...(measure === "merged" ? [] : [measure]), ...(project ? [project] : [])].join("/")}/`;
+  return includeRetired ? `${href}?retired=1` : href;
 }
 
 export function readLeaderboardShareLink(path: string) {

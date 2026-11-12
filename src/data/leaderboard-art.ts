@@ -26,12 +26,14 @@ export function leaderboardSvg(
   key: RankingMeasure,
   format: LeaderboardFormat,
   project?: string,
-  edition: 1 | 2 | 3 = 1,
+  edition: 1 | 2 | 3 | 4 = 1,
   includeRetired = false
 ) {
-  return edition === 3
-    ? leaderboardSvgV3(snapshot, days, key, format, project, includeRetired)
-    : leaderboardSvgLegacy(snapshot, days, key, format, project, edition, includeRetired);
+  return edition === 4
+    ? leaderboardSvgV3(snapshot, days, key, format, project, includeRetired, 4)
+    : edition === 3
+      ? leaderboardSvgV3(snapshot, days, key, format, project, includeRetired)
+      : leaderboardSvgLegacy(snapshot, days, key, format, project, edition, includeRetired);
 }
 function leaderboardSvgLegacy(
   snapshot: LeaderboardSnapshot,
@@ -228,7 +230,8 @@ function leaderboardSvgV3(
   key: RankingMeasure,
   format: LeaderboardFormat,
   project?: string,
-  includeRetired = false
+  includeRetired = false,
+  revision: 3 | 4 = 3
 ) {
   const [w, h] = leaderboardFormats[format];
   const wide = format === "landscape";
@@ -302,16 +305,26 @@ function leaderboardSvgV3(
 
   if (!selected) {
     const max = Math.max(1, ...rows.map((r) => Math.abs(r.value ?? 0)));
-    const rowH = wide ? 77 : portrait ? 114 : 83;
     const start = wide ? 226 : portrait ? 348 : 286;
+    // Edition 3 froze a four-row landscape split that overlapped when a ninth
+    // project appeared. Edition 4 splits the actual list and fits the row height
+    // to the remaining canvas, so every ranked project is present once.
+    const perColumn = wide ? (revision >= 4 ? Math.ceil(rows.length / 2) : 4) : rows.length;
+    const rowH = wide
+      ? revision >= 4
+        ? Math.min(77, Math.floor((h - 94 - 26 - start) / Math.max(1, perColumn)))
+        : 77
+      : portrait
+        ? 114
+        : 83;
     if (portrait) {
       content += text(50, 296, 18, "Rank / project", "#b4c0d2");
       content += text(w - 50, 296, 18, label, "#b4c0d2", 'text-anchor="end"');
     }
     rows.forEach((r, i) => {
-      const col = wide && i >= 4 ? 1 : 0;
+      const col = wide && i >= perColumn ? 1 : 0;
       const x = 50 + col * 560;
-      const y = start + (wide ? i % 4 : i) * rowH;
+      const y = start + (wide ? i % perColumn : i) * rowH;
       const width = wide ? 500 : 980;
       const markSize = wide ? 30 : portrait ? 46 : 40;
       content += text(
@@ -329,7 +342,7 @@ function leaderboardSvgV3(
         wide ? 27 : portrait ? 38 : 34,
         r.name,
         "#f4f7fd",
-        'font-weight="700"'
+        `font-weight="700"${revision >= 4 ? ` data-row="${esc(r.slug)}" data-col="${col}"` : ""}`
       );
       content += text(
         x + width,
