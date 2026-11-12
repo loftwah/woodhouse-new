@@ -83,6 +83,7 @@ export const GET: APIRoute = async ({ cache }) => {
       "/activity/listening/",
       "/activity/measurement/",
       "/share/",
+      "/share/preview/",
       "/projects/",
       "/dispatches/",
       "/incidents/",

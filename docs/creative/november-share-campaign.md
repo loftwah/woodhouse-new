@@ -21,3 +21,15 @@ The old wall led with a repeated group of October posters. App Composer was led 
 The photo placements describe the actual files and intended aspect ratios. Each maintained project has a ZIP with the new JPEGs, captions, alt text and source notes. [X recommends a 1500×500 header and documents possible 60-pixel edge crops](https://help.x.com/en/managing-your-account/common-issues-when-uploading-profile-photo). [YouTube distinguishes 16:9 custom thumbnails from 9:16 Shorts uploads](https://support.google.com/youtube/answer/72431). These JPEGs are stills. Native app crop, actual posting, and MP's creative acceptance remain open.
 
 [Public source notes](https://woodhouse.loftwah.com/campaign/20261112/provenance.txt) record every source and the exact ImageGen prompt. No old downloadable image or producer-owned OG was replaced. The public resource gallery continues to carry the general-purpose resource shelf separately.
+
+## Social preview
+
+[Social preview](https://woodhouse.loftwah.com/share/preview/) opens a finished campaign file in
+one of six placements. X uses a 1500×500 profile header with a toggle for X's documented 60-pixel
+trim. LinkedIn and Instagram use a 1080×1350 feed photo. TikTok uses a 1080×1920 Photo-mode still
+with an approximate control overlay. Facebook uses a 1080×1080 square feed photo. YouTube uses a
+1600×900 video thumbnail with a small preview for a legibility check.
+
+The selection comes from the published campaign and includes only matching downloadable files.
+The guides are local previews. Native clients can change their crop, controls and placement.
+LinkedIn link cards, Facebook covers, Instagram Reels and YouTube Shorts have separate needs.
