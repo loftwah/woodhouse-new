@@ -129,11 +129,11 @@ const works: Work[] = [
     alt: "Liferaft’s blue rescue-ring icon and a desktop screenshot of the released MBOX recovery interface with synthetic mail.",
     caption:
       "Find the email you kept. Liferaft indexes an MBOX archive locally so you can search the messages and recover attachments.",
-    href: "https://github.com/loftwah/liferaft/releases/tag/v0.1.2",
+    href: "https://liferaft.loftwah.com/",
     action: "Explore",
     files: ["feed", "wide", "release"],
     credit:
-      "Woodhouse composition with Liferaft's public v0.1.2 icon and synthetic-fixture release screenshot",
+      "Historical Woodhouse composition with Liferaft's v0.1.2 icon and fictional-mail Electron screenshot",
     kind: "editorial composition"
   },
   {

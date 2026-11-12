@@ -40,6 +40,7 @@ const reviewedImages = new Set([
   "https://raw.githubusercontent.com/loftwah/liferaft/f6c8afa907d41216757d6732a8f12dded19fa12b/og-image.jpg"
 ]);
 const imageHosts = new Set([
+  "liferaft.loftwah.com",
   "fighter.loftwah.com",
   "shoalshot.loftwah.com",
   "protocol11.loftwah.com",

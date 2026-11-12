@@ -2197,12 +2197,13 @@
           "summary": "Liferaft is a local desktop app for searching MBOX email archives, previewing messages and recovering attachments or selected messages.",
           "why": "An email backup is more useful when you can find the message or attachment you need without importing it into a mail service.",
           "teaches": "A read-only archive browser can help recover messages without becoming another email client.",
-          "site_url": "https://github.com/loftwah/liferaft",
-          "site_og_image": "https://raw.githubusercontent.com/loftwah/liferaft/f6c8afa907d41216757d6732a8f12dded19fa12b/og-image.jpg",
-          "site_og_title": "Liferaft · email archive recovery",
+          "site_url": "https://liferaft.loftwah.com/",
+          "site_og_image": "https://liferaft.loftwah.com/media/liferaft-social.jpg",
+          "site_favicon": "https://liferaft.loftwah.com/favicon.ico",
+          "site_og_title": "Liferaft · Local MBOX recovery",
           "site_og_description": "Search MBOX archives locally and recover messages and attachments.",
-          "preview_alt": "An illustrated orange liferaft alongside the words Liferaft and Recover your emails from Google Takeout.",
-          "preview_caption": "Liferaft artwork from its public repository, reviewed 6 November 2026",
+          "preview_alt": "Liferaft, local MBOX recovery. Search, inspect and recover.",
+          "preview_caption": "Artwork from the Liferaft website, reviewed 12 November 2026",
           "public_safe": true
         }
       },

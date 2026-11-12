@@ -130,6 +130,9 @@ const hostOf = (href: string) => {
           ↗
         </a>
         {dossierHref && dossierHref !== projectHref && <a href={dossierHref}>About {name}</a>}
+        {slug === "liferaft" && (
+          <a href="https://liferaft.loftwah.com/media/">Current icon and screenshot</a>
+        )}
         {socialPack && (
           <a href={socialPack} download>
             Download social pack

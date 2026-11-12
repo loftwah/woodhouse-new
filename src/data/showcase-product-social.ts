@@ -134,9 +134,10 @@ const projects = [
   {
     slug: "liferaft",
     name: "Liferaft",
-    alt: "The Liferaft icon and a real example of finding an email attachment, over a blue and orange rescue-chart illustration.",
-    caption: "Open an MBOX archive on your desktop and pull out the attachment you need.",
-    href: "https://github.com/loftwah/liferaft/releases/tag/v0.1.2",
+    alt: "The Liferaft icon and a historical v0.1.2 screenshot showing a fictional attachment recovery, over a blue and orange rescue chart.",
+    caption:
+      "Open an MBOX archive on your desktop and pull out the attachment you need. Artwork includes an earlier v0.1.2 capture.",
+    href: "https://liferaft.loftwah.com/",
     action: "Explore",
     headlines: {
       feed: "Find the missing attachment",
