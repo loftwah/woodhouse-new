@@ -1,10 +1,10 @@
 ---
 /* eslint-disable astro/jsx-a11y/no-noninteractive-tabindex -- A labelled overflow region needs keyboard scroll access. */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ActivitySharing from "../../components/ActivitySharing.astro";
 import {
-  activityLink,
+  LISTENING_PATH,
+  listeningPath,
   cardPath,
   compositeIsPublic,
   parseSnapshot,
@@ -64,10 +64,8 @@ const selected =
 const canShare = !!report && (composite || !!selected);
 const metadataPath =
   report && (requestedSnapshot !== undefined || selected)
-    ? activityLink(selected, report.snapshot)
-        .replace(SITE_ORIGIN, "")
-        .replace("/activity/", "/activity/listening/")
-    : "/activity/listening/";
+    ? listeningPath(selected, report.snapshot)
+    : LISTENING_PATH;
 ---
 
 <BaseLayout

@@ -1240,10 +1240,6 @@ figure.image-plate--inline {
   font-size: 1.5rem;
   font-weight: 500;
 }
-.prose p,
-.prose li {
-  max-inline-size: 53ch;
-}
 .prose p {
   margin: 0 0 1.25em;
 }
@@ -2814,8 +2810,9 @@ a.project-row__image:hover img {
 .prose h3 {
   font-size: 1.42rem;
 }
-.prose p {
-  max-width: 72ch;
+.prose p,
+.prose li {
+  max-inline-size: 53ch;
 }
 .prose strong {
   color: var(--paper);
@@ -3766,7 +3763,7 @@ body {
 .founding-feature .prose > div > ul,
 .founding-feature .prose > div > .callout,
 .founding-feature .prose > .callout {
-  max-width: 68ch;
+  max-inline-size: 53ch;
   margin-inline: auto;
 }
 .founding-feature .prose h2 {

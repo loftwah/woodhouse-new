@@ -286,24 +286,15 @@ const canonicals = new Map();
 const searchHrefs = new Map();
 let searchIndexChecked = false;
 
-async function canonicalOf(pathname) {
-  if (canonicals.has(pathname)) return canonicals.get(pathname);
-  const response = await request(`${origin}${pathname}`);
-  if (
-    response.status !== 200 ||
-    !/^text\/html\b/i.test(response.headers.get("content-type") ?? "")
-  ) {
-    // Downloads have no page canonical. Release their streams without buffering
-    // films and image packs as HTML during a publication audit.
-    await response.body?.cancel();
-    canonicals.set(pathname, null);
+function canonicalPath(html, target) {
+  const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
+  if (!canonical) return null;
+  try {
+    return new URL(canonical).pathname.replace(/\/$/, "");
+  } catch {
+    if (target) report(target, "linked document has an invalid canonical URL");
     return null;
   }
-  const html = await response.text();
-  const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
-  const path = canonical ? new URL(canonical).pathname.replace(/\/$/, "") : null;
-  canonicals.set(pathname, path);
-  return path;
 }
 
 // Fetch the documents together, then inspect them in sitemap order. Only the
@@ -330,8 +321,7 @@ for (const document of documents) {
   const html = body;
   // This document is already in hand. A second GET adds latency and can even
   // audit a different response from the one whose links and privacy we inspect.
-  const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
-  canonicals.set(page, canonical ? new URL(canonical).pathname.replace(/\/$/, "") : null);
+  canonicals.set(page, canonicalPath(html));
   const privacy = scanPublicText(html, { privateValues });
   if (privacy.length) report(page, `privacy scan found ${privacy.join(", ")}`);
   auditDocument(page, html);
@@ -405,7 +395,14 @@ const uncheckedTargets = [
 await pool(uncheckedTargets, async (target) => {
   const response = await request(`${origin}${target}`);
   targetStatuses.set(target, response.status);
-  await response.body?.cancel();
+  if (
+    response.status === 200 &&
+    /^text\/html\b/i.test(response.headers.get("content-type") ?? "")
+  ) {
+    canonicals.set(target, canonicalPath(await response.text(), target));
+  } else {
+    await response.body?.cancel();
+  }
 });
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
@@ -415,17 +412,18 @@ for (const [page, targets] of internalLinks) {
   }
 }
 
-const orphans = focusedPaths.length ? [] : pages.filter((page) => page !== "/" && !linkedPaths.has(page));
+const orphans = focusedPaths.length
+  ? []
+  : pages.filter((page) => page !== "/" && !linkedPaths.has(page));
 for (const orphan of orphans) report(orphan, "is listed for discovery but no page links to it");
 
 // An internal link must point at the page's own canonical URL. A record id
 // used as a path segment resolves but splits one page across several
 // crawlable addresses, which is how the dated records drifted apart before.
-// Resolve every distinct target once, together, then compare in page order.
-await pool([...new Set([...internalLinks.values()].flat())], (target) => canonicalOf(target));
+// Read the canonicals collected with the original status observations.
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
-    const canonical = await canonicalOf(target);
+    const canonical = canonicals.get(target);
     if (canonical && canonical !== new URL(target, origin).pathname.replace(/\/$/, ""))
       report(page, `links to ${target}, whose canonical URL is ${canonical}`);
   }

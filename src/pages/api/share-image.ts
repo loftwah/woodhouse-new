@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { listProjectRecords } from "../../content/repository";
+import { liveProjectArtwork } from "../../data/live-project-artwork";
 import { loadShareImage } from "../../data/share-desk";
 import { logReportFailure, type ReportDependency } from "../../data/report-failure";
 export const prerender = false;
@@ -42,9 +43,9 @@ export const GET: APIRoute = async ({ url, cache }) => {
     }
     const project = result.projects.find((p) => p.slug === slug);
     const source =
-      asset === "social"
-        ? project?.previewImage
-        : project?.slug === "shoalshot"
+      asset === "social" && project
+        ? (await liveProjectArtwork(project)).previewImage
+        : asset !== "social" && project?.slug === "shoalshot"
           ? `https://shoalshot.loftwah.com/ui/brand/shoalshot-${asset}-20261012.webp`
           : undefined;
     if (!source)
