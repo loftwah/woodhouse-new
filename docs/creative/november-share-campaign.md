@@ -90,3 +90,13 @@ ten original drawing PNGs. The source gallery uses small responsive images
 while browsing, lazy loads below the first row, and loads the full file on
 open or download. The file sources and finished social images have distinct
 links.
+
+### Direct social art
+
+Reviewed 13 November 2026, Melbourne. Commissioned each final composition in
+its intended aspect ratio using a project reference and placement brief.
+Each piece comes directly from Codex ImageGen. The original PNG accompanies
+the exact-size JPEG, which uses resizing and encoding only. The series
+includes both lettered and text-free artwork. The Discord tab offers two
+1920 × 1080 banners with room for the server name. Originals can also be
+filtered by project from the Share gallery.

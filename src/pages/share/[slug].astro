@@ -138,6 +138,11 @@ const hostOf = (href: string) => {
             Download social pack
           </a>
         )}
+        {items.some((item) => item.id.startsWith("making-of-")) && (
+          <a href={`/share/originals/?project=${encodeURIComponent(slug)}`}>
+            Original art &amp; drawings
+          </a>
+        )}
         {items.length > 0 && <a href={archiveHref}>Earlier images & downloads</a>}
       </div>
     </header>

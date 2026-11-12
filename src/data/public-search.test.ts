@@ -68,7 +68,7 @@ test("campaign search finds published pieces by placement and exact dimensions",
   assert(entries.every(({ href }) => href));
   const cases: [string, string][] = [
     ["Fighter X header", "/share/fighter/#making-of-fighter"],
-    ["Bubbles 1080x1920", "/share/bubbles/#poster-study-bubbles"],
+    ["Bubbles 1080x1920", "/share/bubbles/#direct-social-tiktok"],
     ["Bubbles 1080 × 1350", "/share/bubbles/#poster-study-bubbles"]
   ];
   for (const [query, href] of cases) {
@@ -83,16 +83,18 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   assert.deepEqual(
     items.slice(0, 4).map(({ id }) => id),
     [
-      "poster-study-loftwahfm",
-      "poster-study-foilbury",
-      "poster-study-shoalshot",
-      "making-of-woodhouse"
+      "direct-social-instagram",
+      "direct-social-facebook",
+      "direct-social-discord",
+      "direct-social-x"
     ]
   );
   const foilbury = items.filter(({ project }) => project === "foilbury");
   assert.deepEqual(
     foilbury.map(({ id, archived }) => [id, Boolean(archived)]),
     [
+      ["direct-social-facebook", false],
+      ["direct-social-instagram-moss", false],
       ["poster-study-foilbury", false],
       ["making-of-foilbury", false],
       ["field-notes-foilbury", false],
@@ -107,6 +109,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       .filter(({ href }) => href.startsWith("/share/foilbury/"))
       .map(({ href }) => href),
     [
+      "/share/foilbury/#direct-social-facebook",
+      "/share/foilbury/#direct-social-instagram-moss",
       "/share/foilbury/#poster-study-foilbury",
       "/share/foilbury/#making-of-foilbury",
       "/share/foilbury/#field-notes-foilbury",
