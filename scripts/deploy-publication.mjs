@@ -2,7 +2,9 @@
 // authoring/recovery workflows. This path releases only the reading surfaces.
 // Every CMS endpoint, mutation, preview request and cron is disabled at the edge;
 // deploy-production.mjs keeps the full editorial acceptance contract.
-import { spawnSync } from "node:child_process";
+import { execFile } from "node:child_process";
+import { setTimeout as delay } from "node:timers/promises";
+import { promisify } from "node:util";
 import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { computeSourceDigest } from "./source-digest.mjs";
@@ -44,62 +46,88 @@ let auditScope = publicationAuditScope(process.argv.slice(3));
 // bookkeeping, not gates: a slow provider upload is reported, never converted
 // into a failed release or a passing one.
 const startedAt = Date.now();
-let markedAt = startedAt;
 const durations = [];
-function mark(stage) {
-  const now = Date.now();
-  durations.push({ stage, ms: now - markedAt });
-  markedAt = now;
+async function timed(stage, operation) {
+  const start = Date.now();
+  try {
+    return await operation();
+  } finally {
+    durations.push({ stage, ms: Date.now() - start });
+  }
 }
-function run(binary, args, options = {}) {
-  const result = spawnSync(binary, args, {
+const exec = promisify(execFile);
+async function run(binary, args, { verbose = false } = {}) {
+  const child = exec(binary, args, {
     cwd: root,
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
-    env: { ...process.env, WOODHOUSE_PUBLICATION_MODE: "read-only" },
-    ...options
+    env: { ...process.env, WOODHOUSE_PUBLICATION_MODE: "read-only" }
   });
-  if (result.error) throw result.error;
-  if (result.status !== 0)
-    throw new Error(`${binary} ${args.slice(0, 3).join(" ")} failed.\n${result.stderr ?? ""}`);
-  return result.stdout ?? "";
+  if (verbose) {
+    child.child.stdout.pipe(process.stdout, { end: false });
+    child.child.stderr.pipe(process.stderr, { end: false });
+  }
+  try {
+    return (await child).stdout;
+  } catch (error) {
+    throw new Error(`${binary} ${args.slice(0, 3).join(" ")} failed.\n${error.stderr ?? ""}`, {
+      cause: error
+    });
+  }
+}
+
+// Drain each group on failure as well. In particular, a rejected remote check
+// cannot leave a build in flight while the operator starts a retry.
+async function together(operations) {
+  const entries = Object.entries(operations);
+  const results = await Promise.allSettled(
+    entries.map(([stage, operation]) => timed(stage, operation))
+  );
+  const failed = results.flatMap((result, i) =>
+    result.status === "rejected" ? [`${entries[i][0]}: ${result.reason.message}`] : []
+  );
+  if (failed.length) throw new Error(failed.join("\n"));
+  return Object.fromEntries(entries.map(([stage], i) => [stage, results[i].value]));
 }
 // The page audit runs immediately after `wrangler deploy`, and a Worker takes a
 // few seconds to answer from every edge node. Twice now the audit failed on the
 // first pass and passed unchanged a minute later — a propagation race reported as
 // a content failure. The audit is read-only and idempotent, so retrying it is
 // safe; the attempt that finally passed is named in the output.
-function auditPages(origin, scope) {
+async function auditPages(origin, scope) {
   const args = ["run", "audit:pages", "--", origin, ...auditScopeArguments(scope)];
   // Full production audits saw intermittent failures on public record reads
   // at the default rate. Four requests per second passed the same assertions.
   if (environment === "production" && scope === null) args.push("--request-interval=250");
-  let last;
-  for (let attempt = 1; attempt <= 3; attempt += 1) {
-    last = spawnSync("pnpm", args, {
-      cwd: root,
-      encoding: "utf8",
-      maxBuffer: 64 * 1024 * 1024,
-      stdio: "inherit"
-    });
-    if (last.status === 0) {
-      if (attempt > 1) process.stdout.write(`Page audit passed on attempt ${attempt}.\n`);
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      await run("pnpm", args, { verbose: true });
+      if (attempt > 1) console.log(`Page audit passed on attempt ${attempt}.`);
       return;
-    }
-    if (attempt < 3) {
-      process.stdout.write(`Page audit attempt ${attempt} failed; retrying in ${attempt * 5}s.\n`);
-      spawnSync("sleep", [String(attempt * 5)]);
+    } catch (error) {
+      if (attempt === 3) throw error;
+      console.log(`Page audit attempt ${attempt} failed; retrying in ${attempt * 5}s.`);
+      await delay(attempt * 5000);
     }
   }
-  throw new Error(`pnpm run audit:pages -- ${origin} failed.\n${last?.stderr ?? ""}`);
 }
 
 function json(output) {
   return JSON.parse(output.slice(output.search(/[[{]/)));
 }
-function verifySecretNames() {
+async function verifySecretNames() {
   const secrets = json(
-    run("pnpm", ["exec", "wrangler", "secret", "list", "--name", target.worker, "--format=json"])
+    await run("pnpm", [
+      "exec",
+      "wrangler",
+      "secret",
+      "list",
+      "--config",
+      "wrangler.jsonc",
+      "--name",
+      target.worker,
+      "--format=json"
+    ])
   );
   const names = new Set(secrets.map((entry) => entry.name));
   const expected = [
@@ -111,11 +139,9 @@ function verifySecretNames() {
     throw Error("Required Worker secret names are missing.");
   return [...names].sort();
 }
-const secretNamesBefore = verifySecretNames();
 const sourceDigest = await computeSourceDigest(root);
 const checks = [];
 const seed = JSON.parse(await readFile(path.join(root, "seed/seed.json"), "utf8"));
-mark("preflight");
 
 async function verifyServedContent(origin, identity) {
   const response = await fetch(origin + "/agents/facts.json", {
@@ -198,14 +224,19 @@ async function verifyBoundary(origin) {
   checks.push("CMS, previews, mutations and enquiry form are disabled");
 }
 
-if (environment === "production") {
-  if (run("git", ["status", "--porcelain"]).trim())
+async function verifyMain() {
+  if ((await run("git", ["status", "--porcelain"])).trim())
     throw new Error("Production requires a clean reviewed tree.");
-  if (run("git", ["branch", "--show-current"]).trim() !== "main")
+  if ((await run("git", ["branch", "--show-current"])).trim() !== "main")
     throw new Error("Production publication must be built from main.");
-  run("git", ["fetch", "origin", "main"]);
-  if (run("git", ["rev-parse", "HEAD"]).trim() !== run("git", ["rev-parse", "origin/main"]).trim())
-    throw new Error("Production publication must match origin/main.");
+  await run("git", ["fetch", "origin", "main"]);
+  const [head, remoteMain] = (await run("git", ["rev-parse", "HEAD", "origin/main"]))
+    .trim()
+    .split("\n");
+  if (head !== remoteMain) throw new Error("Production publication must match origin/main.");
+}
+
+async function verifyPreview() {
   const receipt = JSON.parse(
     await readFile(path.join(root, ".release/publication-preview.json"), "utf8")
   );
@@ -225,33 +256,29 @@ if (environment === "production") {
   )
     throw new Error("Production audit scope differs from the accepted preview.");
   auditScope = receipt.auditScope;
+  await verifyActiveVersion(targets.preview.worker, receipt.workerVersion);
+}
+
+async function verifyActiveVersion(worker, version) {
   const active = json(
-    run("pnpm", [
+    await run("pnpm", [
       "exec",
       "wrangler",
       "deployments",
       "status",
+      "--config",
+      "wrangler.jsonc",
       "--name",
-      targets.preview.worker,
+      worker,
       "--json"
     ])
   );
   if (
     active.versions?.length !== 1 ||
     active.versions[0].percentage !== 100 ||
-    active.versions[0].version_id !== receipt.workerVersion
+    active.versions[0].version_id !== version
   )
-    throw new Error("Accepted preview is not the active 100% deployment.");
-  mark("preview receipt and active version");
-  // The preview receipt is written only after the build identity, served content,
-  // boundary and scoped page audit passed for this exact Worker version. A Worker
-  // version is immutable, and the check above proves that version is still taking
-  // 100% of preview traffic, so re-probing those same bytes here would re-prove
-  // the receipt rather than the deployment. Production re-proves identity, served
-  // content, boundary and the scoped audit on the production origin below, where
-  // the risk actually is.
-  run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { stdio: "inherit" });
-  mark("production recovery point");
+    throw new Error(`${worker} is not serving expected version ${version} at 100% traffic.`);
 }
 // The observed failure would be a healthy CMS release with a missing analytics
 // schema, silently disabling engagement. These are application tables, never
@@ -267,54 +294,86 @@ const analyticsSchemaObjects = [
   "wh_analytics_browser_visits",
   "wh_analytics_browser_coverage"
 ];
-const analyticsSchema = json(
-  run("pnpm", [
-    "exec",
-    "wrangler",
-    "d1",
-    "execute",
-    target.database,
-    "--env",
-    environment,
-    "--remote",
-    "--json",
-    "--command",
-    `SELECT name FROM sqlite_master WHERE name IN (${analyticsSchemaObjects.map((name) => "'" + name + "'").join(",")})`
-  ])
-);
-const actualSchema = new Set(
-  analyticsSchema.flatMap((result) => result.results ?? []).map((row) => row.name)
-);
-if (analyticsSchemaObjects.some((name) => !actualSchema.has(name)))
-  throw new Error("Reviewed portfolio analytics schema must be applied before publication.");
-mark("analytics schema");
-run("pnpm", ["run", "verify:content", "--", environment], { stdio: "inherit" });
-mark("content model");
-run("pnpm", ["run", environment === "production" ? "build" : "build:preview"], {
-  stdio: "inherit"
+async function verifyAnalyticsSchema() {
+  const analyticsSchema = json(
+    await run("pnpm", [
+      "exec",
+      "wrangler",
+      "d1",
+      "execute",
+      target.database,
+      "--config",
+      "wrangler.jsonc",
+      "--env",
+      environment,
+      "--remote",
+      "--json",
+      "--command",
+      `SELECT name FROM sqlite_master WHERE name IN (${analyticsSchemaObjects.map((name) => "'" + name + "'").join(",")})`
+    ])
+  );
+  const actualSchema = new Set(
+    analyticsSchema.flatMap((result) => result.results ?? []).map((row) => row.name)
+  );
+  if (analyticsSchemaObjects.some((name) => !actualSchema.has(name)))
+    throw new Error("Reviewed portfolio analytics schema must be applied before publication.");
+}
+
+async function verifyMigrations() {
+  const migration = json(
+    await run("pnpm", [
+      "exec",
+      "emdash",
+      "migrate",
+      "--check",
+      "--wrangler-config",
+      "wrangler.jsonc",
+      "--wrangler-env",
+      environment,
+      "--json"
+    ])
+  );
+  if (
+    !Array.isArray(migration.pending) ||
+    !Array.isArray(migration.unknownApplied) ||
+    migration.pending.length ||
+    migration.unknownApplied.length
+  )
+    throw new Error("Core migrations must already be clean; publication does not apply them.");
+}
+
+const preflight = await together({
+  build: () =>
+    run("pnpm", ["run", environment === "production" ? "build" : "build:preview"], {
+      verbose: true
+    }),
+  "secret inventory before deploy": verifySecretNames,
+  "database readiness": async () => {
+    // Keep read-only D1 commands serial against the same database. Only the
+    // independent build, Worker inventory and Git/preview checks overlap them.
+    await timed("analytics schema", verifyAnalyticsSchema);
+    await timed("content model", () =>
+      run("pnpm", ["run", "verify:content", "--", environment], {
+        verbose: true
+      })
+    );
+    await timed("migration check", verifyMigrations);
+  },
+  ...(environment === "production"
+    ? {
+        "main and accepted preview": async () => {
+          await verifyMain();
+          await verifyPreview();
+        }
+      }
+    : {})
 });
-mark("build");
-const migration = json(
-  run("pnpm", [
-    "exec",
-    "emdash",
-    "migrate",
-    "--check",
-    "--wrangler-config",
-    "wrangler.jsonc",
-    "--wrangler-env",
-    environment,
-    "--json"
-  ])
-);
-if (
-  !Array.isArray(migration.pending) ||
-  !Array.isArray(migration.unknownApplied) ||
-  migration.pending.length ||
-  migration.unknownApplied.length
-)
-  throw new Error("Core migrations must already be clean; publication does not apply them.");
-mark("migration check");
+const secretNamesBefore = preflight["secret inventory before deploy"];
+if (environment === "production") {
+  await timed("production recovery point", () =>
+    run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { verbose: true })
+  );
+}
 const configPath = path.join(root, "dist/server/wrangler.json");
 const config = JSON.parse(await readFile(configPath, "utf8"));
 const db = config.d1_databases?.find((entry) => entry.binding === "DB");
@@ -341,47 +400,43 @@ config.vars.WOODHOUSE_PUBLICATION_MODE = "read-only";
 // Analytics-only schedule never invokes CMS maintenance or authoring.
 config.triggers = { crons: environment === "production" ? ["17 * * * *"] : [] };
 await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
-mark("manifest");
-const deployment = run("pnpm", [
-  "exec",
-  "wrangler",
-  "deploy",
-  "--config",
-  configPath,
-  "--message",
-  `Public journal ${environment}: ${sourceDigest.slice(0, 24)}`
-]);
+if ((await computeSourceDigest(root)) !== sourceDigest)
+  throw new Error("Source changed during preflight; rebuild before uploading.");
+const deployment = await timed("upload and deploy", () =>
+  run("pnpm", [
+    "exec",
+    "wrangler",
+    "deploy",
+    "--config",
+    configPath,
+    "--message",
+    `Public journal ${environment}: ${sourceDigest.slice(0, 24)}`
+  ])
+);
 for (const line of deployment.split(/\r?\n/)) {
   if (/^(Uploaded |Deployed |Current Version ID:)/.test(line)) console.log(line);
 }
 const workerVersion = /Current Version ID:\s*([a-f0-9-]{36})/i.exec(deployment)?.[1];
 if (!workerVersion) throw new Error("Wrangler did not return the deployed Worker version.");
-mark("upload and deploy");
-const identity = await awaitBuildIdentity(target.origin, {
-  expectedDigest: sourceDigest,
-  expectedEnvironment: environment
-});
+const identity = await timed("build identity", () =>
+  awaitBuildIdentity(target.origin, {
+    expectedDigest: sourceDigest,
+    expectedEnvironment: environment
+  })
+);
 if (!identity.ok || (environment === "production" && identity.identity?.gitClean !== true))
   throw new Error("The deployed origin does not report the intended reviewed build.");
-mark("build identity");
-await verifyServedContent(target.origin, identity.identity);
-mark("served content");
-await verifyBoundary(target.origin);
-mark("publication boundary");
-auditPages(target.origin, auditScope);
-mark("page audit");
-const active = json(
-  run("pnpm", ["exec", "wrangler", "deployments", "status", "--name", target.worker, "--json"])
-);
-if (
-  active.versions?.length !== 1 ||
-  active.versions[0].percentage !== 100 ||
-  active.versions[0].version_id !== workerVersion
-)
-  throw new Error("The new Worker is not active at 100% traffic.");
-mark("active traffic");
-const secretNames = verifySecretNames();
-mark("secret inventory");
+const verified = await together({
+  "served content": () => verifyServedContent(target.origin, identity.identity),
+  "publication boundary": () => verifyBoundary(target.origin),
+  "secret inventory": verifySecretNames
+});
+const secretNames = verified["secret inventory"];
+// Leave the crawler isolated from the other origin probes so they cannot add
+// load to the public record reads during a sitemap-wide audit.
+await timed("page audit", () => auditPages(target.origin, auditScope));
+// The audit can retry; check traffic last so a replaced version cannot earn a receipt.
+await timed("active traffic", () => verifyActiveVersion(target.worker, workerVersion));
 const directory = path.join(root, ".release");
 await mkdir(directory, { recursive: true, mode: 0o700 });
 await chmod(directory, 0o700);
@@ -409,7 +464,7 @@ console.log(
   `Public journal verified at ${target.origin}; Worker ${workerVersion} serves 100% traffic.`
 );
 console.log(
-  `Release timing (${environment}): ${totalSeconds}s — ` +
+  `Release timing (${environment}): ${totalSeconds}s wall time (stages overlap) — ` +
     durations.map((entry) => `${entry.stage} ${(entry.ms / 1000).toFixed(1)}s`).join(", ")
 );
 const showcase = await showcasePublication(manifest);
