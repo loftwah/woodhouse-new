@@ -68,8 +68,8 @@ test("campaign search finds published pieces by placement and exact dimensions",
   assert(entries.every(({ href }) => href));
   const cases: [string, string][] = [
     ["Fighter X header", "/share/fighter/#making-of-fighter"],
-    ["Bubbles 1080x1920", "/share/bubbles/#making-of-bubbles"],
-    ["Bubbles 1080 × 1350", "/share/bubbles/#making-of-bubbles"]
+    ["Bubbles 1080x1920", "/share/bubbles/#poster-study-bubbles"],
+    ["Bubbles 1080 × 1350", "/share/bubbles/#poster-study-bubbles"]
   ];
   for (const [query, href] of cases) {
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
@@ -82,12 +82,18 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   const items = publicCampaignItems(["foilbury", "loftwahfm", "shoalshot"]);
   assert.deepEqual(
     items.slice(0, 4).map(({ id }) => id),
-    ["making-of-woodhouse", "making-of-foilbury", "making-of-shoalshot", "making-of-loftwahfm"]
+    [
+      "poster-study-loftwahfm",
+      "poster-study-foilbury",
+      "poster-study-shoalshot",
+      "making-of-woodhouse"
+    ]
   );
   const foilbury = items.filter(({ project }) => project === "foilbury");
   assert.deepEqual(
     foilbury.map(({ id, archived }) => [id, Boolean(archived)]),
     [
+      ["poster-study-foilbury", false],
       ["making-of-foilbury", false],
       ["field-notes-foilbury", false],
       ["product-social-foilbury", false],
@@ -101,6 +107,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       .filter(({ href }) => href.startsWith("/share/foilbury/"))
       .map(({ href }) => href),
     [
+      "/share/foilbury/#poster-study-foilbury",
       "/share/foilbury/#making-of-foilbury",
       "/share/foilbury/#field-notes-foilbury",
       "/share/foilbury/#product-social-foilbury",

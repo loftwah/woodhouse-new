@@ -1,3 +1,4 @@
+import { featuredPosters } from "./showcase-featured-posters.ts";
 import {
   fieldNotesCampaign,
   makingOfCampaign,
@@ -91,6 +92,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...featuredPosters,
   ...makingOfCampaign,
   ...fieldNotesCampaign,
   ...productSocialCampaign,

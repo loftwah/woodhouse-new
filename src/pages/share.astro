@@ -4,6 +4,7 @@ import {
   makingOfCampaign,
   productSocialCampaign
 } from "../data/showcase-product-social";
+import { featuredPosters } from "../data/showcase-featured-posters";
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
@@ -274,8 +275,9 @@ const featuredCampaign = admittedCampaign.filter(
 );
 const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
 const processWork = freshWork.filter((item) => makingOfCampaign.includes(item));
+const posterWork = freshWork.filter((item) => featuredPosters.includes(item));
 const newestEdition = [
-  processWork,
+  [...posterWork, ...processWork],
   ...[fieldNotesCampaign, productSocialCampaign].map((edition) =>
     freshWork.filter((item) => edition.includes(item))
   )
@@ -329,6 +331,9 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
             <a href={shareNavigation("/share/?type=logos", Astro.url.searchParams)}>
               Logos &amp; icons
+            </a>
+            <a href={shareNavigation("/share/originals/", Astro.url.searchParams)}>
+              Original art &amp; drawings
             </a>
             <a href="/share/resources/">Creative resources</a>
             <a href={processWork.length ? "#earlier-campaigns" : "#archive"}>Earlier artwork</a>
