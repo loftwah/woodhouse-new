@@ -185,3 +185,21 @@ its own module.
 #168 is complete for the `src/` scope this pass took: the skill is installed and used, the hidden
 origin link and the `src/` surplus are fixed, and every remaining finding is named above with a
 reason. The `lab/`/`scripts/` subset remains a separate change, not a silent omission.
+
+## Closeout — reviewed 12 November 2026
+
+The follow-up health pass removed six uncalled helpers and made the remaining private
+helpers internal. Knip now recognizes the standalone brand renderers and keeps
+Storybook’s dynamically loaded Vite builder. Both lab reports ran with the retained
+implementation. The workspace reporter produces structured JSON on request, and
+the build and Discord verifiers run correctly through aliased script paths.
+
+Ordinary pages no longer embed the search corpus. The public projection serves a
+native search form and the on-demand dialog from the same route. Analytics reuses
+hourly captures for preset and closed windows and returns the stored winner to
+concurrent callers. Existing report records and the dated media inventory remain
+available. Generated figures still match their reviewed inputs, so the bulk image
+optimisation in #178 was closed without changing those assets.
+
+The [health ledger](https://github.com/loftwah/woodhouse-new/issues/180) holds the
+dated delivery evidence and links to the existing ownership issues.

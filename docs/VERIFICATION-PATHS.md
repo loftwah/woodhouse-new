@@ -87,7 +87,7 @@ pnpm run deploy:publication -- production --path=/affected/route/
 The publication script checks the tree is clean and `HEAD` matches `origin/main`, runs
 `verify:content`, **builds once**, deploys, waits for the build identity, checks the served content
 and the publication boundary, audits the selected pages (with a retry for edge propagation) and
-writes a receipt. Production reuses the accepted preview scope.
+writes a receipt. Production reuses the accepted preview scope. A full production audit spaces page and link requests 250 ms apart after unpaced runs intermittently failed public record reads on 12 November 2026. Focused releases keep the ordinary request rate. The link audit follows at most five same-origin redirects and keeps the original canonical checks.
 
 Two consequences worth stating plainly:
 
