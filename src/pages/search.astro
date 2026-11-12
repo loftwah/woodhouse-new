@@ -32,8 +32,9 @@ const matches = tokens.length
     ).map(({ page }) => page)
   : pages;
 const qa = Astro.url.searchParams.get("qa");
+const analyticsOff = Astro.url.searchParams.get("analytics") === "off";
 
-if (!index || result.error) {
+if (!index || qa !== null || analyticsOff || result.error) {
   Astro.response.headers.set("cache-control", "private, no-store");
   Astro.cache?.set(false);
 } else if (Astro.cache?.enabled) {
@@ -61,9 +62,7 @@ if (result.error) Astro.response.status = 503;
           maxlength="160"
           placeholder="Try Pirates, payments or an incident"
         />
-        {Astro.url.searchParams.get("analytics") === "off" && (
-          <input type="hidden" name="analytics" value="off" />
-        )}
+        {analyticsOff && <input type="hidden" name="analytics" value="off" />}
         {qa !== null && <input type="hidden" name="qa" value={qa} />}
         <button type="submit" class="home-action">
           Search

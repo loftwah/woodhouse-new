@@ -105,8 +105,13 @@ import { publicSearchPath } from "../data/public-search";
     function render() {
       if (!input || !list || !status || !empty || !fallback) return;
       const query = input.value.trim();
-      const params = new URLSearchParams({ q: query });
-      fallback.href = query ? `${publicSearchPath}?${params}` : publicSearchPath;
+      const params = new URLSearchParams();
+      if (query) params.set("q", query);
+      const source = new URLSearchParams(location.search);
+      if (source.get("analytics") === "off") params.set("analytics", "off");
+      const qa = source.get("qa");
+      if (qa !== null) params.set("qa", qa);
+      fallback.href = params.size ? `${publicSearchPath}?${params}` : publicSearchPath;
       if (!entries) return;
       const tokens = publicSearchTokens(query);
       const ranked = rankPublicSearch(entries, tokens);
