@@ -236,6 +236,13 @@ if (Astro.cache?.enabled) for (const hint of capabilityResult.cacheHints) Astro.
           </a>
         </p>
       )}
+      {project.slug === "liferaft" && (
+        <p class="dossier-hero__analytics">
+          <a class="text-link" href="/activity/liferaft/">
+            See Liferaft installer downloads <span aria-hidden="true">↗</span>
+          </a>
+        </p>
+      )}
       {analyticsProjects.includes(project.slug as AnalyticsProject) && (
         <p class="dossier-hero__analytics">
           <a

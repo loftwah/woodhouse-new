@@ -28,6 +28,7 @@ export const projectColours: Record<string, string> = {
   shoalshot: "#e9ff49",
   "app-composer": "#7fa2ff",
   loftwahfm: "#ff9ccd",
+  foilbury: "#79dcc0",
   woodhouse: "#b4c0d2"
 };
 export const measureChoices = [
@@ -134,6 +135,12 @@ export const measureChoices = [
       "Confirmed listening starts carrying the game's own attribution. Repeated plays count again; this does not count game launches or unique players."
   },
   {
+    key: "cabinet_views",
+    label: "Public cabinet visits",
+    meaning:
+      "Tab visits with an interaction in Foilbury’s public card cabinet. A tab can count again after 30 minutes."
+  },
+  {
     key: "project_opens",
     label: "Project discovery",
     meaning:
@@ -182,7 +189,7 @@ const gameMeasures: MeasureKey[] = [
   "returning_browsers"
 ];
 type ProductView = {
-  family: "game" | "app" | "audience" | "listening";
+  family: "game" | "app" | "audience" | "listening" | "cabinet";
   label: string;
   defaultMeasure: MeasureKey;
   keys: MeasureKey[];
@@ -248,6 +255,14 @@ const productViews: Record<AnalyticsProject, ProductView> = {
     headlines: ["listening_seconds", "listening_starts"],
     description: "See how much music was heard and how often playback started."
   },
+  foilbury: {
+    family: "cabinet",
+    label: "Public cabinet activity",
+    defaultMeasure: "cabinet_views",
+    keys: ["cabinet_views"],
+    headlines: ["cabinet_views"],
+    description: "See when people interact with the public card cabinet."
+  },
   fighter: gameView,
   bubbles: gameView,
   "protocol-11": protocol11View,
@@ -271,7 +286,7 @@ export const overviewMeasure = {
   key: "overview",
   label: "Project overview",
   meaning:
-    "Each project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app access and outcomes for App Composer and audience discovery for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
+    "Each project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app use for App Composer, cabinet visits for Foilbury and engaged sessions for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
 } as const;
 export function measuresFor(project: AnalyticsProject | null) {
   const keys = productView(project)?.keys;
@@ -340,6 +355,7 @@ export const overviewOrder: AnalyticsProject[] = [
   "shoalshot",
   "loftwahfm",
   "app-composer",
+  "foilbury",
   "woodhouse"
 ];
 /**
