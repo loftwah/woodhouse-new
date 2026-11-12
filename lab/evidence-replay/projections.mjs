@@ -14,7 +14,7 @@ import { preferredObservation } from "./envelope.mjs";
  * with the applied events recorded so a rebuild can be compared to what was seen
  * before.
  */
-export function createTimeline() {
+function createTimeline() {
   const entries = new Map();
   const applied = new Set();
   return {
@@ -47,7 +47,7 @@ export function createTimeline() {
  * turns up after a newer one must not roll the state back, and a report must
  * never displace an authoritative record.
  */
-export function createLastObserved() {
+function createLastObserved() {
   const state = new Map();
   const applied = new Set();
   const superseded = [];

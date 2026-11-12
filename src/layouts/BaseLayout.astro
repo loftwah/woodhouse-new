@@ -10,7 +10,7 @@ import { getSeoMeta, getSiteSettings } from "emdash";
 import type { SeoContentInput } from "emdash/seo";
 import { createPublicPageContext } from "emdash/page";
 import { EmDashHead } from "emdash/ui";
-import { getPublicMenu, listProjectRecords, listPublicSearchItems } from "../content/repository";
+import { getPublicMenu, listProjectRecords } from "../content/repository";
 import { portfolioReadout } from "../data/portfolio";
 import { formatReviewDate } from "../data/review-date";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
@@ -138,14 +138,12 @@ const page = createPublicPageContext({
       }
     : {})
 });
-const [primaryResult, footerResult, houseIndexResult, searchResult, projectResult] =
-  await Promise.all([
-    getPublicMenu("primary"),
-    getPublicMenu("footer"),
-    getPublicMenu("house_index"),
-    listPublicSearchItems(),
-    listProjectRecords()
-  ]);
+const [primaryResult, footerResult, houseIndexResult, projectResult] = await Promise.all([
+  getPublicMenu("primary"),
+  getPublicMenu("footer"),
+  getPublicMenu("house_index"),
+  listProjectRecords()
+]);
 // Keep a route's explicit failure/private policy through layout data reads.
 // Applying any hint after set(false) would re-enable Astro's cache provider.
 if (privateView || /private|no-store/i.test(Astro.response.headers.get("cache-control") ?? "")) {
@@ -153,7 +151,6 @@ if (privateView || /private|no-store/i.test(Astro.response.headers.get("cache-co
 } else if (Astro.cache?.enabled) {
   for (const result of [primaryResult, footerResult, houseIndexResult])
     Astro.cache.set(result.cacheHint);
-  for (const hint of searchResult.cacheHints) Astro.cache.set(hint);
   for (const hint of projectResult.cacheHints) Astro.cache.set(hint);
 }
 const primaryLinks = primaryResult.menu?.items ?? [];
@@ -234,7 +231,7 @@ const footerReviewDate = formatReviewDate(footerReadout.reviewDate ?? "") ?? und
     )}
     <SiteHeader currentPath={currentPath} links={primaryLinks} houseIndexLinks={houseIndexLinks}>
       <BrandMark slot="brand" />
-      <SiteSearch pages={searchResult.pages} />
+      <SiteSearch />
     </SiteHeader>
     <main id="main-content">
       <slot />

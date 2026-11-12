@@ -102,10 +102,14 @@ const humanPublishSources: ReadonlySet<string> = new Set<HumanPublishSource>([
   "visual-editor"
 ]);
 
+const manualPublicationReason =
+  "Scheduled publication is unavailable for Woodhouse records. Publish the reviewed draft manually in the Admin.";
+
 export function publicationBlock(
   event: Pick<ContentPolicyEvent, "collection" | "content" | "origin">
 ): string | undefined {
   if (!isControlledCollection(event.collection)) return undefined;
+  if (event.origin?.source === "scheduler") return manualPublicationReason;
 
   // An agent cannot be the party that makes a record public. EmDash's token
   // scopes cannot express this: `content_publish` requires only `content:write`,
@@ -169,17 +173,17 @@ export function publicationBlock(
   return undefined;
 }
 
-const plugin: SandboxedPlugin = {
+const plugin = {
   hooks: {
     "content:beforePublish": async (event) => {
       const reason = publicationBlock(event);
       return reason ? { cancel: true, reason } : undefined;
     },
     "content:beforeSchedule": async (event) => {
-      const reason = publicationBlock(event);
-      return reason ? { cancel: true, reason } : undefined;
+      if (!isControlledCollection(event.collection)) return;
+      return { cancel: true, reason: publicationBlock(event) ?? manualPublicationReason };
     }
   }
-};
+} satisfies SandboxedPlugin;
 
 export default plugin;

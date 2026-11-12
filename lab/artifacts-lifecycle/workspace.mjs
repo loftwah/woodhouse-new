@@ -303,17 +303,9 @@ export function listTaskRefs(repo) {
     .sort();
 }
 
-export function sentinelExists(repo) {
-  return existsSync(path.join(repo, "HOOK-RAN"));
-}
-
 export function readIfPresent(root, relativePath) {
   const absolute = path.join(root, relativePath);
   return existsSync(absolute) ? readFileSync(absolute, "utf8") : null;
-}
-
-export function tempRoot() {
-  return mkdtempSync(path.join(tmpdir(), "woodhouse-workspace-"));
 }
 
 export function cleanupRoot(root) {

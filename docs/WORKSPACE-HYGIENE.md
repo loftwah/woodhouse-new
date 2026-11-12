@@ -24,7 +24,8 @@ Total: 4.6 GB, against 179.9 GB free. Storage pressure is not the problem; unbou
 ## The control
 
 `pnpm run workspace:prune` reports; `pnpm run workspace:prune -- --apply` deletes. `--builds` adds
-`dist`, `storybook-static` and `.astro`.
+`dist`, `storybook-static` and `.astro` when the checkout is idle. Add `--json` for a structured
+report with counts and byte totals.
 
 - It only touches **direct children** of four evidence roots, and only when asked, three build roots.
 - The default run deletes nothing.

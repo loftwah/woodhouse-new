@@ -32,6 +32,7 @@ const alwaysChecked = [
   "/factory/",
   "/connections/",
   "/share/",
+  "/search/",
   "/projects/",
   "/dispatches/",
   "/incidents/",
@@ -295,8 +296,6 @@ const internalLinks = new Map();
 const checked = [];
 
 const canonicals = new Map();
-const searchHrefs = new Map();
-let searchIndexChecked = false;
 
 function canonicalPath(html, target) {
   const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
@@ -374,24 +373,22 @@ for (const document of documents) {
   }
   internalLinks.set(page, [...targets]);
 
-  // The search index is rendered on every page, so check it once. A repeated
-  // href means the same destination under two names, and the count in the
-  // dialog becomes a fiction.
-  if (!searchIndexChecked) {
-    searchIndexChecked = true;
+  // The standalone search index supplies both the dialog and native search.
+  if (page === "/search/") {
+    if (!/<ul[^>]*data-public-search-index/.test(html)) report(page, "search index is missing");
+    const searchHrefs = new Set();
     const searchTargets = [
       ...html.matchAll(/<li[^>]*data-search-item[^>]*>[\s\S]*?href="([^"]+)"/g)
     ]
       .map((match) => match[1])
       .filter((href) => href.startsWith("/"));
     for (const href of searchTargets) {
-      const seen = searchHrefs.get(href);
-      if (seen) report(page, `search index lists ${href} more than once`);
-      else searchHrefs.set(href, page);
+      if (searchHrefs.has(href)) report(page, `search index lists ${href} more than once`);
+      searchHrefs.add(href);
     }
     const announced = /([\d,]+) pages in the index/.exec(html)?.[1];
     if (announced && Number(announced.replaceAll(",", "")) !== searchTargets.length)
-      report(page, `search dialog announces ${announced} pages but lists ${searchTargets.length}`);
+      report(page, `search page announces ${announced} pages but lists ${searchTargets.length}`);
   }
   checked.push(page);
 }

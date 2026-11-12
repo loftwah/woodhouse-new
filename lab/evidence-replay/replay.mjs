@@ -15,9 +15,9 @@ import path from "node:path";
 import { PROJECTIONS } from "./projections.mjs";
 import { MAX_CORPUS_BYTES, MAX_CORPUS_EVENTS, validateEnvelope } from "./envelope.mjs";
 
-export const BATCH_SIZE = 8;
+const BATCH_SIZE = 8;
 /** Matches the documented K2 consume lease, so expiry behaves comparably. */
-export const LEASE_MS = 5 * 60 * 1000;
+const LEASE_MS = 5 * 60 * 1000;
 
 class PoisonBatchError extends Error {
   constructor(offset, events, problems) {

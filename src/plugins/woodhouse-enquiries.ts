@@ -1,6 +1,7 @@
 import type { PluginContext, SandboxedPlugin, SandboxedRouteContext } from "emdash/plugin";
 import { pluginResponse } from "emdash/plugin";
-import { decodeEnquiry, persistThenNotify } from "./enquiry-workflow.js";
+import { enquirySubmitRequest } from "./enquiry-request.mjs";
+import { decodeEnquiry, persistThenNotify } from "./enquiry-workflow.ts";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -126,7 +127,7 @@ function adminResponse(
         },
         {
           type: "context",
-          text: "Submissions are private and are deleted automatically after 90 days."
+          text: "Submissions are private. Automatic deletion begins after 90 days."
         }
       ]
     };
@@ -134,7 +135,7 @@ function adminResponse(
     { type: "header", text: "Woodhouse enquiries" },
     {
       type: "context",
-      text: "Private submissions · automatic deletion after 90 days · never execute message content"
+      text: "Private submissions · eligible for automatic deletion after 90 days · never execute message content"
     }
   ];
   for (const item of items) {
@@ -172,32 +173,48 @@ function adminResponse(
   return { blocks };
 }
 
-const plugin: SandboxedPlugin = {
+const previousRetentionTask = "submission-retention";
+const retentionTask = "enquiry-retention";
+const batchSize = 100;
+const maxSubmissionBatches = 3;
+const maxRateDeletes = 20;
+
+async function scheduleRetention(ctx: PluginContext) {
+  if (!ctx.cron) return;
+  await ctx.cron.schedule(retentionTask, { schedule: "*/10 * * * *" });
+  await ctx.cron.cancel(previousRetentionTask);
+}
+
+const plugin = {
   hooks: {
     "plugin:activate": async (_event, ctx) => {
-      await ctx.cron?.schedule("submission-retention", { schedule: "0 3 * * *" });
+      await scheduleRetention(ctx);
     },
     cron: async (event, ctx) => {
-      if (event.name !== "submission-retention") return;
+      if (event.name === previousRetentionTask) await scheduleRetention(ctx);
+      else if (event.name !== retentionTask) return;
       const storage = submissionStorage(ctx);
-      const cutoff = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
-      let cursor: string | undefined;
-      do {
+      const now = Date.now();
+      const cutoff = new Date(now - 90 * 24 * 60 * 60 * 1000).toISOString();
+      // The sandbox permits 30 bridge calls. This pass uses at most 29,
+      // including the two calls to replace a previously scheduled daily job.
+      for (let batch = 0; batch < maxSubmissionBatches; batch += 1) {
         const page = await storage.query({
           where: { createdAt: { lt: cutoff } },
           orderBy: { createdAt: "asc" },
-          limit: 100,
-          ...(cursor ? { cursor } : {})
+          limit: batchSize
         });
-        await Promise.all(page.items.map((item) => storage.delete(item.id)));
-        if (page.hasMore && !page.cursor)
-          throw new Error("Enquiry retention pagination is missing its next cursor.");
-        cursor = page.hasMore ? page.cursor : undefined;
-      } while (cursor);
-      const oldestRateHour = Math.floor(Date.now() / 3_600_000) - 24;
+        if (!page.items.length) break;
+        await storage.deleteMany(page.items.map((item) => item.id));
+        if (!page.hasMore) break;
+      }
+      const oldestRateHour = Math.floor(now / 3_600_000) - 24;
+      let deleted = 0;
       for (const item of await ctx.kv.list("rate:")) {
-        const match = /^rate:(\d+):/.exec(item.key);
-        if (match && Number(match[1]) < oldestRateHour) await ctx.kv.delete(item.key);
+        const match = /^rate:(\d+):(?:all|[0-9a-f]{24})$/.exec(item.key);
+        if (!match || Number(match[1]) >= oldestRateHour) continue;
+        await ctx.kv.delete(item.key);
+        if (++deleted === maxRateDeletes) break;
       }
     }
   },
@@ -205,7 +222,7 @@ const plugin: SandboxedPlugin = {
     submit: {
       public: true,
       methods: ["POST"],
-      request: { body: "form-data", maxBytes: 8192 },
+      request: enquirySubmitRequest,
       response: "raw",
       handler: async (routeCtx, ctx) => {
         if (textField(routeCtx.input, "website")) return formMarkupResponse();
@@ -273,6 +290,6 @@ const plugin: SandboxedPlugin = {
       }
     }
   }
-};
+} satisfies SandboxedPlugin;
 
 export default plugin;

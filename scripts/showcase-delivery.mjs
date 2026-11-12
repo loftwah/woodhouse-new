@@ -4,7 +4,6 @@
 import { spawnSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { pathToFileURL } from "node:url";
 import {
   buildPayload,
   notifyShowcase,
@@ -131,5 +130,4 @@ async function main() {
     process.exitCode = 1;
   }
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href)
-  await main();
+if (import.meta.main) await main();

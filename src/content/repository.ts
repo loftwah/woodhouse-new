@@ -76,6 +76,7 @@ export type PublicSearchItem = {
   description: string;
   href: string;
   section: string;
+  keywords?: string;
   /**
    * Body text used only for matching. EmDash cannot index a block body — see
    * `src/data/search-text.ts` — so this is the application-side projection of it.

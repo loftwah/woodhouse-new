@@ -1,0 +1,131 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SearchResults from "../components/SearchResults.astro";
+import { listPublicSearchItems } from "../content/repository";
+import {
+  publicSearchPages,
+  publicSearchPath,
+  publicSearchTokens,
+  publicSearchWords,
+  rankPublicSearch
+} from "../data/public-search";
+
+export const prerender = false;
+const query = (Astro.url.searchParams.get("q") ?? "").trim().slice(0, 160);
+const tokens = publicSearchTokens(query);
+const index = !Astro.url.searchParams.has("q");
+const result = await listPublicSearchItems();
+const pages = publicSearchPages(result.pages);
+const matches = tokens.length
+  ? rankPublicSearch(
+      pages.map((page) => ({
+        page,
+        ...publicSearchWords(
+          page.title,
+          page.description,
+          page.section,
+          page.keywords,
+          page.searchText
+        )
+      })),
+      tokens
+    ).map(({ page }) => page)
+  : pages;
+const qa = Astro.url.searchParams.get("qa");
+const analyticsOff = Astro.url.searchParams.get("analytics") === "off";
+
+if (!index || qa !== null || analyticsOff || result.error) {
+  Astro.response.headers.set("cache-control", "private, no-store");
+  Astro.cache?.set(false);
+} else if (Astro.cache?.enabled) {
+  for (const hint of result.cacheHints) Astro.cache.set(hint);
+}
+if (result.error) Astro.response.status = 503;
+---
+
+<BaseLayout
+  title="Search"
+  description="Find projects, field notes, exhibits and evidence in the public Woodhouse record."
+  path={publicSearchPath}
+  robots="noindex, follow"
+>
+  <section class="container search-page">
+    <h1 class="page-title">Search Woodhouse.</h1>
+    <form class="search-form" action={publicSearchPath} method="get">
+      <label for="public-search-query">Search the public record</label>
+      <div>
+        <input
+          id="public-search-query"
+          type="search"
+          name="q"
+          value={query}
+          maxlength="160"
+          placeholder="Try Pirates, payments or an incident"
+        />
+        {analyticsOff && <input type="hidden" name="analytics" value="off" />}
+        {qa !== null && <input type="hidden" name="qa" value={qa} />}
+        <button type="submit" class="home-action">
+          Search
+        </button>
+      </div>
+    </form>
+    {result.error && <p>The full index is unavailable. You can still browse these results.</p>}
+    <p>
+      {tokens.length
+        ? `${matches.length} ${matches.length === 1 ? "match" : "matches"}`
+        : `${pages.length} pages in the index`}
+    </p>
+    <SearchResults pages={matches} fullIndex={index} showEmpty={matches.length === 0} />
+  </section>
+</BaseLayout>
+
+<style>
+  .search-page {
+    max-width: 56rem;
+    padding-block: clamp(3rem, 7vw, 7rem);
+  }
+  .search-page h1 {
+    margin-bottom: 1.75rem;
+  }
+  .search-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--copy);
+  }
+  .search-form div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .search-form input[type="search"] {
+    flex: 1 1 16rem;
+    min-width: 0;
+    min-height: 3.3rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--line-dark);
+    border-radius: 0;
+    color: var(--paper);
+    background: var(--surface-soft);
+    font: 600 1rem/1.3 var(--sans);
+  }
+  .search-form button {
+    min-height: 3.3rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--acid);
+    border-radius: 0;
+    color: var(--ink);
+    background: var(--acid);
+    font: 700 1rem/1 var(--sans);
+    cursor: pointer;
+  }
+  .search-form button:hover {
+    color: var(--acid);
+    background: var(--ink);
+  }
+  .search-form input[type="search"]:focus-visible,
+  .search-form button:focus-visible {
+    outline: 4px solid var(--signal);
+    outline-offset: 2px;
+  }
+</style>

@@ -147,6 +147,30 @@ async function collectHistory(
     : undefined;
 }
 
+const localProjects = new Set<AnalyticsProject>(["woodhouse", "shoalshot", "protocol-11"]);
+const fiveMinutes = 5 * 60_000;
+const oneHour = 60 * 60_000;
+
+async function reportKey(parts: unknown[]): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(JSON.stringify(parts))
+  );
+  return Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, 24);
+}
+
+async function storeReport(db: D1Database, report: PortfolioReport) {
+  await db
+    .prepare("INSERT OR IGNORE INTO wh_analytics_reports(id,created_at,days,body) VALUES(?,?,?,?)")
+    .bind(report.id, report.createdAt, report.days, JSON.stringify(report))
+    .run();
+  // Concurrent captures can differ by milliseconds or source timing. Every
+  // caller must use the body that actually owns this saved link.
+  return readPortfolioReport(db, report.id);
+}
+
 export async function createPortfolioReport(
   db: D1Database,
   days: number,
@@ -157,42 +181,59 @@ export async function createPortfolioReport(
   releaseNotes?: ReportRelease[]
 ): Promise<PortfolioReport> {
   const period = requestedWindow ?? periodFor(days, now);
-  const recent = await db
-    .prepare(
-      "SELECT id FROM wh_analytics_reports WHERE days=? AND created_at>=? AND json_extract(body,'$.period.from')=? AND json_extract(body,'$.period.to')=? AND json_extract(body,'$.period.complete')=? ORDER BY created_at DESC LIMIT 1"
-    )
-    .bind(
-      days,
-      new Date(now - 300000).toISOString(),
-      period.from,
-      period.to,
-      Number(period.complete)
-    )
-    .first<{ id: string }>();
-  if (recent) {
-    const report = await readPortfolioReport(db, recent.id);
-    const local = report?.projects.filter((entry) =>
-      ["woodhouse", "shoalshot", "protocol-11"].includes(entry.project)
-    );
-    if (
-      report &&
-      (releaseNotes === undefined || report.releases !== undefined) &&
-      // A report that contains none of the locally produced projects cannot
-      // prove the producer revision, so it is not safe to reuse as current.
-      local !== undefined &&
-      local.length > 0 &&
-      local.every((entry) => entry.report?.source.revision === producerRevision())
-    )
-      return report;
+  const members = analyticsProjects.filter((project) => publicIds.has(project));
+  const releases = parseReportReleases(
+    releaseNotes?.filter((note) => note.date <= period.to),
+    new Set(members),
+    now
+  )?.sort((a, b) => b.date.localeCompare(a.date) || a.evidenceId.localeCompare(b.evidenceId));
+  const revision = producerRevision();
+  const interval = period.complete || [7, 30, 90].includes(days) ? oneHour : fiveMinutes;
+  const slot = await reportKey([
+    "portfolio-report-slot/1",
+    Math.floor(now / interval),
+    period.from,
+    period.to,
+    period.days,
+    period.complete,
+    members,
+    releases,
+    revision
+  ]);
+  const releaseIdentity = JSON.stringify(releases);
+  const matchesScope = (report: PortfolioReport | null): report is PortfolioReport =>
+    report !== null &&
+    report.period?.from === period.from &&
+    report.period.to === period.to &&
+    report.days === days &&
+    report.period.complete === period.complete &&
+    report.projects.length === members.length &&
+    report.projects.every(
+      ({ project, report: source }, index) =>
+        project === members[index] &&
+        (!source || !localProjects.has(project) || source.source.revision === revision)
+    ) &&
+    JSON.stringify(report.releases) === releaseIdentity;
+  const currentSources = (projects: PortfolioReport["projects"]) => {
+    const local = projects.filter((entry) => localProjects.has(entry.project));
+    return local.length > 0 && local.every((entry) => entry.report?.source.revision === revision);
+  };
+  const cached = await readPortfolioReport(db, slot);
+  if (matchesScope(cached) && currentSources(cached.projects)) return cached;
+  // An occupied slot with stale or inconsistent contents stays available by its
+  // original ID. A different capture key lets the current producer recover.
+  const healthyId = cached ? await reportKey(["portfolio-report-recovery/1", slot]) : slot;
+  if (cached) {
+    const recovery = await readPortfolioReport(db, healthyId);
+    if (matchesScope(recovery) && currentSources(recovery.projects)) return recovery;
   }
-  const members = analyticsProjects.filter((p) => publicIds.has(p));
   const load = async (
     project: AnalyticsProject,
     days: number,
     window: ReportingWindow | undefined
   ) => {
     try {
-      return ["woodhouse", "shoalshot", "protocol-11"].includes(project)
+      return localProjects.has(project)
         ? await localAnalytics(db, project, days, now, window)
         : await loadProjectAnalytics(project, days, fetcher, window);
     } catch {
@@ -205,21 +246,12 @@ export async function createPortfolioReport(
   );
   const createdAt = new Date(now).toISOString();
   const history = await collectHistory(load, members, period, now);
-  const releases = parseReportReleases(
-    releaseNotes?.filter((note) => note.date <= period.to),
-    new Set(members),
-    now
-  );
-  const digest = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(
-      JSON.stringify({ createdAt, days, period, projects, history, releases })
-    )
-  );
-  const id = Array.from(new Uint8Array(digest))
-    .map((v) => v.toString(16).padStart(2, "0"))
-    .join("")
-    .slice(0, 24);
+  const reusable = currentSources(projects);
+  // Missing local sources cannot occupy the healthy slot. Bound duplicate
+  // degraded writes too, while letting the next request check for recovery.
+  const id = reusable
+    ? healthyId
+    : await reportKey(["portfolio-report-degraded/1", slot, Math.floor(now / fiveMinutes)]);
   const report: PortfolioReport = {
     schema: "woodhouse.portfolio-report/1",
     id,
@@ -233,11 +265,21 @@ export async function createPortfolioReport(
     // an earlier range compares the weeks that range actually contains.
     analysis: analysePortfolio(projects, Date.parse(period.to), supportsMeasure)
   };
-  await db
-    .prepare("INSERT OR IGNORE INTO wh_analytics_reports(id,created_at,days,body) VALUES(?,?,?,?)")
-    .bind(id, createdAt, days, JSON.stringify(report))
-    .run();
-  return report;
+  const saved = await storeReport(db, report);
+  if (matchesScope(saved) && (!reusable || currentSources(saved.projects))) return saved;
+
+  const exactId = await reportKey([
+    "portfolio-report-exact/1",
+    createdAt,
+    period,
+    projects,
+    history,
+    releases
+  ]);
+  const recovered = await storeReport(db, { ...report, id: exactId });
+  if (matchesScope(recovered) && (!reusable || currentSources(recovered.projects)))
+    return recovered;
+  throw new Error("Stored portfolio report could not be verified.");
 }
 export function projectReport(
   report: PortfolioReport,

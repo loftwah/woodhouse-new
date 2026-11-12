@@ -1,125 +1,23 @@
 ---
-import type { PublicSearchItem } from "../content/repository";
-import { searchStopWords } from "../data/search-intent";
-
-type SearchPage = PublicSearchItem & { keywords?: string };
-type Props = {
-  pages?: PublicSearchItem[];
-};
-
-const { pages: contentPages = [] } = Astro.props;
-
-const destinationPages: SearchPage[] = [
-  {
-    title: "Home",
-    description: "The Loftwah Software Factory and its projects.",
-    href: "/",
-    section: "Start here"
-  },
-  {
-    title: "The factory floor",
-    description: "Project order, current state and the next proof each project needs.",
-    href: "/factory/",
-    section: "Factory"
-  },
-  {
-    title: "Projects",
-    description: "Games, music, tools and experiments you can play, listen to or try.",
-    href: "/projects/",
-    section: "Projects"
-  },
-  {
-    title: "Stories",
-    description: "Field notes, incidents and the engineering journal.",
-    href: "/dispatches/",
-    section: "Writing"
-  },
-  {
-    title: "Incidents",
-    description: "What failed, what changed and which control came next.",
-    href: "/incidents/",
-    section: "Writing"
-  },
-  {
-    title: "Working exhibits",
-    description: "Try the Patch Bench music and game demo and the Source Plate composition demo.",
-    href: "/exhibits/",
-    section: "Factory"
-  },
-  {
-    title: "House identity",
-    description: "Loom Display, the Woodhouse seal, colour and downloadable brand artwork.",
-    href: "/brand/",
-    section: "Factory"
-  },
-  {
-    title: "Factory doctrine",
-    description: "Value, autonomy, commercial controls and physical work.",
-    keywords:
-      "payments payment Printful fulfilment fulfillment order orders Stripe webhooks idempotency scheduled agent approval approve reject return artwork rights budget walker physical",
-    href: "/doctrine/",
-    section: "Factory"
-  },
-  {
-    title: "Architecture",
-    description: "How the public record is built and what stays private.",
-    href: "/architecture/",
-    section: "Factory"
-  },
-  {
-    title: "Agent Reception",
-    description: "The dated, machine-readable public project record.",
-    href: "/agents/",
-    section: "For agents"
-  },
-  {
-    title: "Dean Lofts",
-    description: "The operator behind the factory.",
-    href: "/dean/",
-    section: "People"
-  },
-  {
-    title: "Contact",
-    description: "Public ways to reach Dean.",
-    href: "/contact/",
-    section: "People"
-  },
-  {
-    title: "Conversations",
-    description: "What Woodhouse publishes and what remains private.",
-    href: "/conversations/",
-    section: "About this record"
-  }
-];
-const contentHrefs = new Set(contentPages.map((page) => page.href));
-const destinationKeywords = new Map(destinationPages.map((page) => [page.href, page.keywords]));
-const pages: SearchPage[] = [
-  ...destinationPages.filter((page) => !contentHrefs.has(page.href)),
-  ...contentPages.map((page) => {
-    const keywords = destinationKeywords.get(page.href);
-    return keywords ? { ...page, keywords } : page;
-  })
-];
+import SearchResults from "./SearchResults.astro";
+import { publicSearchPath } from "../data/public-search";
 ---
 
 <div class="site-search">
-  <button
+  <a
     class="site-search__trigger"
-    type="button"
+    href={publicSearchPath}
     data-site-search-open
     aria-label="Search the Woodhouse index"
-    aria-haspopup="dialog"
-    aria-controls="woodhouse-search"
     aria-keyshortcuts="Meta+K Control+K"
   >
     <span>Search</span>
     <kbd aria-hidden="true">⌘ K</kbd>
-  </button>
+  </a>
   <dialog
     class="site-search__dialog"
     id="woodhouse-search"
     aria-labelledby="woodhouse-search-title"
-    data-search-stop={searchStopWords.join(" ")}
   >
     <div class="site-search__panel">
       <div class="site-search__heading">
@@ -142,42 +40,24 @@ const pages: SearchPage[] = [
         id="woodhouse-search-input"
         class="site-search__input"
         type="search"
+        maxlength="160"
         placeholder="Try Pirates, payments or an incident"
         autocomplete="off"
         enterkeyhint="search"
         aria-controls="woodhouse-search-results"
       />
-      <p class="site-search__status" id="woodhouse-search-status" role="status" aria-live="polite">
-        {pages.length} pages in the index
-      </p>
-      <nav class="site-search__results" aria-label="Search results">
-        <ul id="woodhouse-search-results">
-          {pages.map((page) => (
-            <li
-              data-search-item
-              data-search={`${page.title} ${page.section} ${page.description} ${"keywords" in page ? page.keywords : ""} ${page.searchText ?? ""}`.toLowerCase()}
-              data-search-intent={`${page.title} ${page.section} ${"keywords" in page ? page.keywords : ""}`.toLowerCase()}
-            >
-              <a href={page.href}>
-                <span>
-                  <strong>{page.title}</strong>
-                  <small>{page.description}</small>
-                </span>
-                <em>{page.section}</em>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="site-search__empty" hidden>
-          <span>No matches. Try a project name or a different word.</span>
-          <span class="site-search__empty-starts">
-            Start here: <a href="/projects/">every project</a>,{" "}
-            <a href="/projects/loftwahfm/">LoftwahFM music</a>,{" "}
-            <a href="/projects/bubbles/">Bubbles</a>, <a href="/activity/">Analytics</a> or{" "}
-            <a href="/share/">the share desk</a>.
-          </span>
-        </p>
-      </nav>
+      <p
+        class="site-search__status"
+        id="woodhouse-search-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+      <div class="site-search__content">
+        <a href={publicSearchPath} data-search-fallback hidden>
+          Open the search page
+        </a>
+        <SearchResults listId="woodhouse-search-results" />
+      </div>
       <p class="site-search__hint">
         <kbd>Esc</kbd> closes search <span aria-hidden="true">·</span> <kbd>⌘ K</kbd> or{" "}
         <kbd>Ctrl K</kbd> opens it
@@ -186,96 +66,131 @@ const pages: SearchPage[] = [
   </dialog>
 </div>
 
-<script is:inline>
-  (() => {
-    const dialog = document.getElementById("woodhouse-search");
-    const input = document.getElementById("woodhouse-search-input");
+<script>
+  import {
+    publicSearchPath,
+    publicSearchTokens,
+    publicSearchWords,
+    rankPublicSearch
+  } from "../data/public-search";
+
+  function bindSearch() {
+    const dialog = document.querySelector<HTMLDialogElement>("#woodhouse-search");
+    const input = document.querySelector<HTMLInputElement>("#woodhouse-search-input");
     const status = document.getElementById("woodhouse-search-status");
     const list = document.getElementById("woodhouse-search-results");
+    const empty = dialog?.querySelector<HTMLElement>("[data-search-empty]");
+    const fallback = dialog?.querySelector<HTMLAnchorElement>("[data-search-fallback]");
     if (
-      !(dialog instanceof HTMLDialogElement) ||
-      !(input instanceof HTMLInputElement) ||
+      !dialog ||
+      typeof dialog.showModal !== "function" ||
+      !input ||
       !status ||
-      !list
+      !list ||
+      !empty ||
+      !fallback
     )
       return;
 
-    const entries = [...list.querySelectorAll("[data-search-item]")].map((item, order) => {
-      const words = (value) =>
-        new Set(
-          (value ?? "")
-            .toLocaleLowerCase()
-            .split(/[^a-z0-9]+/)
-            .filter((word) => word.length > 1)
-        );
-      return {
-        item,
-        order,
-        words: words(item.dataset.search),
-        intentWords: words(item.dataset.searchIntent)
-      };
-    });
-    const stop = new Set((dialog.dataset.searchStop ?? "").split(/\s+/).filter(Boolean));
-    const empty = dialog.querySelector(".site-search__empty");
-    let returnFocusTo = null;
+    const triggers = [...document.querySelectorAll<HTMLAnchorElement>("[data-site-search-open]")];
+    for (const trigger of triggers) {
+      trigger.setAttribute("aria-haspopup", "dialog");
+      trigger.setAttribute("aria-controls", dialog.id);
+    }
 
-    const matches = (words, tokens) =>
-      tokens.filter((token) =>
-        [...words].some(
-          (word) => word.startsWith(token) || (word.length >= 3 && token.startsWith(word))
-        )
-      ).length;
-    const matched = (entry, tokens) =>
-      matches(entry.intentWords, tokens) + matches(entry.words, tokens);
+    let entries: Array<ReturnType<typeof publicSearchWords> & { item: HTMLElement }> | undefined;
+    let loading = false;
+    let returnFocusTo: HTMLElement | null = null;
 
-    const filter = () => {
-      // Token matching with a small stop list, so an ordinary intent phrase such
-      // as "music for my game" finds LoftwahFM instead of requiring the exact
-      // words a project record happens to use. Every entry that matches at least
-      // one token is shown, best match first, so a partial match is an alternative
-      // rather than a competitor to the obvious answer.
-      const tokens = (input.value.toLocaleLowerCase().match(/[a-z0-9]+/g) ?? []).filter(
-        (token) => token.length > 1 && !stop.has(token)
-      );
-      const ranked = tokens.length
-        ? entries
-            .map((entry) => ({ entry, score: matched(entry, tokens) }))
-            .filter((row) => row.score > 0)
-            .sort((a, b) => b.score - a.score || a.entry.order - b.entry.order)
-        : entries.map((entry) => ({ entry, score: 0 }));
-      const visible = new Set(ranked.map((row) => row.entry.item));
+    function render() {
+      if (!input || !list || !status || !empty || !fallback) return;
+      const query = input.value.trim();
+      const params = new URLSearchParams();
+      if (query) params.set("q", query);
+      const source = new URLSearchParams(location.search);
+      if (source.get("analytics") === "off") params.set("analytics", "off");
+      const qa = source.get("qa");
+      if (qa !== null) params.set("qa", qa);
+      fallback.href = params.size ? `${publicSearchPath}?${params}` : publicSearchPath;
+      if (!entries) return;
+      const tokens = publicSearchTokens(query);
+      const ranked = rankPublicSearch(entries, tokens);
+      const visible = new Set(ranked.map((row) => row.item));
       for (const entry of entries) entry.item.hidden = !visible.has(entry.item);
-      for (const row of ranked) list.append(row.entry.item);
-      if (empty) empty.hidden = ranked.length !== 0;
+      for (const entry of ranked) list.appendChild(entry.item);
+      empty.hidden = ranked.length !== 0;
       status.textContent = tokens.length
         ? `${ranked.length} ${ranked.length === 1 ? "match" : "matches"}`
         : `${entries.length} pages in the index`;
-    };
+    }
 
-    const open = () => {
-      if (!dialog.open) {
-        const active = document.activeElement;
-        const trigger = document.querySelector < HTMLElement > "[data-site-search-open]";
-        const triggerVisible = Boolean(trigger && trigger.offsetParent !== null);
-        returnFocusTo =
-          active instanceof HTMLElement && active !== document.body
-            ? active
-            : triggerVisible
-              ? trigger
-              : null;
-        dialog.showModal();
+    async function loadIndex() {
+      if (!list || !status || !fallback || entries || loading) return;
+      loading = true;
+      status.textContent = "Loading the search index…";
+      fallback.hidden = true;
+      list.setAttribute("aria-busy", "true");
+      try {
+        const response = await fetch(publicSearchPath, {
+          redirect: "error",
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!response.ok) throw new Error("Search index unavailable.");
+        const page = new DOMParser().parseFromString(await response.text(), "text/html");
+        const index = page.querySelector("[data-public-search-index]");
+        if (!index) throw new Error("Search index missing.");
+        entries = [...index.querySelectorAll<HTMLElement>("[data-search-item]")].map((item) => ({
+          item,
+          ...publicSearchWords(
+            item.querySelector("strong")?.textContent ?? "",
+            item.querySelector("small")?.textContent ?? "",
+            item.querySelector("em")?.textContent ?? "",
+            item.dataset.searchKeywords,
+            item.dataset.searchText
+          )
+        }));
+        list.replaceChildren(...entries.map((entry) => entry.item));
+        render();
+      } catch {
+        status.textContent = "The search index is unavailable.";
+        fallback.hidden = false;
+      } finally {
+        list.removeAttribute("aria-busy");
+        loading = false;
       }
-      input.value = "";
-      filter();
-      input.focus();
-    };
+    }
 
-    document.addEventListener("click", (event) => {
-      if (event.target instanceof Element && event.target.closest("[data-site-search-open]"))
-        open();
-    });
+    function open(trigger?: HTMLElement) {
+      if (!dialog || !input || dialog.open) return;
+      const active = document.activeElement;
+      returnFocusTo =
+        trigger ??
+        (active instanceof HTMLElement && active !== document.body ? active : null) ??
+        triggers.find((item) => item.getClientRects().length > 0) ??
+        document.querySelector<HTMLElement>(".mobile-index > summary");
+      dialog.showModal();
+      input.value = "";
+      render();
+      input.focus();
+      void loadIndex();
+    }
+
+    for (const trigger of triggers) {
+      trigger.addEventListener("click", (event) => {
+        if (
+          event.defaultPrevented ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.altKey ||
+          event.shiftKey
+        )
+          return;
+        event.preventDefault();
+        open(trigger);
+      });
+    }
     dialog.addEventListener("close", () => {
-      if (returnFocusTo instanceof HTMLElement && returnFocusTo.isConnected) returnFocusTo.focus();
+      if (returnFocusTo?.isConnected) returnFocusTo.focus();
       returnFocusTo = null;
     });
     dialog
@@ -284,16 +199,14 @@ const pages: SearchPage[] = [
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
     });
-    input.addEventListener("input", filter);
+    input.addEventListener("input", render);
     document.addEventListener(
       "keydown",
       (event) => {
         if (event.key === "Escape" && dialog.open) {
           event.preventDefault();
           dialog.close();
-          return;
-        }
-        if (
+        } else if (
           (event.metaKey || event.ctrlKey) &&
           !event.altKey &&
           !event.shiftKey &&
@@ -305,7 +218,9 @@ const pages: SearchPage[] = [
       },
       true
     );
-  })();
+  }
+
+  bindSearch();
 </script>
 
 <style>
@@ -326,6 +241,7 @@ const pages: SearchPage[] = [
     font-size: 0.7rem;
     font-weight: 700;
     cursor: pointer;
+    text-decoration: none;
   }
   .site-search__trigger:hover,
   .site-search__trigger:focus-visible {
@@ -409,66 +325,10 @@ const pages: SearchPage[] = [
     color: var(--copy-soft);
     font-size: 0.7rem;
   }
-  .site-search__results {
+  .site-search__content {
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    border-top: 1px solid var(--line);
-  }
-  .site-search__results ul {
-    display: grid;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  .site-search__results li {
-    border-bottom: 1px solid var(--line);
-  }
-  .site-search__results li[hidden] {
-    display: none;
-  }
-  .site-search__results a {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.7rem 0.3rem;
-    color: var(--paper);
-    text-decoration: none;
-  }
-  .site-search__results a:hover,
-  .site-search__results a:focus-visible {
-    color: var(--paper);
-    background: var(--hover-surface);
-  }
-  .site-search__results a span {
-    display: grid;
-    gap: 0.15rem;
-  }
-  .site-search__results strong {
-    font-size: 0.88rem;
-  }
-  .site-search__results small {
-    color: var(--copy-soft);
-    font-size: 0.7rem;
-    line-height: 1.4;
-  }
-  .site-search__results em {
-    color: var(--brass);
-    font: 700 0.55rem/1.3 var(--mono);
-    text-align: right;
-    text-transform: uppercase;
-  }
-  .site-search__empty {
-    padding: 1.2rem 0.3rem;
-    color: var(--copy-soft);
-  }
-  .site-search__empty span {
-    display: block;
-  }
-  .site-search__empty-starts {
-    margin-top: 0.5rem;
-    font-size: 0.7rem;
   }
   .site-search__hint {
     display: flex;

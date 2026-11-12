@@ -96,12 +96,14 @@ const gb = (bytes) => `${(bytes / 1e9).toFixed(2)} GB`;
 export async function main(argv) {
   const apply = argv.includes("--apply");
   const includeBuilds = argv.includes("--builds");
+  const json = argv.includes("--json");
   const unknown = argv.filter((arg) => !["--apply", "--builds", "--json"].includes(arg));
   if (unknown.length) throw new Error(`Unknown argument: ${unknown[0]}`);
 
   const roots = includeBuilds ? [...evidenceRoots, ...buildRoots] : evidenceRoots;
   const before = await freeBytes();
   const report = [];
+  const skippedRoots = [];
   let reclaimable = 0;
   let removed = 0;
 
@@ -114,7 +116,7 @@ export async function main(argv) {
       return null;
     });
     if (details?.isSymbolicLink()) {
-      process.stdout.write(`${spec.path}: symlink skipped\n`);
+      skippedRoots.push(spec.path);
       continue;
     }
     const entries = details ? await readEntries(dir) : [];
@@ -145,6 +147,21 @@ export async function main(argv) {
   }
 
   const after = await freeBytes();
+  if (json) {
+    process.stdout.write(
+      JSON.stringify({
+        apply,
+        roots: report,
+        skippedRoots,
+        reclaimableBytes: reclaimable,
+        freeBytesBefore: before,
+        freeBytesAfter: after,
+        removed
+      }) + "\n"
+    );
+    return 0;
+  }
+  for (const root of skippedRoots) process.stdout.write(`${root}: symlink skipped\n`);
   for (const line of report) {
     const age = line.maxAgeDays ? `${line.maxAgeDays}d` : "always";
     process.stdout.write(
@@ -161,6 +178,6 @@ export async function main(argv) {
   return 0;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
   process.exitCode = await main(process.argv.slice(2));
 }

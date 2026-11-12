@@ -7,6 +7,7 @@ import auditLog from "@emdash-cms/plugin-audit-log";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import { buildIdentityIntegration } from "./scripts/build-identity.mjs";
+import { enquirySubmitRequest } from "./src/plugins/enquiry-request.mjs";
 
 const siteOrigin =
   process.env.WOODHOUSE_SITE_URL ??
@@ -66,7 +67,7 @@ const enquiries = woodhousePlugin("woodhouse-enquiries", ["email:send"], {
       name: "submit",
       public: true,
       methods: ["POST"],
-      request: { body: "form-data", maxBytes: 8192 },
+      request: enquirySubmitRequest,
       response: "raw"
     },
     {
