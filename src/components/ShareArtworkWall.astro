@@ -1,10 +1,12 @@
 ---
 import ShowcaseGallery from "./ShowcaseGallery.astro";
+import { projectStoriesKit } from "../data/showcase-project-stories";
 import { shareNavigation } from "../data/share-browser";
 import type { CampaignItem } from "../data/showcase-campaign";
 
 const categories = [
   ["", "All"],
+  ["project-stories", "Project stories"],
   ["banner", "Banners"],
   ["icon", "Avatars"],
   ["special", "Special icons"],
@@ -50,7 +52,9 @@ const filtered = art.filter(
     (!category ||
       (category === "earlier"
         ? !item.use || item.archived
-        : !item.archived && (category === "sketch" || item.use === category)))
+        : category === "project-stories"
+          ? !item.archived && item.series === category
+          : !item.archived && (category === "sketch" || item.use === category)))
 );
 const size = 24;
 const requested = Number(params.get("artPage") ?? 1);
@@ -67,6 +71,7 @@ const path = (number: number, nextCategory: string = category) => {
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
 };
 const next = page < pages ? path(page + 1) : "";
+const previous = page > 1 ? path(page - 1) : "";
 const projectPack = project
   ? works.find((item) => item.project === project && item.socialPack)?.socialPack
   : undefined;
@@ -111,6 +116,22 @@ const artworkPages = Object.fromEntries(
       </a>
     ))}
   </nav>
+  {pages > 1 && (
+    <nav class="art-page-links" aria-label="Artwork pages">
+      {previous && <a href={`${previous}#artwork`}>Previous page</a>}
+      <span>
+        Page {page} of {pages}
+      </span>
+      {next && <a href={`${next}#artwork`}>Next page</a>}
+    </nav>
+  )}
+  {category === "project-stories" && !project && !placement && (
+    <p class="art-previous">
+      <a href={projectStoriesKit} download>
+        Download Project stories kit
+      </a>
+    </p>
+  )}
   {projectPack && (
     <p class="art-previous">
       <a href={projectPack} download>
@@ -122,11 +143,6 @@ const artworkPages = Object.fromEntries(
     <p class="art-empty">
       No artwork matches these filters.{" "}
       <a href={shareNavigation("/share/", params)}>Show all artwork</a>.
-    </p>
-  )}
-  {page > 1 && (
-    <p class="art-previous">
-      <a href={path(page - 1)}>Previous artwork</a>
     </p>
   )}
   <div data-art-stream>
@@ -319,6 +335,20 @@ const artworkPages = Object.fromEntries(
   }
   .art-sketches h2 {
     margin: 0;
+  }
+  .art-page-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+    margin-block: 0 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .art-page-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
   .art-pagination {
     display: flex;
