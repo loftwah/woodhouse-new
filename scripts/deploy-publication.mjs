@@ -71,8 +71,8 @@ function run(binary, args, options = {}) {
 // safe; the attempt that finally passed is named in the output.
 function auditPages(origin, scope) {
   const args = ["run", "audit:pages", "--", origin, ...auditScopeArguments(scope)];
-  // A cold full production audit overloaded public record reads at the default
-  // request rate. Four requests per second passed with the same assertions.
+  // Full production audits saw intermittent failures on public record reads
+  // at the default rate. Four requests per second passed the same assertions.
   if (environment === "production" && scope === null) args.push("--request-interval=250");
   let last;
   for (let attempt = 1; attempt <= 3; attempt += 1) {

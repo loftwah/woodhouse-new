@@ -28,7 +28,6 @@ const OPERATOR_KEY = "woodhouse.merch.operator.v1";
 const CHECKOUT_KEY = "woodhouse.merch.checkout.v1";
 const storageProblem =
   "This browser could not save the change. Check its storage settings and try again.";
-let temporaryCheckoutId: string | undefined;
 
 type OperatorState = {
   candidates: Record<string, "approved" | "returned" | "rejected">;
@@ -187,13 +186,12 @@ function checkoutId() {
     sessionStorage.setItem(CHECKOUT_KEY, created);
     return created;
   } catch {
-    return (temporaryCheckoutId ??= crypto.randomUUID());
+    throw new Error(storageProblem);
   }
 }
 
 /** A payment attempt has settled, so the next checkout is a new order. */
 function closeCheckoutSession() {
-  temporaryCheckoutId = undefined;
   try {
     sessionStorage.removeItem(CHECKOUT_KEY);
   } catch {
