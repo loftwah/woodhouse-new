@@ -1,3 +1,4 @@
+import { shareStudio } from "./showcase-share-studio.ts";
 import { projectStudies } from "./showcase-project-studies.ts";
 import { directSocial } from "./showcase-direct-social.ts";
 import { featuredPosters } from "./showcase-featured-posters.ts";
@@ -26,6 +27,7 @@ export type CampaignItem = {
   project: string;
   title: string;
   stage?: string;
+  use?: "banner" | "icon" | "special" | "sketch" | "seasonal" | "feature" | "comparison" | "art";
   alt: string;
   caption: string;
   image: string;
@@ -94,6 +96,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...shareStudio,
   ...projectStudies,
   ...directSocial,
   ...featuredPosters,

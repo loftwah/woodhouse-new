@@ -1,3 +1,5 @@
+import { makingOfCampaign } from "./showcase-product-social.ts";
+
 export const originals = [
   {
     project: "bubbles",
@@ -400,3 +402,39 @@ export const originals = [
     height: 1402
   }
 ] as const;
+
+export function publicOriginalArtwork(publicProjects: ReadonlySet<string>) {
+  const destinations = new Map(makingOfCampaign.map((item) => [item.project, item]));
+  const base = "/campaign/20261113-original-art";
+  return originals.flatMap(({ project, title, drawing, alt, file, slug, width, height }) => {
+    const destination = destinations.get(project);
+    if (!destination || (project !== "woodhouse" && !publicProjects.has(project))) return [];
+    const original = `${base}/${file}`;
+    return [
+      {
+        drawing,
+        item: {
+          id: `original-${slug}`,
+          project,
+          title,
+          alt,
+          caption: `${title}. ${drawing ? "A new process drawing for Making the Work." : "Original campaign illustration."}\n${destination.href}`,
+          image: `${base}/${slug}-preview.jpg`,
+          thumbnail: `${base}/${slug}-thumb.jpg`,
+          original,
+          width,
+          height,
+          reviewedAt: "2026-11-13",
+          credit: "Woodhouse · Codex ImageGen",
+          kind: "editorial composition" as const,
+          href: destination.href,
+          action: destination.action,
+          source: `${base}/notes.txt`,
+          formats: [
+            { label: drawing ? "Original PNG" : "Lossless WebP", image: original, width, height }
+          ]
+        }
+      }
+    ];
+  });
+}

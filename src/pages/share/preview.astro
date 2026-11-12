@@ -49,7 +49,7 @@ const imageAlt = !selected
 
 <BaseLayout
   title="Social preview"
-  description="Preview campaign artwork in seven social placements and download the exact file."
+  description="Preview campaign artwork in social placements and download the exact file."
   path={path}
   currentPath="/share/"
 >
@@ -128,7 +128,8 @@ const imageAlt = !selected
 
           <h2>{selected.work.title}</h2>
           <p class="format">
-            {preset.platform} · {selected.file.width} × {selected.file.height} · JPEG
+            {preset.platform} · {selected.file.width} × {selected.file.height} ·{" "}
+            {selected.file.image.endsWith(".png") ? "PNG" : "JPEG"}
           </p>
           <ShareActions
             image={selected.file.image}
@@ -271,6 +272,14 @@ const imageAlt = !selected
   }
   .preview-stage:has([data-preview-guide]:checked) .edge-guide {
     display: block;
+  }
+  [data-platform="youtube-banner"] .edge-guide {
+    inset: 35.3% 19.85%;
+    border: 2px dashed white;
+  }
+  [data-platform="avatars"] .edge-guide {
+    border: 2px dashed white;
+    border-radius: 50%;
   }
   [data-platform="x"] .edge-guide {
     background: linear-gradient(

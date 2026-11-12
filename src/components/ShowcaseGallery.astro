@@ -9,8 +9,17 @@ type Props = {
   compact?: boolean;
   staggered?: boolean;
   eager?: boolean;
+  showPlacement?: boolean;
+  placement?: string;
 };
-const { items, compact = false, staggered = false, eager = true } = Astro.props;
+const {
+  items,
+  compact = false,
+  staggered = false,
+  eager = true,
+  showPlacement = false,
+  placement
+} = Astro.props;
 const containerWidth = "min(calc(100vw - clamp(2.5rem, 8vw, 9rem)), 1440px)";
 const imageSizes = (item: (typeof items)[number], index: number) => {
   if (staggered) {
@@ -44,6 +53,10 @@ const imageSources = (item: (typeof items)[number]) => {
   const image = campaignResponsiveImage(item);
   return `${image.thumbnail} ${image.thumbnailWidth}w, ${item.image} ${image.fullWidth}w`;
 };
+const formatFor = (item: (typeof items)[number]) =>
+  item.formats?.find(({ label }) => label === placement) ?? item.formats?.[0];
+const downloadFor = (item: (typeof items)[number]) =>
+  placement ? (formatFor(item)?.image ?? item.original) : item.original;
 const productName = (slug: string) =>
   ({
     bubbles: "Bubbles",
@@ -98,6 +111,11 @@ const productName = (slug: string) =>
             {item.action} <span class="action-name">{productName(item.project)}</span>
           </a>
         </div>
+        {showPlacement && formatFor(item) && (
+          <p class="work-placement">
+            {formatFor(item)?.label} · {formatFor(item)?.width} × {formatFor(item)?.height}
+          </p>
+        )}
         {item.stage && (
           <p class="process-note">
             <strong>{item.stage}</strong> {item.caption.split("\n")[0]}
@@ -105,10 +123,10 @@ const productName = (slug: string) =>
         )}
         <ShareActions
           caption={item.caption}
-          image={item.original}
-          shareSource={item.formats ? item.original : item.image}
+          image={downloadFor(item)}
+          shareSource={item.formats ? downloadFor(item) : item.image}
           fallbackImage={item.image}
-          filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
+          filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
           link={item.href}
           presentation="gallery"
         >
@@ -187,69 +205,77 @@ const productName = (slug: string) =>
   ))}
 </div>
 <script>
-  if ("ResizeObserver" in window) {
-    for (const wall of document.querySelectorAll<HTMLElement>("[data-staggered-wall]")) {
-      const works = [...wall.querySelectorAll<HTMLElement>(":scope > figure")];
-      const fit = (work: HTMLElement) => {
-        const rows = Math.ceil((work.offsetHeight + 24) / 8);
-        work.style.setProperty("--work-rows", String(rows));
-      };
-      for (const work of works) fit(work);
-      wall.dataset.staggeredReady = "";
-      const observer = new ResizeObserver((entries) => {
-        for (const { target } of entries) {
-          if (target instanceof HTMLElement) fit(target);
+  function bindGallery(scope: Document | HTMLElement) {
+    if ("ResizeObserver" in window) {
+      for (const wall of scope.querySelectorAll<HTMLElement>("[data-staggered-wall]")) {
+        const works = [...wall.querySelectorAll<HTMLElement>(":scope > figure")];
+        const fit = (work: HTMLElement) => {
+          const rows = Math.ceil((work.offsetHeight + 24) / 8);
+          work.style.setProperty("--work-rows", String(rows));
+        };
+        for (const work of works) fit(work);
+        wall.dataset.staggeredReady = "";
+        const observer = new ResizeObserver((entries) => {
+          for (const { target } of entries) {
+            if (target instanceof HTMLElement) fit(target);
+          }
+        });
+        for (const work of works) observer.observe(work);
+      }
+    }
+    for (const link of scope.querySelectorAll<HTMLAnchorElement>("[data-open-art]")) {
+      const dialog = document.getElementById(link.dataset.openArt ?? "");
+      if (!(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== "function")
+        continue;
+      let returnFocus: HTMLElement | null = null;
+      link.addEventListener("click", (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
+          return;
+        event.preventDefault();
+        returnFocus = link;
+        dialog.showModal();
+        const image = dialog.querySelector<HTMLImageElement>("[data-viewer-original]");
+        const status = dialog.querySelector<HTMLElement>("[data-viewer-status]");
+        if (image?.dataset.viewerOriginal && image.dataset.originalLoaded !== "true") {
+          if (status) status.textContent = "Loading original image…";
+          image.onload = () => {
+            image.dataset.originalLoaded = "true";
+            if (status) status.textContent = "Original image loaded.";
+          };
+          image.onerror = () => {
+            image.onload = null;
+            image.onerror = null;
+            if (image.dataset.viewerPreview) image.src = image.dataset.viewerPreview;
+            const download = dialog.querySelector<HTMLAnchorElement>("[data-viewer-download]");
+            if (download && image.dataset.viewerPreview) {
+              download.href = image.dataset.viewerPreview;
+              download.textContent = "Download gallery preview";
+            }
+            if (status)
+              status.textContent =
+                "The original image is unavailable. Showing the gallery preview.";
+          };
+          image.src = image.dataset.viewerOriginal;
         }
       });
-      for (const work of works) observer.observe(work);
+      dialog.addEventListener("close", () => returnFocus?.focus({ preventScroll: true }));
+      dialog.addEventListener("click", (event) => {
+        if (event.target !== dialog) return;
+        const bounds = dialog.getBoundingClientRect();
+        if (
+          event.clientX < bounds.left ||
+          event.clientX > bounds.right ||
+          event.clientY < bounds.top ||
+          event.clientY > bounds.bottom
+        )
+          dialog.close();
+      });
     }
   }
-  for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-open-art]")) {
-    const dialog = document.getElementById(link.dataset.openArt ?? "");
-    if (!(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== "function") continue;
-    let returnFocus: HTMLElement | null = null;
-    link.addEventListener("click", (event) => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
-        return;
-      event.preventDefault();
-      returnFocus = link;
-      dialog.showModal();
-      const image = dialog.querySelector<HTMLImageElement>("[data-viewer-original]");
-      const status = dialog.querySelector<HTMLElement>("[data-viewer-status]");
-      if (image?.dataset.viewerOriginal && image.dataset.originalLoaded !== "true") {
-        if (status) status.textContent = "Loading original image…";
-        image.onload = () => {
-          image.dataset.originalLoaded = "true";
-          if (status) status.textContent = "Original image loaded.";
-        };
-        image.onerror = () => {
-          image.onload = null;
-          image.onerror = null;
-          if (image.dataset.viewerPreview) image.src = image.dataset.viewerPreview;
-          const download = dialog.querySelector<HTMLAnchorElement>("[data-viewer-download]");
-          if (download && image.dataset.viewerPreview) {
-            download.href = image.dataset.viewerPreview;
-            download.textContent = "Download gallery preview";
-          }
-          if (status)
-            status.textContent = "The original image is unavailable. Showing the gallery preview.";
-        };
-        image.src = image.dataset.viewerOriginal;
-      }
-    });
-    dialog.addEventListener("close", () => returnFocus?.focus({ preventScroll: true }));
-    dialog.addEventListener("click", (event) => {
-      if (event.target !== dialog) return;
-      const bounds = dialog.getBoundingClientRect();
-      if (
-        event.clientX < bounds.left ||
-        event.clientX > bounds.right ||
-        event.clientY < bounds.top ||
-        event.clientY > bounds.bottom
-      )
-        dialog.close();
-    });
-  }
+  bindGallery(document);
+  document.addEventListener("woodhouse:artwork-added", ({ target }) => {
+    if (target instanceof HTMLElement) bindGallery(target);
+  });
 </script>
 <style>
   .showcase-wall {
@@ -324,6 +350,11 @@ const productName = (slug: string) =>
     min-height: 44px;
     font-size: 0.875rem;
     font-weight: 650;
+  }
+  .work-placement {
+    margin: 0.25rem 0 0.45rem;
+    color: var(--muted);
+    font-size: 0.8rem;
   }
   .work-credit {
     color: var(--muted);

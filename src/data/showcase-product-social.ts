@@ -311,7 +311,7 @@ function productCampaign(
       id: `${prefix}-${slug}`,
       project: slug,
       title: headlines[primary],
-      stage,
+      ...(stage ? { stage } : {}),
       alt,
       caption: `${caption}\n${href}`,
       href,

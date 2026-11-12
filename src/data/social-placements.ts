@@ -64,5 +64,50 @@ export const socialPlacements = [
     example: "direct-social-youtube",
     source: "https://support.google.com/youtube/answer/72431",
     note: "A 16:9 still for a regular video thumbnail. Use Small preview to check whether the artwork reads at a glance."
+  },
+  {
+    id: "youtube-banner",
+    platform: "YouTube banner",
+    placement: "Channel banner",
+    format: "YouTube channel banner",
+    example: "share-art-woodhouse-channel-cover",
+    source: "https://support.google.com/youtube/answer/10456525",
+    note: "A 2560 × 1440 channel banner. The guide shows the central region for essential details across different devices.",
+    guide: "Safe area guide"
+  },
+  {
+    id: "linkedin-cover",
+    platform: "LinkedIn cover",
+    placement: "Profile background",
+    format: "LinkedIn cover",
+    example: "share-art-composer-linkedin-cover",
+    source: "https://www.linkedin.com/help/linkedin/answer/a568217",
+    note: "A 1584 × 396 profile background. Check how LinkedIn places your profile photo over it."
+  },
+  {
+    id: "facebook-cover",
+    platform: "Facebook cover",
+    placement: "Page cover",
+    format: "Facebook cover",
+    example: "share-art-bubbles-cover-sparks",
+    note: "Wide Page cover artwork. Check the mobile and desktop crop before publishing."
+  },
+  {
+    id: "avatars",
+    platform: "Avatars",
+    placement: "Square profile artwork",
+    format: "Profile icon",
+    example: "share-art-foilbury-lantern-avatar",
+    note: "A 512 × 512 square for project profiles. The guide previews a circular crop.",
+    guide: "Circle guide"
+  },
+  {
+    id: "discord-sticker",
+    platform: "Discord stickers",
+    placement: "Custom sticker",
+    format: "Discord sticker",
+    example: "share-art-foilbury-sticker-moss",
+    source: "https://support.discord.com/hc/en-us/articles/4403089981975-Custom-Stickers-FAQ",
+    note: "A transparent 320 × 320 PNG. Upload it under Server Settings → Stickers where you have permission."
   }
 ] as const;

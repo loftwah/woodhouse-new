@@ -1,13 +1,6 @@
 ---
-import {
-  fieldNotesCampaign,
-  makingOfCampaign,
-  productSocialCampaign
-} from "../data/showcase-product-social";
-import { projectStudies } from "../data/showcase-project-studies";
-import { directSocial } from "../data/showcase-direct-social";
-import { featuredPosters } from "../data/showcase-featured-posters";
-import ShowcaseGallery from "../components/ShowcaseGallery.astro";
+import ShareArtworkWall from "../components/ShareArtworkWall.astro";
+import { publicOriginalArtwork } from "../data/showcase-originals";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
 import {
@@ -275,22 +268,21 @@ const kitProjects = projects;
 const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
-const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
-const processWork = freshWork.filter((item) => makingOfCampaign.includes(item));
-const posterWork = freshWork.filter(
-  (item) =>
-    projectStudies.includes(item) || directSocial.includes(item) || featuredPosters.includes(item)
+const originalArtwork = publicOriginalArtwork(publicIds).filter(
+  ({ item }) => !selected || item.project === selected.slug
 );
-const newestEdition = [
-  [...posterWork, ...processWork],
-  ...[fieldNotesCampaign, productSocialCampaign].map((edition) =>
-    freshWork.filter((item) => edition.includes(item))
-  )
-].find((edition) => edition.length > 0);
-const latestWork = newestEdition ?? (freshWork.length ? freshWork : featuredCampaign);
-const latestIds = new Set(latestWork.map(({ id }) => id));
-const earlierWork = featuredCampaign.filter(({ id }) => !latestIds.has(id));
-const featuredSocial = campaignSocial(latestWork);
+const artwork = [
+  ...featuredCampaign.filter((item) => !item.archived),
+  ...originalArtwork.map(({ item }) => item),
+  ...featuredCampaign.filter((item) => item.archived)
+];
+const featuredSocial = campaignSocial(featuredCampaign);
+const firstArtPage = Number(Astro.url.searchParams.get("artPage") ?? 1) <= 1;
+const sketchHref = `/share/?${new URLSearchParams({ artType: "sketch", ...(selected ? { artProject: selected.slug } : {}) })}`;
+const earlierHref = `/share/?${new URLSearchParams({ artType: "earlier", ...(selected ? { artProject: selected.slug } : {}) })}`;
+const hasArtFilter = ["artType", "artProject", "artFormat"].some((key) =>
+  Astro.url.searchParams.get(key)
+);
 const showcaseClips = gameMedia.filter(
   (asset) =>
     ["app-composer-studio-film-20261014", "protocol11-last-card-16s"].includes(asset.id) &&
@@ -328,11 +320,11 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
     {showcase && (
       <>
         <header class="showcase-heading">
-          <h1>
-            {selected?.name ??
-              (processWork.length ? "Making the work." : "Made to be played. Heard. Tried.")}
-          </h1>
+          <h1>{selected?.name ?? "Share artwork."}</h1>
           <nav class="share-jumps" aria-label="More media">
+            <a href={shareNavigation(sketchHref, Astro.url.searchParams)}>
+              Sketches &amp; drawings
+            </a>
             <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
             <a href={shareNavigation("/share/?type=logos", Astro.url.searchParams)}>
               Logos &amp; icons
@@ -341,31 +333,22 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
               Original art &amp; drawings
             </a>
             <a href="/share/resources/">Creative resources</a>
-            <a href={processWork.length ? "#earlier-campaigns" : "#archive"}>Earlier artwork</a>
           </nav>
         </header>
-        <nav aria-label="Featured projects" class="showcase-projects">
-          <a
-            href={shareNavigation("/share/", Astro.url.searchParams)}
-            aria-current={!selected ? "page" : undefined}
-          >
-            All work
-          </a>
-          {projects.map((project) => (
-            <a
-              href={shareNavigation(`/share/${project.slug}/`, Astro.url.searchParams)}
-              aria-current={selected?.slug === project.slug ? "page" : undefined}
-            >
-              {project.name}
-            </a>
-          ))}
-        </nav>
-        <ShowcaseGallery
-          items={latestWork}
-          compact={!selected && freshWork.length > 0}
-          staggered={!selected && processWork.length > 0}
+        <ShareArtworkWall
+          works={artwork}
+          sketches={originalArtwork.filter(({ drawing }) => drawing).map(({ item }) => item)}
+          projects={[
+            ...projects.filter(({ slug }) => artwork.some((item) => item.project === slug)),
+            ...(artwork.some(({ project }) => project === "woodhouse")
+              ? [{ slug: "woodhouse", name: "Woodhouse" }]
+              : [])
+          ]}
         />
-        {showcaseClips.length > 0 && (
+        <p id="earlier-campaigns">
+          <a href={shareNavigation(earlierHref, Astro.url.searchParams)}>Earlier campaigns</a>
+        </p>
+        {firstArtPage && !hasArtFilter && showcaseClips.length > 0 && (
           <section class="motion-selection" aria-labelledby="motion-title">
             <h2 id="motion-title">In motion.</h2>
             <div class="motion-gallery">
@@ -384,15 +367,13 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             </div>
           </section>
         )}
-        {earlierWork.length > 0 && (
-          <section class="motion-selection" id="earlier-campaigns" aria-labelledby="earlier-title">
-            <h2 id="earlier-title">Earlier campaigns</h2>
-            <ShowcaseGallery items={earlierWork} eager={false} />
-          </section>
-        )}
       </>
     )}
-    <div id="archive" class:list={["archive", { "after-showcase": showcase }]}>
+    <div
+      id="archive"
+      class:list={["archive", { "after-showcase": showcase }]}
+      hidden={showcase && (hasArtFilter || !firstArtPage)}
+    >
       {showcase && <h2 class="archive-heading">Keep exploring.</h2>}
       <header class:list={["gallery-intro", { "archive-intro": showcase }]}>
         <div>

@@ -117,3 +117,25 @@ The bounded-browsing finish review on 12 October 2026 returned **SHIP**, with TH
 Earlier clipboard checks accepted actual writes for PNG and JPG artwork at 1200 × 630 and a diagram at 2081 × 528. The refresh accepted actual PNG clipboard writes for the current SHOALSHOT wordmark at 1998 × 424 and emblem at 1161 × 1161, superseding the historical 636 × 94 wordmark check. The downloaded wordmark decoded as RGBA with alpha spanning 0–255, and its original bytes matched the immutable upstream source. These checks establish browser write acceptance and original-file integrity; they do not establish a physical operating-system paste, destination-app acceptance or published social post.
 
 Keep each selected collection's previews and actions immediately visible, with native project/type browsing and pagination limiting the scroll. All approved assets must remain reachable without a reading prerequisite. Preserve source credits, original files, snapshot boundaries and truthful local-result limits. Do not infer popularity, invent scores or adoption, add an account/collector, or automatically post. Production deployment identity, live-hostname verification and physical device/share-destination acceptance remain separate evidence.
+
+## Direction contract — 13 November 2026 AEDT
+
+**Thesis.** Share is the portfolio's visual working library. The main route
+opens on the newest artwork and continues into the archive as you scroll.
+
+**Own-world.** Retain Woodhouse ink, lime links, the house display face and
+authored image ratios. Illustrations, portraits, wides and icons make the rhythm.
+
+**Story.** Pick a project or a job such as headers, avatars, seasonal art or
+comparisons. Open, copy or download the work directly from the wall. The clean
+sketches have a visible entry and a group on the main wall.
+
+**First viewport.** Keep the title and controls short. Lead with full-colour
+pieces and use an adjacent wide crop or drawing where it fits the artwork order.
+
+**Form.** Extend the current staggered gallery in place. The same canonical
+route supports filters and ordinary page links when JavaScript is unavailable.
+
+**Finish.** Inspect the actual phone and desktop wall, append artwork across
+multiple batches, download an original, copy a late-loaded image and verify
+the older individual drawings and URLs in production.
