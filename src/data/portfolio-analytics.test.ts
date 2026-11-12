@@ -743,6 +743,7 @@ test("optional browser associations are project-scoped hashes, deduplicate sessi
   assert.equal(report.metrics.find((m) => m.key === "browsers")?.value, 1);
   assert.equal(report.metrics.find((m) => m.key === "returning_browsers")?.value, 0);
   assert.equal(report.metrics.find((m) => m.key === "visits")?.value, 1);
+  assert.equal(report.metrics.find((m) => m.key === "visits")?.quality, "partial");
   await collectEngagement(
     request(woodhouseVisit({ sessionId: crypto.randomUUID() }), woodhouseHeaders),
     db,
@@ -958,7 +959,7 @@ test("frozen reports retain reviewed release context, filter membership and reje
   assert.equal((await readPortfolioReport(db, report.id))?.releases, undefined);
 });
 
-test("the collector accepts exactly the same six discovery targets as the browser", async () => {
+test("the collector accepts active discovery targets and rejects paused and retired destinations", async () => {
   const { db, sqlite } = database();
   for (const target of [
     "app-composer",
@@ -968,6 +969,9 @@ test("the collector accepts exactly the same six discovery targets as the browse
     "loftwahfm",
     "bubbles",
     "max",
+    "foilbury",
+    "liferaft",
+    "social-club",
     "asset-hunter",
     "pirates"
   ]) {
@@ -977,14 +981,21 @@ test("the collector accepts exactly the same six discovery targets as the browse
       db,
       now
     );
-    assert.equal(response.status, ["max", "asset-hunter", "pirates"].includes(target) ? 400 : 204);
+    assert.equal(
+      response.status,
+      ["social-club", "asset-hunter", "pirates"].includes(target) ? 400 : 204
+    );
   }
   assert.equal(
     sqlite
       .prepare("SELECT SUM(value) AS n FROM wh_analytics_daily WHERE metric LIKE 'referral_%'")
       .get()!.n,
-    6
+    9
   );
+  const { metrics } = await localAnalytics(db, "woodhouse", 7, now);
+  for (const target of ["foilbury", "liferaft", "max"])
+    assert.equal(metrics.find((metric) => metric.key === `referral_${target}`)?.value, 1);
+  sqlite.close();
 });
 
 test("a current Melbourne review is frozen without moving its observed date or UTC report window", async () => {
