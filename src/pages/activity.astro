@@ -358,6 +358,18 @@ const headlines =
         metric: rows[0]?.data?.metrics.find((m) => m.key === key)
       }))
     : metricRows;
+const quickMeasures =
+  selected && view
+    ? view.headlines.map((key) => ({
+        key,
+        label: choices.find((choice) => choice.key === key)?.label ?? key
+      }))
+    : [];
+const leadMetric = !overview ? metricRows[0]?.metric : undefined;
+const leadQualifier = !overview
+  ? reportQualifier(leadMetric, metricRows[0]?.data ?? null, window)
+  : "";
+const leadMeasured = Boolean(leadMetric && leadMetric.value !== null);
 // The chart, its legend and the exported CSV describe the same applicable scope
 // as the daily table and the coverage calendar. An in-scope project with no
 // observation keeps its column and legend entry as an all-gap series rather than
@@ -379,6 +391,8 @@ const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
 const unit =
   chartRows.find((r) => r.metric)?.metric?.unit ??
   (measure.key.endsWith("_seconds") ? "seconds" : "count");
+const leadValue = leadMeasured && leadMetric ? formatMetric(leadMetric) : "—";
+const leadLabel = unit === "seconds" ? "active play time" : measure.label.toLowerCase();
 const days = dateDays(window);
 // Applicable scope, never a truthy-value count: a project that should report this
 // measure but did not stays in the denominator as "not measured".
@@ -1005,6 +1019,39 @@ const dataPayload = {
               </section>
             )}
             <section class="main-chart" aria-labelledby="trend-heading">
+              {!overview && selected && (
+                <div class="chart-lead">
+                  <div class="chart-lead__read">
+                    <p class="chart-lead__count">
+                      <strong>{leadValue}</strong>
+                      <span>
+                        {leadMeasured ? `${leadLabel} reported` : `${leadLabel} not measured`}
+                      </span>
+                    </p>
+                    <p class="chart-lead__window">
+                      {dateLabel(window.from)} – {dateLabel(window.to)} · UTC
+                    </p>
+                  </div>
+                  <p class="chart-lead__coverage">
+                    <span>{leadQualifier}</span>
+                    <span>
+                      {unit === "seconds"
+                        ? "Recorded active time, not people."
+                        : "Recorded actions, not people."}
+                    </span>
+                  </p>
+                  <nav class="chart-lead__measures" aria-label="Quick measures">
+                    {quickMeasures.map((item) => (
+                      <a
+                        href={pageLink({ measure: item.key })}
+                        aria-current={measure.key === item.key ? "page" : undefined}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+              )}
               <div class:list={["chart-heading", { "chart-heading--overview": overview }]}>
                 <div>
                   <h2 id="trend-heading">
@@ -1027,26 +1074,6 @@ const dataPayload = {
                     </p>
                   )}
                 </div>
-                {!overview && selected && (
-                  <p class="selected-total">
-                    <strong>
-                      {week
-                        ? formatMetric({ value: week.value, unit: week.unit })
-                        : metricRows[0]?.metric
-                          ? formatMetric(metricRows[0].metric)
-                          : "—"}
-                    </strong>
-                    <span>
-                      {week
-                        ? "All 7 days counted"
-                        : reportQualifier(
-                            metricRows[0]?.metric,
-                            metricRows[0]?.data ?? null,
-                            window
-                          )}
-                    </span>
-                  </p>
-                )}
                 <form class="measure-picker" method="get" action="/activity/">
                   {[...new URL(pageLink(), Astro.url.origin).searchParams.entries()]
                     .filter(([key]) => key !== "measure")
@@ -1085,6 +1112,13 @@ const dataPayload = {
                   </button>
                 </div>
               </div>
+
+              {!overview && (
+                <div class="chart-day-inline" data-chart-day-inline hidden>
+                  <span>Selected day</span>
+                  <output data-chart-day-summary aria-live="polite" />
+                </div>
+              )}
 
               {overview ? (
                 <div class="summary-table-wrap">
