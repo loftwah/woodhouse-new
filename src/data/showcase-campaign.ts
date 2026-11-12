@@ -1,6 +1,15 @@
+import { currentCampaign } from "./showcase-current.ts";
+
 /** Reviewed 25 October 2026. Woodhouse editorial campaign, separate from native OG art.
  * Assets contain published artwork or staged production captures, never visitor records.
  */
+export type CampaignFormat = {
+  label: string;
+  image: string;
+  width: number;
+  height: number;
+};
+
 export type CampaignItem = {
   id: string;
   project: string;
@@ -19,6 +28,8 @@ export type CampaignItem = {
   source: string;
   requiredProjects?: string[];
   landscapeImage?: string;
+  thumbnail?: string;
+  formats?: readonly CampaignFormat[];
 };
 const base = "/campaign/20261025/";
 const refined = (entry: CampaignItem, file: string): CampaignItem => ({
@@ -68,6 +79,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...currentCampaign,
   item(
     "shoalshot-lantern-ray",
     "shoalshot",

@@ -5,7 +5,7 @@ export function campaignResponsiveImage(item: CampaignItem) {
   const scale = Math.min(1, 1200 / item.width, 1200 / item.height);
   const fullWidth = Math.round(item.width * scale);
   return {
-    thumbnail: `/campaign/20261026-previews/${item.id}.jpg`,
+    thumbnail: item.thumbnail ?? `/campaign/20261026-previews/${item.id}.jpg`,
     thumbnailWidth: Math.min(640, fullWidth),
     fullWidth
   };
@@ -53,6 +53,7 @@ export function campaignSitemapEntries(projectSlugs: string[]) {
         ...new Set(
           collection.flatMap((item) => [
             item.original,
+            ...(item.formats ?? []).map(({ image }) => image),
             ...(item.landscapeImage ? [item.landscapeImage] : [])
           ])
         )
