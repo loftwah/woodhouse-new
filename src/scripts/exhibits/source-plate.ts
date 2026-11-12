@@ -207,6 +207,7 @@ class SourcePlate {
         // reads as a broken exhibit rather than an honest one.
         composedEmpty.textContent = composedReason("missing");
       }
+      this.drawTether();
       return;
     }
 
@@ -239,6 +240,7 @@ class SourcePlate {
     this.sourcePlate.classList.toggle("is-hidden", this.hidden);
     this.composedPlate.classList.toggle("is-empty", !publicVisible);
     this.root.dataset.hidden = String(this.hidden);
+    this.drawTether();
   }
 
   /* ── Separation ───────────────────────────────────────────────────────────── */
