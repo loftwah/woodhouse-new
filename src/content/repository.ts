@@ -709,6 +709,13 @@ export async function listPublicSearchItems() {
       keywords: aliasesFor(project.slug),
       searchText: `${project.title} ${project.summary} ${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
     })),
+    {
+      title: "Social preview",
+      description: "Preview and download artwork for six social platforms.",
+      href: "/share/preview/",
+      section: "Sharing",
+      keywords: "Twitter X LinkedIn TikTok Facebook Instagram YouTube social preview"
+    },
     ...campaignSearchItems(projectResult.projects),
     {
       title: "Creative resources",
