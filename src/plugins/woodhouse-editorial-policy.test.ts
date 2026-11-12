@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { publicationBlock } from "./woodhouse-editorial-policy.ts";
+import plugin, { publicationBlock } from "./woodhouse-editorial-policy.ts";
 
 // Every real publish carries an origin. The default here is the Admin's own API,
 // which is the human path; agent paths are constructed explicitly below.
@@ -176,11 +176,35 @@ test("an agent cannot publish a record that satisfies every other rule", () => {
   );
 });
 
-test("an agent cannot schedule around the publish gate either", () => {
+test("an agent cannot schedule around the publish gate either", async () => {
   const scheduled = { ...dispatchFrom("mcp", 50), scheduledAt: "2026-10-04T09:00:00Z" };
+  assert.deepEqual(await plugin.hooks["content:beforeSchedule"](scheduled as never), {
+    cancel: true,
+    reason:
+      "Agent-originated changes cannot be published. Leave the record as a draft for human review."
+  });
+});
+
+test("a controlled record can be published manually but cannot be scheduled", async () => {
+  const manual = dispatchFrom("api", 50);
+  const scheduled = { ...manual, scheduledAt: "2026-10-04T09:00:00Z" };
+  const rejection = {
+    cancel: true,
+    reason:
+      "Scheduled publication is unavailable for Woodhouse records. Publish the reviewed draft manually in the Admin."
+  };
+  assert.equal(await plugin.hooks["content:beforePublish"](manual as never), undefined);
+  assert.deepEqual(await plugin.hooks["content:beforeSchedule"](scheduled as never), rejection);
+  assert.deepEqual(
+    await plugin.hooks["content:beforePublish"]({
+      ...scheduled,
+      origin: { source: "scheduler" }
+    } as never),
+    rejection
+  );
   assert.equal(
-    publicationBlock(scheduled),
-    "Agent-originated changes cannot be published. Leave the record as a draft for human review."
+    await plugin.hooks["content:beforeSchedule"]({ ...scheduled, collection: "pages" } as never),
+    undefined
   );
 });
 
