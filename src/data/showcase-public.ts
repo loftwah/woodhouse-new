@@ -1,3 +1,4 @@
+import type { PublicSearchItem } from "../content/repository";
 import { campaignItems, type CampaignItem } from "./showcase-campaign.ts";
 
 /** The existing renderer caps display JPEGs at 1200px on their longest edge. */
@@ -59,5 +60,25 @@ export function campaignSitemapEntries(projectSlugs: string[]) {
         )
       ]
     };
+  });
+}
+
+export function campaignSearchItems(
+  projects: { slug: string; name: string }[]
+): PublicSearchItem[] {
+  const names = new Map(projects.map(({ slug, name }) => [slug, name]));
+  return publicCampaignItems([...names.keys()]).flatMap((item) => {
+    if (!item.formats?.length) return [];
+    const formats = item.formats.map(({ label, width, height }) => `${label} ${width} × ${height}`);
+    return [
+      {
+        title: `${names.get(item.project) ?? "Woodhouse"} · ${item.title}`,
+        description: formats.join(" · "),
+        href: `${campaignCollectionPath(item.project)}#${item.id}`,
+        section: "Share artwork",
+        keywords: `${formats.join(" ")} ${item.formats.map(({ width, height }) => `${width}x${height}`).join(" ")}`,
+        searchText: item.alt
+      }
+    ];
   });
 }

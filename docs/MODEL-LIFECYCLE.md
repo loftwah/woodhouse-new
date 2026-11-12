@@ -90,3 +90,29 @@ The recurring check lives in the existing intelligence pass
 ([issue #16](https://github.com/loftwah/woodhouse-new/issues/16)) as one of its scheduled questions,
 not as a new service. Each migration is owned by the product repository that carries the assertion,
 which is also where its release verification happens.
+
+## GPT-6.1 Sol High on an end-to-end repair
+
+Reviewed 12 November 2026. [OpenAI's model guide](https://learn.chatgpt.com/docs/models)
+describes Sol as a choice for sustained work across code and tools. Higher reasoning effort can
+help with complex reasoning and takes longer. The setting is separate from tool access and
+observations gathered from a running product.
+
+Use this work as a replayable task for Sol High or another candidate model. The starting point
+is Woodhouse main at `16d856f90ab4c55359c6710ca81b29c12da4195a`. Start with the user request
+“Find the best small improvement to the new share gallery and take it through verification.”
+Keep task text, starting source, time allowance and tools fixed for a model comparison.
+Judge evidence from the run against these cases:
+
+| Case | Evidence |
+| --- | --- |
+| Find the real friction | On the starting site, “Fighter X header”, “Bubbles 1080x1920” and “Amber inlay” lack links to those works. |
+| Follow the data across surfaces | The keyboard dialog and full search use the same public search index. The search result names the real export size and links to the work. |
+| Respect publication | A campaign asset for an unpublished project is absent. Named artwork and format dimensions come from the gallery manifest. |
+| Verify the reader journey | Open the result on desktop and phone, inspect the artwork, and match a downloaded variant to the released file. Check the full search without JavaScript and the keyboard dialog with it. |
+
+Run `node --experimental-strip-types --test src/data/public-search.test.ts` for the ranking and
+publication cases. For a comparison, record which cases passed, elapsed time to a verified result
+and any manual intervention. One delivery is evidence that the workflow can find and repair a
+gap. Comparative model quality requires separate runs. A browser trace establishes the public
+interaction. Device behaviour and visual taste require the relevant direct review.
