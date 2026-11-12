@@ -545,8 +545,9 @@ export function analysePortfolio(
     if (!report || !["exact", "partial"].includes(report.coverage.quality)) continue;
     const candidates: PortfolioAnalysis["findings"] = [];
     for (const metric of report.metrics) {
-      // Archived captures can predate the diagnostic quality label.
-      if (project === "woodhouse" && metric.key === "visits") continue;
+      // Raw visits are diagnostic, including in older captures. Discovery
+      // totals span different destination lists; compare per destination.
+      if (project === "woodhouse" && ["visits", "project_opens"].includes(metric.key)) continue;
       if (
         ![
           "game_starts",

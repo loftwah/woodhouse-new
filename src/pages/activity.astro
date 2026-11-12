@@ -1601,7 +1601,7 @@ const dataPayload = {
                   </div>
                   <p class="discovery-coverage">
                     {measuredDestinations.length > 0
-                      ? `This counts clicks to ${measuredDestinations.map((p) => p.name).join(", ")}.`
+                      ? `Woodhouse currently measures clicks to ${measuredDestinations.map((p) => p.name).join(", ")}. Older reports may cover fewer destinations.`
                       : "No measured product destinations are currently published."}
                     {unmeasuredDestinations.length > 0 &&
                       ` Other published projects (${unmeasuredDestinations.map((p) => p.name).join(", ")}) are outside this measured list; a missing click count is not zero.`}
