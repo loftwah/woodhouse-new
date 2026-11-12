@@ -1,0 +1,16 @@
+Fighter · Woodhouse social pack
+12 November 2026
+
+# Fighter
+
+- Name on artwork: Loftwah Fighter. Use the supplied navy three-bar app mark alongside the name.
+- Matchup headline: “Viking meets Grim Reaper.” Viking's red beard and horned helmet sit against amber, with the large-eyed hooded Grim Reaper against violet.
+- Solo headline: “Pick your first move.” Grim Reaper's original dark hood, purple scarf and off-white skull lead a violet print-style portrait.
+- Caption: “The tutorial puts Viking across from Grim Reaper. Pick a move and see what happens.”
+- Product: https://fighter.loftwah.com/
+- Original app mark: https://github.com/loftwah/fighter/blob/4ca25a402d20d31e70883c05d2ee7aa47c13c64d/public/icons/icon-512.png, copied byte-for-byte into `logo.png`.
+- Original character references: `output/campaign-20261112/fighter-viking.png` and `fighter-reaper.png`, native published portraits from the production `/assets/generated/art-cuts/v3-adult-cartoon-r2/` release. See https://woodhouse.loftwah.com/campaign/20261112/provenance.txt.
+- Actual screenshot: `output/campaign-20261112/capture-fighter-wide.png`, staged public Battle Blast tutorial, 12 November 2026. Viking and Grim Reaper appear in their native pre-match panels.
+- Both portrait plates were generated with native Codex ImageGen using first-party character art and product imagery. They are editorial illustrations, with no external brand assets introduced.
+
+ImageGen plates are editorial illustrations. Any pictured interface is sourced from the product. Check the native app's crop before posting.

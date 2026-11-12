@@ -58,3 +58,17 @@ Reviewed 12 November 2026. [Contact Studies](https://woodhouse.loftwah.com/share
 3. Inspect the artwork at full resolution and around 300 px wide. Reject broken geometry, distracting artefacts, unreadable lettering, and crops that cut the focal subject. Look at the whole set together. If two cards do the same job or a piece brings down the set, rework or hold it. A new public edition ships when its set is ready.
 4. Give each work a durable title, URL, alt text and a short note connecting it to the project. Offer the original and only the social sizes that survived visual review. Put the originals, reviewed exports and provenance in the set download. For a physical edition, require separate print dimensions, bleed and a print proof before making a print claim.
 5. Check the live collection and project pages at phone and desktop widths, the full-size viewer and image copy, the actual download dimensions and archive contents, and the intended platform preview where one exists. Keep previous editions reachable and put new work ahead of earlier work. Record the tested URLs and release identity in the owning issue.
+
+## Product social packs
+
+Reviewed 12 November 2026. MP rejected the abstract Contact Studies campaign because the images did not identify the products on their own. It remains available as an earlier edition. The Share wall now leads with packs for Bubbles, SHOALSHOT, Foilbury, Fighter, LoftwahFM, Protocol 11, App Composer, MAX, Liferaft and Woodhouse.
+
+The pack for each project contains five composed images. A 1080 × 1350 portrait covers Instagram and LinkedIn. A 1080 × 1080 square covers Facebook. A 1080 × 1920 still covers TikTok Photo mode. A 1500 × 500 header covers X. A 1600 × 900 thumbnail covers YouTube. The portraits share a placement size because the desk uses the same ratio for both networks. The 50 files have 50 placement-specific headlines. ZIP files and browser thumbnails are outside that count.
+
+For a new batch:
+
+1. Start with the current mark and a real product artefact. Use the actual roster, cabinet render, sleeve, release screenshot or staged gameplay. Keep the original mark as a separate layer. Use synthetic data for interfaces and strip local paths. Keep a public-safe source note in each pack.
+2. Brief at least two different treatments per project from the accepted visual references. Use The Loftwah Voice and write a line specific to the feature or scene. Run referenced generation in parallel, inspect the plates and keep the untouched masters in the production workspace.
+3. Compose each placement around its actual frame. Leave X header content away from its trimmed edges and put TikTok's essential content away from its controls. Keep native gameplay, cards and UI as separate images. Carry qualifiers such as MAX's **Browser simulator** inside the image.
+4. Read every export around 300 px wide. The name and subject should still read when the caption is absent. Hold weak pieces back and fix any cut-off card, wrong logo, invented interface, broken character or mismatched crop. Check the five files, source note and downloadable ZIP byte for byte.
+5. Verify the gallery and platform picker in production. Keep stable archive URLs and leave the project's own unfurl artwork under its control. Test on-platform crops separately if posting.

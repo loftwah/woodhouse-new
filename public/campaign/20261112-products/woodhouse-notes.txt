@@ -1,0 +1,9 @@
+Woodhouse · Woodhouse social pack
+12 November 2026
+
+Woodhouse
+Logo: public/brand/loom-seal-acid.png, existing Woodhouse seal.
+Native image: staged https://woodhouse.loftwah.com/ homepage with published factory art.
+ImageGen art: two original views using public/images/founding-workshop-20261018.webp as reference. A front elevation and an overhead maker's bench. Both are editorial illustrations.
+
+ImageGen plates are editorial illustrations. Any pictured interface is sourced from the product. Check the native app's crop before posting.

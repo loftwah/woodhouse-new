@@ -1,0 +1,14 @@
+Foilbury · Woodhouse social pack
+12 November 2026
+
+# Foilbury
+
+A. The lantern grove keeper.
+B. Moss, in holographic.
+Caption. Moss keeps the lamps lit. Turn the card in Foilbury’s public cabinet and see what the finish does at https://foilbury.loftwah.com/cabinet/moss.
+
+A is Codex ImageGen editorial character art based on the public Moss card, with the original hat, teal hoodie, leaf charm and face. B is a generated brass-and-plum cabinet scene to frame the actual whole card. The card used for the latter is the native public holographic render, credited to Foilbury. The gallery states the underlying Moss artwork origin as unknown. The use here is the owner's requested promotion of a first-party published product render, with no standalone relicensing or collectible release claims.
+
+The native original comes from https://foilbury.loftwah.com/media/render/rnd_mwa2kzjybey2zppg34vcsk3k, linked by https://foilbury.loftwah.com/cabinet/moss. Source repository loftwah/card-collector-bot commit 330dc01b43fe66955f294916ddafdbe7f8cdaa78 contains the official transparent reverse wordmark at public/brand/kit/wordmarks/foil-standard-reverse-transparent-1600x400.png and real cabinet reverse at public/art/layers/card-back.png.
+
+ImageGen plates are editorial illustrations. Any pictured interface is sourced from the product. Check the native app's crop before posting.

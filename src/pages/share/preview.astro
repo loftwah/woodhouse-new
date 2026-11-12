@@ -42,11 +42,9 @@ const frameWidth = selected
   : 760;
 const imageAlt = !selected
   ? ""
-  : preset.id === "x"
-    ? "Viking and Grim Reaper portraits flank the Loftwah Fighter wordmark."
-    : selected.file.image === selected.work.original
-      ? selected.work.alt
-      : `${selected.work.title} · ${selected.file.label}`;
+  : selected.file.image === selected.work.original
+    ? selected.work.alt
+    : (selected.file.title ?? `${selected.work.title} · ${selected.file.label}`);
 ---
 
 <BaseLayout
