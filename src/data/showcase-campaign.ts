@@ -1,3 +1,4 @@
+import { projectStories } from "./showcase-project-stories.ts";
 import { visualFidelityStudies } from "./showcase-visual-fidelity.ts";
 import { shareExpansion } from "./showcase-share-expansion.ts";
 import { shareStudio } from "./showcase-share-studio.ts";
@@ -29,6 +30,7 @@ export type CampaignItem = {
   project: string;
   title: string;
   stage?: string;
+  series?: "project-stories";
   use?:
     | "banner"
     | "icon"
@@ -107,6 +109,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...projectStories,
   ...visualFidelityStudies,
   ...shareExpansion,
   ...shareStudio,

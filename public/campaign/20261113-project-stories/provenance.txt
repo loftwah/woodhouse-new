@@ -1,0 +1,88 @@
+Woodhouse · Project stories · Reviewed 13 November 2026, Melbourne
+New editorial illustrations by Codex ImageGen using reviewed product sources.
+PNG files are untouched. JPEGs use proportional framing, resizing and encoding.
+Lettering is part of the generated picture. No paid image API was called.
+
+Sunstruck Shelf
+Project: https://shoalshot.loftwah.com/
+Visual source: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-shallow-frame-sunstruck-20260929.webp
+Brief: Published Sunstruck reef layers give the location its palette and silhouette. The Glimmerfin specimen supplies the fish shape. This is a travel poster for a playable setting.
+Approved image lettering: SUNSTRUCK SHELF, SHOALSHOT
+Placement: Landscape, 1600 × 900, sunstruck-shelf.jpg
+Placement: Discord banner, 1920 × 1080, sunstruck-shelf-discord-banner.jpg
+Original: 1672 × 941, sunstruck-shelf.png
+
+Tux · Roster avatar
+Project: https://fighter.loftwah.com/
+Visual source: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Brief: The roster portrait anchors the beak, headset and body shape. Ping is the move from the released Tux kit. The artwork is a crop-safe community avatar.
+Approved image lettering: None; avatar
+Placement: Profile icon, 512 × 512, tux-avatar.jpg
+Placement: Square feed, 1080 × 1080, tux-avatar-square-feed.jpg
+Original: 1254 × 1254, tux-avatar.png
+
+Lantern Finale
+Project: https://bubbles.loftwah.com/story
+Visual source: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Brief: Fizz is drawn from the published character image. Lantern Finale is the third level of Story Chapter 2. The passage is a poster setting.
+Approved image lettering: LANTERN FINALE, BUBBLES
+Placement: Story still, 1080 × 1920, lantern-finale.jpg
+Original: 941 × 1672, lantern-finale.png
+
+Draw, save, export
+Project: https://ldraw.loftwah.com/
+Visual source: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Brief: The released editor supplies the palette. The line describes three real actions from the public diagram tool, simplified into an editorial workflow diagram.
+Approved image lettering: LDRAW, DRAW, SAVE, EXPORT
+Placement: Portrait feed, 1080 × 1350, ldraw-route.jpg
+Original: 1122 × 1402, ldraw-route.png
+
+Cabinet Keeper · Paper avatar
+Project: https://foilbury.loftwah.com/cabinet/
+Visual source: https://foilbury.loftwah.com/brand/mascot/keeper-curious-512.png
+Brief: The project mascot supplies the paper silhouette, blue spine and brass key. The resulting square is an editorial avatar.
+Approved image lettering: None; avatar
+Placement: Profile icon, 512 × 512, keeper-avatar.jpg
+Placement: Square feed, 1080 × 1080, keeper-avatar-square-feed.jpg
+Original: 1254 × 1254, keeper-avatar.png
+
+Cartridge Club
+Project: https://fm.loftwah.com/radio?station=cartridge-club
+Visual source: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Brief: The published Cartridge Funk sleeve supplies an era and colour reference. The new station artwork links to the live Cartridge Club programme.
+Approved image lettering: CARTRIDGE CLUB, LOFTWAHFM
+Placement: Discord banner, 1920 × 1080, cartridge-club.jpg
+Placement: Landscape, 1600 × 900, cartridge-club-landscape.jpg
+Original: 1672 × 941, cartridge-club.png
+
+Late Night Party
+Project: https://protocol11.loftwah.com/
+Visual source: https://woodhouse.loftwah.com/share/protocol-11/late-night-party-room.webp
+Brief: The game room supplies the visual reference. An empty table evokes the room without creating an inaccurate deal or player pose.
+Approved image lettering: LATE NIGHT PARTY, PROTOCOL 11
+Placement: Pinterest pin, 1000 × 1500, late-night-room.jpg
+Original: 1024 × 1536, late-night-room.png
+
+Virtual MAX
+Project: https://max.loftwah.com/demo
+Visual source: https://max.loftwah.com/demo
+Brief: The public simulator supplies the UI palette, walker silhouette and locate cue. This is a concept illustration of a browser demo.
+Approved image lettering: VIRTUAL MAX, BROWSER SIMULATOR
+Placement: Landscape, 1600 × 900, virtual-max.jpg
+Original: 1672 × 941, virtual-max.png
+
+Find the attachment
+Project: https://liferaft.loftwah.com/
+Visual source: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Brief: A deployed Attachment Recovery capture with fictional mail supplies the visual palette and real workflow. This is an editorial diagram of a single-file recovery.
+Approved image lettering: FIND THE ATTACHMENT, LIFERAFT, MBOX
+Placement: Portrait feed, 1080 × 1350, liferaft-export.jpg
+Original: 1122 × 1402, liferaft-export.png
+
+Building the loom
+Project: https://woodhouse.loftwah.com/
+Visual source: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Brief: The published loom still supplies the final geometry. Woodhouse introduced the live homepage piece on 23 October 2026. This is a new retrospective illustration, not a surviving sketch from that release.
+Approved image lettering: BUILDING THE LOOM, WOODHOUSE
+Placement: Portrait feed, 1080 × 1350, loom-study.jpg
+Original: 1122 × 1402, loom-study.png

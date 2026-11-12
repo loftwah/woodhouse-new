@@ -67,7 +67,7 @@ The pack for each project contains five composed images. A 1080 × 1350 portrait
 
 For a new batch:
 
-1. Start with the current mark and a real product artefact. Use the actual roster, cabinet render, sleeve, release screenshot or staged gameplay. Keep the original mark as a separate layer. Use synthetic data for interfaces and strip local paths. Keep a public-safe source note in each pack.
+1. Start with the current mark and a real product artefact. Use the actual roster, cabinet render, sleeve, release screenshot or staged gameplay. Use the current mark as a generator reference. Publish the exact mark as its own download. Use synthetic data for interfaces and strip local paths. Keep a public-safe source note in each pack.
 2. Brief at least two different treatments per project from the accepted visual references. Use The Loftwah Voice and write a line specific to the feature or scene. Run referenced generation in parallel, inspect the plates and keep the untouched masters in the production workspace.
 3. Compose each placement around its actual frame. Leave X header content away from its trimmed edges and put TikTok's essential content away from its controls. Keep native gameplay, cards and UI as separate images. Carry qualifiers such as MAX's **Browser simulator** inside the image.
 4. Read every export around 300 px wide. The name and subject should still read when the caption is absent. Hold weak pieces back and fix any cut-off card, wrong logo, invented interface, broken character or mismatched crop. Check the five files, source note and downloadable ZIP byte for byte.
@@ -204,3 +204,31 @@ remain available, and the active Protocol 11 ZIP and Social preview exclude them
 
 The [corrective batch source notes](https://woodhouse.loftwah.com/campaign/20261113-visual-fidelity/provenance.txt)
 record the scene-specific checks and source material.
+
+### Project stories
+
+Reviewed 13 November 2026, Melbourne. The [Project stories wall](https://woodhouse.loftwah.com/share/?artType=project-stories)
+opens on ten pieces with fourteen placement exports. Its ZIP holds the ready
+JPEGs, sizes, captions, alt text and source notes. The original PNGs are on
+each card.
+
+- **Community identity.** Fighter's Tux and Foilbury's Cabinet Keeper have
+  crop-safe avatars tied to their published likenesses. Tux's caption names
+  what Ping does, and the Keeper retains the paper shape and brass key.
+- **Game worlds and stories.** SHOALSHOT gets a Sunstruck Shelf travel poster
+  with the Glimmerfin. Bubbles gets a Lantern Finale poster tied to the
+  Chapter 2 shot budget. Protocol 11's Late Night Party room gets its own cover.
+- **Tool workflows.** LDraw's editable drawing and PNG or SVG export anchor
+  the diagram. Liferaft's MBOX-to-attachment recovery gets a paper collage.
+  Virtual MAX uses a labelled browser simulator mockup and points to FIND.
+- **Music and making.** Cartridge Club gets a station sleeve and a tune-in
+  link. Woodhouse's 23 October fibre loom gets a retrospective construction
+  study, with the live piece available on the homepage.
+
+For the next batch, start from a named asset, place, workflow, release or
+piece of source history and decide who would use the image and where.
+Lettering should carry the exact name, a distinct action or a useful
+qualifier. Generate it as part of the image. Verify the words in the actual
+export and at social thumbnail size. Keep historical screenshots and
+retrospective drawings accurately labelled. Carry source, captions and
+dimensions with the assets so the kit works outside Woodhouse.
