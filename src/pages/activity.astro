@@ -26,6 +26,7 @@ import {
 import {
   projectColours,
   dateDays,
+  dayRange,
   dailyPoints,
   dailyStatus,
   dailyCoverageLabel,
@@ -417,6 +418,10 @@ const week = requestedWeek
         (overview || highlight.measure.key === measure.key)
     ) ?? null)
   : null;
+// The finding's own dates inside the report window. The chart uses this to open
+// on the week the reader followed, while the daily table and CSV keep the whole
+// report they are labelled with.
+const focusRange = week ? dayRange(window, week.from, week.to) : null;
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
 // publishes no mode subtotal shows no breakdown, and nothing is inferred from the
@@ -528,14 +533,17 @@ const link = report
     ? `${reportLink(report.id, "woodhouse").replace(SITE_ORIGIN, Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
     : `${reportLink(report.id, selected).replace(SITE_ORIGIN, Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
   : `${SITE_ORIGIN}/activity/`;
+const shareAnchor = week ? "trend-heading" : storyShare ? "discovery-story" : "";
 // The visible permalink keeps a measurement exclusion; the canonical `link`
 // published in page metadata and the shared caption must not carry a QA
-// parameter, so only this navigable copy is augmented.
+// parameter, so only this navigable copy is augmented. A finding link also
+// carries its own anchor so reopening it lands on the chart or story it names.
 const shareLink = (() => {
   try {
     const url = new URL(link);
     if (qaOff) url.searchParams.set("analytics", "off");
     if (qaValue !== null) url.searchParams.set("qa", qaValue || "1");
+    if (shareAnchor) url.hash = shareAnchor;
     return url.href;
   } catch {
     return link;
@@ -544,7 +552,7 @@ const shareLink = (() => {
 const image = report
   ? storyShare
     ? `/api/portfolio-card.png?report=${report.id}&project=woodhouse&measure=project_opens${week ? `&week=${week.from}` : ""}&destination=${shareDestination}`
-    : `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}` : ""}`
+    : `/api/portfolio-card.png?report=${report.id}${selected ? `&project=${selected}` : ""}${overview ? "" : `&measure=${measure.key}`}${week ? `&week=${week.from}&v=2` : ""}`
   : "/og/woodhouse-workshop-20261018.jpg";
 const dateLabel = (date: string) =>
   new Date(date).toLocaleDateString("en-AU", {
@@ -572,7 +580,7 @@ const opening = analyticsObservations({
   })),
   links: {
     week: (project, weekMeasure, from) =>
-      `${pageLink({ project, measure: weekMeasure, week: from, view: "chart" })}#week-focus`,
+      `${pageLink({ project, measure: weekMeasure, week: from, view: "chart" })}#trend-heading`,
     project: (project, projectMeasure) =>
       pageLink({ project, measure: projectMeasure, view: "chart" }),
     discovery: () =>
@@ -582,7 +590,17 @@ const opening = analyticsObservations({
         measure: "project_opens",
         destination: discovery[0]?.slug ?? null,
         report: report?.id ?? null
-      })}#discovery-story`
+      })}#discovery-story`,
+    weekShare: (project, weekMeasure, from) =>
+      pageLink({ view: "share", project, measure: weekMeasure, week: from }),
+    discoveryShare: () =>
+      pageLink({
+        view: "share",
+        project: "woodhouse",
+        measure: "project_opens",
+        destination: discovery[0]?.slug ?? null,
+        report: report?.id ?? null
+      })
   },
   dateLabel
 });
@@ -669,6 +687,14 @@ const dataPayload = {
     // status stays internal: a visitor sees "Includes old test data", not "legacy".
     return { ...series, statuses: series.statuses.map(dailyCoverageLabel) };
   }),
+  ...(focusRange
+    ? {
+        focus: {
+          ...focusRange,
+          label: `${dateLabel(week!.from)} – ${dateLabel(week!.to)}`
+        }
+      }
+    : {}),
   createdAt: report?.createdAt ?? null
 };
 ---
@@ -850,10 +876,15 @@ const dataPayload = {
             {week && (
               <section id="week-focus" class="week-focus" aria-labelledby="week-focus-title">
                 <div class="week-focus__head">
-                  <span class="week-focus__label">Week in focus</span>
-                  <h2 id="week-focus-title">
-                    {week.name} · {week.measure.label}
-                  </h2>
+                  <div>
+                    <span class="week-focus__label">Finding · week in focus</span>
+                    <h2 id="week-focus-title">
+                      {week.name} · {week.measure.label}
+                    </h2>
+                  </div>
+                  <a class="week-focus__share" href={pageLink({ view: "share" })}>
+                    Share this finding
+                  </a>
                 </div>
                 <dl class="week-focus__figures">
                   <div>
@@ -895,8 +926,7 @@ const dataPayload = {
                   </div>
                 </dl>
                 <p class="week-focus__note">
-                  A full Monday–Sunday UTC week from the history this report keeps, compared with
-                  the week before it. These are counts of recorded activity, not unique people.
+                  A full Monday–Sunday UTC week. Counts recorded activity, not people.
                 </p>
               </section>
             )}
@@ -1115,6 +1145,12 @@ const dataPayload = {
                 </div>
               ) : (
                 <>
+                  {focusRange && (
+                    <p class="chart-focus-note" data-chart-focus>
+                      Showing {dateLabel(focusRange.from)} – {dateLabel(focusRange.to)}, the dates
+                      in this finding.
+                    </p>
+                  )}
                   {!hasDaily && (
                     <div class="chart-empty">
                       <strong>No daily numbers for this selection</strong>
@@ -1127,7 +1163,10 @@ const dataPayload = {
                   <div
                     class:list={["interactive-plot", { "has-no-data": !hasDaily }]}
                     data-activity-chart
+                    role="group"
+                    tabindex="0"
                     aria-label={`${measure.label} daily chart`}
+                    aria-describedby="chart-help"
                   >
                     {hasDaily && (
                       <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />
@@ -1149,11 +1188,11 @@ const dataPayload = {
                         ))}
                       </div>
                       <div class="chart-instructions">
-                        <p data-chart-help>
-                          Tap or hover a date to see the numbers. Open Data for the full table.
+                        <p id="chart-help" data-chart-help>
+                          Tap a date to inspect it, or use the day controls below.
                         </p>
                         <button type="button" data-reset-zoom hidden>
-                          Reset zoom
+                          {focusRange ? `Show all ${window.days} days` : "Reset zoom"}
                         </button>
                       </div>
                     </>
@@ -1183,23 +1222,29 @@ const dataPayload = {
                 </details>
               )}
               {!overview && (
-                <details class="chart-data">
-                  <summary>Look at one day</summary>
-                  <div class="day-inspector" data-day-inspector hidden>
-                    <label>
-                      Inspect UTC day{" "}
-                      <input
-                        type="range"
-                        min="0"
-                        max={window.days - 1}
-                        value={window.days - 1}
-                        aria-label="Inspect UTC day"
-                        data-inspect-day
-                      />
-                    </label>
-                    <output data-day-output aria-live="polite" />
+                <div class="day-inspector" data-day-inspector hidden>
+                  <div class="day-inspector__head">
+                    <span class="day-inspector__label">Inspect a day</span>
+                    <span class="day-inspector__hint">Tap the chart or use the arrow keys</span>
                   </div>
-                </details>
+                  <div class="day-inspector__controls">
+                    <button type="button" data-day-step="-1" aria-label="Previous day">
+                      ←
+                    </button>
+                    <input
+                      type="range"
+                      min="0"
+                      max={window.days - 1}
+                      value={focusRange ? focusRange.end : window.days - 1}
+                      aria-label="Inspect UTC day"
+                      data-inspect-day
+                    />
+                    <button type="button" data-day-step="1" aria-label="Next day">
+                      →
+                    </button>
+                  </div>
+                  <output data-day-output aria-live="polite" />
+                </div>
               )}
               <div class="chart-shortcuts">
                 <a href={pageLink({ view: "data" })}>View daily table</a>
@@ -1306,9 +1351,17 @@ const dataPayload = {
             caption={caption}
             link={shareLink}
             jsonHref={`/api/portfolio-report.json?report=${report?.id ?? ""}`}
-            heading="Share this report"
-            note="Download an image, copy a caption, or open the same saved report."
-            alt={`${title}: ${measure.label}, ${window.from} to ${window.to} UTC`}
+            heading={week ? "Share this finding" : "Share this report"}
+            note={
+              week
+                ? `The image, caption and link all reopen ${week.name} · ${week.measure.label} for ${dateLabel(week.from)} – ${dateLabel(week.to)} UTC.`
+                : "Download an image, copy a caption, or open the same saved report."
+            }
+            alt={
+              week
+                ? `${week.name}: ${formatMetric({ value: week.value, unit: week.unit })} ${week.measure.label.toLowerCase()}, ${dateLabel(week.from)} to ${dateLabel(week.to)} UTC`
+                : `${title}: ${measure.label}, ${window.from} to ${window.to} UTC`
+            }
             expanded
           />
         )}
@@ -1373,9 +1426,16 @@ const dataPayload = {
                             <dd>{observation.doesNotEstablish}</dd>
                           </div>
                         </dl>
-                        <a class="observation__link" href={observation.href}>
-                          {observation.linkLabel} <span aria-hidden="true">↗</span>
-                        </a>
+                        <div class="observation__actions">
+                          <a class="observation__link" href={observation.href}>
+                            {observation.linkLabel} <span aria-hidden="true">↗</span>
+                          </a>
+                          {observation.shareHref && (
+                            <a class="observation__share" href={observation.shareHref}>
+                              Share this finding
+                            </a>
+                          )}
+                        </div>
                       </li>
                     ))}
                   </ol>

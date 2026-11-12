@@ -59,7 +59,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
       : null,
     destination = /^[a-z0-9-]{1,40}$/.test(url.searchParams.get("destination") ?? "")
       ? url.searchParams.get("destination")!
-      : null;
+      : null,
+    revision = url.searchParams.get("v") === "2" ? 2 : 1;
   if (
     !id ||
     (measure !== null && measure !== "replays" && !knownMeasures.has(measure)) ||
@@ -75,6 +76,7 @@ export const GET: APIRoute = async ({ url, cache }) => {
           "measure",
           "week",
           "destination",
+          "v",
           "story",
           "edition"
         ].includes(k) || url.searchParams.getAll(k).length !== 1
@@ -309,7 +311,8 @@ export const GET: APIRoute = async ({ url, cache }) => {
               url.origin,
               week ?? undefined,
               destination ?? undefined,
-              publishedDestinationSlugs
+              publishedDestinationSlugs,
+              revision
             ),
       {
         font: { fontBuffers, defaultFontFamily: "Bricolage Grotesque" }

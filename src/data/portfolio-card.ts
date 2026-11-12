@@ -40,6 +40,12 @@ const day = (date: string) => {
   })}`;
 };
 const longDay = (date: string) => `${day(date)} ${date.slice(0, 4)}`;
+const chartDay = (date: string) =>
+  new Date(date + "T00:00:00Z").toLocaleDateString("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short"
+  });
 /** Break a product name into readable lines without clipping it. */
 function wrap(value: string, max: number): string[] {
   const words = value.split(/\s+/);
@@ -64,7 +70,8 @@ export function reportSvg(
   origin = SITE_ORIGIN,
   highlightedWeek?: string,
   destination?: string,
-  published?: ReadonlySet<string>
+  published?: ReadonlySet<string>,
+  revision = 1
 ) {
   const { width: w, height: h } = reportFormats[format];
   const landscape = format === "landscape",
@@ -153,9 +160,23 @@ export function reportSvg(
   if (rows.length === 1) retrieval.searchParams.set("project", rows[0]!.project);
   if (focus) retrieval.searchParams.set("week", focus.from);
   const retrievalLabel = retrieval.href.replace(/^https?:\/\//, "");
+  // Revision 2 makes the shared finding image lead with the finding's own figure
+  // and its seven-day chart. Older week URLs keep revision 1 artwork, so a
+  // previously posted image cannot change under its audience.
+  const finding = focus && !overview && shown.length === 1 && revision >= 2 ? focus : undefined;
+  const chartPeriod = finding
+    ? { from: finding.from, to: finding.to, days: 7, complete: true }
+    : period;
   const series = shown
     .filter((r) => r.metric)
-    .map((r) => ({ name: r.name, colour: r.colour, values: dailyPoints(r.metric, period) }));
+    .map((r) => ({ name: r.name, colour: r.colour, values: dailyPoints(r.metric, chartPeriod) }));
+  const focusMovement = finding
+    ? finding.changePercent === null
+      ? `No earlier week had a comparable total; ${formatMetric({ value: finding.previous, unit: finding.unit })} the week before.`
+      : finding.changePercent === 0
+        ? `Level with ${formatMetric({ value: finding.previous, unit: finding.unit })} the week before.`
+        : `${finding.changePercent > 0 ? "Up" : "Down"} ${Math.abs(finding.changePercent)}% from ${formatMetric({ value: finding.previous, unit: finding.unit })} the week before.`
+    : "";
   const text = (x: number, y: number, v: string, size = 24, fill = "#f4f7fd", weight = 400) =>
     `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${weight}">${escape(v)}</text>`;
   const line = (y: number) => `<path d="M${pad} ${y}H${w - pad}" stroke="#2a3b51"/>`;
@@ -205,12 +226,14 @@ export function reportSvg(
   svg += text(pad, landscape ? 123 : 148, title, titleSize, "#f4f7fd", 700);
   svg += text(
     pad,
-    focus ? (landscape ? 140 : 172) : landscape ? 157 : 191,
-    `${longDay(period.from)} — ${longDay(period.to)} · UTC · ${period.days} ${period.days === 1 ? "day" : "days"}`,
+    finding ? (landscape ? 140 : 172) : focus ? (landscape ? 140 : 172) : landscape ? 157 : 191,
+    finding
+      ? `${longDay(finding.from)} — ${longDay(finding.to)} · UTC · 7 days · the week in this finding`
+      : `${longDay(period.from)} — ${longDay(period.to)} · UTC · ${period.days} ${period.days === 1 ? "day" : "days"}`,
     landscape ? 20 : 25,
     "#a9b8d0"
   );
-  if (focus) {
+  if (focus && !finding) {
     const movement =
       focus.changePercent === null
         ? `no earlier week to compare (${formatMetric({ value: focus.previous, unit: focus.unit })} the week before)`
@@ -287,16 +310,27 @@ export function reportSvg(
       svg +=
         `<circle cx="${pad + 6}" cy="${figureY - 74}" r="6" fill="${r.colour}"/>` +
         text(pad + 20, figureY - 68, measure.label, 22, "#a9b8d0", 500) +
-        text(pad, figureY, r.metric ? formatMetric(r.metric) : "—", 96, r.colour, 700) +
-        text(pad, figureY + 34, qualifier(r), 19, "#f4f7fd") +
+        text(
+          pad,
+          figureY,
+          finding
+            ? formatMetric({ value: finding.value, unit: finding.unit })
+            : r.metric
+              ? formatMetric(r.metric)
+              : "—",
+          96,
+          r.colour,
+          700
+        ) +
+        text(pad, figureY + 34, finding ? focusMovement : qualifier(r), 19, "#f4f7fd") +
         text(
           pad,
           figureY + 66,
-          `${periodState(period.complete)} · ${period.days} days`,
+          finding ? qualifier(r) : `${periodState(period.complete)} · ${period.days} days`,
           17,
           "#a9b8d0"
         );
-      const plot = svgPlot(series, period, 560, 280)
+      const plot = svgPlot(series, chartPeriod, 560, 280, finding ? chartDay : undefined)
         .replace("<svg ", `<svg x="${w - pad - 560}" y="238" width="560" height="280" `)
         .replace('font-family="system-ui,sans-serif"', 'font-family="Bricolage Grotesque"')
         .replace('font-size="12"', 'font-size="16"');
@@ -335,7 +369,13 @@ export function reportSvg(
     // instead of leaving most of a feed image empty.
     const singleChartY = portrait ? 320 : 285;
     const singleChartH = portrait ? 1050 : 500;
-    const plot = svgPlot(series, period, w - pad * 2, singleChartH)
+    const plot = svgPlot(
+      series,
+      chartPeriod,
+      w - pad * 2,
+      singleChartH,
+      finding ? chartDay : undefined
+    )
       .replace(
         "<svg ",
         `<svg x="${pad}" y="${singleChartY}" width="${w - pad * 2}" height="${singleChartH}" `
@@ -358,7 +398,18 @@ export function reportSvg(
       `<circle cx="${pad + 5}" cy="${y + 27}" r="5" fill="${r.colour}"/>` +
       text(pad + 22, y + 32, r.name, 24, "#f4f7fd", 500) +
       text(portrait ? 520 : 500, y + 32, qualifier(r), 17, "#a9b8d0") +
-      text(w - pad - 190, y + 32, r.metric ? formatMetric(r.metric) : "—", 27, r.colour, 700);
+      text(
+        w - pad - 190,
+        y + 32,
+        finding
+          ? formatMetric({ value: finding.value, unit: finding.unit })
+          : r.metric
+            ? formatMetric(r.metric)
+            : "—",
+        27,
+        r.colour,
+        700
+      );
     const definitionEnd = measure.meaning.indexOf(". ");
     const definition =
       definitionEnd > 0 ? measure.meaning.slice(0, definitionEnd + 1) : measure.meaning;
@@ -456,7 +507,11 @@ export function reportSvg(
     text(
       pad,
       foot + 17,
-      `${reportCount(supplied, applicable, overview)}. ${periodState(period.complete)}.`,
+      `${reportCount(supplied, applicable, overview)}. ${
+        finding
+          ? "Every day in this finding's week was counted."
+          : periodState(period.complete) + "."
+      }`,
       landscape ? 17 : 23,
       "#b4c0d2"
     );
