@@ -5,13 +5,20 @@ const releasesEndpoint = "https://api.github.com/repos/loftwah/liferaft/releases
 
 export type InstallerRelease = { tag: string; url: string; downloads: number };
 
-export async function loadLiferaftDownloads(fetcher: typeof fetch = fetch) {
+export async function loadLiferaftDownloads(fetcher: typeof fetch = fetch, token?: string) {
   try {
+    const headers = new Headers({
+      accept: "application/vnd.github+json",
+      "user-agent": "Woodhouse Analytics"
+    });
+    if (token) headers.set("authorization", `Bearer ${token}`);
     const response = await fetcher(releasesEndpoint, {
-      headers: { accept: "application/vnd.github+json", "user-agent": "Woodhouse Analytics" },
+      headers,
       redirect: "manual",
       signal: AbortSignal.timeout(4000),
-      cf: { cacheTtlByStatus: { "200": 900, "400-599": 0 } }
+      ...(token
+        ? { cache: "no-store" }
+        : { cf: { cacheTtlByStatus: { "200": 900, "400-599": 0 } } })
     });
     const data = await boundedJson(response);
     if (!Array.isArray(data)) return null;
@@ -48,4 +55,28 @@ export async function loadLiferaftDownloads(fetcher: typeof fetch = fetch) {
   } catch {
     return null;
   }
+}
+
+/** Only the public projection may enter this cache. GitHub's authenticated response never does. */
+export async function cachedLiferaftDownloads(origin: string, token?: string) {
+  const cache = (globalThis.caches as (CacheStorage & { default?: Cache }) | undefined)?.default;
+  const key = new Request(new URL("/__woodhouse-cache/liferaft-downloads-v1", origin));
+  try {
+    const saved = await cache?.match(key);
+    if (saved) return (await saved.json()) as InstallerRelease[];
+  } catch {
+    // A cache fault does not prevent reading the canonical source.
+  }
+  const releases = await loadLiferaftDownloads(fetch, token);
+  if (releases !== null) {
+    try {
+      await cache?.put(
+        key,
+        Response.json(releases, { headers: { "cache-control": "public, max-age=900" } })
+      );
+    } catch {
+      // The source is still usable if the result cannot be cached.
+    }
+  }
+  return releases;
 }

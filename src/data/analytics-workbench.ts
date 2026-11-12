@@ -135,6 +135,17 @@ export const measureChoices = [
       "Confirmed listening starts carrying the game's own attribution. Repeated plays count again; this does not count game launches or unique players."
   },
   {
+    key: "challenge_attempts",
+    label: "Challenge attempts",
+    meaning: "New starts and retries of published Protocol 11 challenges."
+  },
+  {
+    key: "challenge_finishes",
+    label: "Challenge finishes",
+    meaning:
+      "Challenge attempts that reached a table result. The objective may still be incomplete."
+  },
+  {
     key: "cabinet_views",
     label: "Public cabinet visits",
     meaning:
@@ -213,9 +224,14 @@ const protocol11View: ProductView = {
   family: "game",
   label: "Play & engagement by mode",
   defaultMeasure: "game_starts",
-  keys: [...gameMeasures, ...modeMeasureChoices.map((choice) => choice.key)],
+  keys: [
+    ...gameMeasures,
+    ...modeMeasureChoices.map((choice) => choice.key),
+    "challenge_attempts",
+    "challenge_finishes"
+  ],
   headlines: ["game_starts", "game_completions", "active_seconds"],
-  description: "See games started and time spent playing, split between local and online play."
+  description: "See local and online play, and track published Challenge attempts separately."
 };
 const productViews: Record<AnalyticsProject, ProductView> = {
   "app-composer": {

@@ -1054,6 +1054,37 @@ const dailyOf = (report: ProjectAnalytics, key: string) => modeMetric(report, ke
 const windowOf = (from: string, to: string) =>
   parseReportingWindow(new URLSearchParams({ from, to }), now)!;
 
+test("Protocol challenges count separately and keep pre-collection dates blank", async () => {
+  const { db, sqlite } = database();
+  await collectEngagement(gameRequest(gameEvent("game_start", "classic")), db, now);
+  const nextDay = now + 86400000;
+  const start = gameEvent("game_start", "challenge");
+  for (const event of [start, start, gameEvent("game_complete", "challenge")]) {
+    assert.equal((await collectEngagement(gameRequest(event), db, nextDay)).status, 204);
+  }
+  assert.equal(
+    (await collectEngagement(gameRequest(gameEvent("game_replay", "challenge")), db, nextDay))
+      .status,
+    400
+  );
+  await collectEngagement(
+    gameRequest(gameEvent("game_start", "challenge"), { "x-analytics-test": "1" }),
+    db,
+    nextDay
+  );
+  const report = await localAnalytics(db, "protocol-11", 7, nextDay);
+  assert.equal(modeMetric(report, "game_starts")?.value, 1);
+  assert.equal(modeMetric(report, "game_completions")?.value, null);
+  assert.deepEqual(dailyOf(report, "challenge_attempts"), [{ date: "2026-10-16", value: 1 }]);
+  assert.deepEqual(dailyOf(report, "challenge_finishes"), [{ date: "2026-10-16", value: 1 }]);
+  assert.equal(
+    report.metrics.some((metric) => metric.key === "game_starts_challenge"),
+    false
+  );
+  assert(parseProjectAnalytics(report, "protocol-11", 7, nextDay));
+  sqlite.close();
+});
+
 test("each reported play mode gets its own additive gameplay subtotal and excluded traffic gets none", async () => {
   const { db, sqlite } = database();
   for (const mode of playModes)

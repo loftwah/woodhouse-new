@@ -320,6 +320,8 @@ const groups = [
   // equal the gameplay measure above them. The groups only survive the filter
   // below for a project whose client reports more than one mode.
   ...modeMeasureGroups.map((group) => ({ label: group.label, keys: [...group.keys] })),
+  { label: "Published challenges", keys: ["challenge_attempts", "challenge_finishes"] },
+  { label: "Cabinet activity", keys: ["cabinet_views"] },
   {
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
