@@ -1,5 +1,6 @@
 ---
 import ShareArtworkWall from "../components/ShareArtworkWall.astro";
+import { foilburyNativeArtwork } from "../data/showcase-foilbury-native";
 import { publicOriginalArtwork } from "../data/showcase-originals";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
@@ -273,6 +274,9 @@ const originalArtwork = publicOriginalArtwork(publicIds).filter(
 );
 const artwork = [
   ...featuredCampaign.filter((item) => !item.archived),
+  ...(publicIds.has("foilbury") && (!selected || selected.slug === "foilbury")
+    ? foilburyNativeArtwork
+    : []),
   ...originalArtwork.map(({ item }) => item),
   ...featuredCampaign.filter((item) => item.archived)
 ];
@@ -285,7 +289,11 @@ const hasArtFilter = ["artType", "artProject", "artFormat"].some((key) =>
 );
 const showcaseClips = gameMedia.filter(
   (asset) =>
-    ["app-composer-studio-film-20261014", "protocol11-last-card-16s"].includes(asset.id) &&
+    [
+      "foilbury-teaser-9x16",
+      "app-composer-studio-film-20261014",
+      "protocol11-last-card-16s"
+    ].includes(asset.id) &&
     publicIds.has(asset.project) &&
     (!selected || asset.project === selected.slug)
 );
@@ -332,6 +340,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             <a href={shareNavigation("/share/originals/", Astro.url.searchParams)}>
               Original art &amp; drawings
             </a>
+            <a href={shareNavigation("/share/?type=clips", Astro.url.searchParams)}>Clips</a>
             <a href="/share/resources/">Creative resources</a>
           </nav>
         </header>

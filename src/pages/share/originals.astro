@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import { listProjectRecords } from "../../content/repository";
 import { originals, publicOriginalArtwork } from "../../data/showcase-originals";
+import { foilburyNativeArtwork } from "../../data/showcase-foilbury-native";
 import { shareNavigation } from "../../data/share-browser";
 
 export const prerender = false;
@@ -23,7 +24,9 @@ const works = publicOriginalArtwork(publicProjects).filter(
 );
 const drawings = works.filter(({ drawing }) => drawing).map(({ item }) => item);
 const illustrations = works.filter(({ drawing }) => !drawing).map(({ item }) => item);
-const lead = drawings[0] ?? illustrations[0];
+const currentCards =
+  scope === "foilbury" && publicProjects.has("foilbury") ? foilburyNativeArtwork : [];
+const lead = currentCards[0] ?? drawings[0] ?? illustrations[0];
 if (scope) {
   Astro.response.headers.set("cache-control", "private, no-store");
   Astro.cache?.set(false);
@@ -50,7 +53,8 @@ if (scope) {
         {scope ? `${projectNames.get(scope)} art and drawings.` : "Original art and drawings."}
       </h1>
       <nav aria-label="Artwork collections">
-        <a href={shareNavigation("/share/", Astro.url.searchParams)}>Featured posters</a>
+        <a href={shareNavigation("/share/", Astro.url.searchParams)}>Share artwork</a>
+        {currentCards.length > 0 && <a href="#current-card-art">Current card art</a>}
         {drawings.length > 0 && <a href="#drawings">Clean drawings</a>}
         {illustrations.length > 0 && <a href="#illustrations">Illustration sources</a>}
         <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
@@ -71,6 +75,12 @@ if (scope) {
           ))}
       </nav>
     </header>
+    {currentCards.length > 0 && (
+      <section id="current-card-art" aria-labelledby="current-card-art-title">
+        <h2 id="current-card-art-title">Current Foilbury cabinet art</h2>
+        <ShowcaseGallery items={currentCards} compact staggered />
+      </section>
+    )}
     {drawings.length > 0 && (
       <section id="drawings" aria-labelledby="drawings-title">
         <h2 id="drawings-title">Clean drawings</h2>

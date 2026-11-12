@@ -145,3 +145,29 @@ and preserve the original. Compare real modes, actions or finishes, with
 editorial imagery clearly credited. Keep the library easy to browse by showing
 the newest work on the main wall, bringing clean drawings forward and loading
 later batches only as needed. Keep the earlier collections and file addresses.
+
+### Expanded artwork and current project sources
+
+Reviewed 13 November 2026, Melbourne. The expansion starts with the
+published image or a reviewed public capture from the owning project. The
+source file records where each image came from. Foilbury's current cabinet
+shows Moss in Plain, Silver, Gold and Diamond. The current Foilbury originals
+include the published renders, with the earlier drawings and campaign art
+still available in their own sections.
+
+- Use a subject that reads in the first frame for 9:16. A concrete feature,
+  action or face works as the opening. Plan for the controls around it.
+  [TikTok Creative Codes](https://ads.tiktok.com/business/en-US/creative-codes)
+- Use a 2:3 Pin and give it a clear destination. Name the project when the
+  brief calls for lettering, and let the subject carry the unlettered studies.
+  [Pinterest creative guidance](https://business.pinterest.com/creative-best-practices/)
+- Use distinct thumbnail ideas for the same credible promise. YouTube's
+  testing tool compares watch time, so the frame should set up the actual video.
+  [YouTube thumbnail testing](https://support.google.com/youtube/answer/16391400)
+- Use a concrete workflow or proof point on LinkedIn. A browser-local PDF
+  sample or a one-step MBOX export makes a specific post.
+  [LinkedIn creative guidance](https://business.linkedin.com/content/dam/lem/business/en/advertise/global/pdfs/Medium-and-Scaling-Business-Getting-Started-Guide.pdf)
+
+The image generator drew every new composition. Exports resize or crop
+that image, with the original file available beside it. No lettering,
+logos or visual elements are layered over the render.
