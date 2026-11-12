@@ -306,7 +306,10 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
       <>
         <header class="showcase-heading">
           <h1>{selected?.name ?? "Made to be played. Heard. Tried."}</h1>
-          <a href="#archive">Browse the archive</a>
+          <nav class="share-jumps" aria-label="More media">
+            <a href="/share/resources/">Creative resources</a>
+            <a href="#archive">Browse the archive</a>
+          </nav>
         </header>
         <nav aria-label="Featured projects" class="showcase-projects">
           <a
@@ -879,6 +882,16 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
     width: min(100% - 2 * var(--gutter), 1440px);
     max-width: none;
     padding-top: 1.6rem;
+  }
+  .share-jumps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1rem;
+  }
+  .share-jumps a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
   }
   .showcase-heading {
     display: flex;
