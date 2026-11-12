@@ -1,5 +1,6 @@
 ---
 import type { WoodhouseProject } from "../content/repository";
+import { creatorHubCaseStudy } from "../data/project-actions";
 type Props = { projects: WoodhouseProject[]; only?: string };
 const { projects, only } = Astro.props;
 const visible = (slug: string) => (!only || only === slug) && projects.some((p) => p.slug === slug);
@@ -56,62 +57,55 @@ const visible = (slug: string) => (!only || only === slug) && projects.some((p) 
   {visible("app-composer") && (
     <section class="build-example" aria-labelledby="build-with-apps">
       <div>
-        <h2 id="build-with-apps">Build a home from apps you own.</h2>
+        <h2 id="build-with-apps">A portfolio with a guestbook of its own.</h2>
         <p>
-          Here / there collects photos. The owner approves them. Linkarooie chooses which to feature
-          and links each photo back to its original. Hide a source and its controlled feature
-          disappears too.
+          Mara Quinn has a portfolio for her ceramics and a guestbook for visitors’ postcards.
+          Postcards wait for approval in Here / there. Linkarooie can feature an approved one and
+          removes it from the portfolio when the owner hides the original.
         </p>
         <p>
-          Try publication and curation with fictional content in the workbench, then open the hosted
-          apps. Each keeps its own source, address and data. That’s the point: useful connections
-          without turning every piece into one inseparable app.
+          The two apps come from one Composer brief. Each has its own source repository, address
+          and database. Open them to see what visitors see, or use the same starting point in Init
+          to give your agent a brief.
+        </p>
+        <p class="source-note">
+          Mara is fictional. The reference apps run in the operator’s Cloudflare account.
+          A first-time creator’s own-account build is still to be demonstrated.
         </p>
       </div>
       <div class="build-example__next">
         <figure class="build-example__image">
-          <a
-            href="https://composer.loftwah.com/demo?from=woodhouse-edition"
-            aria-label="Open the connected-app example"
-          >
+          <a href={creatorHubCaseStudy} aria-label="Read the Creator Hub walkthrough">
             <img
-              src="/share/app-composer/composition-workbench-20261023.png"
-              alt="Composer’s public demonstration with a fictional guestbook source and a creator page, each with its own publication controls."
+              src="https://composer.loftwah.com/creator-hub/profile-20261111.webp"
+              alt="Mara Quinn’s public Linkarooie portfolio, showing four links to her ceramics work."
               width="1440"
-              height="1000"
+              height="960"
               loading="lazy"
             />
           </a>
           <figcaption>
-            AC / Fictional composition workbench on this device. Captured 23 October 2026.
+            The running portfolio, captured by App Composer on 11 November 2026.
           </figcaption>
         </figure>
-        <a class="home-action" href="https://composer.loftwah.com/demo?from=woodhouse-edition">
-          Try the connected apps ↗
+        <a class="home-action" href="https://creator-hub.loftwah.com/">
+          Open Mara’s portfolio ↗
+        </a>
+        <a class="text-link" href="https://creator-hub-guestbook.loftwah.com/">
+          Visit her guestbook ↗
         </a>
         <a
           class="text-link"
           href="https://composer.loftwah.com/init?start=composition#starting-point"
         >
-          Start your collection ↗
+          Configure your own in Init ↗
         </a>
-        <a class="text-link" href="https://composer.loftwah.com/release">
-          See the running versions ↗
+        <a class="text-link" href={creatorHubCaseStudy}>
+          Read the build and see the running versions ↗
         </a>
-        <a class="text-link" href="https://composer.loftwah.com/building">
-          Read the build story ↗
+        <a class="text-link" href="https://composer.loftwah.com/demo?from=woodhouse-edition">
+          Try the local composition demo ↗
         </a>
-        <a class="text-link" href="/exhibits/source-plate/#contribution-flow">
-          Walk the contribution states ↗
-        </a>
-        <a class="text-link" href="/dispatches/your-apps-should-get-along/">
-          Follow the example ↗
-        </a>
-        <p class="source-note">
-          Local workbench actions and hosted records remain separate. Fresh-user setup and WordPress
-          migration demonstrations remain unfinished. Downloaded copies of a photo cannot be
-          recalled.
-        </p>
       </div>
     </section>
   )}
