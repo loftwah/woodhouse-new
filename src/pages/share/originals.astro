@@ -1,0 +1,124 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
+import { listProjectRecords } from "../../content/repository";
+import { makingOfCampaign } from "../../data/showcase-product-social";
+import { originals } from "../../data/showcase-originals";
+import { shareNavigation } from "../../data/share-browser";
+
+export const prerender = false;
+const result = await listProjectRecords();
+if (result.error) {
+  return new Response("Artwork is temporarily unavailable.", {
+    status: 503,
+    headers: { "cache-control": "no-store" }
+  });
+}
+const publicProjects = new Set(result.projects.map(({ slug }) => slug));
+const destinations = new Map(makingOfCampaign.map((item) => [item.project, item]));
+const base = "/campaign/20261113-original-art";
+const works = originals.flatMap(({ project, title, drawing, alt, file, slug, width, height }) => {
+  const destination = destinations.get(project);
+  if (!destination || (project !== "woodhouse" && !publicProjects.has(project))) return [];
+  const original = `${base}/${file}`;
+  return [
+    {
+      drawing,
+      item: {
+        id: `original-${slug}`,
+        project,
+        title,
+        alt,
+        caption: `${title}. ${drawing ? "A new process drawing for Making the Work." : "Original campaign illustration."}\n${destination.href}`,
+        image: `${base}/${slug}-preview.jpg`,
+        thumbnail: `${base}/${slug}-thumb.jpg`,
+        original,
+        width,
+        height,
+        reviewedAt: "2026-11-13",
+        credit: "Woodhouse · Codex ImageGen",
+        kind: "editorial composition" as const,
+        href: destination.href,
+        action: destination.action,
+        source: `${base}/notes.txt`,
+        formats: [
+          { label: drawing ? "Original PNG" : "Lossless WebP", image: original, width, height }
+        ]
+      }
+    }
+  ];
+});
+const drawings = works.filter(({ drawing }) => drawing).map(({ item }) => item);
+const illustrations = works.filter(({ drawing }) => !drawing).map(({ item }) => item);
+const lead = drawings[0] ?? illustrations[0];
+if (Astro.cache?.enabled) {
+  for (const hint of result.cacheHints) Astro.cache.set(hint);
+}
+---
+
+<BaseLayout
+  title="Original art and drawings"
+  description="Download the clean Woodhouse process drawings and original illustrations used in the project campaigns."
+  path="/share/originals/"
+  currentPath="/share/"
+  image={lead?.original}
+  imageAlt={lead?.alt}
+  imageWidth={lead?.width}
+  imageHeight={lead?.height}
+>
+  <div class="container originals">
+    <header>
+      <h1>Original art and drawings.</h1>
+      <nav aria-label="Artwork collections">
+        <a href={shareNavigation("/share/", Astro.url.searchParams)}>Featured posters</a>
+        {drawings.length > 0 && <a href="#drawings">Clean drawings</a>}
+        {illustrations.length > 0 && <a href="#illustrations">Illustration sources</a>}
+        <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
+      </nav>
+    </header>
+    {drawings.length > 0 && (
+      <section id="drawings" aria-labelledby="drawings-title">
+        <h2 id="drawings-title">Clean drawings</h2>
+        <ShowcaseGallery items={drawings} compact staggered />
+      </section>
+    )}
+    {illustrations.length > 0 && (
+      <section id="illustrations" aria-labelledby="illustrations-title">
+        <h2 id="illustrations-title">Illustration sources</h2>
+        <ShowcaseGallery items={illustrations} compact staggered eager={false} />
+      </section>
+    )}
+    {!lead && <p>No original artwork is available yet.</p>}
+  </div>
+</BaseLayout>
+
+<style>
+  .originals {
+    padding-block: clamp(2rem, 5vw, 5rem);
+  }
+  h1 {
+    margin: 0;
+    font: 650 clamp(2.25rem, 5vw, 4.75rem)/1.02 var(--display);
+    letter-spacing: -0.04em;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin-block: 0.85rem 1.75rem;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  section + section {
+    margin-block-start: clamp(2.25rem, 5vw, 4rem);
+  }
+  section {
+    scroll-margin-top: 1.25rem;
+  }
+  h2 {
+    margin-block: 0 1.25rem;
+  }
+</style>

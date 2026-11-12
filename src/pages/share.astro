@@ -332,6 +332,9 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             <a href={shareNavigation("/share/?type=logos", Astro.url.searchParams)}>
               Logos &amp; icons
             </a>
+            <a href={shareNavigation("/share/originals/", Astro.url.searchParams)}>
+              Original art &amp; drawings
+            </a>
             <a href="/share/resources/">Creative resources</a>
             <a href={processWork.length ? "#earlier-campaigns" : "#archive"}>Earlier artwork</a>
           </nav>
