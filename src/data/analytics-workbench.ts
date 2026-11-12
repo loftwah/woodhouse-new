@@ -29,6 +29,7 @@ export const projectColours: Record<string, string> = {
   "app-composer": "#7fa2ff",
   loftwahfm: "#ff9ccd",
   foilbury: "#79dcc0",
+  max: "#ffc078",
   woodhouse: "#b4c0d2"
 };
 export const measureChoices = [
@@ -146,6 +147,11 @@ export const measureChoices = [
       "Challenge attempts that reached a table result. The objective may still be incomplete."
   },
   {
+    key: "simulator_runs",
+    label: "Simulator runs",
+    meaning: "Deliberate Find runs in MAX’s public browser simulator."
+  },
+  {
     key: "cabinet_views",
     label: "Public cabinet visits",
     meaning:
@@ -200,7 +206,7 @@ const gameMeasures: MeasureKey[] = [
   "returning_browsers"
 ];
 type ProductView = {
-  family: "game" | "app" | "audience" | "listening" | "cabinet";
+  family: "game" | "app" | "audience" | "listening" | "cabinet" | "simulator";
   label: string;
   defaultMeasure: MeasureKey;
   keys: MeasureKey[];
@@ -279,10 +285,33 @@ const productViews: Record<AnalyticsProject, ProductView> = {
     headlines: ["cabinet_views"],
     description: "See when people interact with the public card cabinet."
   },
-  fighter: gameView,
-  bubbles: gameView,
+  max: {
+    family: "simulator",
+    label: "Public simulator activity",
+    defaultMeasure: "simulator_runs",
+    keys: ["simulator_runs"],
+    headlines: ["simulator_runs"],
+    description: "See how often people start a Find run in MAX’s public browser simulator."
+  },
+  fighter: {
+    ...gameView,
+    label: "Fight activity",
+    description:
+      "Starts, results and active time for supported fights. Tutorials and marked test sessions are excluded."
+  },
+  bubbles: {
+    ...gameView,
+    label: "Opted-in gameplay",
+    description:
+      "Starts, finishes and active time from players who enabled Share anonymous gameplay."
+  },
   "protocol-11": protocol11View,
-  shoalshot: gameView
+  shoalshot: {
+    ...gameView,
+    label: "Dive activity",
+    description:
+      "New dives, completed runs and active time in regular play. Zen and practice are excluded. Resuming a dive adds no start."
+  }
 };
 export function productView(project: AnalyticsProject | null) {
   return project ? productViews[project] : null;
@@ -302,7 +331,7 @@ export const overviewMeasure = {
   key: "overview",
   label: "Project overview",
   meaning:
-    "Each project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app use for App Composer, cabinet visits for Foilbury and engaged sessions for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
+    "Each project opens on the measure that describes its own use: gameplay for the games, listening for LoftwahFM, app use for App Composer, cabinet visits for Foilbury, simulator runs for MAX and engaged sessions for Woodhouse. The measures have different units and are never added together. Choose a measure for a single-scope drill-down."
 } as const;
 export function measuresFor(project: AnalyticsProject | null) {
   const keys = productView(project)?.keys;
@@ -372,6 +401,7 @@ export const overviewOrder: AnalyticsProject[] = [
   "loftwahfm",
   "app-composer",
   "foilbury",
+  "max",
   "woodhouse"
 ];
 /**

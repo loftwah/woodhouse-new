@@ -106,7 +106,21 @@ const names = new Map([
 const selectedIdentity = selected
   ? identities.projects.find((p) => p.slug === selected)
   : undefined;
+const selectedActivityPath =
+  selected === "max" ? "/demo/" : selected === "foilbury" ? "/cabinet" : null;
 const selectedSite = selected === "woodhouse" ? "/" : (selectedIdentity?.siteUrl ?? null);
+const activityHref =
+  selectedSite && selectedActivityPath
+    ? new URL(selectedActivityPath, selectedSite).href
+    : selectedSite;
+const activityLabel =
+  selected === "max"
+    ? "Open the MAX simulator"
+    : selected === "foilbury"
+      ? "Open the Foilbury cabinet"
+      : selected
+        ? `Open ${names.get(selected)}`
+        : "";
 const releaseEvidence = releaseEvidenceRead ? await releaseEvidenceRead : null;
 const releaseNotes =
   releaseEvidence && !releaseEvidence.error
@@ -322,6 +336,7 @@ const groups = [
   ...modeMeasureGroups.map((group) => ({ label: group.label, keys: [...group.keys] })),
   { label: "Published challenges", keys: ["challenge_attempts", "challenge_finishes"] },
   { label: "Cabinet activity", keys: ["cabinet_views"] },
+  { label: "Simulator activity", keys: ["simulator_runs"] },
   {
     label: "Visits & returns",
     keys: ["visits", "engaged_sessions", "browsers", "returning_browsers", "project_opens"]
@@ -775,10 +790,13 @@ const dataPayload = {
             ></span>
           </a>
         ))}
+        <a href="/activity/liferaft/">
+          <span class="source-dot" style="--source:var(--muted)" aria-hidden="true"></span>
+          Liferaft downloads
+        </a>
       </nav>
       <div class="rail-foot">
         <a href="/activity/measurement/">How measurement works</a>
-        <a href="/activity/liferaft/">Liferaft downloads</a>
         <a href="/activity/listening/">Games × Radio</a>
         <a href="/connections/">Explore connected products</a>
         <a href="/editions/one-more-round/#distribution">Edition discovery</a>
@@ -1060,7 +1078,7 @@ const dataPayload = {
                       <a href={`/projects/${selected}/`}>
                         Read the {names.get(selected)} project page ↗
                       </a>
-                      {selectedSite && <a href={selectedSite}>Open {names.get(selected)} ↗</a>}
+                      {activityHref && <a href={activityHref}>{activityLabel} ↗</a>}
                       <a href={pageLink({ project: null })}>Compare all projects</a>
                     </p>
                   )}
