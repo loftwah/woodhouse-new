@@ -1,3 +1,4 @@
+import { visualFidelityStudies } from "./showcase-visual-fidelity.ts";
 import { shareExpansion } from "./showcase-share-expansion.ts";
 import { shareStudio } from "./showcase-share-studio.ts";
 import { projectStudies } from "./showcase-project-studies.ts";
@@ -106,6 +107,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...visualFidelityStudies,
   ...shareExpansion,
   ...shareStudio,
   ...projectStudies,

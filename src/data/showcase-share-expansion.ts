@@ -4974,9 +4974,21 @@ const art = [
   ]
 ] as const;
 
+const retiredProtocolScenes = new Set([
+  "protocol-11-draw-or-discard-feed",
+  "protocol-11-draw-or-discard-pin",
+  "protocol-11-draw-pile-feed",
+  "protocol-11-draw-pile-pin",
+  "protocol-11-draw-pile-x",
+  "protocol-11-solo-classic-feed",
+  "protocol-11-tactical-landscape",
+  "protocol-11-tactical-square"
+]);
+
 export const shareExpansion: CampaignItem[] = art.map(
   ([id, project, title, alt, caption, href, action, use, ext, files]) => {
     const [, file, width, height] = files[0];
+    const archived = retiredProtocolScenes.has(id);
     return {
       id: `share-edition-${id}`,
       project,
@@ -4985,8 +4997,11 @@ export const shareExpansion: CampaignItem[] = art.map(
       href,
       action,
       use,
+      ...(archived ? { archived: true, stage: "Archived study" } : {}),
       credit: "Woodhouse · GPT Image 2.6 via Fal",
-      caption: `${caption}\n${href}`,
+      caption: archived
+        ? `Earlier illustration with a card or table detail that differs from the live game.\n${href}`
+        : `${caption}\n${href}`,
       original: `${base}/${file}`,
       image: `${base}/${id}-preview.${ext}`,
       thumbnail: `${base}/${id}-thumb.${ext}`,
