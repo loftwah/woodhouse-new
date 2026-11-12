@@ -83,10 +83,10 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   assert.deepEqual(
     items.slice(0, 4).map(({ id }) => id),
     [
+      "visual-study-moss-after-dark",
       "share-edition-foilbury-drop-bear-landscape",
       "share-edition-shoalshot-glimmerfin-study-square",
-      "share-edition-foilbury-diamond-turn-story",
-      "share-edition-loftwahfm-night-tape-link"
+      "share-edition-foilbury-diamond-turn-story"
     ]
   );
   const foilbury = items.filter(({ project, use }) => project === "foilbury" && !use);
@@ -116,6 +116,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       )
       .map(({ href }) => href),
     [
+      "/share/foilbury/#visual-study-moss-after-dark",
       "/share/foilbury/#project-study-moss-paper",
       "/share/foilbury/#project-study-moss-foil",
       "/share/foilbury/#direct-social-facebook",
@@ -127,4 +128,15 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       "/share/foilbury/#november-studio-foilbury"
     ]
   );
+});
+
+test("a retired Protocol 11 scene keeps its collection anchor and stays out of search", () => {
+  const retired = "share-edition-protocol-11-draw-or-discard-pin";
+  const projects = [{ slug: "protocol-11", name: "Protocol 11" }];
+  const item = publicCampaignItems(["protocol-11"]).find(({ id }) => id === retired);
+  assert.equal(item?.archived, true);
+  assert(item?.original.endsWith("protocol-11-draw-or-discard-pin.jpg"));
+  const hits = campaignSearchItems(projects);
+  assert(!hits.some(({ href }) => href.endsWith("#" + retired)));
+  assert(hits.some(({ href }) => href.endsWith("#visual-study-stock-and-discard")));
 });

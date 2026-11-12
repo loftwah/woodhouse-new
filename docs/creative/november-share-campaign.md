@@ -171,3 +171,36 @@ still available in their own sections.
 The image generator drew every new composition. Exports resize or crop
 that image, with the original file available beside it. No lettering,
 logos or visual elements are layered over the render.
+
+### Visual fidelity review before a batch
+
+Reviewed 13 November 2026, Melbourne. Two earlier Protocol 11 draw-and-discard
+illustrations put a numbered face on both piles. Other table scenes showed the
+near players looking at the backs of their own cards, or fingers that did not
+make believable contact. The gallery-scale review let those errors through.
+Eight affected studies now sit under Earlier artwork. Their original files
+remain available, and the active Protocol 11 ZIP and Social preview exclude them.
+
+1. Start with current public game footage, screenshots or renders. Pick one
+   scene and note what must be true before prompting. For Protocol 11 Classic,
+   the stock shows a back and the discard shows its top face. An active player
+   sees their own faces, which point towards that player. Other players see
+   backs. Check that the stage of the turn supports the pictured actions.
+2. Tell ImageGen which reference governs the game state, which supplies the
+   exact object or character, and which is for style. Stage fewer moving parts.
+   When a hand earns its place, get a matching pose reference. For an exact
+   gameplay or finish claim, publish the game's own capture or render.
+   [OpenAI image prompting guide](https://developers.openai.com/api/docs/guides/image-prompting)
+3. Run a small pilot. Check each candidate at full size against the reference
+   and at phone size in the intended crop. Follow each arm into the wrist,
+   count visible fingers against the pose and occlusion, check grip and
+   contact shadows, then read the faces, corners, lettering and reflections.
+   A contact sheet helps choose a composition. It cannot clear these checks.
+4. Ask for a focused ImageGen edit when the fault is local. Recheck the whole
+   image after the edit. Reject the candidate if the game state or anatomy
+   still fails. Keep the exact generator file and use resizing and encoding
+   for placement exports. Record the source, crop and review decision before
+   scaling up the batch.
+
+The [corrective batch source notes](https://woodhouse.loftwah.com/campaign/20261113-visual-fidelity/provenance.txt)
+record the scene-specific checks and source material.

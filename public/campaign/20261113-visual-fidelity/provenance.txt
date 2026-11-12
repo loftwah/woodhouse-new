@@ -1,0 +1,24 @@
+Woodhouse visual fidelity studies
+Reviewed 13 November 2026, Melbourne. Three editorial works made with built-in Codex ImageGen.
+The PNGs are the unedited outputs. The JPEGs use proportional framing, resizing and encoding.
+No paid image API was called for this batch.
+
+Stock and discard
+Source: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Project: https://protocol11.loftwah.com/
+Brief: overhead still life on teal felt. Card back on the left stock, one upright blue 3 on the right discard, no hands.
+Review: checked both top faces, orientation, count, pile separation and thumbnail contrast against the live-table capture. Drawn physical interpretation.
+
+Moss after dark
+Source: https://foilbury.loftwah.com/media/render/rnd_mwa2kzjybey2zppg34vcsk3k
+Project: https://foilbury.loftwah.com/cabinet/moss
+Brief: rain, ultramarine ink and a warm leaf lantern. Use the current Moss Diamond portrait for likeness. Hoodie pouch holds both hands.
+Review: checked ear shape, hat, hoodie and leaf pull against the source. The native card is available in the cabinet.
+
+One card in the light
+Source: https://protocol11.loftwah.com/cards/backs/default.jpg
+Project: https://protocol11.loftwah.com/
+Brief: single face-down card on green felt, amber light and a relief-print treatment. The paw and border come from the published deck back.
+Review: checked the face-down presentation, flat edges and placement inside the vertical frame. A study of the published design.
+
+Reference method: https://developers.openai.com/api/docs/guides/image-prompting

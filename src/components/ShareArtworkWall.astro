@@ -27,7 +27,11 @@ const category = categories.find(([key]) => key === params.get("artType"))?.[0] 
 const requestedProject = params.get("artProject") || params.get("project");
 const project = projects.find(({ slug }) => slug === requestedProject)?.slug ?? "";
 const labels = [
-  ...new Set(works.flatMap(({ formats }) => formats?.map(({ label }) => label) ?? []))
+  ...new Set(
+    works.flatMap(({ archived, formats }) =>
+      archived ? [] : (formats?.map(({ label }) => label) ?? [])
+    )
+  )
 ].sort();
 const placement = labels.find((label) => label === params.get("artFormat")) ?? "";
 const showShelf = !category && !project && !placement;
@@ -42,10 +46,11 @@ const art =
 const filtered = art.filter(
   (item) =>
     (!project || item.project === project) &&
-    (!placement || item.formats?.some(({ label }) => label === placement)) &&
+    (!placement || (!item.archived && item.formats?.some(({ label }) => label === placement))) &&
     (!category ||
-      category === "sketch" ||
-      (category === "earlier" ? !item.use : item.use === category))
+      (category === "earlier"
+        ? !item.use || item.archived
+        : !item.archived && (category === "sketch" || item.use === category)))
 );
 const size = 24;
 const requested = Number(params.get("artPage") ?? 1);
