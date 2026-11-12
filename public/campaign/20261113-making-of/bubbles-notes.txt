@@ -1,0 +1,18 @@
+Bubbles · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+The working Bubbles image is the published 12 October Classic capture. Fizz and the launcher icon are the published product assets.
+
+Source record for reused captures, artwork and marks:
+# Bubbles
+
+- Name on artwork: Bubbles. Use the supplied launcher icon alongside the name.
+- Fizz portrait headline: “Three bubbles. One shot.” The mascot is the iridescent one-eyed droplet under a three-colour cluster, framed by the actual cabinet's cyan and magenta rails.
+- Bank shot headline: “Mind the angle.” A bright blue trajectory rebounds from the right rail into a symbol board. This is a generated arcade illustration, with the exact board supplied separately in `hero.png`.
+- Caption: “There’s a shot off the right wall. See if you can find it before the board drops.”
+- Product: https://bubbles.loftwah.com/
+- Original app mark: https://github.com/loftwah/bubbles/blob/67cde687698b4d85bb32a259a26e92673c958cba/public/icon-512.png, copied byte-for-byte into `logo.png`.
+- Original Fizz likeness: https://github.com/loftwah/bubbles/blob/67cde687698b4d85bb32a259a26e92673c958cba/public/assets/mascots/fizz-preview.webp, publicly presented at https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp. First-party project artwork used within MP's Woodhouse campaign.
+- Actual screenshot: `output/campaign-20261112/capture-bubbles-wide.png`, staged seed-0 Classic opening board on production on 12 November 2026. See https://woodhouse.loftwah.com/campaign/20261112/provenance.txt. Keep screenshot and editorial art labelled according to source.
+- Both portrait plates were generated with native Codex ImageGen, from the above actual project images. No external brand assets were introduced.

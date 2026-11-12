@@ -1,4 +1,8 @@
-import { fieldNotesCampaign, productSocialCampaign } from "./showcase-product-social.ts";
+import {
+  fieldNotesCampaign,
+  makingOfCampaign,
+  productSocialCampaign
+} from "./showcase-product-social.ts";
 import { contactStudyWorks } from "./showcase-contact-studies.ts";
 import { artworkRefresh } from "./showcase-refresh.ts";
 import { currentCampaign } from "./showcase-current.ts";
@@ -18,6 +22,7 @@ export type CampaignItem = {
   id: string;
   project: string;
   title: string;
+  stage?: string;
   alt: string;
   caption: string;
   image: string;
@@ -86,6 +91,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...makingOfCampaign,
   ...fieldNotesCampaign,
   ...productSocialCampaign,
   ...contactStudyWorks,

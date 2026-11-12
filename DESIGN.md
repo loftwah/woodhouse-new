@@ -368,6 +368,13 @@ No image is stretched or cropped to force a common card shape. View remains a
 visible affordance rather than a hover requirement. The large image viewer is a native dialog with a labelled close,
 Escape, focus return, useful caption and ordinary download/product links.
 
+Reviewed 13 November 2026, Melbourne. The current Share wall leads with Making the
+work. The cards keep their square, portrait or landscape image ratio and pack into
+two columns on phones, three on tablets and four on wide screens. Reading and
+keyboard order follow the source order, with a regular grid when script is
+unavailable. Each piece labels its provenance and keeps direct copy and download.
+Earlier packs remain reachable in the gallery and Social preview.
+
 The archive follows the new wall, with all existing project/type/page browsing,
 image IDs, credits, packs, films and captions retained. Explicit image-category
 links name `type=images`, so archive page one cannot unexpectedly become the new

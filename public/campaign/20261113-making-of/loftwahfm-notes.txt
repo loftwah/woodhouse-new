@@ -1,0 +1,15 @@
+LoftwahFM · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+
+Source record for reused captures, artwork and marks:
+# LoftwahFM
+
+A. Cartridge Club.
+B. Night Signal.
+Caption. Cabinet rhythms on Cartridge Club. Tape heads and amber light on Night Signal. Pick a station at https://fm.loftwah.com/radio/.
+
+A is a Codex ImageGen promo scene made from the published BOB sleeve and Cartridge Club station art, with the sampler and cartridge drawn from the real album's music hardware imagery. B uses the actual Night Signal station reference and its reel-to-reel equipment. Both are editorial artwork. The BOB sleeve remains unchanged for the source-led asset.
+
+Source repository loftwah/loftwahfm commit 166b71e12c6a8c3a4ed75b9bddb8a772ce92ccd9. Official mark public/loftwahfm-logo-white-large.png. First-party station art public/radio/artwork/og-cartridge-club-v1.jpg and public/radio/artwork/og-night-signal-v1.jpg. Published sleeve https://fm.loftwah.com/api/radio/v1/media/bob/cover.jpg. Public listening at https://fm.loftwah.com/radio?station=cartridge-club and https://fm.loftwah.com/radio?station=night-signal. No outside assets.

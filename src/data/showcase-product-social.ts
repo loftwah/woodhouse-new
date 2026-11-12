@@ -295,6 +295,8 @@ type ProductWork = {
   caption: string;
   href: string;
   action: CampaignItem["action"];
+  primary?: keyof typeof placements;
+  stage?: string;
   headlines: Record<keyof typeof placements, string>;
 };
 
@@ -304,31 +306,34 @@ function productCampaign(
   prefix: string,
   addedAt: string
 ): CampaignItem[] {
-  return works.map(({ slug, name, alt, caption, href, action, headlines }) => ({
-    id: `${prefix}-${slug}`,
-    project: slug,
-    title: headlines.feed,
-    alt,
-    caption: `${caption}\n${href}`,
-    href,
-    action,
-    image: `${base}/${slug}-preview.jpg`,
-    thumbnail: `${base}/${slug}-thumb.jpg`,
-    original: `${base}/${slug}-feed.jpg`,
-    width: placements.feed.width,
-    height: placements.feed.height,
-    reviewedAt: "2026-11-12",
-    addedAt,
-    credit: "Woodhouse · official product sources and Codex ImageGen campaign illustration",
-    kind: "editorial composition",
-    source: `${base}/${slug}-notes.txt`,
-    socialPack: `${base}/${slug}-social-pack.zip`,
-    formats: (Object.keys(placements) as Array<keyof typeof placements>).map((key) => ({
-      ...placements[key],
-      image: `${base}/${slug}-${key}.jpg`,
-      title: `${name} · ${headlines[key]}`
-    }))
-  }));
+  return works.map(
+    ({ slug, name, alt, caption, href, action, headlines, primary = "feed", stage }) => ({
+      id: `${prefix}-${slug}`,
+      project: slug,
+      title: headlines[primary],
+      stage,
+      alt,
+      caption: `${caption}\n${href}`,
+      href,
+      action,
+      image: `${base}/${slug}-preview.jpg`,
+      thumbnail: `${base}/${slug}-thumb.jpg`,
+      original: `${base}/${slug}-${primary}.jpg`,
+      width: placements[primary].width,
+      height: placements[primary].height,
+      reviewedAt: "2026-11-12",
+      addedAt,
+      credit: "Woodhouse · official product sources and Codex ImageGen campaign illustration",
+      kind: "editorial composition",
+      source: `${base}/${slug}-notes.txt`,
+      socialPack: `${base}/${slug}-social-pack.zip`,
+      formats: (Object.keys(placements) as Array<keyof typeof placements>).map((key) => ({
+        ...placements[key],
+        image: `${base}/${slug}-${key}.jpg`,
+        title: `${name} · ${headlines[key]}`
+      }))
+    })
+  );
 }
 
 export const productSocialCampaign = productCampaign(
@@ -345,4 +350,163 @@ export const fieldNotesCampaign = productCampaign(
   "/campaign/20261112-field-notes",
   "field-notes",
   "2026-11-12T12:32:00Z"
+);
+
+const makingOf = [
+  {
+    slug: "woodhouse",
+    primary: "story",
+    stage: "New process drawing",
+    alt: "A Woodhouse-branded napkin drawing of an arcade cabinet, a turntable and a reef, paired with the released workshop illustration.",
+    caption:
+      "One yellow line ties together the cabinet, the turntable and the reef. Here’s a new drawing of how the workshop hangs together.",
+    headlines: {
+      feed: "The workshop in pencil",
+      square: "The Woodhouse seal",
+      wide: "Before the Share wall",
+      "x-header": "From the workbench",
+      story: "The workshop on a napkin"
+    }
+  },
+  {
+    slug: "bubbles",
+    primary: "wide",
+    stage: "Working capture",
+    alt: "The Bubbles mark, a dated Classic gameplay capture, and a newly drawn diagram of a bank shot.",
+    caption:
+      "The October Classic capture shows the launcher and the room to bank a shot. The new drawing traces the idea.",
+    headlines: {
+      feed: "Sketching the bank shot",
+      square: "The cabinet icon",
+      story: "From line to launcher",
+      "x-header": "How Bubbles banks a shot",
+      wide: "A line off the wall"
+    }
+  },
+  {
+    slug: "foilbury",
+    primary: "square",
+    stage: "Source artwork",
+    alt: "The whole holographic Moss card with the official Foilbury wordmark in a cabinet design plate.",
+    caption:
+      "The frame has to leave room for the hat, the name and the finish. This is the published Moss render.",
+    headlines: {
+      feed: "Sketching a card frame",
+      story: "From frame to foil",
+      wide: "The whole Moss card",
+      "x-header": "Inside the Foilbury cabinet",
+      square: "The Moss card frame"
+    }
+  },
+  {
+    slug: "shoalshot",
+    primary: "feed",
+    stage: "New process drawing",
+    alt: "A pencil study of the SHOALSHOT Glimmerfin eye and tail with the official wordmark and title.",
+    caption:
+      "The eye and tail give the Glimmerfin its silhouette. This new study sits beside the actual game sprite.",
+    headlines: {
+      square: "The Glimmerfin sprite",
+      story: "From pencil to reef",
+      wide: "A fish in the Tide Pool",
+      "x-header": "Inside the Tide Pool",
+      feed: "Glimmerfin in graphite"
+    }
+  },
+  {
+    slug: "fighter",
+    primary: "feed",
+    stage: "New process drawing",
+    alt: "A pencil storyboard of Fighter’s Viking and Grim Reaper with the official Fighter mark and a printed title.",
+    caption: "A new storyboard studies the two silhouettes from Fighter’s opening matchup.",
+    headlines: {
+      square: "Viking and Grim Reaper",
+      story: "From storyboard to ring",
+      wide: "The matchup in Battle Blast",
+      "x-header": "Making the face-off",
+      feed: "Blocking the face-off"
+    }
+  },
+  {
+    slug: "loftwahfm",
+    primary: "square",
+    stage: "Source artwork",
+    alt: "The published BOB sleeve and LoftwahFM wordmark on a sleeve artwork plate.",
+    caption:
+      "The published BOB cover puts the sampler up front. A new drawing picks out the shapes for the flyer.",
+    headlines: {
+      feed: "Sleeve study in marker",
+      story: "From pencil to sleeve",
+      wide: "Artwork from the crate",
+      "x-header": "Inside the LoftwahFM crate",
+      square: "The BOB sleeve"
+    }
+  },
+  {
+    slug: "protocol-11",
+    primary: "story",
+    stage: "Sketch and working capture",
+    alt: "A Protocol 11 table plan over a staged Classic table capture, with the official wordmark and title.",
+    caption:
+      "The new drawing follows the draw pile to the hand. The capture shows where those pieces sit on the Classic table.",
+    headlines: {
+      feed: "Plan of a Classic table",
+      square: "The table pieces",
+      wide: "A seat at the Classic table",
+      "x-header": "Designing the table",
+      story: "From plan to table"
+    }
+  },
+  {
+    slug: "app-composer",
+    primary: "wide",
+    stage: "Working capture",
+    alt: "App Composer’s official logo beside the actual public Creator Hub example and a small layout sketch.",
+    caption:
+      "Mara Quinn’s demo puts the profile, links and guestbook in view. The new sketch pulls those parts apart.",
+    headlines: {
+      feed: "Sketching a Creator Hub",
+      square: "The Creator Hub parts",
+      story: "From wireframe to profile",
+      "x-header": "Making a Creator Hub",
+      wide: "Profile, links, guestbook"
+    }
+  },
+  {
+    slug: "max",
+    primary: "feed",
+    stage: "New process drawing",
+    alt: "Amber pencil rings around a simple room plan with the official MAX wordmark and Browser simulator label.",
+    caption:
+      "A new sketch shows what the locator does in the browser simulator. Try Find MAX to hear it.",
+    headlines: {
+      square: "The locator control",
+      story: "From plan to ping",
+      wide: "The browser locator",
+      "x-header": "Designing the MAX locator",
+      feed: "Sketching the locator"
+    }
+  },
+  {
+    slug: "liferaft",
+    primary: "square",
+    stage: "Working capture",
+    alt: "The Liferaft icon next to the actual synthetic-data email attachment search.",
+    caption:
+      "A real release capture shows the attachment search on sample mail. The new drawing traces the steps.",
+    headlines: {
+      feed: "Sketching mail recovery",
+      story: "From mailbox to file",
+      wide: "Search an MBOX archive",
+      "x-header": "Making Liferaft",
+      square: "From archive to attachment"
+    }
+  }
+] as const;
+
+export const makingOfCampaign = productCampaign(
+  makingOf.map((note) => ({ ...productsBySlug.get(note.slug)!, ...note })),
+  "/campaign/20261113-making-of",
+  "making-of",
+  "2026-11-12T13:00:00Z"
 );

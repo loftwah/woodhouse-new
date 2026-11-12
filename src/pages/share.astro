@@ -1,5 +1,9 @@
 ---
-import { fieldNotesCampaign, productSocialCampaign } from "../data/showcase-product-social";
+import {
+  fieldNotesCampaign,
+  makingOfCampaign,
+  productSocialCampaign
+} from "../data/showcase-product-social";
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
@@ -269,15 +273,14 @@ const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
 const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
-const newPacks = freshWork.filter((item) => fieldNotesCampaign.includes(item));
-const productPacks = freshWork.filter((item) => productSocialCampaign.includes(item));
-const latestWork = newPacks.length
-  ? newPacks
-  : productPacks.length
-    ? productPacks
-    : freshWork.length
-      ? freshWork
-      : featuredCampaign;
+const processWork = freshWork.filter((item) => makingOfCampaign.includes(item));
+const newestEdition = [
+  processWork,
+  ...[fieldNotesCampaign, productSocialCampaign].map((edition) =>
+    freshWork.filter((item) => edition.includes(item))
+  )
+].find((edition) => edition.length > 0);
+const latestWork = newestEdition ?? (freshWork.length ? freshWork : featuredCampaign);
 const latestIds = new Set(latestWork.map(({ id }) => id));
 const earlierWork = featuredCampaign.filter(({ id }) => !latestIds.has(id));
 const featuredSocial = campaignSocial(latestWork);
@@ -318,11 +321,17 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
     {showcase && (
       <>
         <header class="showcase-heading">
-          <h1>{selected?.name ?? "Made to be played. Heard. Tried."}</h1>
+          <h1>
+            {selected?.name ??
+              (processWork.length ? "Making the work." : "Made to be played. Heard. Tried.")}
+          </h1>
           <nav class="share-jumps" aria-label="More media">
             <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
+            <a href={shareNavigation("/share/?type=logos", Astro.url.searchParams)}>
+              Logos &amp; icons
+            </a>
             <a href="/share/resources/">Creative resources</a>
-            <a href="#archive">Browse the archive</a>
+            <a href={processWork.length ? "#earlier-campaigns" : "#archive"}>Earlier artwork</a>
           </nav>
         </header>
         <nav aria-label="Featured projects" class="showcase-projects">
@@ -341,7 +350,11 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             </a>
           ))}
         </nav>
-        <ShowcaseGallery items={latestWork} compact={!selected && freshWork.length > 0} />
+        <ShowcaseGallery
+          items={latestWork}
+          compact={!selected && freshWork.length > 0}
+          staggered={!selected && processWork.length > 0}
+        />
         {showcaseClips.length > 0 && (
           <section class="motion-selection" aria-labelledby="motion-title">
             <h2 id="motion-title">In motion.</h2>

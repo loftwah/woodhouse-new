@@ -1,0 +1,15 @@
+App Composer · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+
+Source record for reused captures, artwork and marks:
+# App Composer
+- Title A | Give your links a home
+- Title B | Build a Creator Hub
+- Caption | Mara Quinn’s demo pairs a Linkarooie profile with a guestbook. Open it, then build a hub of your own.
+- Source | Real public Linkarooie Creator Hub fixture for fictional ceramicist Mara Quinn, captured at https://creator-hub.loftwah.com/. Desktop and mobile captures are included. Hero alternate is the walkthrough on https://composer.loftwah.com/creator-hub. Both are staging-free public views using the existing demo data. Reuse within the same portfolio campaign only.
+- Logo | Actual App Composer reverse lockup rasterised from `public/brand/composer-logo-reverse-20261022b.svg` in loftwah/app-composer at `745deb441260d899e3702ece0e3d02e0064415f1`. Provenance is in that repository’s `docs/assets/brand/PROVENANCE.md`. Alpha preserved. Orange lockup and violet link accent.
+- Artwork A | Codex ImageGen, orange ceramic workbench inspired by the demo profile for a ceramicist.
+- Artwork B | Codex ImageGen, interlocking modular blocks inspired by the approved merging-block logo.
+- Keep the actual product and Linkarooie UI obvious. No reconstructed UI.

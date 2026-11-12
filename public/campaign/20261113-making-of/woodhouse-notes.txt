@@ -1,0 +1,11 @@
+Woodhouse · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+The square uses the released Loom card front. The wide plate shows a genuine 6 November Share mockup excerpt beside the previous live gallery.
+
+Source record for reused captures, artwork and marks:
+Woodhouse
+Logo: public/brand/loom-seal-acid.png, existing Woodhouse seal.
+Native image: staged https://woodhouse.loftwah.com/ homepage with published factory art.
+ImageGen art: two original views using public/images/founding-workshop-20261018.webp as reference. A front elevation and an overhead maker's bench. Both are editorial illustrations.
