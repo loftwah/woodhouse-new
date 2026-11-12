@@ -1,5 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   repositoryFromRemote,
   verifyMain,
@@ -70,6 +75,19 @@ test("dry run verifies main and emits no external request", async () => {
     }
   });
   assert.equal(result.status, "dry_run");
+});
+test("CLI accepts pnpm's leading argument separator", (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "woodhouse-showcase-cli-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const fixture = join(directory, "event.json");
+  writeFileSync(fixture, JSON.stringify({ ...event, stage: "PROJECT_HIGHLIGHT" }));
+
+  const script = fileURLToPath(new URL("./showcase-delivery.mjs", import.meta.url));
+  const result = spawnSync(process.execPath, [script, "--", fixture, "--dry-run"], {
+    encoding: "utf8"
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).status, "dry_run");
 });
 test("read-back confirms exact message and safe Discord link", async () => {
   const checked = verifyMain(event, { runGit });

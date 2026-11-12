@@ -105,7 +105,7 @@ export async function publishDelivery(event, options = {}) {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice(process.argv[2] === "--" ? 3 : 2);
   const files = args.filter((arg) => !["--send", "--dry-run"].includes(arg));
   if (
     files.length !== 1 ||
