@@ -14,7 +14,7 @@ const containerWidth = "min(calc(100vw - clamp(2.5rem, 8vw, 9rem)), 1440px)";
 const imageSizes = (item: (typeof items)[number], index: number) => {
   const single = items.length === 1;
   const mobile =
-    single || (compact ? index === 0 || item.width / item.height > 1.3 : index % 4 >= 2)
+    single || (compact ? item.width / item.height > 1.3 : index % 4 >= 2)
       ? containerWidth
       : `calc((${containerWidth} - .75rem) / 2)`;
   const desktop = single
@@ -374,7 +374,6 @@ const productName = (slug: string) =>
     .showcase-wall.compact .showcase-work {
       grid-column: span 1;
     }
-    .showcase-wall.compact .showcase-work:first-child,
     .showcase-wall.compact .showcase-work.landscape {
       grid-column: 1 / -1;
     }

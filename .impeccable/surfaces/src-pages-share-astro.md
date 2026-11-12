@@ -10,9 +10,11 @@ Direction: an edited wall of complete images, varied in aspect and scale, inside
 the existing Woodhouse world. The first screen spends its area on the images,
 with a short heading, compact project links and direct product actions. Desktop
 uses six tracks: portraits and squares span two, landscapes four.
-At phone widths the opening pairs SHOALSHOT and Bubbles, then gives Fighter
-the full row, followed by Composer. Each four-work group repeats two narrow
-works then two full rows, avoiding a stranded half-row before a wide work. Complete images keep their authored ratio. The memorable moment
+At phone widths the wall pairs portrait and square work from the first row, so
+two pieces and their product actions are visible together; a landscape piece
+keeps the full row. The earlier first-work hero and alternating two-small/two-wide
+sequence were reviewed out on 12 November 2026 because the Contact Studies wall
+made the first screen read as one oversized work. Complete images keep their authored ratio. The memorable moment
 is the work, with a visible View affordance, short title and direct product action.
 
 Content: ten new campaign compositions and eight staged production captures,

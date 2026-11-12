@@ -359,12 +359,13 @@ form above the new selection. Project colour and composition belong to the image
 Desktop uses six tracks: portrait and square work occupy two, landscape work four.
 Images retain their complete authored ratio. Captions are short, with the native
 product action beside the title; Share & download opens the existing controls in
-a native disclosure. Phones use two tracks: SHOALSHOT and Bubbles open side by
-side, then Fighter and Composer each occupy a full row. That two-small/two-wide
-sequence repeats without stranding a half-row before a wide work. This keeps several identities in
-view before the archive. No image is stretched or cropped to force a common
-card shape. View remains a visible affordance rather than a hover
-requirement. The large image viewer is a native dialog with a labelled close,
+a native disclosure. Phones use two tracks: portrait and square works pair from
+the first row, and a landscape work keeps the full row. The earlier first-work
+hero and alternating two-small/two-wide sequence no longer describe the current
+Contact Studies-led wall. Each card keeps its authored ratio, product action,
+Download and Copy image; the two primary actions stay side by side at 390px.
+No image is stretched or cropped to force a common card shape. View remains a
+visible affordance rather than a hover requirement. The large image viewer is a native dialog with a labelled close,
 Escape, focus return, useful caption and ordinary download/product links.
 
 The archive follows the new wall, with all existing project/type/page browsing,
