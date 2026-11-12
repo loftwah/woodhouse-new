@@ -1,0 +1,47 @@
+---
+import type { CampaignFormat } from "../data/showcase-campaign";
+
+type Props = {
+  formats: readonly CampaignFormat[];
+  source: string;
+};
+const { formats, source } = Astro.props;
+---
+
+<ul aria-label="Download sizes">
+  {formats.map(({ label, image, width, height }) => (
+    <li>
+      <a href={image} download>
+        {label}{" "}
+        <span>
+          {width} × {height}
+        </span>
+      </a>
+    </li>
+  ))}
+  <li>
+    <a href={source}>Source notes</a>
+  </li>
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 1.05rem;
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    font-size: 0.825rem;
+  }
+  a {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.35rem;
+    align-content: center;
+    min-height: 44px;
+  }
+  span {
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,18 @@
+Woodhouse November campaign
+Reviewed 2026/11/12 Australia/Melbourne and UTC. Native project OG artwork is owned by each project. These are Woodhouse promotional exports.
+
+woodhouse-loom: original Codex ImageGen landscape, with Woodhouse typesetting and separately framed wide and tall JPEG exports. Exact generation prompt follows.
+Use case: stylized-concept. Create one 3:2 landscape campaign key visual for Woodhouse, an independent Australian studio making browser games, web tools and original radio. A dramatic tactile editorial photograph of a single luminous yellow-green woven filament sweeping through a blackened mechanical weaving loom. Low angled wide composition, near-black graphite tools on the right, filament in motion makes a clear sculptural S across the middle, quieter left edge and enough black above and below to crop to 16:9. Physical material textures, punchy but precise, premium independent record-label campaign, visually legible at 300 pixels. Strong near-black and acid-lime with warm reflected light only. No lettering, no logo, no diagrams, no people, no screens, no neon gradients, no watermark. This is an original campaign illustration of a symbolic loom, not a screenshot.
+
+woodhouse-live: homepage and native fibre artwork at https://woodhouse.loftwah.com/.
+bubbles: opened Play Classic on https://bubbles.loftwah.com/, aimed on the fresh seed-0 opening board. Puzzle still opened Start Puzzles and shows First Spark.
+shoalshot: Dive now from https://shoalshot.loftwah.com/ in landscape, with a staged opening Tide Pool and no earned result. Portrait exports are typeset compositions of the gameplay region. The game asks portrait users to rotate, so portrait gameplay screenshots were rejected.
+fighter: Enter LOFTWAH FIGHTER, then Play Tutorial on https://fighter.loftwah.com/. The X header contains the existing Viking and Grim Reaper portraits from /assets/generated/art-cuts/v3-adult-cartoon-r2/, framed with the name and matchup.
+protocol-11: Play Classic on https://protocol11.loftwah.com/. Fresh local table only. No match results or audience claims.
+app-composer: https://creator-hub.loftwah.com/ is the real Linkarooie profile with the published fictional Mara Quinn fixture. The orange portrait is a composition with a crop from that profile. The square and story are native captures. The wide walkthrough is https://composer.loftwah.com/creator-hub under What is live now.
+loftwahfm: Cartridge Club station on https://fm.loftwah.com/radio?station=cartridge-club with no listening claim. The square uses the published sleeve loaded from https://fm.loftwah.com/api/radio/v1/media/bob/cover.jpg with an editorial station credit.
+foilbury: opened Moss at https://foilbury.loftwah.com/cabinet/moss and selected Holographic. Actual cabinet preview, no sign-in or collectible claim.
+max: activated Find MAX at https://max.loftwah.com/demo. This is the public simulator response and the screen says no physical walker is connected.
+liferaft: icon and screenshot from public tag v0.1.2 (1ef74b8f22ea6ee3b2bd7895981ec30e5301350f). The release screenshot shows the repo's synthetic fixture. Desktop app only. https://github.com/loftwah/liferaft/releases/tag/v0.1.2
+
+Portrait feed 1080×1350, story still 1080×1920, landscape 1600×900, square 1080×1080 and X header 1500×500. The exact advertised files are available for download. Social app previews can crop differently. None were posted to a social account.

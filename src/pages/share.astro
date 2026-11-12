@@ -267,7 +267,10 @@ const kitProjects = projects;
 const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
-const featuredSocial = campaignSocial(featuredCampaign);
+const freshWork = featuredCampaign.filter((item) => item.formats);
+const latestWork = freshWork.length ? freshWork : featuredCampaign;
+const earlierWork = freshWork.length ? featuredCampaign.filter((item) => !item.formats) : [];
+const featuredSocial = campaignSocial(latestWork);
 const showcaseClips = gameMedia.filter(
   (asset) =>
     ["app-composer-studio-film-20261014", "protocol11-last-card-16s"].includes(asset.id) &&
@@ -295,7 +298,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
   currentPath="/share/"
   image={
     selectedSocial?.image ??
-    (showcase && featuredSocial ? featuredSocial.image : "/og/woodhouse-workshop-20261018.jpg")
+    (showcase && featuredSocial ? featuredSocial.original : "/og/woodhouse-workshop-20261018.jpg")
   }
   imageAlt={selectedSocial?.alt ?? (showcase && featuredSocial ? featuredSocial.alt : undefined)}
   imageWidth={selectedSocial?.width ?? (showcase && featuredSocial ? featuredSocial.width : 1200)}
@@ -327,7 +330,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
             </a>
           ))}
         </nav>
-        <ShowcaseGallery items={featuredCampaign} />
+        <ShowcaseGallery items={latestWork} compact={!selected && freshWork.length > 0} />
         {showcaseClips.length > 0 && (
           <section class="motion-selection" aria-labelledby="motion-title">
             <h2 id="motion-title">In motion.</h2>
@@ -345,6 +348,12 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                 );
               })}
             </div>
+          </section>
+        )}
+        {earlierWork.length > 0 && (
+          <section class="motion-selection" id="earlier-campaigns" aria-labelledby="earlier-title">
+            <h2 id="earlier-title">Earlier campaigns</h2>
+            <ShowcaseGallery items={earlierWork} eager={false} />
           </section>
         )}
       </>

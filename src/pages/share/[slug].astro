@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import ShareActions from "../../components/ShareActions.astro";
+import CampaignFormats from "../../components/CampaignFormats.astro";
 import { listProjectRecords } from "../../content/repository";
 import {
   publicCampaignItems,
@@ -38,6 +39,9 @@ const dossierHref = project ? `/projects/${slug}/` : null;
 const archiveHref = project
   ? `/share/?${new URLSearchParams({ project: slug, type: defaultProjectType(slug) })}`
   : "/share/?type=factory";
+const socialPack = items.some((item) => item.formats)
+  ? `/campaign/20261112/${slug}-social-pack.zip`
+  : undefined;
 const collectionLabel = items.length ? "Artwork & screenshots" : "Link card";
 const title = `${name} — ${collectionLabel.toLowerCase()}`;
 const description = project
@@ -122,6 +126,11 @@ const hostOf = (href: string) => {
           ↗
         </a>
         {dossierHref && dossierHref !== projectHref && <a href={dossierHref}>About {name}</a>}
+        {socialPack && (
+          <a href={socialPack} download>
+            Download social pack
+          </a>
+        )}
         {items.length > 0 && <a href={archiveHref}>Earlier images & downloads</a>}
       </div>
     </header>
@@ -189,42 +198,45 @@ const hostOf = (href: string) => {
           <ShareActions
             caption={items[0]!.caption}
             image={items[0]!.original}
-            shareSource={items[0]!.image}
+            shareSource={items[0]!.formats ? items[0]!.original : items[0]!.image}
             filename={items[0]!.original.split("/").pop() ?? `${items[0]!.id}.jpg`}
             link={items[0]!.href}
           />
+          {items[0]!.formats && (
+            <CampaignFormats formats={items[0]!.formats} source={items[0]!.source} />
+          )}
           {items[0]!.landscapeImage && (
             <a class="work-card__poster" href={items[0]!.landscapeImage} download>
               Download the landscape poster
             </a>
           )}
-          {productSocial?.fromProduct && (
-            // The page's own social metadata is the product's declared image, so
-            // the reader can see exactly what the link will look like before it
-            // is posted. A Woodhouse-drawn card is not previewed as a product's.
-            <div class="work-card__preview">
-              <p>Link preview</p>
-              <a class="work-card__unfurl" href={items[0]!.href}>
-                <img
-                  src={productSocial.image}
-                  width={productSocial.width}
-                  height={productSocial.height}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  data-unfurl-image
-                />
-                <span>
-                  <strong>{getSiteMetadata(project!).title}</strong>
-                  <small>{hostOf(items[0]!.href)}</small>
-                </span>
-              </a>
-            </div>
-          )}
         </div>
       </section>
     ) : (
       <ShowcaseGallery items={items} />
+    )}
+    {items.length > 0 && productSocial?.fromProduct && (
+      // The page's own social metadata is the product's declared image, so
+      // the reader can see exactly what the link will look like before it
+      // is posted. A Woodhouse-drawn card is not previewed as a product's.
+      <div class="work-card__preview">
+        <p>Link preview</p>
+        <a class="work-card__unfurl" href={projectHref}>
+          <img
+            src={productSocial.image}
+            width={productSocial.width}
+            height={productSocial.height}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            data-unfurl-image
+          />
+          <span>
+            <strong>{getSiteMetadata(project!).title}</strong>
+            <small>{hostOf(projectHref)}</small>
+          </span>
+        </a>
+      </div>
     )}
     {items.length > 0 && (
       <p class="collection__note">

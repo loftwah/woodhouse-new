@@ -12,7 +12,7 @@ if (process.argv.includes("--responsive-previews")) {
   const { campaignItems } = await import("../src/data/showcase-campaign.ts");
   const directory = `${root}public/campaign/20261026-previews/`;
   mkdirSync(directory, { recursive: true });
-  for (const item of campaignItems)
+  for (const item of campaignItems.filter((entry) => !entry.thumbnail))
     execFileSync("magick", [
       `${root}public${item.image}`,
       "-resize",
