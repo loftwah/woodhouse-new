@@ -34,7 +34,7 @@ export const socialPlacements = [
     platform: "Facebook",
     placement: "Feed photo",
     format: "Square feed",
-    example: "november-loftwahfm",
+    example: "november-studio-fm",
     note: "A square export for a single photo in the feed. Use the image upload for this artwork."
   },
   {
@@ -42,7 +42,7 @@ export const socialPlacements = [
     platform: "Instagram",
     placement: "Portrait feed photo",
     format: "Portrait feed",
-    example: "november-foilbury",
+    example: "november-studio-foilbury",
     source: "https://help.instagram.com/1631821640426723",
     note: "This export uses a 4:5 feed frame. Check the profile grid crop separately in Instagram."
   },
@@ -51,7 +51,7 @@ export const socialPlacements = [
     platform: "YouTube",
     placement: "Video thumbnail",
     format: "Landscape",
-    example: "november-woodhouse-loom",
+    example: "november-studio-tide",
     source: "https://support.google.com/youtube/answer/72431",
     note: "A 16:9 still for a regular video thumbnail. Use Small preview to check whether the artwork reads at a glance."
   }
