@@ -10,9 +10,11 @@
     "public/exhibits/fm-sdk-loader.js",
     "scripts/render-illustrated-plates.mjs",
     "scripts/host-validation-complete.mjs",
-    "scripts/check-analytics-scope.mjs"
+    "scripts/check-analytics-scope.mjs",
+    "scripts/brand/render-applications.mjs",
+    "scripts/brand/render-film.mjs"
   ],
-  "ignoreDependencies": ["cloudflare"],
-  "ignoreBinaries": ["magick", "d2"],
+  "ignoreDependencies": ["@storybook/builder-vite"],
+  "ignoreBinaries": ["magick", "d2", "ffmpeg", "sips"],
   "ignore": ["scripts/assets/edition-film/source.jsx"]
 }

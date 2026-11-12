@@ -200,23 +200,6 @@ export function loomListenerMap(map) {
   return result;
 }
 
-/**
- * Turn raw frame timestamps into the rate and the gap around a marked event.
- * The scene clock can only be continuous if the first frame after a resume is
- * requested from a fresh timestamp; a jump of seconds would show up here.
- */
-export function frameRate(frames, windowMs) {
-  if (!Array.isArray(frames) || frames.length === 0 || !windowMs) return 0;
-  return Math.round((frames.length * 1000) / windowMs);
-}
-
-export function largestFrameGap(frames) {
-  let gap = 0;
-  for (let index = 1; index < (frames?.length ?? 0); index += 1)
-    gap = Math.max(gap, frames[index] - frames[index - 1]);
-  return Math.round(gap);
-}
-
 /** Markdown matrix for the saved report and terminal summary. */
 export function renderMatrix(report) {
   const lines = ["| scenario | engine | result | failed checks |", "| --- | --- | --- | --- |"];

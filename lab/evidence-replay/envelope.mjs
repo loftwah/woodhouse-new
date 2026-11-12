@@ -24,7 +24,7 @@ const VISIBILITIES = ["public", "internal", "restricted"];
  */
 const AUTHORITIES = ["authoritative", "reported"];
 
-export const MAX_ENVELOPE_BYTES = 64 * 1024;
+const MAX_ENVELOPE_BYTES = 64 * 1024;
 export const MAX_CORPUS_EVENTS = 100;
 export const MAX_CORPUS_BYTES = 1024 * 1024;
 

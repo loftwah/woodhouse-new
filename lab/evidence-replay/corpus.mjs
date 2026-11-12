@@ -11,7 +11,7 @@ const BASE_OBSERVED = Date.parse("2026-10-04T00:00:00.000Z");
 const at = (minutes) => new Date(BASE_OBSERVED + minutes * 60_000).toISOString();
 const sha = (seed) => createHash("sha256").update(seed).digest("hex").slice(0, 40);
 
-export function envelope(overrides) {
+function envelope(overrides) {
   return {
     schema: ENVELOPE_VERSION,
     id: `ev-${sha(JSON.stringify(overrides)).slice(0, 10)}`,
@@ -121,49 +121,6 @@ export function cleanCorpus() {
     })
   ];
   return events;
-}
-
-/** The same corpus delivered badly. Everything here is a delivery shape, not content. */
-export function corruptCorpus() {
-  const events = cleanCorpus();
-  return [
-    // An event id that has already been applied: a duplicate delivery.
-    events[0],
-    // A future schema version a consumer has never heard of.
-    {
-      ...envelope({ id: "ev-future", type: "project.state-reviewed", subject: "loftwahfm" }),
-      schema: "loftwah.evidence/2"
-    },
-    // A type outside the known set.
-    { ...envelope({ id: "ev-unknown-type" }), type: "project.teleported" },
-    // A missing source revision, so nothing about it is checkable.
-    {
-      ...envelope({ id: "ev-no-revision", type: "project.state-reviewed", subject: "max" }),
-      sourceRevision: ""
-    },
-    // A credential-shaped attribute.
-    {
-      ...envelope({ id: "ev-credential", type: "project.state-reviewed", subject: "max" }),
-      attributes: { api_key: "not-a-real-key-but-still-wrong" }
-    },
-    // Observed before it happened.
-    {
-      ...envelope({
-        id: "ev-backwards",
-        type: "project.state-reviewed",
-        subject: "max",
-        occurredAt: at(20),
-        observedAt: at(1)
-      })
-    }
-  ];
-}
-
-export function oversizedEvent() {
-  return {
-    ...envelope({ id: "ev-oversized", type: "project.evidence-recorded", subject: "bubbles" }),
-    attributes: { blob: "x".repeat(70 * 1024) }
-  };
 }
 
 /**

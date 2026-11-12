@@ -227,7 +227,7 @@ type DemoOrderStatus =
   | "shipped";
 
 /** The states a successful payment can pass through, in order. */
-export const demoOrderStages = [
+const demoOrderStages = [
   "pending",
   "paid",
   "fulfilment_confirmed",

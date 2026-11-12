@@ -6,7 +6,7 @@ import { mkdir, open, readFile, rename, rm } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
-export const STAGES = [
+const STAGES = [
   "MERGED_TO_MAIN",
   "PRODUCTION_VERIFIED",
   "DOCS_TOOLING_DONE",

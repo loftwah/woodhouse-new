@@ -5,8 +5,8 @@ import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
-export const SKILL_VERSION = '4.8.2';
-export const CLI_VERSION = '4.8.2'; // Reviewed upstream; refresh deliberately, never floating latest.
+const SKILL_VERSION = '4.8.2';
+const CLI_VERSION = '4.8.2'; // Reviewed upstream; refresh deliberately, never floating latest.
 export const START = '<!-- woodhouse-impeccable-required:start -->';
 export const END = '<!-- woodhouse-impeccable-required:end -->';
 export const ROUTING = `${START}
@@ -126,7 +126,7 @@ export function parseArgs(argv) {
   stableVersion(opts.skillVersion); stableVersion(opts.version); installerArgs(opts.version,opts.providers);
   return opts;
 }
-export function main(argv) {
+function main(argv) {
   const opts=parseArgs(argv), seen=new Set(), results=[];
   for(const selected of opts.projects) {
     try {

@@ -181,7 +181,7 @@ export async function awaitBuildIdentity(
 }
 
 // CLI
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.main) {
   const args = process.argv.slice(2);
   const flag = (name) => {
     const index = args.indexOf(name);

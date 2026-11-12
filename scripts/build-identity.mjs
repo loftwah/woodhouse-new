@@ -13,15 +13,15 @@ import { spawnSync } from "node:child_process";
 
 // Woodhouse's release-identity shape. Reviewed 7 October 2026: it has no
 // adopters elsewhere in the factory and does not describe a fleet integration.
-export const BUILD_IDENTITY_SCHEMA = "loftwah.build-identity/1";
+const BUILD_IDENTITY_SCHEMA = "loftwah.build-identity/1";
 
-export const BUILD_IDENTITY_GLOBAL = "__WOODHOUSE_BUILD_IDENTITY__";
+const BUILD_IDENTITY_GLOBAL = "__WOODHOUSE_BUILD_IDENTITY__";
 
 /**
  * Builds the identity object. Kept separate from the integration so it can be
  * unit tested without running an Astro build.
  */
-export function buildIdentity({ sourceDigest, builtAt, environment, gitCommit, gitClean }) {
+function buildIdentity({ sourceDigest, builtAt, environment, gitCommit, gitClean }) {
   return {
     schema: BUILD_IDENTITY_SCHEMA,
     name: "WOODHOUSE",
@@ -38,7 +38,7 @@ export function buildIdentity({ sourceDigest, builtAt, environment, gitCommit, g
  * A build from a dirty tree has no reviewable commit, so the flag has to
  * travel with the commit rather than being implied.
  */
-export function readGitProvenance(root = process.cwd()) {
+function readGitProvenance(root = process.cwd()) {
   const run = (args) => {
     const result = spawnSync("git", args, { cwd: root, encoding: "utf8" });
     if (result.error || result.status !== 0) return null;
@@ -52,7 +52,7 @@ export function readGitProvenance(root = process.cwd()) {
   };
 }
 
-export function validateIdentity(identity) {
+function validateIdentity(identity) {
   const problems = [];
   if (identity?.schema !== BUILD_IDENTITY_SCHEMA) problems.push("unexpected schema");
   if (typeof identity?.name !== "string" || !identity.name) problems.push("name is missing");
