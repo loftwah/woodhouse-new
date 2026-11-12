@@ -1,0 +1,327 @@
+---
+import ShowcaseGallery from "./ShowcaseGallery.astro";
+import { shareNavigation } from "../data/share-browser";
+import type { CampaignItem } from "../data/showcase-campaign";
+
+const categories = [
+  ["", "All"],
+  ["banner", "Banners"],
+  ["icon", "Avatars"],
+  ["special", "Special icons"],
+  ["sketch", "Sketches"],
+  ["seasonal", "Seasonal"],
+  ["feature", "Features & milestones"],
+  ["comparison", "Comparisons"],
+  ["art", "Illustration"],
+  ["earlier", "Earlier artwork"]
+] as const;
+type Props = {
+  works: CampaignItem[];
+  sketches: CampaignItem[];
+  projects: { slug: string; name: string }[];
+};
+const { works, sketches, projects } = Astro.props;
+const params = Astro.url.searchParams;
+const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
+const requestedProject = params.get("artProject") || params.get("project");
+const project = projects.find(({ slug }) => slug === requestedProject)?.slug ?? "";
+const labels = [
+  ...new Set(works.flatMap(({ formats }) => formats?.map(({ label }) => label) ?? []))
+].sort();
+const placement = labels.find((label) => label === params.get("artFormat")) ?? "";
+const showShelf = !category && !project && !placement;
+const sketchPreview = sketches.slice(0, 4);
+const shelfIds = new Set(sketchPreview.map(({ id }) => id));
+const art =
+  category === "sketch"
+    ? [...sketches, ...works.filter(({ use }) => use === "sketch")]
+    : showShelf
+      ? works.filter(({ id }) => !shelfIds.has(id))
+      : works;
+const filtered = art.filter(
+  (item) =>
+    (!project || item.project === project) &&
+    (!placement || item.formats?.some(({ label }) => label === placement)) &&
+    (!category ||
+      category === "sketch" ||
+      (category === "earlier" ? !item.use : item.use === category))
+);
+const size = 24;
+const requested = Number(params.get("artPage") ?? 1);
+const pages = Math.max(1, Math.ceil(filtered.length / size));
+const page = Number.isSafeInteger(requested) ? Math.max(1, Math.min(requested, pages)) : 1;
+const current = filtered.slice((page - 1) * size, page * size);
+const drawingShelf = showShelf && page === 1;
+const path = (number: number, nextCategory: string = category) => {
+  const query = new URLSearchParams();
+  if (nextCategory) query.set("artType", nextCategory);
+  if (project) query.set("artProject", project);
+  if (placement) query.set("artFormat", placement);
+  if (number > 1) query.set("artPage", String(number));
+  return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
+};
+const next = page < pages ? path(page + 1) : "";
+const artworkPages = Object.fromEntries(
+  filtered.map(({ id }, i) => [id, Math.floor(i / size) + 1])
+);
+---
+
+<div id="artwork" data-artwork-wall data-art-pages={JSON.stringify(artworkPages)}>
+  <form class="art-filters" action="/share/" aria-label="Filter artwork">
+    {category && <input type="hidden" name="artType" value={category} />}
+    {params.has("qa") && <input type="hidden" name="qa" value={params.get("qa")} />}
+    {params.get("analytics") === "off" && <input type="hidden" name="analytics" value="off" />}
+    <label>
+      <span>Project</span>
+      <select name="artProject">
+        <option value="">All projects</option>
+        {projects.map(({ slug, name }) => (
+          <option value={slug} selected={slug === project}>
+            {name}
+          </option>
+        ))}
+      </select>
+    </label>
+    <label>
+      <span>Format</span>
+      <select name="artFormat">
+        <option value="">All formats</option>
+        {labels.map((label) => (
+          <option value={label} selected={label === placement}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
+    <button type="submit">Apply</button>
+  </form>
+  <nav class="art-categories" aria-label="Artwork categories">
+    {categories.map(([key, label]) => (
+      <a href={path(1, key)} aria-current={category === key ? "page" : undefined}>
+        {label}
+      </a>
+    ))}
+  </nav>
+  {filtered.length === 0 && (
+    <p class="art-empty">
+      No artwork matches these filters.{" "}
+      <a href={shareNavigation("/share/", params)}>Show all artwork</a>.
+    </p>
+  )}
+  {page > 1 && (
+    <p class="art-previous">
+      <a href={path(page - 1)}>Previous artwork</a>
+    </p>
+  )}
+  <div data-art-stream>
+    <div data-art-batch data-next={next}>
+      {drawingShelf && sketchPreview.length > 0 ? (
+        <>
+          <ShowcaseGallery
+            items={current.slice(0, 8)}
+            compact
+            staggered
+            showPlacement
+            placement={placement}
+          />
+          <section class="art-sketches" aria-labelledby="art-sketch-title">
+            <header>
+              <h2 id="art-sketch-title">Sketches &amp; drawings</h2>
+              <a href={path(1, "sketch")}>Browse all sketches</a>
+            </header>
+            <ShowcaseGallery items={sketchPreview} compact staggered eager={false} />
+          </section>
+          <ShowcaseGallery
+            items={current.slice(8)}
+            compact
+            staggered
+            eager={false}
+            showPlacement
+            placement={placement}
+          />
+        </>
+      ) : (
+        <ShowcaseGallery
+          items={current}
+          compact
+          staggered
+          eager={page === 1}
+          showPlacement
+          placement={placement}
+        />
+      )}
+    </div>
+  </div>
+  <p class="art-pagination">
+    <a href={next || undefined} data-art-next hidden={!next}>
+      More artwork
+    </a>
+    <span data-art-status role="status"></span>
+  </p>
+</div>
+
+<script>
+  for (const wall of document.querySelectorAll<HTMLElement>("[data-artwork-wall]")) {
+    const stream = wall.querySelector<HTMLElement>("[data-art-stream]");
+    const more = wall.querySelector<HTMLAnchorElement>("[data-art-next]");
+    const status = wall.querySelector<HTMLElement>("[data-art-status]");
+    const artworkHash = location.hash.slice(1);
+    if (artworkHash && !document.getElementById(artworkHash)) {
+      const page = JSON.parse(wall.dataset.artPages ?? "{}")[artworkHash];
+      if (Number.isInteger(page) && page > 1) {
+        const url = new URL(location.href);
+        url.searchParams.set("artPage", String(page));
+        location.replace(url.href);
+        continue;
+      }
+    }
+    if (!stream || !more || !status || more.hidden) continue;
+    let loading = false;
+    let focusOnAppend = false;
+    const observer =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            ([entry]) => {
+              if (entry?.isIntersecting) void load();
+            },
+            { rootMargin: "450px" }
+          )
+        : null;
+
+    async function load(focus = false) {
+      focusOnAppend ||= focus;
+      if (!stream || !more || !status || loading || more.hidden) return;
+      loading = true;
+      observer?.unobserve(more);
+      status.textContent = "Loading artwork…";
+      try {
+        const url = more.href;
+        const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+        if (!response.ok) throw new Error("Artwork request failed");
+        const page = new DOMParser().parseFromString(await response.text(), "text/html");
+        const batch = page.querySelector<HTMLElement>("[data-art-batch]");
+        if (!batch?.querySelector("figure")) throw new Error("Artwork batch was empty");
+        stream.appendChild(batch);
+        batch.dispatchEvent(new Event("woodhouse:artwork-added", { bubbles: true }));
+        const next = batch.dataset.next;
+        if (next) more.href = next;
+        else more.hidden = true;
+        if (focusOnAppend) batch.querySelector<HTMLElement>("figure a")?.focus();
+        status.textContent = next
+          ? "More artwork loaded."
+          : "You’ve reached the end of the artwork.";
+        if (next) observer?.observe(more);
+      } catch {
+        status.textContent = "Artwork couldn’t load here. Use More artwork to open the next page.";
+        more.dataset.navigate = "";
+      } finally {
+        loading = false;
+        focusOnAppend = false;
+      }
+    }
+    more.addEventListener("click", (event) => {
+      if (
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey ||
+        more.dataset.navigate !== undefined
+      )
+        return;
+      event.preventDefault();
+      void load(true);
+    });
+    observer?.observe(more);
+  }
+</script>
+
+<style>
+  .art-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: end;
+    margin-block: 0.25rem 0.75rem;
+  }
+  .art-filters label {
+    display: grid;
+    gap: 0.25rem;
+    min-width: 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  select,
+  button {
+    min-height: 44px;
+    max-width: 100%;
+    border: 1px solid var(--line);
+    color: var(--paper);
+    background: var(--ink);
+    padding: 0.45rem 0.55rem;
+    font: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  .art-categories {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-block-end: 1.1rem;
+  }
+  .art-categories a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--paper);
+    text-underline-offset: 0.3em;
+  }
+  .art-categories a[aria-current="page"] {
+    color: var(--acid);
+  }
+  [data-art-batch] + [data-art-batch] {
+    margin-top: 1rem;
+  }
+  .art-sketches {
+    margin-block: 2.5rem;
+    padding-block-start: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .art-sketches header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 1rem;
+    margin-block-end: 1rem;
+  }
+  .art-sketches h2 {
+    margin: 0;
+  }
+  .art-pagination {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-block: 1.25rem;
+    color: var(--muted);
+  }
+  .art-pagination a {
+    min-height: 44px;
+    padding-block: 0.75rem;
+  }
+  .art-empty,
+  .art-previous {
+    margin-block: 0.75rem 1rem;
+  }
+  @media (max-width: 550px) {
+    .art-filters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    }
+    .art-categories {
+      font-size: 0.9rem;
+    }
+  }
+</style>

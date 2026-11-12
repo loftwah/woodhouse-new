@@ -105,7 +105,7 @@ const AdditionalActions = gallery ? "details" : "div";
   const textDeadline = 8_000;
   const resetDelay = 4_000;
 
-  for (const root of document.querySelectorAll<HTMLElement>("[data-share-actions]")) {
+  function bindShareActions(root: HTMLElement) {
     const status = root.querySelector<HTMLElement>("[data-status]");
     const text = root.querySelector<HTMLTextAreaElement>("textarea");
     const copy = root.querySelector<HTMLButtonElement>("[data-copy]");
@@ -648,6 +648,12 @@ const AdditionalActions = gallery ? "details" : "div";
       });
     }
   }
+  const bindAll = (scope: Document | HTMLElement) =>
+    scope.querySelectorAll<HTMLElement>("[data-share-actions]").forEach(bindShareActions);
+  bindAll(document);
+  document.addEventListener("woodhouse:artwork-added", ({ target }) => {
+    if (target instanceof HTMLElement) bindAll(target);
+  });
 </script>
 <style>
   .actions {

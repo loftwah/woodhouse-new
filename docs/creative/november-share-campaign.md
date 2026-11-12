@@ -118,3 +118,30 @@ encode the reviewed placement JPEG without adding layers. Put new work at the
 front of Share, give it a project link and keep the earlier art discoverable.
 The [source notes](https://woodhouse.loftwah.com/campaign/20261113-project-studies/provenance.txt)
 record the project details, briefs and available sizes.
+
+### Share artwork library
+
+Reviewed 13 November 2026, Melbourne. The work is published on the main Share
+wall. Artwork filters and ordinary page links also work when JavaScript is
+disabled. The wall leads with recent work and includes the original drawings.
+
+| Project | Audience | Publish around |
+| --- | --- | --- |
+| Bubbles | Arcade players and puzzle regulars | Match-three, bank shots and First Spark |
+| SHOALSHOT | Fishing and collection-game players | The Tide Pool and the Glimmerfin |
+| Foilbury | People who collect for the artwork or the finish | Moss and how plain and holographic finishes read in light |
+| Fighter | Arcade players drawn to distinctive matchups | Viking versus Grim Reaper and the first Battle Blast move |
+| Protocol 11 | Card-night players and solo players looking for a table | Classic, Tactical and the tension of the last card |
+| App Composer | Creators building a home for their work | Links and a moderated guestbook, plus Paperwork's local PDF workflow |
+| LoftwahFM | Listeners who want a station to keep on while making or playing | Cartridge Club and Night Signal, with direct tune-in links |
+| Liferaft | People trying to retrieve a file from an old mail export | Local MBOX search and attachment export |
+| MAX | Makers interested in a working browser demo | The locator's sound cue inside the public simulator |
+| Woodhouse | Readers and collaborators exploring the portfolio | Games, music and software from the same workshop |
+
+Plan each image around one feature or scene, one audience and one next action.
+Draw banners for their safe area and icons for a circle at small size. Use
+published references, generate full compositions and lettering in the model,
+and preserve the original. Compare real modes, actions or finishes, with
+editorial imagery clearly credited. Keep the library easy to browse by showing
+the newest work on the main wall, bringing clean drawings forward and loading
+later batches only as needed. Keep the earlier collections and file addresses.

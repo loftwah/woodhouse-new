@@ -2,8 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import { listProjectRecords } from "../../content/repository";
-import { makingOfCampaign } from "../../data/showcase-product-social";
-import { originals } from "../../data/showcase-originals";
+import { originals, publicOriginalArtwork } from "../../data/showcase-originals";
 import { shareNavigation } from "../../data/share-browser";
 
 export const prerender = false;
@@ -16,43 +15,12 @@ if (result.error) {
 }
 const publicProjects = new Set(result.projects.map(({ slug }) => slug));
 const requested = Astro.url.searchParams.get("project");
-const destinations = new Map(makingOfCampaign.map((item) => [item.project, item]));
-const base = "/campaign/20261113-original-art";
 const projectNames = new Map(result.projects.map(({ slug, name }) => [slug, name]));
 projectNames.set("woodhouse", "Woodhouse");
 const scope = requested && projectNames.has(requested) ? requested : null;
-const works = originals.flatMap(({ project, title, drawing, alt, file, slug, width, height }) => {
-  if (scope && project !== scope) return [];
-  const destination = destinations.get(project);
-  if (!destination || (project !== "woodhouse" && !publicProjects.has(project))) return [];
-  const original = `${base}/${file}`;
-  return [
-    {
-      drawing,
-      item: {
-        id: `original-${slug}`,
-        project,
-        title,
-        alt,
-        caption: `${title}. ${drawing ? "A new process drawing for Making the Work." : "Original campaign illustration."}\n${destination.href}`,
-        image: `${base}/${slug}-preview.jpg`,
-        thumbnail: `${base}/${slug}-thumb.jpg`,
-        original,
-        width,
-        height,
-        reviewedAt: "2026-11-13",
-        credit: "Woodhouse · Codex ImageGen",
-        kind: "editorial composition" as const,
-        href: destination.href,
-        action: destination.action,
-        source: `${base}/notes.txt`,
-        formats: [
-          { label: drawing ? "Original PNG" : "Lossless WebP", image: original, width, height }
-        ]
-      }
-    }
-  ];
-});
+const works = publicOriginalArtwork(publicProjects).filter(
+  ({ item }) => !scope || item.project === scope
+);
 const drawings = works.filter(({ drawing }) => drawing).map(({ item }) => item);
 const illustrations = works.filter(({ drawing }) => !drawing).map(({ item }) => item);
 const lead = drawings[0] ?? illustrations[0];
@@ -69,10 +37,12 @@ if (scope) {
   description="Download the clean Woodhouse process drawings and original illustrations used in the project campaigns."
   path="/share/originals/"
   currentPath="/share/"
-  image={lead?.original}
-  imageAlt={lead?.alt}
-  imageWidth={lead?.width}
-  imageHeight={lead?.height}
+  {...(lead && {
+    image: lead.original,
+    imageAlt: lead.alt,
+    imageWidth: lead.width,
+    imageHeight: lead.height
+  })}
 >
   <div class="container originals">
     <header>
