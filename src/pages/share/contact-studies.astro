@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
+import { listProjectRecords } from "../../content/repository";
+import { contactStudies, contactStudyWorks } from "../../data/showcase-contact-studies";
+import { publicCampaignItems } from "../../data/showcase-public";
+import { shareNavigation } from "../../data/share-browser";
+
+export const prerender = false;
+const result = await listProjectRecords();
+if (result.error) return new Response("Artwork is temporarily unavailable.", { status: 503 });
+const published = new Set(publicCampaignItems(result.projects.map(({ slug }) => slug)));
+const works = contactStudyWorks.filter((work) => published.has(work));
+if (!works.length) return new Response("Artwork not found.", { status: 404 });
+if (Astro.cache?.enabled) {
+  for (const hint of result.cacheHints) Astro.cache.set(hint);
+}
+const lead = works[0]!;
+---
+
+<BaseLayout
+  title={contactStudies.title}
+  description={contactStudies.description}
+  path={contactStudies.path}
+  currentPath="/share/"
+  image={lead.original}
+  imageAlt={lead.alt}
+  imageWidth={lead.width}
+  imageHeight={lead.height}
+>
+  <div class="container studies">
+    <header>
+      <a href={shareNavigation("/share/", Astro.url.searchParams)}>Share gallery</a>
+      <h1>{contactStudies.title}</h1>
+      <p>
+        Liquid, thread, paper and ribbon. Four studies of what happens when things meet, inspired by
+        the games and software we make.
+      </p>
+      <div class="edition-actions">
+        {works.length === contactStudyWorks.length && (
+          <a class="edition-download" href={contactStudies.pack} download>
+            Download the set (ZIP)
+          </a>
+        )}
+        <a href={contactStudies.source}>Edition notes</a>
+      </div>
+    </header>
+    <ShowcaseGallery items={works} compact />
+  </div>
+</BaseLayout>
+
+<style>
+  .studies {
+    padding-block: clamp(2.5rem, 6vw, 6rem);
+  }
+  header {
+    margin-block-end: clamp(1.75rem, 4vw, 3rem);
+  }
+  h1 {
+    margin: 0.5rem 0 0.6rem;
+    font: 650 clamp(3rem, 8vw, 7.5rem)/0.98 var(--display);
+    letter-spacing: -0.06em;
+  }
+  p {
+    max-width: 44ch;
+    font-size: clamp(1rem, 2vw, 1.25rem);
+  }
+  .edition-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin-block-start: 1rem;
+  }
+  .edition-actions a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .edition-download {
+    color: var(--acid);
+    font-weight: 650;
+  }
+</style>

@@ -67,7 +67,8 @@ test("campaign search finds published pieces by placement and exact dimensions",
   }));
   for (const [query, href] of [
     ["Fighter X header", "/share/fighter/#november-fighter"],
-    ["Bubbles 1080x1920", "/share/bubbles/#november-bubbles"]
+    ["Bubbles 1080x1920", "/share/bubbles/#november-bubbles"],
+    ["Bubbles 1080 × 1350", "/share/bubbles/#contact-studies-surface-tension"]
   ]) {
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
   }

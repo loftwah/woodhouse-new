@@ -100,7 +100,8 @@ export function publicSearchPages(contentPages: PublicSearchItem[]): PublicSearc
 }
 
 export function publicSearchTokens(query: string): string[] {
-  return (query.toLocaleLowerCase().match(/[a-z0-9]+/g) ?? []).filter(
+  const normalized = query.toLocaleLowerCase().replace(/(\d+)\s*[x×]\s*(\d+)/g, "$1x$2");
+  return (normalized.match(/[a-z0-9]+/g) ?? []).filter(
     (word) => word.length > 1 && !stopWords.has(word)
   );
 }
@@ -134,9 +135,11 @@ export function rankPublicSearch<T extends ReturnType<typeof publicSearchWords>>
   if (!tokens.length) return entries;
   const matches = (words: Set<string>) =>
     tokens.filter((token) =>
-      [...words].some(
-        (word) => word.startsWith(token) || (word.length >= 3 && token.startsWith(word))
-      )
+      /^\d+x\d+$/.test(token)
+        ? words.has(token)
+        : [...words].some(
+            (word) => word.startsWith(token) || (word.length >= 3 && token.startsWith(word))
+          )
     ).length;
   return entries
     .map((entry, order) => ({
