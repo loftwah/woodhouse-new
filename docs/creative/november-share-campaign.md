@@ -80,3 +80,7 @@ The second batch adds 50 files using ten new reference-led ImageGen illustration
 ### Making the work
 
 Reviewed 13 November 2026, Melbourne. The final batch mixes portrait sketches, square source art, landscape working captures and tall comparisons. Five branded stills per project cover the same six social placements. Each embeds the native mark and a readable title. The source note and image labels distinguish the 12 October Bubbles capture and 6 November Share mockup from new retrospective drawings. The published Foilbury card, Glimmerfin sprite, BOB sleeve and Loom card are shown as source artwork. When an original sketch is unavailable, label a new drawing as such in the pixels as well as on the page.
+
+### Poster studies
+
+Reviewed 13 November 2026, Melbourne. The Share wall leads with nine picked posters. Each uses lettering drawn into its composition, from the Bubbles bank-shot title to the LoftwahFM tape sleeve and the Foilbury cabinet engraving. The official product marks and short addresses are applied separately. The posters have native feed exports. Three also have distinct compositions for TikTok’s vertical photo placement, X’s header and a YouTube thumbnail. Making the Work and the earlier packs stay selectable. Check the actual words, logos and addresses on the export at full and feed size before promoting it.

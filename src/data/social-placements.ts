@@ -4,7 +4,7 @@ export const socialPlacements = [
     platform: "X / Twitter",
     placement: "Profile header",
     format: "X header",
-    example: "making-of-fighter",
+    example: "poster-study-loftwahfm",
     source:
       "https://help.x.com/en/managing-your-account/common-issues-when-uploading-profile-photo",
     note: "X says some views may trim 60 pixels from the top and bottom. Turn on Crop guide to see those edges.",
@@ -15,7 +15,7 @@ export const socialPlacements = [
     platform: "LinkedIn",
     placement: "Single-image post",
     format: "Portrait feed",
-    example: "making-of-app-composer",
+    example: "poster-study-app-composer",
     source: "https://www.linkedin.com/help/linkedin/answer/a527229",
     note: "This is a 4:5 photo for a single-image post. LinkedIn lays out multi-image posts differently."
   },
@@ -24,7 +24,7 @@ export const socialPlacements = [
     platform: "TikTok",
     placement: "Photo post",
     format: "Story still",
-    example: "making-of-shoalshot",
+    example: "poster-study-bubbles",
     source: "https://support.tiktok.com/en/using-tiktok/creating-videos/making-a-post",
     note: "This is a 9:16 still for Photo mode. The guide approximates space for captions and controls. Check the preview in the app before posting.",
     guide: "Overlay guide"
@@ -34,7 +34,7 @@ export const socialPlacements = [
     platform: "Facebook",
     placement: "Feed photo",
     format: "Square feed",
-    example: "making-of-loftwahfm",
+    example: "poster-study-loftwahfm",
     note: "A square export for a single photo in the feed. Use the image upload for this artwork."
   },
   {
@@ -42,7 +42,7 @@ export const socialPlacements = [
     platform: "Instagram",
     placement: "Portrait feed photo",
     format: "Portrait feed",
-    example: "making-of-foilbury",
+    example: "poster-study-bubbles",
     source: "https://help.instagram.com/1631821640426723",
     note: "This export uses a 4:5 feed frame. Check the profile grid crop separately in Instagram."
   },
@@ -51,7 +51,7 @@ export const socialPlacements = [
     platform: "YouTube",
     placement: "Video thumbnail",
     format: "Landscape",
-    example: "making-of-bubbles",
+    example: "poster-study-fighter",
     source: "https://support.google.com/youtube/answer/72431",
     note: "A 16:9 still for a regular video thumbnail. Use Small preview to check whether the artwork reads at a glance."
   }
