@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { setTimeout as delay } from "node:timers/promises";
 import {
   checkPublishedPaths,
   parseEnvFile,
@@ -21,6 +22,10 @@ if (!/^https?:\/\//.test(origin))
   );
 const focusedPaths = args.filter((arg) => arg.startsWith("--path=")).map((arg) => arg.slice(7));
 if (focusedPaths.length) auditScopeArguments(focusedPaths);
+const intervalOption = args.find((arg) => arg.startsWith("--request-interval="));
+const requestInterval = Number(intervalOption?.slice("--request-interval=".length) ?? 0);
+if (!Number.isInteger(requestInterval) || requestInterval < 0 || requestInterval > 1000)
+  throw new Error("Request interval must be an integer from 0 to 1000 milliseconds.");
 
 const alwaysChecked = [
   "/",
@@ -238,9 +243,16 @@ function auditDocument(page, html) {
 // rather than by query, so a finding right after a deploy can be a pre-deploy
 // body. Re-run after the route TTL (60s) to confirm.
 const stamp = Date.now().toString(36);
+let nextRequest = 0;
 async function request(url) {
   const target = new URL(url);
   target.searchParams.set("audit", stamp);
+  if (requestInterval) {
+    const now = Date.now();
+    const slot = Math.max(nextRequest, now);
+    nextRequest = slot + requestInterval;
+    if (slot > now) await delay(slot - now);
+  }
   return fetch(target, { redirect: "manual", signal: AbortSignal.timeout(30000) });
 }
 
@@ -388,27 +400,58 @@ const linkedFrom = new Set([...internalLinks.values()].flat());
 const linkedPaths = new Set([...linkedFrom].map((link) => new URL(link, origin).pathname));
 // Keep one status per exact destination while retaining a finding for every
 // linking page. Shared navigation and downloads otherwise repeat the same GET.
-const targetStatuses = new Map();
-const uncheckedTargets = [
-  ...new Set([...internalLinks.values()].flat().filter((target) => !pages.includes(target)))
-];
+const targetFindings = new Map();
+const pageSet = new Set(pages);
+const uncheckedTargets = [...linkedFrom].filter((target) => !pageSet.has(target));
+const redirectStatuses = new Set([301, 302, 303, 307, 308]);
 await pool(uncheckedTargets, async (target) => {
-  const response = await request(`${origin}${target}`);
-  targetStatuses.set(target, response.status);
-  if (
-    response.status === 200 &&
-    /^text\/html\b/i.test(response.headers.get("content-type") ?? "")
-  ) {
-    canonicals.set(target, canonicalPath(await response.text(), target));
-  } else {
+  let url = new URL(target, origin);
+  const visited = new Set([url.href]);
+  for (;;) {
+    const response = await request(url);
+    if (!redirectStatuses.has(response.status)) {
+      if (response.status >= 400) {
+        const detail = visited.size > 1 ? `, which redirects to ${url.pathname}` : "";
+        targetFindings.set(target, `${detail}, which returned HTTP ${response.status}`);
+      } else if (visited.size > 1) {
+        linkedPaths.add(url.pathname);
+      }
+      if (
+        visited.size === 1 &&
+        response.status === 200 &&
+        /^text\/html\b/i.test(response.headers.get("content-type") ?? "")
+      ) {
+        canonicals.set(target, canonicalPath(await response.text(), target));
+      } else {
+        await response.body?.cancel();
+      }
+      return;
+    }
+    const location = response.headers.get("location");
     await response.body?.cancel();
+    try {
+      if (!location) throw new Error();
+      url = new URL(location, url);
+      if (!["http:", "https:"].includes(url.protocol) || url.username || url.password)
+        throw new Error();
+    } catch {
+      targetFindings.set(target, ", which has an invalid redirect location");
+      return;
+    }
+    if (url.origin !== origin) return;
+    url.hash = "";
+    url.searchParams.delete("audit");
+    if (visited.has(url.href) || visited.size > 5) {
+      targetFindings.set(target, ", which exceeded the same-origin redirect limit");
+      return;
+    }
+    visited.add(url.href);
   }
 });
 for (const [page, targets] of internalLinks) {
   for (const target of targets) {
-    if (pages.includes(target)) continue;
-    const status = targetStatuses.get(target);
-    if (status >= 400) report(page, `links to ${target}, which returned HTTP ${status}`);
+    const finding = targetFindings.get(target);
+    if (finding) report(page, `links to ${target}${finding}`);
   }
 }
 

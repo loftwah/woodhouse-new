@@ -70,9 +70,13 @@ function run(binary, args, options = {}) {
 // a content failure. The audit is read-only and idempotent, so retrying it is
 // safe; the attempt that finally passed is named in the output.
 function auditPages(origin, scope) {
+  const args = ["run", "audit:pages", "--", origin, ...auditScopeArguments(scope)];
+  // Full production audits saw intermittent failures on public record reads
+  // at the default rate. Four requests per second passed the same assertions.
+  if (environment === "production" && scope === null) args.push("--request-interval=250");
   let last;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
-    last = spawnSync("pnpm", ["run", "audit:pages", "--", origin, ...auditScopeArguments(scope)], {
+    last = spawnSync("pnpm", args, {
       cwd: root,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,

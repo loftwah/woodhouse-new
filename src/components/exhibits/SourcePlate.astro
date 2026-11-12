@@ -452,6 +452,15 @@ const {
     color: var(--copy-soft);
   }
 
+  @media (max-width: 1080px) {
+    .plate--source {
+      transform: translateX(calc(-0.75rem * var(--plate-separation, 0)));
+    }
+    .plate--composed {
+      transform: translateX(calc(0.75rem * var(--plate-separation, 0)));
+    }
+  }
+
   @media (max-width: 720px) {
     .plate {
       width: 100%;

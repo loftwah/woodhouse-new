@@ -26,6 +26,8 @@ const CART_KEY = "woodhouse.merch.cart.v1";
 const ORDERS_KEY = "woodhouse.merch.orders.v1";
 const OPERATOR_KEY = "woodhouse.merch.operator.v1";
 const CHECKOUT_KEY = "woodhouse.merch.checkout.v1";
+const storageProblem =
+  "This browser could not save the change. Check its storage settings and try again.";
 
 type OperatorState = {
   candidates: Record<string, "approved" | "returned" | "rejected">;
@@ -44,9 +46,16 @@ function readJson<T>(key: string, fallback: T): T {
 function writeJson(key: string, value: unknown) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
+    return true;
   } catch {
-    /* A private window with storage disabled still gets the explanation. */
+    return false;
   }
+}
+
+function showNote(note: HTMLElement | null, message: string) {
+  if (!note) return;
+  note.textContent = message;
+  note.hidden = !message;
 }
 
 function escapeHtml(value: string) {
@@ -63,7 +72,7 @@ function cart(): DemoLine[] {
 }
 
 function saveCart(lines: DemoLine[]) {
-  writeJson(CART_KEY, lines);
+  return writeJson(CART_KEY, lines);
 }
 
 function orders(): DemoOrder[] {
@@ -71,7 +80,7 @@ function orders(): DemoOrder[] {
 }
 
 function saveOrders(list: DemoOrder[]) {
-  writeJson(ORDERS_KEY, list);
+  return writeJson(ORDERS_KEY, list);
 }
 
 function saveOrder(order: DemoOrder) {
@@ -79,7 +88,7 @@ function saveOrder(order: DemoOrder) {
   const index = list.findIndex((item) => item.id === order.id);
   if (index >= 0) list[index] = order;
   else list.unshift(order);
-  saveOrders(list.slice(0, 30));
+  return saveOrders(list.slice(0, 30));
 }
 
 function addLine(productSlug: string, variantId: string, quantity = 1) {
@@ -89,9 +98,9 @@ function addLine(productSlug: string, variantId: string, quantity = 1) {
   );
   if (existing) existing.quantity = Math.min(10, existing.quantity + quantity);
   else current.push({ productSlug, variantId, quantity });
-  saveCart(current);
-  updateCartCount();
-  return current;
+  const saved = saveCart(current);
+  if (saved) updateCartCount();
+  return saved;
 }
 
 function setLineQuantity(productSlug: string, variantId: string, quantity: number) {
@@ -102,18 +111,18 @@ function setLineQuantity(productSlug: string, variantId: string, quantity: numbe
         : line
     )
     .filter((line) => line.quantity > 0);
-  saveCart(current);
-  updateCartCount();
-  return current;
+  const saved = saveCart(current);
+  if (saved) updateCartCount();
+  return saved;
 }
 
 function removeLine(productSlug: string, variantId: string) {
   const current = cart().filter(
     (line) => !(line.productSlug === productSlug && line.variantId === variantId)
   );
-  saveCart(current);
-  updateCartCount();
-  return current;
+  const saved = saveCart(current);
+  if (saved) updateCartCount();
+  return saved;
 }
 
 function cartCount() {
@@ -177,7 +186,7 @@ function checkoutId() {
     sessionStorage.setItem(CHECKOUT_KEY, created);
     return created;
   } catch {
-    return crypto.randomUUID();
+    throw new Error(storageProblem);
   }
 }
 
@@ -246,11 +255,11 @@ function initCatalogue() {
         form.dataset.defaultVariant ??
         "";
       if (!productSlug || !variantId) return;
-      addLine(productSlug, variantId, 1);
-      if (feedback) {
-        feedback.textContent = "Added to the demo basket. Nothing was charged or reserved.";
-        feedback.hidden = false;
-      }
+      const saved = addLine(productSlug, variantId, 1);
+      showNote(
+        feedback,
+        saved ? "Added to the demo basket. Nothing was charged or reserved." : storageProblem
+      );
     });
   }
 
@@ -265,6 +274,7 @@ function initCatalogue() {
 function renderBasket() {
   const host = document.querySelector<HTMLElement>("[data-basket]");
   if (!host) return;
+  const note = document.querySelector<HTMLElement>("[data-basket-note]");
   const summary = cartSummary(cart());
   if (!summary.priced.length) {
     host.innerHTML =
@@ -303,7 +313,8 @@ function renderBasket() {
     input.addEventListener("change", () => {
       const [product, variant] = (input.dataset.quantity ?? "").split("|");
       if (product && variant) {
-        setLineQuantity(product, variant, Number(input.value));
+        const saved = setLineQuantity(product, variant, Math.trunc(Number(input.value)));
+        showNote(note, saved ? "" : storageProblem);
         renderBasket();
       }
     });
@@ -312,7 +323,8 @@ function renderBasket() {
     button.addEventListener("click", () => {
       const [product, variant] = (button.dataset.remove ?? "").split("|");
       if (product && variant) {
-        removeLine(product, variant);
+        const saved = removeLine(product, variant);
+        showNote(note, saved ? "" : storageProblem);
         renderBasket();
       }
     });
@@ -356,6 +368,7 @@ function initCheckout() {
   const button = document.querySelector<HTMLButtonElement>("[data-place-order]");
   const outcome = document.querySelector("[data-outcome]") as HTMLSelectElement | null;
   const note = document.querySelector<HTMLElement>("[data-checkout-note]");
+  const recovery = document.querySelector<HTMLAnchorElement>("[data-checkout-recovery]");
   if (!button) return;
   button.addEventListener("click", () => {
     const lines = cart();
@@ -366,37 +379,44 @@ function initCheckout() {
       const existing = orders().find((order) => order.id === `demo-${id}`);
       const order = existing ?? createDemoOrder(id, lines, [...merchProducts, ...merchCandidates]);
       const choice = outcome?.value ?? "paid";
-      if (order.status !== "pending") {
-        if (note) {
-          note.textContent =
-            "This demo checkout already has an outcome. Open its tracking page instead of charging twice.";
-          note.hidden = false;
-        }
-        window.location.href = `/shop/order/?id=${encodeURIComponent(order.id)}`;
-        return;
-      }
       const event =
         choice === "paid"
           ? eventFor(order, "payment.succeeded", order.totalCents)
           : choice === "failed"
             ? eventFor(order, "payment.failed")
             : eventFor(order, "payment.cancelled");
-      const result = applyDemoEvent(order, event);
-      saveOrder(result.order);
-      // Paid, failed and cancelled all end this checkout attempt. Keeping the
-      // checkout id after a failure pinned the tab to a terminal order and made
-      // every later attempt bounce back to it, with no way to start again.
-      if (result.accepted && result.order.status !== "pending") {
-        if (result.order.status === "paid") saveCart([]);
+      const settled = order.status === "pending" ? applyDemoEvent(order, event).order : order;
+      if (settled !== order && !saveOrder(settled)) throw new Error(storageProblem);
+      const tracking = `/shop/order/?id=${encodeURIComponent(settled.id)}`;
+      if (settled.status !== "pending") {
+        const basket = cart();
+        const matchesOrder =
+          basket.length === settled.lines.length &&
+          basket.every((line, index) => {
+            const ordered = settled.lines[index];
+            return (
+              ordered?.productSlug === line.productSlug &&
+              ordered.variantId === line.variantId &&
+              ordered.quantity === line.quantity
+            );
+          });
+        if (settled.status === "paid" && matchesOrder && !saveCart([])) {
+          if (recovery) {
+            recovery.href = tracking;
+            recovery.hidden = false;
+          }
+          throw new Error(
+            "The demo order was saved. This browser could not clear the basket. You can retry or open the saved order."
+          );
+        }
         closeCheckoutSession();
       }
-      window.location.href = `/shop/order/?id=${encodeURIComponent(result.order.id)}`;
+      window.location.href = tracking;
     } catch (error) {
-      if (note) {
-        note.textContent =
-          error instanceof Error ? error.message : "The demo order could not be created.";
-        note.hidden = false;
-      }
+      showNote(
+        note,
+        error instanceof Error ? error.message : "The demo order could not be created."
+      );
       button.disabled = false;
     }
   });
@@ -405,7 +425,8 @@ function initCheckout() {
   // the checkout permanently unsubmittable.
   window.addEventListener("pageshow", (event) => {
     if (!event.persisted) return;
-    if (note) note.hidden = true;
+    showNote(note, "");
+    if (recovery) recovery.hidden = true;
     renderCheckout();
   });
 }
@@ -465,10 +486,11 @@ function operator(): OperatorState {
 }
 
 function saveOperator(state: OperatorState) {
-  writeJson(OPERATOR_KEY, state);
+  return writeJson(OPERATOR_KEY, state);
 }
 
 function renderOperator() {
+  const note = document.querySelector<HTMLElement>("[data-operator-note]");
   const candidateHost = document.querySelector<HTMLElement>("[data-operator-candidates]");
   if (candidateHost) {
     const state = operator();
@@ -498,8 +520,9 @@ function renderOperator() {
         if (!candidate) return;
         const state = operator();
         state.candidates[candidate] = decision;
-        saveOperator(state);
-        renderOperator();
+        const saved = saveOperator(state);
+        showNote(note, saved ? "" : storageProblem);
+        if (saved) renderOperator();
       });
     }
   }
@@ -555,8 +578,9 @@ function renderOperator() {
       const order = orders().find((item) => item.id === id);
       if (!order) return;
       const result = applyDemoEvent(order, eventFor(order, type));
-      saveOrder(result.order);
-      renderOperator();
+      const saved = saveOrder(result.order);
+      showNote(note, saved ? "" : storageProblem);
+      if (saved) renderOperator();
     });
   }
 }
@@ -576,10 +600,12 @@ function initOperatorFixtures() {
         current = result.order;
         lines.push(`${result.accepted ? "Accepted" : "Rejected"} ${event.type}: ${result.reason}`);
       }
-      saveOrder(current);
-      renderOperator();
+      const saved = saveOrder(current);
+      showNote(document.querySelector("[data-operator-note]"), saved ? "" : storageProblem);
+      if (saved) renderOperator();
       if (log) {
-        log.hidden = false;
+        log.hidden = !saved;
+        if (!saved) return;
         log.innerHTML = `<p><strong>${escapeHtml(button.textContent?.trim() ?? "Fixture")}</strong></p><ol>${lines
           .map((line) => `<li>${escapeHtml(line)}</li>`)
           .join("")}</ol>`;
