@@ -144,6 +144,8 @@ Observed failure: the first ledger required MP to interpret numbers without suff
 
 The aggregate APIs accept either preset `days=7|30|90` or inclusive `from=YYYY-MM-DD&to=YYYY-MM-DD`, with real ordered UTC dates, no future endpoint and 1–90 days per window. A selected historical endpoint constrains actual source queries; missing/expired history stays null. Snapshot cache keys and content identity include the entire window, including the closed-calendar flag. Existing saved preset reports remain readable. Source coverage may declare `comparableFrom`; absent or null boundaries cannot earn a weekly record, and the first boundary day is conservatively excluded. Legacy historical counts are retained and labelled, never guessed away. Closed calendar dates alone cannot establish source completeness.
 
+Reviewed 12 November 2026. Preset reports and closed calendar windows reuse one saved capture per UTC hour for the same dates, public project set, release notes and producer revision. Other live windows reuse five-minute captures. Concurrent requests use the same stored capture and its timestamp. A missing local source stays in a separate five-minute capture so the main capture can recover on the next request. Previously published report IDs remain valid under the existing public membership checks.
+
 Frozen PNG layouts accept the same allowlisted `measure` as the chart and render actual daily series with explicit dates and limitations. Landscape, square and portrait are authored independently. The default portfolio view does not sum game starts, bounded app opens or music seconds into a common engagement score. Browser distincts remain period-owned measures rather than sums of daily distincts.
 
 
