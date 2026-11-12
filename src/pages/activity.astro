@@ -365,11 +365,6 @@ const quickMeasures =
         label: choices.find((choice) => choice.key === key)?.label ?? key
       }))
     : [];
-const leadMetric = !overview ? metricRows[0]?.metric : undefined;
-const leadQualifier = !overview
-  ? reportQualifier(leadMetric, metricRows[0]?.data ?? null, window)
-  : "";
-const leadMeasured = Boolean(leadMetric && leadMetric.value !== null);
 // The chart, its legend and the exported CSV describe the same applicable scope
 // as the daily table and the coverage calendar. An in-scope project with no
 // observation keeps its column and legend entry as an all-gap series rather than
@@ -391,8 +386,6 @@ const hasDaily = chartSeries.some((s) => s.values.some((v) => v !== null));
 const unit =
   chartRows.find((r) => r.metric)?.metric?.unit ??
   (measure.key.endsWith("_seconds") ? "seconds" : "count");
-const leadValue = leadMeasured && leadMetric ? formatMetric(leadMetric) : "—";
-const leadLabel = unit === "seconds" ? "active play time" : measure.label.toLowerCase();
 const days = dateDays(window);
 // Applicable scope, never a truthy-value count: a project that should report this
 // measure but did not stays in the denominator as "not measured".
@@ -436,6 +429,26 @@ const week = requestedWeek
 // on the week the reader followed, while the daily table and CSV keep the whole
 // report they are labelled with.
 const focusRange = week ? dayRange(window, week.from, week.to) : null;
+const leadMetric = !overview ? metricRows[0]?.metric : undefined;
+const leadMeasured = !overview ? Boolean(week || (leadMetric && leadMetric.value !== null)) : false;
+const leadValue = !overview
+  ? week
+    ? formatMetric({ value: week.value, unit: week.unit })
+    : leadMeasured && leadMetric
+      ? formatMetric(leadMetric)
+      : "—"
+  : "—";
+const leadQualifier = !overview
+  ? week
+    ? "All 7 days counted"
+    : reportQualifier(leadMetric, metricRows[0]?.data ?? null, window)
+  : "";
+const leadLabel = week
+  ? `${measure.label.toLowerCase()} in this finding`
+  : unit === "seconds"
+    ? "active play time"
+    : measure.label.toLowerCase();
+const leadWindow = week ?? window;
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
 // publishes no mode subtotal shows no breakdown, and nothing is inferred from the
@@ -460,7 +473,7 @@ function pageLink(
     latest?: boolean;
     from?: string;
     to?: string;
-    week?: string;
+    week?: string | null;
     destination?: string | null;
     /** Freeze this exact report instead of recomputing a window. */
     report?: string | null;
@@ -547,7 +560,7 @@ const link = report
     ? `${reportLink(report.id, "woodhouse").replace(SITE_ORIGIN, Astro.url.origin)}&measure=project_opens${week ? `&week=${week.from}` : ""}${shareDestination ? `&destination=${shareDestination}` : ""}`
     : `${reportLink(report.id, selected).replace(SITE_ORIGIN, Astro.url.origin)}&measure=${measure.key}${week ? `&week=${week.from}` : ""}`
   : `${SITE_ORIGIN}/activity/`;
-const shareAnchor = week ? "trend-heading" : storyShare ? "discovery-story" : "";
+const shareAnchor = week ? "chart-lead" : storyShare ? "discovery-story" : "";
 // The visible permalink keeps a measurement exclusion; the canonical `link`
 // published in page metadata and the shared caption must not carry a QA
 // parameter, so only this navigable copy is augmented. A finding link also
@@ -594,7 +607,7 @@ const opening = analyticsObservations({
   })),
   links: {
     week: (project, weekMeasure, from) =>
-      `${pageLink({ project, measure: weekMeasure, week: from, view: "chart" })}#trend-heading`,
+      `${pageLink({ project, measure: weekMeasure, week: from, view: "chart" })}#chart-lead`,
     project: (project, projectMeasure) =>
       pageLink({ project, measure: projectMeasure, view: "chart" }),
     discovery: () =>
@@ -1020,16 +1033,20 @@ const dataPayload = {
             )}
             <section class="main-chart" aria-labelledby="trend-heading">
               {!overview && selected && (
-                <div class="chart-lead">
+                <div class="chart-lead" id="chart-lead">
                   <div class="chart-lead__read">
                     <p class="chart-lead__count">
                       <strong>{leadValue}</strong>
                       <span>
-                        {leadMeasured ? `${leadLabel} reported` : `${leadLabel} not measured`}
+                        {leadMeasured
+                          ? week
+                            ? leadLabel
+                            : `${leadLabel} reported`
+                          : `${leadLabel} not measured`}
                       </span>
                     </p>
                     <p class="chart-lead__window">
-                      {dateLabel(window.from)} – {dateLabel(window.to)} · UTC
+                      {dateLabel(leadWindow.from)} – {dateLabel(leadWindow.to)} · UTC
                     </p>
                   </div>
                   <p class="chart-lead__coverage">
@@ -1043,7 +1060,10 @@ const dataPayload = {
                   <nav class="chart-lead__measures" aria-label="Quick measures">
                     {quickMeasures.map((item) => (
                       <a
-                        href={pageLink({ measure: item.key })}
+                        href={pageLink({
+                          measure: item.key,
+                          ...(week ? { week: null } : {})
+                        })}
                         aria-current={measure.key === item.key ? "page" : undefined}
                       >
                         {item.label}
