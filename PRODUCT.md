@@ -4,6 +4,47 @@
 
 Build the public interface to the Loftwah software factory: an exceptionally designed, evidence-led engineering publication that works as an observatory, technical journal, project portfolio and professional record.
 
+## Shared creation direction
+
+Reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC.
+
+The portfolio combines human intent, selected references and agent execution to
+produce useful software with a deliberate identity. Each maintained project keeps
+its own creative and technical context: examples worth adapting, the qualities
+that matter, intended behaviour and accepted decisions. Asset Hunter is retired;
+its useful reference-curation idea continues inside projects. Preserve each
+project's existing access boundaries and each source's usage rights.
+
+For a new or materially changed experience, make the intended result inspectable
+through a relevant visualisation, mock-up or working preview before committing to
+the implementation. Retain the meaningful decisions so future work can build on
+them. The normal division of work is a capable planning model shaping the issue,
+an economical model suited to the task implementing it, and a stronger review
+checking the actual change against the brief and affected behaviour. Scale this
+to the change and reuse accepted direction for routine fixes.
+
+App Composer turns this method into an approachable, continuing creation and
+operation experience. It owns Get Ready/Init, independent mini-app composition
+and native EmDash administration on Cloudflare. Users should be able to obtain
+or connect a supported agent, describe, inspect, build, publish, manage and return
+to evolve the same owned application. Roles, teams and scoped self-service
+resources belong to its existing platform work; the optional third-party Chrome
+extension makes supported tasks feel coherent within Cloudflare Dashboard.
+
+People use visible controls in a browser, an app or an appropriate existing
+channel such as Discord, Slack or RSS. Agent-side tools may use terminals, APIs
+or MCP without making those the person's default workflow. Use the person's
+chosen agent and supported existing inference access, with a clear account and
+billing route. App Composer remains MIT/open source, with ownership, portability
+and useful access central to the experience.
+
+Woodhouse coordinates discovery and evidence; each product retains its identity,
+data and release ownership. A useful application demonstrated in person, including
+a later change, is the immediate proof; Cloudflare/Workers adoption is an outcome
+to measure. [Composer #425](https://github.com/loftwah/app-composer/issues/425)
+owns that flagship. [#179](https://github.com/loftwah/woodhouse-new/issues/179)
+routes adoption of the working method through the existing project owners.
+
 ## Audience
 
 Reviewed 18 October 2026. The first reading layer is for ordinary visitors: players, listeners,
