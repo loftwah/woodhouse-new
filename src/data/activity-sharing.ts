@@ -21,10 +21,14 @@ export function cardPath(game: string, snapshot: number, download = false) {
   if (download) params.set("download", "1");
   return `/api/activity-card.png?${params}`;
 }
-export function activityLink(game: string, snapshot: number) {
+export const LISTENING_PATH = "/activity/listening/";
+export function listeningPath(game: string, snapshot: number) {
   const params = new URLSearchParams({ snapshot: String(snapshot) });
   if (game) params.set("game", game);
-  return `${SITE_ORIGIN}/activity/?${params}`;
+  return `${LISTENING_PATH}?${params}`;
+}
+export function activityLink(game: string, snapshot: number) {
+  return SITE_ORIGIN + listeningPath(game, snapshot);
 }
 export const cardFormats = {
   landscape: { width: 1200, height: 630 },

@@ -1,6 +1,6 @@
 ---
 import type { ListeningReport } from "../data/activity";
-import { activityLink, cardPath, sharingGames } from "../data/activity-sharing";
+import { activityLink, cardPath, LISTENING_PATH, sharingGames } from "../data/activity-sharing";
 type Props = {
   report: ListeningReport;
   projects: { slug: string; name: string }[];
@@ -12,6 +12,7 @@ const choices = sharingGames.flatMap((id) => projects.filter((p) => p.slug === i
 const name = selected
   ? (choices.find((p) => p.slug === selected)?.name ?? "Games × Radio")
   : "Games × Radio";
+const qaValue = Astro.url.searchParams.get("qa");
 const image = cardPath(selected, report.snapshot);
 const link = activityLink(selected, report.snapshot);
 const row = report.games.find((game) => game.id === selected);
@@ -35,7 +36,7 @@ const caption = !selected
   data-filename={`${selected || "games-radio"}-${report.snapshot}-1200x630.png`}
 >
   <h2 id="sharing-title">Take the next round with you.</h2>
-  <form action="/activity/" method="get" class="selection">
+  <form action={LISTENING_PATH} method="get" class="selection">
     <label for="share-game">Choose your image</label>
     <select id="share-game" name="game">
       {composite && (
@@ -50,6 +51,10 @@ const caption = !selected
       ))}
     </select>
     <input type="hidden" name="snapshot" value={report.snapshot} />
+    {Astro.url.searchParams.get("analytics") === "off" && (
+      <input type="hidden" name="analytics" value="off" />
+    )}
+    {qaValue !== null && <input type="hidden" name="qa" value={qaValue} />}
     <button type="submit">Show image</button>
   </form>
   <a class="image-link" href={image} aria-label={`Open ${name} image at full size`}>
@@ -140,7 +145,7 @@ const caption = !selected
             files: [prepared],
             title: "Games × Radio",
             text: root.dataset.caption ?? "Games × Radio",
-            url: root.dataset.link ?? "https://woodhouse.loftwah.com/activity/"
+            url: root.dataset.link ?? location.href
           });
           update("Image handed to your device’s share options.");
         } catch (error) {

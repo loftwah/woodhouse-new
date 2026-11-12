@@ -29,7 +29,12 @@ import { liveProjectArtwork } from "../data/live-project-artwork";
 import { orderShareProjects, projectCaption, shareCaption, gameMedia } from "../data/share-desk";
 import { sharePreviews } from "../data/share-previews";
 import { loadListeningReport, projectListeningReport } from "../data/activity";
-import { compositeIsPublic, cardFormats, type CardFormat } from "../data/activity-sharing";
+import {
+  activityLink,
+  compositeIsPublic,
+  cardFormats,
+  type CardFormat
+} from "../data/activity-sharing";
 import {
   galleryTypes,
   galleryURL as canonicalGalleryURL,
@@ -608,7 +613,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
                     caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\n${SITE_ORIGIN}/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
                     image={radioImage(format, true)}
                     filename={`loftwahfm-games-${format}.png`}
-                    link={`${SITE_ORIGIN}/activity/?snapshot=${radio.snapshot}`}
+                    link={activityLink("", radio.snapshot)}
                   />
                 </figure>
               ))}

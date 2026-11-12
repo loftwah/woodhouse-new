@@ -58,6 +58,9 @@ const {
     </button>
   </div>
   <p role="status" data-status></p>
+  <a href={link} data-link-recovery hidden>
+    Open the destination link or copy its address
+  </a>
   <details>
     <summary>Caption</summary>
     <textarea aria-label="Ready-to-share post" rows="4">{caption}</textarea>
@@ -370,6 +373,8 @@ const {
     // the image, and the link is for a message, a bio or a reply. It gets its own
     // confirmation because "copied" has to mean the thing that was pressed.
     if (copyLink && navigator.clipboard?.writeText) {
+      const linkRecovery = document.createElement("a");
+      linkRecovery.textContent = "Open the destination link or copy its address";
       copyLink.hidden = false;
       const idleLabel = copyLink.textContent?.trim() || "Copy link";
       const labelIntent = createOperationIntent();
@@ -400,11 +405,16 @@ const {
               delete copyLink.dataset.state;
             }, resetDelay);
           }
+          if (statusIntent.isCurrent(token)) linkRecovery.remove();
           say(`Link copied. ${link}`, token);
         } catch (error) {
           if (labelIntent.isCurrent(labelToken)) {
             copyLink.textContent = idleLabel;
             delete copyLink.dataset.state;
+          }
+          if (statusIntent.isCurrent(token)) {
+            linkRecovery.href = link;
+            status?.after(linkRecovery);
           }
           say(clipboardFailureMessage(clipboardProblem(error), "link"), token);
         } finally {

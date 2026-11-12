@@ -12,6 +12,7 @@ import {
 import { toJsonLd } from "../../data/safe-json";
 import { getArtworkFallback, socialCardFor, getSiteMetadata } from "../../data/site-metadata";
 import { projectActionHref, projectActionLabel } from "../../data/project-actions";
+import { defaultProjectType, kitURL } from "../../data/share-browser";
 import { projectCaption } from "../../data/share-desk";
 import { liveProjectArtwork } from "../../data/live-project-artwork";
 
@@ -32,6 +33,9 @@ if (!project && (slug !== "woodhouse" || !items.length))
   return new Response("Gallery not found.", { status: 404 });
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const name = project?.name ?? "Woodhouse";
+const projectHref = project ? projectActionHref(project) : "/";
+const dossierHref = project ? `/projects/${slug}/` : null;
+const archiveHref = project ? kitURL(slug, defaultProjectType(slug)) : "/share/?type=factory";
 const collectionLabel = items.length ? "Artwork & screenshots" : "Link card";
 const title = `${name} — ${collectionLabel.toLowerCase()}`;
 const description = project
@@ -107,7 +111,7 @@ const hostOf = (href: string) => {
       </h1>
       <p>{project?.title ?? "Games, software and music. A selection from the things we make."}</p>
       <div class="collection__links">
-        <a href={project ? projectActionHref(project) : "/"}>
+        <a href={projectHref}>
           {items[0]?.action
             ? `${items[0].action} ${name}`
             : project
@@ -115,14 +119,8 @@ const hostOf = (href: string) => {
               : "Explore Woodhouse"}{" "}
           ↗
         </a>
-        {project && <a href={`/projects/${slug}/`}>About {name}</a>}
-        {items.length > 0 && (
-          <a
-            href={`/share/?${slug === "woodhouse" ? "type=factory" : `project=${slug}&type=images`}`}
-          >
-            Earlier images & downloads
-          </a>
-        )}
+        {dossierHref && dossierHref !== projectHref && <a href={dossierHref}>About {name}</a>}
+        {items.length > 0 && <a href={archiveHref}>Earlier images & downloads</a>}
       </div>
     </header>
     {!items.length && project && productSocial && artworkFallback ? (

@@ -54,10 +54,10 @@ export function clipboardFailureMessage(
   }
   if (scope === "link") {
     if (problem === "blocked")
-      return "Clipboard access was blocked. The address is in your browser's address bar.";
+      return "Clipboard access was blocked. Use the destination link below.";
     if (problem === "timed-out")
-      return "The clipboard did not confirm the copy. Copy the address from the address bar.";
-    return "Could not copy the link automatically. Copy the address from the address bar.";
+      return "The clipboard did not confirm the copy. Use the destination link below.";
+    return "Could not copy the link automatically. Use the destination link below.";
   }
   const recovery = "The post is open below; copy it from there.";
   if (problem === "blocked") return `Clipboard access was blocked. ${recovery}`;

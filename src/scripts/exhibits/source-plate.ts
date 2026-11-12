@@ -147,15 +147,29 @@ class SourcePlate {
 
   /* ── Rendering ────────────────────────────────────────────────────────────── */
 
+  private renderImage(container: HTMLElement | null, item: ContractItem | undefined) {
+    if (!container) return;
+    const current = container.querySelector("img");
+    if (!item) {
+      current?.remove();
+      return;
+    }
+    const image = current ?? document.createElement("img");
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.alt = item.title;
+    if (image.getAttribute("src") !== item.image) image.src = item.image;
+    if (!current) container.insertBefore(image, container.firstChild);
+  }
+
   private render() {
     const item = this.current;
-    const sourceImage = pick<HTMLImageElement>(this.root, "[data-source-image]");
+    const sourceFrame = pick<HTMLElement>(this.root, "[data-source-frame]");
     const sourceTitle = pick<HTMLElement>(this.root, "[data-source-title]");
     const sourceContract = pick<HTMLElement>(this.root, "[data-source-contract]");
     const sourceRevision = pick<HTMLElement>(this.root, "[data-source-revision]");
     const sourceVisibility = pick<HTMLElement>(this.root, "[data-source-visibility]");
     const sourceState = pick<HTMLElement>(this.root, "[data-source-state]");
-    const composedImage = pick<HTMLImageElement>(this.root, "[data-composed-image]");
     const composedTitle = pick<HTMLElement>(this.root, "[data-composed-title]");
     const composedLink = pick<HTMLAnchorElement>(this.root, "[data-composed-link]");
     const composedCardElement = pick<HTMLElement>(this.root, "[data-composed-card]");
@@ -177,7 +191,8 @@ class SourcePlate {
         loading.hidden = false;
         loading.textContent = "The published contract could not be read.";
       }
-      if (sourceImage) sourceImage.removeAttribute("src");
+      this.renderImage(sourceFrame, undefined);
+      this.renderImage(composedCardElement, undefined);
       if (sourceTitle) sourceTitle.textContent = "No contribution available.";
       if (sourceState) {
         sourceState.textContent = "No source item is available to show.";
@@ -198,11 +213,9 @@ class SourcePlate {
     const hideControl = pick<HTMLButtonElement>(this.root, "[data-plate-hide]");
     if (hideControl) hideControl.disabled = false;
 
-    const publicVisible = composedCard(item, this.hidden).visible;
-    if (sourceImage) {
-      sourceImage.src = item.image;
-      sourceImage.alt = item.title;
-    }
+    const card = composedCard(item, this.hidden);
+    const publicVisible = card.visible;
+    this.renderImage(sourceFrame, item);
     if (sourceTitle) sourceTitle.textContent = item.title;
     if (sourceContract) sourceContract.textContent = "guestbook · contract 1";
     if (sourceRevision) sourceRevision.textContent = String(item.revision ?? "—");
@@ -215,19 +228,13 @@ class SourcePlate {
         : "Public in the published contract.";
       sourceState.dataset.state = this.hidden ? "hidden" : "public";
     }
-    if (composedImage) {
-      composedImage.src = item.image;
-      composedImage.alt = item.title;
-    }
+    this.renderImage(composedCardElement, publicVisible ? item : undefined);
     if (composedTitle) composedTitle.textContent = item.title;
-    if (composedLink) {
-      composedLink.href = item.url;
-      composedLink.textContent = "Open the original contribution";
-    }
+    if (composedLink) composedLink.href = item.url;
     if (composedCardElement) composedCardElement.hidden = !publicVisible;
     if (composedEmpty) {
       composedEmpty.hidden = publicVisible;
-      composedEmpty.textContent = composedReason(composedCard(item, this.hidden).reason);
+      composedEmpty.textContent = composedReason(card.reason);
     }
     this.sourcePlate.classList.toggle("is-hidden", this.hidden);
     this.composedPlate.classList.toggle("is-empty", !publicVisible);
