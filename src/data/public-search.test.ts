@@ -62,14 +62,16 @@ test("campaign search finds published pieces by placement and exact dimensions",
     { slug: "bubbles", name: "Bubbles" },
     { slug: "fighter", name: "Fighter" }
   ]).map((page) => ({
-    href: page.href,
+    href: page.href ?? "",
     ...publicSearchWords(page.title, page.description, page.section, page.keywords, page.searchText)
   }));
-  for (const [query, href] of [
+  assert(entries.every(({ href }) => href));
+  const cases: [string, string][] = [
     ["Fighter X header", "/share/fighter/#november-fighter"],
     ["Bubbles 1080x1920", "/share/bubbles/#november-bubbles"],
     ["Bubbles 1080 × 1350", "/share/bubbles/#contact-studies-surface-tension"]
-  ]) {
+  ];
+  for (const [query, href] of cases) {
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
   }
   assert(!entries.some(({ href }) => href.startsWith("/share/foilbury/")));

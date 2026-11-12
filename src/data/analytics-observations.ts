@@ -57,6 +57,13 @@ type Observation = {
   doesNotEstablish: string;
   href: string;
   linkLabel: string;
+  /**
+   * A direct route to the preparing share view for this exact finding. The
+   * overview cards do not each need their own share panel, but a reader should
+   * not have to open the chart, scroll to the header and re-find the share
+   * action before they can send the thing they just read.
+   */
+  shareHref?: string;
 };
 
 export type ObservationInput = {
@@ -79,6 +86,9 @@ export type ObservationInput = {
     week: (project: AnalyticsProject, measure: string, from: string) => string;
     project: (project: AnalyticsProject, measure: string) => string;
     discovery: () => string;
+    /** Optional prepared share routes for the findings that can be shared alone. */
+    weekShare?: (project: AnalyticsProject, measure: string, from: string) => string;
+    discoveryShare?: () => string;
   };
   dateLabel: (date: string) => string;
 };
@@ -194,7 +204,7 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       colour: colours[week.project] ?? "#b4c0d2",
       kicker: `${week.name} · ${week.measure.label}`,
       headline: week.newBest
-        ? `${week.name}'s ${week.measure.label.toLowerCase()} reached ${valueLabel} — a new best across the ${week.comparedWeeks} complete weeks we can compare, against ${previous} the week before.`
+        ? `A new best for ${week.name}: ${valueLabel} ${week.measure.label.toLowerCase()} in a complete week, against ${previous} the week before.`
         : `${week.name}'s ${week.measure.label.toLowerCase()} ${movement}.`,
       figure: valueLabel,
       unitLabel: week.measure.label,
@@ -214,11 +224,16 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
               unit: week.unit
             }
           }),
-      establishes: `${valueLabel} recorded, against ${previous} in the week before.`,
+      establishes: `${valueLabel} recorded, against ${previous} in the week before${
+        week.newBest ? `; the best of ${week.comparedWeeks} complete weeks` : ""
+      }.`,
       doesNotEstablish:
         "Why it changed, whether this week is typical, or how many people were involved.",
       href: input.links.week(week.project, week.measure.key, week.from),
-      linkLabel: "Open this week"
+      linkLabel: "Open this week",
+      ...(input.links.weekShare
+        ? { shareHref: input.links.weekShare(week.project, week.measure.key, week.from) }
+        : {})
     });
   } else {
     notes.push({
@@ -285,7 +300,8 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
       doesNotEstablish:
         "That anyone played, tried or kept using it. This counts clicks on Woodhouse, not what happened next.",
       href: input.links.discovery(),
-      linkLabel: "Open this discovery story"
+      linkLabel: "Open this discovery story",
+      ...(input.links.discoveryShare ? { shareHref: input.links.discoveryShare() } : {})
     });
   } else {
     notes.push({

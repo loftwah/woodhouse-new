@@ -9,6 +9,7 @@ import {
 } from "./portfolio-analytics.ts";
 import {
   dailyStatus,
+  dayRange,
   modeSplitNote,
   overviewMeasures,
   reportQualifier,
@@ -250,4 +251,61 @@ test("a missing comparable-history boundary is unknown, not old test data", () =
     }),
     "Comparable history unknown"
   );
+});
+
+test("a finding opens on its own day range inside the report window", () => {
+  const window: ReportingWindow = {
+    from: "2026-10-14",
+    to: "2026-11-12",
+    days: 30,
+    complete: false
+  };
+  assert.deepEqual(dayRange(window, "2026-11-02", "2026-11-08"), {
+    from: "2026-11-02",
+    to: "2026-11-08",
+    start: 19,
+    end: 25
+  });
+  assert.equal(dayRange(window, "2026-10-13", "2026-10-19"), null);
+});
+
+test("a shareable finding carries its own share route", () => {
+  const window: ReportingWindow = {
+    from: "2026-10-14",
+    to: "2026-11-12",
+    days: 30,
+    complete: false
+  };
+  const result = analyticsObservations({
+    window,
+    colours: {},
+    weekly: [
+      {
+        project: "protocol-11",
+        name: "Protocol 11",
+        family: "game",
+        measure: overviewMeasures("protocol-11")[0]!,
+        unit: "count",
+        from: "2026-11-02",
+        to: "2026-11-08",
+        value: 8,
+        previous: 1,
+        changePercent: 700,
+        newBest: true,
+        comparedWeeks: 3
+      }
+    ],
+    discovery: [],
+    discoveryTotal: null,
+    rows: [],
+    links: {
+      week: () => "/activity/?week=2026-11-02#trend-heading",
+      project: () => "/activity/",
+      discovery: () => "/activity/",
+      weekShare: () => "/activity/?view=share&week=2026-11-02"
+    },
+    dateLabel: (date) => date
+  });
+  const finding = result.observations.find((entry) => entry.kind === "week");
+  assert.equal(finding?.shareHref, "/activity/?view=share&week=2026-11-02");
 });

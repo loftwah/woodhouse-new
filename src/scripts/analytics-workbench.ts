@@ -30,6 +30,7 @@ import {
   TooltipComponent,
   LegendComponent,
   DataZoomComponent,
+  MarkAreaComponent,
   AriaComponent,
   type GridComponentOption,
   type TooltipComponentOption,
@@ -52,6 +53,7 @@ echarts.use([
   TooltipComponent,
   LegendComponent,
   DataZoomComponent,
+  MarkAreaComponent,
   AriaComponent,
   SVGRenderer
 ]);
@@ -60,6 +62,7 @@ type ChartData = {
   measure: string;
   unit: string;
   overview?: boolean;
+  focus?: { from: string; to: string; start: number; end: number; label: string };
   series: {
     name: string;
     colour: string;
@@ -80,17 +83,58 @@ if (payload) {
   const dates = Array.from({ length: data.period.days }, (_, i) =>
     new Date(Date.parse(data.period.from) + i * 86400000).toISOString().slice(0, 10)
   );
+  const dayLabel = (day: string) =>
+    new Date(day + "T00:00:00Z").toLocaleDateString("en-AU", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC"
+    });
   const dateInput = document.querySelector<HTMLInputElement>("[data-inspect-day]");
   const output = document.querySelector<HTMLOutputElement>("[data-day-output]");
+  let inspected = data.focus ? Math.min(data.focus.end, dates.length - 1) : dates.length - 1;
   const inspect = (index: number) => {
     const day = dates[index];
     if (!day || !output) return;
-    output.textContent = `${day} UTC · ${data.series.map((s) => `${s.name}: ${s.values[index] === null ? "no data" : (s.values[index]?.toLocaleString("en-AU") ?? "no data")}${s.values[index] !== null && data.unit === "seconds" ? " seconds" : ""} (${s.statuses[index]})`).join(" · ")}`;
+    inspected = index;
+    if (dateInput) dateInput.value = String(index);
+    output.textContent = `${dayLabel(day)} UTC · ${data.series
+      .map((s) => {
+        const value = s.values[index];
+        const suffix = value !== null && (s.unit ?? data.unit) === "seconds" ? " seconds" : "";
+        return `${s.name}: ${value === null || value === undefined ? "no data" : `${value.toLocaleString("en-AU")}${suffix}`} (${s.statuses[index]})`;
+      })
+      .join(" · ")}`;
   };
-  if (target) {
-    document.querySelector<HTMLElement>("[data-day-inspector]")!.hidden = false;
+  const inspector = document.querySelector<HTMLElement>("[data-day-inspector]");
+  if (target && inspector) {
+    inspector.hidden = false;
     dateInput?.addEventListener("input", () => inspect(Number(dateInput.value)));
-    inspect(data.period.days - 1);
+    document.querySelectorAll<HTMLButtonElement>("[data-day-step]").forEach((button) => {
+      button.addEventListener("click", () =>
+        inspect(Math.min(dates.length - 1, Math.max(0, inspected + Number(button.dataset.dayStep))))
+      );
+    });
+    inspect(inspected);
+    // The chart itself is a labelled, focusable group. Arrow keys move the same
+    // day cursor as the visible controls, so keyboard inspection does not require
+    // finding a slider inside a closed disclosure.
+    target.addEventListener("keydown", (event) => {
+      const next =
+        event.key === "ArrowLeft"
+          ? inspected - 1
+          : event.key === "ArrowRight"
+            ? inspected + 1
+            : event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? dates.length - 1
+                : null;
+      if (next === null) return;
+      event.preventDefault();
+      inspect(Math.min(dates.length - 1, Math.max(0, next)));
+    });
   }
   if (target && data.series.some((s) => s.values.some((v) => v !== null))) {
     try {
@@ -169,8 +213,9 @@ if (payload) {
             type: "slider",
             bottom: 17,
             height: 25,
-            start: 0,
-            end: 100,
+            ...(data.focus
+              ? { startValue: data.focus.start, endValue: data.focus.end }
+              : { start: 0, end: 100 }),
             showDetail: false,
             borderColor: "#2d4058",
             backgroundColor: "#0e1b2d",
@@ -191,7 +236,7 @@ if (payload) {
             preventDefaultMouseMove: false
           }
         ],
-        series: data.series.map((s) => ({
+        series: data.series.map((s, seriesIndex) => ({
           name: s.name,
           type,
           data: s.values,
@@ -202,7 +247,23 @@ if (payload) {
           lineStyle: { width: 2 },
           itemStyle: { color: s.colour },
           emphasis: { focus: "series" },
-          barMaxWidth: 20
+          barMaxWidth: 20,
+          ...(seriesIndex === 0 && data.focus
+            ? {
+                markArea: {
+                  silent: true,
+                  itemStyle: { color: "rgba(233,255,73,.07)" },
+                  label: {
+                    show: true,
+                    position: "insideTop",
+                    color: "#e9ff49",
+                    fontSize: 10,
+                    formatter: "Finding week"
+                  },
+                  data: [[{ xAxis: data.focus.from }, { xAxis: data.focus.to }]]
+                }
+              }
+            : {})
         }))
       });
       chart.setOption(build("line"));
@@ -219,9 +280,46 @@ if (payload) {
       document.querySelector<HTMLElement>("[data-chart-controls]")!.hidden = false;
       const reset = document.querySelector<HTMLButtonElement>("[data-reset-zoom]")!;
       reset.hidden = false;
-      reset.addEventListener("click", () =>
-        chart.dispatchAction({ type: "dataZoom", start: 0, end: 100 })
-      );
+      const focusNote = document.querySelector<HTMLElement>("[data-chart-focus]");
+      const findingNote = focusNote?.textContent ?? "";
+      const allDatesNote = `Showing all ${data.period.days} days, ${data.period.from} to ${data.period.to}.`;
+      let showingFinding = Boolean(data.focus);
+      let applyingFocus = false;
+      reset.addEventListener("click", () => {
+        if (data.focus && !showingFinding) {
+          applyingFocus = true;
+          chart.dispatchAction({
+            type: "dataZoom",
+            startValue: data.focus.start,
+            endValue: data.focus.end
+          });
+          if (focusNote) focusNote.textContent = findingNote;
+          reset.textContent = `Show all ${data.period.days} days`;
+          showingFinding = true;
+          requestAnimationFrame(() => {
+            applyingFocus = false;
+          });
+          return;
+        }
+        chart.dispatchAction({ type: "dataZoom", start: 0, end: 100 });
+        if (focusNote) focusNote.textContent = allDatesNote;
+        reset.textContent = data.focus ? "Show finding week" : "Reset zoom";
+        showingFinding = false;
+      });
+      if (focusNote && data.focus) {
+        // The initial setOption fires `datazoom`; let that settle before treating
+        // a later zoom as the reader's own change.
+        let readerZoomed = false;
+        requestAnimationFrame(() => {
+          readerZoomed = true;
+        });
+        chart.on("datazoom", () => {
+          if (!readerZoomed || applyingFocus || focusNote.textContent?.startsWith("Showing all"))
+            return;
+          focusNote.textContent =
+            "Showing the dates you selected. Use the button above to return to the finding.";
+        });
+      }
       document.querySelectorAll<HTMLButtonElement>("[data-chart-type]").forEach((button) =>
         button.addEventListener("click", () => {
           document
@@ -234,16 +332,25 @@ if (payload) {
         const info = event as { axesInfo?: { value?: number | string }[] };
         const value = info.axesInfo?.[0]?.value;
         const index = typeof value === "number" ? value : dates.indexOf(String(value));
-        if (index >= 0) {
-          if (dateInput) dateInput.value = String(index);
-          inspect(index);
-        }
+        if (index >= 0) inspect(index);
+      });
+      // A tap on the plot selects the nearest date even when it does not land on
+      // a symbol. The lower brush keeps its own gesture; clicks there are ignored.
+      target.addEventListener("click", (event) => {
+        const bounds = target.getBoundingClientRect();
+        if (event.clientY > bounds.top + bounds.height - 78) return;
+        const point = chart.convertFromPixel({ gridIndex: 0 }, [
+          event.clientX - bounds.left,
+          event.clientY - bounds.top
+        ]);
+        const value = Array.isArray(point) ? point[0] : point;
+        if (typeof value === "number" && Number.isFinite(value)) inspect(Math.round(value));
       });
       new ResizeObserver(() => chart.resize()).observe(target);
       const help = document.querySelector("[data-chart-help]");
       if (help)
         help.textContent =
-          "Hover or tap a date. Drag the lower brush to zoom; use the day slider for keyboard inspection.";
+          "Tap a date, or focus the chart and use the arrow keys. Drag the lower brush to zoom.";
     } catch {
       const help = document.querySelector("[data-chart-help]");
       if (help)

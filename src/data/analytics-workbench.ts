@@ -554,6 +554,19 @@ export function dateDays(period: ReportingWindow) {
     new Date(Date.parse(period.from) + i * 86400000).toISOString().slice(0, 10)
   );
 }
+/**
+ * The indices of a highlighted day range inside a reporting window. A shared
+ * finding must open on its own dates, not on an unrelated full-window chart; a
+ * range that is not wholly inside the selected window returns null rather than
+ * being silently clamped into a different story.
+ */
+export function dayRange(period: ReportingWindow, from: string, to: string) {
+  const days = dateDays(period);
+  const start = days.indexOf(from);
+  const end = days.indexOf(to);
+  if (start < 0 || end < 0 || end < start) return null;
+  return { from, to, start, end };
+}
 export function dailyStatus(
   report: { coverage: ProjectAnalytics["coverage"] } | null,
   metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
@@ -971,7 +984,8 @@ export function svgPlot(
   series: { name: string; colour: string; values: (number | null)[] }[],
   period: ReportingWindow,
   width = 900,
-  height = 340
+  height = 340,
+  labelDate: (date: string) => string = (date) => date.slice(5)
 ) {
   const left = 60,
     right = 22,
@@ -997,7 +1011,7 @@ export function svgPlot(
   const dates = dateDays(period);
   const tickIndices = [...new Set([0, Math.floor((period.days - 1) / 2), period.days - 1])];
   for (const i of tickIndices)
-    svg += `<text x="${x(i)}" y="${height - 12}" text-anchor="middle">${dates[i]!.slice(5)}</text>`;
+    svg += `<text x="${x(i)}" y="${height - 12}" text-anchor="middle">${labelDate(dates[i]!)}</text>`;
   for (const s of series) {
     let pen = false,
       d = "";
