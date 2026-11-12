@@ -9,15 +9,15 @@ export const analyticsProjects = [
   "protocol-11",
   "loftwahfm",
   "bubbles",
-  "foilbury"
+  "foilbury",
+  "max"
 ] as const;
 export type AnalyticsProject = (typeof analyticsProjects)[number];
 // Referral coverage does not imply a native usage feed. Share the allowlist
 // across the browser collector, ingress and reporting surfaces.
 export const discoveryProjects = [
   ...analyticsProjects.filter((project) => project !== "woodhouse"),
-  "liferaft",
-  "max"
+  "liferaft"
 ] as const;
 export type ReportRelease = {
   project: AnalyticsProject;
@@ -122,7 +122,8 @@ const analyticsSources: Record<AnalyticsProject, string> = {
   "protocol-11": `${SITE_ORIGIN}/api/portfolio-analytics?project=protocol-11`,
   loftwahfm: "https://fm.loftwah.com/api/portfolio-analytics",
   bubbles: "https://api.bubbles.loftwah.com/api/portfolio-analytics",
-  foilbury: "https://foilbury.loftwah.com/api/portfolio-analytics"
+  foilbury: "https://foilbury.loftwah.com/api/portfolio-analytics",
+  max: "https://max.loftwah.com/api/portfolio-analytics"
 };
 const qualities = new Set<unknown>(["exact", "sampled", "bounded", "partial", "unavailable"]);
 export function isObject(v: unknown): v is Record<string, unknown> {
@@ -564,6 +565,7 @@ export function analysePortfolio(
           "visits",
           "engaged_sessions",
           "cabinet_views",
+          "simulator_runs",
           "project_opens"
         ].includes(metric.key)
       )
