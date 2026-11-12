@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { loadLiferaftDownloads } from "../../data/liferaft-downloads";
+
+export const prerender = false;
+const releases = await loadLiferaftDownloads();
+if (releases === null) {
+  Astro.cache.set(false);
+  Astro.response.headers.set("cache-control", "private, no-store");
+}
+---
+
+<BaseLayout
+  title="Liferaft downloads"
+  description="Lifetime downloads for Liferaft’s Mac installers, by GitHub release."
+  path="/activity/liferaft/"
+  currentPath="/activity/"
+>
+  <article class="container installer-report">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/activity/">Analytics</a>
+      <span aria-current="page">Liferaft</span>
+    </nav>
+    <h1 class="page-title">Liferaft downloads</h1>
+    <p>Lifetime GitHub downloads for the Mac installer in each recent stable release.</p>
+    {releases === null ? (
+      <p>GitHub’s download counts are unavailable right now.</p>
+    ) : releases.length === 0 ? (
+      <p>No Mac installers are listed for the recent stable releases.</p>
+    ) : (
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Release</th>
+            <th scope="col">Installer downloads</th>
+          </tr>
+        </thead>
+        <tbody>
+          {releases.map(({ tag, url, downloads }) => (
+            <tr>
+              <th scope="row">
+                <a href={url}>{tag}</a>
+              </th>
+              <td>{downloads.toLocaleString("en-AU")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+    <p>Repeat downloads can count. Archive recovery runs locally on your Mac.</p>
+    <a href="https://github.com/loftwah/liferaft/releases">See Liferaft releases on GitHub</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .installer-report {
+    max-width: 76ch;
+    padding-block: 2rem 5rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block: 1.5rem;
+  }
+  th,
+  td {
+    border-bottom: 1px solid var(--line);
+    padding: 0.8rem 0;
+    text-align: left;
+  }
+  th:last-child,
+  td {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

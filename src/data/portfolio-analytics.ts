@@ -8,14 +8,14 @@ export const analyticsProjects = [
   "shoalshot",
   "protocol-11",
   "loftwahfm",
-  "bubbles"
+  "bubbles",
+  "foilbury"
 ] as const;
 export type AnalyticsProject = (typeof analyticsProjects)[number];
 // Referral coverage does not imply a native usage feed. Share the allowlist
 // across the browser collector, ingress and reporting surfaces.
 export const discoveryProjects = [
   ...analyticsProjects.filter((project) => project !== "woodhouse"),
-  "foilbury",
   "liferaft",
   "max"
 ] as const;
@@ -121,7 +121,8 @@ const analyticsSources: Record<AnalyticsProject, string> = {
   shoalshot: `${SITE_ORIGIN}/api/portfolio-analytics?project=shoalshot`,
   "protocol-11": `${SITE_ORIGIN}/api/portfolio-analytics?project=protocol-11`,
   loftwahfm: "https://fm.loftwah.com/api/portfolio-analytics",
-  bubbles: "https://api.bubbles.loftwah.com/api/portfolio-analytics"
+  bubbles: "https://api.bubbles.loftwah.com/api/portfolio-analytics",
+  foilbury: "https://foilbury.loftwah.com/api/portfolio-analytics"
 };
 const qualities = new Set<unknown>(["exact", "sampled", "bounded", "partial", "unavailable"]);
 export function isObject(v: unknown): v is Record<string, unknown> {
@@ -300,7 +301,7 @@ export function parseProjectAnalytics(
     }
   };
 }
-async function boundedJson(response: Response, limit = 192 * 1024): Promise<unknown> {
+export async function boundedJson(response: Response, limit = 192 * 1024): Promise<unknown> {
   if (
     !response.ok ||
     !response.headers.get("content-type")?.includes("application/json") ||
@@ -562,6 +563,7 @@ export function analysePortfolio(
           "listening_starts",
           "visits",
           "engaged_sessions",
+          "cabinet_views",
           "project_opens"
         ].includes(metric.key)
       )

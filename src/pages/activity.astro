@@ -148,33 +148,33 @@ const measuredDestinations = identities.projects.filter(
 const unmeasuredDestinations = identities.projects.filter(
   (p) => p.siteUrl && !discoveryProjects.some((slug) => slug === p.slug)
 );
-const allRows = analyticsProjects
-  .filter((p) => publicIds.has(p))
-  .map((project) => ({
-    project,
-    name: names.get(project) ?? project,
-    data: snapshot?.projects.find((p) => p.project === project)?.report ?? null,
-    colour: projectColours[project]!
-  }));
+const capturedProjects =
+  frozen && snapshot ? new Set(snapshot.projects.map(({ project }) => project)) : null;
+const inReportScope = (project: AnalyticsProject) =>
+  publicIds.has(project) && (capturedProjects === null || capturedProjects.has(project));
+const allRows = analyticsProjects.filter(inReportScope).map((project) => ({
+  project,
+  name: names.get(project) ?? project,
+  data: snapshot?.projects.find((p) => p.project === project)?.report ?? null,
+  colour: projectColours[project]!
+}));
 const rows = allRows.filter((r) => !selected || r.project === selected);
 const overviewRows = overview
-  ? overviewOrder
-      .filter((project) => publicIds.has(project))
-      .map((project) => {
-        const data = snapshot?.projects.find((p) => p.project === project)?.report ?? null;
-        return {
-          project,
-          name: names.get(project) ?? project,
-          colour: projectColours[project]!,
-          data,
-          // A project stays in the overview when its source is unavailable; the
-          // measure is still named so a real reporting failure stays visible.
-          overviewMeasure: measuresFor(project).find(
-            (m) => m.key === productView(project)!.defaultMeasure
-          )!,
-          metric: overviewMetric(data, project)
-        };
-      })
+  ? overviewOrder.filter(inReportScope).map((project) => {
+      const data = snapshot?.projects.find((p) => p.project === project)?.report ?? null;
+      return {
+        project,
+        name: names.get(project) ?? project,
+        colour: projectColours[project]!,
+        data,
+        // A project stays in the overview when its source is unavailable; the
+        // measure is still named so a real reporting failure stays visible.
+        overviewMeasure: measuresFor(project).find(
+          (m) => m.key === productView(project)!.defaultMeasure
+        )!,
+        metric: overviewMetric(data, project)
+      };
+    })
   : [];
 // Woodhouse discovery referrals. The collector stores one counter per
 // destination; the page keeps only destinations that are still published and
@@ -776,6 +776,7 @@ const dataPayload = {
       </nav>
       <div class="rail-foot">
         <a href="/activity/measurement/">How measurement works</a>
+        <a href="/activity/liferaft/">Liferaft downloads</a>
         <a href="/activity/listening/">Games × Radio</a>
         <a href="/connections/">Explore connected products</a>
         <a href="/editions/one-more-round/#distribution">Edition discovery</a>
