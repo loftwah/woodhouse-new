@@ -1,4 +1,5 @@
 ---
+import { contactStudies, contactStudyWorks } from "../data/showcase-contact-studies";
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { projectActionHref, projectActionLabel } from "../data/project-actions.ts";
@@ -87,6 +88,7 @@ Astro.response.headers.set("cache-control", "private, no-store");
 const requestedProject = projects.find((project) => project.slug === requested);
 const selected = requestedProject ? await liveProjectArtwork(requestedProject) : undefined;
 const admittedCampaign = publicCampaignItems(projects.map((project) => project.slug));
+const hasContactStudies = contactStudyWorks.some((work) => admittedCampaign.includes(work));
 const campaignProjects = new Set(admittedCampaign.map((item) => item.project));
 const showcase =
   !explicitType &&
@@ -313,6 +315,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
           <h1>{selected?.name ?? "Made to be played. Heard. Tried."}</h1>
           <nav class="share-jumps" aria-label="More media">
             <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
+            {hasContactStudies && <a href={contactStudies.path}>{contactStudies.title}</a>}
             <a href="/share/resources/">Creative resources</a>
             <a href="#archive">Browse the archive</a>
           </nav>

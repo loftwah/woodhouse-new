@@ -48,3 +48,13 @@ campaign entries sort by addition time and older entries by their recorded revie
 historical ties retain their editorial order. The earlier Foilbury pieces are kept out of the
 current search results, social picker and updated pack. The [public source notes](https://woodhouse.loftwah.com/campaign/20261112-refresh/provenance.txt)
 record the exact ImageGen prompts.
+
+## Collectible editions
+
+Reviewed 12 November 2026. [Contact Studies](https://woodhouse.loftwah.com/share/contact-studies/) is the first set made to this standard. It uses liquid, thread, paper and ribbon to interpret four published projects. These are Woodhouse digital artworks. Foilbury's native cabinet and collectible editions have their own [artwork](https://github.com/loftwah/card-collector-bot/issues/39) and [print](https://github.com/loftwah/card-collector-bot/issues/27) work.
+
+1. Start with a one-sentence brief, the audience, and a reason to keep the set. Sketch three to six distinct subjects before making assets. Each card needs a specific relationship to its project, and each set needs a shared idea. Vary the medium, palette, silhouette or point of view intentionally. Crops and colourways are exports of a card.
+2. Keep an untouched master for each card and record its source, credit and permitted uses. For third-party references, check the source and terms before making or distributing a derivative. Label editorial art and staged or live captures in the gallery. Keep private briefs and unpublished source material out of release assets.
+3. Inspect the artwork at full resolution and around 300 px wide. Reject broken geometry, distracting artefacts, unreadable lettering, and crops that cut the focal subject. Look at the whole set together. If two cards do the same job or a piece brings down the set, rework or hold it. A new public edition ships when its set is ready.
+4. Give each work a durable title, URL, alt text and a short note connecting it to the project. Offer the original and only the social sizes that survived visual review. Put the originals, reviewed exports and provenance in the set download. For a physical edition, require separate print dimensions, bleed and a print proof before making a print claim.
+5. Check the live collection and project pages at phone and desktop widths, the full-size viewer and image copy, the actual download dimensions and archive contents, and the intended platform preview where one exists. Keep previous editions reachable and put new work ahead of earlier work. Record the tested URLs and release identity in the owning issue.
