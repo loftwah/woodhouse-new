@@ -28,7 +28,7 @@ export type ProjectAction = {
 const reviewed: Record<string, ProjectAction> = {
   fighter: { action: "Play", availability: "Playable now in your browser." },
   bubbles: { action: "Play", availability: "Playable now in your browser." },
-  liferaft: { action: "Open", availability: "Explore the repository and desktop downloads." },
+  liferaft: { action: "Open", availability: "Open the recovery guide and desktop downloads." },
   foilbury: {
     action: "Open",
     availability: "The public shelf is open; signing in only adds your own album."
