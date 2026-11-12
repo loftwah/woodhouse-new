@@ -68,9 +68,10 @@ test("campaign search finds published pieces by placement and exact dimensions",
   assert(entries.every(({ href }) => href));
   const cases: [string, string][] = [
     ["Fighter X header", "/share/fighter/#share-edition-fighter-battle-blast-x"],
-    ["Bubbles 1080x1920", "/share/bubbles/#project-story-lantern-finale"],
+    ["Bubbles Bank Shot Lesson 1080x1920", "/share/bubbles/#project-story-50-bubbles-prologue"],
+    ["Bubbles Lantern Finale 1080x1920", "/share/bubbles/#project-story-lantern-finale"],
     ["Bubbles Take the wall 1080x1920", "/share/bubbles/#share-edition-bubbles-bank-line-story"],
-    ["Bubbles 1080 × 1350", "/share/bubbles/#share-edition-bubbles-bank-line-feed"]
+    ["Bubbles Take the wall 1080 × 1350", "/share/bubbles/#share-edition-bubbles-bank-line-feed"]
   ];
   for (const [query, href] of cases) {
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
@@ -82,7 +83,10 @@ test("campaign search finds published pieces by placement and exact dimensions",
 test("fresh work leads on the same review date and archived Foilbury art is off the current index", () => {
   const items = publicCampaignItems(["foilbury", "loftwahfm", "shoalshot"]);
   assert.deepEqual(
-    items.slice(0, 5).map(({ id }) => id),
+    items
+      .filter(({ series }) => series !== "project-stories-50")
+      .slice(0, 5)
+      .map(({ id }) => id),
     [
       "project-story-sunstruck-shelf",
       "project-story-keeper-avatar",
@@ -113,6 +117,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       .filter(
         ({ href }) =>
           href.startsWith("/share/foilbury/") &&
+          !href.includes("#project-story-50-") &&
           !href.includes("#share-art-") &&
           !href.includes("#share-edition-")
       )

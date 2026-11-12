@@ -232,3 +232,18 @@ qualifier. Generate it as part of the image. Verify the words in the actual
 export and at social thumbnail size. Keep historical screenshots and
 retrospective drawings accurately labelled. Carry source, captions and
 dimensions with the assets so the kit works outside Woodhouse.
+
+### Fifty more project stories
+
+Reviewed 13 November 2026, Melbourne. [Latest 50](https://woodhouse.loftwah.com/share/?artType=project-stories-50)
+contains five distinct new artworks each for Bubbles, SHOALSHOT, Foilbury,
+Fighter, Protocol 11, App Composer, LoftwahFM, Liferaft, MAX and Woodhouse.
+The release opens with a mixed selection across projects. The original PNGs
+are available on every artwork and the kit contains all fifty placement
+files, captions, alt text, visual references and the prompts.
+
+The visual pass compared Foilbury's character details with the cabinet,
+checked eight counters for Bubbles' Eight Shots, kept card mechanics out of
+illustrated room scenes, and checked lettering and framing across the nine
+placements used in this batch. Rhea's palette and Liferaft's Read Only
+headline each needed a second render.
