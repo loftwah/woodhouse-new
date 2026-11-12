@@ -76,3 +76,7 @@ For a new batch:
 ### Field Notes
 
 The second batch adds 50 files using ten new reference-led ImageGen illustrations. It covers First Spark in Bubbles, the SHOALSHOT Glimmerfin, the front and reverse of a Foilbury card, the Fighter opening matchup, Night Signal on LoftwahFM, a Classic table in Protocol 11, App Composer's Creator Hub, MAX's browser locator, Liferaft's attachment search and a cutaway of Woodhouse. The first batch keeps its URLs, its ZIPs and its entries in the platform picker. Each Field Notes pack has its own ZIP and source note.
+
+### Making the work
+
+Reviewed 13 November 2026, Melbourne. The final batch mixes portrait sketches, square source art, landscape working captures and tall comparisons. Five branded stills per project cover the same six social placements. Each embeds the native mark and a readable title. The source note and image labels distinguish the 12 October Bubbles capture and 6 November Share mockup from new retrospective drawings. The published Foilbury card, Glimmerfin sprite, BOB sleeve and Loom card are shown as source artwork. When an original sketch is unavailable, label a new drawing as such in the pixels as well as on the page.

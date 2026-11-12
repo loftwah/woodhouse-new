@@ -1,0 +1,15 @@
+MAX · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+
+Source record for reused captures, artwork and marks:
+# MAX
+- Title A | Try Find MAX
+- Title B | Meet Virtual MAX
+- Caption | Try Find MAX in the browser to hear the locator. This is the public simulator.
+- On-image qualifier | Browser simulator
+- Source | https://max.loftwah.com/demo, actual public simulated FIND state. This is the visible simulator panel with its locator action and official product imagery. Never imply the physical walker responded. Alternate is the portrait browser view of the same real simulator.
+- Logo | Unmodified published MAX wordmark `apps/web/public/brand/max-wordmark-512.png` in loftwah/max at `ac93ce65d1416544c650dacfc859e9af011dbc1a`. Native asset is white on black with amber point, no alpha. Same portfolio campaign context.
+- Artwork A | Codex ImageGen, graphite and amber daylit entryway background using the simulator’s visual palette and actual setting as reference.
+- Artwork B | Codex ImageGen, graphite field with an amber locator ripple inspired by the actual Find MAX action.

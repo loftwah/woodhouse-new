@@ -1,0 +1,17 @@
+Protocol 11 · Making the work
+13 November 2026, Melbourne
+
+New retrospective drawings made with Codex ImageGen for this campaign. The titles and official marks were applied separately. The drawings explain how existing work fits together.
+
+Source record for reused captures, artwork and marks:
+# Protocol 11
+
+- Name on artwork: Protocol 11. The supplied production wordmark can carry this on its own if it reads at small size.
+- Classic Felt headline: “Your draw.” Cards sit on the original green table colours under the classic room's pool of brass lamplight.
+- Arcade Pop headline: “A seat at the table.” Blue-backed cards ring the draw pile in a turquoise and coral arcade room.
+- Caption: “Open Classic, draw a card and see what you can make from the hand you get.”
+- Product: https://protocol11.loftwah.com/
+- Original brand wordmark: https://github.com/loftwah/protocol-11/blob/71bc83e0c95a2e32533d17eb046b2a61f07e087b/public/brand/protocol-11-wordmark.jpg, converted losslessly to `logo.png` without changing the design. Its dark plaque is part of the artwork.
+- First-party room references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp, https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp and https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp. Current Woodhouse source reference 32c788fcc9675f7a66ac8fdaa74187456dfb141d.
+- Actual screenshot: `output/campaign-20261112/capture-protocol-11-wide.png`, production Classic local table staged at the opening hand, 12 November 2026. See https://woodhouse.loftwah.com/campaign/20261112/provenance.txt.
+- Both portrait plates were generated with native Codex ImageGen using first-party room art and production gameplay. The decks in the illustrations are stylised, with native card faces available in the original gameplay capture.
