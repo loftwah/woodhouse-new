@@ -93,19 +93,60 @@ if (payload) {
     });
   const dateInput = document.querySelector<HTMLInputElement>("[data-inspect-day]");
   const output = document.querySelector<HTMLOutputElement>("[data-day-output]");
+  const inlineSummary = document.querySelector<HTMLElement>("[data-chart-day-inline]");
+  const inlineOutput = document.querySelector<HTMLOutputElement>("[data-chart-day-summary]");
+  const today = new Date().toISOString().slice(0, 10);
+  const coverageLabel = (status: string, day: string) => {
+    switch (status) {
+      case "clean":
+      case "Full day":
+        return "full day";
+      case "partial":
+      case "Part day":
+        return day === today ? "so far today (UTC)" : "partial day";
+      case "missing":
+      case "No data":
+        return "no data";
+      case "legacy":
+      case "Includes old test data":
+        return "includes old test data";
+      case "unknown":
+      case "Comparable history unknown":
+        return "coverage unknown";
+      case "bounded":
+      case "Count may be capped":
+        return "count may be capped";
+      case "sampled":
+      case "Estimated from a sample":
+        return "estimated from a sample";
+      default:
+        return status;
+    }
+  };
   let inspected = data.focus ? Math.min(data.focus.end, dates.length - 1) : dates.length - 1;
   const inspect = (index: number) => {
     const day = dates[index];
     if (!day || !output) return;
     inspected = index;
     if (dateInput) dateInput.value = String(index);
-    output.textContent = `${dayLabel(day)} UTC · ${data.series
+    const text = `${dayLabel(day)} UTC · ${data.series
       .map((s) => {
         const value = s.values[index];
         const suffix = value !== null && (s.unit ?? data.unit) === "seconds" ? " seconds" : "";
-        return `${s.name}: ${value === null || value === undefined ? "no data" : `${value.toLocaleString("en-AU")}${suffix}`} (${s.statuses[index]})`;
+        const valueLabel =
+          value === null || value === undefined
+            ? "No data"
+            : `${value.toLocaleString("en-AU")}${suffix}`;
+        const statusLabel =
+          value === null || value === undefined
+            ? ""
+            : ` · ${coverageLabel(s.statuses[index] ?? "missing", day)}`;
+        return `${s.name}: ${valueLabel}${statusLabel}`;
       })
       .join(" · ")}`;
+    output.textContent = text;
+    if (inlineOutput) inlineOutput.textContent = text;
+    if (inlineSummary) inlineSummary.hidden = false;
   };
   const inspector = document.querySelector<HTMLElement>("[data-day-inspector]");
   if (target && inspector) {
@@ -266,7 +307,13 @@ if (payload) {
             : {})
         }))
       });
-      chart.setOption(build("line"));
+      const initialType = data.unit === "count" && data.period.days <= 14 ? "bar" : "line";
+      document
+        .querySelectorAll<HTMLButtonElement>("[data-chart-type]")
+        .forEach((button) =>
+          button.setAttribute("aria-pressed", String(button.dataset.chartType === initialType))
+        );
+      chart.setOption(build(initialType));
       document.querySelectorAll<HTMLButtonElement>("[data-series-toggle]").forEach((button) => {
         button.disabled = false;
         button.addEventListener("click", () => {
