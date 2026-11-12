@@ -1,0 +1,104 @@
+---
+import type { PublicSearchItem } from "../content/repository";
+
+type Props = {
+  pages?: PublicSearchItem[];
+  listId?: string;
+  fullIndex?: boolean;
+  showEmpty?: boolean;
+};
+
+const { pages = [], listId, fullIndex = false, showEmpty = false } = Astro.props;
+---
+
+<nav class="site-search__results" aria-label="Search results">
+  <ul id={listId} data-public-search-index={fullIndex ? "" : undefined}>
+    {pages.map((page) => (
+      <li
+        data-search-item
+        data-search-keywords={fullIndex ? page.keywords : undefined}
+        data-search-text={fullIndex ? page.searchText : undefined}
+      >
+        <a href={page.href}>
+          <span>
+            <strong>{page.title}</strong>
+            <small>{page.description}</small>
+          </span>
+          <em>{page.section}</em>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="site-search__empty" data-search-empty hidden={!showEmpty}>
+    <span>No matches. Try a project name or a different word.</span>
+    <span class="site-search__empty-starts">
+      Start here: <a href="/projects/">every project</a>,{" "}
+      <a href="/projects/loftwahfm/">LoftwahFM music</a>, <a href="/projects/bubbles/">Bubbles</a>,{" "}
+      <a href="/activity/">Analytics</a> or <a href="/share/">the share desk</a>.
+    </span>
+  </p>
+</nav>
+
+<style>
+  .site-search__results {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-top: 1px solid var(--line);
+  }
+  .site-search__results ul {
+    display: grid;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .site-search__results li {
+    border-bottom: 1px solid var(--line);
+  }
+  .site-search__results li[hidden] {
+    display: none;
+  }
+  .site-search__results a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.3rem;
+    color: var(--paper);
+    text-decoration: none;
+  }
+  .site-search__results a:hover,
+  .site-search__results a:focus-visible {
+    color: var(--paper);
+    background: var(--hover-surface);
+  }
+  .site-search__results a span {
+    display: grid;
+    gap: 0.15rem;
+  }
+  .site-search__results strong {
+    font-size: 0.88rem;
+  }
+  .site-search__results small {
+    color: var(--copy-soft);
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+  .site-search__results em {
+    color: var(--brass);
+    font: 700 0.55rem/1.3 var(--mono);
+    text-align: right;
+    text-transform: uppercase;
+  }
+  .site-search__empty {
+    padding: 1.2rem 0.3rem;
+    color: var(--copy-soft);
+  }
+  .site-search__empty span {
+    display: block;
+  }
+  .site-search__empty-starts {
+    margin-top: 0.5rem;
+    font-size: 0.7rem;
+  }
+</style>
