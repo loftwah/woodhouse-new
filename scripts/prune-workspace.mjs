@@ -109,7 +109,15 @@ export async function main(argv) {
     const dir = resolve(root, spec.path);
     if (dir !== root && !dir.startsWith(root + sep))
       throw new Error(`Outside the repository: ${dir}`);
-    const entries = await readEntries(dir);
+    const details = await lstat(dir).catch((error) => {
+      if (error.code !== "ENOENT") throw error;
+      return null;
+    });
+    if (details?.isSymbolicLink()) {
+      process.stdout.write(`${spec.path}: symlink skipped\n`);
+      continue;
+    }
+    const entries = details ? await readEntries(dir) : [];
     const { candidates, kept, skipped } = selectCandidates(entries, {
       maxAgeDays: spec.maxAgeDays ?? 0,
       keep: spec.keep
@@ -125,7 +133,10 @@ export async function main(argv) {
       kept: kept.length,
       skipped: skipped.length
     });
-    if (apply) {
+    if (apply && candidates.length) {
+      const current = await lstat(dir);
+      if (current.isSymbolicLink() || current.dev !== details.dev || current.ino !== details.ino)
+        throw new Error(`Workspace root changed during inspection: ${spec.path}`);
       for (const candidate of candidates) {
         await rm(join(dir, candidate.name), { recursive: true, force: true });
         removed += 1;

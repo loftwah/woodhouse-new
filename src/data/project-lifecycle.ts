@@ -15,11 +15,6 @@
  */
 export type ProjectLifecycle = "active" | "paused" | "retired" | "unknown";
 
-const lifecycleStates: Record<string, ProjectLifecycle> = {
-  Paused: "paused",
-  Retired: "retired"
-};
-
 /** Map a current status label to a portfolio lifecycle. */
 export function projectLifecycle(value: unknown): ProjectLifecycle {
   if (typeof value !== "string") return "unknown";
@@ -28,7 +23,9 @@ export function projectLifecycle(value: unknown): ProjectLifecycle {
   // engineering label falls through to `active`; blank or whitespace-only text
   // stays unreviewed so it cannot join current work by omission.
   if (!status) return "unknown";
-  return lifecycleStates[status] ?? "active";
+  if (status === "Paused") return "paused";
+  if (status === "Retired") return "retired";
+  return "active";
 }
 
 /** Only an explicit `active` record joins current work, counts and rankings. */

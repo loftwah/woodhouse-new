@@ -41,6 +41,18 @@ const destinationPages: SearchPage[] = [
     section: "Writing"
   },
   {
+    title: "Working exhibits",
+    description: "Try the Patch Bench music and game demo and the Source Plate composition demo.",
+    href: "/exhibits/",
+    section: "Factory"
+  },
+  {
+    title: "House identity",
+    description: "Loom Display, the Woodhouse seal, colour and downloadable brand artwork.",
+    href: "/brand/",
+    section: "Factory"
+  },
+  {
     title: "Factory doctrine",
     description: "Value, autonomy, commercial controls and physical work.",
     keywords:
@@ -80,9 +92,13 @@ const destinationPages: SearchPage[] = [
   }
 ];
 const contentHrefs = new Set(contentPages.map((page) => page.href));
+const destinationKeywords = new Map(destinationPages.map((page) => [page.href, page.keywords]));
 const pages: SearchPage[] = [
   ...destinationPages.filter((page) => !contentHrefs.has(page.href)),
-  ...contentPages
+  ...contentPages.map((page) => {
+    const keywords = destinationKeywords.get(page.href);
+    return keywords ? { ...page, keywords } : page;
+  })
 ];
 ---
 

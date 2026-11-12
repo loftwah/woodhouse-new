@@ -1240,6 +1240,10 @@ figure.image-plate--inline {
   font-size: 1.5rem;
   font-weight: 500;
 }
+.prose p,
+.prose li {
+  max-inline-size: 53ch;
+}
 .prose p {
   margin: 0 0 1.25em;
 }

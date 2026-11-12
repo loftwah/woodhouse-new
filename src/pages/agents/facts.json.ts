@@ -82,7 +82,9 @@ export const GET: APIRoute = async ({ cache }) => {
       "A project whose repository is public is summarised from that repository and its published site.",
     projectCount: projects.length,
     activeProjectCount: active.length,
-    pausedOrRetiredProjectCount: projects.length - active.length,
+    pausedOrRetiredProjectCount: projects.filter(
+      ({ lifecycle }) => lifecycle === "paused" || lifecycle === "retired"
+    ).length,
     portfolioLifecycle:
       "Only active projects join current work, current rankings and promotional priority. " +
       "Paused and retired projects keep their dossier, dated evidence and stable URL; retirement " +

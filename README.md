@@ -18,7 +18,7 @@ Most project repositories are private. Public copy comes from the shareable fact
 
 Agent task routing and the launch/doctor/drive/evidence/cleanup sequence live in [docs/AGENT_INDEX.md](docs/AGENT_INDEX.md).
 
-Use Node 22.16 or later and pnpm.
+Use Node 22.23.4 or later and pnpm 12.8.1.
 
 - Install dependencies with `pnpm install --frozen-lockfile`.
 - Start the local site with pnpm dev.

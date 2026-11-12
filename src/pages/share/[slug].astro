@@ -10,7 +10,9 @@ import {
   campaignSocial
 } from "../../data/showcase-public";
 import { toJsonLd } from "../../data/safe-json";
-import { socialCardFor, getSiteMetadata } from "../../data/site-metadata";
+import { getArtworkFallback, socialCardFor, getSiteMetadata } from "../../data/site-metadata";
+import { projectActionHref, projectActionLabel } from "../../data/project-actions";
+import { projectCaption } from "../../data/share-desk";
 import { liveProjectArtwork } from "../../data/live-project-artwork";
 
 export const prerender = false;
@@ -26,17 +28,21 @@ const project = recordedProject ? await liveProjectArtwork(recordedProject) : un
 const items = publicCampaignItems(result.projects.map((entry) => entry.slug)).filter(
   (item) => item.project === slug
 );
-if (!items.length || (slug !== "woodhouse" && !project))
+if (!project && (slug !== "woodhouse" || !items.length))
   return new Response("Gallery not found.", { status: 404 });
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const name = project?.name ?? "Woodhouse";
-const title = `${name} — artwork & screenshots`;
+const collectionLabel = items.length ? "Artwork & screenshots" : "Link card";
+const title = `${name} — ${collectionLabel.toLowerCase()}`;
 const description = project
-  ? `${project.summary} Explore ${name} promotional artwork and current product captures, with original downloads and a direct link to the product.`
+  ? items.length
+    ? `${project.summary} Explore ${name} promotional artwork and current product captures, with original downloads and a direct link to the product.`
+    : `${project.summary} Download the link card and copy a caption to share ${name}.`
   : "Games, software and music from the Loftwah software factory. Explore the Woodhouse campaign, open the real products and download the original artwork.";
 const social = campaignSocial(items)!;
 // The product owns its identity. Campaign pieces stay in the gallery.
 const productSocial = project ? socialCardFor(project) : null;
+const artworkFallback = project ? getArtworkFallback(project) : null;
 const path = campaignCollectionPath(slug);
 const origin = Astro.site?.origin ?? SITE_ORIGIN;
 // The ready-to-post caption ends with its destination. On the page that
@@ -62,10 +68,10 @@ const hostOf = (href: string) => {
   description={description}
   path={path}
   currentPath="/share/"
-  image={productSocial?.image ?? social.original}
-  imageAlt={productSocial?.alt ?? social.alt}
-  imageWidth={productSocial?.width ?? social.width}
-  imageHeight={productSocial?.height ?? social.height}
+  image={productSocial?.image ?? social?.original}
+  imageAlt={productSocial?.alt ?? social?.alt}
+  imageWidth={productSocial?.width ?? social?.width}
+  imageHeight={productSocial?.height ?? social?.height}
 >
   <script
     slot="head"
@@ -97,22 +103,58 @@ const hostOf = (href: string) => {
     <header>
       <h1>
         {name}
-        <span>Artwork & screenshots</span>
+        <span>{collectionLabel}</span>
       </h1>
       <p>{project?.title ?? "Games, software and music. A selection from the things we make."}</p>
       <div class="collection__links">
-        <a href={project?.siteUrl ?? "/"}>
-          {items[0]?.action ?? "Explore"} {name} ↗
+        <a href={project ? projectActionHref(project) : "/"}>
+          {items[0]?.action
+            ? `${items[0].action} ${name}`
+            : project
+              ? projectActionLabel(project)
+              : "Explore Woodhouse"}{" "}
+          ↗
         </a>
         {project && <a href={`/projects/${slug}/`}>About {name}</a>}
-        <a
-          href={`/share/?${slug === "woodhouse" ? "type=factory" : `project=${slug}&type=images`}`}
-        >
-          Earlier images & downloads
-        </a>
+        {items.length > 0 && (
+          <a
+            href={`/share/?${slug === "woodhouse" ? "type=factory" : `project=${slug}&type=images`}`}
+          >
+            Earlier images & downloads
+          </a>
+        )}
       </div>
     </header>
-    {items.length === 1 ? (
+    {!items.length && project && productSocial && artworkFallback ? (
+      <section class="work-card" aria-label={`Share ${name}`}>
+        <figure class="work-card__art">
+          <a href={productSocial.image} aria-label={`View ${name} link card full size`}>
+            <img
+              src={productSocial.image}
+              width={productSocial.width}
+              height={productSocial.height}
+              alt={productSocial.alt}
+              decoding="async"
+            />
+          </a>
+          <figcaption>
+            {productSocial.fromProduct ? `Artwork from ${name}` : artworkFallback.credit}
+          </figcaption>
+        </figure>
+        <div class="work-card__body">
+          <p class="work-card__caption">{captionText(projectCaption(project))}</p>
+          <ShareActions
+            caption={projectCaption(project)}
+            image={
+              productSocial.fromProduct ? `/api/share-image?project=${slug}` : productSocial.image
+            }
+            fallbackImage={artworkFallback.image}
+            filename={`${slug}-social.jpg`}
+            link={projectActionHref(project)}
+          />
+        </div>
+      </section>
+    ) : items.length === 1 ? (
       // One reviewed work is a share card, not a gallery grid: the artwork, the
       // caption a person would actually post and the actions belong in one view.
       <section class="work-card" aria-labelledby="work-card-title">
@@ -184,10 +226,12 @@ const hostOf = (href: string) => {
     ) : (
       <ShowcaseGallery items={items} />
     )}
-    <p class="collection__note">
-      Promotional compositions and product captures are labelled individually. The caption is ready
-      to post; the original file is the full-size download.
-    </p>
+    {items.length > 0 && (
+      <p class="collection__note">
+        Promotional compositions and product captures are labelled individually. The caption is
+        ready to post; the original file is the full-size download.
+      </p>
+    )}
   </div>
 </BaseLayout>
 

@@ -121,9 +121,11 @@ async function main() {
   }
   try {
     const event = JSON.parse(await readFile(resolve(files[0]), "utf8"));
-    console.log(
-      JSON.stringify(await publishDelivery(event, { send: args.includes("--send") }), null, 2)
-    );
+    const send = args.includes("--send");
+    const result = await publishDelivery(event, { send });
+    console.log(JSON.stringify(result, null, 2));
+    const confirmed = send ? result.readBackVerified === true : result.status === "dry_run";
+    if (!confirmed) process.exitCode = 1;
   } catch {
     console.error("Showcase input could not be read; no delivery confirmed.");
     process.exitCode = 1;

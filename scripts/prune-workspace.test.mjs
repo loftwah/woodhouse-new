@@ -1,5 +1,16 @@
 import assert from "node:assert/strict";
-import { mkdtemp, mkdir, rm, symlink, writeFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import {
+  copyFile,
+  mkdtemp,
+  mkdir,
+  readFile,
+  realpath,
+  rm,
+  symlink,
+  utimes,
+  writeFile
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -74,4 +85,25 @@ test("the real policy never removes a symlink target", async (t) => {
   }
   const { candidates } = selectCandidates(entries, { maxAgeDays: 1, now });
   assert.equal(candidates.length, 0);
+});
+
+test("apply skips a symlink at the evidence root itself", async (t) => {
+  const fixture = await mkdtemp(join(tmpdir(), "woodhouse-prune-root-"));
+  t.after(() => rm(fixture, { recursive: true, force: true }));
+  const repo = join(fixture, "repo");
+  const outside = join(fixture, "outside");
+  await mkdir(join(repo, "scripts"), { recursive: true });
+  await mkdir(outside);
+  const script = join(repo, "scripts", "prune-workspace.mjs");
+  await copyFile(new URL("./prune-workspace.mjs", import.meta.url), script);
+  const sentinel = join(outside, "retain.txt");
+  await writeFile(sentinel, "retain");
+  await utimes(sentinel, new Date(0), new Date(0));
+  await symlink(outside, join(repo, "output"));
+  const result = spawnSync(process.execPath, [await realpath(script), "--apply"], {
+    encoding: "utf8"
+  });
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(await readFile(sentinel, "utf8"), "retain");
+  assert.match(result.stdout, /output: symlink skipped/);
 });
