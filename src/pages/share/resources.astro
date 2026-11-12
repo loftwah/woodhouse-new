@@ -1,0 +1,248 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShareActions from "../../components/ShareActions.astro";
+import { creativePlates, resourceReviewDate, resourceSources } from "../../data/creative-resources";
+
+const first = creativePlates[0]!;
+---
+
+<BaseLayout
+  title="Creative resources"
+  description="Original Woodhouse artwork, project media, game and interface assets, and datasets for testing."
+  path="/share/resources/"
+  currentPath="/share/"
+  image={first.image}
+  imageWidth={first.width}
+  imageHeight={first.height}
+  imageAlt={first.alt}
+>
+  <div class="container resource-library">
+    <header class="library-intro">
+      <a class="back" href="/share/">
+        Back to the Share gallery
+      </a>
+      <h1>Creative resources</h1>
+      <p>
+        Grab a background for your next post, find assets for a prototype, or pick a dataset to test
+        an import.
+      </p>
+      <nav aria-label="Resource categories">
+        <a href="#woodhouse-art">Original artwork</a>
+        <a href="#project-media">Project media</a>
+        {resourceSources.map(({ id, title }) => (
+          <a href={`#${id}`}>{title}</a>
+        ))}
+      </nav>
+    </header>
+
+    <section id="woodhouse-art" aria-labelledby="art-heading">
+      <h2 id="art-heading">Original artwork</h2>
+      <div class="plates">
+        {creativePlates.map((plate, index) => (
+          <figure id={plate.id}>
+            <a href={plate.image} aria-label={`View ${plate.title} full size`}>
+              <img
+                src={plate.preview}
+                alt={plate.alt}
+                width={plate.width}
+                height={plate.height}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </a>
+            <figcaption>
+              <h3>{plate.title}</h3>
+              <p>{plate.use}</p>
+              <p class="file-details">
+                Codex ImageGen · PNG · {plate.width} × {plate.height}
+              </p>
+              <ShareActions
+                caption={plate.use}
+                image={plate.image}
+                filename={`${plate.id}.png`}
+                link={`/share/resources/#${plate.id}`}
+                presentation="image"
+              />
+              <details>
+                <summary>Generation prompt</summary>
+                <p>{plate.prompt}</p>
+              </details>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+
+    <section id="project-media" class="resource-section" aria-labelledby="media-heading">
+      <h2 id="media-heading">Project media</h2>
+      <ul class="sources">
+        <li>
+          <h3>
+            <a href="/share/">Project images and clips</a>
+          </h3>
+          <p>Campaign artwork, game captures and downloadable originals.</p>
+        </li>
+        <li>
+          <h3>
+            <a href="/share/?type=logos">Logos and marks</a>
+          </h3>
+          <p>Transparent artwork and original vectors from the published media archive.</p>
+        </li>
+        <li>
+          <h3>
+            <a href="/share/loftwahfm/">LoftwahFM artwork</a>
+          </h3>
+          <p>Station and campaign art, with links to the music and the full cover archive.</p>
+        </li>
+        <li>
+          <h3>
+            <a href="/brand/">Woodhouse identity</a>
+          </h3>
+          <p>The house typeface, palette and design system in use.</p>
+        </li>
+      </ul>
+    </section>
+
+    {resourceSources.map(({ id, title, resources }) => (
+      <section id={id} class="resource-section" aria-labelledby={`${id}-heading`}>
+        <h2 id={`${id}-heading`}>{title}</h2>
+        <ul class="sources">
+          {resources.map(({ name, source, use, terms, licence }) => (
+            <li>
+              <h3>
+                <a href={source}>{name}</a>
+              </h3>
+              <p>{use}</p>
+              {source === licence ? (
+                <p class="file-details">{terms}</p>
+              ) : (
+                <a class="terms" href={licence}>
+                  {terms}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <p class="file-details reviewed">
+      Source terms reviewed <time datetime={resourceReviewDate}>12 November 2026</time>.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .resource-library {
+    padding-block: clamp(2rem, 6vw, 6rem);
+  }
+  .library-intro h1 {
+    max-width: 17ch;
+    margin: 0.45rem 0 0.75rem;
+    font: 600 clamp(2.8rem, 7vw, 6rem) / 0.98 var(--display);
+    letter-spacing: -0.04em;
+  }
+  .library-intro p {
+    max-width: 58ch;
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(1rem, 2vw, 1.22rem);
+  }
+  .library-intro nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.4rem;
+    margin-block: 1rem 2.6rem;
+    border-block: 1px solid var(--line);
+  }
+  .library-intro a,
+  summary,
+  .terms {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .back {
+    font-size: 0.875rem;
+  }
+  section {
+    scroll-margin-top: 1rem;
+  }
+  h2 {
+    font: 600 clamp(1.7rem, 3vw, 2.75rem) / 1.1 var(--display);
+    letter-spacing: -0.025em;
+    margin: 0 0 1rem;
+  }
+  h3 {
+    font: 600 1.23rem / 1.18 var(--display);
+    margin: 0;
+  }
+  .plates {
+    display: grid;
+    grid-template-columns: minmax(0, 9fr) minmax(0, 4fr);
+    gap: clamp(1.5rem, 3.5vw, 3.5rem);
+    align-items: start;
+  }
+  figure {
+    min-width: 0;
+    margin: 0;
+  }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  figcaption {
+    padding-top: 0.85rem;
+  }
+  figcaption p {
+    max-width: 65ch;
+    margin: 0.35rem 0 0.65rem;
+  }
+  summary {
+    display: list-item;
+    padding-block: 0.65rem;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+  .file-details {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .resource-section {
+    margin-top: clamp(2.5rem, 6vw, 5.5rem);
+  }
+  .sources {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1rem, 4vw, 4rem);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .sources li {
+    border-top: 1px solid var(--line);
+    padding-block: 1rem;
+  }
+  .sources p {
+    max-width: 55ch;
+    margin: 0.35rem 0 0;
+  }
+  .terms {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .reviewed {
+    margin: 1.25rem 0 0;
+  }
+  @media (max-width: 650px) {
+    .plates,
+    .sources {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .plates figure:last-child {
+      max-width: 24rem;
+    }
+  }
+</style>

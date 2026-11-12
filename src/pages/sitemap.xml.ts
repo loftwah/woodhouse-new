@@ -1,3 +1,4 @@
+import { creativePlates, resourceReviewDate } from "../data/creative-resources";
 import { dispatchPath } from "../data/what-we-built";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { portfolioEdition } from "../data/portfolio-edition";
@@ -98,6 +99,11 @@ export const GET: APIRoute = async ({ cache }) => {
       "/contact/"
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
+    {
+      path: "/share/resources/",
+      lastmod: resourceReviewDate,
+      images: creativePlates.map(({ image }) => image)
+    },
     ...campaign,
     ...projectSlugs
       .map(campaignCollectionPath)

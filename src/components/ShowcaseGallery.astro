@@ -73,20 +73,18 @@ const productName = (slug: string) =>
             {item.action} <span class="action-name">{productName(item.project)}</span>
           </a>
         </div>
-        <details class="work-sharing">
-          <summary>Share & download</summary>
-          <p class="work-caption">{item.caption}</p>
+        <ShareActions
+          caption={item.caption}
+          image={item.original}
+          shareSource={item.image}
+          fallbackImage={item.image}
+          filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
+          link={item.href}
+          presentation="gallery"
+        >
           <p class="work-credit">
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
-          <ShareActions
-            caption={item.caption}
-            image={item.original}
-            shareSource={item.image}
-            fallbackImage={item.image}
-            filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
-            link={item.href}
-          />
           {item.landscapeImage && (
             <a class="collection-link" href={item.landscapeImage} download>
               Download landscape poster
@@ -98,7 +96,7 @@ const productName = (slug: string) =>
           >
             More {productName(item.project)}
           </a>
-        </details>
+        </ShareActions>
       </figcaption>
       <dialog
         id={`viewer-${item.id}`}
@@ -133,6 +131,15 @@ const productName = (slug: string) =>
             <a href={item.original} data-viewer-download download>
               Download original
             </a>
+            <ShareActions
+              caption={item.caption}
+              image={item.original}
+              shareSource={item.image}
+              fallbackImage={item.image}
+              filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
+              link={item.href}
+              presentation="copy"
+            />
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
               Project gallery
             </a>
@@ -165,7 +172,6 @@ const productName = (slug: string) =>
           image.onload = null;
           image.onerror = null;
           if (image.dataset.viewerPreview) image.src = image.dataset.viewerPreview;
-          // The download must follow the asset the viewer can actually show.
           const download = dialog.querySelector<HTMLAnchorElement>("[data-viewer-download]");
           if (download && image.dataset.viewerPreview) {
             download.href = image.dataset.viewerPreview;
@@ -259,21 +265,6 @@ const productName = (slug: string) =>
     font-size: 0.875rem;
     font-weight: 650;
   }
-  .work-sharing summary {
-    display: list-item;
-    min-height: 44px;
-    padding-block: 0.6rem;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-decoration: underline;
-    text-underline-offset: 0.25em;
-  }
-  .work-caption {
-    max-width: 60ch;
-    margin: 0.2rem 0 0.7rem;
-    font-size: 0.9rem;
-  }
   .work-credit {
     color: var(--muted);
     font-size: 0.75rem;
@@ -365,9 +356,6 @@ const productName = (slug: string) =>
     }
     .action-name {
       display: none;
-    }
-    .work-sharing summary {
-      font-size: 0.75rem;
     }
     .view-affordance {
       right: 0.35rem;

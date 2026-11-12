@@ -14,6 +14,7 @@ type Props = {
   filename?: string;
   link: string;
   label?: string;
+  presentation?: "full" | "gallery" | "image" | "copy";
   mediaType?: "image" | "video";
 };
 const {
@@ -24,8 +25,12 @@ const {
   filename = "loftwah-social.jpg",
   link,
   label = "Copy post",
+  presentation = "full",
   mediaType = "image"
 } = Astro.props;
+const gallery = presentation === "gallery";
+const hasCaption = presentation === "full" || gallery;
+const AdditionalActions = gallery ? "details" : "div";
 ---
 
 <div
@@ -38,33 +43,51 @@ const {
   data-link={link}
 >
   <div class="actions">
-    <a class="download" href={image} download={filename}>
-      Download
-    </a>
+    {presentation !== "copy" && (
+      <a class="download" href={image} download={filename}>
+        Download
+      </a>
+    )}
     <button type="button" data-copy-image hidden>
       Copy image
     </button>
-    <button type="button" data-copy hidden>
-      {label}
-    </button>
-    <button type="button" data-copy-link hidden>
-      Copy link
-    </button>
-    <button type="button" data-device-share hidden>
-      Share
-    </button>
-    <button type="button" data-retry-download hidden>
-      Try the download again
-    </button>
+    {presentation !== "copy" && (
+      <button type="button" data-retry-download hidden>
+        Try the download again
+      </button>
+    )}
+    {hasCaption && (
+      <AdditionalActions class:list={["additional", { "gallery-details": gallery }]}>
+        {gallery && <summary>Caption & more ways to share</summary>}
+        <div class="actions">
+          <button type="button" data-copy hidden>
+            {label}
+          </button>
+          <button type="button" data-copy-link hidden>
+            Copy link
+          </button>
+          <button type="button" data-device-share hidden>
+            Share
+          </button>
+        </div>
+        <a href={link} data-link-recovery hidden>
+          Open the destination link or copy its address
+        </a>
+        {gallery ? (
+          <>
+            <textarea aria-label="Ready-to-share post" rows="4">{caption}</textarea>
+            <slot />
+          </>
+        ) : (
+          <details class="full-caption">
+            <summary>Caption</summary>
+            <textarea aria-label="Ready-to-share post" rows="4">{caption}</textarea>
+          </details>
+        )}
+      </AdditionalActions>
+    )}
+    <p role="status" data-status></p>
   </div>
-  <p role="status" data-status></p>
-  <a href={link} data-link-recovery hidden>
-    Open the destination link or copy its address
-  </a>
-  <details>
-    <summary>Caption</summary>
-    <textarea aria-label="Ready-to-share post" rows="4">{caption}</textarea>
-  </details>
 </div>
 <script>
   import { createOperationIntent } from "../data/operation-intent";
@@ -372,9 +395,8 @@ const {
     // A person sharing a page often wants the address on its own: the post is for
     // the image, and the link is for a message, a bio or a reply. It gets its own
     // confirmation because "copied" has to mean the thing that was pressed.
-    if (copyLink && navigator.clipboard?.writeText) {
-      const linkRecovery = document.createElement("a");
-      linkRecovery.textContent = "Open the destination link or copy its address";
+    const linkRecovery = root.querySelector<HTMLAnchorElement>("[data-link-recovery]");
+    if (copyLink && linkRecovery && navigator.clipboard?.writeText) {
       copyLink.hidden = false;
       const idleLabel = copyLink.textContent?.trim() || "Copy link";
       const labelIntent = createOperationIntent();
@@ -405,7 +427,7 @@ const {
               delete copyLink.dataset.state;
             }, resetDelay);
           }
-          if (statusIntent.isCurrent(token)) linkRecovery.remove();
+          if (statusIntent.isCurrent(token)) linkRecovery.hidden = true;
           say(`Link copied. ${link}`, token);
         } catch (error) {
           if (labelIntent.isCurrent(labelToken)) {
@@ -414,7 +436,7 @@ const {
           }
           if (statusIntent.isCurrent(token)) {
             linkRecovery.href = link;
-            root.insertBefore(linkRecovery, status?.nextSibling ?? null);
+            linkRecovery.hidden = false;
           }
           say(clipboardFailureMessage(clipboardProblem(error), "link"), token);
         } finally {
@@ -591,7 +613,9 @@ const {
           })
           .catch(() => {});
       });
-      observer.observe(root);
+      // A gallery's sharing controls are inside a closed disclosure. Do not
+      // fetch its source until the open disclosure enters the viewport.
+      observer.observe(root.querySelector(".gallery-details > .actions") ?? root);
       share.addEventListener("click", async () => {
         if (sharing) {
           say("The share sheet is already open.");
@@ -660,10 +684,34 @@ const {
     border-color: var(--acid);
     font-weight: 650;
   }
+  .additional:not(.gallery-details),
+  .additional:not(.gallery-details) > .actions {
+    display: contents;
+  }
+  .gallery-details,
+  .full-caption,
+  [data-link-recovery],
   [role="status"] {
+    flex-basis: 100%;
+  }
+  [data-link-recovery]:not([hidden]),
+  .full-caption {
+    order: 2;
+  }
+  .gallery-details textarea {
+    margin-top: 0.6rem;
+  }
+  [role="status"] {
+    order: 1;
     margin: 0.4rem 0;
     min-height: 1.3em;
     font-size: 0.85rem;
+  }
+  [data-status]:empty {
+    margin: 0;
+    min-height: 0;
+    height: 0;
+    flex-basis: 0;
   }
   summary {
     min-height: 44px;
