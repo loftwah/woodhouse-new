@@ -7,6 +7,8 @@ import type { CapabilityReview } from "../data/capabilities";
 import { projectCapabilities } from "../data/capabilities";
 import { searchTextFromBlocks } from "../data/search-text";
 import { aliasesFor } from "../data/search-intent";
+import { creativePlates, resourceSources } from "../data/creative-resources";
+import { campaignSearchItems } from "../data/showcase-public";
 import { projectLifecycle } from "../data/project-lifecycle";
 import type { ProjectLifecycle } from "../data/project-lifecycle";
 import type {
@@ -706,6 +708,23 @@ export async function listPublicSearchItems() {
       section: "Projects",
       keywords: aliasesFor(project.slug),
       searchText: `${project.title} ${project.summary} ${project.why} ${project.teaches} ${project.current} ${project.remaining} ${project.proofBoundary}`
+    })),
+    ...campaignSearchItems(projectResult.projects),
+    {
+      title: "Creative resources",
+      description: "Game assets, interface assets, artwork and test datasets.",
+      href: "/share/resources/",
+      section: "Resources",
+      keywords: resourceSources
+        .flatMap(({ resources }) => resources.map(({ name }) => name))
+        .join(" ")
+    },
+    ...creativePlates.map(({ id, title, use, width, height }) => ({
+      title,
+      description: use,
+      href: `/share/resources/#${id}`,
+      section: "Resources",
+      keywords: `ImageGen background PNG ${width}x${height}`
     })),
     ...dispatchResult.dispatches.map((dispatch) => ({
       title: dispatch.title,

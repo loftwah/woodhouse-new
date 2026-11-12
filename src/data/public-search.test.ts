@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { campaignSearchItems } from "./showcase-public.ts";
+
 import {
   publicSearchPages,
   publicSearchTokens,
@@ -53,4 +55,21 @@ test("public search ranks intent before body, keeps tied order, and retains body
     ["body"]
   );
   assert.equal(rankPublicSearch(entries, publicSearchTokens("find my")), entries);
+});
+
+test("campaign search finds published pieces by placement and exact dimensions", () => {
+  const entries = campaignSearchItems([
+    { slug: "bubbles", name: "Bubbles" },
+    { slug: "fighter", name: "Fighter" }
+  ]).map((page) => ({
+    href: page.href,
+    ...publicSearchWords(page.title, page.description, page.section, page.keywords, page.searchText)
+  }));
+  for (const [query, href] of [
+    ["Fighter X header", "/share/fighter/#november-fighter"],
+    ["Bubbles 1080x1920", "/share/bubbles/#november-bubbles"]
+  ]) {
+    assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
+  }
+  assert(!entries.some(({ href }) => href.startsWith("/share/foilbury/")));
 });

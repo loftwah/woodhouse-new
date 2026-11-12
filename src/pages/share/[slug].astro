@@ -166,7 +166,7 @@ const hostOf = (href: string) => {
     ) : items.length === 1 ? (
       // One reviewed work is a share card, not a gallery grid: the artwork, the
       // caption a person would actually post and the actions belong in one view.
-      <section class="work-card" aria-labelledby="work-card-title">
+      <section id={items[0]!.id} class="work-card" aria-labelledby="work-card-title">
         <figure class="work-card__art">
           <a
             href={items[0]!.original}
