@@ -443,11 +443,7 @@ const leadQualifier = !overview
     ? "All 7 days counted"
     : reportQualifier(leadMetric, metricRows[0]?.data ?? null, window)
   : "";
-const leadLabel = week
-  ? `${measure.label.toLowerCase()} in this finding`
-  : unit === "seconds"
-    ? "active play time"
-    : measure.label.toLowerCase();
+const leadLabel = `${measure.label.toLowerCase()}${week ? " in this finding" : ""}`;
 const leadWindow = week ?? window;
 // The local-versus-online split of the selected project's additive gameplay
 // counters. It comes from the payload, not from the project name: a source that
@@ -1052,9 +1048,7 @@ const dataPayload = {
                   <p class="chart-lead__coverage">
                     <span>{leadQualifier}</span>
                     <span>
-                      {unit === "seconds"
-                        ? "Recorded active time, not people."
-                        : "Recorded actions, not people."}
+                      {unit === "seconds" ? "Recorded time." : "Recorded actions, not people."}
                     </span>
                   </p>
                   <nav class="chart-lead__measures" aria-label="Quick measures">
@@ -1233,7 +1227,25 @@ const dataPayload = {
                     aria-describedby="chart-help"
                   >
                     {hasDaily && (
-                      <div class="plot-fallback" set:html={svgPlot(chartSeries, window)} />
+                      <div
+                        class="plot-fallback"
+                        set:html={
+                          focusRange
+                            ? svgPlot(
+                                chartSeries.map((series) => ({
+                                  ...series,
+                                  values: series.values.slice(focusRange.start, focusRange.end + 1)
+                                })),
+                                {
+                                  from: focusRange.from,
+                                  to: focusRange.to,
+                                  days: focusRange.end - focusRange.start + 1,
+                                  complete: true
+                                }
+                              )
+                            : svgPlot(chartSeries, window)
+                        }
+                      />
                     )}
                   </div>
                   {hasDaily && (
