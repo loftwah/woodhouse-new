@@ -31,7 +31,6 @@ import {
   dailyStatus,
   dailyCoverageLabel,
   qualityText,
-  reportCount,
   periodState,
   reportQualifier,
   svgPlot,
@@ -466,7 +465,6 @@ function pageLink(
     project?: AnalyticsProject | null;
     measure?: string;
     days?: number;
-    latest?: boolean;
     from?: string;
     to?: string;
     week?: string | null;
@@ -483,9 +481,8 @@ function pageLink(
     q.set("to", changes.to);
   } else if (
     snapshot &&
-    !changes.latest &&
     changes.days === undefined &&
-    (frozen || Boolean(changes.week) || changes.view !== undefined)
+    (frozen || Boolean(changes.week) || changes.view === "share")
   )
     // A highlighted week must carry the report it was read from, so reopening the
     // link later still shows the same week, the same previous period and the same
@@ -506,7 +503,8 @@ function pageLink(
   if (changes.week !== undefined) {
     if (changes.week && !selectedDestinationSlug && !changes.destination)
       q.set("week", changes.week);
-  } else if (week && !selectedDestinationSlug && !changes.destination) q.set("week", week.from);
+  } else if (week && changes.days === undefined && !selectedDestinationSlug && !changes.destination)
+    q.set("week", week.from);
   // A destination only describes the discovery view. Carrying it onto a project
   // or measure that does not render that view would make the URL claim a scope
   // the page does not show, so it is dropped at this one boundary.
@@ -589,6 +587,17 @@ const dateLabel = (date: string) =>
  * names its own limits, so a finding cannot appear here that the rest of the
  * page contradicts.
  */
+const captureLabel = report
+  ? new Intl.DateTimeFormat("en-AU", {
+      timeZone: "UTC",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).format(new Date(report.createdAt))
+  : null;
+const latestDays = [7, 30, 90].includes(window.days) ? window.days : 30;
 const opening = analyticsObservations({
   window,
   colours: projectColours,
@@ -636,9 +645,6 @@ const changeFindings = overview
       .filter((observation) => observation.kind === "week" || observation.kind === "discovery")
       .slice(0, 2)
   : [];
-const changeNotes = opening.notes.filter(
-  (note) => note.kind === "week" || note.kind === "discovery"
-);
 const captionFinding =
   overview && !storyShare
     ? (() => {
@@ -781,17 +787,7 @@ const dataPayload = {
       <header class="workbench-heading">
         <div>
           <h1>{selected ? names.get(selected) : "Analytics"}</h1>
-          <p class="product-view-label">
-            {view ? view.label : "What people play, hear and use"}
-            {" · "}
-            <a
-              class="leaderboards-link"
-              href="/activity/leaderboards/"
-              aria-label="Engineering activity leaderboards, separate from product analytics"
-            >
-              Engineering leaderboards ↗
-            </a>
-          </p>
+          <p class="product-view-label">{view ? view.label : "What people play, hear and use"}</p>
         </div>
         <div class="date-toolbar">
           <nav aria-label="Reporting period">
@@ -876,15 +872,19 @@ const dataPayload = {
       <div class="snapshot-line">
         <span>
           {dateLabel(window.from)} – {dateLabel(window.to)} · UTC
+          {!window.complete && ` · ${periodState(false)}`}
         </span>
-        <span>
-          {reportCount(available, applicable.length, overview)} · {periodState(window.complete)}
-          {frozen && (
+        <span class="snapshot-capture">
+          {report && (
             <>
-              {" "}
-              · Saved · <a href={pageLink({ latest: true })}>Refresh</a>
+              {frozen ? "Saved" : "Captured"}{" "}
+              <time datetime={report.createdAt}>{captureLabel} UTC</time>
+              {frozen && (
+                <a href={pageLink({ days: latestDays, view: "chart" })}>Latest {latestDays} days</a>
+              )}
             </>
           )}
+          {!report && !invalidWindow && "Report unavailable"}
         </span>
       </div>
       {invalidWindow && (
@@ -960,71 +960,36 @@ const dataPayload = {
                 <a href={pageLink({ destination: null })}>All destinations</a>
               </p>
             )}
-            {overview && (
+            {overview && changeFindings.length > 0 && (
               <section class="change-notes" aria-labelledby="change-notes-heading">
                 <div class="change-notes__head">
                   <h2 id="change-notes-heading">What changed</h2>
-                  <a href={pageLink({ view: "stories" })}>Open Stories</a>
+                  <a href={pageLink({ view: "stories" })}>All stories</a>
                 </div>
-                {changeFindings.length ? (
-                  <ol class="change-notes__list">
-                    {changeFindings.map((finding) => {
-                      const change = finding.change;
-                      // One shared scale for both bars, so the pair reads as a
-                      // comparison rather than as two unrelated lengths.
-                      const scale = change ? Math.max(1, change.previous, change.current) : 1;
-                      return (
-                        <li style={`--source:${finding.colour}`}>
-                          <p class="change-notes__kicker">
-                            <span class="source-dot" aria-hidden="true" />
-                            {finding.kicker}
-                          </p>
-                          <p class="change-notes__headline">{finding.headline}</p>
-                          {change && (
-                            <figure class="change-notes__compare">
-                              {[
-                                { label: change.previousLabel, value: change.previous },
-                                { label: change.currentLabel, value: change.current }
-                              ].map((row) => (
-                                <div class="change-notes__compare-row">
-                                  <span class="change-notes__compare-label">{row.label}</span>
-                                  <span class="change-notes__compare-track" aria-hidden="true">
-                                    <span
-                                      class="change-notes__compare-fill"
-                                      style={`--share:${(Math.abs(row.value) / scale) * 100}%`}
-                                    />
-                                  </span>
-                                  <span class="change-notes__compare-value">
-                                    {formatMetric({ value: row.value, unit: change.unit })}
-                                  </span>
-                                </div>
-                              ))}
-                              <figcaption>Both periods on one scale</figcaption>
-                            </figure>
-                          )}
-                          <p class="change-notes__comparison">{finding.comparison}</p>
-                          <p class="change-notes__limit">
-                            <span>What this doesn’t show: </span>
-                            {finding.doesNotEstablish}
-                          </p>
-                          <p class="change-notes__period">
-                            {finding.period}
-                            {" · "}
-                            <a href={finding.href}>{finding.linkLabel} ↗</a>
-                          </p>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                ) : (
-                  <p class="change-notes__quiet">
-                    <strong>A quiet period for comparisons.</strong>{" "}
-                    {changeNotes.length
-                      ? changeNotes.map((note) => note.reason).join(" ")
-                      : "No comparison is available for these dates."}{" "}
-                    The table below shows exactly what was recorded.
-                  </p>
-                )}
+                <ul class="change-notes__list">
+                  {changeFindings.map((finding) => (
+                    <li style={`--source:${finding.colour}`}>
+                      <p class="change-notes__headline">
+                        <span class="source-dot" aria-hidden="true" />
+                        {finding.headline}
+                      </p>
+                      <p class="change-notes__period">
+                        {finding.kind === "week" ? finding.period : "Recorded outbound clicks"}
+                      </p>
+                      <div class="change-notes__actions">
+                        <a href={finding.href}>{finding.linkLabel}</a>
+                        {finding.shareHref && (
+                          <a
+                            href={finding.shareHref}
+                            aria-label={`Share this finding: ${finding.headline}`}
+                          >
+                            Share
+                          </a>
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </section>
             )}
             <section class="main-chart" aria-labelledby="trend-heading">
@@ -1444,10 +1409,7 @@ const dataPayload = {
         {activeView === "stories" && (
           <div class="report-stories">
             <h2>Portfolio stories</h2>
-            <p>
-              Findings across the portfolio for these saved dates. Your selected chart and measure
-              are kept in the other views.
-            </p>
+            <p>Findings across the portfolio for the selected dates.</p>
             {
               <OutcomeFindings
                 report={snapshot ? projectReport(snapshot, null, publicIds) : null}
@@ -2117,6 +2079,7 @@ const dataPayload = {
       <footer class="workbench-close">
         <a href="/activity/measurement/">How measurement works</a>
         <a href="/connections/">Explore product stories</a>
+        <a href="/activity/leaderboards/">Engineering leaderboards</a>
         <a href="/activity/listening/">Games × Radio</a>
       </footer>
     </div>
@@ -2135,60 +2098,3 @@ const dataPayload = {
 <script>
   import "../scripts/analytics-workbench";
 </script>
-<style>
-  /* "What changed" carries the pair of figures its sentence compares, so a
-     reader can see the change instead of decoding a percentage. Same scale on
-     both rows; a measured zero draws no bar and keeps its number. */
-  .change-notes__compare {
-    display: grid;
-    gap: 0.22rem;
-    max-width: 30rem;
-    margin: 0.5rem 0 0.55rem;
-  }
-  .change-notes__compare-row {
-    display: grid;
-    grid-template-columns: 7.6rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.55rem;
-    min-width: 0;
-  }
-  .change-notes__compare-label {
-    color: var(--muted);
-    font: 400 0.64rem/1.35 var(--mono);
-    white-space: nowrap;
-    overflow-wrap: anywhere;
-  }
-  .change-notes__compare-track {
-    display: block;
-    height: 0.5rem;
-    border-bottom: 1px solid var(--line);
-  }
-  .change-notes__compare-fill {
-    display: block;
-    width: var(--share, 0%);
-    height: 100%;
-    max-width: 100%;
-    background: var(--source);
-  }
-  .change-notes__compare-value {
-    color: var(--paper);
-    font: 650 0.8rem/1.2 var(--display);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-  .change-notes__compare figcaption {
-    margin-top: 0.1rem;
-    color: var(--muted);
-    font-size: 0.66rem;
-  }
-  .change-notes__limit {
-    margin: 0.35rem 0 0.2rem;
-    color: var(--copy-soft);
-    font-size: 0.74rem;
-    line-height: 1.5;
-  }
-  .change-notes__limit span {
-    color: var(--paper);
-    font-weight: 650;
-  }
-</style>
