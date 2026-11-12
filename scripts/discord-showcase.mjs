@@ -1,12 +1,10 @@
-#!/usr/bin/env node
 // One integration owner and one durable private state directory. This is local
 // deduplication, NOT exactly-once delivery across independent hosts. Never erase
 // uncertain records/abandoned locks to retry without first reconciling Discord.
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, open, readFile, rename, rm } from "node:fs/promises";
 import { homedir } from "node:os";
-import { dirname, join, resolve } from "node:path";
-import { pathToFileURL } from "node:url";
+import { dirname, join } from "node:path";
 
 export const STAGES = [
   "MERGED_TO_MAIN",
@@ -343,25 +341,3 @@ export async function notifyShowcase(
     }
   }
 }
-
-async function main() {
-  const args = process.argv.slice(2);
-  const send = args.includes("--send");
-  const files = args.filter((arg) => !["--send", "--dry-run"].includes(arg));
-  if (files.length !== 1 || files[0].startsWith("-") || (send && args.includes("--dry-run"))) {
-    console.error(
-      "Usage: node scripts/discord-showcase.mjs <public-safe-event.json> [--dry-run | --send]"
-    );
-    process.exitCode = 1;
-    return;
-  }
-  try {
-    const event = JSON.parse(await readFile(resolve(files[0]), "utf8"));
-    console.log(JSON.stringify(await notifyShowcase(event, { send }), null, 2));
-  } catch {
-    console.error("Showcase input could not be read. No delivery confirmed.");
-    process.exitCode = 1;
-  }
-}
-if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href)
-  await main();

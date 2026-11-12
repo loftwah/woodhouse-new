@@ -541,7 +541,7 @@ export async function listPublicContentGeneration() {
     for (const record of [...records].sort((left, right) =>
       String(left.id).localeCompare(String(right.id))
     ))
-      lines.push(`${collection} ${record.id} ${JSON.stringify(record.data ?? null)}`);
+      lines.push(`${collection}\0${record.id}\0${JSON.stringify(record.data ?? null)}`);
   }
 
   return {

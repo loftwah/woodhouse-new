@@ -1,7 +1,7 @@
 import { dispatchPath } from "../data/what-we-built";
 import { SITE_ORIGIN } from "../data/site-origin.ts";
 import { portfolioEdition } from "../data/portfolio-edition";
-import { campaignSitemapEntries } from "../data/showcase-public";
+import { campaignCollectionPath, campaignSitemapEntries } from "../data/showcase-public";
 import type { APIRoute } from "astro";
 import {
   asText,
@@ -68,11 +68,14 @@ export const GET: APIRoute = async ({ cache }) => {
   ])
     if (hint) cache.set(hint);
   const edition = portfolioEdition(dispatchResult.dispatches);
-  const campaign = campaignSitemapEntries(projectResult.projects.map((project) => project.slug));
+  const projectSlugs = projectResult.projects.map((project) => project.slug);
+  const campaign = campaignSitemapEntries(projectSlugs);
+  const campaignPaths = new Set(campaign.map(({ path }) => path));
   const urls: Array<{ path: string; lastmod?: string | undefined; images?: string[] }> = [
     ...[
       "/",
       "/factory/",
+      "/brand/",
       "/connections/",
       "/activity/",
       "/activity/leaderboards/",
@@ -85,6 +88,10 @@ export const GET: APIRoute = async ({ cache }) => {
       "/evidence/",
       "/conversations/",
       "/architecture/",
+      "/architecture/woodhouse/",
+      "/exhibits/",
+      "/exhibits/patch-bench/",
+      "/exhibits/source-plate/",
       "/doctrine/",
       "/dean/",
       "/agents/",
@@ -92,6 +99,10 @@ export const GET: APIRoute = async ({ cache }) => {
     ].map((path) => ({ path })),
     ...(edition ? [{ path: edition.href, lastmod: edition.reviewDate }] : []),
     ...campaign,
+    ...projectSlugs
+      .map(campaignCollectionPath)
+      .filter((path) => !campaignPaths.has(path))
+      .map((path) => ({ path })),
     ...projectResult.projects.map((project) => ({
       path: `/projects/${project.slug}/`,
       lastmod: project.reviewDate
@@ -130,7 +141,9 @@ export const GET: APIRoute = async ({ cache }) => {
   // query-string URL whose own canonical is the clean path. Collapse the query
   // before de-duplicating so a parameterised entry cannot reappear.
   const documentPath = (path: string) => new URL(path, siteOrigin).pathname;
-  const unique = new Map(urls.map((entry) => [documentPath(entry.path), { ...entry, path: documentPath(entry.path) }]));
+  const unique = new Map(
+    urls.map((entry) => [documentPath(entry.path), { ...entry, path: documentPath(entry.path) }])
+  );
   const xml = [...unique.values()]
     .map(
       ({ path, lastmod, images }) =>

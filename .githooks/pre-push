@@ -21,6 +21,10 @@ root=$(git rev-parse --show-toplevel 2>/dev/null || true)
 [ -n "$root" ] || exit 0
 cd "$root"
 
+# The hook exports the checkout's Git context. Tests that initialise another
+# repository must discover it from their own cwd.
+unset $(git rev-parse --local-env-vars)
+
 if ! command -v pnpm >/dev/null 2>&1; then
   echo "local-ci: pnpm not found, so the quick lane could not run. Push allowed." >&2
   echo "local-ci: install pnpm and run 'pnpm run verify -- --quick' before relying on this push." >&2

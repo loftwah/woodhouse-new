@@ -14,6 +14,8 @@ test("ordinary engineering states and unknown input stay active or unknown", () 
   assert.equal(projectLifecycle("A+ convergence"), "active");
   assert.equal(projectLifecycle("Hospitality prototype · delivery paused"), "active");
   assert.equal(projectLifecycle("RETIRED"), "active");
+  for (const label of ["constructor", "toString", "__proto__"])
+    assert.equal(projectLifecycle(label), "active");
   assert.equal(projectLifecycle(undefined), "unknown");
   assert.equal(projectLifecycle(null), "unknown");
 });

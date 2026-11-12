@@ -45,10 +45,12 @@ import {
   type ProjectGalleryType
 } from "../data/share-browser";
 export const prerender = false;
+const requested = Astro.url.searchParams.get("project");
+const requestedType = Astro.url.searchParams.get("type") ?? "images";
 const [result, footer, listening, dispatches, evidence] = await Promise.all([
   listProjectRecords(),
   getPublicMenu("footer"),
-  loadListeningReport(),
+  !requested && requestedType === "radio" ? loadListeningReport() : null,
   listPublishedDispatches(),
   listPublicEvidence()
 ]);
@@ -57,7 +59,7 @@ if (result.error)
     status: 503,
     headers: { "cache-control": "no-store" }
   });
-const projects = orderShareProjects(await Promise.all(result.projects.map(liveProjectArtwork)));
+const projects = orderShareProjects(result.projects);
 const galleryURL = (...args: Parameters<typeof canonicalGalleryURL>) => {
   const url = new URL(canonicalGalleryURL(...args), Astro.url.origin);
   // The new editorial wall owns the bare route; archive image links explicitly
@@ -65,9 +67,7 @@ const galleryURL = (...args: Parameters<typeof canonicalGalleryURL>) => {
   if (!url.searchParams.has("type")) url.searchParams.set("type", "images");
   return shareNavigation(url.pathname + url.search, Astro.url.searchParams);
 };
-const requested = Astro.url.searchParams.get("project");
 const explicitType = Astro.url.searchParams.has("type");
-const requestedType = Astro.url.searchParams.get("type") ?? "images";
 if (!galleryTypes.some(([key]) => key === requestedType))
   return new Response("Gallery view not found.", {
     status: 404,
@@ -80,7 +80,7 @@ const view = (
 const requestedPage = Number(Astro.url.searchParams.get("page") ?? 1);
 Astro.response.headers.set("cache-control", "private, no-store");
 const requestedProject = projects.find((project) => project.slug === requested);
-const selected = requestedProject;
+const selected = requestedProject ? await liveProjectArtwork(requestedProject) : undefined;
 const admittedCampaign = publicCampaignItems(projects.map((project) => project.slug));
 const campaignProjects = new Set(admittedCampaign.map((item) => item.project));
 const showcase =
@@ -98,8 +98,6 @@ if (requested && !requestedProject)
 const projectRedirect = selected ? projectViewRedirect(selected.slug, view, explicitType) : null;
 if (!showcase && selected && projectRedirect)
   return Astro.redirect(galleryURL(selected.slug, projectRedirect), 302);
-if (!listening || dispatches.error || evidence.error)
-  Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
   for (const hint of result.cacheHints) Astro.cache.set(hint);
   Astro.cache.set(footer.cacheHint);
@@ -228,7 +226,26 @@ const collection =
           ? galleryPage(smallAssets, requestedPage)
           : galleryPage(media, requestedPage);
 const visibleMedia = galleryPage(media, requestedPage).items;
-const visibleProjects = galleryPage(cardProjects, requestedPage).items;
+const visibleProjects =
+  view === "cards"
+    ? selected
+      ? galleryPage([selected], requestedPage).items
+      : await Promise.all(galleryPage(cardProjects, requestedPage).items.map(liveProjectArtwork))
+    : [];
+const imagePacks = new Set([
+  "/share/bubbles/gameplay-images.zip",
+  "/share/fighter/gameplay-images.zip",
+  "/share/loftwahfm/art-images.zip",
+  "/share/loftwahfm/gameplay-images.zip",
+  "/share/protocol-11/art-images.zip",
+  "/share/protocol-11/gameplay-images.zip",
+  "/share/shoalshot/art-images.zip",
+  "/share/shoalshot/gameplay-images.zip"
+]);
+const imagePack =
+  selected && (view === "images" || view === "artwork")
+    ? `/share/${selected.slug}/${view === "artwork" ? "art" : "gameplay"}-images.zip`
+    : null;
 const visibleFactoryIds = new Set(
   galleryPage(factoryItems, requestedPage).items.map((item) => item.id)
 );
@@ -293,16 +310,14 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
           >
             All work
           </a>
-          {projects
-            .filter((project) => campaignProjects.has(project.slug))
-            .map((project) => (
-              <a
-                href={shareNavigation(`/share/${project.slug}/`, Astro.url.searchParams)}
-                aria-current={selected?.slug === project.slug ? "page" : undefined}
-              >
-                {project.name}
-              </a>
-            ))}
+          {projects.map((project) => (
+            <a
+              href={shareNavigation(`/share/${project.slug}/`, Astro.url.searchParams)}
+              aria-current={selected?.slug === project.slug ? "page" : undefined}
+            >
+              {project.name}
+            </a>
+          ))}
         </nav>
         <ShowcaseGallery items={featuredCampaign} />
         {showcaseClips.length > 0 && (
@@ -445,11 +460,8 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
         <section aria-label={`${selected?.name ?? "All projects"} ${viewLabel}`}>
           {selected && (
             <div class="section-heading">
-              {selected && view !== "clips" && collection.total > 0 && (
-                <a
-                  href={`/share/${selected.slug}/${view === "artwork" ? "art" : "gameplay"}-images.zip`}
-                  download={`${selected.slug}-${view}.zip`}
-                >
+              {imagePack && collection.total > 0 && imagePacks.has(imagePack) && (
+                <a href={imagePack} download={`${selected.slug}-${view}.zip`}>
                   Download image pack
                 </a>
               )}

@@ -76,14 +76,25 @@ const audit = spawnSync("pnpm", ["audit", "--json"], {
 });
 let parsed;
 try {
-  const offset = audit.stdout.search(/\{/);
-  parsed = JSON.parse(offset >= 0 ? audit.stdout.slice(offset) : "{}");
+  if (audit.error || ![0, 1].includes(audit.status)) throw new Error("Audit process failed.");
+  const offset = audit.stdout.indexOf("{");
+  if (offset < 0) throw new Error("Audit report missing.");
+  parsed = JSON.parse(audit.stdout.slice(offset));
 } catch {
   console.error("Dependency audit returned unreadable JSON.");
   process.exit(1);
 }
 
-const advisories = Object.values(parsed.advisories ?? {});
+const isRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+if (
+  !isRecord(parsed?.advisories) ||
+  !isRecord(parsed.metadata?.vulnerabilities) ||
+  (audit.status === 1 && Object.keys(parsed.advisories).length === 0)
+) {
+  console.error("Dependency audit did not return an advisory report.");
+  process.exit(1);
+}
+const advisories = Object.values(parsed.advisories);
 const accepted = [];
 const rejected = [];
 for (const advisory of advisories) {
