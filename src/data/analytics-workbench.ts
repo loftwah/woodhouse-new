@@ -229,11 +229,11 @@ const productViews: Record<AnalyticsProject, ProductView> = {
   woodhouse: {
     family: "audience",
     label: "Audience & project discovery",
-    defaultMeasure: "visits",
-    keys: ["visits", "engaged_sessions", "project_opens", "browsers", "returning_browsers"],
-    headlines: ["visits", "engaged_sessions", "project_opens"],
+    defaultMeasure: "engaged_sessions",
+    keys: ["engaged_sessions", "visits", "project_opens", "browsers", "returning_browsers"],
+    headlines: ["engaged_sessions", "project_opens"],
     description:
-      "See visits, visits with at least 10 seconds of activity and the projects readers chose to open."
+      "See sessions with at least 10 seconds of activity and the projects readers chose to open. Raw visits include unattended loads."
   },
   loftwahfm: {
     family: "listening",

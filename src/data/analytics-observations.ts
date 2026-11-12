@@ -349,30 +349,24 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
   }
 
   const woodhouse = input.rows.find((row) => row.project === "woodhouse");
-  const visits = woodhouse?.data?.metrics.find((metric) => metric.key === "visits");
   const engaged = woodhouse?.data?.metrics.find((metric) => metric.key === "engaged_sessions");
-  if (visits && visits.value !== null) {
-    // The opening statement for Woodhouse's own site is an aggregate. Give it the
-    // same before-and-after a reader expects elsewhere: the last seven counted
-    // days against the seven before, both required to be whole.
-    const pair = recentWeekPair(visits, window);
+  if (engaged && engaged.value !== null) {
+    const pair = engaged.quality === "exact" ? recentWeekPair(engaged, window) : null;
     const comparison = pair
-      ? `${pair.current.toLocaleString("en-AU")} visits in the last seven counted days (${dateLabel(pair.from)}–${dateLabel(pair.to)}), against ${pair.previous.toLocaleString("en-AU")} in the seven days before.`
+      ? `${pair.current.toLocaleString("en-AU")} engaged sessions in the last seven counted days (${dateLabel(pair.from)}–${dateLabel(pair.to)}), against ${pair.previous.toLocaleString("en-AU")} in the seven days before.`
       : window.days < 14
         ? "These dates are shorter than the two weeks needed to compare."
         : "No two complete seven-day windows are available inside these dates, so no comparison is claimed.";
+    const figure = formatMetric({ value: engaged.value, unit: engaged.unit });
     observations.push({
       kind: "audience",
       project: "woodhouse",
       name: "Woodhouse",
       colour: colours.woodhouse ?? "#b4c0d2",
-      kicker: "Woodhouse · Visits",
-      headline:
-        engaged && engaged.value !== null
-          ? `${formatMetric({ value: visits.value, unit: visits.unit })} visits, including ${formatMetric({ value: engaged.value, unit: engaged.unit })} that lasted 10 seconds or more.`
-          : `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded for Woodhouse.`,
-      figure: formatMetric({ value: visits.value, unit: visits.unit }),
-      unitLabel: "visits",
+      kicker: "Woodhouse · Engaged sessions",
+      headline: `${figure} engaged sessions recorded for Woodhouse.`,
+      figure,
+      unitLabel: "engaged sessions",
       period: periodLabel,
       comparison,
       ...(pair
@@ -382,23 +376,20 @@ export function analyticsObservations(input: ObservationInput): ObservationResul
               current: pair.current,
               previousLabel: "Previous 7 days",
               currentLabel: "Last 7 days",
-              unit: visits.unit
+              unit: engaged.unit
             }
           }
         : {}),
-      establishes:
-        engaged && engaged.value !== null
-          ? `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded; ${formatMetric({ value: engaged.value, unit: engaged.unit })} lasted 10 seconds or more.`
-          : `${formatMetric({ value: visits.value, unit: visits.unit })} visits recorded by Woodhouse.`,
+      establishes: "Each counted tab session reached 10 seconds of active use with recent input.",
       doesNotEstablish:
-        "How many people read anything, or whether they came back. This counts visits, not people.",
-      href: input.links.project("woodhouse", "visits"),
+        "How many people visited or came back. Quick visits and visits without interaction are outside this measure.",
+      href: input.links.project("woodhouse", "engaged_sessions"),
       linkLabel: "Open Woodhouse analytics"
     });
   } else {
     notes.push({
       kind: "audience",
-      reason: "Woodhouse's visit count is unavailable for these dates."
+      reason: "Woodhouse's engaged session count is unavailable for these dates."
     });
   }
 

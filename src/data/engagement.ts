@@ -477,8 +477,18 @@ export async function localAnalytics(
         }
       return {
         ...d,
+        ...(project === "woodhouse" && kind === "visit"
+          ? {
+              definition:
+                "Raw page-load markers, deduplicated per tab session. Automated or unattended loads can inflate this count. Use Engaged sessions to compare activity with recent input."
+            }
+          : {}),
         value: daily.length ? daily.reduce((s, r) => s + r.value, 0) : null,
-        quality: daily.length ? "exact" : "unavailable",
+        quality: !daily.length
+          ? "unavailable"
+          : project === "woodhouse" && kind === "visit"
+            ? "partial"
+            : "exact",
         daily
       };
     });

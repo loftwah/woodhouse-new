@@ -11,9 +11,14 @@ export const analyticsProjects = [
   "bubbles"
 ] as const;
 export type AnalyticsProject = (typeof analyticsProjects)[number];
-// Outbound referrals measure the six product destinations in this programme.
-// Share this existing subset across browser, ingress and coverage copy.
-export const discoveryProjects = analyticsProjects.filter((project) => project !== "woodhouse");
+// Referral coverage does not imply a native usage feed. Share the allowlist
+// across the browser collector, ingress and reporting surfaces.
+export const discoveryProjects = [
+  ...analyticsProjects.filter((project) => project !== "woodhouse"),
+  "foilbury",
+  "liferaft",
+  "max"
+] as const;
 export type ReportRelease = {
   project: AnalyticsProject;
   evidenceId: string;
@@ -540,6 +545,8 @@ export function analysePortfolio(
     if (!report || !["exact", "partial"].includes(report.coverage.quality)) continue;
     const candidates: PortfolioAnalysis["findings"] = [];
     for (const metric of report.metrics) {
+      // Archived captures can predate the diagnostic quality label.
+      if (project === "woodhouse" && metric.key === "visits") continue;
       if (
         ![
           "game_starts",
@@ -550,6 +557,7 @@ export function analysePortfolio(
           "listening_seconds",
           "listening_starts",
           "visits",
+          "engaged_sessions",
           "project_opens"
         ].includes(metric.key)
       )
