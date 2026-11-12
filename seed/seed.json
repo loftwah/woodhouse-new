@@ -2172,7 +2172,7 @@
           "index": "10",
           "discipline": "Development tools · agent-operated setup",
           "title": "Make software. Keep it yours.",
-          "summary": "App Composer is a studio for building and maintaining web apps with a coding agent. Prepare the environment, shape the app and its editable content, then build a standalone application or reuse existing mini-apps. Loftwah’s Linkarooie creator page is a live example.",
+          "summary": "App Composer helps you build and maintain a web app with a coding agent. Prepare the environment with Get Ready, describe what you need in Init, then build a standalone app or connect existing ones. The live Creator Hub pairs a ceramics portfolio with a moderated guestbook.",
           "why": "You bring the idea and keep the source in your own project. Get Ready handles supported setup, Init makes the brief concrete, and an agent builds the app around the content and features you need. EmDash provides editing and administration; your selected cloud account runs the result.",
           "teaches": "A checklist is not readiness. An exact HTTPS deployment and a verified change show that the build path works; another person completing setup is the next stronger proof.",
           "site_url": "https://composer.loftwah.com/",
@@ -2513,6 +2513,19 @@
           "source_description": "Owner decision in #164 plus the published project records and current repository states, reviewed 7 November 2026.",
           "scope": "Active, paused and retired status for the current Loftwah portfolio.",
           "editorial_notes": "Retirement and pause are portfolio decisions. They preserve product history; they do not claim that a project never worked or that a paused project is cancelled.",
+          "public_safe": true
+        }
+      },
+      {
+        "id": "snapshot-2026-11-12-app-composer-creator-hub",
+        "slug": "2026-11-12-app-composer-creator-hub",
+        "status": "published",
+        "data": {
+          "title": "App Composer Creator Hub review",
+          "reviewed_at": "2026-11-12",
+          "source_description": "The published App Composer Creator Hub walkthrough and the two reference apps’ public pages and build records, checked 12 November 2026.",
+          "scope": "App Composer’s live reference build, its public build plan and the boundary of the onboarding evidence.",
+          "editorial_notes": "The two apps share a brief and retain independent source, data and release identities. The demonstration uses fictional content in the operator’s account.",
           "public_safe": true
         }
       }
@@ -3695,6 +3708,25 @@
         },
         "slug": "pirates-2026-11-07",
         "status": "published"
+      },
+      {
+        "id": "status-app-composer-2026-11-12-creator-hub",
+        "slug": "app-composer-2026-11-12-creator-hub",
+        "status": "published",
+        "data": {
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-11-12-app-composer-creator-hub",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-11-12-app-composer-creator-hub",
+          "state": "Creator Hub reference is live",
+          "state_tone": "active",
+          "current": "A ceramics portfolio and moderated guestbook run on separate public hostnames from one Composer brief. The walkthrough links both apps, their live revisions and the same starting point in Init.",
+          "next_proof": "Follow a consenting first-time creator through setup, publication and a later change in their own authorised account.",
+          "proof_boundary": "The apps use fictional content in the operator’s Cloudflare account. The public walkthrough records operator moderation; this review checked the public pages and live build identities.",
+          "reviewed_at": "2026-11-12",
+          "sort_order": 0,
+          "public_safe": true
+        }
       }
     ],
     "evidence_records": [
@@ -5919,6 +5951,29 @@
           "revision": "",
           "public_safe": true,
           "proof_boundary": "Public presentation only; no private collection, completed player action, Discord flow or adoption is asserted."
+        }
+      },
+      {
+        "id": "evidence-app-composer-creator-hub-2026-11-12",
+        "slug": "app-composer-creator-hub-2026-11-12",
+        "status": "published",
+        "data": {
+          "title": "Creator Hub · portfolio and guestbook",
+          "project": "$ref:project-app-composer",
+          "snapshot": "$ref:snapshot-2026-11-12-app-composer-creator-hub",
+          "project_key": "app-composer",
+          "snapshot_key": "2026-11-12-app-composer-creator-hub",
+          "claim": "Two independently deployed apps are open to visitors from the Creator Hub walkthrough.",
+          "evidence_kind": "observation",
+          "evidence_state": "reviewed",
+          "occurred_at": "2026-11-12",
+          "reviewed_at": "2026-11-12",
+          "summary": "The portfolio and guestbook served their public pages and matched the reviewed revisions b7cd3b3e8f19dbbb76d33fb4266053da928cf586 and 36797b8028682460c33fe092682bfbd63751ec1a. Composer links the working pair to an Init composition starting point.",
+          "source_label": "Creator Hub walkthrough and live release identities",
+          "source_url": "https://composer.loftwah.com/creator-hub",
+          "revision": "991e15c81456c4350dd82c5ba6a3f0bc1f8a427f",
+          "public_safe": true,
+          "proof_boundary": "Public reference observation with fictional data in the operator’s account. No customer deployment, new owner onboarding or fresh authenticated administration was exercised for this review."
         }
       }
     ],

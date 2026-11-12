@@ -1,6 +1,8 @@
 import type { WoodhouseProject } from "../content/repository";
 import type { ProjectLifecycle } from "./project-lifecycle";
 
+export const creatorHubCaseStudy = "https://composer.loftwah.com/creator-hub";
+
 /**
  * What a visitor can actually do with a project, decided once for every entry
  * point (homepage, project index, dossier, search results).
@@ -39,7 +41,7 @@ const reviewed: Record<string, ProjectAction> = {
   loftwahfm: { action: "Listen", availability: "Stations, shows and the player stream now." },
   "app-composer": {
     action: "Try",
-    availability: "The reference stack is live. First-time setup for a new person is not finished."
+    availability: "You can open the live reference apps without an account."
   },
   "asset-hunter": {
     action: "Try",
