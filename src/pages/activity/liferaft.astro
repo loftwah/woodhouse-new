@@ -1,9 +1,13 @@
 ---
+import { env } from "cloudflare:workers";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { loadLiferaftDownloads } from "../../data/liferaft-downloads";
+import { cachedLiferaftDownloads } from "../../data/liferaft-downloads";
 
 export const prerender = false;
-const releases = await loadLiferaftDownloads();
+const releases = await cachedLiferaftDownloads(
+  Astro.url.origin,
+  (env as { WOODHOUSE_GITHUB_TOKEN?: string }).WOODHOUSE_GITHUB_TOKEN
+);
 if (releases === null) {
   Astro.cache.set(false);
   Astro.response.headers.set("cache-control", "private, no-store");

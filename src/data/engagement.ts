@@ -112,10 +112,12 @@ function parseEngagement(raw: unknown): EngagementEvent | null {
         : raw.project === "woodhouse"
           ? "site"
           : "";
+  const allowedMode =
+    raw.project === "protocol-11" && mode === "challenge"
+      ? raw.event === "game_start" || raw.event === "game_complete"
+      : (raw.event === "visit" && mode === "visit") || modes[raw.project]?.includes(mode);
   if (
-    (raw.event === "visit"
-      ? mode !== "visit" && !modes[raw.project]?.includes(mode)
-      : !modes[raw.project]?.includes(mode)) ||
+    !allowedMode ||
     (raw.project === "woodhouse" && raw.event.startsWith("game_")) ||
     (raw.project !== "woodhouse" && raw.event === "project_open")
   )
@@ -264,6 +266,13 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
           `woodhouse.browser-return/1:${event.project}:${event.browserToken.toLowerCase()}`
         )
       : null;
+  // Challenge attempts are separate from the four established gameplay modes.
+  const kind =
+    event.mode === "challenge"
+      ? event.event === "game_start"
+        ? "challenge_start"
+        : "challenge_finish"
+      : event.event;
   await db.batch([
     db
       .prepare(
@@ -278,7 +287,7 @@ export async function collectEngagement(request: Request, db: D1Database, now = 
         event.project,
         eventId,
         session,
-        event.event,
+        kind,
         event.seconds,
         event.mode,
         day,
@@ -400,6 +409,20 @@ const definitions: Record<
     definition:
       "Accepted 1–30 second foreground, unpaused activity increments, ending 30 seconds after trusted input. Server bounds total by session wall time. Radio time is excluded."
   },
+  challenge_start: {
+    key: "challenge_attempts",
+    label: "Challenge attempts",
+    unit: "count",
+    definition:
+      "Accepted starts and retries of published Protocol 11 challenges. Resuming an attempt does not add a start."
+  },
+  challenge_finish: {
+    key: "challenge_finishes",
+    label: "Challenge finishes",
+    unit: "count",
+    definition:
+      "Accepted Protocol 11 challenge attempts that reached a terminal table result, whether or not the objective was met."
+  },
   project_open: {
     key: "project_opens",
     label: "Project discoveries",
@@ -459,13 +482,22 @@ export async function localAnalytics(
   // A metric's own first day, not the project's. A counter added later must not
   // inherit weeks of fabricated zeros back to the project's first event.
   const metricStarts = new Map(starts.results.map((row) => [row.metric, row.day]));
+  const challengeStarted = [
+    metricStarts.get("challenge_start"),
+    metricStarts.get("challenge_finish")
+  ]
+    .filter((day): day is string => !!day)
+    .sort()[0];
   const metrics: Metric[] = Object.entries(definitions)
-    .filter(([kind]) =>
-      project === "woodhouse" ? !kind.startsWith("game_") : kind !== "project_open"
-    )
+    .filter(([kind]) => {
+      if (kind.startsWith("challenge_")) return project === "protocol-11";
+      return project === "woodhouse" ? !kind.startsWith("game_") : kind !== "project_open";
+    })
     .map(([kind, d]) => {
       const daily: Metric["daily"] = [];
-      const metricStarted = metricStarts.get(kind) ?? null;
+      const metricStarted = kind.startsWith("challenge_")
+        ? challengeStarted
+        : metricStarts.get(kind);
       if (metricStarted)
         for (let t = Date.parse(period.from); t <= Date.parse(period.to); t += 86400000) {
           const date = new Date(t).toISOString().slice(0, 10);
@@ -678,7 +710,8 @@ export async function localAnalytics(
               ...(splitModes.length
                 ? [
                     "Mode subtotals come from the same accepted gameplay events as their overall measure: from the day the split begins, the mode subtotals sum exactly to that measure, and a day with no row for a mode is a measured zero for it. Before the split begins there are gaps, not zeroes, and raw history older than 90 days cannot be reconstructed.",
-                    "Visits and engaged sessions are tab session markers and are deliberately not split by mode: one tab session can span several modes, so per-mode session counts would overlap and double-count."
+                    "Visits and engaged sessions are tab session markers and are deliberately not split by mode: one tab session can span several modes, so per-mode session counts would overlap and double-count.",
+                    "Published Challenge attempts and finishes have their own counters starting with the first accepted Challenge event. The existing four-mode totals exclude them."
                   ]
                 : [])
             ])
