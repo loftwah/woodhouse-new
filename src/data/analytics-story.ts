@@ -156,7 +156,7 @@ export function discoveryStory(input: {
         : coverage === "observed"
           ? period.complete
             ? `All ${dates.length} days counted`
-            : "All days so far counted; today is still being counted"
+            : "All dates have data, including the partial final day"
           : `${observedDays} of ${dates.length} days counted; the rest are missing`;
   const recent = windowSlice(metric, dates.slice(-7));
   const prior = windowSlice(metric, dates.slice(-14, -7));
@@ -191,7 +191,7 @@ export function discoveryStory(input: {
       ? "No click count, so no comparison is claimed."
       : !eligible
         ? !period.complete
-          ? "The current UTC day is not finished, so the last seven days are not a full week."
+          ? "The final UTC day is partial, so the last seven days are not a full week."
           : period.days < 14
             ? "These dates are shorter than the two weeks a comparison needs."
             : prior.observedDays < 7

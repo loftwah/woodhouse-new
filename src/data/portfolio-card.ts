@@ -584,7 +584,7 @@ function discoveryCard(
     `<text x="${x}" y="${y}" fill="${fill}" font-size="${size}" font-weight="${weight}"${anchor ? ` text-anchor="${anchor}"` : ""}>${escape(v)}</text>`;
   const rule = (y: number, x = pad, width = w - pad * 2, colour = "#2a3b51") =>
     `<path d="M${x} ${y}H${x + width}" stroke="${colour}"/>`;
-  const market = `${story.period.complete ? "date range finished" : "today is still being counted"}`;
+  const market = `${periodState(story.period.complete).toLowerCase()}`;
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="${story.colour}" stop-opacity="0.22"/><stop offset="1" stop-color="${story.colour}" stop-opacity="0"/></radialGradient></defs><rect width="${w}" height="${h}" fill="#080d19"/><rect x="0" y="0" width="8" height="${h}" fill="${story.colour}"/><g font-family="Bricolage Grotesque">`;
   const header = (y: number, size: number) =>
     text(pad, y, "WOODHOUSE", size, "#e9ff49", 700) +
@@ -696,7 +696,7 @@ function discoveryCard(
       return [recent, direction];
     }
     const comparisonNote = !story.period.complete
-      ? "No comparison: today is still being counted"
+      ? "No comparison: final day is partial"
       : story.period.days < 14
         ? "No comparison: dates are shorter than two weeks"
         : story.prior.observedDays < 7
