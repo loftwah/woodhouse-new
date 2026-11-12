@@ -100,3 +100,21 @@ the exact-size JPEG, which uses resizing and encoding only. The series
 includes both lettered and text-free artwork. The Discord tab offers two
 1920 × 1080 banners with room for the server name. Originals can also be
 filtered by project from the Share gallery.
+
+### Project studies
+
+Reviewed 13 November 2026, Melbourne. These are ideas for sharing a feature,
+character or scene that already exists in each project. Start with a public
+artefact and the action a viewer can take after seeing the piece. Let that
+subject pick the medium. Bubbles' wall bounce reads as an arcade instruction
+print, SHOALSHOT's Glimmerfin as a field plate, and Foilbury's Moss as a block
+print or a study in reflected foil. Liferaft's local attachment recovery takes
+the form of a paper collage. MAX's browser locator stays visibly in simulation.
+
+Use the current public project art as the ImageGen reference. Brief the frame
+before generating and check that each image reads at gallery scale. Inspect the
+feature details, text and safe area before publishing. Keep the exact PNG and
+encode the reviewed placement JPEG without adding layers. Put new work at the
+front of Share, give it a project link and keep the earlier art discoverable.
+The [source notes](https://woodhouse.loftwah.com/campaign/20261113-project-studies/provenance.txt)
+record the project details, briefs and available sizes.

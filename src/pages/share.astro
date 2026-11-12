@@ -4,6 +4,7 @@ import {
   makingOfCampaign,
   productSocialCampaign
 } from "../data/showcase-product-social";
+import { projectStudies } from "../data/showcase-project-studies";
 import { directSocial } from "../data/showcase-direct-social";
 import { featuredPosters } from "../data/showcase-featured-posters";
 import ShowcaseGallery from "../components/ShowcaseGallery.astro";
@@ -277,7 +278,8 @@ const featuredCampaign = admittedCampaign.filter(
 const freshWork = featuredCampaign.filter((item) => item.formats && !item.archived);
 const processWork = freshWork.filter((item) => makingOfCampaign.includes(item));
 const posterWork = freshWork.filter(
-  (item) => directSocial.includes(item) || featuredPosters.includes(item)
+  (item) =>
+    projectStudies.includes(item) || directSocial.includes(item) || featuredPosters.includes(item)
 );
 const newestEdition = [
   [...posterWork, ...processWork],

@@ -1,3 +1,4 @@
+import { projectStudies } from "./showcase-project-studies.ts";
 import { directSocial } from "./showcase-direct-social.ts";
 import { featuredPosters } from "./showcase-featured-posters.ts";
 import {
@@ -93,6 +94,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...projectStudies,
   ...directSocial,
   ...featuredPosters,
   ...makingOfCampaign,
