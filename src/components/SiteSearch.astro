@@ -40,6 +40,7 @@ import { publicSearchPath } from "../data/public-search";
         id="woodhouse-search-input"
         class="site-search__input"
         type="search"
+        maxlength="160"
         placeholder="Try Pirates, payments or an incident"
         autocomplete="off"
         enterkeyhint="search"
@@ -194,17 +195,24 @@ import { publicSearchPath } from "../data/public-search";
       if (event.target === dialog) dialog.close();
     });
     input.addEventListener("input", render);
-    document.addEventListener("keydown", (event) => {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        !event.altKey &&
-        !event.shiftKey &&
-        event.key.toLowerCase() === "k"
-      ) {
-        event.preventDefault();
-        open();
-      }
-    });
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && dialog.open) {
+          event.preventDefault();
+          dialog.close();
+        } else if (
+          (event.metaKey || event.ctrlKey) &&
+          !event.altKey &&
+          !event.shiftKey &&
+          event.key.toLowerCase() === "k"
+        ) {
+          event.preventDefault();
+          open();
+        }
+      },
+      true
+    );
   }
 
   bindSearch();
