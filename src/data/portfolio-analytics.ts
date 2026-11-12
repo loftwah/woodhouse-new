@@ -368,13 +368,15 @@ export function formatMetric(metric: Pick<Metric, "value" | "unit">) {
 export function weeklyRecord(
   metric: Metric,
   coverage: ProjectAnalytics["coverage"],
-  now = Date.now()
+  now = Date.now(),
+  project?: AnalyticsProject
 ) {
   if (
     metric.quality !== "exact" ||
     !coverage.startedAt ||
     !coverage.comparableFrom ||
-    ["browsers", "returning_browsers", "engaged_sessions"].includes(metric.key)
+    ["browsers", "returning_browsers"].includes(metric.key) ||
+    (metric.key === "engaged_sessions" && project !== "woodhouse")
   )
     return null;
   const today = new Date(new Date(now).toISOString().slice(0, 10));
@@ -432,7 +434,8 @@ export function weeklyRecordFromHistory(entry: ReportHistoryEntry, now = Date.no
       daily: entry.daily
     },
     { ...entry.coverage, quality: entry.quality, limitations: [] },
-    now
+    now,
+    entry.project
   );
 }
 
@@ -564,7 +567,7 @@ export function analysePortfolio(
       )
         continue;
       if (!applies(project, metric.key)) continue;
-      const week = weeklyRecord(metric, report.coverage, now);
+      const week = weeklyRecord(metric, report.coverage, now, project);
       if (
         !week ||
         week.comparison === null ||

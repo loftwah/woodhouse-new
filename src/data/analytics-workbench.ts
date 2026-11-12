@@ -883,16 +883,16 @@ export function weeklyHighlights(
     // metric rather than discarding a valid comparison.
     const week = retained
       ? (weeklyRecordFromHistory(retained, now) ??
-        (metric ? weeklyRecord(metric, report.coverage, now) : null))
+        (metric ? weeklyRecord(metric, report.coverage, now, project) : null))
       : metric
-        ? weeklyRecord(metric, report.coverage, now)
+        ? weeklyRecord(metric, report.coverage, now, project)
         : null;
     if (!week) {
       gaps.push({
         project,
         name,
         reason: metric
-          ? weeklyGapReason(metric, report.coverage, primary!)
+          ? weeklyGapReason(metric, report.coverage, primary!, project)
           : retained
             ? "The retained history does not contain two complete comparable weeks"
             : `${primary!.label} is not in this source report`
@@ -920,9 +920,13 @@ export function weeklyHighlights(
 function weeklyGapReason(
   metric: Metric,
   coverage: ProjectAnalytics["coverage"],
-  measure: { label: string }
+  measure: { label: string },
+  project: AnalyticsProject
 ) {
-  if (["browsers", "returning_browsers", "engaged_sessions"].includes(metric.key))
+  if (
+    ["browsers", "returning_browsers"].includes(metric.key) ||
+    (metric.key === "engaged_sessions" && project !== "woodhouse")
+  )
     return `${measure.label} is a period statistic, not a comparable daily counter`;
   if (metric.quality !== "exact") return `${measure.label} is not an exact counter`;
   if (!coverage.startedAt) return "Collection start is not established";
@@ -954,13 +958,15 @@ export function qualityText(metric?: Metric) {
  */
 export function reportQualifier(
   metric: Pick<Metric, "key" | "value" | "quality" | "daily"> | undefined,
-  report: { coverage: ProjectAnalytics["coverage"] } | null | undefined,
+  report: { coverage: ProjectAnalytics["coverage"]; project?: AnalyticsProject } | null | undefined,
   period: ReportingWindow
 ) {
   // A missing source, a source that omitted this metric and a measured metric
   // with no value in the window are three different facts, not one zero.
   if (!metric) return report ? "Not reported" : "No data for these dates";
   if (metric.value === null) return "Not measured";
+  if (metric.key === "visits" && report?.project === "woodhouse")
+    return "Includes unattended loads";
   if (metric.key === "guest_postcards_received" && metric.quality === "partial")
     return "Some days missing";
   if (metric.quality === "bounded" || report?.coverage.quality === "bounded")
