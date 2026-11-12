@@ -21,10 +21,26 @@ function parseJsonOutput(output) {
 // three. The assertions are unchanged, including the per-relation comparison;
 // only the transport is batched.
 function queryBatches(database, statements) {
+  const environment = Object.keys(databases).find((name) => databases[name] === database);
+  if (!environment) throw new Error("D1 readiness requires a configured Woodhouse database.");
   const sql = statements.map((statement) => statement.trim().replace(/;$/, "")).join(";\n");
   const result = spawnSync(
     "pnpm",
-    ["exec", "wrangler", "d1", "execute", database, "--remote", "--json", "--command", sql],
+    [
+      "exec",
+      "wrangler",
+      "d1",
+      "execute",
+      database,
+      "--config",
+      "wrangler.jsonc",
+      "--env",
+      environment,
+      "--remote",
+      "--json",
+      "--command",
+      sql
+    ],
     {
       encoding: "utf8",
       maxBuffer: 16 * 1024 * 1024
