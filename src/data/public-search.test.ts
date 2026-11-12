@@ -67,9 +67,9 @@ test("campaign search finds published pieces by placement and exact dimensions",
   }));
   assert(entries.every(({ href }) => href));
   const cases: [string, string][] = [
-    ["Fighter X header", "/share/fighter/#share-art-fighter-arcade-banner"],
-    ["Bubbles 1080x1920", "/share/bubbles/#share-art-bubbles-first-spark-poster"],
-    ["Bubbles 1080 × 1350", "/share/bubbles/#share-art-bubbles-match-three"]
+    ["Fighter X header", "/share/fighter/#share-edition-fighter-battle-blast-x"],
+    ["Bubbles 1080x1920", "/share/bubbles/#share-edition-bubbles-bank-line-story"],
+    ["Bubbles 1080 × 1350", "/share/bubbles/#share-edition-bubbles-bank-line-feed"]
   ];
   for (const [query, href] of cases) {
     assert.equal(rankPublicSearch(entries, publicSearchTokens(query))[0]?.href, href);
@@ -83,10 +83,10 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   assert.deepEqual(
     items.slice(0, 4).map(({ id }) => id),
     [
-      "share-art-foilbury-foil-streak",
-      "share-art-shoalshot-gill-study",
-      "share-art-woodhouse-paper-machine",
-      "share-art-loftwahfm-night-signal"
+      "share-edition-foilbury-drop-bear-landscape",
+      "share-edition-shoalshot-glimmerfin-study-square",
+      "share-edition-foilbury-diamond-turn-story",
+      "share-edition-loftwahfm-night-tape-link"
     ]
   );
   const foilbury = items.filter(({ project, use }) => project === "foilbury" && !use);
@@ -108,7 +108,12 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   );
   assert.deepEqual(
     campaignSearchItems([{ slug: "foilbury", name: "Foilbury" }])
-      .filter(({ href }) => href.startsWith("/share/foilbury/") && !href.includes("#share-art-"))
+      .filter(
+        ({ href }) =>
+          href.startsWith("/share/foilbury/") &&
+          !href.includes("#share-art-") &&
+          !href.includes("#share-edition-")
+      )
       .map(({ href }) => href),
     [
       "/share/foilbury/#project-study-moss-paper",

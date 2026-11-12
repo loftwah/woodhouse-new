@@ -78,7 +78,7 @@ const art = [
     "foilbury",
     "Moss under foil",
     "Moss sits within a copper cabinet amid pools of shifting foil colour.",
-    "The light catches Moss differently across the surface. Open Foilbury to see the public holographic card.",
+    "The light catches Moss differently across the surface. Open Foilbury to inspect the current public card finishes.",
     "https://foilbury.loftwah.com/cabinet/moss",
     "Explore",
     "Square feed",

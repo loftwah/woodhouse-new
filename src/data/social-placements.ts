@@ -109,5 +109,22 @@ export const socialPlacements = [
     example: "share-art-foilbury-sticker-moss",
     source: "https://support.discord.com/hc/en-us/articles/4403089981975-Custom-Stickers-FAQ",
     note: "A transparent 320 × 320 PNG. Upload it under Server Settings → Stickers where you have permission."
+  },
+  {
+    id: "pinterest",
+    platform: "Pinterest",
+    placement: "Standard Pin",
+    format: "Pinterest pin",
+    example: "share-edition-shoalshot-reef-edge-pin",
+    source: "https://business.pinterest.com/creative-best-practices/",
+    note: "A 1000 × 1500 vertical Pin. Pair it with the product link and a short description."
+  },
+  {
+    id: "link-preview",
+    platform: "Link cards",
+    placement: "Editorial link image",
+    format: "Link preview",
+    example: "share-edition-foilbury-silver-shift-link",
+    note: "A 1200 × 630 editorial image. Use it with a link or in your own link metadata."
   }
 ] as const;

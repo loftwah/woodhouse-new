@@ -1,3 +1,4 @@
+import { shareExpansion } from "./showcase-share-expansion.ts";
 import { shareStudio } from "./showcase-share-studio.ts";
 import { projectStudies } from "./showcase-project-studies.ts";
 import { directSocial } from "./showcase-direct-social.ts";
@@ -27,7 +28,16 @@ export type CampaignItem = {
   project: string;
   title: string;
   stage?: string;
-  use?: "banner" | "icon" | "special" | "sketch" | "seasonal" | "feature" | "comparison" | "art";
+  use?:
+    | "banner"
+    | "icon"
+    | "special"
+    | "sketch"
+    | "seasonal"
+    | "feature"
+    | "comparison"
+    | "art"
+    | "native";
   alt: string;
   caption: string;
   image: string;
@@ -39,7 +49,7 @@ export type CampaignItem = {
   archived?: true;
   socialPack?: string;
   credit: string;
-  kind: "editorial composition" | "production screenshot";
+  kind: "editorial composition" | "production screenshot" | "published product artwork";
   href: string;
   action: "Play" | "Listen" | "Try" | "Explore";
   source: string;
@@ -96,6 +106,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...shareExpansion,
   ...shareStudio,
   ...projectStudies,
   ...directSocial,

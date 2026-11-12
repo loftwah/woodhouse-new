@@ -13,6 +13,7 @@ const categories = [
   ["feature", "Features & milestones"],
   ["comparison", "Comparisons"],
   ["art", "Illustration"],
+  ["native", "Current project art"],
   ["earlier", "Earlier artwork"]
 ] as const;
 type Props = {
@@ -61,6 +62,9 @@ const path = (number: number, nextCategory: string = category) => {
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
 };
 const next = page < pages ? path(page + 1) : "";
+const projectPack = project
+  ? works.find((item) => item.project === project && item.socialPack)?.socialPack
+  : undefined;
 const artworkPages = Object.fromEntries(
   filtered.map(({ id }, i) => [id, Math.floor(i / size) + 1])
 );
@@ -102,6 +106,13 @@ const artworkPages = Object.fromEntries(
       </a>
     ))}
   </nav>
+  {projectPack && (
+    <p class="art-previous">
+      <a href={projectPack} download>
+        Download project kit
+      </a>
+    </p>
+  )}
   {filtered.length === 0 && (
     <p class="art-empty">
       No artwork matches these filters.{" "}
@@ -114,7 +125,7 @@ const artworkPages = Object.fromEntries(
     </p>
   )}
   <div data-art-stream>
-    <div data-art-batch data-next={next}>
+    <div data-art-batch data-next={next} data-progress={`Page ${page} of ${pages}`}>
       {drawingShelf && sketchPreview.length > 0 ? (
         <>
           <ShowcaseGallery
@@ -156,6 +167,9 @@ const artworkPages = Object.fromEntries(
     <a href={next || undefined} data-art-next hidden={!next}>
       More artwork
     </a>
+    <span data-art-progress>
+      Page {page} of {pages}
+    </span>
     <span data-art-status role="status"></span>
   </p>
 </div>
@@ -165,6 +179,7 @@ const artworkPages = Object.fromEntries(
     const stream = wall.querySelector<HTMLElement>("[data-art-stream]");
     const more = wall.querySelector<HTMLAnchorElement>("[data-art-next]");
     const status = wall.querySelector<HTMLElement>("[data-art-status]");
+    const progress = wall.querySelector<HTMLElement>("[data-art-progress]");
     const artworkHash = location.hash.slice(1);
     if (artworkHash && !document.getElementById(artworkHash)) {
       const page = JSON.parse(wall.dataset.artPages ?? "{}")[artworkHash];
@@ -204,6 +219,7 @@ const artworkPages = Object.fromEntries(
         stream.appendChild(batch);
         batch.dispatchEvent(new Event("woodhouse:artwork-added", { bubbles: true }));
         const next = batch.dataset.next;
+        if (progress) progress.textContent = batch.dataset.progress ?? "";
         if (next) more.href = next;
         else more.hidden = true;
         if (focusOnAppend) batch.querySelector<HTMLElement>("figure a")?.focus();

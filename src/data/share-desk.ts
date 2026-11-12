@@ -156,6 +156,48 @@ type ShareMedia = {
 };
 export const gameMedia: ShareMedia[] = [
   {
+    id: "foilbury-teaser-9x16",
+    project: "foilbury",
+    title: "Foilbury · Cabinet teaser",
+    file: "/campaign/20261113-foilbury-native/foilbury-teaser-9x16.mp4",
+    kind: "video",
+    width: 1080,
+    height: 1920,
+    alt: "Foilbury’s published artwork in motion from the official cabinet showcase.",
+    credit: "Foilbury · official media showcase",
+    note: "Published Foilbury artwork trailer, 3 November 2026",
+    caption:
+      "A look inside Foilbury’s collectible-card cabinet.\nhttps://foilbury.loftwah.com/showcase",
+    category: "art",
+    poster: "/campaign/20261113-foilbury-native/card-9x16-1080.png",
+    duration: 8.0,
+    link: "https://foilbury.loftwah.com/showcase",
+    sha256: "e701227da9f7ab485a5cecea8c1c998748de6093163c24251b981126ec8508b2",
+    bytes: 1397821,
+    reviewedAt: "2026-11-13"
+  },
+  {
+    id: "foilbury-trailer-16x9",
+    project: "foilbury",
+    title: "Foilbury · Published showcase trailer",
+    file: "/campaign/20261113-foilbury-native/foilbury-trailer-16x9.mp4",
+    kind: "video",
+    width: 1920,
+    height: 1080,
+    alt: "Foilbury’s published artwork in motion from the official cabinet showcase.",
+    credit: "Foilbury · official media showcase",
+    note: "Published Foilbury artwork trailer, 3 November 2026",
+    caption:
+      "A look inside Foilbury’s collectible-card cabinet.\nhttps://foilbury.loftwah.com/showcase",
+    category: "art",
+    poster: "/campaign/20261113-foilbury-native/card-16x9-1920.png",
+    duration: 18.0,
+    link: "https://foilbury.loftwah.com/showcase",
+    sha256: "9f07b6e64e14c5ff98d60023aa4352e4543f1e5c7153b8d98d3fd18f047b2327",
+    bytes: 2424619,
+    reviewedAt: "2026-11-13"
+  },
+  {
     id: "app-composer-studio-film-20261014",
     project: "app-composer",
     title: "App Composer \u00b7 From setup to software",
