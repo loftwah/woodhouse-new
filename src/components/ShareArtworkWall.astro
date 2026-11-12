@@ -1,11 +1,13 @@
 ---
 import ShowcaseGallery from "./ShowcaseGallery.astro";
+import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
 import { shareNavigation } from "../data/share-browser";
 import type { CampaignItem } from "../data/showcase-campaign";
 
 const categories = [
   ["", "All"],
+  ["project-stories-50", "Latest 50"],
   ["project-stories", "Project stories"],
   ["banner", "Banners"],
   ["icon", "Avatars"],
@@ -52,7 +54,7 @@ const filtered = art.filter(
     (!category ||
       (category === "earlier"
         ? !item.use || item.archived
-        : category === "project-stories"
+        : category === "project-stories" || category === "project-stories-50"
           ? !item.archived && item.series === category
           : !item.archived && (category === "sketch" || item.use === category)))
 );
@@ -72,6 +74,14 @@ const path = (number: number, nextCategory: string = category) => {
 };
 const next = page < pages ? path(page + 1) : "";
 const previous = page > 1 ? path(page - 1) : "";
+const seriesPack =
+  !project && !placement
+    ? category === "project-stories-50"
+      ? { href: projectStories50Kit, label: "Download latest 50" }
+      : category === "project-stories"
+        ? { href: projectStoriesKit, label: "Download Project stories kit" }
+        : undefined
+    : undefined;
 const projectPack = project
   ? works.find((item) => item.project === project && item.socialPack)?.socialPack
   : undefined;
@@ -125,10 +135,10 @@ const artworkPages = Object.fromEntries(
       {next && <a href={`${next}#artwork`}>Next page</a>}
     </nav>
   )}
-  {category === "project-stories" && !project && !placement && (
+  {seriesPack && (
     <p class="art-previous">
-      <a href={projectStoriesKit} download>
-        Download Project stories kit
+      <a href={seriesPack.href} download>
+        {seriesPack.label}
       </a>
     </p>
   )}
