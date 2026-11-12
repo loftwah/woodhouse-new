@@ -78,7 +78,7 @@ const frozen = Astro.url.searchParams.has("report");
 // Published evidence and the project identities are read from different
 // collections; the report needs both, and the evidence read does not use the
 // identity list, so start it now rather than after the identity gates.
-const releaseEvidenceRead = frozen ? null : listPublicEvidence();
+const releaseEvidenceRead = frozen || invalidWindow ? null : listPublicEvidence();
 const identities = await listProjectRecords();
 if (identities.error)
   return new Response("Public project identities are unavailable.", {
@@ -119,15 +119,17 @@ try {
         (env as unknown as { DB: D1Database }).DB,
         Astro.url.searchParams.get("report")!
       )
-    : await createPortfolioReport(
-        (env as unknown as { DB: D1Database }).DB,
-        period.days,
-        publicIds,
-        fetch,
-        now,
-        Astro.url.searchParams.has("from") ? period : undefined,
-        releaseNotes
-      );
+    : invalidWindow
+      ? null
+      : await createPortfolioReport(
+          (env as unknown as { DB: D1Database }).DB,
+          period.days,
+          publicIds,
+          fetch,
+          now,
+          Astro.url.searchParams.has("from") ? period : undefined,
+          releaseNotes
+        );
 } catch {
   /* Sources remain explicitly unavailable. */
 }

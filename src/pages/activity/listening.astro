@@ -40,6 +40,14 @@ if (requestedSnapshot && report && report.snapshot !== requestedSnapshot)
     status: 404,
     headers: { "cache-control": "no-store" }
   });
+const missingSnapshot = requestedSnapshot !== undefined && !report;
+const latestParams = new URLSearchParams();
+for (const key of ["analytics", "qa"]) {
+  const value = Astro.url.searchParams.get(key);
+  if (value !== null) latestParams.set(key, value);
+}
+const latestPath = latestParams.size ? `${LISTENING_PATH}?${latestParams}` : LISTENING_PATH;
+if (missingSnapshot) Astro.response.status = 503;
 if (!report) Astro.response.headers.set("cache-control", "private, no-store");
 if (Astro.cache?.enabled) {
   if (!report) {
@@ -214,12 +222,18 @@ const metadataPath =
         </>
       ) : (
         <p class="empty-state">
-          The listening source is unavailable.
+          {missingSnapshot
+            ? "This saved listening snapshot is unavailable."
+            : "The listening source is unavailable."}
           <br />
-          <span>
-            Open Games × Radio for the latest source report. Missing data does not mean zero
-            listening.
-          </span>
+          {missingSnapshot ? (
+            <a href={latestPath}>Open the latest listening report</a>
+          ) : (
+            <span>
+              Open Games × Radio for the latest source report. Missing data does not mean zero
+              listening.
+            </span>
+          )}
         </p>
       )}
       <p class="source-links">

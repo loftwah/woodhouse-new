@@ -1512,3 +1512,55 @@ test("new captures do not reuse a previous producer revision and older reports r
   assert.equal(reused.id, fresh.id);
   sqlite.close();
 });
+
+test("concurrent preset captures publish one immutable report per hour and scope", async () => {
+  const { db, sqlite } = database();
+  const capture = (time: number, members = ["woodhouse"]) =>
+    createPortfolioReport(db, 30, new Set(members), fetch, time);
+
+  const [first, other] = await Promise.all([capture(now), capture(now + 1000)]);
+  assert.deepEqual(first, other, "Both callers receive the same saved report and timestamp");
+  assert.deepEqual(await capture(now + 50 * 60_000), first);
+  assert.equal(
+    sqlite.prepare("SELECT COUNT(*) AS count FROM wh_analytics_reports").get()!.count,
+    1
+  );
+  assert.notEqual((await capture(now + 60 * 60_000)).id, first.id);
+  assert.notEqual((await capture(now + 50 * 60_000, ["woodhouse", "shoalshot"])).id, first.id);
+  assert.deepEqual(await readPortfolioReport(db, first.id), first);
+  sqlite.close();
+});
+
+test("closed report windows reuse normalized evidence and recapture when it changes", async () => {
+  const { db, sqlite } = database();
+  const period = { from: "2026-10-13", to: "2026-10-14", days: 2, complete: true };
+  const note = {
+    project: "woodhouse" as const,
+    evidenceId: "woodhouse-release",
+    date: "2026-10-14",
+    reviewedAt: "2026-10-14",
+    title: "Reviewed observation",
+    summary: "Evidence from the release.",
+    boundary: "Observed in the published site.",
+    revision: null
+  };
+  const another = { ...note, evidenceId: "another-release" };
+  const capture = (time: number, notes?: (typeof note)[]) =>
+    createPortfolioReport(db, 2, new Set(["woodhouse"]), fetch, time, period, notes);
+  const initial = await capture(now);
+  const withNotes = await capture(now + 1000, [note, another]);
+  assert.notEqual(withNotes.id, initial.id);
+  assert.equal((await capture(now + 50 * 60_000, [another, note])).id, withNotes.id);
+  const corrected = await capture(now + 50 * 60_000, [
+    { ...note, summary: "Corrected observation." },
+    another
+  ]);
+  assert.notEqual(corrected.id, withNotes.id);
+  assert.equal(
+    (await readPortfolioReport(db, withNotes.id))?.releases?.find(
+      (item) => item.evidenceId === note.evidenceId
+    )?.summary,
+    note.summary
+  );
+  sqlite.close();
+});
