@@ -307,7 +307,10 @@ class SourcePlate {
     if (!this.tether) return;
     const from = pick<HTMLElement>(this.root, "[data-tether-source]");
     const to = pick<HTMLElement>(this.root, "[data-tether-target]");
-    if (!from || !to) return;
+    if (!from || !to || to.closest("[hidden]")) {
+      this.tether.parentElement?.setAttribute("data-visible", "false");
+      return;
+    }
     const field = this.field.getBoundingClientRect();
     const a = from.getBoundingClientRect();
     const b = to.getBoundingClientRect();

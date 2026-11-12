@@ -9,16 +9,17 @@
 type Props = {
   /** `entry` is the closed discovery object; `full` is the working bench. */
   variant?: "entry" | "full";
+  heading?: "h2" | "h3";
   /** Shared links shown under the bench. */
   recipeHref?: string;
   recipeLabel?: string;
 };
 const {
   variant = "full",
+  heading: Heading = "h3",
   recipeHref = "/dispatches/your-game-its-own-soundtrack/",
   recipeLabel = "Read the story behind it"
 } = Astro.props;
-const Heading = variant === "full" ? "h2" : "h3";
 ---
 
 <div

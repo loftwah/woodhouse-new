@@ -12,7 +12,7 @@ import {
 import { toJsonLd } from "../../data/safe-json";
 import { getArtworkFallback, socialCardFor, getSiteMetadata } from "../../data/site-metadata";
 import { projectActionHref, projectActionLabel } from "../../data/project-actions";
-import { defaultProjectType, kitURL } from "../../data/share-browser";
+import { defaultProjectType } from "../../data/share-browser";
 import { projectCaption } from "../../data/share-desk";
 import { liveProjectArtwork } from "../../data/live-project-artwork";
 
@@ -35,7 +35,9 @@ if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(
 const name = project?.name ?? "Woodhouse";
 const projectHref = project ? projectActionHref(project) : "/";
 const dossierHref = project ? `/projects/${slug}/` : null;
-const archiveHref = project ? kitURL(slug, defaultProjectType(slug)) : "/share/?type=factory";
+const archiveHref = project
+  ? `/share/?${new URLSearchParams({ project: slug, type: defaultProjectType(slug) })}`
+  : "/share/?type=factory";
 const collectionLabel = items.length ? "Artwork & screenshots" : "Link card";
 const title = `${name} — ${collectionLabel.toLowerCase()}`;
 const description = project

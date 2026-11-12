@@ -414,7 +414,7 @@ const {
           }
           if (statusIntent.isCurrent(token)) {
             linkRecovery.href = link;
-            status?.after(linkRecovery);
+            root.insertBefore(linkRecovery, status?.nextSibling ?? null);
           }
           say(clipboardFailureMessage(clipboardProblem(error), "link"), token);
         } finally {

@@ -286,12 +286,13 @@ const canonicals = new Map();
 const searchHrefs = new Map();
 let searchIndexChecked = false;
 
-function canonicalPath(html) {
+function canonicalPath(html, target) {
   const canonical = /<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(html)?.[1];
   if (!canonical) return null;
   try {
     return new URL(canonical).pathname.replace(/\/$/, "");
   } catch {
+    if (target) report(target, "linked document has an invalid canonical URL");
     return null;
   }
 }
@@ -394,8 +395,11 @@ const uncheckedTargets = [
 await pool(uncheckedTargets, async (target) => {
   const response = await request(`${origin}${target}`);
   targetStatuses.set(target, response.status);
-  if (response.status === 200 && /^text\/html\b/i.test(response.headers.get("content-type") ?? "")) {
-    canonicals.set(target, canonicalPath(await response.text()));
+  if (
+    response.status === 200 &&
+    /^text\/html\b/i.test(response.headers.get("content-type") ?? "")
+  ) {
+    canonicals.set(target, canonicalPath(await response.text(), target));
   } else {
     await response.body?.cancel();
   }
