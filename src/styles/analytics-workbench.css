@@ -279,7 +279,7 @@
   gap: 6px 16px;
   padding: 14px 16px;
   border-bottom: 1px solid #26364c;
-  background: linear-gradient(180deg, #0e1b2d, #0a1220);
+  background: #0a1220;
 }
 .chart-lead__read {
   display: flex;
@@ -316,7 +316,7 @@
   justify-content: end;
   gap: 4px 10px;
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   line-height: 1.45;
   color: var(--muted);
   text-align: right;
@@ -1131,11 +1131,10 @@
   }
   .chart-heading .project-paths {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 0 0.8rem;
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: thin;
+    overflow-x: visible;
+    white-space: normal;
   }
   .metric-strip {
     margin-inline: 0.75rem;
