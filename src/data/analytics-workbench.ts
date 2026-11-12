@@ -355,7 +355,7 @@ export function reportCount(supplied: number, total: number, mixed: boolean) {
 }
 /** Whether the selected UTC dates have finished, in visitor words. */
 export function periodState(complete: boolean) {
-  return complete ? "Date range finished" : "Today is still being counted";
+  return complete ? "Date range finished" : "Final day is partial";
 }
 /**
  * Short per-day labels for the Data table, chart tooltip and CSV. They keep the

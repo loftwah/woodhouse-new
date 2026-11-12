@@ -60,7 +60,7 @@ const headingId =
         {dateLabel(story.period.from)} – {dateLabel(story.period.to)}
         <small>
           UTC · {story.period.days} days ·{" "}
-          {story.period.complete ? "date range finished" : "today is still being counted"}
+          {story.period.complete ? "date range finished" : "final day is partial"}
         </small>
       </dd>
     </div>
@@ -79,7 +79,7 @@ const headingId =
                   : "No click count"
                 : story.period.complete
                   ? "Every day counted"
-                  : "Today is still being counted"}
+                  : "Final day is partial"}
         </small>
       </dd>
     </div>

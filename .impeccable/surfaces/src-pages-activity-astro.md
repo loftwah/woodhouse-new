@@ -128,8 +128,10 @@ remain. Overview uses a compact semantic project table with actual gap-preservin
 daily trends, separate units and adjacent coverage. Drill-down opens the existing
 single-measure ECharts chart. Native URL views expose Data (fourteen dates per
 page), Share (open image/download actions), Stories and Notes (native disclosures).
-Task switching freezes the currently displayed report; date/project/measure and
-measurement exclusions remain in scope. Historical review receipts above retain
+Task switching keeps a rolling window rolling and preserves an explicitly selected
+date range. Share and specific findings use a saved capture. A saved report keeps its
+capture across task views and offers a direct route to the latest dates. Project,
+measure and measurement exclusions remain in scope. Historical review receipts above retain
 their original source and do not qualify this change. Production and physical
 share-sheet acceptance require their own current evidence.
 
