@@ -100,6 +100,13 @@ Read [PLATFORM.md](PLATFORM.md) before proposing any Cloudflare service. It reco
 - No GitHub Actions, no new paid commitment and no cloud resource change merely to make an evaluation look complete. Installing a package or adding a document is not proof of a runtime integration.
 - GitHub remains authoritative for repository, issue and pull-request state unless MP changes that decision.
 
+## Artwork and media retention
+
+Use the [portfolio R2 artwork workflow](docs/WORKSPACE-HYGIENE.md#portfolio-r2-artwork-archive)
+when generating or shipping project media. Archive masters and provenance to private R2 before
+retiring local copies. Each project owns its asset references, public delivery and release checks.
+Preserve files required by the current build and keep the public catalogue independent of the private archive.
+
 ## Scope
 
 - Do not create process, tooling, architecture or abstraction without naming the observed failure it prevents. "It may be useful later" is not a failure.
