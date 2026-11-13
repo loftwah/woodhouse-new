@@ -1,0 +1,17 @@
+Woodhouse design studies. Reviewed 13 November 2026 in Melbourne.
+
+All images are original Codex ImageGen illustrations. PNG downloads preserve the generated masters.
+JPEG previews resize the full canvas. No text, logos or other content were added after generation.
+Concepts are proposals or visual explorations. Studies illustrate existing behaviour.
+Foilbury and Woodhouse used published artwork and a live Woodhouse capture, respectively, as visual references.
+
+The cabinet and the spotlight · Concept mockup · https://github.com/loftwah/card-collector-bot/issues/146
+Three depths of reef · Environment concept · https://shoalshot.loftwah.com/
+HyperROM preset workflow · Workflow concept · https://github.com/loftwah/woodhouse-new/issues/232
+Recover the attachment · Workflow concept · https://github.com/loftwah/liferaft/issues/9
+Smoked acrylic, warm dial · Material concept · https://fm.loftwah.com/radio
+Pass the phone · Interaction sketch · https://protocol11.loftwah.com/
+One cover, four frames · Storyboard concept · https://github.com/loftwah/app-composer/issues/459
+The bank shot on paper · Gameplay study · https://bubbles.loftwah.com/
+Before the hit lands · Animation storyboard · https://fighter.loftwah.com/
+One strand to the loom · Shipped feature study · https://woodhouse.loftwah.com/

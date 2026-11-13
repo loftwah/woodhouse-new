@@ -86,7 +86,10 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
     items
       .filter(
         ({ series }) =>
-          series !== "project-stories-50" && series !== "wild-25" && series !== "build-notes"
+          series !== "project-stories-50" &&
+          series !== "wild-25" &&
+          series !== "build-notes" &&
+          series !== "design-studies"
       )
       .slice(0, 5)
       .map(({ id }) => id),
@@ -128,6 +131,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       )
       .map(({ href }) => href),
     [
+      "/share/foilbury/#design-study-foilbury",
       "/share/foilbury/#project-story-keeper-avatar",
       "/share/foilbury/#visual-study-moss-after-dark",
       "/share/foilbury/#project-study-moss-paper",

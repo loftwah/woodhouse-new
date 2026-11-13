@@ -119,6 +119,12 @@ const productName = (slug: string) =>
         {item.stage && (
           <p class="process-note">
             <strong>{item.stage}</strong> {item.caption.split("\n")[0]}
+            {item.issue && (
+              <>
+                {" "}
+                <a href={item.issue}>Planning issue</a>
+              </>
+            )}
           </p>
         )}
         <ShareActions
@@ -174,7 +180,15 @@ const productName = (slug: string) =>
         />
         <div class="viewer-caption">
           <p role="status" data-viewer-status></p>
-          <p>{item.caption}</p>
+          <p>
+            {item.stage && <strong>{item.stage} · </strong>}
+            {item.issue ? item.caption.split("\n")[0] : item.caption}
+          </p>
+          {item.issue && (
+            <p>
+              <a href={item.issue}>Planning issue</a>
+            </p>
+          )}
           <p class="work-credit">
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>

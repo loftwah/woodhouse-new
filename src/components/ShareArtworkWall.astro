@@ -14,6 +14,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["design-studies", "Design studies"],
   ["build-notes", "Build Notes"],
   ["wild-25", "Wild 25"],
   ["project-stories-50", "Latest 50"],
@@ -38,6 +39,7 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "design-studies" ||
   category === "build-notes" ||
   category === "wild-25" ||
   category === "project-stories-50" ||
@@ -91,8 +93,8 @@ const path = (number: number, nextCategory: string = category) => {
 const next = page < pages ? path(page + 1) : "";
 const previous = page > 1 ? path(page - 1) : "";
 const seriesPack =
-  series && series !== "build-notes" && !project && !placement
-    ? collectionPacks[series]
+  series && series in collectionPacks && !project && !placement
+    ? collectionPacks[series as keyof typeof collectionPacks]
     : undefined;
 const projectPack =
   series === "build-notes" &&
