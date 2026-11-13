@@ -20,7 +20,7 @@ const art = [
   [
     "bubbles-bank-line-pin",
     "bubbles",
-    "Take the wall · Pinterest pin",
+    "Take the wall · For Pinterest",
     "Take the wall artwork for Bubbles.",
     "There’s another line into the cluster. Use the wall in Bubbles Classic.",
     "https://bubbles.loftwah.com/",
@@ -28,7 +28,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "bubbles-bank-line-pin.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-bank-line-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "bubbles-bank-line-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -65,7 +65,7 @@ const art = [
   [
     "app-composer-pdf-before-after-pin",
     "app-composer",
-    "Fill, then export · Pinterest pin",
+    "Fill, then export · For Pinterest",
     "Fill, then export artwork for App Composer.",
     "Open a sample PDF, fill a field, add a visual signature and export it in Paperwork.",
     "https://paperwork.loftwah.com/",
@@ -73,7 +73,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "app-composer-pdf-before-after-pin.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-pdf-before-after-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "app-composer-pdf-before-after-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -95,7 +95,7 @@ const art = [
   [
     "fighter-reaper-paper-pin",
     "fighter",
-    "The Reaper enters · Pinterest pin",
+    "The Reaper enters · For Pinterest",
     "The Reaper enters artwork for Fighter.",
     "The Reaper enters. Open Battle Blast in Fighter and pick your first move.",
     "https://fighter.loftwah.com/",
@@ -103,14 +103,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "fighter-reaper-paper-pin.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-reaper-paper-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "fighter-reaper-paper-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "woodhouse-workshop-parts-pin",
     "woodhouse",
-    "Games, music and tools · Pinterest pin",
+    "Games, music and tools · For Pinterest",
     "Games, music and tools artwork for Woodhouse.",
     "Games, music and tools. Browse the games, music, tools and artwork from Woodhouse.",
     "https://woodhouse.loftwah.com/",
@@ -118,14 +118,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "woodhouse-workshop-parts-pin.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-workshop-parts-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "woodhouse-workshop-parts-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "liferaft-recover-one-pin",
     "liferaft",
-    "Find the one attachment · Pinterest pin",
+    "Find the one attachment · For Pinterest",
     "Find the one attachment artwork for Liferaft.",
     "Find the one attachment. Search a local MBOX archive and export the attachment you need.",
     "https://liferaft.loftwah.com/",
@@ -133,14 +133,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "liferaft-recover-one-pin.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-recover-one-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "liferaft-recover-one-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "protocol-11-last-card-pin",
     "protocol-11",
-    "One card left · Pinterest pin",
+    "One card left · For Pinterest",
     "One card left artwork for Protocol 11.",
     "One card left. Play a local hand at the Classic table in Protocol 11.",
     "https://protocol11.loftwah.com/",
@@ -148,14 +148,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "protocol-11-last-card-pin.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-last-card-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "protocol-11-last-card-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "max-idle-and-active-pin",
     "max",
-    "Idle and active · Pinterest pin",
+    "Idle and active · For Pinterest",
     "Idle and active artwork for MAX.",
     "Watch the room with the locator idle, then hear the cue in the MAX browser simulator.",
     "https://max.loftwah.com/demo",
@@ -163,7 +163,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "max-idle-and-active-pin.jpg", 1000, 1500],
+      ["For Pinterest", "max-idle-and-active-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "max-idle-and-active-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -205,7 +205,7 @@ const art = [
   [
     "foilbury-moss-cut-paper-pin",
     "foilbury",
-    "Moss, the quiet collector · Pinterest pin",
+    "Moss, the quiet collector · For Pinterest",
     "Moss, the quiet collector artwork for Foilbury.",
     "Moss, the quiet collector. Explore the published cards and their current finishes in Foilbury.",
     "https://foilbury.loftwah.com/cabinet/moss",
@@ -213,7 +213,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-moss-cut-paper-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-moss-cut-paper-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-moss-cut-paper-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -235,7 +235,7 @@ const art = [
   [
     "shoalshot-reef-edge-pin",
     "shoalshot",
-    "On the reef edge · Pinterest pin",
+    "On the reef edge · For Pinterest",
     "On the reef edge artwork for SHOALSHOT.",
     "On the reef edge. Take a browser dive and look for the Glimmerfin in SHOALSHOT’s Tide Pool.",
     "https://shoalshot.loftwah.com/",
@@ -243,7 +243,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "shoalshot-reef-edge-pin.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-reef-edge-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "shoalshot-reef-edge-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -280,7 +280,7 @@ const art = [
   [
     "app-composer-sample-pdf-pin",
     "app-composer",
-    "Fill a sample PDF · Pinterest pin",
+    "Fill a sample PDF · For Pinterest",
     "Fill a sample PDF artwork for App Composer.",
     "Fill a sample PDF. Open the sample Creator Hub and see how a links page and guestbook work together.",
     "https://paperwork.loftwah.com/",
@@ -288,14 +288,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "app-composer-sample-pdf-pin.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-sample-pdf-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "app-composer-sample-pdf-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "loftwahfm-cartridge-club-pin",
     "loftwahfm",
-    "Cartridge Club on the bench · Pinterest pin",
+    "Cartridge Club on the bench · For Pinterest",
     "Cartridge Club on the bench artwork for LoftwahFM.",
     "Cartridge Club is music for the arcade bench. Tune in straight from your browser.",
     "https://fm.loftwah.com/radio?station=cartridge-club",
@@ -303,7 +303,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "loftwahfm-cartridge-club-pin.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-cartridge-club-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "loftwahfm-cartridge-club-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -325,7 +325,7 @@ const art = [
   [
     "max-find-max-pin",
     "max",
-    "Find MAX in the browser · Pinterest pin",
+    "Find MAX in the browser · For Pinterest",
     "Find MAX in the browser artwork for MAX.",
     "Open Find MAX and hear the locator in the public browser simulator.",
     "https://max.loftwah.com/demo",
@@ -333,7 +333,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "max-find-max-pin.jpg", 1000, 1500],
+      ["For Pinterest", "max-find-max-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "max-find-max-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -1120,7 +1120,7 @@ const art = [
   [
     "bubbles-first-spark-pin",
     "bubbles",
-    "Find the first spark · Pinterest pin",
+    "Find the first spark · For Pinterest",
     "Find the first spark artwork for Bubbles.",
     "Start with First Spark. Aim one shot and see what opens up.",
     "https://bubbles.loftwah.com/puzzle",
@@ -1128,7 +1128,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "bubbles-first-spark-pin.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-first-spark-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "bubbles-first-spark-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -1195,7 +1195,7 @@ const art = [
   [
     "loftwahfm-put-radio-on-pin",
     "loftwahfm",
-    "Put the radio on · Pinterest pin",
+    "Put the radio on · For Pinterest",
     "Put the radio on artwork for LoftwahFM.",
     "Put the radio on. Tune to Cartridge Club for game-inspired music on LoftwahFM.",
     "https://fm.loftwah.com/radio?station=cartridge-club",
@@ -1203,14 +1203,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "loftwahfm-put-radio-on-pin.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-put-radio-on-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "loftwahfm-put-radio-on-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "liferaft-attachment-export-pin",
     "liferaft",
-    "Take the attachment · Pinterest pin",
+    "Take the attachment · For Pinterest",
     "Take the attachment artwork for Liferaft.",
     "Found the message? Export the one attachment you need.",
     "https://liferaft.loftwah.com/",
@@ -1218,7 +1218,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "liferaft-attachment-export-pin.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-attachment-export-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "liferaft-attachment-export-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -1300,7 +1300,7 @@ const art = [
   [
     "fighter-battle-blast-pin",
     "fighter",
-    "Open Battle Blast · Pinterest pin",
+    "Open Battle Blast · For Pinterest",
     "Open Battle Blast artwork for Fighter.",
     "Open the Battle Blast tutorial in Fighter. Viking and Grim Reaper are already at the cabinet.",
     "https://fighter.loftwah.com/",
@@ -1308,14 +1308,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "fighter-battle-blast-pin.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-battle-blast-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "fighter-battle-blast-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "protocol-11-draw-pile-pin",
     "protocol-11",
-    "Take the top card · Pinterest pin",
+    "Take the top card · For Pinterest",
     "Take the top card artwork for Protocol 11.",
     "Take the top card. Play a local hand at the Classic table in Protocol 11.",
     "https://protocol11.loftwah.com/",
@@ -1323,14 +1323,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "protocol-11-draw-pile-pin.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-draw-pile-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "protocol-11-draw-pile-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "app-composer-visitor-postcards-pin",
     "app-composer",
-    "Leave a postcard · Pinterest pin",
+    "Leave a postcard · For Pinterest",
     "Leave a postcard artwork for App Composer.",
     "Leave a postcard. Open the sample Creator Hub and see how a links page and guestbook work together.",
     "https://composer.loftwah.com/creator-hub",
@@ -1338,7 +1338,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "app-composer-visitor-postcards-pin.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-visitor-postcards-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "app-composer-visitor-postcards-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -1390,7 +1390,7 @@ const art = [
   [
     "woodhouse-share-the-work-pin",
     "woodhouse",
-    "Show your work · Pinterest pin",
+    "Show your work · For Pinterest",
     "Show your work artwork for Woodhouse.",
     "Take a piece of the workshop. The Share wall has artwork, clean drawings and download sizes.",
     "https://woodhouse.loftwah.com/",
@@ -1398,14 +1398,14 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "woodhouse-share-the-work-pin.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-share-the-work-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "woodhouse-share-the-work-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "foilbury-gold-shift-pin",
     "foilbury",
-    "Gold in warm light · Pinterest pin",
+    "Gold in warm light · For Pinterest",
     "Gold in warm light artwork for Foilbury.",
     "Same Moss portrait, warmer surface. Open the Gold finish in the cabinet.",
     "https://foilbury.loftwah.com/cabinet/moss",
@@ -1413,7 +1413,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-gold-shift-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-gold-shift-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-gold-shift-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -1435,7 +1435,7 @@ const art = [
   [
     "shoalshot-tidepool-entry-pin",
     "shoalshot",
-    "Step into the tide pool · Pinterest pin",
+    "Step into the tide pool · For Pinterest",
     "Step into the tide pool artwork for SHOALSHOT.",
     "Open SHOALSHOT in your browser and take a dive into the Tide Pool.",
     "https://shoalshot.loftwah.com/",
@@ -1443,7 +1443,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "shoalshot-tidepool-entry-pin.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-tidepool-entry-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "shoalshot-tidepool-entry-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -2320,7 +2320,7 @@ const art = [
   [
     "bubbles-puzzle-map-pin",
     "bubbles",
-    "A board worth another go · Pinterest pin",
+    "A board worth another go · For Pinterest",
     "A board worth another go artwork for Bubbles.",
     "A board worth another go. Match three and clear the board in Bubbles Classic.",
     "https://bubbles.loftwah.com/",
@@ -2328,7 +2328,7 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "bubbles-puzzle-map-pin.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-puzzle-map-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "bubbles-puzzle-map-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -2395,7 +2395,7 @@ const art = [
   [
     "loftwahfm-bright-and-dark-pin",
     "loftwahfm",
-    "Two stations, two moods · Pinterest pin",
+    "Two stations, two moods · For Pinterest",
     "Two stations, two moods artwork for LoftwahFM.",
     "Cartridge Club and Night Signal are two different moods in LoftwahFM’s radio picker.",
     "https://fm.loftwah.com/radio?station=cartridge-club",
@@ -2403,14 +2403,14 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "loftwahfm-bright-and-dark-pin.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-bright-and-dark-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "loftwahfm-bright-and-dark-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "liferaft-search-then-export-pin",
     "liferaft",
-    "Search, then export · Pinterest pin",
+    "Search, then export · For Pinterest",
     "Search, then export artwork for Liferaft.",
     "Open a local MBOX archive. Search for the message and export the attachment you came for.",
     "https://liferaft.loftwah.com/",
@@ -2418,7 +2418,7 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "liferaft-search-then-export-pin.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-search-then-export-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "liferaft-search-then-export-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -2455,7 +2455,7 @@ const art = [
   [
     "foilbury-drop-bear-pin",
     "foilbury",
-    "Drop Bear from Fighter · Pinterest pin",
+    "Drop Bear from Fighter · For Pinterest",
     "Drop Bear from Fighter artwork for Foilbury.",
     "Drop Bear came across from Fighter. Open the current card in the Foilbury cabinet.",
     "https://foilbury.loftwah.com/cabinet/drop-bear",
@@ -2463,7 +2463,7 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-drop-bear-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-drop-bear-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-drop-bear-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -2485,7 +2485,7 @@ const art = [
   [
     "shoalshot-reef-summer-pin",
     "shoalshot",
-    "Summer in the shallows · Pinterest pin",
+    "Summer in the shallows · For Pinterest",
     "Summer in the shallows artwork for SHOALSHOT.",
     "Summer in the shallows. Take a browser dive and look for the Glimmerfin in SHOALSHOT’s Tide Pool.",
     "https://shoalshot.loftwah.com/",
@@ -2493,14 +2493,14 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "shoalshot-reef-summer-pin.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-reef-summer-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "shoalshot-reef-summer-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "fighter-battle-first-pin",
     "fighter",
-    "Pick your first move · Pinterest pin",
+    "Pick your first move · For Pinterest",
     "Pick your first move artwork for Fighter.",
     "Pick your first move. Open Battle Blast in Fighter and pick your first move.",
     "https://fighter.loftwah.com/",
@@ -2508,14 +2508,14 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "fighter-battle-first-pin.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-battle-first-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "fighter-battle-first-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "protocol-11-solo-classic-pin",
     "protocol-11",
-    "A local hand · Pinterest pin",
+    "A local hand · For Pinterest",
     "A local hand artwork for Protocol 11.",
     "A local hand. Play a local hand at the Classic table in Protocol 11.",
     "https://protocol11.loftwah.com/",
@@ -2523,14 +2523,14 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "protocol-11-solo-classic-pin.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-solo-classic-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "protocol-11-solo-classic-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "app-composer-ready-made-pin",
     "app-composer",
-    "Start from a working sample · Pinterest pin",
+    "Start from a working sample · For Pinterest",
     "Start from a working sample artwork for App Composer.",
     "Start from a working sample. Open the sample Creator Hub and see how a links page and guestbook work together.",
     "https://composer.loftwah.com/creator-hub",
@@ -2538,7 +2538,7 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "app-composer-ready-made-pin.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-ready-made-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "app-composer-ready-made-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -2575,7 +2575,7 @@ const art = [
   [
     "max-simulator-only-pin",
     "max",
-    "The browser simulator · Pinterest pin",
+    "The browser simulator · For Pinterest",
     "The browser simulator artwork for MAX.",
     "The browser simulator. Try the locator in the public MAX browser simulator.",
     "https://max.loftwah.com/demo",
@@ -2583,14 +2583,14 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "max-simulator-only-pin.jpg", 1000, 1500],
+      ["For Pinterest", "max-simulator-only-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "max-simulator-only-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "woodhouse-makers-radio-pin",
     "woodhouse",
-    "Radio for makers · Pinterest pin",
+    "Radio for makers · For Pinterest",
     "Radio for makers artwork for Woodhouse.",
     "Radio for makers. Browse the games, music, tools and artwork from Woodhouse.",
     "https://woodhouse.loftwah.com/",
@@ -2598,7 +2598,7 @@ const art = [
     "feature",
     "jpg",
     [
-      ["Pinterest pin", "woodhouse-makers-radio-pin.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-makers-radio-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "woodhouse-makers-radio-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -3520,7 +3520,7 @@ const art = [
   [
     "bubbles-glass-and-print-pin",
     "bubbles",
-    "From glass to ink · Pinterest pin",
+    "From glass to ink · For Pinterest",
     "From glass to ink artwork for Bubbles.",
     "From glass to ink. Match three and clear the board in Bubbles Classic.",
     "https://bubbles.loftwah.com/",
@@ -3528,7 +3528,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "bubbles-glass-and-print-pin.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-glass-and-print-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "bubbles-glass-and-print-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -3565,7 +3565,7 @@ const art = [
   [
     "protocol-11-draw-or-discard-pin",
     "protocol-11",
-    "Draw and discard · Pinterest pin",
+    "Draw and discard · For Pinterest",
     "Draw and discard artwork for Protocol 11.",
     "A draw pile and a discard pile. Pull up a chair at a local Classic table.",
     "https://protocol11.loftwah.com/",
@@ -3573,7 +3573,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "protocol-11-draw-or-discard-pin.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-draw-or-discard-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "protocol-11-draw-or-discard-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -3595,7 +3595,7 @@ const art = [
   [
     "loftwahfm-analogue-digital-pin",
     "loftwahfm",
-    "Tape and cartridge · Pinterest pin",
+    "Tape and cartridge · For Pinterest",
     "Tape and cartridge artwork for LoftwahFM.",
     "Tape and cartridge. Tune to Cartridge Club for game-inspired music on LoftwahFM.",
     "https://fm.loftwah.com/radio?station=cartridge-club",
@@ -3603,14 +3603,14 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "loftwahfm-analogue-digital-pin.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-analogue-digital-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "loftwahfm-analogue-digital-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "liferaft-with-and-without-pin",
     "liferaft",
-    "Archive and attachment · Pinterest pin",
+    "Archive and attachment · For Pinterest",
     "Archive and attachment artwork for Liferaft.",
     "Archive and attachment. Search a local MBOX archive and export the attachment you need.",
     "https://liferaft.loftwah.com/",
@@ -3618,7 +3618,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "liferaft-with-and-without-pin.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-with-and-without-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "liferaft-with-and-without-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -3685,7 +3685,7 @@ const art = [
   [
     "shoalshot-reef-scale-pin",
     "shoalshot",
-    "One fish, two views · Pinterest pin",
+    "One fish, two views · For Pinterest",
     "One fish, two views artwork for SHOALSHOT.",
     "One fish, two views. Take a browser dive and look for the Glimmerfin in SHOALSHOT’s Tide Pool.",
     "https://shoalshot.loftwah.com/",
@@ -3693,14 +3693,14 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "shoalshot-reef-scale-pin.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-reef-scale-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "shoalshot-reef-scale-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "fighter-roster-pair-pin",
     "fighter",
-    "Same cabinet, different corners · Pinterest pin",
+    "Same cabinet, different corners · For Pinterest",
     "Same cabinet, different corners artwork for Fighter.",
     "Same cabinet, different corners. Open Battle Blast in Fighter and pick your first move.",
     "https://fighter.loftwah.com/",
@@ -3708,7 +3708,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "fighter-roster-pair-pin.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-roster-pair-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "fighter-roster-pair-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -3775,7 +3775,7 @@ const art = [
   [
     "max-sound-and-space-pin",
     "max",
-    "Sound and space · Pinterest pin",
+    "Sound and space · For Pinterest",
     "Sound and space artwork for MAX.",
     "Sound and space. Try the locator in the public MAX browser simulator.",
     "https://max.loftwah.com/demo",
@@ -3783,14 +3783,14 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "max-sound-and-space-pin.jpg", 1000, 1500],
+      ["For Pinterest", "max-sound-and-space-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "max-sound-and-space-pin-original.jpg", 1024, 1536]
     ]
   ],
   [
     "woodhouse-drawings-to-cards-pin",
     "woodhouse",
-    "From drawings to finished art · Pinterest pin",
+    "From drawings to finished art · For Pinterest",
     "From drawings to finished art artwork for Woodhouse.",
     "From drawings to finished art. Browse the games, music, tools and artwork from Woodhouse.",
     "https://woodhouse.loftwah.com/",
@@ -3798,7 +3798,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "woodhouse-drawings-to-cards-pin.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-drawings-to-cards-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "woodhouse-drawings-to-cards-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -4255,7 +4255,7 @@ const art = [
   [
     "foilbury-gabe-shelf-pin",
     "foilbury",
-    "Gabe on the shelf · Pinterest pin",
+    "Gabe on the shelf · For Pinterest",
     "Gabe on the shelf artwork for Foilbury.",
     "Gabe on the shelf. Explore the published cards and their current finishes in Foilbury.",
     "https://foilbury.loftwah.com/cabinet/gabe",
@@ -4263,7 +4263,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-gabe-shelf-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-gabe-shelf-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-gabe-shelf-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -4810,7 +4810,7 @@ const art = [
   [
     "foilbury-pippa-print-pin",
     "foilbury",
-    "Pippa in print · Pinterest pin",
+    "Pippa in print · For Pinterest",
     "Pippa in print artwork for Foilbury.",
     "Pippa in print. Explore the published cards and their current finishes in Foilbury.",
     "https://foilbury.loftwah.com/cabinet/pippa",
@@ -4818,7 +4818,7 @@ const art = [
     "art",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-pippa-print-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-pippa-print-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-pippa-print-pin-original.jpg", 1024, 1536]
     ]
   ],
@@ -4953,7 +4953,7 @@ const art = [
     "comparison",
     "jpg",
     [
-      ["Pinterest pin", "foilbury-real-finish-silver-gold-pin.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-real-finish-silver-gold-pin.jpg", 1000, 1500],
       ["ImageGen original JPEG", "foilbury-real-finish-silver-gold-pin-original.jpg", 1024, 1536]
     ]
   ],
