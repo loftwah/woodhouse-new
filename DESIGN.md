@@ -40,6 +40,28 @@ ownership, reduced-motion and offscreen lifecycle remain intact. No animated tex
 scroll interception hides useful content. This source describes the implementation direction;
 actual browser inspection, production identity and MP’s visual acceptance remain separate evidence.
 
+### Sliced hero artwork — 2026/11/13 AEDT (Australia/Melbourne, UTC+11) / 2026/11/13 UTC
+
+MP supplied [Luna's Slice Image](https://slice-image.dev/) as the reference for a
+continuous picture divided into narrow vertical strips with regular gaps and
+rounded ends. Woodhouse applies that treatment to its own loom through the
+homepage's `SignaturePlate` `sliced` option. Twenty proportional apertures mask
+the existing still and the single live canvas identically. The mask is original
+SVG geometry, inlined by Astro; no reference artwork, external runtime, image
+upload, extra renderer or new animation is involved.
+
+The mask covers artwork only. The reading zone, headline, navigation, caption,
+Freeze/Resume control, pointer host and existing reduced-motion and failure paths
+keep their roles. Gaps scale down with the phone composition. Browsers without
+mask support retain the uninterrupted picture. This is a presentation option,
+not a change to the loom's simulation or lifecycle.
+
+Reuse this treatment for authored artwork where the whole image still reads
+through the gaps. Keep application screenshots, labels, diagrams, text and
+controls intact. Liferaft's real product screenshot is evidence of its interface;
+it should stay readable rather than inherit this decorative treatment. Preserve
+each project's own artwork and identity when adapting the idea elsewhere.
+
 ## Colour and material
 
 - Ink `#080D19` is the page ground. Raised surfaces stay within the same dark family: `#0F182A`, `#111A2C`, and `#17233A`.

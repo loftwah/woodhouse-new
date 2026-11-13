@@ -6,7 +6,7 @@ production page. A design or a story never overrides the live route.
 
 | Screen | Route | Stitch | Production component(s) | Storybook | Live |
 | --- | --- | --- | --- | --- | --- |
-| Homepage | `/` | 01, 08 (historical); 0.security quality reference, 2026/11/10 | `BaseLayout` (home shell), `SiteHeader`, `SignaturePlate` (immersive variant), homepage product spreads, `EditionInvitation`, `FMListening`, `ProjectNetwork`, `SiteFooter` | `Foundations/Signature plate`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/ |
+| Homepage | `/` | 01, 08 (historical); 0.security composition and Slice Image treatment (see DESIGN.md) | `BaseLayout` (home shell), `SiteHeader`, `SignaturePlate` (immersive, sliced variant), homepage product spreads, `EditionInvitation`, `FMListening`, `ProjectNetwork`, `SiteFooter` | `Foundations/Signature plate`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/ |
 | Projects catalogue | `/projects/` | 02 | `ProjectRow`, `EditionInvitation`, `StatusStamp` | `Portfolio/Project row`, `Compositions/Projects ledger` | https://woodhouse.loftwah.com/projects/ |
 | Project record | `/projects/[slug]/` | 03 | `ProjectRow`, `StatusStamp`, `CapabilityRecord`, `GameMedia`, `EditorialBlocks`, `D2Diagram` | `Portfolio/Project row`, `Editorial/*` | https://woodhouse.loftwah.com/projects/bubbles/ |
 | Stories index | `/dispatches/` | 04 | edition callout, dispatch ledger | `Compositions/Article reading` | https://woodhouse.loftwah.com/dispatches/ |
