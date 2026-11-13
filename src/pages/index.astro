@@ -1036,6 +1036,14 @@ export const prerender = false;
     .signature-hero {
       min-height: 56rem;
     }
+    /* Below 405px the Build Notes row wraps under the artwork link, so the
+       hero foot is a two-row block. Lift the plate's caption and pause control
+       by that second row; at wider phones the foot stays a single row. */
+    @media (max-width: 404px) {
+      .signature-hero {
+        --signature-foot-clearance: 3rem;
+      }
+    }
     .signature-hero__inner {
       justify-content: flex-start;
       padding-top: 8.5rem;
