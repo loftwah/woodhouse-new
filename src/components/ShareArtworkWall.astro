@@ -64,7 +64,13 @@ const tags = [
   ...new Set(works.flatMap(({ archived, tags }) => (archived ? [] : (tags ?? []))))
 ].sort();
 const tag = tags.find((label) => label === params.get("artTag")) ?? "";
-const showShelf = !category && !project && !placement && !tag;
+const sortOptions = [
+  ["newest", "Newest"],
+  ["oldest", "Oldest"],
+  ["title", "Title A–Z"]
+] as const;
+const sort = sortOptions.find(([value]) => value === params.get("artSort"))?.[0] ?? "newest";
+const showShelf = !category && !project && !placement && !tag && sort === "newest";
 const sketchPreview = sketches.slice(0, 4);
 const shelfIds = new Set(sketchPreview.map(({ id }) => id));
 const art =
@@ -85,6 +91,11 @@ const filtered = art.filter(
           ? !item.archived && item.series === series
           : !item.archived && (category === "sketch" || item.use === category)))
 );
+if (sort === "oldest") {
+  filtered.sort((a, b) => (a.addedAt ?? a.reviewedAt).localeCompare(b.addedAt ?? b.reviewedAt));
+} else if (sort === "title") {
+  filtered.sort((a, b) => a.title.localeCompare(b.title, "en-AU", { sensitivity: "base" }));
+}
 const size = 24;
 const requested = Number(params.get("artPage") ?? 1);
 const pages = Math.max(1, Math.ceil(filtered.length / size));
@@ -97,6 +108,7 @@ const path = (number: number, nextCategory: string = category) => {
   if (project) query.set("artProject", project);
   if (placement) query.set("artFormat", placement);
   if (tag) query.set("artTag", tag);
+  if (sort !== "newest") query.set("artSort", sort);
   if (number > 1) query.set("artPage", String(number));
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
 };
@@ -165,6 +177,16 @@ const artworkPages = Object.fromEntries(
         </select>
       </label>
     )}
+    <label>
+      <span>Sort by</span>
+      <select name="artSort">
+        {sortOptions.map(([value, label]) => (
+          <option value={value} selected={value === sort}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
     <button type="submit">Apply</button>
   </form>
   <nav class="art-categories" aria-label="Artwork categories">
@@ -449,10 +471,10 @@ const artworkPages = Object.fromEntries(
   @media (max-width: 550px) {
     .art-filters {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
-    }
-    .art-filters:has([name="artTag"]) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .art-filters:has([name="artTag"]) button {
+      grid-column: 1 / -1;
     }
     .art-categories {
       font-size: 0.9rem;
