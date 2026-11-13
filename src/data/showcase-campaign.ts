@@ -1,3 +1,4 @@
+import { wild25 } from "./showcase-wild-25.ts";
 import { projectStories50 } from "./showcase-project-stories-50.ts";
 import { projectStories } from "./showcase-project-stories.ts";
 import { visualFidelityStudies } from "./showcase-visual-fidelity.ts";
@@ -31,7 +32,7 @@ export type CampaignItem = {
   project: string;
   title: string;
   stage?: string;
-  series?: "project-stories" | "project-stories-50";
+  series?: "project-stories" | "project-stories-50" | "wild-25";
   use?:
     | "banner"
     | "icon"
@@ -110,6 +111,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...wild25,
   ...projectStories50,
   ...projectStories,
   ...visualFidelityStudies,

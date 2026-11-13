@@ -1,0 +1,178 @@
+Woodhouse · Wild 25 · 25 original editorial artworks
+GPT Image 2.6 via Fal. All lettering is drawn by the model. The original PNGs are untouched.
+Placement JPEGs use framing, resizing and encoding. Game illustrations and tool mockups are editorial.
+
+Fizz over the city
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Prompt: Create a finished full-bleed 1080:1920 editorial artwork for Bubbles. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A huge translucent helium Fizz floats between grimy concrete high-rises, viewed straight up from street level. Real midnight flash photo, purple glare in windows, exactly one large violet eye and one droplet-shaped tail. The title is a real illuminated sign on the highest rooftop, centred in the top third. No people. Render only these exact lines of text, once each: 'BUBBLES'. Keep important detail clear of bottom fifth and right edge. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Story still, 1080 × 1920
+Original SHA-256: a7f5b22cd9eee7f83bfe9289f0216e0a1e5993dde3a480dddf22a64a21a45391
+
+Rhea in broken tile
+Product: https://foilbury.loftwah.com/cabinet/rhea
+Visual reference: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1
+Prompt: Create a finished full-bleed 1080:1080 editorial artwork for Foilbury. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Monumental broken-ceramic mosaic portrait of Rhea against electric coral plaster. Match the actual predominantly teal hair with one coral curl, warm complexion, round glasses and teal jacket. Uneven reflective fragments, dark grout, face clearly readable from across a room. No card frame or words. Completely text-free, remove any reference text. Read immediately at phone size. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Square feed, 1080 × 1080
+Original SHA-256: 3f4b2c4e83e024eff0ad368499d2979e313f14568b6d53cf4fd770c9d26a045e
+
+Viking in the ice
+Product: https://fighter.loftwah.com/
+Visual reference: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Prompt: Create a finished full-bleed 1600:900 editorial artwork for Fighter. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A single head-and-shoulders Viking bust sculpted entirely from cracked blue ice, on a pitch-black arena stage. Match real beard, helmet and proportions. Giant ice-cut letters beside him, hard sidelight and extreme black levels. No people, hands or combat. Render only these exact lines of text, once each: 'VIKING', 'FIGHTER'. Keep lower right clear of key detail. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Landscape, 1600 × 900
+Original SHA-256: f826835926542dc8dc41bf530f771ebc5d4c880da566d71c79576ba82ab4cbed
+
+Low Tide in thread
+Product: https://fm.loftwah.com/radio?station=low-tide
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Prompt: Create a finished full-bleed 1000:1500 editorial artwork for LoftwahFM. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A huge wave made entirely from thick cobalt and hot-pink embroidery stitches on sun-faded scarlet sailcloth. Use two readable text lines embroidered in contrasting ivory above the surf. Visible knots and frayed fibres. No other markings. Render only these exact lines of text, once each: 'LOW TIDE', 'LOFTWAHFM'. Clear focal point in a 2:3 crop. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Pinterest pin, 1000 × 1500
+Original SHA-256: 7468f621c5a16c0d5f6e61a7d6de247403c2d2baad788f5540f72b5e6a7e29d5
+
+Tide Leviathan
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Prompt: Create a finished full-bleed 1000:1500 editorial artwork for SHOALSHOT. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A giant single accurate Tide Leviathan silhouette in a sumi-e ocean, one enormous fluid black brushstroke with only three red seal-like geometric marks that are not letters. Ivory fibre paper, torn edges within bleed. Huge distressed black title made with brush ink. No metrics or invented creature anatomy. Render only these exact lines of text, once each: 'TIDE LEVIATHAN', 'SHOALSHOT'. Clear focal point in a 2:3 crop. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Pinterest pin, 1000 × 1500
+Original SHA-256: 336b5c54e53346335ae3c6a101489d717cd6bd7f5754ae17c69286b1d4b8c5c4
+
+The paper stack
+Product: https://paperwork.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025-v2/composer-paperwork-close.jpg
+Prompt: Create a finished full-bleed 1080:1350 editorial artwork for App Composer. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A monumental skyscraper made of stacked white paper, with an enormous orange rubber stamp perched on top, low angle brutalist architecture. The word PAPERWORK is pressed sideways into the paper tower in saturated vermilion. No signatures, forms or hands. Render only these exact lines of text, once each: 'PAPERWORK'. Legible at 300 pixels wide. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Portrait feed, 1080 × 1350
+Original SHA-256: b6bd124946f7d6e52bc840be30d114800a76566208047131e5c06cc7d7823ae8
+
+A table in folded paper
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp
+Prompt: Create a finished full-bleed 1080:1350 editorial artwork for Protocol 11. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: The Kitchen Table room as a three-dimensional folded-paper pop-up emerging from a solid lemon paper sheet. Use the source for room character, with exactly one empty table and three empty chairs. Purple paper cast shadows, unbelievable scale, believable folds. No cards, players or text. Completely text-free, remove any reference text. Legible at 300 pixels wide. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Portrait feed, 1080 × 1350
+Original SHA-256: ad99c2aad03265fdfba0c7e292b7cca1d377236f87c626e016235826e26717aa
+
+Patch Bench after hours
+Product: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Prompt: Create a finished full-bleed 1080:1350 editorial artwork for Woodhouse. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Two real objects from the exhibit idea, a tiny green arcade cabinet and a crimson radio, appear as carved foam sculptures on an intense cobalt soundstage. Giant vivid yellow screenprinted letters across a folded backdrop. Handmade texture and huge shadows, objects physically apart. No fake controls, people or hands. Render only these exact lines of text, once each: 'PATCH BENCH', 'WOODHOUSE'. Legible at 300 pixels wide. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Portrait feed, 1080 × 1350
+Original SHA-256: dbe4b9ad5918f41a45a8563f8a93c95e1b348f9ba56c50fc77da6e8d84d1afb8
+
+The mail vault
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Prompt: Create a finished full-bleed 1200:630 editorial artwork for Liferaft. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: An impossibly vast pale-blue archive vault miniature, photographed tilt-shift, with one orange envelope brightly lit on a ledge. No people or hands, no typography. Strong orange/navy product palette, very legible thumbnail shape. Completely text-free, remove any reference text. Keep important content inside the central 85 percent. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Link preview, 1200 × 630
+Original SHA-256: 7a19ed04d2e1ee44d9936dca27e608b857c6d5d2efb39d0ac24985a90612b638
+
+Echo in amber
+Product: https://max.loftwah.com/demo
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/max-wide.jpg
+Prompt: Create a finished full-bleed 1080:1080 editorial artwork for MAX. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A giant amber waveform carved into a black monolith as a physical museum display, with both exact title lines laser-etched into the plinth. One conceptual wave, no readings, electronics, walker or people. Strong diagonal, blinding amber light. Render only these exact lines of text, once each: 'VIRTUAL MAX', 'BROWSER SIMULATOR'. Read immediately at phone size. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Square feed, 1080 × 1080
+Original SHA-256: 31e980641dc3e0b52f72abaf01bc50542fb85382c5193829ba0749ffb37c08c0
+
+Fizz in hard enamel
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Prompt: Create a finished full-bleed 512:512 editorial artwork for Bubbles. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Take the published one-eyed droplet silhouette and render a single absurdly glossy acid-purple enamel pin with one huge convex pupil, as a macro photo on bright canary yellow. Face dead centre, no other droplets, no text. Completely text-free, remove any reference text. Keep features within a 75-percent centre circle. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Profile icon, 512 × 512
+Original SHA-256: e9c2aa3b5d91935c3b41c93fc3843f0a6c209fd176f068681108b8a147688042
+
+The bubble quilt
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Prompt: Create a finished full-bleed 1080:1080 editorial artwork for Bubbles. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: An intensely colourful handmade patchwork quilt seen perfectly overhead. Its upper half is sewn with chunky coloured bubble circles and stitched symbols borrowed from Bubbles Classic. Its lower half is open cobalt fabric, folded once. Handmade cloth with believable stitching, no launcher, board controls, people or lettering. Completely text-free, remove any reference text. Read immediately at phone size. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Square feed, 1080 × 1080
+Original SHA-256: 1583ccccecb1c4d5072ff0ae68acc5b81445a5913c54b640607518b6d3554e3a
+
+The reef observatory
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Prompt: Create a finished full-bleed 1600:900 editorial artwork for SHOALSHOT. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A wild high-contrast overhead stereoscopic magazine illustration: the game reef appears inside a circular deep-sea porthole as if you were looking through a copper observatory roof. Force the world into ultraviolet, vermilion, and chartreuse. Paint the single title directly onto the rim, centred and large. No people, labels or gauges. Render only these exact lines of text, once each: 'SHOALSHOT'. Keep lower right clear of key detail. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Landscape, 1600 × 900
+Original SHA-256: ce473a10aac90dd3eb5e075ffe1b87b42f889aa6529c59114bc59a6eccf3d994
+
+Lantern Ray in copper
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Prompt: Create a finished full-bleed 1080:1350 editorial artwork for SHOALSHOT. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: One Lantern Ray silhouette as a working-looking printed circuit etched into copper over petrol-blue board. Its published outline, eyes and markings must remain recognisable. Tiny lit solder points, macro side light, tactile patina. No fake circuitry labels or claims that this is a functioning board. Completely text-free, remove any reference text. Legible at 300 pixels wide. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Portrait feed, 1080 × 1350
+Original SHA-256: 237df3e139e27d4664fb5370c8c7be842e5942652aff8ff372090f17ba8fde63
+
+Pippa after closing
+Product: https://foilbury.loftwah.com/cabinet/pippa
+Visual reference: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m
+Prompt: Create a finished full-bleed 1080:1920 editorial artwork for Foilbury. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A high-contrast cinematic shadow puppet still. Pippa’s exact black-dog profile with floppy ears, white chin and clear eyes on a violet curtain, surrounded by translucent orange paper flame shapes and one spotlight. The title is cut through a coloured gel at centre top and cast onto the curtain. No other lettering or stats. Render only these exact lines of text, once each: 'PIPPA', 'FOILBURY'. Keep important detail clear of bottom fifth and right edge. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Story still, 1080 × 1920
+Original SHA-256: 22784d76127b70211d28ce61dc6e8d1918b59f604f14326c8aa887598b350946
+
+Moss under glass
+Product: https://foilbury.loftwah.com/cabinet/moss
+Visual reference: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe
+Prompt: Create a finished full-bleed 1080:1350 editorial artwork for Foilbury. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A jewel-bright Victorian pressed-plant glass plate from an eccentric natural history drawer. Use only leaves and dried flowers to build Moss’s unmistakable drooping-eared silhouette, ochre hat and teal hoodie. Overhead photo; no card frame, text, title or hands. Completely text-free, remove any reference text. Legible at 300 pixels wide. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Portrait feed, 1080 × 1350
+Original SHA-256: 9ce491f3df30c051e0b249562755d6c76720c29b8254c7d1f39f8a88d532baef
+
+Last edition
+Product: https://fighter.loftwah.com/
+Visual reference: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Prompt: Create a finished full-bleed 1000:1500 editorial artwork for Fighter. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Reaper bursts out of the halftone print of a tabloid page into a pool of ink. Preserve the exact skull, blue eyes and hood. Black, off-white and fluorescent red only. Type like a huge torn newspaper headline. Newspaper body is abstract pattern without fake readable type. No hands. Render only these exact lines of text, once each: 'LAST EDITION', 'FIGHTER'. Clear focal point in a 2:3 crop. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Pinterest pin, 1000 × 1500
+Original SHA-256: c5a70b59ed4e4991f0a6f61ffaa7a7ba907dc76a35a95601365be0cb3f745c55
+
+Tux on the test signal
+Product: https://fighter.loftwah.com/
+Visual reference: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Prompt: Create a finished full-bleed 512:512 editorial artwork for Fighter. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Tux as a gritty but friendly CRT close-up with tearing cyan scanlines. Preserve orange beak, black-and-cream face and actual headset. Single face centred for circle crop. Deep black and hard neon turquoise with one white scan flash, no text or numbers. Completely text-free, remove any reference text. Keep features within a 75-percent centre circle. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Profile icon, 512 × 512
+Original SHA-256: 336fb2e4b4303d9518f88a5ecb8fff9ba45924dc77e3d158c4e10da6dea440d8
+
+Arcade Pop in false colour
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Prompt: Create a finished full-bleed 1500:500 editorial artwork for Protocol 11. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: An empty Arcade Pop room seen like a false-colour thermal camera: almost black plum with white-yellow neon and magenta rail silhouettes. Dramatically compress perspective to a 3:1 long frame. One sharply legible text treatment inside the warm right half, like a glowing sign. No cards, hands, players or readings. Render only these exact lines of text, once each: 'ARCADE POP', 'PROTOCOL 11'. Keep top and bottom clear of text and lower left quiet. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: X header, 1500 × 500
+Original SHA-256: d5a01f3d90a468b8d7094fdc36c48cf3fcb0d5b291d7756b0f64a1662ea6f48b
+
+Felt through the walls
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Prompt: Create a finished full-bleed 1920:1080 editorial artwork for Protocol 11. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Surreal architectural photograph: an endless ribbon of actual green table baize rises through a concrete doorway like an impossible conveyor into darkness. Borrow the room’s walnut edge and pool of green light. Quiet dark top quarter for Discord. No cards, people or text. Completely text-free, remove any reference text. Quiet top quarter. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Discord banner, 1920 × 1080
+Original SHA-256: 6c092c6c6fe737c237b8456bba3d667831c4a39c75e1586d9f16dd98f3d10d5c
+
+One mark, three ways
+Product: https://composer.loftwah.com/launch-kit
+Visual reference: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Prompt: Create a finished full-bleed 1600:900 editorial artwork for App Composer. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Explosive 1980s toy packaging photographed with direct flash: the actual purple radio mark appears across three different physical pieces, tiny square, large square, long rectangle. Embed titles on two punchy printed folds. One coherent image with recognisable icon, no invented UI, no fake dimensions. Render only these exact lines of text, once each: 'LAUNCH KIT', 'ONE MARK, THREE WAYS'. Keep lower right clear of key detail. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Landscape, 1600 × 900
+Original SHA-256: 9ee8d4293b4a46a21b6ebb27487edffae752d3cf7a143ac1f78243156ac34b11
+
+Bend the diagram
+Product: https://ldraw.loftwah.com/
+Visual reference: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Prompt: Create a finished full-bleed 1080:1080 editorial artwork for App Composer. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: An abstract diagram made from bent neon glass tubes on a black wall, precisely three nodes and two links. No directional arrows. The only title LDRAW is etched into a real glass nameplate in the centre top. Use the deployed editor’s orange lines as palette source. No fake UI. Render only these exact lines of text, once each: 'LDRAW'. Read immediately at phone size. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Square feed, 1080 × 1080
+Original SHA-256: f91091e9aa9d754a7e5033a768a2f0bc2960442bcc940056666deb754df7cc29
+
+Pressure System X-ray
+Product: https://fm.loftwah.com/radio?station=pressure-system
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Prompt: Create a finished full-bleed 1080:1920 editorial artwork for LoftwahFM. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A blacklight X-ray record sleeve with a single giant speaker cone in teal and vivid tangerine, its internals blowing outward into ring-shaped drum hits. Physical anatomy of the speaker suggests a radiograph, with hard clean type in top-centre like a screenprint. No measurements. Render only these exact lines of text, once each: 'PRESSURE SYSTEM', 'LOFTWAHFM'. Keep important detail clear of bottom fifth and right edge. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Story still, 1080 × 1920
+Original SHA-256: 79e423143c7719d8ea93177ac7c40496c3e9a6c32a25298e08a84348c72e626b
+
+The archive opens
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Prompt: Create a finished full-bleed 1500:500 editorial artwork for Liferaft. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: Dark blue computer punch-card paper tears open like a vast curtain to expose one electric-orange envelope. Big utilitarian lettering is die-cut into the right panel, with clean top and bottom margin. No invented GUI, faux readable text or mail addresses. Render only these exact lines of text, once each: 'LIFERAFT', 'OPEN THE ARCHIVE'. Keep top and bottom clear of text and lower left quiet. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: X header, 1500 × 500
+Original SHA-256: d21d784bc5e9a8b2f57c02d7c824a9141dd8935441e6cbf4a347456c67ee0f91
+
+Loom in a vacuum
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Prompt: Create a finished full-bleed 1600:900 editorial artwork for Woodhouse. Image 1 is the source for subject identity or visual palette only. Create a completely different composition using the following specific art direction: A psychedelic long-exposure macro of the real loom eye, formed from pale mint and acid-yellow laser strands suspended inside a sealed black chamber. Sharp optical flares and huge negative space, no typography, no physical product claim. Completely text-free, remove any reference text. Keep lower right clear of key detail. No watermarks, extraneous letters, fabricated interfaces, or programmatic-looking overlay. Lettering belongs to the materials in the image.
+Placement: Landscape, 1600 × 900
+Original SHA-256: 835384ac01565e39258f6c9e001786e5b8813a1b6f932975310cfdc47e77ccf9

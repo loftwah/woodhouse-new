@@ -84,7 +84,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   const items = publicCampaignItems(["foilbury", "loftwahfm", "shoalshot"]);
   assert.deepEqual(
     items
-      .filter(({ series }) => series !== "project-stories-50")
+      .filter(({ series }) => series !== "project-stories-50" && series !== "wild-25")
       .slice(0, 5)
       .map(({ id }) => id),
     [
@@ -118,6 +118,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
         ({ href }) =>
           href.startsWith("/share/foilbury/") &&
           !href.includes("#project-story-50-") &&
+          !href.includes("#wild-25-") &&
           !href.includes("#share-art-") &&
           !href.includes("#share-edition-")
       )
