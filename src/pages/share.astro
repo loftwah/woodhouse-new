@@ -284,9 +284,9 @@ const featuredSocial = campaignSocial(featuredCampaign);
 const firstArtPage = Number(Astro.url.searchParams.get("artPage") ?? 1) <= 1;
 const sketchHref = `/share/?${new URLSearchParams({ artType: "sketch", ...(selected ? { artProject: selected.slug } : {}) })}`;
 const earlierHref = `/share/?${new URLSearchParams({ artType: "earlier", ...(selected ? { artProject: selected.slug } : {}) })}`;
-const hasArtFilter = ["artType", "artProject", "artFormat", "artTag"].some((key) =>
-  Astro.url.searchParams.get(key)
-);
+const hasArtFilter =
+  ["artType", "artProject", "artFormat", "artTag"].some((key) => Astro.url.searchParams.get(key)) ||
+  ["oldest", "title"].includes(Astro.url.searchParams.get("artSort") ?? "");
 const showcaseClips = gameMedia.filter(
   (asset) =>
     [
