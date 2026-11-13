@@ -36,7 +36,11 @@ export function campaignSocial(items: CampaignItem[]) {
   // Design studies belong in the gallery. Unfurls keep the established campaign art.
   const socialItems = items.filter(
     ({ series }) =>
-      series !== "design-studies" && series !== "seasonal-library" && series !== "field-guide"
+      series !== "design-studies" &&
+      series !== "seasonal-library" &&
+      series !== "field-guide" &&
+      series !== "game-rules" &&
+      series !== "architecture"
   );
   const lead = socialItems[0] ?? items[0];
   if (lead?.landscapeImage)

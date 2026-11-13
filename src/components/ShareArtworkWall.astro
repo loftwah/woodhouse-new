@@ -14,6 +14,8 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["game-rules", "How to play"],
+  ["architecture", "Architecture"],
   ["field-guide", "Field Guide"],
   ["seasonal-library", "Seasonal & collectibles"],
   ["design-studies", "Design studies"],
@@ -41,6 +43,8 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "game-rules" ||
+  category === "architecture" ||
   category === "field-guide" ||
   category === "seasonal-library" ||
   category === "design-studies" ||
@@ -198,6 +202,12 @@ const artworkPages = Object.fromEntries(
       </a>
     ))}
   </nav>
+  {series === "game-rules" && (
+    <p class="guide-intro">Learn a first move, then choose a game to find the rest of its rules.</p>
+  )}
+  {series === "architecture" && (
+    <p class="guide-intro">See what each project is made of and where the work happens.</p>
+  )}
   {pages > 1 && (
     <nav class="art-page-links" aria-label="Artwork pages">
       {previous && <a href={`${previous}#artwork`}>Previous page</a>}
@@ -369,6 +379,11 @@ const artworkPages = Object.fromEntries(
 </script>
 
 <style>
+  .guide-intro {
+    margin-block: 1rem;
+    max-width: 65ch;
+    color: var(--muted);
+  }
   .art-filters {
     display: flex;
     flex-wrap: wrap;
