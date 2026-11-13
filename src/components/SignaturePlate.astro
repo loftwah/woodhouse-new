@@ -477,11 +477,14 @@ const sliceMask = sliced
     }
     .signature-plate--immersive .signature-plate__control {
       right: var(--gutter);
-      bottom: 7.5rem;
+      /* The homepage foot can wrap to a second row on narrow phones. The page
+         raises --signature-foot-clearance there so the caption and the control
+         stay above it instead of sitting under the Build Notes thumbnails. */
+      bottom: calc(7.5rem + var(--signature-foot-clearance, 0rem));
     }
     .signature-plate--immersive figcaption {
       right: var(--gutter);
-      bottom: 6.5rem;
+      bottom: calc(6.5rem + var(--signature-foot-clearance, 0rem));
       left: var(--gutter);
       width: auto;
       padding: 0;
