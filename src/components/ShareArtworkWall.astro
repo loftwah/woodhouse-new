@@ -1,12 +1,19 @@
 ---
 import ShowcaseGallery from "./ShowcaseGallery.astro";
+import { wild25Kit } from "../data/showcase-wild-25";
 import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
 import { shareNavigation } from "../data/share-browser";
 import type { CampaignItem } from "../data/showcase-campaign";
 
+const collectionPacks = {
+  "wild-25": { href: wild25Kit, label: "Download Wild 25" },
+  "project-stories-50": { href: projectStories50Kit, label: "Download latest 50" },
+  "project-stories": { href: projectStoriesKit, label: "Download Project stories kit" }
+};
 const categories = [
   ["", "All"],
+  ["wild-25", "Wild 25"],
   ["project-stories-50", "Latest 50"],
   ["project-stories", "Project stories"],
   ["banner", "Banners"],
@@ -28,6 +35,10 @@ type Props = {
 const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
+const series =
+  category === "wild-25" || category === "project-stories-50" || category === "project-stories"
+    ? category
+    : undefined;
 const requestedProject = params.get("artProject") || params.get("project");
 const project = projects.find(({ slug }) => slug === requestedProject)?.slug ?? "";
 const labels = [
@@ -54,8 +65,8 @@ const filtered = art.filter(
     (!category ||
       (category === "earlier"
         ? !item.use || item.archived
-        : category === "project-stories" || category === "project-stories-50"
-          ? !item.archived && item.series === category
+        : series
+          ? !item.archived && item.series === series
           : !item.archived && (category === "sketch" || item.use === category)))
 );
 const size = 24;
@@ -74,14 +85,7 @@ const path = (number: number, nextCategory: string = category) => {
 };
 const next = page < pages ? path(page + 1) : "";
 const previous = page > 1 ? path(page - 1) : "";
-const seriesPack =
-  !project && !placement
-    ? category === "project-stories-50"
-      ? { href: projectStories50Kit, label: "Download latest 50" }
-      : category === "project-stories"
-        ? { href: projectStoriesKit, label: "Download Project stories kit" }
-        : undefined
-    : undefined;
+const seriesPack = series && !project && !placement ? collectionPacks[series] : undefined;
 const projectPack = project
   ? works.find((item) => item.project === project && item.socialPack)?.socialPack
   : undefined;

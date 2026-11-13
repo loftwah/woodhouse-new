@@ -247,3 +247,13 @@ checked eight counters for Bubbles' Eight Shots, kept card mechanics out of
 illustrated room scenes, and checked lettering and framing across the nine
 placements used in this batch. Rhea's palette and Liferaft's Read Only
 headline each needed a second render.
+
+### Wild 25
+
+Reviewed 13 November 2026, Melbourne. [Wild 25](https://woodhouse.loftwah.com/share/?artType=wild-25)
+contains 25 distinct treatments, from pressed leaves, brush ink and ceramic
+tile to X-ray, CRT, ice sculpture and flash photography. Each started from an
+existing project reference. The original generator PNG is available beside
+its placement export. The kit bundles all 25 exports, captions, alt text
+and source notes. Scenes are editorial, including the empty Protocol 11 rooms
+and the Virtual MAX browser simulator illustration.
