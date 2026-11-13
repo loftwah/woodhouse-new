@@ -89,7 +89,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           series !== "project-stories-50" &&
           series !== "wild-25" &&
           series !== "build-notes" &&
-          series !== "design-studies"
+          series !== "design-studies" &&
+          series !== "seasonal-library"
       )
       .slice(0, 5)
       .map(({ id }) => id),
@@ -125,6 +126,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           href.startsWith("/share/foilbury/") &&
           !href.includes("#project-story-50-") &&
           !href.includes("#build-note-") &&
+          !href.includes("#seasonal-library-") &&
           !href.includes("#wild-25-") &&
           !href.includes("#share-art-") &&
           !href.includes("#share-edition-")

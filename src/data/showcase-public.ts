@@ -34,7 +34,9 @@ export function campaignCollectionPath(slug: string) {
 /** A portrait poster remains whole in the gallery; the unfurl uses a wide composition. */
 export function campaignSocial(items: CampaignItem[]) {
   // Design studies belong in the gallery. Unfurls keep the established campaign art.
-  const socialItems = items.filter(({ series }) => series !== "design-studies");
+  const socialItems = items.filter(
+    ({ series }) => series !== "design-studies" && series !== "seasonal-library"
+  );
   const lead = socialItems[0] ?? items[0];
   if (lead?.landscapeImage)
     return {
@@ -84,7 +86,7 @@ export function campaignSearchItems(
         href: `${campaignCollectionPath(item.project)}#${item.id}`,
         section: "Share artwork",
         keywords: `${formats.join(" ")} ${item.formats.map(({ width, height }) => `${width}x${height}`).join(" ")}`,
-        searchText: item.alt
+        searchText: [item.alt, ...(item.tags ?? [])].join(" ")
       }
     ];
   });

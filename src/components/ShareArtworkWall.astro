@@ -14,6 +14,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["seasonal-library", "Seasonal & collectibles"],
   ["design-studies", "Design studies"],
   ["build-notes", "Build Notes"],
   ["wild-25", "Wild 25"],
@@ -39,6 +40,7 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "seasonal-library" ||
   category === "design-studies" ||
   category === "build-notes" ||
   category === "wild-25" ||
@@ -58,7 +60,11 @@ const labels = [
 const requestedFormat = params.get("artFormat");
 const format = requestedFormat === "Pinterest pin" ? "For Pinterest" : requestedFormat;
 const placement = labels.find((label) => label === format) ?? "";
-const showShelf = !category && !project && !placement;
+const tags = [
+  ...new Set(works.flatMap(({ archived, tags }) => (archived ? [] : (tags ?? []))))
+].sort();
+const tag = tags.find((label) => label === params.get("artTag")) ?? "";
+const showShelf = !category && !project && !placement && !tag;
 const sketchPreview = sketches.slice(0, 4);
 const shelfIds = new Set(sketchPreview.map(({ id }) => id));
 const art =
@@ -70,6 +76,7 @@ const art =
 const filtered = art.filter(
   (item) =>
     (!project || item.project === project) &&
+    (!tag || (!item.archived && item.tags?.includes(tag))) &&
     (!placement || (!item.archived && item.formats?.some(({ label }) => label === placement))) &&
     (!category ||
       (category === "earlier"
@@ -89,6 +96,7 @@ const path = (number: number, nextCategory: string = category) => {
   if (nextCategory) query.set("artType", nextCategory);
   if (project) query.set("artProject", project);
   if (placement) query.set("artFormat", placement);
+  if (tag) query.set("artTag", tag);
   if (number > 1) query.set("artPage", String(number));
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
 };
@@ -144,6 +152,19 @@ const artworkPages = Object.fromEntries(
         ))}
       </select>
     </label>
+    {tags.length > 0 && (
+      <label>
+        <span>Tag</span>
+        <select name="artTag">
+          <option value="">All tags</option>
+          {tags.map((label) => (
+            <option value={label} selected={label === tag}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </label>
+    )}
     <button type="submit">Apply</button>
   </form>
   <nav class="art-categories" aria-label="Artwork categories">
@@ -429,6 +450,9 @@ const artworkPages = Object.fromEntries(
     .art-filters {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+    }
+    .art-filters:has([name="artTag"]) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .art-categories {
       font-size: 0.9rem;
