@@ -90,7 +90,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           series !== "wild-25" &&
           series !== "build-notes" &&
           series !== "design-studies" &&
-          series !== "seasonal-library"
+          series !== "seasonal-library" &&
+          series !== "field-guide"
       )
       .slice(0, 5)
       .map(({ id }) => id),
@@ -127,6 +128,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           !href.includes("#project-story-50-") &&
           !href.includes("#build-note-") &&
           !href.includes("#seasonal-library-") &&
+          !href.includes("#field-guide-") &&
           !href.includes("#wild-25-") &&
           !href.includes("#share-art-") &&
           !href.includes("#share-edition-")
@@ -160,8 +162,10 @@ test("a retired Protocol 11 scene keeps its collection anchor and stays out of s
   assert(hits.some(({ href }) => href.endsWith("#visual-study-stock-and-discard")));
 });
 
-test("new QR posters lead the artwork feed in publication order", () => {
-  const items = publicCampaignItems(["bubbles", "foilbury", "protocol-11", "loftwahfm"]);
+test("new QR posters lead the seasonal artwork in publication order", () => {
+  const items = publicCampaignItems(["bubbles", "foilbury", "protocol-11", "loftwahfm"]).filter(
+    ({ series }) => series === "seasonal-library"
+  );
   assert.deepEqual(
     items.slice(0, 5).map(({ id }) => id),
     ["gallery", "bubbles", "foilbury", "protocol", "radio"].map(

@@ -1,0 +1,1773 @@
+Woodhouse Field Guide · 13 November 2026, Melbourne
+Generated illustrations and design studies. PNG originals are the generator outputs. Previews only resize the full canvas.
+Proposed interactions and conceptual hardware are labelled in the gallery.
+
+Last credit
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png
+Image generator: Codex ImageGen
+SHA-256: 23097bee3ea66574af880ad0c1222ae43af5c1b3bbd232802bcd30da9f24a636
+
+Bank shot · Cyanotype
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Image generator: Codex ImageGen
+SHA-256: f287ff5d154b1dea58ef2a577b4898d8b3401fed4b19e2a9d9d6decc85b65510
+
+Rhea after hours · Mezzotint card
+Project: https://foilbury.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261113-seasonal-library/rhea-card.png
+Image generator: Codex ImageGen
+SHA-256: e94d4e8b070a3faa217038e84562c036591c13d49901d0bd903bab2b05dbb197
+
+Pull up a chair · Enamel pin
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: Codex ImageGen
+SHA-256: 989a37429df8ba47f0755c61d7683639e69c8d87138f22eb81d6dad6480ab778
+
+Pippa has the studio
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png
+Image generator: Codex ImageGen
+SHA-256: 37a681e9e69cc4c96fdcc05fb51b1426907ce0b81f58943a73492fbddd5a07ad
+
+Lantern Ray field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d9ed70663e586ab1cf6c299961a4f5dbf7029f79ee1d8619612272cd01753f2a
+
+The model comes apart · Diagram
+Project: https://ldraw.loftwah.com/
+Visual references: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 71a7ad183d6749ec28de45d024afe849e979b3821860f1945cb175917b8b4a7d
+
+Cartridge Club · Poster
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d845f49031d28ccf5bbbf7e6814d758f5460fe27b19cc8f715ba33092328c17d
+
+Recover the attachment · Diagram
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 92d3e039f5c488bb25536731786633d740bb60a0b40ea6856bf8cd3ea2de57f2
+
+Pippa has the better corner · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1ece4ce60317e5b1ea4d59dc699942075fd47fefd309ec94e5447c07d0ba6fdd
+
+Dean and Pippa · Arcade avatar
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png
+Image generator: Codex ImageGen
+SHA-256: 2ac28ab19d1acc2d76dc807027b9cc162d0581efb0643ffa73916f255b341fc9
+
+A useful rehearsal · Diagram
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1dc4b449ec2da1c9b27a977d450cbc7aa39520af55aecc367c42641999dd9dba
+
+Where the card came from · Poster
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 66d08cb160c92866a7c35b904700c2cee0ea09f449e2845c1f10accbaec271be
+
+The wall is part of the shot · Poster
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6318ae062a83a8cb071e2ce7510a2a3dc4fc73630ea630cccde5cc7ce742c4a3
+
+The same card under light · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l29t5yrhnwsb7ye8thb4, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 5ac17e8234111224347d6d1a1eb97e28622a37ad21fb6bfc3a576f9bef827c8d
+
+Read the impact · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 90a1f0456c6518a660da6e7e31c5ef8251ea2a40978dad5b13e8ee2b59917cec
+
+Abyssjaw in the dark · Poster
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/abyssjaw.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3142eec0c9b3ef95cf8d769426ceab80a3b811b555e125c7f444f338b5f226aa
+
+Arcade Pop · Poster
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 14f5b82fda3e4a063ff01949fa2d30a49aa0c3279d2de2e4f509c4316a8225f7
+
+One mark, several destinations · Poster
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3a6d66182c0416e2d1242b57effe17c2fe9274e99a64b1ca2be026e201c4791a
+
+Bob on the dial · Poster
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 780117a76b0be1ad2094667a78af9359b20745fe1fc202b0ec4b200fcc5616ef
+
+Keep the original in place · Poster
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 529a6afcf84ae0535fa0caf1bc79476fa58fc0ab1ed270c76ffb2938d16c7c8f
+
+A useful rehearsal · Poster
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a5502f143c406ce5c44bf9de96a155e5a434e6bd4773910ef04af5c52dd6f7b0
+
+Where the card came from · Diagram
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8c0f15f763f02594899f7ba21a8bb3a5006f56c7d0a3b0cc2fb509012cce3a67
+
+The wall is part of the shot · Diagram
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a77fc7788cecfbcdf98b7ed993d41c20d2a4a1218cec16159ce262f1a0cb3c99
+
+The same card under light · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l29t5yrhnwsb7ye8thb4
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a090cc3740832e10f28642ab1113e157289869a20fca632dc5b8ab2321a3e748
+
+Read the impact · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 676d5ed1fcb054bb7e9afaec937b9c462844d52df3dc89bd1960744b5d199209
+
+Abyssjaw in the dark · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/abyssjaw.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 84590d6b20fd06a5d402e29162672684697ead2111e16391d15d4dddd826eea2
+
+Arcade Pop · Diagram
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: caaa2db398d4f0b383deec0529a9ad5bd0d825d40f916e0b343e6c2c333a4673
+
+One mark, several destinations · Diagram
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: bda1ca2efe050ccfe3f4cfb499b6f7ed216c3b870f25dc89f0404008faaf65ae
+
+Bob on the dial · Diagram
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: cbb0f95272d92ccf97ef5117d8ed3f99189b9f2f1c874ac31fd325da1e35a1d1
+
+Keep the original in place · Diagram
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7812c52d7eea52310fb0f686ff714b4fc950f9f29a6005bafaf831e1b0e5896e
+
+Where the card came from · Story
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b76e0e78631420e271f3099f1af3b739af4eaa93335035f4033f291e4eb473e4
+
+The wall is part of the shot · Story
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 4b32c8807e3cd0e3bf137c624d3e452b6ddff6d32e648281f8216984a952a6d9
+
+The same card under light · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l29t5yrhnwsb7ye8thb4, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b84c664b340aaa4ec3889adeeb5603ff4c0fcfcc65e2eeb88aba1f18890768e8
+
+Read the impact · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6487053b0954c5729cee83c11e7b58d386b71feae29998151c3e91091c69311b
+
+Abyssjaw in the dark · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/abyssjaw.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 45fa38c0788a8b86aa8f9bd4b4e5bcdd5b88466b4f319c74bcdf634469c3f73f
+
+Arcade Pop · Story
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: cb18658f02369e2520499220782621ef7f9607ba37c948245d94952013fa0bd7
+
+One mark, several destinations · Story
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e4d4d4fa549a9e391807596565327b06f3c2f0ff9cb509ffb61bdf7188b8eaba
+
+Bob on the dial · Story
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d62eeba50b732f276c2731ff3fa8f58df80e6505770099973c34e677d3323f24
+
+The thing you remember · Story
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d64e5eaa8c19dfb4a9859c48d56e21323a237a5b6abf1fc035a7a43b86ec1bf3
+
+A useful rehearsal · Story
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: aba554971d2c774404f34d34cc4a21b57701e4171f783252265f8ce73e05a805
+
+Where the card came from · Sticker
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 574ee58b716e9df70f39aa3c206284e71eb7a45f5002a0386a356ca1c2ba4a4f
+
+The wall is part of the shot · Sticker
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b2e9294c7b415448025191f82809bd18b8f56b05e5321e95c0be816f22e1eff5
+
+The same card under light · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l29t5yrhnwsb7ye8thb4, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e06f3289a179b4be085892f250630a5458db86a0922b93d80b9ae222e19c7d90
+
+Read the impact · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a1f8a593cd92d067f5f933fb24ea09011af2ab9068daf3bddc0e655541c41f51
+
+Abyssjaw in the dark · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/abyssjaw.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 23b0f0d052df06a651bebf0d02cab2163347720acc8f03d535e3ebb8d72ab15d
+
+Arcade Pop · Sticker
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 68421d19def0c2573297889bb35ba78b2d331edc65aa388b8a2be94cf6ac9db1
+
+One mark, several destinations · Sticker
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 097a6b472944e474c29320a90571685f68ecf4e52d7d48d04fc455255e46454c
+
+Bob on the dial · Sticker
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2d9425cfda7244c197ec78ec3d2b8964052cbe6a29282300842a5e6fe9d4426a
+
+Keep the original in place · Sticker
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f0db89f141f7a43054009d2d3739a4c81b33ae2113d46fdd7a47953e8bffc2f6
+
+A useful rehearsal · Sticker
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: befa07520163c2a782b88161857ae30b2ec165c0e6106fe9ea0aad93bf65f0a3
+
+Where the card came from · Print
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d67bad44c7f0e94fceee92264797d1b736143a3a6cff0de2a12d9ed1a5688af8
+
+The wall is part of the shot · Print
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 889fa6916059c881c9a132ecf3eb47d27ac86bf882567e5bfd8ac04cd56f26bb
+
+The same card under light · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l29t5yrhnwsb7ye8thb4, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d4b89a3b1801b747fed0082771fba640985b0763395b19b29cb3300619523cbe
+
+Read the impact · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 806f89c5095689b98fd7a579b9f10758bc90e23b159a2743407c30ebfc5609ff
+
+Abyssjaw in the dark · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/abyssjaw.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c8ade4620f1838c29a461a5748db0104a40240646c40f8d1c637b0bf1f66b33d
+
+Arcade Pop · Print
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 90a7818ec184b30ce0dc9ce6a35dcb55448d9cf706ca8e2ee0ef860af6f3d55a
+
+One mark, several destinations · Print
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 989d41c1ec39b6ced784be5b60a89e186fbe58cce4943c48ae9bad11e45afde2
+
+Bob on the dial · Print
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b2a07895aacd540ee8249f9d6714ebe2e9bac11123ae92275dbb90905fd4c4cf
+
+Keep the original in place · Print
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9aef754770f129036161ef6a1b47badb8fd5b11175c80c2b91c28be367571514
+
+A useful rehearsal · Print
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ca55d4fee7753fcd22aa81e3eb4a161bfd2a3868b736ea08dea51eec6889c21b
+
+Woodhouse woven seal
+Project: https://woodhouse.loftwah.com/exhibits/source-plate/
+Visual references: https://woodhouse.loftwah.com/brand/loom-card-front.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d51572405c391c5cce2ad5840305587e093919300d8163fdef9d660be51c98f2
+
+Bubbles arcade emblem
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 04e561cf340fb1b94921e75d2f7d43f692e80b374a3483e4054d800d8cc2bbd4
+
+Foilbury foil stamp
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/kit/foil-standard/mark-1024.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d182d223984aac0f3b0ad3f1518157b788e4ecfd9d78f7785994278a56a1be4d
+
+Fighter marquee mark
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/switching.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fed2dbea361b493f51ff0877faa4a402067bd7770a935526c0f05f2460629837
+
+SHOALSHOT reef mark
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c55e02586c9a6c39888e7457d59f1f5b84969e0e760e19e983d829c528a0977a
+
+Protocol 11 chair mark
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/arcade-pop-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ee7ffc0c8640e5fb15703fe7f213d2c0a2fb53805d228f1308b069b1469854a1
+
+App Composer launch header
+Project: https://composer.loftwah.com/launch-kit
+Visual references: https://composer.loftwah.com/brand/apps/launch-kit-20261023-480.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6f5a6534e2ad4edc6bca911620128d8b4e6fbdadc405e291bf2ab969762861e4
+
+LoftwahFM dial mark
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/bob.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fda69180bbdcf35aafe1e727d6419a99e64d4c5e4ff8687d385522ac3d85fb1f
+
+Liferaft archive mark
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b9eb9cd9e1cb436f379e6c523abe635477a9f34947daa4c2ca26679c3ddb7a19
+
+Virtual MAX signal mark
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8a4a5bfb0f32cc7e245a5bfd230065fa6a228c76b330384af08c1254f16edc0d
+
+Dean off the clock · Poster
+Project: https://woodhouse.loftwah.com/
+Visual references: https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e784b360d8297ee190e29a73ec96c0705c7800cadb83320912535875a20203ed
+
+Another credit · Poster
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d0c1d084e7bfd2f1e5a3f908d17845aec50f3ba2a1220fed9b885a6c2b49fef7
+
+Gabe’s shelf · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9eibqf4ntvfrhg6bw8webb, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7af389ffd7e13dc8b5fce6b6298e17c898a70c86d10a1f7f2904da680c3ae099
+
+The Reaper enters · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b8b00ad8f08c154ff1766e37c58a865feb033e3b1a6ace4f49c4181ff8b2d42a
+
+The crown in the current · Poster
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/crown_jelly.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0e26aa31de13f391793af59945888190c634be4a57499a2bb7ea6a926cddcafa
+
+Classic felt · Poster
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 67bc9d1ede49354b89c4657f472739668c447c6be7129e985f9b2bb52cb15dc1
+
+The model comes apart · Poster
+Project: https://ldraw.loftwah.com/
+Visual references: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a51acc5e5137c954fb7dd27cd0faa9e405cbac54fc1021cd9dce0adcfcf24d71
+
+The thing you remember · Poster
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 78a330738ea4c17b21b128cb0fec30e04a78cfbd91541a8eda0d30ccec1b1135
+
+A voice interaction to try · Poster
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9784552b69996e036a68b173e6e4028d3d58752a19e8196d8c86a4c6fe9edd1f
+
+Dean off the clock · Diagram
+Project: https://woodhouse.loftwah.com/
+Visual references: https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8e1ad938b727e0f4c169546dae8eac445429343121f0deb9f1946037b84bb63d
+
+Another credit · Diagram
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0f04f2890846d8ec913ef011631dd0ce2e3e75d825068cd426a00a49c05c8c5c
+
+Gabe’s shelf · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9eibqf4ntvfrhg6bw8webb, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a87a099a287480c88c675d58a3ad8cb8b2a97b5dd6c1e432645c86d07875b9d1
+
+The Reaper enters · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1c7a1591deef17f239c61a747f8428b9770712cefb8d342b949f0a817a58b1b2
+
+The crown in the current · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/crown_jelly.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e761a946559a417c451525f3273b958e9476b4ad3ccbd58ca054f5792333f440
+
+Classic felt · Diagram
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d25ce8cb42930f59d31ab8a96dc847c93d9199e02437794372dc09fa586bab58
+
+Cartridge Club · Diagram
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 5bc05a3e4befdea3cc4af89942af2882b835f2ada82ab64b438701242fbea997
+
+The thing you remember · Diagram
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: bf0384fa5379e556fb4235ab6633294393ed539ac4046841048cff776ec8afb2
+
+A voice interaction to try · Diagram
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 5652eec135e326b444a2ef7684bb2341ebce8ea4a14a066ec71438049d338c00
+
+Dean off the clock · Story
+Project: https://woodhouse.loftwah.com/
+Visual references: https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1101441310db6970b07ba2fe2ffa9baf3989e1202cf219e7c87f406b47f9dcc8
+
+Another credit · Story
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 85c28aa0e2ba46425992382db87081c9e4ffc10889abe6f45981b7140eb14ebe
+
+Gabe’s shelf · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9eibqf4ntvfrhg6bw8webb, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3a1094a052e18187b81728c8981f83fa4e17f3cf6d3895628fbb27ab79a4c269
+
+Humpty off the wall · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/humpty/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2e5cc8b3c79d8e056cc3823115ce1a08d0cab40cdb7558cee40e2cd1136bdb03
+
+The crown in the current · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/crown_jelly.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e49b2e7631c04853bd365eb892b2e1fd9e7a482c17f9d734f6071240654e4f69
+
+Classic felt · Story
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9219c8a26fbe31fc81395b86dc41f5f857417d6fcec7623fdad9d2a7418a0b45
+
+The model comes apart · Story
+Project: https://ldraw.loftwah.com/
+Visual references: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 793b45d195fb6ee9b07e729002de01ae4dd5e3f8435039f52333ef972fd12393
+
+Cartridge Club · Story
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 54b6191141b08775dd3ab0610e8f815f92178a5d137019e14417efc716feeff7
+
+Recover the attachment · Story
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b025a3ed08491262f25a6fa26b6975637ac05ea340c4d9454a2e96db3011511f
+
+A voice interaction to try · Story
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 594e2b451f858192bd1b4c7a0e756bb510c56c0bc7662f129e3d3451ad6764fd
+
+Dean off the clock · Sticker
+Project: https://woodhouse.loftwah.com/
+Visual references: https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 680f23ddd94bdb381289e5e687bd4b8c2d27a4094d3703b32aba36e913cf6a55
+
+Another credit · Sticker
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 87bdc3d5dd9fc5fabae210e368e96434ccb5091e63ed290aeff908e0f92a87a8
+
+Gabe’s shelf · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9eibqf4ntvfrhg6bw8webb, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 13a2b6c903d4e00e2d40b47d51730c4808e5c126a96d7505cdb16b6dd88e3906
+
+Humpty off the wall · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/humpty/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b882659c6755c4ece352a7cd5f3484cf0dcdcbc59dbfef3c6f60ded740507331
+
+The crown in the current · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/crown_jelly.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ea4ae4a2d33984da9dc539c8f1d88116948312af6c2b1418244f9f83c6213438
+
+Classic felt · Sticker
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d6451634ef5c0baf8c060abc74cace4acdc64e3b268eb3e1c6463ac16f600f06
+
+The model comes apart · Sticker
+Project: https://ldraw.loftwah.com/
+Visual references: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0ee68e7d91065991ea392b5ceb26cf7d95599bda608e913666de13667deaf5f5
+
+Cartridge Club · Sticker
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2b2bc169fcd9b3d9f2f5ad0c9a7fc0ae0397f7569bc0714ef58ad44928626516
+
+The thing you remember · Sticker
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ababa4ff5918add415cade90a0cd277dcfdb388c3cf99c72d38f1ab0f93ffcea
+
+A voice interaction to try · Sticker
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f55eccba4cc653c7dbf8eb3ec41a9937656b150219a0538bdf0b91d4e5dc081a
+
+Dean off the clock · Print
+Project: https://woodhouse.loftwah.com/
+Visual references: https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 08e1f9f36c0606d86912525d357a4d88534699ef83156902d4d9f070b7874952
+
+Another credit · Print
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 14508c19e72988aa895e107d9c97ec5ece2b78a3d81fcc1aa37292ef4ca9af67
+
+Gabe’s shelf · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9eibqf4ntvfrhg6bw8webb, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2de744d357d1655480911d05f0e11135d7976cc90c3a87dc4e2ac9e9e2807425
+
+Moses takes the next turn · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/moses/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6fe48619f3427bb88f8b52f5d11310a25ee39b84d9841a3b3169bde13b4f7335
+
+The crown in the current · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/crown_jelly.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b0ec6d1eeecabc0127aa5224a8ab071fb0328827abe5eb579bd9408a0ca69398
+
+Classic felt · Print
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/classic-felt-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 67b0719e2bd83a7ea0525f47484143214ed377e784998c12bb967ee69a3400d0
+
+The model comes apart · Print
+Project: https://ldraw.loftwah.com/
+Visual references: https://composer.loftwah.com/brand/apps/ldraw-workspace-fa7a2ab6171c-010cfbd2-r2-1440.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 34a54641cc1c506f7b888f670141a622e3327fb1b79f3dc3ba134c424dbd8aa3
+
+Cartridge Club · Print
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 37e349283f1a5bba47598630a123a3dda08fe8bb4bc5f3630b5cd844c450a931
+
+The thing you remember · Print
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 46115d3ed65e26bceb2d2ae258d02baa0df59e3f563cab7277405d9553168bc2
+
+A voice interaction to try · Print
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fcf3faec46bb1999b3c4e6dcc4b2f6faea7776ab66815562ef0f00a095851fa9
+
+A line under tension · Poster
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 738aa9a9397df4a7d2b4a3559b98356cca351ce855db647ad238f5b4e25e3ae0
+
+The ceiling comes down · Poster
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7526e60b4c042f105655ea6693559c842dea6e022153d085cf77a2081e01570b
+
+The keeper on shift · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 229464ba41495a0d4ee2f99507f39438f6ecfced5b5c310886899ec251c681bd
+
+Pippa has the better corner · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 42b1e2833a09fd3bf6b2dd83a30181cc7dd9aac994fbaf25ddf10a1eb55a31d3
+
+The reef has a ceiling · Poster
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fa8c250992d4b95581f5851ff6a5d797326660c6ed5271100c6bba9d1a8d5fbf
+
+Pass the phone · Poster
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/late-night-party-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 866edc6cdd8fed86e19cfbcbfe8cdf74bf31588d0208a9330af4529ec5d43b15
+
+The app is yours · Poster
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 12f07f20362cad1a8fb27e182091fc8083fc1258f949fad3489d194af2159e6b
+
+Night Signal · Poster
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: eea9f84009baa19438ad76ee47003032df9d24bbcaaf8e71ff73aeb613225bfa
+
+Recover the attachment · Poster
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d6e6ce0451a22977cb52266990b340d24bd1643fc737b5c63cc48d6cbdad0214
+
+The walker you already have · Poster
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: edd732041c152373cba722bfe68539b2a0a740d4dcdd73a346a339bb8231f9bc
+
+A line under tension · Diagram
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2186468d211bc17d3aeda374c7f370290b54b432727ab17564370f8798363fc9
+
+The ceiling comes down · Diagram
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 923452306f108384cf7025252eb7d1f12d3f1eec6b584b21336305e4dd83b394
+
+The keeper on shift · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 257e0bfe174fc521be6ffe67b15225339a6c5010eba79236355f1d97c754f268
+
+Dust Shrimp field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/dust_shrimp.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c385eae70ac9e8c497d17ab2983989d3697884888b550c14fbeeac047c1ebe85
+
+Pass the phone · Diagram
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/late-night-party-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 26ee70a734e5f7e5c29412f3db8e1caec02a8512823db6e0c5fcb250fd90d028
+
+The app is yours · Diagram
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 333dc3399a2f29746cd619acc1607ba029f3bbb5e954a539f87d276b0b3de69b
+
+Bring your own soundtrack · Diagram
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c475894b94108debe8d4d1f261b17a0bece6e1646ce167612127a58e145bfe4a
+
+The walker you already have · Diagram
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1a36bb82fa5daee37786f2cb6f4a0355780e7c0fcecfc29dea82176ee6afffce
+
+A line under tension · Story
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e393d04566696d9c2cdbb59aeca4f740397d9fca7b56fbc2b9e608cb1da3c5ab
+
+The ceiling comes down · Story
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 5e9fe7f2cfc6f6978de1a5724515701ee83191a2fbc254149c0005f592476a93
+
+The keeper on shift · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 88e5c801c20c029a0bf49999954a337c505fa11d2ea96d843f31d9584d69ee24
+
+Moses takes the next turn · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/moses/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1122cc36bdbf1cda2cfc5e19183af386e8b9b645a59d63fdb88f1062a1c93cb7
+
+The reef has a ceiling · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8426199d7904d64a31fdf16416ba7436c958234fa7a4eb5b4c2eb8aa12865753
+
+Pass the phone · Story
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/late-night-party-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 780f320bfb54ff4be9037627a6039115feb2162e41559dc598fb9e741d5bf306
+
+The app is yours · Story
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 52f410e924ceabf7358ca858478b77051b3cb271af90538e50f699c7d8ef6ec5
+
+Bring your own soundtrack · Story
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: bf1d552fc49cc7294b2fb567c2ffe1dfe67bb352a9cd81a26128d8ec3ebf0e17
+
+Recover the attachment · Sticker
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6a7bc465a46a40fef96adb4d531c44fdbf5afc7e342657012bad02076354041a
+
+The walker you already have · Sticker
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 839af6db966372c694ab622152f2cb66acf8541428cb7ad3a2ff321adf5d4075
+
+A line under tension · Sticker
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 93b91a9fc8a75143363bc31705e14aebdc9e0fa9319ab193ba3e91b2b19931f9
+
+The ceiling comes down · Sticker
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 720195b62068d42a45b36b7d451dcc7b23c66c20dd543caf6ec2fcda782f2421
+
+The keeper on shift · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 38976e1025a9bb9e1f0bbd7b41ea4ff37db3ac82672585e20d19d7e845cab3aa
+
+Moses takes the next turn · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/moses/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0313ae3d0111e06ae2c3f4dad3262e33c15d23054d55fbdd14860ecc689c3968
+
+Dust Shrimp field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/dust_shrimp.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 28725a525e194175ccf5aa091fa8570b921ebbb19db000ff6ffa8f25ca8cfecb
+
+Kitchen table · Sticker
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1fb261e935f857c89d609b921bc38ba5db5cd45c06bcecd9e119fa50a7dba210
+
+The app is yours · Sticker
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 5cc477a3b42efb00fed559e92de70b38324a3823bcaff232d219e7c3d8990f85
+
+Bring your own soundtrack · Sticker
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fdbc3d277b05996bafb29e01e542b18581ffb11d01271e6a95572e370495c3a0
+
+Recover the attachment · Print
+Project: https://liferaft.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 49395fc7da39cd8a44fd9400481fb4208b52d70c5694988df827ecc98fd356bf
+
+The walker you already have · Print
+Project: https://max.loftwah.com/demo
+Visual references: https://max.loftwah.com/og-walker-20261025.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6c2764795e8df23480fee3e133c4ff521b7990cb717fc92fb05a824943b32430
+
+A line under tension · Print
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/signature/loom-wide.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 77a4d4738a40f949cf2368dcbf3aad2feea5799740e4b79c5751e4353132cb36
+
+The ceiling comes down · Print
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d326d9ac2aaa0575bf4af445efdd1c59bfcc8be23032a1ff665f665ec2adb366
+
+The keeper on shift · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 46d1040f42983f2c3f6f531521f729e56f3be71ff5b186df94862b3b6a9afcfa
+
+Ned Kelly under the lights · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/ned-kelly/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 875e086e61649263c5d6726c49e31eaae626e57a43abacf6143a9aca869bc410
+
+The reef has a ceiling · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6152a3589c8736e27949dba8e0bf2d65b6f724229bd7fe4588bac248ccd23b59
+
+Pass the phone · Print
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/late-night-party-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ccd735bd0490c770dd16d922aac342d550c302722a49910ce2195d6567d7b6a2
+
+The app is yours · Print
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a14fe101f93d9bffde140d687d21bdf5522a70ec3d3f0e604caf22c744e33b84
+
+Bring your own soundtrack · Print
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: cc8e24c11838b86a3dcfc75ed3549def0d43b8e3a9dbd0f36fec360a50e94a8f
+
+One human. One dog. · Poster
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d66fa808d49e091d4bd898a89494beed8871219a383c108c3d7ca46092db0e63
+
+What falls with it · Poster
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 76b8a70b59eeb2e4888bf22255e891cb40dcdb0d35ceeef1ab8105d8ef660967
+
+Moss and the leaf pull · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3d9bb4cbd42d9844732084296bcdb04ab0ac112637fe8e150397ee27d03a480a
+
+The bench is a decision · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/intro-launch-roster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0cc3889ec7804658aadee9b250c00cebec6605442cc8c9fefb3e17f69e3d9c55
+
+The three depths · Poster
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9696a2678af2c2c95bbd46b0647a4938e4aa1c71a6b9112303c8ede1ff19f1fb
+
+Two piles give away different things · Poster
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 207bc8d9a4c31082d9cfe3a382348ddddfe336a22fbd5873f40da573e124e31b
+
+One cover, four decisions · Poster
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 363e14c8b42a21de4ed21d1e887c4aa76833d4b341a851cda8e1ad9b9a5c7b91
+
+The station has its own signal · Poster
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 456cb3663acdd6489b8aaf40a1ffb7648b19cb4a64d7976f19976b82eeeaadd4
+
+One human. One dog. · Diagram
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3914bd3ee34325e96003b692f3b5f7894478fae87195725ebc50e2d3b678427a
+
+What falls with it · Diagram
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7156377f6a6c665159e1acf5811b3d8b8dfb60c838fb395ff832230b8a3985ef
+
+Moss and the leaf pull · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ab7ccfe68e5922c9fde87eea73c32887b505e5175ed312e62c5bf4db00107478
+
+The bench is a decision · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/intro-launch-roster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7af397d119e296090c48eabf91e94af6195349f2478d26f46e37f2fcf90c2dc3
+
+Ember Eel field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/ember_eel.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7a63991427d40a12ba0174794a885524a908d743311d984a2c01eb8457c0dd7c
+
+Kitchen table · Diagram
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a872828d648556abdd2d253a730754a03a22e081987585ab6d1f3327832b352c
+
+One form, out the door · Diagram
+Project: https://paperwork.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261025-v2/composer-paperwork-close.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 56dae5b99076da59b5298409970b81a8c57f0cbdf9b8d7f39684785d17b3b05c
+
+Night Signal · Diagram
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2b94129fce7848b8bbca29cadfd5ef4518307e4901890968c2d817437990dae9
+
+One human. One dog. · Story
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a15100d497782b886a92c4e0b31eead630556dafe9cdc79f5bdef0c4e1fa4db5
+
+What falls with it · Story
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: bd7e9f6f6fffd920346e6374658bef797a0be5e469b05aef5c187c5ebaf11345
+
+Moss and the leaf pull · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e0142872fcb469fa5b2e650f1ec66dcd455f592ecd8b907f9660b78fa4b25da6
+
+Ned Kelly under the lights · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/ned-kelly/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7d036cf53021a9a15833e7784584674ef38f341d790c3084ecc745733fa81ddf
+
+Lantern Ray field plate · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: aa41633e82270a79397b6d94a8b1bfe9fde4f514fba0def3729c9371ef6424bb
+
+Kitchen table · Story
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0b5565ec565695dbb4d418f37ee9d832d915f17b6171bcbf990f057a25a213cb
+
+One form, out the door · Story
+Project: https://paperwork.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261025-v2/composer-paperwork-close.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fdf344bff99a0e98a50ebb57d8230cda3cb5e07f3716b25fb790b965c648f08b
+
+Night Signal · Story
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1392e0c9bacd2086c5c776097906eb59fea38c8c73650e38368830ddb3ec8712
+
+One human. One dog. · Sticker
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1c4a700b8f8ff5b812def9f26f29ac418865556d4ec224aed7e98cdf49c0971a
+
+What falls with it · Sticker
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9779985be62aea712c4cc93aafba1bbe77168578601e5b0b881c54a6c9d80413
+
+Moss and the leaf pull · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: cd46302a2419e6290004a5e91aa17ededc5d44755f4204bee7ff452cb74aea3b
+
+Ned Kelly under the lights · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/ned-kelly/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f5e05c4df1d9aa4535cf4e3b5a1d1cd8d48ae72bbb27def908d0d9495b7d5642
+
+Ember Eel field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/ember_eel.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2e34c6ceb97b88b4278fb7577eb680f73dfcd09317bb500a512e057dae66bc8e
+
+Two piles give away different things · Sticker
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 4defb09f32c7c95cad0c38fc4c19018819d13f0b97e74eee0b27ae7518c6cf33
+
+One form, out the door · Sticker
+Project: https://paperwork.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261025-v2/composer-paperwork-close.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0e864d2e34ce9b44f4c20bfa35610ed3611d6797c4987a478de69f56c72c4769
+
+Night Signal · Sticker
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 18cbd02433d62cd85869220ba389863b7e46e5ab12051c6a126953eef83e347a
+
+One human. One dog. · Print
+Project: https://woodhouse.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 36efa02b6e9de294d6875cf9bc61f3047d769fd1ee9325a08d51d9080c252ea4
+
+What falls with it · Print
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg, https://woodhouse.loftwah.com/share/bubbles/icon-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d9f2c68d9c2903b64951520c5d4242c77b3edc2c72fd4490ad1f1a85b9fc55a3
+
+Moss and the leaf pull · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2l54p6a3r5c6h265htppe, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2ea0dc6809652e393bc94de3f18e80741c312a117adc11bd3c95c7a901a64fea
+
+The Reaper enters · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 639fcaf103e04f3cd97d0c12ff3dd16814d737aa4859cc9a33812453f46cd10b
+
+Lantern Ray field plate · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 389f67665a6d9e1a5831612693dcedc63bea3e8cd4716a2c98f06187e1c679aa
+
+Kitchen table · Print
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/kitchen-table-room.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7579e50c0fc638d0a9fd89a13dc293301732a785cd91d117e71ebc8ac42808c4
+
+One form, out the door · Print
+Project: https://paperwork.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/campaign/20261025-v2/composer-paperwork-close.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fa1aa833bfd5d53766fa979eb0d0a0c2a902b1cac06e4004681fbbc3ecfebcd8
+
+Night Signal · Print
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0a8468b7656ca31e775096f43cd0a624253364d1027e170e83360fbbdeffeebe
+
+Three things make a sound · Poster
+Project: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual references: https://woodhouse.loftwah.com/brand/loom-poster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1188acf202468aa500a2ec39bb97e7e1a3a859dbc81f19770424a32ee3820733
+
+Fizz between rounds · Poster
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: eed23128fc819f3f22f2de863a718e17044cee271741a50fdcb9f5711f6b32fb
+
+Nora keeps the catalogue · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ejhpyz1xa6q6westca39w, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 354b16a7ed7c5d3630a035c2a21bc90ff0a185d9a55b3419ee53f5c1fdb0ef1a
+
+Tux in the corner · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d852dd7cc2a70d98daa6c3e7625a7223bbc979ade67bb6e1941ae30178ffb50d
+
+Read the tide · Poster
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/tideglass/tideglass-instrument.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ebb134db298acf2db0e76d1762c327e3fc5e26b779d5f0c47479356f046587e6
+
+Two piles give away different things · Diagram
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8373c797af174b640ce1a295586d7718713cb172bc4083407971008e97c9a017
+
+One cover, four decisions · Diagram
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: da10542a8c013c96f30972e037cc3460664d3874c910351b45f6a95b6405dd7d
+
+The station has its own signal · Diagram
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0f9b27025c57bde997c3b9b3cc85653753e617b6e292184c404f2de1783aee3f
+
+Three things make a sound · Diagram
+Project: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual references: https://woodhouse.loftwah.com/brand/loom-poster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e0911080f244f4229d40a10848002276ee3d77a19a4f278bea8faf47bc7b56ed
+
+Fizz between rounds · Diagram
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: bd914117faf501321caadb8868aa6ea9923fafffd424245b2ce1898e3a42e5d6
+
+Nora keeps the catalogue · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ejhpyz1xa6q6westca39w, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e938b8df7d2b9454996044f8c075c29d80c2017fb53caa0fb6a3c0e8c58c900e
+
+Tux in the corner · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a42b7d81736393ea9c37a9fb3be91114ee30e313004d23756d2732e9cf540bea
+
+Glassreef Boxfish field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/glassreef_boxfish.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e0f9c9e71d38fe501309a203ee2b483f01785ff57f9cd33d4972b9f62e039171
+
+Two piles give away different things · Story
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d311d1a87686d18c2bbb50953d48678118ae3bc3159bcadb2ca5873d3132b8e8
+
+One cover, four decisions · Story
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 64fde582cf3b64fb7c9b9502d7d42599fd1b6e1715c2ecebe5f537b9a8e0bbcc
+
+The station has its own signal · Story
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f6f651d32521f26f71bc546907b4483967afe98a5bb4cbec84b9348c1a974fdd
+
+Three things make a sound · Story
+Project: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual references: https://woodhouse.loftwah.com/brand/loom-poster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c717354c8d95ea92bf2ddd4fa8149f410dc237841991abd2072302709c97696c
+
+Fizz between rounds · Story
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 7625a80fcaa5f41bd4fcf391a4c5828cf11327e9ccedcc52ad10c2adc210ef8d
+
+Nora keeps the catalogue · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ejhpyz1xa6q6westca39w, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a8a3b3c64a74cefb75c53d35c35868df0947400fc762b4f2122eb6e7dc487a8b
+
+The Reaper enters · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0cf1717b169a3aba97abc24fcf3c639ef382c52e7b17adde6006e791bc25b6ed
+
+The three depths · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fd515748019b3174f25393dcd43e212cdf5982d3d9c3ddb71171cb53139f6131
+
+One cover, four decisions · Sticker
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 1a8c15d414fe18ddcd94852a1dd03a17133c20fc787c5b14cff1f687991e663d
+
+The station has its own signal · Sticker
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6dda55483458ce163dc111a1db2505219f913a39d4dc63906cfd9d258f8908be
+
+Three things make a sound · Sticker
+Project: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual references: https://woodhouse.loftwah.com/brand/loom-poster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 818089a2b46266d5495b53a9f52fc9d8d5d5910c28a013957a0c8b16df1ead1b
+
+Fizz between rounds · Sticker
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 611ab6d16aa3e9f7fcce59902fcb8ef51641f30dcc1e9ad1aabe60b1bc9e243f
+
+Nora keeps the catalogue · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ejhpyz1xa6q6westca39w, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: a999473f731c80c58ac08b49a798ef1ff1a01fc72dbee686291fb3f2388577e7
+
+The Reaper enters · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/grim-reaper/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: eb5429981e3b5e521bfda0f5be18bb309d53783c09bab3b1b7822dc6085030c9
+
+Glassreef Boxfish field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/glassreef_boxfish.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d0c739abe44b96a040c4500b7c9c51a5419af4cbce8020a382b4448fd20b035c
+
+Two piles give away different things · Print
+Project: https://protocol11.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 691af64f6f0799dde7e6233868857546b7f60212b68bd103d5af075e620e826a
+
+One cover, four decisions · Print
+Project: https://composer.loftwah.com/creator-hub
+Visual references: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9136b9553e5b631cfb61af0b659998e00eba3a1c22bdf46151c62f82872c8aa0
+
+The station has its own signal · Print
+Project: https://fm.loftwah.com/radio
+Visual references: https://woodhouse.loftwah.com/share/loftwahfm/nightwave.jpg
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 75e35dea6d29626e1dcc29592920eb550d7f10c1e0afeac9c4ae562637214d06
+
+Three things make a sound · Print
+Project: https://woodhouse.loftwah.com/exhibits/patch-bench/
+Visual references: https://woodhouse.loftwah.com/brand/loom-poster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 10587a3f9b666e98597a7aba564545b25e40e25c2b021d1749bd8ba52a1f98d5
+
+Fizz between rounds · Print
+Project: https://bubbles.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/bubbles/fizz-preview.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 34da27a6c712ac1d3dbc1603e3e22f51a625207cd91951ad314333d6af6dd68f
+
+Nora keeps the catalogue · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ejhpyz1xa6q6westca39w, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 564470ff395a35b232c3bcce62319b2dfa6e8a59bcdbd91ba795e59ae51ae8d5
+
+Pippa has the better corner · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f423ca1207be0d6cbe607ad672b7c66adb53e99be4d81055aceb6ba8b2037f04
+
+The three depths · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 453fb86a01a203e0424b73c392dcd6ac09b0abb31dcda4f415197d1ba14cd7d2
+
+Pippa at the cabinet · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6fe028df194e889151c0c2e58bc3fb5a6d58a62bf3484de26847c0090a42a4a2
+
+The Viking holds the line · Poster
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c498bb7899370c405085798c9ca3681436f2b0c225cb5a4624f54efc8db521ea
+
+Glimmerfin field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/glimmerfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c4dd6fa9e96a8ad92e18f7181323730d38b75e4082d5695f2fe0c97690974bc2
+
+Pippa at the cabinet · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3e5ab472232b88a47a4d4992830fce9abaa399d83b2a06d09b82348849c67761
+
+The Viking holds the line · Diagram
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 596a3e3a9f06e722673d484149f89da26b35998ca32edb579c9329a621fa7628
+
+Read the tide · Story
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/tideglass/tideglass-instrument.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0a6a50f3ae46d6d8b8de7fc4af6a0bb25bed8e0d6d70fdfc883517f4e49de93f
+
+Pippa at the cabinet · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: faefd703d3d2b879526cf45b38ed03ba83acbaa3e11973f3e895b8e71832e8f8
+
+Pippa has the better corner · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8b1a644617a2332aa8d6ca4791df9407e6c56963cd35ae78693dfce8d724b6b5
+
+Glimmerfin field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/glimmerfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: eb64b08c494378cef2c822a74fe3c800547a3b9256bf297c63235fc4ab3470d7
+
+Pippa at the cabinet · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 934a54c0cac6239c498f4c3c7f96654edb87e9579ff6c0e1379c13c64f6f66bb
+
+Pippa has the better corner · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/og/projects/fighter-duo-20261023.png, https://avatars.githubusercontent.com/u/19922556?v=4&s=512
+Image generator: GPT Image 2.6 via Fal
+SHA-256: dd3866a765904d1f798ab3448432e69f0863493133e440533e6ea627957f68fe
+
+Read the tide · Print
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/tideglass/tideglass-instrument.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 11af25e34a1c885f99bb7e70c5d1f6536c9f19161bb1ade9859eeb13bbd0900b
+
+Pippa at the cabinet · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mwa2qxvln55a1f44xsvcpk7m, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 683261785b13a7483a12aec44639283ba3977dda5bb06c62f3a93a627cc7b7d7
+
+The bench is a decision · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/intro-launch-roster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d7381d8cee89f66008ac6ba36e0174de0b37874ceb8c1fc5de0ce696735dcac8
+
+The reef has a ceiling · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f48a2c545c6376830946011d35fbb42166ee6d31085d11c7ae69aa286ffc7332
+
+Rhea in the record room · Poster
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 4ef81ceeaa4af24ebc3ae9e4c1729c509aa30d3663a2c255f3d081c885d801f1
+
+The bench is a decision · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/intro-launch-roster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2a5040e9589a8eda3df0ced6546aa63ef81962f47d50b84cd5adabf4f0a9e4b5
+
+The reef has a ceiling · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tide_leviathan.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: eb1a12f3d3d767237bfc89ff5faaf1675a79bd77c564dc4a18b73fa8063e5e9d
+
+Rhea in the record room · Diagram
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: fc44f92ea6dbd5e790302919b1268992830d59bdf9f76ca591c88754734f1267
+
+The bench is a decision · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/fighter/intro-launch-roster.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: ec61e7636aebb30ff64ec30227354349bb1dbde3102f19900b6862f456f6e063
+
+Mirrorwing field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/mirrorwing.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6a69ac7b474652b30f3761542abd55d4f1680f62ebcd2e99b460a2a5b3518dfe
+
+Rhea in the record room · Story
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6f61b2c180dc0ee4feee069bc52795e7ea7f0c9380f2bd899907cd6ef21c081a
+
+Tux in the corner · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e2751d706a318b18c1ceadcdbcfe63434175ee8ad7b6e3e15d770d65c21316da
+
+Mirrorwing field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/mirrorwing.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: d30eb19fa5787659904d86a4990753399ce74a87b49c6f10c14ca674e1b633eb
+
+Rhea in the record room · Sticker
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3bfec1528d22e1741551f0a97b48c01f34a758fcc17aa9a9e54febfee7ad88dc
+
+Tux in the corner · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f2e5e4f7b7b1b3e36614b00a0f483c9c7e56cfead09ca7976e71285c38939533
+
+Rhea in the record room · Print
+Project: https://foilbury.loftwah.com/cabinet/moss
+Visual references: https://foilbury.loftwah.com/media/render/rnd_mw9ej0915rfnqad4jg11zpf1, https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 67c0329d5d808a020dc08ab8a3c954626c4f7594801693647632d94d4bd50848
+
+Tux in the corner · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/tux/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3eab0a54f89c0bd9dee771db32fe78123e4530ba23872653931b2a88c4f1c3c1
+
+Lantern Ray field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/lantern_ray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c4a3e79c29c68fac947b06d6a5ef2eb2b7de32c7ddd3d4c5af79e85692e4ac90
+
+The Viking holds the line · Print
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e5b8457f51d9a27a9fcfcd6cfca4232944dcd47016d8edeb37959d8ea7071853
+
+Razorfin field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/razorfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: de71c4a89610a936ccdad8ffc315d230137e6673cb120d5a05ee2df81a6c181f
+
+The Viking holds the line · Story
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c1351af83d8bb38f699ad161c955900fe27cb8839dde2591c84e54cd9868d687
+
+Razorfin field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/razorfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 3e2d6dd5d0c64fb13c2252188d6d752353b346838d3bf5fae9427f6e4917bb1a
+
+The Viking holds the line · Sticker
+Project: https://fighter.loftwah.com/
+Visual references: https://fighter.loftwah.com/assets/generated/art-cuts/house/viking/portrait.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 0414ef70a2d0c254c68eff7ce9c9bc9a1bd44245b1aa601af8bba5eacc4c4418
+
+The three depths · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 92c81c19ac3dbf0fbe77f2313d65300dfc48714364b3b4f3abd9861e5b56ab75
+
+The three depths · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e197cd066c9b021396b87e18b31811e10d7e21c31b3b750580b2e374f57b234d
+
+Reefback field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/reefback.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 6f919fd4095b42a92071f62469ae68f4c44ce8b56d22f4ce8629ac3b66e995dd
+
+Reefback field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/reefback.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: c3a3f180bf1abecc0a229fc95ef009df83e6f310739d03a0016483246fd1beb2
+
+Ribbon Dart field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/ribbon_dart.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f34fae7618f92a593f8b7e1952228b4cbce5e0bc67eb11d9fe46f8ca4b507447
+
+Ribbon Dart field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/ribbon_dart.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: e87c294d186c89e7ab91c07f94d9121b3e3636ff22cfcdca32d4896f2bcb166a
+
+Sailray field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/sailray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: b6c7bbaa70089732fba409bbdc086644fd85a95402ce65c75883ae0f0fbcff45
+
+Sailray field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/sailray.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2686fa172bd2cf32a9bb60204db28e8c13f73464932106490caf090dc17265fa
+
+Stormglass Squid field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/stormglass_squid.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 2aadc165d527e392b30b74a63a0979b06665906ff65824b2349b09f27314cb8b
+
+Stormglass Squid field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/stormglass_squid.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f5c0fc1e28cc0a72d6372cc7c5b6ed5640bfed035bc65387d1b30219ae32d06d
+
+Sunscale Sprat field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/sunscale_sprat.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 4fc8b134c8e1656b8a4785a82973470c1558c084baf400aaebacd5c115fb0ffc
+
+Sunscale Sprat field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/sunscale_sprat.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 96649d5fa3088545c8cdbb510270267a42f6a42e106bfdc17186f2b54107ac26
+
+Read the tide · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/tideglass/tideglass-instrument.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 16ee6d67a998ea6e653a56db08e595bcfc0280bbc7708cfe58a1367f58d475bd
+
+Read the tide · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/tideglass/tideglass-instrument.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 888ce0e63bcc179cf98e726685f6e1c070d938638f31cc95b503abebb26a9408
+
+Tidehunter field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tidehunter.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 64948206ca552bb76d0f2f0458c4a416ef51b152fd07bf15127b485af0964b5c
+
+Tidehunter field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/tidehunter.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 8c414f0cf6dd0e2debfb13a0326ee54f8387159cdef02ac0b6533dee56550729
+
+Veilfin field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/veilfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 4467149dd1c61e1db2257bafafe735b27b2767a4171865d71125ff6e0349be20
+
+Veilfin field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/veilfin.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: f0c70b6b4c9ce23f4dfabbe54f4fc5839a23499ee68d0fee6e135f629479fe10
+
+Void Moth field plate · Diagram
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/void_moth.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 9d6d02d3ef038c942ba337f1d4b20697cb78d7e441e698e4b53e3fb466897050
+
+Void Moth field plate · Sticker
+Project: https://shoalshot.loftwah.com/
+Visual references: https://woodhouse.loftwah.com/share/shoalshot/ui/art/specimens/void_moth.webp
+Image generator: GPT Image 2.6 via Fal
+SHA-256: 090aaa7ec52dc26aa4e3792bd3c94fe636d0d54f31a0cbdf8629f8a479110faa

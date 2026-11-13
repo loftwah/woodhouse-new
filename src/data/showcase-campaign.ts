@@ -1,3 +1,4 @@
+import { fieldGuide } from "./showcase-field-guide.ts";
 import { seasonalLibrary } from "./showcase-seasonal-library.ts";
 import { designStudies } from "./showcase-design-studies.ts";
 import { buildNotes } from "./showcase-build-notes.ts";
@@ -43,7 +44,8 @@ export type CampaignItem = {
     | "wild-25"
     | "build-notes"
     | "design-studies"
-    | "seasonal-library";
+    | "seasonal-library"
+    | "field-guide";
   use?:
     | "banner"
     | "icon"
@@ -122,6 +124,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...fieldGuide,
   ...seasonalLibrary,
   ...designStudies,
   ...buildNotes,
