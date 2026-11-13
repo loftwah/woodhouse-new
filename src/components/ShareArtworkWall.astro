@@ -14,6 +14,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["field-guide", "Field Guide"],
   ["seasonal-library", "Seasonal & collectibles"],
   ["design-studies", "Design studies"],
   ["build-notes", "Build Notes"],
@@ -40,6 +41,7 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "field-guide" ||
   category === "seasonal-library" ||
   category === "design-studies" ||
   category === "build-notes" ||
