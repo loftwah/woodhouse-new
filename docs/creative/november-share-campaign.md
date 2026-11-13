@@ -257,3 +257,36 @@ existing project reference. The original generator PNG is available beside
 its placement export. The kit bundles all 25 exports, captions, alt text
 and source notes. Scenes are editorial, including the empty Protocol 11 rooms
 and the Virtual MAX browser simulator illustration.
+
+### Build Notes
+
+Reviewed 13 November 2026, Melbourne. [Build Notes](https://woodhouse.loftwah.com/share/?artType=build-notes)
+follows 50 decisions and subjects across ten projects, with five editorial
+treatments per subject. The cartoon frames, workbench illustrations,
+posters, studies and avatars can be shared on their own or read together.
+
+The caption tells you what the product actually does and the product link
+takes you there. A drawing of a decision is a new editorial illustration.
+For exact gameplay, interface or collector-card details, use the published
+capture or native render linked in the source notes.
+
+The batch uses the current project mark or named icon as a visual reference.
+The generator draws the mark, title and short address inside the composition
+where the format can carry them. Text-free studies and small avatars let
+the subject or icon do the work. Read every URL and headline after rendering.
+Check the source mark, the correct character and the placement frame before
+approving the image. The original PNG and every existing Share collection
+keep their own links.
+
+Platform choices use [Pinterest's creative guidance](https://business.pinterest.com/en-gb/creative-best-practices/)
+for visible identity, [TikTok's creative codes](https://ads.tiktok.com/business/en-US/creative-codes)
+for early hooks and vertical safe space, and [YouTube's thumbnail testing
+guidance](https://blog.youtube/creator-and-artist-stories/master-these-4-metrics/)
+for a visual promise the material can actually deliver.
+Build Notes uses separate imagery for the opening frame, the technical idea,
+and the destination. Verify real marks against the owning project. If the
+generator cannot faithfully draw the mark, use the actual project name as
+the on-art identifier and keep the exact native mark available in Share.
+The visual direction is an original cast in broad cartoon idioms and
+the portfolio's own characters and materials. The workbench scenes are
+editorial drawings of real mechanisms and decisions.

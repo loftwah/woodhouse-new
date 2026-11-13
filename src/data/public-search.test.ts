@@ -67,7 +67,7 @@ test("campaign search finds published pieces by placement and exact dimensions",
   }));
   assert(entries.every(({ href }) => href));
   const cases: [string, string][] = [
-    ["Fighter X header", "/share/fighter/#share-edition-fighter-battle-blast-x"],
+    ["Fighter Battle Blast X header", "/share/fighter/#share-edition-fighter-battle-blast-x"],
     ["Bubbles Bank Shot Lesson 1080x1920", "/share/bubbles/#project-story-50-bubbles-prologue"],
     ["Bubbles Lantern Finale 1080x1920", "/share/bubbles/#project-story-lantern-finale"],
     ["Bubbles Take the wall 1080x1920", "/share/bubbles/#share-edition-bubbles-bank-line-story"],
@@ -84,7 +84,10 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
   const items = publicCampaignItems(["foilbury", "loftwahfm", "shoalshot"]);
   assert.deepEqual(
     items
-      .filter(({ series }) => series !== "project-stories-50" && series !== "wild-25")
+      .filter(
+        ({ series }) =>
+          series !== "project-stories-50" && series !== "wild-25" && series !== "build-notes"
+      )
       .slice(0, 5)
       .map(({ id }) => id),
     [
@@ -118,6 +121,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
         ({ href }) =>
           href.startsWith("/share/foilbury/") &&
           !href.includes("#project-story-50-") &&
+          !href.includes("#build-note-") &&
           !href.includes("#wild-25-") &&
           !href.includes("#share-art-") &&
           !href.includes("#share-edition-")

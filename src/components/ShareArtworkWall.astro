@@ -1,5 +1,6 @@
 ---
 import ShowcaseGallery from "./ShowcaseGallery.astro";
+import { buildNotesKit } from "../data/showcase-build-notes";
 import { wild25Kit } from "../data/showcase-wild-25";
 import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
@@ -13,6 +14,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["build-notes", "Build Notes"],
   ["wild-25", "Wild 25"],
   ["project-stories-50", "Latest 50"],
   ["project-stories", "Project stories"],
@@ -36,7 +38,10 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
-  category === "wild-25" || category === "project-stories-50" || category === "project-stories"
+  category === "build-notes" ||
+  category === "wild-25" ||
+  category === "project-stories-50" ||
+  category === "project-stories"
     ? category
     : undefined;
 const requestedProject = params.get("artProject") || params.get("project");
@@ -85,10 +90,24 @@ const path = (number: number, nextCategory: string = category) => {
 };
 const next = page < pages ? path(page + 1) : "";
 const previous = page > 1 ? path(page - 1) : "";
-const seriesPack = series && !project && !placement ? collectionPacks[series] : undefined;
-const projectPack = project
-  ? works.find((item) => item.project === project && item.socialPack)?.socialPack
-  : undefined;
+const seriesPack =
+  series && series !== "build-notes" && !project && !placement
+    ? collectionPacks[series]
+    : undefined;
+const projectPack =
+  series === "build-notes" &&
+  project &&
+  works.some((item) => item.project === project && item.series === series)
+    ? buildNotesKit(project)
+    : project
+      ? works.find((item) => item.project === project && item.socialPack)?.socialPack
+      : undefined;
+const buildProjects =
+  series === "build-notes" && !project
+    ? projects.filter(({ slug }) =>
+        works.some((item) => item.project === slug && item.series === series)
+      )
+    : [];
 const artworkPages = Object.fromEntries(
   filtered.map(({ id }, i) => [id, Math.floor(i / size) + 1])
 );
@@ -138,6 +157,20 @@ const artworkPages = Object.fromEntries(
       </span>
       {next && <a href={`${next}#artwork`}>Next page</a>}
     </nav>
+  )}
+  {buildProjects.length > 0 && (
+    <details class="art-previous">
+      <summary>Download project kits</summary>
+      <ul class="build-kit-links">
+        {buildProjects.map(({ slug, name }) => (
+          <li>
+            <a href={buildNotesKit(slug)} download>
+              {name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
   )}
   {seriesPack && (
     <p class="art-previous">
@@ -349,6 +382,14 @@ const artworkPages = Object.fromEntries(
   }
   .art-sketches h2 {
     margin: 0;
+  }
+  .build-kit-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.15rem;
+    list-style: none;
+    padding: 0;
+    margin-block: 0.65rem;
   }
   .art-page-links {
     display: flex;
