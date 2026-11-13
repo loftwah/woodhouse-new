@@ -38,3 +38,11 @@ Play Bubbles QR · https://bubbles.loftwah.com/
 Open Foilbury QR · https://foilbury.loftwah.com/
 Open Protocol 11 QR · https://protocol11.loftwah.com/
 Listen to LoftwahFM QR · https://fm.loftwah.com/radio
+
+Branded QR cards and art posters · 13 November 2026 Melbourne.
+Woodhouse, Bubbles and LoftwahFM use marks in the Woodhouse public asset library.
+Foilbury uses the Foil Standard project mark and Protocol 11 uses its project brand mark.
+The posters reuse the unaltered compositions Loom, Arcade night, Rhea · After hours,
+Pull up a chair and Last track of the year in a separate layout with an encoded QR.
+The original plain QR files are still available. All ten new files and their gallery
+previews were independently decoded to the same destinations as the originals.
