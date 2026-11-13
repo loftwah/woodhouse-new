@@ -1,3 +1,4 @@
+import { playbook } from "./showcase-playbook.ts";
 import { fieldGuide } from "./showcase-field-guide.ts";
 import { seasonalLibrary } from "./showcase-seasonal-library.ts";
 import { designStudies } from "./showcase-design-studies.ts";
@@ -45,7 +46,9 @@ export type CampaignItem = {
     | "build-notes"
     | "design-studies"
     | "seasonal-library"
-    | "field-guide";
+    | "field-guide"
+    | "game-rules"
+    | "architecture";
   use?:
     | "banner"
     | "icon"
@@ -124,6 +127,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...playbook,
   ...fieldGuide,
   ...seasonalLibrary,
   ...designStudies,

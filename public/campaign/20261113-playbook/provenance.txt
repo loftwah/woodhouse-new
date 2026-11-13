@@ -1,0 +1,602 @@
+Woodhouse Share playbook, reviewed 13 November 2026.
+AI-generated editorial illustrations of source-checked rules and systems. Product links lead to the owning project.
+
+Take a Classic turn
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: Codex ImageGen
+SHA-256: 05fd985568cc68277f8cd91e754d844525e10d7b1f5f69e44565fde24bd0a661
+
+How a project gets onto the site
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Generator: Codex ImageGen
+SHA-256: 865e94bc39d6f39339c34babd1220192c32b309e6e06c34688acdc28f11b1c21
+
+Bank a shot
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: d16585e5f7347c3513086b1adc384bdb8ed2527cace654aa39fdc869599363cd
+
+Combat under the cabinet
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: d8c82c8da71f531cfaaa5149a7102136a08194b2977e62f4d4593e9304af2a0a
+
+Start a dive
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 63b66bbcbae8d9d09440c30356c2afc2e14006afd4886bf3bd4f325d310e84f6
+
+A pull is one transaction
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7981b23ddf5bdec8a47ea9d1af7422ad4733d08bee1b2e61fbc8f603c165a016
+
+Set up Quick Fight
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: fddb8b5e7265ae0251774d5d5457279ec8c6e100929fbae403f68aac86aac388
+
+Who owns an online room
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 427bd1e38679bda39c832075d42eaa85e0fd1aea9f2577ab21fd605ce3f13e2c
+
+Make your first pull
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7bfad7a5c7206eb8ebba156ae8266aaa247c3e1bbd3938e96771badcd64959ea
+
+From an album file to the player
+Product: https://fm.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 88e5c158a22575056e1fcd0c33011c4b6c2adf8e1e0ffc070b8c23477514c59f
+
+Match three
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: Codex ImageGen
+SHA-256: 88e7442139cea648314c636fd71d72d785c73fe5ccdbba3268f59f9cb1963d63
+
+The public MAX simulator
+Product: https://max.loftwah.com/demo
+Visual reference: https://max.loftwah.com/og-walker-20261025.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 1c203cf815422a628934cb7704c33bba2823cebd50dc0a81773f41b748bb1a52
+
+Under the tide pool
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: f41d6f05f84bddd8ffe5755efb936e02d86027453fa8281a12822eda32af4051
+
+The MBOX stays where it is
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 1c9738f260c5bd89a6d9893332f97347dafc5272615ed98a9c77b4f345996601
+
+First shot
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: dfce9d178a1a4d7cf589a8b4668893b52c5c73aad9435507555c03ee6347a64d
+
+Input to outcome
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 570badf2700527158dc0aa190e8f3e938c702bd6cf949c083c2710c8b3bba21d
+
+One table, several ways to play
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 92cab89173182fb8f5ce54e59823c03b951913683b93b247246f0edfcc4a3181
+
+A catalogue with separate apps
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: b12edc5cbfaddeda4d14c65c227540ca7303cc173db23e36e9842886991b01a9
+
+How a reconstruction is checked
+Product: https://woodhouse.loftwah.com/projects/pirates/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025-v2/pirates-original-voyage.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: f3fccb81b799be3aeb2429bd523e7e84368323ba5cd1e1c78e2f4c65027f410a
+
+From many assets to one possibility
+Product: https://woodhouse.loftwah.com/projects/asset-hunter/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/asset-hunter-catalogue-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 59ecfd142866ae89a9c59bffbb5b5eecda3904c7f241e231df4deeec3c937f8a
+
+The Plans With You platform
+Product: https://woodhouse.loftwah.com/projects/social-club/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/plans-with-you-home-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: ea1e108add203419cdb77cd1805191a09240ee30a17ebd73009e35451df506b2
+
+Read both Charge Strips
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 9f76f479d1f5878ffad725605112354e0ee123fed9e7cb184ef1c9b4f69919fc
+
+Lead a moving shoal
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 5b05225a45d5f4b8b63c3412a0e216d5e7f50ac6eff6347156fa225565ef3528
+
+Know your two draw piles
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 6e53bef26a215b3ef489e3c0af5dfebef9d748f354ab0e865010a968d0126324
+
+Claim a daily reward
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 9515a5d2ac29446fc174018e52c258636f1d02f43819c12ac1a3903cc7c2bd9e
+
+Replay the same shot
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: c0de11913e6d500c2a15c2852c2a0585a867349ab2481d0a025fa4f6ec631835
+
+One roster, different fights
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 75d684094fba9bcfd70a0d2fb89cd5ea61f2b74ce88af71a9b2120500ed09ddd
+
+The browser holds your dive
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 3e424533d075d1e96a662fd1eac4621539e63be8695966c3fbbf26f10cd432a3
+
+Same request, same result
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: eea6095db92a4fb485b13c23220ea4a2d1e25d8ef2b76219f567f985c2446af8
+
+Why snapshots are append-only
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 57b8e68e69ca3028af5615d013ed1d7c275ebd8085be2e30ad8edf418c3851f4
+
+How Showcase checks an item
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 1b2e66ebf892246ddd3a68a051082ed519504673ee9dcc80fb6370ea50aa8640
+
+How seeking works
+Product: https://fm.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7b8f0a2379a6e22e11ccc65a4b428091c27951766aba976f6d74a45c91ecd470
+
+Where a search runs
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 42c30c945511738fec492753eafe08734ce7d1e4dc8a451bdd139a33e40bbed7
+
+The local MAX command route
+Product: https://max.loftwah.com/demo
+Visual reference: https://max.loftwah.com/og-walker-20261025.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: c672667386cc0626a6b7f80bd98265745127f8d930d67a0bbd3c3d156d91b7bc
+
+From an observed screen to a fixture
+Product: https://woodhouse.loftwah.com/projects/pirates/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025-v2/pirates-original-voyage.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: c903572f4f14e40dae843c1c08e8f24f8e0c1d66bdea079ac0d767111f1e5f26
+
+Where the crawl stops
+Product: https://woodhouse.loftwah.com/projects/asset-hunter/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/asset-hunter-catalogue-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: b0ff847fcb8cdf0891ccd9d39a7f4a2f5ce6bd0cd39a8629ef733d8202f14aaf
+
+Mail has its own lane
+Product: https://woodhouse.loftwah.com/projects/social-club/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/plans-with-you-home-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 5d3595da914dae09c94690e768db789decfac2df11ae7296cd0609428a617549
+
+Use your first Move
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a7fee18bb7cb44c1fb2dae2e7b6131277744604c0eb74c3d92f47266313713b1
+
+Choose a launcher
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: c45e725ca9e5c39e8f19e091b3e860bf6fc7b9c82c69a7f92fb4b18fba12ad9c
+
+Build a set
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 20b9452da5ec3ae0d409c8d4ca80f08357dc75004041fc51c57b290637411f76
+
+Where the save lives
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 8ea60841a4d468e7f475af85239ff56e67549a02337cf600a300231bd3adc7bb
+
+What the Worker serves
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 99ad5697ac59286733a0847aaa08311c1b04a0365032655fb7d574f83c237ace
+
+How the table checks a laydown
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a7dcd837e8430fbefb1f5fea014c808b0e7ba2f0595aca23f4b40a88edbb8e3b
+
+Catalogue and inventory
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 948193ba61038a10bf6ffe1c8769b6a0a1edd1c7462e571b0d91dff5c954a013
+
+How Share builds the wall
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: c8560145c4badb4d1b9e44c35403961fdc45021f9668e9e99f36476026736464
+
+How Get Ready proves a setup
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: b4b03231620aa6119628b67656f2910b2d3d4b4347c6c6ba5531f9bd1b1159c4
+
+A station inside a game
+Product: https://fm.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 94f850e08877e137ddc4637b018ba27664b9ca9539622a591ec8d956f71e9159
+
+Recover one original message
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 22ed30d67ae0cab8caab3944e04a66ce36182250a2ab30a40a3bf6e75e438a56
+
+Speech into a deterministic command
+Product: https://max.loftwah.com/demo
+Visual reference: https://max.loftwah.com/og-walker-20261025.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 09bba2d747747a7f2cfc79683a1c3fd9c23ebf358e73fc8b3820ac1a0ca751f1
+
+Origins stay separate
+Product: https://woodhouse.loftwah.com/projects/asset-hunter/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/asset-hunter-catalogue-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 8fe1e1f551a56a9c8740ffab517a0f33d5be1628282d17a47e3dedcd275da42e
+
+Bring the right lineup
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: e7d1c4168b8a6022582cbf25949d17f837ff3e6cc23312eb19f97a358a59cc61
+
+Use Glow Bait
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: bb7d7a77932d81f69209fba112db26ddb1ad1e735c512ef90e1822171f289c4e
+
+Build a run
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 41b8cec8032fd028c1eb10e2ef5fcf9c2b9fdadc80bfc53773b56de754f20a4a
+
+Explore your cabinet
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 8f39795dd27ad5b4a0bec144de2d96b6fc4a70b50aaa268eb00bcb28f7c5af12
+
+How a Cup carries state
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: e56d4b2e27dd0e9a4a8935e340e1165e0eb1d975494184cf527d126003cf65e8
+
+From dive to share image
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: e9f9c863a52593561042f86eeb543759e645cd107a75e224311788c93e5e1d04
+
+From events to replays
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 0e91899d943d9dc34b0bb48b2ee0d194a3b39f849ef7106a57497e8aa9fee5d4
+
+What makes a card public
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 010bc67d068fdb3683ce9f469b382fa68f5566efe0c3a6f6953e280ab881f82d
+
+Where the original goes
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 72033bc52a23cd701836c4c35ab866945dfeaea886b01193fda81ce97d94c836
+
+An LDraw model comes apart
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 3ab7e7a82b97f074dc944ed82f70461226c73209f554efdba219e879189a2ddb
+
+What the public API returns
+Product: https://fm.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/loftwahfm/cartridge-funk.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 257c90087c8bd217b12cf373d9b7b1fb2f707684c207aad2720b8139f8b2ed3c
+
+What an agent can reach
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 2d86cc1f7390378a4acb497d94d5f8f17dec82a9092a311cf662831ae2aa3d78
+
+How evidence follows an example
+Product: https://woodhouse.loftwah.com/projects/asset-hunter/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261025/asset-hunter-catalogue-20261025.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 3689f23e1270a121fae0db72d9615a05a25a01fa489ac54d42076dc914732e6a
+
+Recognise a miss
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 705d2fe1d9640798020d0b9928d595483297f67f687e8f2d6e1f4d5145e4b136
+
+Switch without resetting the team bar
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: da06c46cf26104d9b2a1c58f189441241eebcba2ddadfab45c5cc063ebf070a6
+
+Place a Pulse Mine
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 106338f5a6cd5d4538b487704520e4821465ee0fd82e389f29c7effd53565fd6
+
+Build a colour group
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 0e87ec5c68f96e2471dce4baf856e427e9cc96a6ce53bcc0ff96625493071c4f
+
+Browse the binder
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7cafef14ad36cd1239aaeb875f26276ddd93dccd4808aa4a05e00e889138fd09
+
+How the next shot is queued
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 9ad9fc386d6d9998784657b92526b5a23c49366e885c0b56f844a38680e364f5
+
+Where public information ends
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 128b68238920c5702b0c486cc29562fb3ab4eb967852928df79555f5e9134dde
+
+One card, several prints
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 85b6bb563107e6def54f9689e4a5eb9a53d95b3435a0fd12320ae1c6b709494e
+
+Read-only on production
+Product: https://woodhouse.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/brand/loom-poster.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 001ff6b2a2da7fa1d7167a868e8107fbb127203096fabb6792089e72883486fc
+
+Where your app runs
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: d5f5e6a98b1d4a1164e460a61d0b0d41d7117615da5503bd0eba2969257fafb9
+
+Preview an HTML email
+Product: https://liferaft.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/campaign/20261112/liferaft-release.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: b9aac9645404e90fe876ba4b9c81a0d6a7a69854c5290d19ee380ea32aa07c97
+
+Watch the foul marks
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 995c6cc194ec6396b0eefe25e25f8e79e6ba5b24b0a0cd6b3667ce83c0740c0a
+
+Read an incoming charge-up
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 51d1be11b6b57752afc5f7a771487d74c6b8bbda347f37b42049b2ac5e73a25b
+
+Use Bloom Charge
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7fd4d86beb62601c4d3004400c493984aee5dc70d1653cbf529949d89eaef27c
+
+Assign a Wild
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 708e15d539285a957bafdfbd67c1ec36a784d1e6a9a6275b2f7214dd324f4098
+
+Find your near-complete shelves
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a4062cf862f62622bb8d7caf9d0f9616263f04ff9656999ff92ca17e97ee89af
+
+Carry an encrypted handoff
+Product: https://composer.loftwah.com/
+Visual reference: https://composer.loftwah.com/creator-hub/share-20261112.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: aed919d3c56388150536aa95181e7707b4effdfce011f2510decb09ef8bf4763
+
+Protect the bottom
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 0c97e278a30b3fa4ec9e1ab1fd27b4388190d05e99126ff64db559e685cfdead
+
+Look for a Field Survey objective
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: c1e0587ffdf656017bc013caad7ead2a0d8ad1fdac4922a5cb014922c239de4e
+
+Hit a public group
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 76b158a1d4adf6cdeb1b9d4d12c44147c2aca7706cfefb5f402cdd0d90d3e140
+
+Check the print before sharing
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 604d2a0424ee01d87b2cfd31aadd52085c8de91d426c752cd11634d6cf3ff724
+
+Plan with two colours
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 36079b0c7001de1ac78ea3efb3e1c3573947f055b00252b8f55ae18c3946b9d5
+
+Build Team Traits
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a07bddb142b8a6dc9133a95a53ffd7f63bed98296f6c966e9c90d704a15ca88c
+
+Use the Collection
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 630e77f4264a083a8eedcc6d12f4cc17fce4164d153f728f6a2039483446213c
+
+Use a Skip
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: cdb274fc6b6e528e9da1f07d2e1aabb1c1f1286ba4452ed53397813e9a6f85aa
+
+Track collection milestones
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 23a2bed1261d24e6d22192012313d7686ebccacc0d61b36d6b64f9c7929f0239
+
+Read the staggered grid
+Product: https://bubbles.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/bubbles/classic-gameplay-desktop-20261012.jpg
+Generator: GPT Image 2.6 via Fal
+SHA-256: 46bc47047c87786b53e22d5578c25da4226e879e2167e12ba9d1d21a5b347ff3
+
+Survive the Wrong Door Cup
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a6b26c28ded90919c36b6277671115e3983c00ed6d61e09a7ac7e253f56c75c3
+
+Use Practice to learn
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: c064db2b255581b10c17f620aa588559d19abfd6e09de4e590466db1caf48e5c
+
+Advance or repeat
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 46db57303338fba537c1f6b0aa56d200f4d4ab7d8c4447305e0e36dd9fe26d06
+
+Find the right pack
+Product: https://foilbury.loftwah.com/
+Visual reference: https://foilbury.loftwah.com/brand/mascot/keeper-neutral-512.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: b53a755f25be11f82a5b915eef7dfba1220074ddee5c82124aad687528d587ed
+
+Find Story’s next fight
+Product: https://fighter.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/fighter/switching.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 9800b21f5d8563f72edd99e9103f9eaa219b36fce256b00214ebe4aa2a874b4c
+
+Share a saved dive
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 02f92bbb15681bcd6e7d5de71bfa671f6c63ddd1dae726e798b77ea60d24cd59
+
+Count what is left
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: 48f643ea4fcdf37077230e5308f00d0dabe457883f3b7d957c407f1a79a3a156
+
+Back up before changing browser
+Product: https://shoalshot.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/shoalshot/backgrounds/tide_pool/reef-midwater-frame-deep-tide-20260929.webp
+Generator: GPT Image 2.6 via Fal
+SHA-256: 7f0d57b45954d64b52da1ca010c0ffa47ed467c322572884e4d4f7b6fe70f0c5
+
+Build an odd run
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: a8eb851d4efe62b60bb38758eda43bd44d080386f66f1b918834a27f13640a0f
+
+Play a Wild with a natural card
+Product: https://protocol11.loftwah.com/
+Visual reference: https://woodhouse.loftwah.com/share/protocol-11/table-layout-production-1366x768.png
+Generator: GPT Image 2.6 via Fal
+SHA-256: c6c25f853952ddae1df4792fa39822b48edfa3fba3715854176c3fffc06879d4
