@@ -1,3 +1,4 @@
+import { seasonalLibrary } from "./showcase-seasonal-library.ts";
 import { designStudies } from "./showcase-design-studies.ts";
 import { buildNotes } from "./showcase-build-notes.ts";
 import { wild25 } from "./showcase-wild-25.ts";
@@ -35,7 +36,14 @@ export type CampaignItem = {
   title: string;
   stage?: string;
   issue?: string;
-  series?: "project-stories" | "project-stories-50" | "wild-25" | "build-notes" | "design-studies";
+  tags?: readonly string[];
+  series?:
+    | "project-stories"
+    | "project-stories-50"
+    | "wild-25"
+    | "build-notes"
+    | "design-studies"
+    | "seasonal-library";
   use?:
     | "banner"
     | "icon"
@@ -114,6 +122,7 @@ const item = (
     : {})
 });
 export const campaignItems: CampaignItem[] = [
+  ...seasonalLibrary,
   ...designStudies,
   ...buildNotes,
   ...wild25,
