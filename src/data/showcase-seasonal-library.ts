@@ -517,7 +517,7 @@ const qrCards: CampaignItem[] = qrProjects.flatMap(
         width,
         height,
         reviewedAt: "2026-11-13",
-        addedAt: "2026-11-13T06:02:53.123Z",
+        addedAt: poster ? "2026-11-13T07:46:57.514Z" : "2026-11-13T06:02:53.123Z",
         formats: [
           {
             label: poster ? "QR poster PNG" : "Branded QR card PNG",

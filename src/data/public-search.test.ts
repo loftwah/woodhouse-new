@@ -159,3 +159,13 @@ test("a retired Protocol 11 scene keeps its collection anchor and stays out of s
   assert(!hits.some(({ href }) => href.endsWith("#" + retired)));
   assert(hits.some(({ href }) => href.endsWith("#visual-study-stock-and-discard")));
 });
+
+test("new QR posters lead the artwork feed in publication order", () => {
+  const items = publicCampaignItems(["bubbles", "foilbury", "protocol-11", "loftwahfm"]);
+  assert.deepEqual(
+    items.slice(0, 5).map(({ id }) => id),
+    ["gallery", "bubbles", "foilbury", "protocol", "radio"].map(
+      (key) => `seasonal-library-qr-${key}-poster`
+    )
+  );
+});
