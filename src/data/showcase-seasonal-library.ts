@@ -448,7 +448,7 @@ const qrProjects = [
     "woodhouse",
     "Share gallery QR",
     "Take something",
-    "the Woodhouse loom",
+    "luminous Woodhouse loom fibres",
     "https://woodhouse.loftwah.com/share/"
   ],
   [
@@ -456,15 +456,15 @@ const qrProjects = [
     "bubbles",
     "Play Bubbles QR",
     "One more round",
-    "the Bubbles arcade night invitation",
+    "a neon Bubbles arcade cabinet",
     "https://bubbles.loftwah.com/"
   ],
   [
     "foilbury",
     "foilbury",
     "Open Foilbury QR",
-    "Open the cabinet",
-    "Rhea’s After Hours trading card",
+    "The After Hours pull",
+    "Rhea in an ornate Foilbury collector frame",
     "https://foilbury.loftwah.com/"
   ],
   [
@@ -472,7 +472,7 @@ const qrProjects = [
     "protocol-11",
     "Open Protocol 11 QR",
     "Pull up a chair",
-    "the Protocol 11 table invitation",
+    "a cream and teal Art Deco game-night invitation",
     "https://protocol11.loftwah.com/"
   ],
   [
@@ -480,18 +480,18 @@ const qrProjects = [
     "loftwahfm",
     "Listen to LoftwahFM QR",
     "Leave it on",
-    "the LoftwahFM record sleeve",
+    "a QR printed in the label of a vinyl record",
     "https://fm.loftwah.com/radio"
   ]
 ] as const;
 
 const qrCards: CampaignItem[] = qrProjects.flatMap(
   ([key, project, title, posterTitle, artwork, href]) =>
-    (["branded", "poster"] as const).map((style) => {
+    (["poster", "branded"] as const).map((style) => {
       const poster = style === "poster";
-      const id = `qr-${key}-${style}`;
-      const width = 1200;
-      const height = poster ? 1500 : 1200;
+      const id = `qr-${key}-${poster ? "imagegen" : style}`;
+      const width = poster ? 1122 : 1200;
+      const height = poster ? 1402 : 1200;
       const original = `${base}/${id}.png`;
       return {
         id: `seasonal-library-qr-${key}${poster ? "-poster" : ""}`,
@@ -508,7 +508,7 @@ const qrCards: CampaignItem[] = qrProjects.flatMap(
         action: "Explore",
         kind: "editorial composition",
         credit: poster
-          ? "Woodhouse layout · Codex ImageGen illustration · encoded QR"
+          ? "Woodhouse · Codex ImageGen with a QR reference"
           : "Woodhouse · brand artwork and encoded QR",
         source: `${base}/provenance.txt`,
         image: `${base}/${id}-preview.jpg`,
