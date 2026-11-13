@@ -46,3 +46,10 @@ The posters reuse the unaltered compositions Loom, Arcade night, Rhea · After h
 Pull up a chair and Last track of the year in a separate layout with an encoded QR.
 The original plain QR files are still available. All ten new files and their gallery
 previews were independently decoded to the same destinations as the originals.
+
+Codex ImageGen QR posters · 13 November 2026 Melbourne.
+The original QR PNG and a project artwork reference were supplied to ImageGen
+for each of the five colour posters. The downloadable masters are the tool
+outputs byte for byte. No QR, lettering or marks were added after generation.
+Each master, gallery rendition and 200px test export decoded to its exact
+project URL. Previous poster file URLs and the plain QR downloads remain valid.
