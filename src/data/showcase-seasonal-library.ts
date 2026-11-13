@@ -407,80 +407,10 @@ const pieces = [
     alt: "Hand-inked cartoon portrait of Dean",
     label: "ImageGen original PNG",
     credit: "Woodhouse · Codex ImageGen"
-  },
-  {
-    id: "qr-gallery",
-    project: "woodhouse",
-    title: "Share gallery QR",
-    tag: "QR codes",
-    use: "feature",
-    width: 1184,
-    height: 1184,
-    href: "https://woodhouse.loftwah.com/share/",
-    caption: "Scan to open https://woodhouse.loftwah.com/share/",
-    alt: "Black and white QR code for https://woodhouse.loftwah.com/share/",
-    label: "QR code PNG",
-    credit: "Woodhouse · URL-encoded QR"
-  },
-  {
-    id: "qr-bubbles",
-    project: "bubbles",
-    title: "Play Bubbles QR",
-    tag: "QR codes",
-    use: "feature",
-    width: 1184,
-    height: 1184,
-    href: "https://bubbles.loftwah.com/",
-    caption: "Scan to open https://bubbles.loftwah.com/",
-    alt: "Black and white QR code for https://bubbles.loftwah.com/",
-    label: "QR code PNG",
-    credit: "Woodhouse · URL-encoded QR"
-  },
-  {
-    id: "qr-foilbury",
-    project: "foilbury",
-    title: "Open Foilbury QR",
-    tag: "QR codes",
-    use: "feature",
-    width: 1184,
-    height: 1184,
-    href: "https://foilbury.loftwah.com/",
-    caption: "Scan to open https://foilbury.loftwah.com/",
-    alt: "Black and white QR code for https://foilbury.loftwah.com/",
-    label: "QR code PNG",
-    credit: "Woodhouse · URL-encoded QR"
-  },
-  {
-    id: "qr-protocol",
-    project: "protocol-11",
-    title: "Open Protocol 11 QR",
-    tag: "QR codes",
-    use: "feature",
-    width: 1184,
-    height: 1184,
-    href: "https://protocol11.loftwah.com/",
-    caption: "Scan to open https://protocol11.loftwah.com/",
-    alt: "Black and white QR code for https://protocol11.loftwah.com/",
-    label: "QR code PNG",
-    credit: "Woodhouse · URL-encoded QR"
-  },
-  {
-    id: "qr-radio",
-    project: "loftwahfm",
-    title: "Listen to LoftwahFM QR",
-    tag: "QR codes",
-    use: "feature",
-    width: 1184,
-    height: 1184,
-    href: "https://fm.loftwah.com/radio",
-    caption: "Scan to open https://fm.loftwah.com/radio",
-    alt: "Black and white QR code for https://fm.loftwah.com/radio",
-    label: "QR code PNG",
-    credit: "Woodhouse · URL-encoded QR"
   }
 ] as const;
 
-export const seasonalLibrary: CampaignItem[] = pieces.map((piece) => ({
+const seasonalArtwork: CampaignItem[] = pieces.map((piece) => ({
   id: `seasonal-library-${piece.id}`,
   series: "seasonal-library",
   project: piece.project,
@@ -511,3 +441,94 @@ export const seasonalLibrary: CampaignItem[] = pieces.map((piece) => ({
     }
   ]
 }));
+
+const qrProjects = [
+  [
+    "gallery",
+    "woodhouse",
+    "Share gallery QR",
+    "Take something",
+    "the Woodhouse loom",
+    "https://woodhouse.loftwah.com/share/"
+  ],
+  [
+    "bubbles",
+    "bubbles",
+    "Play Bubbles QR",
+    "One more round",
+    "the Bubbles arcade night invitation",
+    "https://bubbles.loftwah.com/"
+  ],
+  [
+    "foilbury",
+    "foilbury",
+    "Open Foilbury QR",
+    "Open the cabinet",
+    "Rhea’s After Hours trading card",
+    "https://foilbury.loftwah.com/"
+  ],
+  [
+    "protocol",
+    "protocol-11",
+    "Open Protocol 11 QR",
+    "Pull up a chair",
+    "the Protocol 11 table invitation",
+    "https://protocol11.loftwah.com/"
+  ],
+  [
+    "radio",
+    "loftwahfm",
+    "Listen to LoftwahFM QR",
+    "Leave it on",
+    "the LoftwahFM record sleeve",
+    "https://fm.loftwah.com/radio"
+  ]
+] as const;
+
+const qrCards: CampaignItem[] = qrProjects.flatMap(
+  ([key, project, title, posterTitle, artwork, href]) =>
+    (["branded", "poster"] as const).map((style) => {
+      const poster = style === "poster";
+      const id = `qr-${key}-${style}`;
+      const width = 1200;
+      const height = poster ? 1500 : 1200;
+      const original = `${base}/${id}.png`;
+      return {
+        id: `seasonal-library-qr-${key}${poster ? "-poster" : ""}`,
+        series: "seasonal-library",
+        project,
+        title: poster ? `${posterTitle} · QR poster` : title,
+        use: "feature",
+        tags: ["QR codes"],
+        alt: poster
+          ? `Poster featuring ${artwork}, a QR code and the address ${href}`
+          : `Branded square QR card with the address ${href}`,
+        caption: `Scan to open ${href}`,
+        href,
+        action: "Explore",
+        kind: "editorial composition",
+        credit: poster
+          ? "Woodhouse layout · Codex ImageGen illustration · encoded QR"
+          : "Woodhouse · brand artwork and encoded QR",
+        source: `${base}/provenance.txt`,
+        image: `${base}/${id}-preview.jpg`,
+        thumbnail: `${base}/${id}-thumb.jpg`,
+        original,
+        width,
+        height,
+        reviewedAt: "2026-11-13",
+        addedAt: "2026-11-13T06:02:53.123Z",
+        formats: [
+          {
+            label: poster ? "QR poster PNG" : "Branded QR card PNG",
+            image: original,
+            width,
+            height
+          },
+          { label: "QR code PNG", image: `${base}/qr-${key}.png`, width: 1184, height: 1184 }
+        ]
+      };
+    })
+);
+
+export const seasonalLibrary = [...seasonalArtwork, ...qrCards];
