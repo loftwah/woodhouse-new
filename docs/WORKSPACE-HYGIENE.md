@@ -65,6 +65,43 @@ Music and private data are content, not cache. A `.wrangler` directory holds loc
 is state, not output. Neither should be pruned by an age rule; each project decides with its own
 evidence.
 
+## Portfolio R2 artwork archive
+
+Reviewed 13 November 2026, Australia/Melbourne. The private Cloudflare R2 bucket
+`loftwah-artwork-archive` holds backed-up artwork masters, creative media and provenance.
+Open **Cloudflare → R2 Object Storage → loftwah-artwork-archive → snapshots** to find it from
+another machine. Under `snapshots/20261113/`, `indexes/` holds timestamped restore indexes
+and `tools/` holds the restore helper and instructions. The newest index lists the paths
+verified so far. It can be partial while a transfer is running. Each record carries the
+original path, byte length, SHA-256 and the R2 object key or ordered part keys. Keep this
+bucket private and retain completed archive objects.
+
+On MP's Mac, open `~/.local/state/loftwah-artwork-archive/20261113/README.md`. From that
+directory, run `/opt/homebrew/bin/python3 status.py` for verified, queued and missing counts.
+Use the restore instructions there to fetch an original to a new path. Verify that its
+SHA-256 matches the index before putting it back into a project. Codex and Woodhouse QR
+samples were restored and compared byte for byte on 13 November. The cross-project upload
+was still running at review time.
+
+### Default for each project
+
+1. Keep finished masters, editable creative sources, rights and provenance together. Store
+   them in the private R2 archive or the project's existing private R2 media workflow. Give
+   each kept asset a stable key and record where to restore it in the project’s asset manifest
+   or owning issue. Check the bytes from R2 before calling the asset archived.
+2. Keep the source and minimum assets required by the current build or offline runtime. Large
+   approved downloads can move to the project's existing delivery bucket through its normal
+   release. Verify the public route and exact download before dropping the old runtime copy.
+   Share, its public catalogue and project builds must never depend on browsing the private archive.
+3. Use local working copies and lightweight previews for editing. When a batch is complete, check
+   the archive index and restore a representative original. Retire only verified duplicate or
+   reproducible local copies that no active worktree, tool or release uses. Use the existing
+   prune report for idle build output. Preserve unverified masters and in-flight evidence.
+
+The archive is storage and recovery. [#234](https://github.com/loftwah/woodhouse-new/issues/234)
+owns public catalogue delivery and rights metadata. [#179](https://github.com/loftwah/woodhouse-new/issues/179)
+routes adoption by each project.
+
 ## Boundary
 
 This is not a disk cleaner for the host. It does not touch system temporary directories, other
