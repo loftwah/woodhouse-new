@@ -33,7 +33,9 @@ export function campaignCollectionPath(slug: string) {
 
 /** A portrait poster remains whole in the gallery; the unfurl uses a wide composition. */
 export function campaignSocial(items: CampaignItem[]) {
-  const lead = items[0];
+  // Design studies belong in the gallery. Unfurls keep the established campaign art.
+  const socialItems = items.filter(({ series }) => series !== "design-studies");
+  const lead = socialItems[0] ?? items[0];
   if (lead?.landscapeImage)
     return {
       ...lead,
@@ -42,7 +44,7 @@ export function campaignSocial(items: CampaignItem[]) {
       width: 1200,
       height: 630
     };
-  return items.find((item) => item.width > item.height) ?? items[0];
+  return socialItems.find((item) => item.width > item.height) ?? lead;
 }
 
 export function campaignSitemapEntries(projectSlugs: string[]) {
