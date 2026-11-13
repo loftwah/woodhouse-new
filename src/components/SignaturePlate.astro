@@ -9,13 +9,32 @@ import { LOOM_STRANDS } from "../scripts/signature/loom";
 type Props = {
   class?: string;
   immersive?: boolean;
+  sliced?: boolean;
 };
 
-const { class: className, immersive = false } = Astro.props;
+const { class: className, immersive = false, sliced = false } = Astro.props;
+
+// One mask over the existing image and canvas, not twenty image downloads or
+// renderers. The apertures scale with the artwork, including the phone crop.
+// Inlined at render time so a failed extra asset request cannot hide the loom.
+const sliceMask = sliced
+  ? `url("data:image/svg+xml,${encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">${Array.from(
+        { length: 20 },
+        (_, index) =>
+          `<rect x="${index * 50 + 3}" y="0" width="44" height="1000" rx="4" fill="white"/>`
+      ).join("")}</svg>`
+    )}")`
+  : undefined;
 ---
 
 <figure
-  class:list={["signature-plate", { "signature-plate--immersive": immersive }, className]}
+  class:list={[
+    "signature-plate",
+    { "signature-plate--immersive": immersive, "signature-plate--sliced": sliced },
+    className
+  ]}
+  style={sliceMask ? { "--signature-slice-mask": sliceMask } : undefined}
   data-signature-plate
 >
   <div class="signature-plate__stage" data-signature-stage data-live="false">
@@ -96,6 +115,19 @@ const { class: className, immersive = false } = Astro.props;
   .signature-plate__poster {
     object-fit: cover;
     z-index: 0;
+  }
+  /* Slice Image's continuous-picture treatment, expressed in native CSS.
+     Mask only the art. The rig, controls, caption and pointer host stay whole.
+     With no mask support, the original uninterrupted artwork remains. */
+  .signature-plate--sliced .signature-plate__poster,
+  .signature-plate--sliced .signature-plate__canvas {
+    -webkit-mask-image: var(--signature-slice-mask);
+    mask-image: var(--signature-slice-mask);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    mask-mode: alpha;
   }
   .signature-plate__canvas {
     z-index: 1;
