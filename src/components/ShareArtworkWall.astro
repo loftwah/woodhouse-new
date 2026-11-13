@@ -55,7 +55,9 @@ const labels = [
     )
   )
 ].sort();
-const placement = labels.find((label) => label === params.get("artFormat")) ?? "";
+const requestedFormat = params.get("artFormat");
+const format = requestedFormat === "Pinterest pin" ? "For Pinterest" : requestedFormat;
+const placement = labels.find((label) => label === format) ?? "";
 const showShelf = !category && !project && !placement;
 const sketchPreview = sketches.slice(0, 4);
 const shelfIds = new Set(sketchPreview.map(({ id }) => id));

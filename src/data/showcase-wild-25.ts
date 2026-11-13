@@ -55,7 +55,7 @@ const art = [
     "https://fm.loftwah.com/radio?station=low-tide",
     "Listen",
     [
-      ["Pinterest pin", "loftwahfm-lowtide-embroidery.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-lowtide-embroidery.jpg", 1000, 1500],
       ["ImageGen original PNG", "loftwahfm-lowtide-embroidery.png", 1024, 1536]
     ]
   ],
@@ -69,7 +69,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-leviathan-print.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-leviathan-print.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-leviathan-print.png", 1024, 1536]
     ]
   ],
@@ -237,7 +237,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-reaper-news.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-reaper-news.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-reaper-news.png", 1024, 1536]
     ]
   ],

@@ -112,12 +112,12 @@ export const socialPlacements = [
   },
   {
     id: "pinterest",
-    platform: "Pinterest",
-    placement: "Standard Pin",
-    format: "Pinterest pin",
+    platform: "For Pinterest",
+    placement: "2:3 portrait",
+    format: "For Pinterest",
     example: "share-edition-shoalshot-reef-edge-pin",
     source: "https://business.pinterest.com/creative-best-practices/",
-    note: "A 1000 × 1500 vertical Pin. Pair it with the product link and a short description."
+    note: "A 1000 × 1500 portrait image for a Pinterest post. Pair it with the product link and a short description."
   },
   {
     id: "link-preview",

@@ -104,7 +104,7 @@ const art = [
     href: "https://protocol11.loftwah.com/",
     action: "Play",
     formats: [
-      ["Pinterest pin", "late-night-room.jpg", 1000, 1500],
+      ["For Pinterest", "late-night-room.jpg", 1000, 1500],
       ["ImageGen original PNG", "late-night-room.png", 1024, 1536]
     ]
   },

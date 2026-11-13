@@ -165,9 +165,19 @@ const productName = (slug: string) =>
       >
         <div class="viewer-toolbar">
           <h2 id={`viewer-title-${item.id}`}>{item.title}</h2>
-          <form method="dialog">
-            <button aria-label="Close image viewer">Close</button>
-          </form>
+          <div class="viewer-tools">
+            <nav aria-label="Browse artwork" data-viewer-navigation hidden>
+              <button type="button" data-viewer-step="-1" aria-label="Previous artwork">
+                ‹
+              </button>
+              <button type="button" data-viewer-step="1" aria-label="Next artwork">
+                ›
+              </button>
+            </nav>
+            <form method="dialog">
+              <button aria-label="Close image viewer">Close</button>
+            </form>
+          </div>
         </div>
         <img
           src={item.image}
@@ -241,13 +251,47 @@ const productName = (slug: string) =>
       const dialog = document.getElementById(link.dataset.openArt ?? "");
       if (!(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== "function")
         continue;
-      let returnFocus: HTMLElement | null = null;
+      const navigation = dialog.querySelector<HTMLElement>("[data-viewer-navigation]");
+      const buttons = [...dialog.querySelectorAll<HTMLButtonElement>("[data-viewer-step]")];
+      const adjacent = (step: number) => {
+        const collection = link.closest("[data-art-stream]") ?? link.closest(".showcase-wall");
+        const works = [
+          ...(collection?.querySelectorAll<HTMLAnchorElement>("[data-open-art]") ?? [])
+        ];
+        return works[works.indexOf(link) + step];
+      };
+      const browse = (step: number) => {
+        const next = adjacent(step);
+        if (!next) return;
+        dialog.close();
+        next.click();
+      };
+      for (const button of buttons) {
+        button.addEventListener("click", () => browse(Number(button.dataset.viewerStep)));
+      }
+      dialog.addEventListener("keydown", (event) => {
+        if (
+          event.defaultPrevented ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey
+        )
+          return;
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        browse(event.key === "ArrowLeft" ? -1 : 1);
+      });
       link.addEventListener("click", (event) => {
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0)
           return;
         event.preventDefault();
-        returnFocus = link;
+        for (const button of buttons) {
+          button.disabled = !adjacent(Number(button.dataset.viewerStep));
+        }
+        if (navigation) navigation.hidden = buttons.every((button) => button.disabled);
         dialog.showModal();
+        dialog.querySelector<HTMLElement>('[aria-label="Close image viewer"]')?.focus();
         const image = dialog.querySelector<HTMLImageElement>("[data-viewer-original]");
         const status = dialog.querySelector<HTMLElement>("[data-viewer-status]");
         if (image?.dataset.viewerOriginal && image.dataset.originalLoaded !== "true") {
@@ -272,7 +316,12 @@ const productName = (slug: string) =>
           image.src = image.dataset.viewerOriginal;
         }
       });
-      dialog.addEventListener("close", () => returnFocus?.focus({ preventScroll: true }));
+      dialog.addEventListener("close", () => {
+        if (!document.querySelector(".art-viewer[open]")) {
+          link.focus({ preventScroll: true });
+          link.scrollIntoView({ block: "nearest", inline: "nearest" });
+        }
+      });
       dialog.addEventListener("click", (event) => {
         if (event.target !== dialog) return;
         const bounds = dialog.getBoundingClientRect();
@@ -411,6 +460,21 @@ const productName = (slug: string) =>
     font: 600 1.25rem/1.2 var(--display);
     margin: 0;
   }
+  .viewer-tools,
+  [data-viewer-navigation]:not([hidden]) {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  [data-viewer-step] {
+    min-width: 44px;
+    font-size: 1.25rem;
+  }
+  .viewer-toolbar button:disabled {
+    color: var(--muted);
+    opacity: 0.45;
+    cursor: default;
+  }
   .viewer-toolbar button {
     min-height: 44px;
     padding: 0.5rem 0.8rem;
@@ -480,6 +544,10 @@ const productName = (slug: string) =>
     .art-viewer {
       width: calc(100% - 1rem);
       max-height: calc(100dvh - 1rem);
+    }
+    .viewer-toolbar {
+      gap: 0.5rem;
+      padding-inline: 0.6rem;
     }
     .viewer-toolbar h2 {
       font-size: 1.05rem;

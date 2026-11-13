@@ -141,7 +141,7 @@ const art = [
     "https://woodhouse.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "woodhouse-loom-study.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-loom-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "woodhouse-loom-study.png", 1024, 1536]
     ],
     "study",
@@ -541,7 +541,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-reef-study.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-reef-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-reef-study.png", 1024, 1536]
     ],
     "study",
@@ -605,7 +605,7 @@ const art = [
     "https://composer.loftwah.com/launch-kit",
     "Try",
     [
-      ["Pinterest pin", "app-composer-launch-study.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-launch-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "app-composer-launch-study.png", 1024, 1536]
     ],
     "study",
@@ -733,7 +733,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-tux-study.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-tux-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-tux-study.png", 1024, 1536]
     ],
     "study",
@@ -797,7 +797,7 @@ const art = [
     "https://liferaft.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "liferaft-read-study.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-read-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "liferaft-read-study.png", 1024, 1536]
     ],
     "study",
@@ -1325,7 +1325,7 @@ const art = [
     "https://bubbles.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "bubbles-canopy-study.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-canopy-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "bubbles-canopy-study.png", 1024, 1536]
     ],
     "study",
@@ -1357,7 +1357,7 @@ const art = [
     "https://foilbury.loftwah.com/cabinet/rhea",
     "Explore",
     [
-      ["Pinterest pin", "foilbury-rhea-study.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-rhea-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "foilbury-rhea-study.png", 1024, 1536]
     ],
     "study",
@@ -1389,7 +1389,7 @@ const art = [
     "https://protocol11.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "protocol-11-kitchen-study.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-kitchen-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "protocol-11-kitchen-study.png", 1024, 1536]
     ],
     "study",
@@ -1421,7 +1421,7 @@ const art = [
     "https://fm.loftwah.com/radio?station=low-tide",
     "Listen",
     [
-      ["Pinterest pin", "loftwahfm-low-study.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-low-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "loftwahfm-low-study.png", 1024, 1536]
     ],
     "study",
@@ -1453,7 +1453,7 @@ const art = [
     "https://max.loftwah.com/demo",
     "Try",
     [
-      ["Pinterest pin", "max-stop-study.jpg", 1000, 1500],
+      ["For Pinterest", "max-stop-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "max-stop-study.png", 1024, 1536]
     ],
     "study",
@@ -1949,7 +1949,7 @@ const art = [
     "https://bubbles.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "bubbles-fizz-poster.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-fizz-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "bubbles-fizz-poster.png", 1024, 1536]
     ],
     "poster",
@@ -1965,7 +1965,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-jelly-poster.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-jelly-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-jelly-poster.png", 1024, 1536]
     ],
     "poster",
@@ -1981,7 +1981,7 @@ const art = [
     "https://foilbury.loftwah.com/cabinet/pippa",
     "Explore",
     [
-      ["Pinterest pin", "foilbury-pippa-poster.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-pippa-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "foilbury-pippa-poster.png", 1024, 1536]
     ],
     "poster",
@@ -1997,7 +1997,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-reaper-poster.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-reaper-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-reaper-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2013,7 +2013,7 @@ const art = [
     "https://protocol11.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "protocol-11-arcade-poster.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-arcade-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "protocol-11-arcade-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2029,7 +2029,7 @@ const art = [
     "https://composer.loftwah.com/creator-hub",
     "Try",
     [
-      ["Pinterest pin", "app-composer-guest-poster.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-guest-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "app-composer-guest-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2045,7 +2045,7 @@ const art = [
     "https://fm.loftwah.com/radio?station=cartridge-club",
     "Listen",
     [
-      ["Pinterest pin", "loftwahfm-cartridge-poster.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-cartridge-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "loftwahfm-cartridge-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2061,7 +2061,7 @@ const art = [
     "https://liferaft.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "liferaft-three-poster.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-three-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "liferaft-three-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2077,7 +2077,7 @@ const art = [
     "https://max.loftwah.com/demo",
     "Try",
     [
-      ["Pinterest pin", "max-voice-poster.jpg", 1000, 1500],
+      ["For Pinterest", "max-voice-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "max-voice-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2093,7 +2093,7 @@ const art = [
     "https://woodhouse.loftwah.com/exhibits/source-plate/",
     "Explore",
     [
-      ["Pinterest pin", "woodhouse-plate-poster.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-plate-poster.jpg", 1000, 1500],
       ["ImageGen original PNG", "woodhouse-plate-poster.png", 1024, 1536]
     ],
     "poster",
@@ -2125,7 +2125,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-jelly-study.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-jelly-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-jelly-study.png", 1024, 1536]
     ],
     "study",
@@ -2157,7 +2157,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-reaper-study.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-reaper-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-reaper-study.png", 1024, 1536]
     ],
     "study",
@@ -2189,7 +2189,7 @@ const art = [
     "https://composer.loftwah.com/creator-hub",
     "Try",
     [
-      ["Pinterest pin", "app-composer-guest-study.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-guest-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "app-composer-guest-study.png", 1024, 1536]
     ],
     "study",
@@ -2221,7 +2221,7 @@ const art = [
     "https://liferaft.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "liferaft-three-study.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-three-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "liferaft-three-study.png", 1024, 1536]
     ],
     "study",
@@ -2253,7 +2253,7 @@ const art = [
     "https://woodhouse.loftwah.com/exhibits/source-plate/",
     "Explore",
     [
-      ["Pinterest pin", "woodhouse-plate-study.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-plate-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "woodhouse-plate-study.png", 1024, 1536]
     ],
     "study",
@@ -2893,7 +2893,7 @@ const art = [
     "https://bubbles.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "bubbles-fungus-study.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-fungus-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "bubbles-fungus-study.png", 1024, 1536]
     ],
     "study",
@@ -2925,7 +2925,7 @@ const art = [
     "https://foilbury.loftwah.com/cabinet/nora",
     "Explore",
     [
-      ["Pinterest pin", "foilbury-nora-study.jpg", 1000, 1500],
+      ["For Pinterest", "foilbury-nora-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "foilbury-nora-study.png", 1024, 1536]
     ],
     "study",
@@ -2957,7 +2957,7 @@ const art = [
     "https://protocol11.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "protocol-11-circuit-study.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-circuit-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "protocol-11-circuit-study.png", 1024, 1536]
     ],
     "study",
@@ -2989,7 +2989,7 @@ const art = [
     "https://fm.loftwah.com/radio?station=pressure-system",
     "Listen",
     [
-      ["Pinterest pin", "loftwahfm-pressure-study.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-pressure-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "loftwahfm-pressure-study.png", 1024, 1536]
     ],
     "study",
@@ -3021,7 +3021,7 @@ const art = [
     "https://max.loftwah.com/demo",
     "Try",
     [
-      ["Pinterest pin", "max-isolated-study.jpg", 1000, 1500],
+      ["For Pinterest", "max-isolated-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "max-isolated-study.png", 1024, 1536]
     ],
     "study",
@@ -3709,7 +3709,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-abyss-study.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-abyss-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-abyss-study.png", 1024, 1536]
     ],
     "study",
@@ -3741,7 +3741,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-launch-study.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-launch-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-launch-study.png", 1024, 1536]
     ],
     "study",
@@ -3773,7 +3773,7 @@ const art = [
     "https://composer.loftwah.com/creator-hub",
     "Try",
     [
-      ["Pinterest pin", "app-composer-links-study.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-links-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "app-composer-links-study.png", 1024, 1536]
     ],
     "study",
@@ -3805,7 +3805,7 @@ const art = [
     "https://liferaft.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "liferaft-message-study.jpg", 1000, 1500],
+      ["For Pinterest", "liferaft-message-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "liferaft-message-study.png", 1024, 1536]
     ],
     "study",
@@ -3837,7 +3837,7 @@ const art = [
     "https://woodhouse.loftwah.com/",
     "Explore",
     [
-      ["Pinterest pin", "woodhouse-workshop-study.jpg", 1000, 1500],
+      ["For Pinterest", "woodhouse-workshop-study.jpg", 1000, 1500],
       ["ImageGen original PNG", "woodhouse-workshop-study.png", 1024, 1536]
     ],
     "study",

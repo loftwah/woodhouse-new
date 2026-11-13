@@ -27,7 +27,7 @@ const art = [
     "https://fighter.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "fighter-tux.jpg", 1000, 1500],
+      ["For Pinterest", "fighter-tux.jpg", 1000, 1500],
       ["ImageGen original PNG", "fighter-tux.png", 1024, 1536]
     ]
   ],
@@ -41,7 +41,7 @@ const art = [
     "https://bubbles.loftwah.com/story",
     "Play",
     [
-      ["Pinterest pin", "bubbles-silver-fungus.jpg", 1000, 1500],
+      ["For Pinterest", "bubbles-silver-fungus.jpg", 1000, 1500],
       ["ImageGen original PNG", "bubbles-silver-fungus.png", 1024, 1536]
     ]
   ],
@@ -83,7 +83,7 @@ const art = [
     "https://protocol11.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "protocol-11-circuit.jpg", 1000, 1500],
+      ["For Pinterest", "protocol-11-circuit.jpg", 1000, 1500],
       ["ImageGen original PNG", "protocol-11-circuit.png", 1024, 1536]
     ]
   ],
@@ -251,7 +251,7 @@ const art = [
     "https://shoalshot.loftwah.com/",
     "Play",
     [
-      ["Pinterest pin", "shoalshot-tideglass.jpg", 1000, 1500],
+      ["For Pinterest", "shoalshot-tideglass.jpg", 1000, 1500],
       ["ImageGen original PNG", "shoalshot-tideglass.png", 1024, 1536]
     ]
   ],
@@ -447,7 +447,7 @@ const art = [
     "https://composer.loftwah.com/creator-hub",
     "Try",
     [
-      ["Pinterest pin", "app-composer-postcard.jpg", 1000, 1500],
+      ["For Pinterest", "app-composer-postcard.jpg", 1000, 1500],
       ["ImageGen original PNG", "app-composer-postcard.png", 1024, 1536]
     ]
   ],
@@ -517,7 +517,7 @@ const art = [
     "https://fm.loftwah.com/radio?station=saltwater-static",
     "Listen",
     [
-      ["Pinterest pin", "loftwahfm-saltwater.jpg", 1000, 1500],
+      ["For Pinterest", "loftwahfm-saltwater.jpg", 1000, 1500],
       ["ImageGen original PNG", "loftwahfm-saltwater.png", 1024, 1536]
     ]
   ],
@@ -643,7 +643,7 @@ const art = [
     "https://max.loftwah.com/demo",
     "Try",
     [
-      ["Pinterest pin", "max-prototype.jpg", 1000, 1500],
+      ["For Pinterest", "max-prototype.jpg", 1000, 1500],
       ["ImageGen original PNG", "max-prototype.png", 1024, 1536]
     ]
   ],
