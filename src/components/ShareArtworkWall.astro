@@ -184,42 +184,49 @@ const artworkPages = Object.fromEntries(
       </svg>
       {sort === "shuffle" ? "Reshuffle" : "Shuffle"}
     </a>
-    <label>
-      <span>Project</span>
-      <select name="artProject">
-        <option value="">All projects</option>
-        {projects.map(({ slug, name }) => (
-          <option value={slug} selected={slug === project}>
-            {name}
-          </option>
-        ))}
-      </select>
-    </label>
-    <label>
-      <span>Format</span>
-      <select name="artFormat">
-        <option value="">All formats</option>
-        {labels.map((label) => (
-          <option value={label} selected={label === placement}>
-            {label}
-          </option>
-        ))}
-      </select>
-    </label>
-    {tags.length > 0 && (
-      <label>
-        <span>Tag</span>
-        <select name="artTag">
-          <option value="">All tags</option>
-          {tags.map((label) => (
-            <option value={label} selected={label === tag}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
-    )}
-    <button type="submit">Apply</button>
+    <details class="art-filter-disclosure" open={Boolean(project || placement || tag)}>
+      <summary>Filters{project || placement || tag ? " · Active" : ""}</summary>
+      <div class="art-filter-fields">
+        <label>
+          <span>Project</span>
+          <select name="artProject">
+            <option value="">All projects</option>
+            {projects.map(({ slug, name }) => (
+              <option value={slug} selected={slug === project}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Format</span>
+          <select name="artFormat">
+            <option value="">All formats</option>
+            {labels.map((label) => (
+              <option value={label} selected={label === placement}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        {tags.length > 0 && (
+          <label>
+            <span>Tag</span>
+            <select name="artTag">
+              <option value="">All tags</option>
+              {tags.map((label) => (
+                <option value={label} selected={label === tag}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+      </div>
+    </details>
+    <button type="submit" class="art-apply">
+      Apply
+    </button>
   </form>
   <nav class="art-categories" aria-label="Artwork categories">
     {categories.map(([key, label]) => (
@@ -434,6 +441,20 @@ const artworkPages = Object.fromEntries(
     align-items: end;
     margin-block: 0.25rem 0.75rem;
   }
+  .art-filter-disclosure {
+    align-self: end;
+  }
+  .art-filter-disclosure summary {
+    min-height: 44px;
+    align-content: center;
+    cursor: pointer;
+  }
+  .art-filter-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-end: 0.5rem;
+  }
   .art-filters label {
     display: grid;
     gap: 0.25rem;
@@ -543,7 +564,14 @@ const artworkPages = Object.fromEntries(
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .art-filters:has([name="artTag"]) button {
+    .art-filter-disclosure {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .art-filter-fields label {
+      flex: 1 1 8rem;
+    }
+    .art-apply {
       grid-column: 1 / -1;
     }
     .art-categories {
