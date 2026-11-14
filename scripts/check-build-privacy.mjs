@@ -1,6 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { Worker } from "node:worker_threads";
 import {
   parseEnvFile,
   privateEnvValues,
@@ -37,6 +38,50 @@ async function optionalFile(file) {
   }
 }
 
+// Bounded worker pool: no artifact or pattern is skipped and values never enter logs.
+async function scanFiles(files, buildRoot, privateValues) {
+  const count = Math.min(4, files.length);
+  const groups = Array.from({ length: count }, () => []);
+  files.forEach((file, index) =>
+    groups[index % count].push({
+      index,
+      file,
+      isPublic: path.relative(buildRoot, file).replaceAll("\\", "/").startsWith("client/")
+    })
+  );
+  const workers = [];
+  try {
+    for (const group of groups) {
+      workers.push(
+        new Worker(new URL("./privacy-scan-worker.mjs", import.meta.url), {
+          workerData: { files: group, privateValues },
+          execArgv: process.execArgv.filter((arg) => !arg.startsWith("--input-type"))
+        })
+      );
+    }
+    const batches = await Promise.all(
+      workers.map(
+        (worker) =>
+          new Promise((resolve, reject) => {
+            let findings;
+            worker.once("message", (value) => {
+              findings = value;
+            });
+            worker.once("error", reject);
+            worker.once("exit", (code) => {
+              if (code !== 0 || !Array.isArray(findings))
+                reject(new Error("Privacy scan worker failed."));
+              else resolve(findings);
+            });
+          })
+      )
+    );
+    return batches.flat().sort((a, b) => a.index - b.index);
+  } finally {
+    await Promise.all(workers.map((worker) => worker.terminate()));
+  }
+}
+
 /**
  * Inspect the artefact actually staged for publication: every client and Worker
  * file, hidden and nested paths, bundles, source maps and copied static assets.
@@ -63,18 +108,13 @@ export async function checkBuildPrivacy({ root = process.cwd(), envFile } = {}) 
     return { ok: false, findings, files: 0, configuredValuesIncluded };
   }
 
-  for (const file of files) {
+  const scanned = await scanFiles(files, buildRoot, privateValues);
+  const labelsByIndex = new Map(scanned.map(({ index, labels }) => [index, labels]));
+  for (const [index, file] of files.entries()) {
     const relative = path.relative(buildRoot, file);
     const reason = riskyPathReason(relative);
     if (reason) findings.push({ label: `published ${reason}`, file });
-    const isPublic = relative.replaceAll("\\", "/").startsWith("client/");
-    const bytes = await readFile(file);
-    for (const label of scanPublicText(bytes, {
-      privateValues,
-      includeMarkers: isPublic,
-      includePatterns: true
-    }))
-      findings.push({ label, file });
+    for (const label of labelsByIndex.get(index) ?? []) findings.push({ label, file });
   }
 
   const seedPath = path.join(root, "seed/seed.json");

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { chmod, mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -303,6 +303,71 @@ test("explicit trusted env supports isolated worktrees and fails closed when mis
     assert(!`${cli.stdout}${cli.stderr}`.includes(CANARY));
     await assert.rejects(checkBuildPrivacy({ root, envFile: path.join(root, "missing.env") }));
   } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("parallel artefact guard scans binary bytes and retains path-specific rules", async () => {
+  const root = await fixture({
+    ".env": `TEST_API_KEY=${CANARY}`,
+    "dist/client/deep/image.bin": Buffer.concat([
+      Buffer.from([0xff, 0xfe, 0]),
+      Buffer.from(CANARY)
+    ]),
+    "dist/client/deep/video.bin": Buffer.concat([
+      Buffer.from([0, 0xff]),
+      Buffer.from(FAKE_GITHUB_TOKEN)
+    ]),
+    "dist/client/deep/.env": "ordinary contents",
+    "dist/server/worker.mjs": 'const name = "EMDASH_ENVIRONMENT"',
+    "dist/client/app.js": "ordinary content",
+    "seed/seed.json": JSON.stringify({ content: { conversations: [] } })
+  });
+  try {
+    const result = await checkBuildPrivacy({ root });
+    const relative = result.findings.map(
+      ({ label, file }) => `${label}:${path.relative(root, file)}`
+    );
+    assert(relative.includes("configured private value:dist/client/deep/image.bin"));
+    assert(relative.includes("GitHub token:dist/client/deep/video.bin"));
+    assert(relative.includes("published environment file:dist/client/deep/.env"));
+    assert(!relative.some((finding) => finding.includes("dist/server/worker.mjs")));
+    assert(!JSON.stringify(result).includes(CANARY));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("artefact guard works from an input-type module parent", async () => {
+  const root = await fixture({ "dist/client/index.html": "ordinary content" });
+  try {
+    const cli = spawnSync(
+      process.execPath,
+      [
+        "--input-type=module",
+        "-e",
+        `import { checkBuildPrivacy } from ${JSON.stringify(new URL("./check-build-privacy.mjs", import.meta.url).href)}; const result = await checkBuildPrivacy({root: ${JSON.stringify(root)}}); if (!result.ok || result.files !== 1) process.exit(1);`
+      ],
+      { encoding: "utf8" }
+    );
+    assert.equal(cli.status, 0, cli.stderr);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("an unreadable artifact fails the parallel guard closed", async (t) => {
+  if (process.getuid?.() === 0) return t.skip("root bypasses file permissions");
+  const root = await fixture({
+    "dist/client/private.bin": "ordinary bytes",
+    "dist/client/index.html": "safe"
+  });
+  const target = path.join(root, "dist/client/private.bin");
+  try {
+    await chmod(target, 0);
+    await assert.rejects(checkBuildPrivacy({ root }), /EACCES|permission/i);
+  } finally {
+    await chmod(target, 0o600);
     await rm(root, { recursive: true, force: true });
   }
 });
