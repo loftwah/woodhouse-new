@@ -132,7 +132,7 @@ const path = (
   if (tag) query.set("artTag", tag);
   if (
     (nextSort !== "featured" && nextSort !== "newest") ||
-    (nextSort === "newest" && !nextCategory && !project && !placement && !nextTag)
+    (nextSort === "newest" && !nextCategory && !project && !placement && !tag)
   )
     query.set("artSort", nextSort);
   if (nextSort === "shuffle") query.set("artSeed", nextSeed);

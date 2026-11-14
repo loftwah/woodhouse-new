@@ -5,12 +5,12 @@ import type { CampaignItem } from "../../data/showcase-campaign";
 import { creativePlates, resourceReviewDate, resourceSources } from "../../data/creative-resources";
 
 const first = creativePlates[0]!;
-const works: CampaignItem[] = creativePlates.map((plate) => ({
+const works: CampaignItem[] = creativePlates.map(({ use, prompt: _prompt, ...plate }) => ({
   ...plate,
   project: "woodhouse",
   original: plate.image,
   image: plate.preview,
-  caption: plate.use,
+  caption: use,
   reviewedAt: resourceReviewDate,
   kind: "editorial composition",
   credit: "Woodhouse · Codex ImageGen",
