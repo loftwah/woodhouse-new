@@ -11,9 +11,11 @@ const unavailable = (status: number) =>
 export const GET: APIRoute = async ({ params, request }) => {
   const key = prefix + params.file;
   if (!published.has(key)) return unavailable(404);
+  const storageKey = key.slice(1);
   const bucket = (env as unknown as { MEDIA: R2Bucket }).MEDIA;
   try {
-    const object = request.method === "HEAD" ? await bucket.head(key) : await bucket.get(key);
+    const object =
+      request.method === "HEAD" ? await bucket.head(storageKey) : await bucket.get(storageKey);
     if (!object) return unavailable(404);
     const headers = new Headers({
       "content-type": "image/png",
