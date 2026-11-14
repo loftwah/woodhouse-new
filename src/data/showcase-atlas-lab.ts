@@ -11656,5 +11656,4859 @@ export const atlasLab: CampaignItem[] = [
       }
     ],
     "sourceReleasedAt": "2026-01-01"
+  },
+  {
+    "id": "studio-story-01-1",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The week the pictures came off the wall · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Animated short",
+      "The week the pictures came off the wall"
+    ],
+    "alt": "The week the pictures came off the wall · 1/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 1 of 3. A print peels itself off a wall the minute the workshop closes",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-01-1-preview-edbd3329883cc8d3.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-01-1-thumb-920c7be23689f83f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-01-1-f7a02e4bb18f486f.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:58.673734Z",
+    "fileModifiedAt": "2026-11-14T04:38:58.673734Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-1-f7a02e4bb18f486f.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-1-ed1de0ceb93c54e9.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-01-2",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The week the pictures came off the wall · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Animated short",
+      "The week the pictures came off the wall"
+    ],
+    "alt": "The week the pictures came off the wall · 2/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 2 of 3. A cluster of earlier prints sets up an impromptu drawing room behind a radiator",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-01-2-preview-9ce29f3e69b9566b.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-01-2-thumb-313646a534f8d282.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-01-2-fb6b1964636b465e.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:45.947940Z",
+    "fileModifiedAt": "2026-11-14T04:42:45.947940Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-2-fb6b1964636b465e.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-2-ab62b76438d98231.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-01-3",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The week the pictures came off the wall · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Animated short",
+      "The week the pictures came off the wall"
+    ],
+    "alt": "The week the pictures came off the wall · 3/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 3 of 3. The keeper opens the door to find all the prints clipped to the clothesline in release order",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-01-3-preview-e25a21290294e67e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-01-3-thumb-728bd79fe0093407.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-01-3-7c60dfed8b6f1017.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:32.719919Z",
+    "fileModifiedAt": "2026-11-14T04:44:32.719919Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-3-7c60dfed8b6f1017.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-01-3-567bccd049143968.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-02-1",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The shop with a door to every other shop · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Picture book",
+      "The shop with a door to every other shop"
+    ],
+    "alt": "The shop with a door to every other shop · 1/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 1 of 3. A small door inside the stationery shop opens onto a stranger’s print bench",
+    "href": "https://woodhouse.loftwah.com/projects/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-02-1-preview-43423a0e40a77277.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-02-1-thumb-2480e6c0af5330d8.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-02-1-cbcf4cde38e72e15.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:52.569622Z",
+    "fileModifiedAt": "2026-11-14T04:38:52.569622Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-1-cbcf4cde38e72e15.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-1-cf34a0aa16de713d.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-02-2",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The shop with a door to every other shop · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Picture book",
+      "The shop with a door to every other shop"
+    ],
+    "alt": "The shop with a door to every other shop · 2/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 2 of 3. The visitor follows a trace of red paper through three studios with very different light",
+    "href": "https://woodhouse.loftwah.com/projects/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-02-2-preview-c6376c5d4dc79b33.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-02-2-thumb-8107562e8796cd7c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-02-2-ed0130734354294b.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:40.440692Z",
+    "fileModifiedAt": "2026-11-14T04:41:40.440692Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-2-ed0130734354294b.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-2-d5e5af3953d90a5f.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-02-3",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "The shop with a door to every other shop · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Picture book",
+      "The shop with a door to every other shop"
+    ],
+    "alt": "The shop with a door to every other shop · 3/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 3 of 3. All of the doors open onto the same courtyard for a night market",
+    "href": "https://woodhouse.loftwah.com/projects/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-02-3-preview-82486246c71d7221.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-02-3-thumb-2825f006d767ac6c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-02-3-2c58436a52f86259.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:48.393813Z",
+    "fileModifiedAt": "2026-11-14T04:42:48.393813Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-3-2c58436a52f86259.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-02-3-a15ee6f839d4df3c.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-03-1",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "One original at a time · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Graphic novella",
+      "One original at a time"
+    ],
+    "alt": "One original at a time · 1/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 1 of 3. An archivist peels back the backing paper on a single huge painting",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-03-1-preview-9a0625a91494b141.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-03-1-thumb-001c2509c7b0266d.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-03-1-e62f87573e598151.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:44.493141Z",
+    "fileModifiedAt": "2026-11-14T04:38:44.493141Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-1-e62f87573e598151.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-1-72f8cb0e746ab463.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-03-2",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "One original at a time · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Graphic novella",
+      "One original at a time"
+    ],
+    "alt": "One original at a time · 2/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 2 of 3. The label joins a row of forty physical things that made the painting possible",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-03-2-preview-4a2c8da8da1ad21c.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-03-2-thumb-a028a369a5ecbde5.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-03-2-9ca0a04dd5f74e09.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:13.496879Z",
+    "fileModifiedAt": "2026-11-14T04:42:13.496879Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-2-9ca0a04dd5f74e09.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-2-21ee2e3f8a85f765.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-03-3",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "One original at a time · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Graphic novella",
+      "One original at a time"
+    ],
+    "alt": "One original at a time · 3/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 3 of 3. The artist walks away with a little box containing the actual first sketch",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-03-3-preview-341194bb22860287.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-03-3-thumb-9c62bae35e728e14.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-03-3-859c021fe9e3ee27.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:33.790986Z",
+    "fileModifiedAt": "2026-11-14T04:43:33.790986Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-3-859c021fe9e3ee27.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-03-3-7c2ed498259f7303.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-04-1",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Over the fence with Loftwah · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Illustrated profile",
+      "Over the fence with Loftwah"
+    ],
+    "alt": "Over the fence with Loftwah · 1/3 · Storyboards",
+    "caption": "Illustrated profile storyboard · frame 1 of 3. Loftwah waits in a patch of cold morning sun with a mug and rolled print",
+    "href": "https://woodhouse.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-04-1-preview-b979eafb417ae185.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-04-1-thumb-298a884b5beb4f1e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-04-1-d8b09cb721c1e995.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:28.190011Z",
+    "fileModifiedAt": "2026-11-14T04:38:28.190011Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-1-d8b09cb721c1e995.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-1-10e2f563ba7b1e25.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-04-2",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Over the fence with Loftwah · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Illustrated profile",
+      "Over the fence with Loftwah"
+    ],
+    "alt": "Over the fence with Loftwah · 2/3 · Storyboards",
+    "caption": "Illustrated profile storyboard · frame 2 of 3. One scrap catches on the fence and he leans over to pass it to a neighbour",
+    "href": "https://woodhouse.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-04-2-preview-b4e7cb5b28102fea.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-04-2-thumb-2fb96fb7a046bd88.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-04-2-262ec78cf0ca4b51.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:48.980623Z",
+    "fileModifiedAt": "2026-11-14T04:41:48.980623Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-2-262ec78cf0ca4b51.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-2-6b67aa9edd359830.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-04-3",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Over the fence with Loftwah · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Illustrated profile",
+      "Over the fence with Loftwah"
+    ],
+    "alt": "Over the fence with Loftwah · 3/3 · Storyboards",
+    "caption": "Illustrated profile storyboard · frame 3 of 3. The two pin their drafts on opposite sides of the same garden gate",
+    "href": "https://woodhouse.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-04-3-preview-cb340e912f8b6726.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-04-3-thumb-3f65326493dbef41.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-04-3-a957993c5786fb05.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:44.575773Z",
+    "fileModifiedAt": "2026-11-14T04:43:44.575773Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-3-a957993c5786fb05.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-04-3-5eab1636631e16fd.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-05-1",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Glass negatives of tomorrow · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Film concept",
+      "Glass negatives of tomorrow"
+    ],
+    "alt": "Glass negatives of tomorrow · 1/3 · Storyboards",
+    "caption": "Film concept storyboard · frame 1 of 3. A shopkeeper lifts a glass negative that seems to show the shop in fifty years",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-05-1-preview-c537738e913d74e9.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-05-1-thumb-628310dec742456d.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-05-1-2018927c5c0c10cc.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:27.548907Z",
+    "fileModifiedAt": "2026-11-14T04:38:27.548907Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-1-2018927c5c0c10cc.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-1-3cfd6cc7b8be96d6.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-05-2",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Glass negatives of tomorrow · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Film concept",
+      "Glass negatives of tomorrow"
+    ],
+    "alt": "Glass negatives of tomorrow · 2/3 · Storyboards",
+    "caption": "Film concept storyboard · frame 2 of 3. Its details change whenever the shopkeeper turns a lamp on in the present",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-05-2-preview-6bbb46892bfabf9d.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-05-2-thumb-4b7557b4fa2a2d20.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-05-2-ccb78bf0edba5f7e.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:40.377793Z",
+    "fileModifiedAt": "2026-11-14T04:41:40.377793Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-2-ccb78bf0edba5f7e.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-2-93503f12307015a9.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-05-3",
+    "project": "woodhouse",
+    "subject": "Woodhouse",
+    "title": "Glass negatives of tomorrow · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Woodhouse",
+      "Storyboards",
+      "Film concept",
+      "Glass negatives of tomorrow"
+    ],
+    "alt": "Glass negatives of tomorrow · 3/3 · Storyboards",
+    "caption": "Film concept storyboard · frame 3 of 3. The last negative shows an ordinary workshop lit by an ordinary lamp, with its front door still open",
+    "href": "https://woodhouse.loftwah.com/share/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-05-3-preview-2b2f2361313217c9.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-05-3-thumb-e7bce44751c70151.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-05-3-8a385b43f713b608.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:47.092104Z",
+    "fileModifiedAt": "2026-11-14T04:43:47.092104Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-3-8a385b43f713b608.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-05-3-7fa70c761759ce95.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-06-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Who left the lights on? · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "Who left the lights on?"
+    ],
+    "alt": "Who left the lights on? · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A route map made from little model rooms shows an empty switchboard",
+    "href": "https://composer.loftwah.com/creator-hub",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-06-1-preview-2fd0d11e13b54024.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-06-1-thumb-ac3b6e4041bf939e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-06-1-afdf68a89bdee787.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:30.321025Z",
+    "fileModifiedAt": "2026-11-14T04:38:30.321025Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-1-afdf68a89bdee787.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-1-4dc86b72df4ca421.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-06-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Who left the lights on? · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "Who left the lights on?"
+    ],
+    "alt": "Who left the lights on? · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. One occupied workshop clicks on and passes a proof through a hatch",
+    "href": "https://composer.loftwah.com/creator-hub",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-06-2-preview-b34152218638a2b5.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-06-2-thumb-f16f70008d6ad5c0.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-06-2-7527899d8edc63ee.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:26.531244Z",
+    "fileModifiedAt": "2026-11-14T04:42:26.531244Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-2-7527899d8edc63ee.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-2-557a19207be0ab26.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-06-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Who left the lights on? · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "Who left the lights on?"
+    ],
+    "alt": "Who left the lights on? · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. Other rooms take turns lighting up from their own switches as visitors walk by",
+    "href": "https://composer.loftwah.com/creator-hub",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-06-3-preview-339cd78bae3440f5.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-06-3-thumb-64f91f44cc4cf9cd.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-06-3-08bf04c67604e680.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:11.959635Z",
+    "fileModifiedAt": "2026-11-14T04:44:11.959635Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-3-08bf04c67604e680.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-06-3-c3cf75a0af5819dc.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-07-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The shortest useful lap · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The shortest useful lap"
+    ],
+    "alt": "The shortest useful lap · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A pencil sketch on cardboard shows the one thing a builder wants to make",
+    "href": "https://composer.loftwah.com/learn",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-07-1-preview-8f9c6c80626d4222.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-07-1-thumb-57172e34f7b8c8a8.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-07-1-3d388919012bed3e.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:43.523025Z",
+    "fileModifiedAt": "2026-11-14T04:38:43.523025Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-1-3d388919012bed3e.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-1-c65cf3dbc4305ffb.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-07-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The shortest useful lap · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The shortest useful lap"
+    ],
+    "alt": "The shortest useful lap · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. The builder tries a mock door at an angle and notices it catches a shelf",
+    "href": "https://composer.loftwah.com/learn",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-07-2-preview-099a2df2143f541a.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-07-2-thumb-c9deb7514331e19e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-07-2-b3af7dc0a74d0ccc.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:08.034535Z",
+    "fileModifiedAt": "2026-11-14T04:42:08.034535Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-2-b3af7dc0a74d0ccc.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-2-47a7db8dc172a9f2.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-07-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The shortest useful lap · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The shortest useful lap"
+    ],
+    "alt": "The shortest useful lap · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. The corrected door is opened for a visitor with a real key",
+    "href": "https://composer.loftwah.com/learn",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-07-3-preview-2d9702aae39c7f6e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-07-3-thumb-45ded65dafb02576.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-07-3-51dda88935a724a5.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:18.270626Z",
+    "fileModifiedAt": "2026-11-14T04:44:18.270626Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-3-51dda88935a724a5.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-07-3-b501a68062bf5bd7.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-08-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The film made of offcuts · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Animated short",
+      "The film made of offcuts"
+    ],
+    "alt": "The film made of offcuts · 1/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 1 of 3. A cut strip of footage keeps curling into a projector before anyone has chosen a frame",
+    "href": "https://composer.loftwah.com/media-studio",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-08-1-preview-fa10f6ae45112f6c.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-08-1-thumb-2c266063c8f038c0.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-08-1-ec76f32af9178c70.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:45.052561Z",
+    "fileModifiedAt": "2026-11-14T04:38:45.052561Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-1-ec76f32af9178c70.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-1-22053572a39f1aa1.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-08-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The film made of offcuts · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Animated short",
+      "The film made of offcuts"
+    ],
+    "alt": "The film made of offcuts · 2/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 2 of 3. A film maker sorts genuine takes through a hand-cranked splicer",
+    "href": "https://composer.loftwah.com/media-studio",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-08-2-preview-e09142a7f262b7aa.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-08-2-thumb-919885af61232130.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-08-2-0465e63036d0f999.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:51.177099Z",
+    "fileModifiedAt": "2026-11-14T04:41:51.177099Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-2-0465e63036d0f999.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-2-f53734a5a62e2be1.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-08-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The film made of offcuts · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Animated short",
+      "The film made of offcuts"
+    ],
+    "alt": "The film made of offcuts · 3/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 3 of 3. The finished short lights a wall outside the little film room",
+    "href": "https://composer.loftwah.com/media-studio",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-08-3-preview-c9c062eaa04d3d61.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-08-3-thumb-5fbec11c05e8b8e8.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-08-3-63f4499280d8a916.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:03.003260Z",
+    "fileModifiedAt": "2026-11-14T04:43:03.003260Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-3-63f4499280d8a916.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-08-3-deff9a701d664175.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-09-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Six seconds missing · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Mystery concept",
+      "Six seconds missing"
+    ],
+    "alt": "Six seconds missing · 1/3 · Storyboards",
+    "caption": "Mystery concept storyboard · frame 1 of 3. A stopped clock sits beside a spool whose loose end is caught under a floorboard",
+    "href": "https://composer.loftwah.com/incident-replay",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-09-1-preview-9832796a2f37642e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-09-1-thumb-fbb53158731520fb.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-09-1-fc7dc5d3d23b845a.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.534912Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.534912Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-1-fc7dc5d3d23b845a.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-1-f7e9517854e7c58a.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-09-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Six seconds missing · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Mystery concept",
+      "Six seconds missing"
+    ],
+    "alt": "Six seconds missing · 2/3 · Storyboards",
+    "caption": "Mystery concept storyboard · frame 2 of 3. An archivist replays a physical sequence using slate cards and time markers",
+    "href": "https://composer.loftwah.com/incident-replay",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-09-2-preview-73c5daac4dbc34ff.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-09-2-thumb-634e70f8aad79da4.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-09-2-79d8f610068882fb.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:29.254903Z",
+    "fileModifiedAt": "2026-11-14T04:41:29.254903Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-2-79d8f610068882fb.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-2-6644811203e9dc46.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-09-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "Six seconds missing · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Mystery concept",
+      "Six seconds missing"
+    ],
+    "alt": "Six seconds missing · 3/3 · Storyboards",
+    "caption": "Mystery concept storyboard · frame 3 of 3. The replay leads to a hinge that can be reached from only one side",
+    "href": "https://composer.loftwah.com/incident-replay",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-09-3-preview-6e1f16ae83c4b896.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-09-3-thumb-8001da9861bc7dda.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-09-3-a70258232bf768f9.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:14.609845Z",
+    "fileModifiedAt": "2026-11-14T04:42:14.609845Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-3-a70258232bf768f9.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-09-3-936b0ebc2d5d3458.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-10-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "A week in marks · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Data illustration",
+      "A week in marks"
+    ],
+    "alt": "A week in marks · 1/3 · Storyboards",
+    "caption": "Data illustration storyboard · frame 1 of 3. A blank peg board hangs in a real independent workshop",
+    "href": "https://composer.loftwah.com/activity",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-10-1-preview-27a4688a7d977850.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-10-1-thumb-dfb964a1fcb2c957.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-10-1-c61c7aa1f1035114.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:26.431647Z",
+    "fileModifiedAt": "2026-11-14T04:38:26.431647Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-1-c61c7aa1f1035114.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-1-8eb91d7462889ec4.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-10-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "A week in marks · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Data illustration",
+      "A week in marks"
+    ],
+    "alt": "A week in marks · 2/3 · Storyboards",
+    "caption": "Data illustration storyboard · frame 2 of 3. A maker adds one differently shaped coloured peg after each concrete action",
+    "href": "https://composer.loftwah.com/activity",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-10-2-preview-73fdfdf9b9d9a41c.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-10-2-thumb-e0d7b83cc2c7cebd.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-10-2-dd48733eb90da2bd.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:48.889458Z",
+    "fileModifiedAt": "2026-11-14T04:41:48.889458Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-2-dd48733eb90da2bd.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-2-9772c46eee513f86.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-10-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "A week in marks · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Data illustration",
+      "A week in marks"
+    ],
+    "alt": "A week in marks · 3/3 · Storyboards",
+    "caption": "Data illustration storyboard · frame 3 of 3. At week's end the board tells a visible story, with blank patches where nothing happened",
+    "href": "https://composer.loftwah.com/activity",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-10-3-preview-7d8452a81d658aa5.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-10-3-thumb-3b5ecf3144608d90.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-10-3-1745d2c76cc02a49.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:51.469854Z",
+    "fileModifiedAt": "2026-11-14T04:43:51.469854Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-3-1745d2c76cc02a49.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-10-3-5bad75edc04cbdbb.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-11-1",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The release that changed one room · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The release that changed one room"
+    ],
+    "alt": "The release that changed one room · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A dollhouse of independent workshops is seen in section under warm work lamps",
+    "href": "https://composer.loftwah.com/architecture",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-11-1-preview-65e792aea34a038f.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-11-1-thumb-bac952d3a9dcd23f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-11-1-ca312778ee70261f.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:38.050293Z",
+    "fileModifiedAt": "2026-11-14T04:38:38.050293Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-1-ca312778ee70261f.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-1-e70c425256e7c797.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-11-2",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The release that changed one room · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The release that changed one room"
+    ],
+    "alt": "The release that changed one room · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. A maker fits a new window to one room while the others are occupied",
+    "href": "https://composer.loftwah.com/architecture",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-11-2-preview-6bcc0d030eb97b9e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-11-2-thumb-e9b561a1b06ad9b3.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-11-2-c8f84917c6b513c6.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:56.492415Z",
+    "fileModifiedAt": "2026-11-14T04:41:56.492415Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-2-c8f84917c6b513c6.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-2-6bb3322d2e8d600f.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-11-3",
+    "project": "app-composer",
+    "subject": "App Composer",
+    "title": "The release that changed one room · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "App Composer",
+      "Storyboards",
+      "Product editorial",
+      "The release that changed one room"
+    ],
+    "alt": "The release that changed one room · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. A visitor opens the improved window while a boxed earlier frame remains on the shelf",
+    "href": "https://composer.loftwah.com/architecture",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-11-3-preview-058e80b1edba1491.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-11-3-thumb-16c4d253094fb875.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-11-3-b30803ad1fe3d2c4.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:55.715309Z",
+    "fileModifiedAt": "2026-11-14T04:43:55.715309Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-3-b30803ad1fe3d2c4.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-11-3-27ec8fd7fba37835.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-12-1",
+    "project": "woodhouse",
+    "subject": "Paperwork",
+    "title": "Fold along the line · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Paperwork",
+      "Storyboards",
+      "Book concept",
+      "Fold along the line"
+    ],
+    "alt": "Fold along the line · 1/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 1 of 3. A blank form drifts to the ground outside a bookbinder's shop",
+    "href": "https://paperwork.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-12-1-preview-22af7c07730d7e36.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-12-1-thumb-bf95da96ac8e862d.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-12-1-b46338eab4f8224a.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:32.251124Z",
+    "fileModifiedAt": "2026-11-14T04:38:32.251124Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-1-b46338eab4f8224a.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-1-7b12851fbd053a4b.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-12-2",
+    "project": "woodhouse",
+    "subject": "Paperwork",
+    "title": "Fold along the line · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Paperwork",
+      "Storyboards",
+      "Book concept",
+      "Fold along the line"
+    ],
+    "alt": "Fold along the line · 2/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 2 of 3. The binder works through a crease with a bone folder and writes a carefully placed annotation",
+    "href": "https://paperwork.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-12-2-preview-6862053721d22f02.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-12-2-thumb-08c4dccb29bae6fb.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-12-2-d4fdb8a8b6e26462.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:15.895066Z",
+    "fileModifiedAt": "2026-11-14T04:41:15.895066Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-2-d4fdb8a8b6e26462.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-2-a2047e08ae5cc3a4.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-12-3",
+    "project": "woodhouse",
+    "subject": "Paperwork",
+    "title": "Fold along the line · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Paperwork",
+      "Storyboards",
+      "Book concept",
+      "Fold along the line"
+    ],
+    "alt": "Fold along the line · 3/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 3 of 3. A folded copy drops into a local cabinet beside its original",
+    "href": "https://paperwork.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-12-3-preview-0de85025ecea7bce.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-12-3-thumb-72534fcd0b0829c2.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-12-3-8426aa9ac27f5112.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:25.295738Z",
+    "fileModifiedAt": "2026-11-14T04:42:25.295738Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-3-8426aa9ac27f5112.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-12-3-7fdbda5bdcf6e791.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-13-1",
+    "project": "woodhouse",
+    "subject": "LDraw",
+    "title": "Two ways to draw a room · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LDraw",
+      "Storyboards",
+      "Product editorial",
+      "Two ways to draw a room"
+    ],
+    "alt": "Two ways to draw a room · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A draftsperson fits a faint rough diagram on a sheet far too big for the desk",
+    "href": "https://ldraw.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-13-1-preview-e654f552c3d48211.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-13-1-thumb-03256c21463d68ec.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-13-1-c86b0af501ad5810.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:37.524454Z",
+    "fileModifiedAt": "2026-11-14T04:38:37.524454Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-1-c86b0af501ad5810.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-1-13a5c270c86c179e.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-13-2",
+    "project": "woodhouse",
+    "subject": "LDraw",
+    "title": "Two ways to draw a room · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LDraw",
+      "Storyboards",
+      "Product editorial",
+      "Two ways to draw a room"
+    ],
+    "alt": "Two ways to draw a room · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. One crisp arrow gets moved and the relationship of the whole drawing changes",
+    "href": "https://ldraw.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-13-2-preview-61cf0040c68b7313.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-13-2-thumb-583c73c24e1bcc55.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-13-2-5e74bc636c52e1ff.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:28.313539Z",
+    "fileModifiedAt": "2026-11-14T04:42:28.313539Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-2-5e74bc636c52e1ff.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-2-a304533cad6afae4.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-13-3",
+    "project": "woodhouse",
+    "subject": "LDraw",
+    "title": "Two ways to draw a room · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LDraw",
+      "Storyboards",
+      "Product editorial",
+      "Two ways to draw a room"
+    ],
+    "alt": "Two ways to draw a room · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. A friend opens an editable copy and starts adding a separate room",
+    "href": "https://ldraw.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-13-3-preview-e1412823d6299e30.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-13-3-thumb-42131668f1b8b785.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-13-3-96c54bf01d8888a5.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:18.471021Z",
+    "fileModifiedAt": "2026-11-14T04:44:18.471021Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-3-96c54bf01d8888a5.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-13-3-e19de454481c69f6.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-14-1",
+    "project": "woodhouse",
+    "subject": "Here / there",
+    "title": "Postcards for a street that moved · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Here / there",
+      "Storyboards",
+      "Picture book",
+      "Postcards for a street that moved"
+    ],
+    "alt": "Postcards for a street that moved · 1/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 1 of 3. A visitor writes a postcard beside a fenced-off footpath",
+    "href": "https://guestbook.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-14-1-preview-2ab3639e9b20d7a0.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-14-1-thumb-dadf06712961ab6e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-14-1-1119fdb31c9d981b.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.527775Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.527775Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-1-1119fdb31c9d981b.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-1-8a5cc158550d8026.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-14-2",
+    "project": "woodhouse",
+    "subject": "Here / there",
+    "title": "Postcards for a street that moved · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Here / there",
+      "Storyboards",
+      "Picture book",
+      "Postcards for a street that moved"
+    ],
+    "alt": "Postcards for a street that moved · 2/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 2 of 3. A keeper clips it to an indoor board with two unseen contributions waiting",
+    "href": "https://guestbook.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-14-2-preview-896603510f3b7979.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-14-2-thumb-7ae079c43fd97b8e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-14-2-e499ee8bf6770212.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:14.084385Z",
+    "fileModifiedAt": "2026-11-14T04:41:14.084385Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-2-e499ee8bf6770212.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-2-d907d850d78169a5.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-14-3",
+    "project": "woodhouse",
+    "subject": "Here / there",
+    "title": "Postcards for a street that moved · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Here / there",
+      "Storyboards",
+      "Picture book",
+      "Postcards for a street that moved"
+    ],
+    "alt": "Postcards for a street that moved · 3/3 · Storyboards",
+    "caption": "Picture book storyboard · frame 3 of 3. Someone traces the old route from the approved picture and leaves a new postcard",
+    "href": "https://guestbook.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-14-3-preview-b781f48ce01122c1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-14-3-thumb-a3d1b2a53c6f52b8.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-14-3-43e911e4fac6f0c9.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:11.939420Z",
+    "fileModifiedAt": "2026-11-14T04:44:11.939420Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-3-43e911e4fac6f0c9.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-14-3-f00ca653c4992d1a.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-15-1",
+    "project": "woodhouse",
+    "subject": "Linkarooie",
+    "title": "The limelight cabinet · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Linkarooie",
+      "Storyboards",
+      "Animated short",
+      "The limelight cabinet"
+    ],
+    "alt": "The limelight cabinet · 1/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 1 of 3. The lime curator opens a cabinet door and an entire trail of ribbons falls out",
+    "href": "https://showcase.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-15-1-preview-01520be99108977e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-15-1-thumb-b24e603bfa0f22d4.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-15-1-708b503ea57deaad.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:47.739177Z",
+    "fileModifiedAt": "2026-11-14T04:38:47.739177Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-1-708b503ea57deaad.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-1-aab59168901c294e.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-15-2",
+    "project": "woodhouse",
+    "subject": "Linkarooie",
+    "title": "The limelight cabinet · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Linkarooie",
+      "Storyboards",
+      "Animated short",
+      "The limelight cabinet"
+    ],
+    "alt": "The limelight cabinet · 2/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 2 of 3. The curator follows three links to their sources and puts two aside",
+    "href": "https://showcase.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-15-2-preview-b6cd37f48c5cbcee.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-15-2-thumb-446d1175fa0cd11a.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-15-2-8da5569c967e10b6.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:20.648388Z",
+    "fileModifiedAt": "2026-11-14T04:41:20.648388Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-2-8da5569c967e10b6.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-2-8b2003a0c9de6953.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-15-3",
+    "project": "woodhouse",
+    "subject": "Linkarooie",
+    "title": "The limelight cabinet · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Linkarooie",
+      "Storyboards",
+      "Animated short",
+      "The limelight cabinet"
+    ],
+    "alt": "The limelight cabinet · 3/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 3 of 3. Visitors find the tiny drawer that has the good trail through the collection",
+    "href": "https://showcase.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-15-3-preview-5ce923795ce5e426.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-15-3-thumb-9daf47e6eb7220d7.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-15-3-27b45b2dd17e0320.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:40.948329Z",
+    "fileModifiedAt": "2026-11-14T04:42:40.948329Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-3-27b45b2dd17e0320.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-15-3-0bd94804a4212dd7.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-16-1",
+    "project": "woodhouse",
+    "subject": "Link Check",
+    "title": "Where the signs point · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Link Check",
+      "Storyboards",
+      "Product editorial",
+      "Where the signs point"
+    ],
+    "alt": "Where the signs point · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A battered street sign points down an alley with two bends",
+    "href": "https://share.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-16-1-preview-2d5250ce5c624dac.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-16-1-thumb-95a4e35b226fd37c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-16-1-167d5c7ca3069394.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.516968Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.516968Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-1-167d5c7ca3069394.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-1-ac690e5355d7828a.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-16-2",
+    "project": "woodhouse",
+    "subject": "Link Check",
+    "title": "Where the signs point · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Link Check",
+      "Storyboards",
+      "Product editorial",
+      "Where the signs point"
+    ],
+    "alt": "Where the signs point · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. A courier follows the redirects in daylight and keeps a note at each turning",
+    "href": "https://share.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-16-2-preview-f03b7f23f9dc4f05.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-16-2-thumb-76b7e5b444a08784.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-16-2-b9ffde9ca564ccfe.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:55.339494Z",
+    "fileModifiedAt": "2026-11-14T04:41:55.339494Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-2-b9ffde9ca564ccfe.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-2-a9ed1be044998838.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-16-3",
+    "project": "woodhouse",
+    "subject": "Link Check",
+    "title": "Where the signs point · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Link Check",
+      "Storyboards",
+      "Product editorial",
+      "Where the signs point"
+    ],
+    "alt": "Where the signs point · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. The last door is seen from the pavement with the earlier arrows in clear view",
+    "href": "https://share.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-16-3-preview-6b123db82e49388b.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-16-3-thumb-bb5ad26bb01a3b89.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-16-3-d990fad456817d23.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:02.446934Z",
+    "fileModifiedAt": "2026-11-14T04:43:02.446934Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-3-d990fad456817d23.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-16-3-91ddf495a4733941.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-17-1",
+    "project": "woodhouse",
+    "subject": "Carry / forward",
+    "title": "The small suitcase of memory · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Carry / forward",
+      "Storyboards",
+      "Fictional demo illustration",
+      "The small suitcase of memory"
+    ],
+    "alt": "The small suitcase of memory · 1/3 · Storyboards",
+    "caption": "Fictional demo illustration storyboard · frame 1 of 3. A traveller lays out a fictional assistant snapshot as clearly different paper layers",
+    "href": "https://ai.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-17-1-preview-23e1df25b91de0ff.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-17-1-thumb-d8ac025505856a62.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-17-1-2af482177ce8d566.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:44.071842Z",
+    "fileModifiedAt": "2026-11-14T04:38:44.071842Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-1-2af482177ce8d566.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-1-25931dd4dfa0c50b.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-17-2",
+    "project": "woodhouse",
+    "subject": "Carry / forward",
+    "title": "The small suitcase of memory · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Carry / forward",
+      "Storyboards",
+      "Fictional demo illustration",
+      "The small suitcase of memory"
+    ],
+    "alt": "The small suitcase of memory · 2/3 · Storyboards",
+    "caption": "Fictional demo illustration storyboard · frame 2 of 3. The traveller chooses the pieces that belong in a tiny suitcase",
+    "href": "https://ai.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-17-2-preview-8a0cadd8c3dc278c.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-17-2-thumb-2f1cfe314b26c8e8.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-17-2-019959658929495c.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:11.131874Z",
+    "fileModifiedAt": "2026-11-14T04:41:11.131874Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-2-019959658929495c.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-2-2aa218dfac256d34.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-17-3",
+    "project": "woodhouse",
+    "subject": "Carry / forward",
+    "title": "The small suitcase of memory · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Carry / forward",
+      "Storyboards",
+      "Fictional demo illustration",
+      "The small suitcase of memory"
+    ],
+    "alt": "The small suitcase of memory · 3/3 · Storyboards",
+    "caption": "Fictional demo illustration storyboard · frame 3 of 3. At the next desk the traveller opens it and checks the pieces against the original drawing",
+    "href": "https://ai.loftwah.com/",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-17-3-preview-6f733f065e91f49b.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-17-3-thumb-509ed34a1b9a11cc.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-17-3-f0aa741de2e85dbb.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:22.303174Z",
+    "fileModifiedAt": "2026-11-14T04:42:22.303174Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-3-f0aa741de2e85dbb.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-17-3-c130702b51e2afea.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-18-1",
+    "project": "woodhouse",
+    "subject": "Launch Kit",
+    "title": "The sign painter’s three windows · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Launch Kit",
+      "Storyboards",
+      "Product editorial",
+      "The sign painter’s three windows"
+    ],
+    "alt": "The sign painter’s three windows · 1/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 1 of 3. A painter takes one real motif from an artwork pinned to the wall",
+    "href": "https://composer.loftwah.com/launch-kit",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-18-1-preview-721184ad78c28c91.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-18-1-thumb-ed82221a2257960d.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-18-1-ca4dc8440f6f83d6.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:24.514205Z",
+    "fileModifiedAt": "2026-11-14T04:38:24.514205Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-1-ca4dc8440f6f83d6.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-1-7ab298393ce30180.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-18-2",
+    "project": "woodhouse",
+    "subject": "Launch Kit",
+    "title": "The sign painter’s three windows · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Launch Kit",
+      "Storyboards",
+      "Product editorial",
+      "The sign painter’s three windows"
+    ],
+    "alt": "The sign painter’s three windows · 2/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 2 of 3. Three scales of stencil hang in the window while the smallest is held up to the light",
+    "href": "https://composer.loftwah.com/launch-kit",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-18-2-preview-fe28114a132e1085.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-18-2-thumb-b905c5be7cf89b66.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-18-2-d5cb5bafd90fbd05.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:22.220868Z",
+    "fileModifiedAt": "2026-11-14T04:42:22.220868Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-2-d5cb5bafd90fbd05.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-2-e6cb2251e49705b8.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-18-3",
+    "project": "woodhouse",
+    "subject": "Launch Kit",
+    "title": "The sign painter’s three windows · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Launch Kit",
+      "Storyboards",
+      "Product editorial",
+      "The sign painter’s three windows"
+    ],
+    "alt": "The sign painter’s three windows · 3/3 · Storyboards",
+    "caption": "Product editorial storyboard · frame 3 of 3. Matching marks land on a small icon, a card and a larger poster",
+    "href": "https://composer.loftwah.com/launch-kit",
+    "action": "Explore",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-18-3-preview-7d7d3e3c73306f8f.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-18-3-thumb-20364fee979fdec7.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-18-3-a30497ab1e853dc6.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:04.190493Z",
+    "fileModifiedAt": "2026-11-14T04:44:04.190493Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-3-a30497ab1e853dc6.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-18-3-ee11467d8da7e50d.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-19-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The four chair problem · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Comic",
+      "The four chair problem"
+    ],
+    "alt": "The four chair problem · 1/3 · Storyboards",
+    "caption": "Comic storyboard · frame 1 of 3. Knox and Nora spot a visitor who is waiting beside a table with one chair missing",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-19-1-preview-abacfa5614ab70d3.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-19-1-thumb-24d3fee05ed10cf2.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-19-1-5ca5f6dcdb0ebbb3.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:26.917694Z",
+    "fileModifiedAt": "2026-11-14T04:38:26.917694Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-1-5ca5f6dcdb0ebbb3.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-1-4fc5f909b883f094.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-19-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The four chair problem · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Comic",
+      "The four chair problem"
+    ],
+    "alt": "The four chair problem · 2/3 · Storyboards",
+    "caption": "Comic storyboard · frame 2 of 3. Rhea hands a cup to Theo while he works out how to unfold the last chair without disturbing the cards",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-19-2-preview-a6316ab89413d3f8.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-19-2-thumb-4b98648bd426ee4b.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-19-2-a6ba38b72af8df05.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:40:51.579150Z",
+    "fileModifiedAt": "2026-11-14T04:40:51.579150Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-2-a6ba38b72af8df05.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-2-79fb8e9400f50875.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-19-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The four chair problem · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Comic",
+      "The four chair problem"
+    ],
+    "alt": "The four chair problem · 3/3 · Storyboards",
+    "caption": "Comic storyboard · frame 3 of 3. Everyone is seated when the visitor takes the first draw",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-19-3-preview-bd17485308437880.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-19-3-thumb-5984ab9ce923b992.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-19-3-b23f4f916076f793.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:30.077146Z",
+    "fileModifiedAt": "2026-11-14T04:42:30.077146Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-3-b23f4f916076f793.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-19-3-063161180c203897.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-20-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Quiet table · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "Quiet table"
+    ],
+    "alt": "Quiet table · 1/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 1 of 3. Nora calmly unfolds the table notice before the opening draw",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-20-1-preview-0cb609631473978d.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-20-1-thumb-f346bbc5bff1e718.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-20-1-863195b9e99fd269.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:32.809108Z",
+    "fileModifiedAt": "2026-11-14T04:38:32.809108Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-1-863195b9e99fd269.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-1-d5c8318aee49b742.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-20-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Quiet table · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "Quiet table"
+    ],
+    "alt": "Quiet table · 2/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 2 of 3. Knox notices a Skip in his hand and leaves the target untouched",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-20-2-preview-6fb43729b2497b6c.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-20-2-thumb-8816b3698c9d73c5.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-20-2-2f94a9ef7f789e17.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:50.680739Z",
+    "fileModifiedAt": "2026-11-14T04:41:50.680739Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-2-2f94a9ef7f789e17.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-2-634bf4f622293ab1.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-20-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Quiet table · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "Quiet table"
+    ],
+    "alt": "Quiet table · 3/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 3 of 3. The next player takes their normal turn while the forbidden move stays out of play for this Journey round",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-20-3-preview-42395b3188c4e710.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-20-3-thumb-184040e2f4d4892c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-20-3-9f6a8871c074c813.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:15.265638Z",
+    "fileModifiedAt": "2026-11-14T04:42:15.265638Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-3-9f6a8871c074c813.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-20-3-38de8dfecd186596.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-21-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "No more cards in the pile · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "No more cards in the pile"
+    ],
+    "alt": "No more cards in the pile · 1/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 1 of 3. A player lifts the last face-down card from a small plain stack",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-21-1-preview-7033513c4b8e8dc1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-21-1-thumb-62afa08cd6649491.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-21-1-0dd5f4c0d34fc962.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:32.975154Z",
+    "fileModifiedAt": "2026-11-14T04:38:32.975154Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-1-0dd5f4c0d34fc962.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-1-700bf114c71cb887.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-21-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "No more cards in the pile · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "No more cards in the pile"
+    ],
+    "alt": "No more cards in the pile · 2/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 2 of 3. The top discard stays visible while the older cards are lifted off the felt",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-21-2-preview-448fce076c1879c4.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-21-2-thumb-fcd5e8a1076d7c28.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-21-2-f08ba184638d8398.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:55.946675Z",
+    "fileModifiedAt": "2026-11-14T04:41:55.946675Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-2-f08ba184638d8398.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-2-9f12d495ef22515a.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-21-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "No more cards in the pile · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Rules illustration",
+      "No more cards in the pile"
+    ],
+    "alt": "No more cards in the pile · 3/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 3 of 3. A freshly shuffled stack lands beside the same top discard",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-21-3-preview-3f7009f50ca82242.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-21-3-thumb-fb9a7d79b9114d2f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-21-3-b4e40afef469a328.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:08.908726Z",
+    "fileModifiedAt": "2026-11-14T04:44:08.908726Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-3-b4e40afef469a328.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-21-3-ed5ec1777fe3d943.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-22-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The cup and the last card · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Graphic novella",
+      "The cup and the last card"
+    ],
+    "alt": "The cup and the last card · 1/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 1 of 3. Pippa watches a tea cup placed at exactly the wrong end of the table",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-22-1-preview-f69492fd03b78ae6.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-22-1-thumb-bf651d406225f034.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-22-1-1dca821e29d9760b.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:32.877978Z",
+    "fileModifiedAt": "2026-11-14T04:38:32.877978Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-1-1dca821e29d9760b.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-1-3e01f08fc8b599eb.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-22-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The cup and the last card · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Graphic novella",
+      "The cup and the last card"
+    ],
+    "alt": "The cup and the last card · 2/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 2 of 3. Moss hands a new player a coaster as Nora studies the open group of cards",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-22-2-preview-fe1f712e548dc4b1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-22-2-thumb-eb7cdebf463333aa.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-22-2-c081dce66b44b850.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:29.134781Z",
+    "fileModifiedAt": "2026-11-14T04:41:29.134781Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-2-c081dce66b44b850.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-2-d8ee285645c07e3e.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-22-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "The cup and the last card · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Graphic novella",
+      "The cup and the last card"
+    ],
+    "alt": "The cup and the last card · 3/3 · Storyboards",
+    "caption": "Graphic novella storyboard · frame 3 of 3. The cup moves at the same moment the final card reaches the felt",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-22-3-preview-4b452818becb5bd1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-22-3-thumb-9f7ca053040b6eaf.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-22-3-314e74bbac0331bd.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:19.089490Z",
+    "fileModifiedAt": "2026-11-14T04:43:19.089490Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-3-314e74bbac0331bd.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-22-3-ab621852ce65d3f4.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-23-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "A guest from the lighthouse · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Book concept",
+      "A guest from the lighthouse"
+    ],
+    "alt": "A guest from the lighthouse · 1/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 1 of 3. A keeper sets a little table in the lantern room during a rolling fog",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-23-1-preview-d5fca42856394e97.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-23-1-thumb-2ac6f1e5f104643c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-23-1-d54488653d033e5b.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:28.698477Z",
+    "fileModifiedAt": "2026-11-14T04:38:28.698477Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-1-d54488653d033e5b.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-1-9540ac9ec27ac73d.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-23-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "A guest from the lighthouse · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Book concept",
+      "A guest from the lighthouse"
+    ],
+    "alt": "A guest from the lighthouse · 2/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 2 of 3. Orbit arrives with a group of known regulars and a deck of plain coloured cards",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-23-2-preview-7bf99b59976171a9.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-23-2-thumb-b23e7237094fffa3.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-23-2-5f5455444166d886.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:00.264285Z",
+    "fileModifiedAt": "2026-11-14T04:42:00.264285Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-2-5f5455444166d886.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-2-e4fe770efaf1c3a5.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-23-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "A guest from the lighthouse · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Book concept",
+      "A guest from the lighthouse"
+    ],
+    "alt": "A guest from the lighthouse · 3/3 · Storyboards",
+    "caption": "Book concept storyboard · frame 3 of 3. The whole group leans toward a single decisive hand as the fog lifts over the sea",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-23-3-preview-cd0d0c4cbd93a2c8.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-23-3-thumb-9b753483b87b9106.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-23-3-301ccf9fbd88963e.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:09.473294Z",
+    "fileModifiedAt": "2026-11-14T04:43:09.473294Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-3-301ccf9fbd88963e.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-23-3-f956491c1356c59f.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-24-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "When the music changes · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Animated short",
+      "When the music changes"
+    ],
+    "alt": "When the music changes · 1/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 1 of 3. Rhea slips a coin into a small room jukebox while Theo watches from the table",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-24-1-preview-501f613f17aae4d7.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-24-1-thumb-41debe12a8f9159e.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-24-1-9bab8e451f99a698.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:29.953346Z",
+    "fileModifiedAt": "2026-11-14T04:38:29.953346Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-1-9bab8e451f99a698.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-1-7be8591fa85de6fc.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-24-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "When the music changes · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Animated short",
+      "When the music changes"
+    ],
+    "alt": "When the music changes · 2/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 2 of 3. The lamps flicker just as Pippa finds her seat",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-24-2-preview-f8e2750a1446f65f.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-24-2-thumb-718de002d2d4c1b1.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-24-2-77b5e2b0a1c6505d.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:40:52.586762Z",
+    "fileModifiedAt": "2026-11-14T04:40:52.586762Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-2-77b5e2b0a1c6505d.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-2-2838579d668cf2b9.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-24-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "When the music changes · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "Animated short",
+      "When the music changes"
+    ],
+    "alt": "When the music changes · 3/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 3 of 3. Everyone concentrates on a quiet draw while the jukebox throws coloured reflections over the felt",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-24-3-preview-7b65de81aec68f4b.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-24-3-thumb-6c2ad683325e3149.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-24-3-18acf9cf3a747077.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:24.534017Z",
+    "fileModifiedAt": "2026-11-14T04:42:24.534017Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-3-18acf9cf3a747077.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-24-3-61b23d5dbe9ae8fe.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-25-1",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Last table at the museum · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "TV concept",
+      "Last table at the museum"
+    ],
+    "alt": "Last table at the museum · 1/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 1 of 3. A well-lit museum foyer is empty except for a small card table",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-25-1-preview-bced847b4f0edc0f.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-25-1-thumb-7294e68b9a60826f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-25-1-ae13ba4d37dbef3c.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:33.183007Z",
+    "fileModifiedAt": "2026-11-14T04:38:33.183007Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-1-ae13ba4d37dbef3c.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-1-cae2fd2c3e9c3fab.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-25-2",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Last table at the museum · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "TV concept",
+      "Last table at the museum"
+    ],
+    "alt": "Last table at the museum · 2/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 2 of 3. Knox notices the reflected chairs form a completely different arrangement",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-25-2-preview-8cccf2157c8ad144.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-25-2-thumb-d61cb4158297f996.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-25-2-4cbff8d1eeae3d93.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:25.267813Z",
+    "fileModifiedAt": "2026-11-14T04:41:25.267813Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-2-4cbff8d1eeae3d93.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-2-185706aca10482d0.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-25-3",
+    "project": "protocol-11",
+    "subject": "Protocol 11",
+    "title": "Last table at the museum · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Protocol 11",
+      "Storyboards",
+      "TV concept",
+      "Last table at the museum"
+    ],
+    "alt": "Last table at the museum · 3/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 3 of 3. The museum caretaker swivels a lamp toward the only occupied seat in the reflection",
+    "href": "https://protocol11.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-25-3-preview-2886843afc85c7cf.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-25-3-thumb-014e7bfdb781f677.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-25-3-eb55182bf2281740.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:28.763168Z",
+    "fileModifiedAt": "2026-11-14T04:42:28.763168Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-3-eb55182bf2281740.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-25-3-f0e4998c4dbda41f.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-26-1",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The corner that makes the shot · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Rules illustration",
+      "The corner that makes the shot"
+    ],
+    "alt": "The corner that makes the shot · 1/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 1 of 3. Fizz checks a bead on a string held up against a glass wall",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-26-1-preview-7436ed871c85efbe.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-26-1-thumb-ee86132cedf6365c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-26-1-91508fb05a26ddee.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:32.203291Z",
+    "fileModifiedAt": "2026-11-14T04:38:32.203291Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-1-91508fb05a26ddee.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-1-60ea5b5a2ee6505b.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-26-2",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The corner that makes the shot · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Rules illustration",
+      "The corner that makes the shot"
+    ],
+    "alt": "The corner that makes the shot · 2/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 2 of 3. A bubble rebounds once cleanly off the side and misses a near group",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-26-2-preview-0fb91f11b04123f0.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-26-2-thumb-5fcb0fb97fc50d33.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-26-2-e542ad00d8f58435.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:41:22.483616Z",
+    "fileModifiedAt": "2026-11-14T04:41:22.483616Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-2-e542ad00d8f58435.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-2-dbbc46852153d23b.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-26-3",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The corner that makes the shot · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Rules illustration",
+      "The corner that makes the shot"
+    ],
+    "alt": "The corner that makes the shot · 3/3 · Storyboards",
+    "caption": "Rules illustration storyboard · frame 3 of 3. The bubble joins the matching group that was visible behind the obstruction",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-26-3-preview-8476f7789f01b644.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-26-3-thumb-5cc00140ac03310c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-26-3-c2efe3026fd6bb22.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:42:33.186901Z",
+    "fileModifiedAt": "2026-11-14T04:42:33.186901Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-3-c2efe3026fd6bb22.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-26-3-512ebd3194ad19b4.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-27-1",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Under the pressure line · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Animated short",
+      "Under the pressure line"
+    ],
+    "alt": "Under the pressure line · 1/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 1 of 3. Bubblecap stands underneath a low bridge while bubbles crowd overhead",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-27-1-preview-31f313d62502d483.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-27-1-thumb-97d9ef73967f207f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-27-1-a7b312319cebcc1b.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.376734Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.376734Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-1-a7b312319cebcc1b.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-1-9ec6e216f6ea36b0.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-27-2",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Under the pressure line · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Animated short",
+      "Under the pressure line"
+    ],
+    "alt": "Under the pressure line · 2/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 2 of 3. The last opening in the cluster narrows and Fizz lines up beside it",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-27-2-preview-b5276b93d912fefe.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-27-2-thumb-8dc98c20ae9911ec.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-27-2-030eb81201791be2.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:06.812050Z",
+    "fileModifiedAt": "2026-11-14T04:44:06.812050Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-2-030eb81201791be2.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-2-2972babc9d1e2dc9.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-27-3",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Under the pressure line · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Animated short",
+      "Under the pressure line"
+    ],
+    "alt": "Under the pressure line · 3/3 · Storyboards",
+    "caption": "Animated short storyboard · frame 3 of 3. A small release sends light through the bridge and the cast floats out",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-27-3-preview-258ea2df43555de8.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-27-3-thumb-c117fd91edae6c53.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-27-3-bac37cd0be674155.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:46.664983Z",
+    "fileModifiedAt": "2026-11-14T04:44:46.664983Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-3-bac37cd0be674155.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-27-3-5db93a3e16f38a59.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-28-1",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The little laboratory of impossible bounces · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "The little laboratory of impossible bounces"
+    ],
+    "alt": "The little laboratory of impossible bounces · 1/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 1 of 3. A red test bubble is loaded into a handmade tabletop launcher",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-28-1-preview-0b02ff1d5d8c00a1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-28-1-thumb-70bea7c98f51b3fb.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-28-1-c27b25383212e3c1.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:44.283146Z",
+    "fileModifiedAt": "2026-11-14T04:38:44.283146Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-1-c27b25383212e3c1.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-1-5bdee363e940b832.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-28-2",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The little laboratory of impossible bounces · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "The little laboratory of impossible bounces"
+    ],
+    "alt": "The little laboratory of impossible bounces · 2/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 2 of 3. The player tests two bounce surfaces in a small experimental board",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-28-2-preview-6010d0e5ef0ac3d1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-28-2-thumb-21ec30b0ab569609.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-28-2-5afa2f71c0541d74.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:38.896445Z",
+    "fileModifiedAt": "2026-11-14T04:43:38.896445Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-2-5afa2f71c0541d74.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-2-824d939854247b72.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-28-3",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "The little laboratory of impossible bounces · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "The little laboratory of impossible bounces"
+    ],
+    "alt": "The little laboratory of impossible bounces · 3/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 3 of 3. The successful angle opens a different lab bench with a new material",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-28-3-preview-7237ad0150243c9d.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-28-3-thumb-d52f93c226e5ad9a.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-28-3-d52a7158cacaaf91.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:44.604553Z",
+    "fileModifiedAt": "2026-11-14T04:44:44.604553Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-3-d52a7158cacaaf91.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-28-3-c9c252da2a1da68c.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-29-1",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "First Light at the jetty · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "First Light at the jetty"
+    ],
+    "alt": "First Light at the jetty · 1/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 1 of 3. A low mist hides a route through a floating puzzle board",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-29-1-preview-2ad4d3e64d6740e5.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-29-1-thumb-f1342c9db520164c.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-29-1-bbc781aea5657b22.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:41.418896Z",
+    "fileModifiedAt": "2026-11-14T04:38:41.418896Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-1-bbc781aea5657b22.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-1-8adc9a7bfecb7422.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-29-2",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "First Light at the jetty · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "First Light at the jetty"
+    ],
+    "alt": "First Light at the jetty · 2/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 2 of 3. The player exposes one clear line from a familiar shape in the foreground",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-29-2-preview-9452b1b3bf38adb0.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-29-2-thumb-0c6f17e0e8f3d8af.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-29-2-fd9cfca140245456.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:05.862039Z",
+    "fileModifiedAt": "2026-11-14T04:44:05.862039Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-2-fd9cfca140245456.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-2-9bc93ce6ce20db25.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-29-3",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "First Light at the jetty · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "Game concept",
+      "First Light at the jetty"
+    ],
+    "alt": "First Light at the jetty · 3/3 · Storyboards",
+    "caption": "Game concept storyboard · frame 3 of 3. A rescue beacon lights and reveals a separate station across the water",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-29-3-preview-98af8db90fb334fa.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-29-3-thumb-47e733b014c08047.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-29-3-ae5558d7678a2fff.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:38.203921Z",
+    "fileModifiedAt": "2026-11-14T04:44:38.203921Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-3-ae5558d7678a2fff.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-29-3-50eea93c17a656c7.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-30-1",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Cabinet after the coins are gone · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "TV concept",
+      "Cabinet after the coins are gone"
+    ],
+    "alt": "Cabinet after the coins are gone · 1/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 1 of 3. Drift watches the owner flip a cabinet sign around at closing",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-30-1-preview-2c08e16d68f8cdb9.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-30-1-thumb-89b849c12ce0eedc.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-30-1-b04cb851f0f09bfb.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:38.411896Z",
+    "fileModifiedAt": "2026-11-14T04:38:38.411896Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-1-b04cb851f0f09bfb.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-1-f134733a29f8e94c.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-30-2",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Cabinet after the coins are gone · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "TV concept",
+      "Cabinet after the coins are gone"
+    ],
+    "alt": "Cabinet after the coins are gone · 2/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 2 of 3. Pip and Wisp climb into the old machine after its last coin rolls out",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-30-2-preview-3e300209964899bf.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-30-2-thumb-b0c394ea960b8f3f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-30-2-6f0bfec993f840ae.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:02.232219Z",
+    "fileModifiedAt": "2026-11-14T04:44:02.232219Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-2-6f0bfec993f840ae.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-2-85ddb3635d5a7a38.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-30-3",
+    "project": "bubbles",
+    "subject": "Bubbles",
+    "title": "Cabinet after the coins are gone · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "Bubbles",
+      "Storyboards",
+      "TV concept",
+      "Cabinet after the coins are gone"
+    ],
+    "alt": "Cabinet after the coins are gone · 3/3 · Storyboards",
+    "caption": "TV concept storyboard · frame 3 of 3. When the owner returns the cabinet is glowing from an improvised constellation",
+    "href": "https://bubbles.loftwah.com/",
+    "action": "Play",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-30-3-preview-65859853a5ba86d1.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-30-3-thumb-bb31c604ee2f43fc.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-30-3-235d3c3f0a28ea2d.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:31.783012Z",
+    "fileModifiedAt": "2026-11-14T04:44:31.783012Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-3-235d3c3f0a28ea2d.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-30-3-236fc0ff62397c49.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-31-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Dead Air Department · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Dead Air Department · 1/3 · Radio show art",
+    "caption": "A coat hangs on a hook in a small broadcast office while a reel slowly unthreads",
+    "href": "https://fm.loftwah.com/radio?station=dead-air-department",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-31-1-preview-40634be68ac705e9.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-31-1-thumb-df92e62960fbb1b6.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-31-1-414999f4adea604f.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:42.065243Z",
+    "fileModifiedAt": "2026-11-14T04:38:42.065243Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-1-414999f4adea604f.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-1-c5af0739e1d7ba9e.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-31-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Dead Air Department · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Dead Air Department · 2/3 · Radio show art",
+    "caption": "The booth has one working window and a microphone turned out toward a dark city",
+    "href": "https://fm.loftwah.com/radio?station=dead-air-department",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-31-2-preview-6bb23c8c8fa516fb.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-31-2-thumb-32297cc79316a9c6.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-31-2-d31cd8c6ab1b77ed.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:21.783694Z",
+    "fileModifiedAt": "2026-11-14T04:44:21.783694Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-2-d31cd8c6ab1b77ed.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-2-4e414cbb0a29051f.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-31-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Dead Air Department · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Dead Air Department · 3/3 · Radio show art",
+    "caption": "The reel rewinds itself with the empty mic still live",
+    "href": "https://fm.loftwah.com/radio?station=dead-air-department",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-31-3-preview-249a568003a5c8ee.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-31-3-thumb-712e1fad0a5a94e1.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-31-3-89c5abb51e3d1bab.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:40.127450Z",
+    "fileModifiedAt": "2026-11-14T04:44:40.127450Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-3-89c5abb51e3d1bab.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-31-3-4b42c7519af7742b.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-32-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Smoko Circuit · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Smoko Circuit · 1/3 · Radio show art",
+    "caption": "Two heavy work gloves are placed beside a portable radio in a patch of sun",
+    "href": "https://fm.loftwah.com/radio?station=smoko-circuit",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-32-1-preview-76d46146a2031aa7.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-32-1-thumb-8f3bc62f2dfe5d7f.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-32-1-3b4d44ef948303dd.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.603536Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.603536Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-1-3b4d44ef948303dd.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-1-a783294508b17d8d.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-32-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Smoko Circuit · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Smoko Circuit · 2/3 · Radio show art",
+    "caption": "A smoko table has an unused chair as tall aerials appear behind the shed",
+    "href": "https://fm.loftwah.com/radio?station=smoko-circuit",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-32-2-preview-2b6b0b3c3f971f54.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-32-2-thumb-80cd246f0cc4227d.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-32-2-7947b43849622ac2.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:05.818664Z",
+    "fileModifiedAt": "2026-11-14T04:44:05.818664Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-2-7947b43849622ac2.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-2-078870111c0cde10.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-32-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Smoko Circuit · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Smoko Circuit · 3/3 · Radio show art",
+    "caption": "From the open door of the shed the crew catches the last phrase of the broadcast",
+    "href": "https://fm.loftwah.com/radio?station=smoko-circuit",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-32-3-preview-a02238ec227055c8.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-32-3-thumb-d479a0b5f3347174.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-32-3-25a8e6a1e697aa94.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:33.449907Z",
+    "fileModifiedAt": "2026-11-14T04:44:33.449907Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-3-25a8e6a1e697aa94.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-32-3-d12ce6c9f65e1db6.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-33-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Low Tide · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Low Tide · 1/3 · Radio show art",
+    "caption": "A record sleeve made from waxed canvas hangs off a rope beside a jetty",
+    "href": "https://fm.loftwah.com/radio?station=low-tide",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-33-1-preview-9fea7ef70e0400fd.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-33-1-thumb-4c88d3d231726335.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-33-1-9c03fb6a8691ca1d.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:39.973187Z",
+    "fileModifiedAt": "2026-11-14T04:38:39.973187Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-1-9c03fb6a8691ca1d.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-1-b1f74ee50cf1bbae.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-33-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Low Tide · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Low Tide · 2/3 · Radio show art",
+    "caption": "The receding water exposes an entire pattern of submerged cables",
+    "href": "https://fm.loftwah.com/radio?station=low-tide",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-33-2-preview-aed928849098e99e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-33-2-thumb-f35039f63d9ef615.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-33-2-6585d13654be0e3f.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:02.118193Z",
+    "fileModifiedAt": "2026-11-14T04:44:02.118193Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-2-6585d13654be0e3f.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-2-6dff57ce05e6d451.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-33-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Low Tide · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Low Tide · 3/3 · Radio show art",
+    "caption": "In the booth the tide chart rocks gently beside a tiny speaker",
+    "href": "https://fm.loftwah.com/radio?station=low-tide",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-33-3-preview-07b63ff95d160741.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-33-3-thumb-19b0f7bf0439f700.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-33-3-1d8f7bec434f1a6b.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:28.254267Z",
+    "fileModifiedAt": "2026-11-14T04:44:28.254267Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-3-1d8f7bec434f1a6b.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-33-3-b4e3071ba7490c7f.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-34-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Cartridge Club · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Cartridge Club · 1/3 · Radio show art",
+    "caption": "A dusty cartridge sits in a tin lunchbox with an old set of earbuds",
+    "href": "https://fm.loftwah.com/radio?station=cartridge-club",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-34-1-preview-10134bac6247bb71.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-34-1-thumb-b436324fb4838715.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-34-1-595bd4daeabfa90e.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:42.065317Z",
+    "fileModifiedAt": "2026-11-14T04:38:42.065317Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-1-595bd4daeabfa90e.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-1-50f688a3b64c5272.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-34-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Cartridge Club · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Cartridge Club · 2/3 · Radio show art",
+    "caption": "A tiny television illuminates its first playable image in an empty room",
+    "href": "https://fm.loftwah.com/radio?station=cartridge-club",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-34-2-preview-dc6a5589c1d1f69d.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-34-2-thumb-bfe625bb55e21594.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-34-2-995f601720a70819.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:17.129435Z",
+    "fileModifiedAt": "2026-11-14T04:43:17.129435Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-2-995f601720a70819.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-2-97d120990079e8d9.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-34-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Cartridge Club · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Cartridge Club · 3/3 · Radio show art",
+    "caption": "A little radio transmits the tune through the wall into a separate tabletop game",
+    "href": "https://fm.loftwah.com/radio?station=cartridge-club",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-34-3-preview-ef7e3f762f7a8510.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-34-3-thumb-356b74f7c4c455b9.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-34-3-ce69c64a26ef40ca.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:58.401817Z",
+    "fileModifiedAt": "2026-11-14T04:43:58.401817Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-3-ce69c64a26ef40ca.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-34-3-e5b1d8f48dc74d29.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-35-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Night Signal · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Night Signal · 1/3 · Radio show art",
+    "caption": "A tall dark aerial is partly visible through a motel curtain",
+    "href": "https://fm.loftwah.com/radio?station=night-signal",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-35-1-preview-42d49c5d52573a32.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-35-1-thumb-07faaf5b4ca460d1.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-35-1-c8bf7e93d10a1213.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:46.831842Z",
+    "fileModifiedAt": "2026-11-14T04:38:46.831842Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-1-c8bf7e93d10a1213.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-1-7efe98d85e20476b.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-35-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Night Signal · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Night Signal · 2/3 · Radio show art",
+    "caption": "Its window reflection aligns with the needle on a receiver",
+    "href": "https://fm.loftwah.com/radio?station=night-signal",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-35-2-preview-2678dcd67a5f9c0e.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-35-2-thumb-48ac5b5e4bc19467.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-35-2-052ff340a1de7467.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:14.475483Z",
+    "fileModifiedAt": "2026-11-14T04:43:14.475483Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-2-052ff340a1de7467.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-2-dc505a02b3c2976e.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-35-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Night Signal · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Night Signal · 3/3 · Radio show art",
+    "caption": "The room's light goes out and a single bright point stays visible",
+    "href": "https://fm.loftwah.com/radio?station=night-signal",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-35-3-preview-54ca566d2daff14a.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-35-3-thumb-607e912d4cf915f5.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-35-3-275dfc69f131d0ac.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:12.100314Z",
+    "fileModifiedAt": "2026-11-14T04:44:12.100314Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-3-275dfc69f131d0ac.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-35-3-a84ccece2164b541.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-36-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Soft Focus · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Soft Focus · 1/3 · Radio show art",
+    "caption": "A dusty window gives the listening chair a wash of lilac light",
+    "href": "https://fm.loftwah.com/radio?station=soft-focus",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-36-1-preview-12ed3421aa3677f3.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-36-1-thumb-58b1ede59c814982.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-36-1-0af50de261a4b8e6.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:48.721941Z",
+    "fileModifiedAt": "2026-11-14T04:38:48.721941Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-1-0af50de261a4b8e6.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-1-96f047c319da3b2e.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-36-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Soft Focus · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Soft Focus · 2/3 · Radio show art",
+    "caption": "A warped surface bends the shape of a simple vinyl record",
+    "href": "https://fm.loftwah.com/radio?station=soft-focus",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-36-2-preview-a5b4c10cc0711123.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-36-2-thumb-936467a886e17bbf.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-36-2-7593c6ec1060ebfe.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:43:26.022832Z",
+    "fileModifiedAt": "2026-11-14T04:43:26.022832Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-2-7593c6ec1060ebfe.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-2-0a5de4fa883bd1bd.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-36-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Soft Focus · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Soft Focus · 3/3 · Radio show art",
+    "caption": "The window's soft circle settles over a small speaker at dusk",
+    "href": "https://fm.loftwah.com/radio?station=soft-focus",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-36-3-preview-4568198584ee855f.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-36-3-thumb-05a28397135a2bce.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-36-3-c032d8490e564ee7.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:18.329985Z",
+    "fileModifiedAt": "2026-11-14T04:44:18.329985Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-3-c032d8490e564ee7.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-36-3-89fa52204b62d779.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-37-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Pressure System · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Pressure System · 1/3 · Radio show art",
+    "caption": "A barometer needle is caught at the edge of a glowing forecast screen",
+    "href": "https://fm.loftwah.com/radio?station=pressure-system",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-37-1-preview-a163ee48f1fa0b97.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-37-1-thumb-75ef4a0b9da08f48.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-37-1-fe74a623ecd4354c.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:42.603905Z",
+    "fileModifiedAt": "2026-11-14T04:38:42.603905Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-1-fe74a623ecd4354c.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-1-029377a7c2ec9635.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
+  },
+  {
+    "id": "studio-story-37-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Pressure System · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Pressure System · 2/3 · Radio show art",
+    "caption": "Dark clouds stretch into strips of insulating tape over a tall radio mast",
+    "href": "https://fm.loftwah.com/radio?station=pressure-system",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-37-2-preview-5a5bc668200d324b.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-37-2-thumb-3f428419a05ba48b.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-37-2-4f08a2831ee3e166.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:29.094172Z",
+    "fileModifiedAt": "2026-11-14T04:44:29.094172Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-2-4f08a2831ee3e166.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-2-2bbbf1acc3755887.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-37-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Pressure System · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Pressure System · 3/3 · Radio show art",
+    "caption": "An isolated drop of water moves inward along the shield of a loudspeaker",
+    "href": "https://fm.loftwah.com/radio?station=pressure-system",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-37-3-preview-2f6474944ea41c89.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-37-3-thumb-3146943b285ce5f9.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-37-3-c23c052040301a4f.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:52.762774Z",
+    "fileModifiedAt": "2026-11-14T04:44:52.762774Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-3-c23c052040301a4f.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-37-3-7cd79c374bf9354f.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-38-1",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Saltwater Static · 1/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Saltwater Static · 1/3 · Radio show art",
+    "caption": "A speaker sits in a weatherproof box on the seawall before dawn",
+    "href": "https://fm.loftwah.com/radio?station=saltwater-static",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-38-1-preview-15307d06a84ffff6.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-38-1-thumb-368ab03bec10d143.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-38-1-8ed48098153f2143.jpg",
+    "width": 1024,
+    "height": 1460,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:38:43.894826Z",
+    "fileModifiedAt": "2026-11-14T04:38:43.894826Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-1-8ed48098153f2143.jpg",
+        "width": 1024,
+        "height": 1460
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-1-b1f93322c4fe514a.png",
+        "width": 1024,
+        "height": 1280
+      }
+    ]
+  },
+  {
+    "id": "studio-story-38-2",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Saltwater Static · 2/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Saltwater Static · 2/3 · Radio show art",
+    "caption": "A listener pulls a curl of salt-dried paper from the speaker grille",
+    "href": "https://fm.loftwah.com/radio?station=saltwater-static",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-38-2-preview-536f9e06abf7b401.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-38-2-thumb-d0023d85ef931a86.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-38-2-51e95b5395fe9a9f.jpg",
+    "width": 1536,
+    "height": 1189,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:18.974796Z",
+    "fileModifiedAt": "2026-11-14T04:44:18.974796Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-2-51e95b5395fe9a9f.jpg",
+        "width": 1536,
+        "height": 1189
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-2-c322afc964ab8969.png",
+        "width": 1536,
+        "height": 1024
+      }
+    ]
+  },
+  {
+    "id": "studio-story-38-3",
+    "project": "loftwahfm",
+    "subject": "LoftwahFM",
+    "title": "Saltwater Static · 3/3",
+    "series": "atlas-lab",
+    "use": "art",
+    "tags": [
+      "LoftwahFM",
+      "Radio show art"
+    ],
+    "alt": "Saltwater Static · 3/3 · Radio show art",
+    "caption": "A band of static recedes into sea foam as the horizon lights up",
+    "href": "https://fm.loftwah.com/radio?station=saltwater-static",
+    "action": "Listen",
+    "image": "/campaign/20261114-atlas-lab/master/studio-story-38-3-preview-be33cd114f043c16.webp",
+    "thumbnail": "/campaign/20261114-atlas-lab/master/studio-story-38-3-thumb-283c00f3bda627e0.webp",
+    "original": "/campaign/20261114-atlas-lab/master/studio-story-38-3-bbd5f0b122ae109c.jpg",
+    "width": 1536,
+    "height": 1029,
+    "reviewedAt": "2026-11-14",
+    "addedAt": "2026-11-14T04:44:35.173973Z",
+    "fileModifiedAt": "2026-11-14T04:44:35.173973Z",
+    "credit": "Woodhouse · gpt-image-2.6-flare · Tabler Icons (MIT)",
+    "kind": "editorial composition",
+    "source": "/campaign/20261114-atlas-lab/manifest.json",
+    "formats": [
+      {
+        "label": "Branded artwork JPG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-3-bbd5f0b122ae109c.jpg",
+        "width": 1536,
+        "height": 1029
+      },
+      {
+        "label": "Image API master PNG",
+        "image": "/campaign/20261114-atlas-lab/master/studio-story-38-3-9d1d99b5b682d7f8.png",
+        "width": 1536,
+        "height": 864
+      }
+    ]
   }
 ];
