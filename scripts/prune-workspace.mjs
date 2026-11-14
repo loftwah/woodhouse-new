@@ -21,7 +21,7 @@ export const evidenceRoots = [
   { path: ".playwright-cli", maxAgeDays: 7 }
 ];
 
-/** Rebuildable output. Removed only with --builds, because a build is running. */
+/** Rebuildable output. Select these only after the local build or preview has stopped. */
 export const buildRoots = [{ path: "dist" }, { path: "storybook-static" }, { path: ".astro" }];
 
 /**
@@ -96,11 +96,19 @@ const gb = (bytes) => `${(bytes / 1e9).toFixed(2)} GB`;
 export async function main(argv) {
   const apply = argv.includes("--apply");
   const includeBuilds = argv.includes("--builds");
+  const buildsOnly = argv.includes("--builds-only");
   const json = argv.includes("--json");
-  const unknown = argv.filter((arg) => !["--apply", "--builds", "--json"].includes(arg));
+  const unknown = argv.filter(
+    (arg) => !["--apply", "--builds", "--builds-only", "--json"].includes(arg)
+  );
   if (unknown.length) throw new Error(`Unknown argument: ${unknown[0]}`);
 
-  const roots = includeBuilds ? [...evidenceRoots, ...buildRoots] : evidenceRoots;
+  if (includeBuilds && buildsOnly) throw new Error("Choose --builds or --builds-only");
+  const roots = buildsOnly
+    ? buildRoots
+    : includeBuilds
+      ? [...evidenceRoots, ...buildRoots]
+      : evidenceRoots;
   const before = await freeBytes();
   const report = [];
   const skippedRoots = [];

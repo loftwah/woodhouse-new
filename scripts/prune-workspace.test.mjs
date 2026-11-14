@@ -107,3 +107,30 @@ test("apply skips a symlink at the evidence root itself", async (t) => {
   assert.equal(await readFile(sentinel, "utf8"), "retain");
   assert.match(result.stdout, /output: symlink skipped/);
 });
+
+test("builds-only clears build output and preserves expired evidence", async (t) => {
+  const repo = await mkdtemp(join(tmpdir(), "woodhouse-prune-builds-"));
+  t.after(() => rm(repo, { recursive: true, force: true }));
+  await mkdir(join(repo, "scripts"));
+  await mkdir(join(repo, "dist"));
+  await mkdir(join(repo, "output"));
+  const script = join(repo, "scripts", "prune-workspace.mjs");
+  const artifact = join(repo, "dist", "build.json");
+  const evidence = join(repo, "output", "master.png");
+  await copyFile(new URL("./prune-workspace.mjs", import.meta.url), script);
+  await writeFile(artifact, "build");
+  await writeFile(evidence, "master");
+  await utimes(evidence, new Date(0), new Date(0));
+
+  const result = spawnSync(process.execPath, [script, "--builds-only", "--apply", "--json"], {
+    encoding: "utf8"
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(
+    JSON.parse(result.stdout).roots.map(({ root }) => root),
+    ["dist", "storybook-static", ".astro"]
+  );
+  await assert.rejects(readFile(artifact), { code: "ENOENT" });
+  assert.equal(await readFile(evidence, "utf8"), "master");
+});
