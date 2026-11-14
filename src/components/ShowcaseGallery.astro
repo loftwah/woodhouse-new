@@ -261,6 +261,16 @@ const productName = (slug: string) =>
                 Preview social placement
               </a>
             )}
+          {item.socialPack && (
+            <a class="collection-link" href={item.socialPack} download>
+              Download social pack
+            </a>
+          )}
+          {item.landscapeImage && (
+            <a class="collection-link" href={item.landscapeImage} download>
+              Download landscape poster
+            </a>
+          )}
           {item.versions?.map((version) => (
             <details class="viewer-comparison">
               <summary>Compare with {version.label.toLowerCase()}</summary>
