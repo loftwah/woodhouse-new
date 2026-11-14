@@ -8,6 +8,7 @@ import { campaignResponsiveImage } from "../data/showcase-public";
 type Props = {
   items: ReadonlyArray<(typeof campaignItems)[number]>;
   compact?: boolean;
+  minimal?: boolean;
   staggered?: boolean;
   eager?: boolean;
   showPlacement?: boolean;
@@ -16,6 +17,7 @@ type Props = {
 const {
   items,
   compact = false,
+  minimal = false,
   staggered = false,
   eager = true,
   showPlacement = false,
@@ -90,7 +92,7 @@ const productName = (slug: string) =>
         href={item.original}
         class="showcase-image"
         data-open-art={`viewer-${item.id}`}
-        aria-label={`View ${item.title} full size`}
+        aria-label={item.video ? `Play ${item.title}` : `View ${item.title} full size`}
       >
         <img
           src={item.image}
@@ -107,7 +109,7 @@ const productName = (slug: string) =>
           {item.video ? "Play clip" : "View"}
         </span>
       </a>
-      <figcaption>
+      <figcaption class:list={{ "minimal-caption": minimal }}>
         <div class="work-identity">
           <h2>{item.title}</h2>
           <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
@@ -115,7 +117,7 @@ const productName = (slug: string) =>
             <span class="action-name">{item.subject ?? productName(item.project)}</span>
           </a>
         </div>
-        {Boolean(item.versions?.length) && (
+        {!minimal && Boolean(item.versions?.length) && (
           <p class="work-placement">Updated · {1 + (item.versions?.length ?? 0)} versions</p>
         )}
         {showPlacement && formatFor(item) && (
@@ -123,7 +125,7 @@ const productName = (slug: string) =>
             {formatFor(item)?.label} · {formatFor(item)?.width} × {formatFor(item)?.height}
           </p>
         )}
-        {item.stage && (
+        {!minimal && item.stage && (
           <p class="process-note">
             <strong>{item.stage}</strong> {item.caption.split("\n")[0]}
             {item.issue && (
@@ -134,38 +136,40 @@ const productName = (slug: string) =>
             )}
           </p>
         )}
-        <ShareActions
-          caption={item.caption}
-          image={downloadFor(item)}
-          shareSource={item.formats ? downloadFor(item) : item.image}
-          fallbackImage={item.image}
-          filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
-          link={item.href}
-          mediaType={item.video ? "video" : "image"}
-          presentation="gallery"
-        >
-          <p class="work-credit">
-            {item.kind} · {item.credit} · {item.reviewedAt}
-          </p>
-          {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
-          {!item.formats && <a href={item.source}>Source</a>}
-          {item.socialPack && (
-            <a class="collection-link" href={item.socialPack} download>
-              Download social pack
-            </a>
-          )}
-          {item.landscapeImage && (
-            <a class="collection-link" href={item.landscapeImage} download>
-              Download landscape poster
-            </a>
-          )}
-          <a
-            class="collection-link"
-            href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}
+        {!minimal && (
+          <ShareActions
+            caption={item.caption}
+            image={downloadFor(item)}
+            shareSource={item.formats ? downloadFor(item) : item.image}
+            fallbackImage={item.image}
+            filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
+            link={item.href}
+            mediaType={item.video ? "video" : "image"}
+            presentation="gallery"
           >
-            More {productName(item.project)}
-          </a>
-        </ShareActions>
+            <p class="work-credit">
+              {item.kind} · {item.credit} · {item.reviewedAt}
+            </p>
+            {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+            {!item.formats && <a href={item.source}>Source</a>}
+            {item.socialPack && (
+              <a class="collection-link" href={item.socialPack} download>
+                Download social pack
+              </a>
+            )}
+            {item.landscapeImage && (
+              <a class="collection-link" href={item.landscapeImage} download>
+                Download landscape poster
+              </a>
+            )}
+            <a
+              class="collection-link"
+              href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}
+            >
+              More {productName(item.project)}
+            </a>
+          </ShareActions>
+        )}
       </figcaption>
       <dialog
         id={`viewer-${item.id}`}
@@ -303,7 +307,7 @@ const productName = (slug: string) =>
               {item.action} {item.subject ?? productName(item.project)}
             </a>
             <a href={item.original} data-viewer-download download>
-              Download original
+              {item.video ? "Download clip" : "Download original"}
             </a>
             <ShareActions
               caption={item.caption}
@@ -466,6 +470,13 @@ const productName = (slug: string) =>
   });
 </script>
 <style>
+  .minimal-caption .product-action {
+    display: none;
+  }
+  .minimal-caption h2 {
+    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  }
+
   .art-viewer video {
     display: block;
     object-fit: contain;

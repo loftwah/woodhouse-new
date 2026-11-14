@@ -75,9 +75,24 @@ const tags = [
   ...new Set(works.flatMap(({ archived, tags }) => (archived ? [] : (tags ?? []))))
 ].sort();
 const tag = tags.find((label) => label === params.get("artTag")) ?? "";
-const sort = artworkSorts.find(([value]) => value === params.get("artSort"))?.[0] ?? "newest";
+const featuredIds = [
+  "november-woodhouse-loom",
+  "november-shoalshot",
+  "november-fighter",
+  "november-app-composer",
+  "november-bubbles",
+  "november-loftwahfm",
+  "november-foilbury",
+  "november-protocol-11"
+];
+const defaultSort = !project && !category && !placement && !tag ? "featured" : "newest";
+const sort =
+  params.get("artSort") === "featured"
+    ? defaultSort
+    : (artworkSorts.find(([value]) => value === params.get("artSort"))?.[0] ?? defaultSort);
+const featured = sort === "featured";
 const shuffleSeed = (params.get("artSeed") ?? "").match(/^[a-z0-9]{1,24}$/i)?.[0] ?? "woodhouse";
-const filtered = orderArtwork(
+const ordered = orderArtwork(
   works.filter(
     (item) =>
       (!project || item.project === project) &&
@@ -90,9 +105,15 @@ const filtered = orderArtwork(
             ? !item.archived && item.series === series
             : !item.archived && item.use === category))
   ),
-  sort,
+  featured ? "newest" : sort,
   shuffleSeed
 );
+const filtered = featured
+  ? [
+      ...featuredIds.flatMap((id) => ordered.filter((item) => item.id === id)),
+      ...ordered.filter((item) => !featuredIds.includes(item.id))
+    ]
+  : ordered;
 const size = 24;
 const requested = Number(params.get("artPage") ?? 1);
 const pages = Math.max(1, Math.ceil(filtered.length / size));
@@ -109,7 +130,11 @@ const path = (
   if (project) query.set("artProject", project);
   if (placement) query.set("artFormat", placement);
   if (tag) query.set("artTag", tag);
-  if (nextSort !== "newest") query.set("artSort", nextSort);
+  if (
+    (nextSort !== "featured" && nextSort !== "newest") ||
+    (nextSort === "newest" && !nextCategory && !project && !placement && !nextTag)
+  )
+    query.set("artSort", nextSort);
   if (nextSort === "shuffle") query.set("artSeed", nextSeed);
   if (number > 1) query.set("artPage", String(number));
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
@@ -173,11 +198,14 @@ const artworkPages = Object.fromEntries(
       Apply
     </button>
     <details class="art-filter-disclosure">
-      <summary>More filters{placement || tag || sort !== "newest" ? " · Active" : ""}</summary>
+      <summary>More filters{placement || tag || sort !== defaultSort ? " · Active" : ""}</summary>
       <div class="art-filter-fields">
         <label class="art-sort">
           <span>Sort by</span>
           <select name="artSort">
+            <option value="featured" selected={featured}>
+              Recommended
+            </option>
             {artworkSorts.map(([value, label]) => (
               <option value={value} selected={value === sort}>
                 {label}
@@ -307,7 +335,8 @@ const artworkPages = Object.fromEntries(
         compact
         staggered
         eager={page === 1}
-        showPlacement
+        minimal
+        showPlacement={Boolean(placement)}
         placement={placement}
       />
     </div>
