@@ -40,7 +40,8 @@ export function campaignSocial(items: CampaignItem[]) {
       series !== "seasonal-library" &&
       series !== "field-guide" &&
       series !== "game-rules" &&
-      series !== "architecture"
+      series !== "architecture" &&
+      series !== "commissioned"
   );
   const lead = socialItems[0] ?? items[0];
   if (lead?.landscapeImage)

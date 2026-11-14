@@ -1,0 +1,1828 @@
+{
+  "originals": 42,
+  "upgrades": 47,
+  "artwork": [
+    {
+      "slot": "NEW-032",
+      "artwork": "new-032",
+      "version": "new-032-v1",
+      "parent": null,
+      "title": "The name belongs on the thing",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "9629567b3a926564a6429a10d9ad33a9e1b83eb47d0f00d78937f8bfb5337c88",
+      "original": "/campaign/20261114-commissions/new-032.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-032-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.318359375
+        }
+      ]
+    },
+    {
+      "slot": "NEW-282",
+      "artwork": "new-282",
+      "version": "new-282-v1",
+      "parent": null,
+      "title": "The open assembly cradle",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": true,
+      "sha256": "824467bc256675c96f9c9e9f5e68ab9f648b66c5ee3b71bf9b3cba4e9593c7f5",
+      "original": "/campaign/20261114-commissions/new-282.png"
+    },
+    {
+      "slot": "NEW-393",
+      "artwork": "new-393",
+      "version": "new-393-v1",
+      "parent": null,
+      "title": "The awkward little task",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "30d5c73b792ea144d2ca73992cdfd9777a6ce67caac72d915a294521eb1c325b",
+      "original": "/campaign/20261114-commissions/new-393.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-393-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The app you come back to",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-394",
+      "artwork": "new-394",
+      "version": "new-394-v1",
+      "parent": null,
+      "title": "A useful first shape",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "282d72cdf6d49df4c4fce98028b5af79cef1ebeae361210f07e1ab8967e00531",
+      "original": "/campaign/20261114-commissions/new-394.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-394-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The app you come back to",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-395",
+      "artwork": "new-395",
+      "version": "new-395-v1",
+      "parent": null,
+      "title": "The first working afternoon",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "0f6d2415730d50aa0cb019f0ca218b3c8e8c7679b5f4d78f236d041e64f31ed9",
+      "original": "/campaign/20261114-commissions/new-395.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-395-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The app you come back to",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-396",
+      "artwork": "new-396",
+      "version": "new-396-v1",
+      "parent": null,
+      "title": "Something else needs changing",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "1d3b840406c5771efb5af80623597415cd1ab281291e36f74c49e883bae31cf9",
+      "original": "/campaign/20261114-commissions/new-396.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-396-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The app you come back to",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-397",
+      "artwork": "new-397",
+      "version": "new-397-v1",
+      "parent": null,
+      "title": "One deliberate adjustment",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "7c1fe2accf674949f51737bd0210b18e929efd47c6f1039e317913bcebcea3bd",
+      "original": "/campaign/20261114-commissions/new-397.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-397-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The app you come back to",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-399",
+      "artwork": "new-399",
+      "version": "new-399-v1",
+      "parent": null,
+      "title": "The prop that starts it",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "84b2d2b297573ef16acefe55813d3619ecc1dbce52c29ba63f8c9552af55beb4",
+      "original": "/campaign/20261114-commissions/new-399.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-399-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A character earns a scene",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-400",
+      "artwork": "new-400",
+      "version": "new-400-v1",
+      "parent": null,
+      "title": "A reference worth keeping",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "7ab7f9ce9c4610bf9d81760fa2761760641ed437248e167bcbc54adc2edc5617",
+      "original": "/campaign/20261114-commissions/new-400.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-400-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A character earns a scene",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-401",
+      "artwork": "new-401",
+      "version": "new-401-v1",
+      "parent": null,
+      "title": "Outside the original frame",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "a6a4b32f58ea2ac775aa3e22354275080821aec87d6e1591a92783ce94208cf1",
+      "original": "/campaign/20261114-commissions/new-401.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-401-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A character earns a scene",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-402",
+      "artwork": "new-402",
+      "version": "new-402-v1",
+      "parent": null,
+      "title": "The tiny repair",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "a88cf9cb07b79e1f7a06057bb141b7f356f31b217ef632dd574818e3eb563ecc",
+      "original": "/campaign/20261114-commissions/new-402.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-402-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A character earns a scene",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-403",
+      "artwork": "new-403",
+      "version": "new-403-v1",
+      "parent": null,
+      "title": "One motion to carry",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "b340cd00d8b4398ec5cabf777eb094f59151f24bd20ec1f2cfa4953f320fb36c",
+      "original": "/campaign/20261114-commissions/new-403.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-403-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A character earns a scene",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-405",
+      "artwork": "new-405",
+      "version": "new-405-v1",
+      "parent": null,
+      "title": "A familiar missing shape",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "78e94275d86fc1cf6e70efc8311335f7b0a8f6c8a3474493bebd821417714fe2",
+      "original": "/campaign/20261114-commissions/new-405.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-405-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-406",
+      "artwork": "new-406",
+      "version": "new-406-v1",
+      "parent": null,
+      "title": "The local archive opens",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "0f69ac64a30800cc648168ff94e3c85868e12afb28a720286bac42f3344fdaae",
+      "original": "/campaign/20261114-commissions/new-406.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-406-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-407",
+      "artwork": "new-407",
+      "version": "new-407-v1",
+      "parent": null,
+      "title": "Too many almost matches",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "bee27ee9a28fbab4e4bcb7f4ae87fa7029db899795ba1a743fd8a991acd834c8",
+      "original": "/campaign/20261114-commissions/new-407.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-407-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-408",
+      "artwork": "new-408",
+      "version": "new-408-v1",
+      "parent": null,
+      "title": "The useful clue",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "5b15bb868f3e6bff763b07c6d91ef75cf7bb5404b3820f10d3003d8fed92da53",
+      "original": "/campaign/20261114-commissions/new-408.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-408-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-409",
+      "artwork": "new-409",
+      "version": "new-409-v1",
+      "parent": null,
+      "title": "Back within reach",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "6cc582043388e0a2243978cedf86f3634f96045f5797d713b192ed73507f641a",
+      "original": "/campaign/20261114-commissions/new-409.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-409-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-410",
+      "artwork": "new-410",
+      "version": "new-410-v1",
+      "parent": null,
+      "title": "The old work continues",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "6f1de4a5f5444efced520a7b3ec225cc2693ff3a7acc7bfe5249d9078690bc72",
+      "original": "/campaign/20261114-commissions/new-410.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-410-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "The attachment from years ago",
+        "frame": 6
+      }
+    },
+    {
+      "slot": "NEW-411",
+      "artwork": "new-411",
+      "version": "new-411-v1",
+      "parent": null,
+      "title": "A tempting straight line",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "94af18335c9fa5c0b52b48c6578c04de166ff0a934cd6387d66e9167c704b33e",
+      "original": "/campaign/20261114-commissions/new-411.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-411-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "One shot, properly considered",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-412",
+      "artwork": "new-412",
+      "version": "new-412-v1",
+      "parent": null,
+      "title": "The obstruction becomes clear",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "12a2ad72bceef19c2de7b13501c7cdca1b9ec96ba67dcbb899418d8ec396359b",
+      "original": "/campaign/20261114-commissions/new-412.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-412-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "One shot, properly considered",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-413",
+      "artwork": "new-413",
+      "version": "new-413-v1",
+      "parent": null,
+      "title": "Looking at the other wall",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "1ebeac5706fdb45924e1024b4b6c5d3447f21498af1a0759959b3aef40fd2fa7",
+      "original": "/campaign/20261114-commissions/new-413.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-413-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "One shot, properly considered",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-414",
+      "artwork": "new-414",
+      "version": "new-414-v1",
+      "parent": null,
+      "title": "Commit to the attempt",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "940134cf76651c72e49d9fcfb5fe598cf8ed83730c0d9a27c00648eca427ac2d",
+      "original": "/campaign/20261114-commissions/new-414.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-414-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "One shot, properly considered",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-417",
+      "artwork": "new-417",
+      "version": "new-417-v1",
+      "parent": null,
+      "title": "The room before play",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "c6f6cf020adf1406840de6ee50d5ab144c326fa8551025ee6880d2dc50929b41",
+      "original": "/campaign/20261114-commissions/new-417.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-417-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A station for the session",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-418",
+      "artwork": "new-418",
+      "version": "new-418-v1",
+      "parent": null,
+      "title": "A deliberate first press",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "c551ce71d8c77219463be75a016c07eca79fa8961d5c662432f7221c5046ce9b",
+      "original": "/campaign/20261114-commissions/new-418.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-418-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A station for the session",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-419",
+      "artwork": "new-419",
+      "version": "new-419-v1",
+      "parent": null,
+      "title": "The first rhythm takes hold",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "83b8c315200b4bbac417ac081096cddaf807c81672dc9ca6c02ebfcd3f4acab6",
+      "original": "/campaign/20261114-commissions/new-419.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-419-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A station for the session",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-420",
+      "artwork": "new-420",
+      "version": "new-420-v1",
+      "parent": null,
+      "title": "The work changes shape",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "9873b073d7b3a333b327ecdd11c77b35295157ee0ec68d87403172780fc47397",
+      "original": "/campaign/20261114-commissions/new-420.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-420-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A station for the session",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-421",
+      "artwork": "new-421",
+      "version": "new-421-v1",
+      "parent": null,
+      "title": "A pause chosen by the listener",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "c7a8f599c3d0fe6dbd64c696217eb1952258d573573beca26d174bd10fcf8c74",
+      "original": "/campaign/20261114-commissions/new-421.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-421-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A station for the session",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-423",
+      "artwork": "new-423",
+      "version": "new-423-v1",
+      "parent": null,
+      "title": "An empty space with a purpose",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "bb26468b4a43ab1de1192eb89629fc670cfe5f9f9d4f4d5d6911cd71b5dc59c8",
+      "original": "/campaign/20261114-commissions/new-423.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-423-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "Finding a place in the cabinet",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-424",
+      "artwork": "new-424",
+      "version": "new-424-v1",
+      "parent": null,
+      "title": "A closer look at the picture",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "5965fa359f8c8a2adc10e901892ad86dae022d7f538348a10c7e8d0599caa144",
+      "original": "/campaign/20261114-commissions/new-424.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-424-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "Finding a place in the cabinet",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-425",
+      "artwork": "new-425",
+      "version": "new-425-v1",
+      "parent": null,
+      "title": "The finish changes with light",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "1c9754ff027fafedeb0681ed99890a6ea5bdebc09c64542ff03fc1a7bf8b2957",
+      "original": "/campaign/20261114-commissions/new-425.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-425-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "Finding a place in the cabinet",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-426",
+      "artwork": "new-426",
+      "version": "new-426-v1",
+      "parent": null,
+      "title": "Trying a different neighbour",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "295256684742970dfbd4c62bba67c5ede97057da660bf850e858f330b0186ff9",
+      "original": "/campaign/20261114-commissions/new-426.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-426-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "Finding a place in the cabinet",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-427",
+      "artwork": "new-427",
+      "version": "new-427-v1",
+      "parent": null,
+      "title": "The frame settles into place",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "ed4e868cd4e0fbb80670c63ced7b9200287a11ddf79511d2453b075dfa27173d",
+      "original": "/campaign/20261114-commissions/new-427.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-427-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "Finding a place in the cabinet",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-429",
+      "artwork": "new-429",
+      "version": "new-429-v1",
+      "parent": null,
+      "title": "Choosing what to contribute",
+      "project": "here-there",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "bf804d50811210b9ae4e4ef61d189be1ccb0ee33248f986c8701cb0ed47f341e",
+      "original": "/campaign/20261114-commissions/new-429.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-429-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A postcard finds its place",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-430",
+      "artwork": "new-430",
+      "version": "new-430-v1",
+      "parent": null,
+      "title": "A note goes with it",
+      "project": "here-there",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "8331f546dba0146b36f0d16c55c292cf8d2fef2ac0160375ea3fbaf9ad10ef20",
+      "original": "/campaign/20261114-commissions/new-430.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-430-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A postcard finds its place",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-431",
+      "artwork": "new-431",
+      "version": "new-431-v1",
+      "parent": null,
+      "title": "The contribution waits",
+      "project": "here-there",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "8b8d9ce3e0eb27a046ac14c4aef6cfb4208e7f0097eea7f6f00e92818c18b8b0",
+      "original": "/campaign/20261114-commissions/new-431.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-431-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A postcard finds its place",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-432",
+      "artwork": "new-432",
+      "version": "new-432-v1",
+      "parent": null,
+      "title": "An owner makes the choice",
+      "project": "here-there",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "472413a082172f9e78c09da81e90ae752f9c4fc799062443040986fbd800bb7f",
+      "original": "/campaign/20261114-commissions/new-432.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-432-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A postcard finds its place",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-433",
+      "artwork": "new-433",
+      "version": "new-433-v1",
+      "parent": null,
+      "title": "The curator spots it",
+      "project": "here-there",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "83d8f59785291f2eb53e9739f5b10408beeeaedb3581907458479fa2b1d0b461",
+      "original": "/campaign/20261114-commissions/new-433.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-433-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A postcard finds its place",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "NEW-435",
+      "artwork": "new-435",
+      "version": "new-435-v1",
+      "parent": null,
+      "title": "The first version is here",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-flare",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "42f9323001fdecbd081a4aa87824785a195112c3055401ca21b05bc2d6447641",
+      "original": "/campaign/20261114-commissions/new-435.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-435-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A revision stays in the record",
+        "frame": 1
+      }
+    },
+    {
+      "slot": "NEW-436",
+      "artwork": "new-436",
+      "version": "new-436-v1",
+      "parent": null,
+      "title": "A useful note arrives",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "27b20a54120579a2b7204dd33327dc79a8258b68160a0eeac8b8da97c43e7c30",
+      "original": "/campaign/20261114-commissions/new-436.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-436-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A revision stays in the record",
+        "frame": 2
+      }
+    },
+    {
+      "slot": "NEW-437",
+      "artwork": "new-437",
+      "version": "new-437-v1",
+      "parent": null,
+      "title": "One clear change to try",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "e8851cd08f06f3551c1e2422958c12ccb0c8630240029b8607e8b1eb51a4d66c",
+      "original": "/campaign/20261114-commissions/new-437.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-437-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A revision stays in the record",
+        "frame": 3
+      }
+    },
+    {
+      "slot": "NEW-438",
+      "artwork": "new-438",
+      "version": "new-438-v1",
+      "parent": null,
+      "title": "Both versions are visible",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "0b8912ab8af8b6406a6bc78155746962727be85e9b3949ab72ce039bce69d09d",
+      "original": "/campaign/20261114-commissions/new-438.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-438-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A revision stays in the record",
+        "frame": 4
+      }
+    },
+    {
+      "slot": "NEW-439",
+      "artwork": "new-439",
+      "version": "new-439-v1",
+      "parent": null,
+      "title": "A preference has a reason",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "7223ba38de73511cd52581485251600609354a34242e0cee9284f28b3f7bf6c8",
+      "original": "/campaign/20261114-commissions/new-439.png",
+      "exports": [
+        {
+          "label": "Portrait feed",
+          "image": "/campaign/20261114-commissions/new-439-social.jpg",
+          "width": 1080,
+          "height": 1350,
+          "upscale": 1.0546875
+        }
+      ],
+      "sequence": {
+        "title": "A revision stays in the record",
+        "frame": 5
+      }
+    },
+    {
+      "slot": "UPG-001",
+      "artwork": "composer-make-something-useful",
+      "version": "upg-001-v1",
+      "parent": "/campaign/20261025-v2/composer-paperwork-close-original.png",
+      "title": "App Composer · A PDF. Your mark.",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "c9a51438239ed26dc8a3389ea7d9367bec2fa3d8484290c88f1ea073b777e75f",
+      "original": "/campaign/20261114-commissions/upg-001.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-002",
+      "artwork": "asset-hunter-discover-possibilities",
+      "version": "upg-002-v1",
+      "parent": "/campaign/20261025/asset-hunter-discover-possibilities-original.png",
+      "title": "Asset Hunter · Find a possibility",
+      "project": "asset-hunter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "1db5cbc55bc868c297eb5e7b202f20bf8bc10ab1c88d6778e4c56539d3db35e1",
+      "original": "/campaign/20261114-commissions/upg-002.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-003",
+      "artwork": "bubbles-one-more-shot",
+      "version": "upg-003-v1",
+      "parent": "/campaign/20261025-v2/bubbles-next-shot-original.png",
+      "title": "Bubbles · Make the next shot",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "50745db814d846aa69207c21e1f1955d717f81a49849ff14bdfa50873f28c78e",
+      "original": "/campaign/20261114-commissions/upg-003.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-004",
+      "artwork": "design-study-fighter",
+      "version": "upg-004-v1",
+      "parent": "/campaign/20261113-design-studies/fighter.png",
+      "title": "Before the hit lands",
+      "project": "fighter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "0647246d4478e9bdc73c5b787dd55f6e5cf21b8c8048a16a6b9be5ca837ce2eb",
+      "original": "/campaign/20261114-commissions/upg-004.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-005",
+      "artwork": "design-study-foilbury",
+      "version": "upg-005-v1",
+      "parent": "/campaign/20261113-design-studies/foilbury.png",
+      "title": "The cabinet and the spotlight",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "c9162704b5de47e4069e3536c1d089e4b8092aee298870c9a34a84c160e8d628",
+      "original": "/campaign/20261114-commissions/upg-005.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-006",
+      "artwork": "design-study-liferaft",
+      "version": "upg-006-v1",
+      "parent": "/campaign/20261113-design-studies/liferaft.png",
+      "title": "Recover the attachment",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "d0b00247a023339bb4bf8ecc0d78f4e27233f6d4e87aa4f0b1c1c65f1d68c352",
+      "original": "/campaign/20261114-commissions/upg-006.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-007",
+      "artwork": "design-study-loftwahfm",
+      "version": "upg-007-v1",
+      "parent": "/campaign/20261113-design-studies/loftwahfm.png",
+      "title": "Smoked acrylic, warm dial",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "125c58e82f3c741a9bcf0db107aabf13bc03bb62e7021ebc52010911e15911e9",
+      "original": "/campaign/20261114-commissions/upg-007.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-008",
+      "artwork": "field-notes-max",
+      "version": "upg-008-v1",
+      "parent": "/campaign/20261112-field-notes/max-feed.jpg",
+      "title": "Where's MAX?",
+      "project": "max",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "c9aef58333418a2da3d62468f29a0b343cc94c8f7a0b73a4469d689c7599abec",
+      "original": "/campaign/20261114-commissions/upg-008.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-009",
+      "artwork": "pirates-original-voyage",
+      "version": "upg-009-v1",
+      "parent": "/campaign/20261025-v2/pirates-original-voyage-original.jpg",
+      "title": "Pirates · An original prelaunch concept",
+      "project": "pirates",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 864,
+      "alpha": false,
+      "sha256": "ca5ee4c59729605b65a6aa0faba2cbd61089d48cf9a4b16f71bf9a34dc7de15a",
+      "original": "/campaign/20261114-commissions/upg-009.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-010",
+      "artwork": "design-study-protocol-11",
+      "version": "upg-010-v1",
+      "parent": "/campaign/20261113-design-studies/protocol-11.png",
+      "title": "Pass the phone",
+      "project": "protocol-11",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "a7657b719e025b92d7b94444f5f7400bf301ac9ec86d2ff23ddaaa76df8f1200",
+      "original": "/campaign/20261114-commissions/upg-010.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-011",
+      "artwork": "design-study-shoalshot",
+      "version": "upg-011-v1",
+      "parent": "/campaign/20261113-design-studies/shoalshot.png",
+      "title": "Three depths of reef",
+      "project": "shoalshot",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "54166acb54458e05b3574564de9ef1e35b31e41e896b15a0a7461b1c89dd893e",
+      "original": "/campaign/20261114-commissions/upg-011.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-012",
+      "artwork": "plans-with-you-evening-returned",
+      "version": "upg-012-v1",
+      "parent": "/campaign/20261025/plans-with-you-evening-returned-original.png",
+      "title": "Plans With You · Evening returned",
+      "project": "social-club",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "c37a52ed958a196eaad2597ebf138aceb1015896064c561184f72fc436ac450f",
+      "original": "/campaign/20261114-commissions/upg-012.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-013",
+      "artwork": "design-study-hyperrom",
+      "version": "upg-013-v1",
+      "parent": "/campaign/20261113-design-studies/hyperrom.png",
+      "title": "HyperROM preset workflow",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "9c838904147d3220c5e01803e7cb97146dc025689797e7eb1988cd441d16049c",
+      "original": "/campaign/20261114-commissions/upg-013.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-014",
+      "artwork": "design-study-app-composer",
+      "version": "upg-014-v1",
+      "parent": "/campaign/20261113-design-studies/app-composer.png",
+      "title": "One cover, four frames",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "1fafc0bf889d553d288412359672a4fd0dbc1c9f5a984e26167861c5097a8e71",
+      "original": "/campaign/20261114-commissions/upg-014.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-015",
+      "artwork": "design-study-bubbles",
+      "version": "upg-015-v1",
+      "parent": "/campaign/20261113-design-studies/bubbles.png",
+      "title": "The bank shot on paper",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "7ee0d28a828d6a903e47dba6fcabe55ad94563e285e0b4cf4a2195173c89b598",
+      "original": "/campaign/20261114-commissions/upg-015.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-016",
+      "artwork": "direct-social-youtube",
+      "version": "upg-016-v1",
+      "parent": "/campaign/20261113-direct-social/youtube.jpg",
+      "title": "Viking vs Reaper",
+      "project": "fighter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 864,
+      "alpha": false,
+      "sha256": "641530307e43cac4904006f8b8c389237217cb4af0789037cfbccc213e612825",
+      "original": "/campaign/20261114-commissions/upg-016.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-017",
+      "artwork": "direct-social-facebook",
+      "version": "upg-017-v1",
+      "parent": "/campaign/20261113-direct-social/facebook.jpg",
+      "title": "Moss at the cabinet door",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "80e0e3bb70f0260f0630d875cb96f76bc998a7ebce1803ba37fdf357905c3f2d",
+      "original": "/campaign/20261114-commissions/upg-017.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-018",
+      "artwork": "field-notes-liferaft",
+      "version": "upg-018-v1",
+      "parent": "/campaign/20261112-field-notes/liferaft-feed.jpg",
+      "title": "An email worth keeping",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "795a23fd46230015f71bf9c3a3639b7670cab421d2d8a34fbaab81132046e9bf",
+      "original": "/campaign/20261114-commissions/upg-018.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-019",
+      "artwork": "direct-social-x",
+      "version": "upg-019-v1",
+      "parent": "/campaign/20261113-direct-social/x.jpg",
+      "title": "Night Signal header",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 512,
+      "alpha": false,
+      "sha256": "230cb4bac644dabdb391f078eb479ce59d353227559ab32bcbf1eaa16ff5c1a6",
+      "original": "/campaign/20261114-commissions/upg-019.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-020",
+      "artwork": "making-of-max",
+      "version": "upg-020-v1",
+      "parent": "/campaign/20261113-making-of/max-feed.jpg",
+      "title": "Sketching the locator",
+      "project": "max",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "1903783366b8009221fc6f58dcc2a42067cdcb180152e023bc54570be6f3160a",
+      "original": "/campaign/20261114-commissions/upg-020.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-021",
+      "artwork": "field-notes-protocol-11",
+      "version": "upg-021-v1",
+      "parent": "/campaign/20261112-field-notes/protocol-11-feed.jpg",
+      "title": "What fits your hand?",
+      "project": "protocol-11",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "82436991714991d74674b1efa79b2be05690c04b9beaa97150139ed186d209d1",
+      "original": "/campaign/20261114-commissions/upg-021.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-022",
+      "artwork": "direct-social-instagram",
+      "version": "upg-022-v1",
+      "parent": "/campaign/20261113-direct-social/instagram.jpg",
+      "title": "Dive the Tide Pool",
+      "project": "shoalshot",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "06083d34289c2a4fc28e05ffeb8fd67c7ba3dd2684cf6de3213b78953f583cf4",
+      "original": "/campaign/20261114-commissions/upg-022.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-023",
+      "artwork": "design-study-woodhouse",
+      "version": "upg-023-v1",
+      "parent": "/campaign/20261113-design-studies/woodhouse.png",
+      "title": "One strand to the loom",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "d87c6bc9e820d27149be6ed2764037054292006b6c179c9430802995df456296",
+      "original": "/campaign/20261114-commissions/upg-023.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-024",
+      "artwork": "direct-social-linkedin",
+      "version": "upg-024-v1",
+      "parent": "/campaign/20261113-direct-social/linkedin.jpg",
+      "title": "Links and a Guestbook",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "57b6e4d33b51b66f4b59ed014b142b8d7a77c5afa7f606dec23f9b52e87ca82b",
+      "original": "/campaign/20261114-commissions/upg-024.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-025",
+      "artwork": "direct-social-discord-bubbles",
+      "version": "upg-025-v1",
+      "parent": "/campaign/20261113-direct-social/discord-bubbles.jpg",
+      "title": "Fizz after closing",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 864,
+      "alpha": false,
+      "sha256": "115823e5eeb806395d303176ec069f96467f2c6a7db73c457699dfe5fb6ee339",
+      "original": "/campaign/20261114-commissions/upg-025.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-026",
+      "artwork": "field-notes-fighter",
+      "version": "upg-026-v1",
+      "parent": "/campaign/20261112-field-notes/fighter-feed.jpg",
+      "title": "Across the ring",
+      "project": "fighter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "452d58952f3c2732498f407a123db4d6499570c5984f797116f2f8e2ee3f10ac",
+      "original": "/campaign/20261114-commissions/upg-026.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-027",
+      "artwork": "direct-social-instagram-moss",
+      "version": "upg-027-v1",
+      "parent": "/campaign/20261113-direct-social/instagram-moss.jpg",
+      "title": "Moss fixes the lamp",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "c74ca629c07dd3bfe3d2b9a92da6872120d8933b4f66728e5eabb91888a5a3dc",
+      "original": "/campaign/20261114-commissions/upg-027.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-028",
+      "artwork": "making-of-liferaft",
+      "version": "upg-028-v1",
+      "parent": "/campaign/20261113-making-of/liferaft-square.jpg",
+      "title": "From archive to attachment",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "bedebe027bbe28a633500b1469788ec92668bc9ddbae5fe544c350c138e99ad3",
+      "original": "/campaign/20261114-commissions/upg-028.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-029",
+      "artwork": "field-notes-loftwahfm",
+      "version": "upg-029-v1",
+      "parent": "/campaign/20261112-field-notes/loftwahfm-feed.jpg",
+      "title": "Night Signal",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "885100234465a32fce2989c412f9688ec9225f94138cceb1ba2f489a2a2a369d",
+      "original": "/campaign/20261114-commissions/upg-029.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-030",
+      "artwork": "max-a-little-help",
+      "version": "upg-030-v1",
+      "parent": "/campaign/20261025-v2/max-try-the-simulator-original.png",
+      "title": "MAX · Try the simulator",
+      "project": "max",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "ce25831137a4e1219d8d97a2309633155761d11aa43c2cc56da6e8fff5fa8deb",
+      "original": "/campaign/20261114-commissions/upg-030.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-031",
+      "artwork": "making-of-protocol-11",
+      "version": "upg-031-v1",
+      "parent": "/campaign/20261113-making-of/protocol-11-story.jpg",
+      "title": "From plan to table",
+      "project": "protocol-11",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 864,
+      "height": 1536,
+      "alpha": false,
+      "sha256": "9ef0605040c7c2e2597f79a76623f115a78b08777f13bd8b9456f40cb5210060",
+      "original": "/campaign/20261114-commissions/upg-031.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-032",
+      "artwork": "field-notes-shoalshot",
+      "version": "upg-032-v1",
+      "parent": "/campaign/20261112-field-notes/shoalshot-feed.jpg",
+      "title": "Fish of the Tide Pool",
+      "project": "shoalshot",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "38572dc502a850ea710b55ec71d7af5db8644069cd575ae5c66571a5b09a4448",
+      "original": "/campaign/20261114-commissions/upg-032.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-033",
+      "artwork": "direct-social-discord",
+      "version": "upg-033-v1",
+      "parent": "/campaign/20261113-direct-social/discord.jpg",
+      "title": "The workshop after hours",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 864,
+      "alpha": false,
+      "sha256": "9f416ef3af2200d8e22ce9e145ab59802e5d5c1608e9faabb2f32b8c57522d39",
+      "original": "/campaign/20261114-commissions/upg-033.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-034",
+      "artwork": "field-notes-app-composer",
+      "version": "upg-034-v1",
+      "parent": "/campaign/20261112-field-notes/app-composer-feed.jpg",
+      "title": "A page of your own",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "6c37383b9a111d275c51900d3508c10b85680940f6f6c31fff3611e8ca8b9acc",
+      "original": "/campaign/20261114-commissions/upg-034.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-035",
+      "artwork": "direct-social-tiktok",
+      "version": "upg-035-v1",
+      "parent": "/campaign/20261113-direct-social/tiktok.jpg",
+      "title": "Bank the Shot",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 864,
+      "height": 1536,
+      "alpha": false,
+      "sha256": "9cbc67553a0478f8b36a792bbe252e4d4d1466e813fa8241cc1e16868780435d",
+      "original": "/campaign/20261114-commissions/upg-035.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-036",
+      "artwork": "fighter-first-fight",
+      "version": "upg-036-v1",
+      "parent": "/campaign/20261025/fighter-first-fight-original.png",
+      "title": "Fighter · Your first fight",
+      "project": "fighter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "aeb79e8e14af961b302bfdd84454a15e7f1af701c7020efb0dfeaaa80bfa8d2e",
+      "original": "/campaign/20261114-commissions/upg-036.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-037",
+      "artwork": "field-notes-foilbury",
+      "version": "upg-037-v1",
+      "parent": "/campaign/20261112-field-notes/foilbury-feed.jpg",
+      "title": "Moss, front and back",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "9b47c07d35fdcc0087709293646098b365b3c29f6f3a83ea09c82b23a77d0eea",
+      "original": "/campaign/20261114-commissions/upg-037.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-038",
+      "artwork": "november-liferaft",
+      "version": "upg-038-v1",
+      "parent": "/campaign/20261112/liferaft-feed.jpg",
+      "title": "Find the email you kept",
+      "project": "liferaft",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "ddfd38058592d7450592e37c441c8ac009e2e4d63a6a9651e2ee5dea1e6e5f45",
+      "original": "/campaign/20261114-commissions/upg-038.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-039",
+      "artwork": "fm-find-your-frequency",
+      "version": "upg-039-v1",
+      "parent": "/campaign/20261025/fm-find-your-frequency-original.png",
+      "title": "LoftwahFM · Find your frequency",
+      "project": "loftwahfm",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "34f58bcc77865192927db2ed00232a373879cfc15a61c46b1256e2f380bcf38d",
+      "original": "/campaign/20261114-commissions/upg-039.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-040",
+      "artwork": "poster-study-max",
+      "version": "upg-040-v1",
+      "parent": "/campaign/20261113-poster-studies/max.jpg",
+      "title": "Ping!",
+      "project": "max",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "ce4235c3f47855f5f19820205b62cd82af7d29bd515fe33f9901d74f4ecc4040",
+      "original": "/campaign/20261114-commissions/upg-040.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-041",
+      "artwork": "poster-study-protocol-11",
+      "version": "upg-041-v1",
+      "parent": "/campaign/20261113-poster-studies/protocol-11.jpg",
+      "title": "Your Draw",
+      "project": "protocol-11",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "9bcf52d295a4b49c169e81d81573a78b214f4a0df2b3e79d7b5c6d5020886cde",
+      "original": "/campaign/20261114-commissions/upg-041.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-042",
+      "artwork": "making-of-shoalshot",
+      "version": "upg-042-v1",
+      "parent": "/campaign/20261113-making-of/shoalshot-feed.jpg",
+      "title": "Glimmerfin in graphite",
+      "project": "shoalshot",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "b962cc3414dc7f677bb0b7234c348c44ca57ca98a7d7063e32acbdadaaf1345a",
+      "original": "/campaign/20261114-commissions/upg-042.png",
+      "focus": "Character and gesture"
+    },
+    {
+      "slot": "UPG-043",
+      "artwork": "field-notes-woodhouse",
+      "version": "upg-043-v1",
+      "parent": "/campaign/20261112-field-notes/woodhouse-feed.jpg",
+      "title": "What's on the bench",
+      "project": "woodhouse",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "481fc8986a753974ed159e2c81a9229bdf341cd71114c7b38ef52fcc2b666d93",
+      "original": "/campaign/20261114-commissions/upg-043.png",
+      "focus": "Materials and lighting"
+    },
+    {
+      "slot": "UPG-044",
+      "artwork": "making-of-app-composer",
+      "version": "upg-044-v1",
+      "parent": "/campaign/20261113-making-of/app-composer-wide.jpg",
+      "title": "Profile, links, guestbook",
+      "project": "app-composer",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1536,
+      "height": 864,
+      "alpha": false,
+      "sha256": "1cc0509d7f8529ed91d0c337532540d8c7ef6df49097a629b8dfa90edfda21d6",
+      "original": "/campaign/20261114-commissions/upg-044.png",
+      "focus": "Camera and depth"
+    },
+    {
+      "slot": "UPG-045",
+      "artwork": "field-notes-bubbles",
+      "version": "upg-045-v1",
+      "parent": "/campaign/20261112-field-notes/bubbles-feed.jpg",
+      "title": "First Spark",
+      "project": "bubbles",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "5ef8021ad18d5d6f2bcafc34cacc8dbd37e268ccc536092a3716c5130acb5af0",
+      "original": "/campaign/20261114-commissions/upg-045.png",
+      "focus": "Editorial layout"
+    },
+    {
+      "slot": "UPG-046",
+      "artwork": "making-of-fighter",
+      "version": "upg-046-v1",
+      "parent": "/campaign/20261113-making-of/fighter-feed.jpg",
+      "title": "Blocking the face-off",
+      "project": "fighter",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1280,
+      "alpha": false,
+      "sha256": "ebca6874ccd58c1d4711cbb2c21fafc74ca78d3b217bbf7a1ca825d4f199a744",
+      "original": "/campaign/20261114-commissions/upg-046.png",
+      "focus": "Composition"
+    },
+    {
+      "slot": "UPG-047",
+      "artwork": "making-of-foilbury",
+      "version": "upg-047-v1",
+      "parent": "/campaign/20261113-making-of/foilbury-square.jpg",
+      "title": "The Moss card frame",
+      "project": "foilbury",
+      "model": "gpt-image-2.6-sunburst",
+      "width": 1024,
+      "height": 1024,
+      "alpha": false,
+      "sha256": "e5a26b157fef656266370491e39b30130805e108e7b48d3a8d079cf939aaa121",
+      "original": "/campaign/20261114-commissions/upg-047.png",
+      "focus": "Character and gesture"
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 ---
+import { artworkSorts, orderArtwork } from "../data/artwork-order";
 import ShowcaseGallery from "./ShowcaseGallery.astro";
 import { buildNotesKit } from "../data/showcase-build-notes";
 import { wild25Kit } from "../data/showcase-wild-25";
 import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
 import { shareNavigation } from "../data/share-browser";
+import { commissionedKits } from "../data/showcase-commissioned";
 import type { CampaignItem } from "../data/showcase-campaign";
 
 const collectionPacks = {
@@ -14,6 +16,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["commissioned", "New commissions"],
   ["game-rules", "How to play"],
   ["architecture", "Architecture"],
   ["field-guide", "Field Guide"],
@@ -43,6 +46,7 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "commissioned" ||
   category === "game-rules" ||
   category === "architecture" ||
   category === "field-guide" ||
@@ -70,12 +74,8 @@ const tags = [
   ...new Set(works.flatMap(({ archived, tags }) => (archived ? [] : (tags ?? []))))
 ].sort();
 const tag = tags.find((label) => label === params.get("artTag")) ?? "";
-const sortOptions = [
-  ["newest", "Newest"],
-  ["oldest", "Oldest"],
-  ["title", "Title A–Z"]
-] as const;
-const sort = sortOptions.find(([value]) => value === params.get("artSort"))?.[0] ?? "newest";
+const sort = artworkSorts.find(([value]) => value === params.get("artSort"))?.[0] ?? "newest";
+const shuffleSeed = (params.get("artSeed") ?? "").match(/^[a-z0-9]{1,24}$/i)?.[0] ?? "woodhouse";
 const showShelf = !category && !project && !placement && !tag && sort === "newest";
 const sketchPreview = sketches.slice(0, 4);
 const shelfIds = new Set(sketchPreview.map(({ id }) => id));
@@ -85,39 +85,45 @@ const art =
     : showShelf
       ? works.filter(({ id }) => !shelfIds.has(id))
       : works;
-const filtered = art.filter(
-  (item) =>
-    (!project || item.project === project) &&
-    (!tag || (!item.archived && item.tags?.includes(tag))) &&
-    (!placement || (!item.archived && item.formats?.some(({ label }) => label === placement))) &&
-    (!category ||
-      (category === "earlier"
-        ? !item.use || item.archived
-        : series
-          ? !item.archived && item.series === series
-          : !item.archived && (category === "sketch" || item.use === category)))
+const filtered = orderArtwork(
+  art.filter(
+    (item) =>
+      (!project || item.project === project) &&
+      (!tag || (!item.archived && item.tags?.includes(tag))) &&
+      (!placement || (!item.archived && item.formats?.some(({ label }) => label === placement))) &&
+      (!category ||
+        (category === "earlier"
+          ? !item.use || item.archived
+          : series
+            ? !item.archived && item.series === series
+            : !item.archived && (category === "sketch" || item.use === category)))
+  ),
+  sort,
+  shuffleSeed
 );
-if (sort === "oldest") {
-  filtered.sort((a, b) => (a.addedAt ?? a.reviewedAt).localeCompare(b.addedAt ?? b.reviewedAt));
-} else if (sort === "title") {
-  filtered.sort((a, b) => a.title.localeCompare(b.title, "en-AU", { sensitivity: "base" }));
-}
 const size = 24;
 const requested = Number(params.get("artPage") ?? 1);
 const pages = Math.max(1, Math.ceil(filtered.length / size));
 const page = Number.isSafeInteger(requested) ? Math.max(1, Math.min(requested, pages)) : 1;
 const current = filtered.slice((page - 1) * size, page * size);
 const drawingShelf = showShelf && page === 1;
-const path = (number: number, nextCategory: string = category) => {
+const path = (
+  number: number,
+  nextCategory: string = category,
+  nextSort = sort,
+  nextSeed = shuffleSeed
+) => {
   const query = new URLSearchParams();
   if (nextCategory) query.set("artType", nextCategory);
   if (project) query.set("artProject", project);
   if (placement) query.set("artFormat", placement);
   if (tag) query.set("artTag", tag);
-  if (sort !== "newest") query.set("artSort", sort);
+  if (nextSort !== "newest") query.set("artSort", nextSort);
+  if (nextSort === "shuffle") query.set("artSeed", nextSeed);
   if (number > 1) query.set("artPage", String(number));
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
 };
+const shuffle = path(1, category, "shuffle", crypto.randomUUID().replaceAll("-", "").slice(0, 16));
 const next = page < pages ? path(page + 1) : "";
 const previous = page > 1 ? path(page - 1) : "";
 const seriesPack =
@@ -130,7 +136,10 @@ const projectPack =
   works.some((item) => item.project === project && item.series === series)
     ? buildNotesKit(project)
     : project
-      ? works.find((item) => item.project === project && item.socialPack)?.socialPack
+      ? works.find(
+          (item) =>
+            item.project === project && (!series || item.series === series) && item.socialPack
+        )?.socialPack
       : undefined;
 const buildProjects =
   series === "build-notes" && !project
@@ -148,6 +157,33 @@ const artworkPages = Object.fromEntries(
     {category && <input type="hidden" name="artType" value={category} />}
     {params.has("qa") && <input type="hidden" name="qa" value={params.get("qa")} />}
     {params.get("analytics") === "off" && <input type="hidden" name="analytics" value="off" />}
+    {sort === "shuffle" && <input type="hidden" name="artSeed" value={shuffleSeed} />}
+    <label class="art-sort">
+      <span>Sort by</span>
+      <select name="artSort">
+        {artworkSorts.map(([value, label]) => (
+          <option value={value} selected={value === sort}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
+    <a class="shuffle-link" href={`${shuffle}#artwork`}>
+      <svg
+        aria-hidden="true"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 6h3c4 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c1.7 0 3.2-2.3 4.5-4.8m3-4.4C15 7 16.3 6 18 6h3m-4-4 4 4-4 4" />
+      </svg>
+      {sort === "shuffle" ? "Reshuffle" : "Shuffle"}
+    </a>
     <label>
       <span>Project</span>
       <select name="artProject">
@@ -183,16 +219,6 @@ const artworkPages = Object.fromEntries(
         </select>
       </label>
     )}
-    <label>
-      <span>Sort by</span>
-      <select name="artSort">
-        {sortOptions.map(([value, label]) => (
-          <option value={value} selected={value === sort}>
-            {label}
-          </option>
-        ))}
-      </select>
-    </label>
     <button type="submit">Apply</button>
   </form>
   <nav class="art-categories" aria-label="Artwork categories">
@@ -229,6 +255,23 @@ const artworkPages = Object.fromEntries(
           </li>
         ))}
       </ul>
+    </details>
+  )}
+  {series === "commissioned" && !project && commissionedKits.length > 0 && (
+    <details class="art-previous">
+      <summary>Download project kits</summary>
+      <ul class="build-kit-links">
+        {commissionedKits.map(({ label, href }) => (
+          <li>
+            <a href={href} download>
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/campaign/20261114-commissions/manifest.json" download>
+        Download collection manifest
+      </a>
     </details>
   )}
   {seriesPack && (
@@ -407,6 +450,16 @@ const artworkPages = Object.fromEntries(
     background: var(--ink);
     padding: 0.45rem 0.55rem;
     font: inherit;
+  }
+  .shuffle-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding-inline: 0.65rem;
+    color: var(--acid);
+    text-underline-offset: 0.22em;
   }
   button {
     cursor: pointer;
