@@ -62,6 +62,44 @@ if (scope) {
       </select>
       <button>Apply</button>
     </form>
+    {(!scope || scope === "woodhouse") && (
+      <section class="workshop-film" aria-labelledby="workshop-film-title">
+        <div>
+          <p class="workshop-film__eyebrow">Woodhouse · Studio motion study</p>
+          <h2 id="workshop-film-title">The miniature workshop in motion</h2>
+          <p>
+            A fictional miniature world of games, music and a reef, animated in Media Studio from
+            Woodhouse’s Codex ImageGen illustration. This is generated artwork, not a physical
+            workshop.
+          </p>
+          <p>Silent video · 5 seconds</p>
+          <p>
+            <a href="https://media.loftwah.com/p/Gs_0aKIkiriOHyLt">Studio film and provenance</a> ·{" "}
+            <a href="https://woodhouse.loftwah.com/api/v1/assets/original-woodhouse-ai-a">
+              Original artwork
+            </a>
+          </p>
+        </div>
+        <video
+          controls
+          playsinline
+          preload="none"
+          width="768"
+          height="960"
+          poster="/campaign/20261115-workshop-motion/workshop.webp"
+          aria-label="The miniature workshop, a silent animated illustration"
+        >
+          <source src="/campaign/20261115-workshop-motion/workshop.mp4" type="video/mp4" />
+          <track
+            kind="captions"
+            src="/campaign/20261115-workshop-motion/workshop.en.vtt"
+            srclang="en"
+            label="English description"
+          />
+          <a href="/campaign/20261115-workshop-motion/workshop.mp4">Download the video</a>
+        </video>
+      </section>
+    )}
     {currentCards.length > 0 && (
       <section id="current-card-art" aria-labelledby="current-card-art-title">
         <h2 id="current-card-art-title">Current Foilbury cabinet art</h2>
@@ -85,6 +123,35 @@ if (scope) {
 </ShareLayout>
 
 <style>
+  .workshop-film {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 15rem);
+    gap: clamp(1.25rem, 4vw, 3rem);
+    align-items: center;
+    margin-block: 2rem;
+    padding-block: 1.5rem;
+    border-block: 1px solid var(--line);
+  }
+  .workshop-film p {
+    max-width: 54ch;
+  }
+  .workshop-film__eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .workshop-film video {
+    display: block;
+    width: 100%;
+    max-width: 15rem;
+    height: auto;
+    background: #111;
+  }
+  @media (max-width: 640px) {
+    .workshop-film {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
   .original-project {
     display: flex;
     flex-wrap: wrap;
