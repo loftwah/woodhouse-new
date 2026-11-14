@@ -197,6 +197,57 @@ export const campaignItems: CampaignItem[] = [
     ),
     "composer-paperwork-close"
   ),
+  // App Composer publishes this Media Studio artwork itself. The card, portrait,
+  // square and 9:16 poster are copied byte for byte; the motion plays on the
+  // product's build article and is recorded in the source notes.
+  {
+    id: "composer-media-studio",
+    project: "app-composer",
+    use: "native",
+    title: "Build your own media studio",
+    alt: "App Composer's Media Studio share card: a paper-cut studio desk holding a collapsing orange waveform, film strip, lamp and camera, beside the exact type Build your own media studio.",
+    caption:
+      "Build your own media studio. Own the source, projects and releases, and use vendor models for inference. App Composer's published card and its 9:16 motion are generated artwork with the exact type and mark, not product recordings.\nhttps://composer.loftwah.com/media-studio",
+    image: "/campaign/20261114-composer-studio/composer-media-studio-preview.jpg",
+    thumbnail: "/campaign/20261114-composer-studio/composer-media-studio-thumb.jpg",
+    original: "/campaign/20261114-composer-studio/composer-media-studio.png",
+    width: 1200,
+    height: 630,
+    reviewedAt: "2026-11-14",
+    addedAt: "2026-11-14T03:09:23Z",
+    credit:
+      "App Composer · Media Studio launch artwork: Workers AI Lucid Origin still, FLUX.1 Fill masked refinement and Hailuo 2.3 motion; exact type and mark finished deterministically · 14 November 2026",
+    kind: "published product artwork",
+    href: "https://composer.loftwah.com/media-studio",
+    action: "Try",
+    source: "https://woodhouse.loftwah.com/campaign/20261114-composer-studio/provenance.txt",
+    formats: [
+      {
+        label: "Link preview",
+        image: "/campaign/20261114-composer-studio/composer-media-studio.png",
+        width: 1200,
+        height: 630
+      },
+      {
+        label: "Portrait feed",
+        image: "/campaign/20261114-composer-studio/composer-media-studio-portrait.png",
+        width: 1080,
+        height: 1350
+      },
+      {
+        label: "Square feed",
+        image: "/campaign/20261114-composer-studio/composer-media-studio-square.png",
+        width: 1080,
+        height: 1080
+      },
+      {
+        label: "Story still",
+        image: "/campaign/20261114-composer-studio/composer-media-studio-story.png",
+        width: 720,
+        height: 1280
+      }
+    ]
+  },
   item(
     "protocol-your-next-move",
     "protocol-11",
