@@ -39,10 +39,9 @@ const categories = [
 ] as const;
 type Props = {
   works: CampaignItem[];
-  sketches: CampaignItem[];
   projects: { slug: string; name: string }[];
 };
-const { works, sketches, projects } = Astro.props;
+const { works, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
@@ -76,17 +75,8 @@ const tags = [
 const tag = tags.find((label) => label === params.get("artTag")) ?? "";
 const sort = artworkSorts.find(([value]) => value === params.get("artSort"))?.[0] ?? "newest";
 const shuffleSeed = (params.get("artSeed") ?? "").match(/^[a-z0-9]{1,24}$/i)?.[0] ?? "woodhouse";
-const showShelf = !category && !project && !placement && !tag && sort === "newest";
-const sketchPreview = sketches.slice(0, 4);
-const shelfIds = new Set(sketchPreview.map(({ id }) => id));
-const art =
-  category === "sketch"
-    ? [...sketches, ...works.filter(({ use }) => use === "sketch")]
-    : showShelf
-      ? works.filter(({ id }) => !shelfIds.has(id))
-      : works;
 const filtered = orderArtwork(
-  art.filter(
+  works.filter(
     (item) =>
       (!project || item.project === project) &&
       (!tag || (!item.archived && item.tags?.includes(tag))) &&
@@ -96,7 +86,7 @@ const filtered = orderArtwork(
           ? !item.use || item.archived
           : series
             ? !item.archived && item.series === series
-            : !item.archived && (category === "sketch" || item.use === category)))
+            : !item.archived && item.use === category))
   ),
   sort,
   shuffleSeed
@@ -106,7 +96,6 @@ const requested = Number(params.get("artPage") ?? 1);
 const pages = Math.max(1, Math.ceil(filtered.length / size));
 const page = Number.isSafeInteger(requested) ? Math.max(1, Math.min(requested, pages)) : 1;
 const current = filtered.slice((page - 1) * size, page * size);
-const drawingShelf = showShelf && page === 1;
 const path = (
   number: number,
   nextCategory: string = category,
@@ -303,41 +292,14 @@ const artworkPages = Object.fromEntries(
   )}
   <div data-art-stream>
     <div data-art-batch data-next={next} data-progress={`Page ${page} of ${pages}`}>
-      {drawingShelf && sketchPreview.length > 0 ? (
-        <>
-          <ShowcaseGallery
-            items={current.slice(0, 8)}
-            compact
-            staggered
-            showPlacement
-            placement={placement}
-          />
-          <section class="art-sketches" aria-labelledby="art-sketch-title">
-            <header>
-              <h2 id="art-sketch-title">Sketches &amp; drawings</h2>
-              <a href={path(1, "sketch")}>Browse all sketches</a>
-            </header>
-            <ShowcaseGallery items={sketchPreview} compact staggered eager={false} />
-          </section>
-          <ShowcaseGallery
-            items={current.slice(8)}
-            compact
-            staggered
-            eager={false}
-            showPlacement
-            placement={placement}
-          />
-        </>
-      ) : (
-        <ShowcaseGallery
-          items={current}
-          compact
-          staggered
-          eager={page === 1}
-          showPlacement
-          placement={placement}
-        />
-      )}
+      <ShowcaseGallery
+        items={current}
+        compact
+        staggered
+        eager={page === 1}
+        showPlacement
+        placement={placement}
+      />
     </div>
   </div>
   <p class="art-pagination">
@@ -505,21 +467,6 @@ const artworkPages = Object.fromEntries(
   }
   [data-art-batch] + [data-art-batch] {
     margin-top: 1rem;
-  }
-  .art-sketches {
-    margin-block: 2.5rem;
-    padding-block-start: 1rem;
-    border-top: 1px solid var(--line);
-  }
-  .art-sketches header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.35rem 1rem;
-    margin-block-end: 1rem;
-  }
-  .art-sketches h2 {
-    margin: 0;
   }
   .build-kit-links {
     display: flex;

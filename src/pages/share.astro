@@ -348,7 +348,6 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
         </header>
         <ShareArtworkWall
           works={artwork}
-          sketches={originalArtwork.filter(({ drawing }) => drawing).map(({ item }) => item)}
           projects={[
             ...projects.filter(({ slug }) => artwork.some((item) => item.project === slug)),
             ...(artwork.some(({ project }) => project === "woodhouse")

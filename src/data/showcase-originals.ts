@@ -417,6 +417,7 @@ export function publicOriginalArtwork(publicProjects: ReadonlySet<string>) {
           id: `original-${slug}`,
           project,
           title,
+          ...(drawing ? { use: "sketch" as const } : {}),
           alt,
           caption: `${title}. ${drawing ? "A new process drawing for Making the Work." : "Original campaign illustration."}\n${destination.href}`,
           image: `${base}/${slug}-preview.jpg`,

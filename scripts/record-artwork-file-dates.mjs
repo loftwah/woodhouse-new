@@ -23,7 +23,9 @@ writeFileSync(
   "src/data/artwork-file-dates.json",
   JSON.stringify(
     Object.fromEntries(
-      [...files].filter(([path]) => paths.has(path)).sort(([a], [b]) => a.localeCompare(b))
+      [...files]
+        .filter(([path]) => paths.has(path) || path.startsWith("/campaign/20261113-original-art/"))
+        .sort(([a], [b]) => a.localeCompare(b))
     ),
     null,
     2
