@@ -69,3 +69,37 @@ test("scheduled maintenance is disabled for publication and forwarded for editor
   await scheduled("event", env, "context");
   assert.deepEqual(calls, [["event", env, "context"]]);
 });
+
+test("only the exact public MCP route admits POST through the publication boundary", () => {
+  assert.equal(
+    publicationRequestAllowed(new Request(origin + "/api/v1/assets-mcp", { method: "POST" })),
+    true
+  );
+  for (const path of [
+    "/api/v1/assets-mcp/",
+    "/api/v1/assets-mcp/../_emdash/api/content",
+    "/api/v1/assets",
+    "/_emdash/api/mcp",
+    "/api/v1/assets-mcp?_preview=token"
+  ])
+    assert.equal(
+      publicationRequestAllowed(new Request(origin + path, { method: "POST" })),
+      false,
+      path
+    );
+  for (const method of ["PUT", "PATCH", "DELETE", "OPTIONS"])
+    assert.equal(
+      publicationRequestAllowed(new Request(origin + "/api/v1/assets-mcp", { method })),
+      false,
+      method
+    );
+  assert.equal(
+    publicationRequestAllowed(
+      new Request(origin + "/api/v1/assets-mcp", {
+        method: "POST",
+        headers: { cookie: "emdash-edit-mode=true" }
+      })
+    ),
+    false
+  );
+});
