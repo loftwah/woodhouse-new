@@ -47,16 +47,20 @@ async function optionalFile(file) {
  * Findings name the class and the relative path only; a matched value is never
  * printed.
  */
-export async function checkBuildPrivacy({ root = process.cwd() } = {}) {
+export async function checkBuildPrivacy({ root = process.cwd(), envFile } = {}) {
   const buildRoot = path.join(root, "dist");
   const findings = [];
-  const envSource = await optionalFile(path.join(root, ".env"));
+  const envPath = envFile ?? path.join(root, ".env");
+  const envSource = await optionalFile(envPath);
+  if (envFile && envSource === null)
+    throw new Error("The configured privacy environment file is unavailable.");
   const privateValues = envSource ? privateEnvValues(parseEnvFile(envSource)) : [];
+  const configuredValuesIncluded = privateValues.length > 0;
 
   const files = await filesUnder(buildRoot);
   if (!files.length) {
     findings.push({ label: "no build artefact under dist/", file: buildRoot });
-    return { ok: false, findings, files: 0 };
+    return { ok: false, findings, files: 0, configuredValuesIncluded };
   }
 
   for (const file of files) {
@@ -89,18 +93,34 @@ export async function checkBuildPrivacy({ root = process.cwd() } = {}) {
     }
     for (const conversation of seed?.content?.conversations ?? []) {
       if (conversation.data?.public_safe !== true || conversation.data?.source_reviewed !== true)
-        findings.push({ label: "unreviewed conversation source in seed", file: seedPath });
+        findings.push({
+          label: "unreviewed conversation source in seed",
+          file: seedPath
+        });
     }
   }
 
-  return { ok: findings.length === 0, findings, files: files.length };
+  return {
+    ok: findings.length === 0,
+    findings,
+    files: files.length,
+    configuredValuesIncluded
+  };
 }
 
 const invokedDirectly =
   process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (invokedDirectly) {
   const root = process.cwd();
-  const { ok, findings, files } = await checkBuildPrivacy({ root });
+  const { ok, findings, files, configuredValuesIncluded } = await checkBuildPrivacy({
+    root,
+    envFile: process.env.WOODHOUSE_PRIVACY_ENV_FILE || undefined
+  });
+  console.log(
+    configuredValuesIncluded
+      ? "Privacy check includes configured private values."
+      : "Privacy check has no configured private values; credential-shape checks remain active."
+  );
   if (!ok) {
     for (const finding of findings)
       console.error(
