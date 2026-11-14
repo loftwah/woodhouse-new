@@ -108,9 +108,13 @@ const productName = (slug: string) =>
         <div class="work-identity">
           <h2>{item.title}</h2>
           <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
-            {item.action} <span class="action-name">{productName(item.project)}</span>
+            {item.action}{" "}
+            <span class="action-name">{item.subject ?? productName(item.project)}</span>
           </a>
         </div>
+        {Boolean(item.versions?.length) && (
+          <p class="work-placement">Updated · {1 + (item.versions?.length ?? 0)} versions</p>
+        )}
         {showPlacement && formatFor(item) && (
           <p class="work-placement">
             {formatFor(item)?.label} · {formatFor(item)?.width} × {formatFor(item)?.height}
@@ -203,9 +207,50 @@ const productName = (slug: string) =>
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
           {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {item.versions?.map((version) => (
+            <details class="viewer-comparison">
+              <summary>Compare with {version.label.toLowerCase()}</summary>
+              <div class="comparison-pair">
+                <figure>
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    width={item.width}
+                    height={item.height}
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    Original ·{" "}
+                    <a href={item.original} download>
+                      Download
+                    </a>
+                  </figcaption>
+                </figure>
+                <figure>
+                  <img
+                    src={version.image}
+                    alt={`${item.title} — ${version.label}`}
+                    width={version.width}
+                    height={version.height}
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    {version.label} ·{" "}
+                    <a href={version.image} download>
+                      Download
+                    </a>
+                  </figcaption>
+                </figure>
+              </div>
+              <p>
+                {version.note} · {version.width} × {version.height} ·{" "}
+                <a href={version.source}>Source notes</a>
+              </p>
+            </details>
+          ))}
           <div class="viewer-actions">
             <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
-              {item.action} {productName(item.project)}
+              {item.action} {item.subject ?? productName(item.project)}
             </a>
             <a href={item.original} data-viewer-download download>
               Download original
@@ -341,6 +386,36 @@ const productName = (slug: string) =>
   });
 </script>
 <style>
+  .viewer-comparison {
+    border-block-start: 1px solid var(--line);
+    margin-block: 0.75rem;
+  }
+  .viewer-comparison summary,
+  .viewer-comparison a {
+    align-content: center;
+    min-height: 44px;
+  }
+  .viewer-comparison summary {
+    cursor: pointer;
+  }
+  .comparison-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .comparison-pair figure {
+    min-width: 0;
+    margin: 0;
+  }
+  .art-viewer .comparison-pair img {
+    width: 100%;
+    height: clamp(7rem, 28vw, 20rem);
+    object-fit: contain;
+  }
+  .art-viewer .comparison-pair a {
+    display: inline-block;
+  }
+
   .showcase-wall {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));

@@ -1,3 +1,4 @@
+import { commissionedArt, commissionedUpgrades } from "./showcase-commissioned.ts";
 import { playbook } from "./showcase-playbook.ts";
 import { fieldGuide } from "./showcase-field-guide.ts";
 import { seasonalLibrary } from "./showcase-seasonal-library.ts";
@@ -32,11 +33,20 @@ export type CampaignFormat = {
   height: number;
 };
 
+export type CampaignVersion = CampaignFormat & {
+  id: string;
+  parent: string;
+  note: string;
+  source: string;
+};
+
 export type CampaignItem = {
   id: string;
   project: string;
   title: string;
   stage?: string;
+  subject?: string;
+  versions?: readonly CampaignVersion[];
   issue?: string;
   tags?: readonly string[];
   series?:
@@ -48,7 +58,8 @@ export type CampaignItem = {
     | "seasonal-library"
     | "field-guide"
     | "game-rules"
-    | "architecture";
+    | "architecture"
+    | "commissioned";
   use?:
     | "banner"
     | "icon"
@@ -126,7 +137,8 @@ const item = (
     ? { landscapeImage: `${base}${id}-landscape.jpg` }
     : {})
 });
-export const campaignItems: CampaignItem[] = [
+const allCampaignItems: CampaignItem[] = [
+  ...commissionedArt,
   ...playbook,
   ...fieldGuide,
   ...seasonalLibrary,
@@ -453,3 +465,8 @@ export const campaignItems: CampaignItem[] = [
     source: "https://woodhouse.loftwah.com/campaign/20261025-v2/provenance.txt"
   }
 ];
+
+export const campaignItems: CampaignItem[] = allCampaignItems.map((item) => {
+  const versions = commissionedUpgrades[item.id];
+  return versions?.length ? { ...item, versions } : item;
+});

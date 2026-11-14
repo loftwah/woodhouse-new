@@ -5,6 +5,7 @@ import { wild25Kit } from "../data/showcase-wild-25";
 import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
 import { shareNavigation } from "../data/share-browser";
+import { commissionedKits } from "../data/showcase-commissioned";
 import type { CampaignItem } from "../data/showcase-campaign";
 
 const collectionPacks = {
@@ -14,6 +15,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["commissioned", "New commissions"],
   ["game-rules", "How to play"],
   ["architecture", "Architecture"],
   ["field-guide", "Field Guide"],
@@ -43,6 +45,7 @@ const { works, sketches, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "commissioned" ||
   category === "game-rules" ||
   category === "architecture" ||
   category === "field-guide" ||
@@ -130,7 +133,10 @@ const projectPack =
   works.some((item) => item.project === project && item.series === series)
     ? buildNotesKit(project)
     : project
-      ? works.find((item) => item.project === project && item.socialPack)?.socialPack
+      ? works.find(
+          (item) =>
+            item.project === project && (!series || item.series === series) && item.socialPack
+        )?.socialPack
       : undefined;
 const buildProjects =
   series === "build-notes" && !project
@@ -229,6 +235,23 @@ const artworkPages = Object.fromEntries(
           </li>
         ))}
       </ul>
+    </details>
+  )}
+  {series === "commissioned" && !project && commissionedKits.length > 0 && (
+    <details class="art-previous">
+      <summary>Download project kits</summary>
+      <ul class="build-kit-links">
+        {commissionedKits.map(({ label, href }) => (
+          <li>
+            <a href={href} download>
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <a href="/campaign/20261114-commissions/manifest.json" download>
+        Download collection manifest
+      </a>
     </details>
   )}
   {seriesPack && (
