@@ -16,6 +16,7 @@ const collectionPacks = {
 };
 const categories = [
   ["", "All"],
+  ["atlas-lab", "Atlas, cast & storyboards"],
   ["commissioned", "New commissions"],
   ["game-rules", "How to play"],
   ["architecture", "Architecture"],
@@ -45,6 +46,7 @@ const { works, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "atlas-lab" ||
   category === "commissioned" ||
   category === "game-rules" ||
   category === "architecture" ||
