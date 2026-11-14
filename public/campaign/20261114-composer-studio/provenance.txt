@@ -1,0 +1,49 @@
+WOODHOUSE SHARE — APP COMPOSER MEDIA STUDIO
+Reviewed 14 November 2026, Australia/Melbourne.
+
+One placement within the existing App Composer artwork collection. The current
+homepage hero, the App Composer mark and every earlier campaign item are
+unchanged. This is the product's own published Media Studio launch artwork, not a
+new campaign and not a replacement for the App Composer identity.
+
+SOURCE ARTWORK — PUBLISHED BY APP COMPOSER
+Card 1200 × 630: https://composer.loftwah.com/media-studio/brand/brand-share-1200x630-20261114.png
+Portrait 1080 × 1350: https://composer.loftwah.com/media-studio/brand/brand-portrait-1080x1350-20261114.png
+Square 1080 × 1080: https://composer.loftwah.com/media-studio/brand/brand-square-1080-20261114.png
+9:16 poster 720 × 1280: https://composer.loftwah.com/media-studio/brand/brand-916-poster-20261114.png
+9:16 motion, 5.875 s: https://composer.loftwah.com/media-studio/brand/brand-916-motion-20261114.mp4
+
+The card, portrait, square and 9:16 poster here are byte-for-byte copies of the
+published files. The preview JPEG and thumbnail are bounded derivatives of the
+card, resized without cropping and without adding or moving any element.
+
+SHA-256 of the copied originals:
+ba20457c953ee0bd88eef25ec6b1c13c74cd1d05b734200261e318f5fcd807bc  card 1200 × 630
+3aaf19084a2d3be9a7d6480795369f91dd6eab42f7c6f79797643a2e93790995  portrait 1080 × 1350
+111c9cbc1e7907468432eacbd8df5bf0a7672596141cb3125848227bc6bfee09  square 1080 × 1080
+ac076a6a2d712bd36f72320801b42fef533cb7a11902c0ec45dad295e7074b38  9:16 poster 720 × 1280
+
+PROVENANCE
+Workers AI Lucid Origin produced the original 1280 × 720 still. The selected
+refinement was a real masked fill: a white ellipse in the empty upper-right panel,
+then FLUX.1 Fill returning a 1280 × 704 variant, with the original, mask and
+result kept separate. Hailuo 2.3 Standard animated the selected edit and a
+separate Studio Effect supplied the sound bed. The exact type, approved App
+Composer mark, crops and the 9:16 frame were finished deterministically, because
+generated lettering and a generated logo would be the wrong tool. Hashes and
+lineage: https://composer.loftwah.com/media-studio#made
+
+PUBLISHED PAGES
+Share card: https://media.loftwah.com/p/B_HA5PV6YMmHDA7N
+9:16 motion: https://media.loftwah.com/p/jWri1dDSfWbZ8HXD
+Build article, including the playing motion: https://composer.loftwah.com/media-studio
+Source repository: https://github.com/loftwah/app-composer
+
+SCOPE
+The artwork is generated promotional material with the product's exact type and
+mark; it is not a product recording, a screenshot of shipped behaviour or an
+earned result. The share gallery's existing campaign format carries still
+images, so this placement shows the card and offers the portrait, square and
+9:16 poster files. The motion itself is published and plays on the App Composer
+Media Studio article above. No private prompts, credentials or studio session
+data are included.
