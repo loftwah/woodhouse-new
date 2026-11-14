@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShareLayout from "../../layouts/ShareLayout.astro";
 import ShareActions from "../../components/ShareActions.astro";
 import { listProjectRecords } from "../../content/repository";
 import { campaignCollectionPath, publicCampaignItems } from "../../data/showcase-public";
@@ -47,16 +47,15 @@ const imageAlt = !selected
     : (selected.file.title ?? `${selected.work.title} · ${selected.file.label}`);
 ---
 
-<BaseLayout
+<ShareLayout
   title="Social preview"
   description="Preview campaign artwork in social placements and download the exact file."
   path={path}
-  currentPath="/share/"
+  heading={"Social preview"}
+  section="preview"
 >
   <div class="container preview">
     <header>
-      <a href={shareNavigation("/share/", query)}>Share gallery</a>
-      <h1>Social preview</h1>
       <p>Pick a platform. Check the framing. Take the exact file.</p>
     </header>
 
@@ -160,11 +159,11 @@ const imageAlt = !selected
       </p>
     )}
   </div>
-</BaseLayout>
+</ShareLayout>
 
 <style>
   .preview {
-    padding-block: clamp(2rem, 5vw, 4.5rem);
+    padding-block: 0 2rem;
   }
   header > a {
     display: inline-flex;

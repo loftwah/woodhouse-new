@@ -1,9 +1,8 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShareLayout from "../../layouts/ShareLayout.astro";
 import { SITE_ORIGIN } from "../../data/site-origin.ts";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import ShareActions from "../../components/ShareActions.astro";
-import CampaignFormats from "../../components/CampaignFormats.astro";
 import { listProjectRecords } from "../../content/repository";
 import {
   publicCampaignItems,
@@ -77,11 +76,11 @@ const hostOf = (href: string) => {
 };
 ---
 
-<BaseLayout
+<ShareLayout
   title={title}
   description={description}
   path={path}
-  currentPath="/share/"
+  heading={name}
   image={productSocial?.image ?? social?.original}
   imageAlt={productSocial?.alt ?? social?.alt}
   imageWidth={productSocial?.width ?? social?.width}
@@ -109,16 +108,7 @@ const hostOf = (href: string) => {
     })}
   />
   <div class="container collection">
-    <nav aria-label="Breadcrumb">
-      <a href="/share/">Share gallery</a>
-      <span aria-hidden="true"> / </span>
-      <span>{name}</span>
-    </nav>
     <header>
-      <h1>
-        {name}
-        <span>{collectionLabel}</span>
-      </h1>
       <p>{project?.title ?? "Games, software and music. A selection from the things we make."}</p>
       <div class="collection__links">
         <a href={projectHref}>
@@ -180,62 +170,13 @@ const hostOf = (href: string) => {
           />
         </div>
       </section>
-    ) : items.length === 1 ? (
-      // One reviewed work is a share card, not a gallery grid: the artwork, the
-      // caption a person would actually post and the actions belong in one view.
-      <section id={items[0]!.id} class="work-card" aria-labelledby="work-card-title">
-        <figure class="work-card__art">
-          <a
-            href={items[0]!.original}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`View ${items[0]!.title} full size`}
-          >
-            <img
-              src={items[0]!.image}
-              width={items[0]!.width}
-              height={items[0]!.height}
-              alt={items[0]!.alt}
-              loading="eager"
-              decoding="async"
-            />
-            <span class="work-card__view" aria-hidden="true">
-              View full size ↗
-            </span>
-          </a>
-          <figcaption>
-            <span class="work-card__kind">{items[0]!.kind}</span>
-            {items[0]!.credit} · reviewed {items[0]!.reviewedAt}
-          </figcaption>
-        </figure>
-        <div class="work-card__body">
-          <p class="work-card__eyebrow">Share card</p>
-          <h2 id="work-card-title">{items[0]!.title}</h2>
-          <p class="work-card__caption">{captionText(items[0]!.caption)}</p>
-          <ShareActions
-            caption={items[0]!.caption}
-            image={items[0]!.original}
-            shareSource={items[0]!.formats ? items[0]!.original : items[0]!.image}
-            filename={items[0]!.original.split("/").pop() ?? `${items[0]!.id}.jpg`}
-            link={items[0]!.href}
-          />
-          {items[0]!.formats && (
-            <CampaignFormats formats={items[0]!.formats} source={items[0]!.source} />
-          )}
-          {items[0]!.landscapeImage && (
-            <a class="work-card__poster" href={items[0]!.landscapeImage} download>
-              Download the landscape poster
-            </a>
-          )}
-        </div>
-      </section>
     ) : (
       <>
-        <ShowcaseGallery items={currentItems} />
+        <ShowcaseGallery items={currentItems} compact staggered />
         {archivedItems.length > 0 && (
           <section class="earlier-artwork" aria-labelledby="earlier-artwork-title">
             <h2 id="earlier-artwork-title">Earlier artwork</h2>
-            <ShowcaseGallery items={archivedItems} eager={false} />
+            <ShowcaseGallery items={archivedItems} compact staggered eager={false} />
           </section>
         )}
       </>
@@ -270,7 +211,7 @@ const hostOf = (href: string) => {
       </p>
     )}
   </div>
-</BaseLayout>
+</ShareLayout>
 
 <script>
   // A product can move or withdraw the image its own page declares. The preview

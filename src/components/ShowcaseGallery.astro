@@ -1,12 +1,14 @@
 ---
 import ShareActions from "./ShareActions.astro";
 import CampaignFormats from "./CampaignFormats.astro";
+import { socialPlacements } from "../data/social-placements";
 import { shareNavigation } from "../data/share-browser";
 import type { campaignItems } from "../data/showcase-campaign";
 import { campaignResponsiveImage } from "../data/showcase-public";
 type Props = {
   items: ReadonlyArray<(typeof campaignItems)[number]>;
   compact?: boolean;
+  minimal?: boolean;
   staggered?: boolean;
   eager?: boolean;
   showPlacement?: boolean;
@@ -15,6 +17,7 @@ type Props = {
 const {
   items,
   compact = false,
+  minimal = false,
   staggered = false,
   eager = true,
   showPlacement = false,
@@ -50,6 +53,8 @@ const imageSizes = (item: (typeof items)[number], index: number) => {
     : `(max-width: 700px) ${mobile}, ${desktop}`;
 };
 const imageSources = (item: (typeof items)[number]) => {
+  if (item.original.startsWith("/share/") || item.video || item.image.startsWith("/share/"))
+    return undefined;
   const image = campaignResponsiveImage(item);
   return `${image.thumbnail} ${image.thumbnailWidth}w, ${item.image} ${image.fullWidth}w`;
 };
@@ -87,7 +92,7 @@ const productName = (slug: string) =>
         href={item.original}
         class="showcase-image"
         data-open-art={`viewer-${item.id}`}
-        aria-label={`View ${item.title} full size`}
+        aria-label={item.video ? `Play ${item.title}` : `View ${item.title} full size`}
       >
         <img
           src={item.image}
@@ -101,10 +106,10 @@ const productName = (slug: string) =>
           decoding="async"
         />
         <span class="view-affordance" aria-hidden="true">
-          View
+          {item.video ? "Play clip" : "View"}
         </span>
       </a>
-      <figcaption>
+      <figcaption class:list={{ "minimal-caption": minimal }}>
         <div class="work-identity">
           <h2>{item.title}</h2>
           <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
@@ -112,7 +117,7 @@ const productName = (slug: string) =>
             <span class="action-name">{item.subject ?? productName(item.project)}</span>
           </a>
         </div>
-        {Boolean(item.versions?.length) && (
+        {!minimal && Boolean(item.versions?.length) && (
           <p class="work-placement">Updated · {1 + (item.versions?.length ?? 0)} versions</p>
         )}
         {showPlacement && formatFor(item) && (
@@ -120,7 +125,7 @@ const productName = (slug: string) =>
             {formatFor(item)?.label} · {formatFor(item)?.width} × {formatFor(item)?.height}
           </p>
         )}
-        {item.stage && (
+        {!minimal && item.stage && (
           <p class="process-note">
             <strong>{item.stage}</strong> {item.caption.split("\n")[0]}
             {item.issue && (
@@ -131,36 +136,40 @@ const productName = (slug: string) =>
             )}
           </p>
         )}
-        <ShareActions
-          caption={item.caption}
-          image={downloadFor(item)}
-          shareSource={item.formats ? downloadFor(item) : item.image}
-          fallbackImage={item.image}
-          filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
-          link={item.href}
-          presentation="gallery"
-        >
-          <p class="work-credit">
-            {item.kind} · {item.credit} · {item.reviewedAt}
-          </p>
-          {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
-          {item.socialPack && (
-            <a class="collection-link" href={item.socialPack} download>
-              Download social pack
-            </a>
-          )}
-          {item.landscapeImage && (
-            <a class="collection-link" href={item.landscapeImage} download>
-              Download landscape poster
-            </a>
-          )}
-          <a
-            class="collection-link"
-            href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}
+        {!minimal && (
+          <ShareActions
+            caption={item.caption}
+            image={downloadFor(item)}
+            shareSource={item.formats ? downloadFor(item) : item.image}
+            fallbackImage={item.image}
+            filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
+            link={item.href}
+            mediaType={item.video ? "video" : "image"}
+            presentation="gallery"
           >
-            More {productName(item.project)}
-          </a>
-        </ShareActions>
+            <p class="work-credit">
+              {item.kind} · {item.credit} · {item.reviewedAt}
+            </p>
+            {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+            {!item.formats && <a href={item.source}>Source</a>}
+            {item.socialPack && (
+              <a class="collection-link" href={item.socialPack} download>
+                Download social pack
+              </a>
+            )}
+            {item.landscapeImage && (
+              <a class="collection-link" href={item.landscapeImage} download>
+                Download landscape poster
+              </a>
+            )}
+            <a
+              class="collection-link"
+              href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}
+            >
+              More {productName(item.project)}
+            </a>
+          </ShareActions>
+        )}
       </figcaption>
       <dialog
         id={`viewer-${item.id}`}
@@ -188,15 +197,36 @@ const productName = (slug: string) =>
             </form>
           </div>
         </div>
-        <img
-          src={item.image}
-          data-viewer-original={item.original}
-          data-viewer-preview={item.image}
-          loading="lazy"
-          alt={item.alt}
-          width={item.width}
-          height={item.height}
-        />
+        {item.video ? (
+          <video
+            controls
+            playsinline
+            preload="none"
+            poster={item.image}
+            width={item.width}
+            height={item.height}
+            aria-label={item.title}
+          >
+            <source src={item.video} type="video/mp4" />
+            <track
+              kind="captions"
+              src={item.video.replace(/\.mp4$/, ".vtt")}
+              srclang="en"
+              label="Sound captions"
+            />
+            <a href={item.video}>Download clip</a>
+          </video>
+        ) : (
+          <img
+            src={item.image}
+            data-viewer-original={item.original}
+            data-viewer-preview={item.image}
+            loading="lazy"
+            alt={item.alt}
+            width={item.width}
+            height={item.height}
+          />
+        )}
         <div class="viewer-caption">
           <p role="status" data-viewer-status></p>
           <p>
@@ -212,6 +242,35 @@ const productName = (slug: string) =>
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
           {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {!item.formats && <a href={item.source}>Source</a>}
+          {item.formats &&
+            socialPlacements.some(({ format }) =>
+              item.formats?.some(({ label }) => label === format)
+            ) && (
+              <a
+                href={shareNavigation(
+                  `/share/preview/?${new URLSearchParams({
+                    art: item.id,
+                    platform: socialPlacements.find(({ format }) =>
+                      item.formats?.some(({ label }) => label === format)
+                    )!.id
+                  })}`,
+                  Astro.url.searchParams
+                )}
+              >
+                Preview social placement
+              </a>
+            )}
+          {item.socialPack && (
+            <a class="collection-link" href={item.socialPack} download>
+              Download social pack
+            </a>
+          )}
+          {item.landscapeImage && (
+            <a class="collection-link" href={item.landscapeImage} download>
+              Download landscape poster
+            </a>
+          )}
           {item.versions?.map((version) => (
             <details class="viewer-comparison">
               <summary>Compare with {version.label.toLowerCase()}</summary>
@@ -258,7 +317,7 @@ const productName = (slug: string) =>
               {item.action} {item.subject ?? productName(item.project)}
             </a>
             <a href={item.original} data-viewer-download download>
-              Download original
+              {item.video ? "Download clip" : "Download original"}
             </a>
             <ShareActions
               caption={item.caption}
@@ -267,6 +326,7 @@ const productName = (slug: string) =>
               fallbackImage={item.image}
               filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
               link={item.href}
+              mediaType={item.video ? "video" : "image"}
               presentation="copy"
             />
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
@@ -329,6 +389,8 @@ const productName = (slug: string) =>
       dialog.addEventListener("keydown", (event) => {
         if (
           event.defaultPrevented ||
+          (event.target instanceof Element &&
+            event.target.closest("video, input, select, textarea, [contenteditable]")) ||
           event.altKey ||
           event.ctrlKey ||
           event.metaKey ||
@@ -373,7 +435,27 @@ const productName = (slug: string) =>
           image.src = image.dataset.viewerOriginal;
         }
       });
+      let gesture: { x: number; y: number } | undefined;
+      dialog.addEventListener("pointerdown", (event) => {
+        if (
+          event.pointerType === "touch" &&
+          event.target instanceof Element &&
+          event.target.matches("img[data-viewer-original]")
+        )
+          gesture = { x: event.clientX, y: event.clientY };
+      });
+      dialog.addEventListener("pointercancel", () => {
+        gesture = undefined;
+      });
+      dialog.addEventListener("pointerup", (event) => {
+        if (!gesture || event.pointerType !== "touch") return;
+        const dx = event.clientX - gesture.x;
+        const dy = event.clientY - gesture.y;
+        gesture = undefined;
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) browse(dx > 0 ? -1 : 1);
+      });
       dialog.addEventListener("close", () => {
+        dialog.querySelector("video")?.pause();
         if (!document.querySelector(".art-viewer[open]")) {
           link.focus({ preventScroll: true });
           link.scrollIntoView({ block: "nearest", inline: "nearest" });
@@ -398,6 +480,21 @@ const productName = (slug: string) =>
   });
 </script>
 <style>
+  .minimal-caption .product-action {
+    display: none;
+  }
+  .minimal-caption h2 {
+    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  }
+
+  .art-viewer video {
+    display: block;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+    max-height: 70dvh;
+    background: var(--ink);
+  }
   .viewer-comparison {
     border-block-start: 1px solid var(--line);
     margin-block: 0.75rem;
@@ -530,6 +627,7 @@ const productName = (slug: string) =>
     background: rgb(0 0 0 / 88%);
   }
   .art-viewer > img {
+    touch-action: pan-y pinch-zoom;
     display: block;
     width: 100%;
     height: auto;
