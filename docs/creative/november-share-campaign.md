@@ -146,6 +146,21 @@ editorial imagery clearly credited. Keep the library easy to browse by showing
 the newest work on the main wall, bringing clean drawings forward and loading
 later batches only as needed. Keep the earlier collections and file addresses.
 
+### AI-generated brand artwork
+
+Reviewed 14 November 2026, Melbourne. For a commissioned branded illustration,
+give the image model the approved mark, the exact display URL and the intended
+icons. Brief where they appear in the scene, at a size the viewer can read.
+Use different compositions and media suited to each subject. Check the
+generated mark and spelling in the actual image. Keep earlier attempts
+downloadable with the work when correcting a concrete error.
+
+A separate branding strip or generic project plate needs a specific
+deliverable reason, such as an exact-size utility lockup. Record that reason
+in the brief. The runner takes the approved wording, mark references, and
+placement direction from the artwork job. A separate label in the gallery
+serves navigation and does not fulfil a request for visible branding in art.
+
 ### Expanded artwork and current project sources
 
 Reviewed 13 November 2026, Melbourne. The expansion starts with the

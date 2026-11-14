@@ -42,7 +42,8 @@ export function campaignSocial(items: CampaignItem[]) {
       series !== "game-rules" &&
       series !== "architecture" &&
       series !== "commissioned" &&
-      series !== "atlas-lab"
+      series !== "atlas-lab" &&
+      series !== "asset-library"
   );
   const lead = socialItems[0] ?? items[0];
   if (lead?.landscapeImage)

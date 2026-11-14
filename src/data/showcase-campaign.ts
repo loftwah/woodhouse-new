@@ -1,3 +1,4 @@
+import { assetLibrary } from "./showcase-asset-library.ts";
 import { atlasLab } from "./showcase-atlas-lab.ts";
 import { commissionedArt, commissionedUpgrades } from "./showcase-commissioned.ts";
 import { playbook } from "./showcase-playbook.ts";
@@ -62,7 +63,8 @@ export type CampaignItem = {
     | "game-rules"
     | "architecture"
     | "commissioned"
-    | "atlas-lab";
+    | "atlas-lab"
+    | "asset-library";
   use?:
     | "banner"
     | "icon"
@@ -149,6 +151,7 @@ const item = (
     : {})
 });
 const allCampaignItems: CampaignItem[] = [
+  ...assetLibrary,
   ...atlasLab,
   ...commissionedArt,
   ...playbook,

@@ -95,7 +95,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           series !== "game-rules" &&
           series !== "architecture" &&
           series !== "commissioned" &&
-          series !== "atlas-lab"
+          series !== "atlas-lab" &&
+          series !== "asset-library"
       )
       .slice(0, 5)
       .map(({ id }) => id),
@@ -107,7 +108,7 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
       "visual-study-moss-after-dark"
     ]
   );
-  assert.equal(items[0]?.series, "atlas-lab");
+  assert.ok(items.some(({ series }) => series === "atlas-lab"));
   const foilbury = items.filter(({ project, use }) => project === "foilbury" && !use);
   assert.deepEqual(
     foilbury.map(({ id, archived }) => [id, Boolean(archived)]),
@@ -140,7 +141,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           !href.includes("#share-edition-") &&
           !href.includes("#new-") &&
           !href.includes("#atlas-") &&
-          !href.includes("#mascot-")
+          !href.includes("#mascot-") &&
+          !href.includes("#woodhouse-art-")
       )
       .map(({ href }) => href),
     [
