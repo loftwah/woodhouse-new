@@ -31,6 +31,34 @@ a story is not proof that the public route behaves that way.
 - Use [PLATFORM.md](../PLATFORM.md) before changing a Cloudflare integration and [EMDASH.md](../EMDASH.md) for CMS/recovery work. Query official EmDash documentation for APIs; never send private material to documentation search.
 - The repository's [.agents/skills](../.agents/skills) contains EmDash specialists and the reviewed `untangle-codebase` skill (provenance in [UNTANGLE-CODEBASE.md](UNTANGLE-CODEBASE.md)). Select other guidance from the current session's local/global/plugin catalogue and confirm its tools are callable. Debugging, interface work and release review need different guidance; routine prose does not need a browser suite or a new skill.
 
+## Git identity and provenance
+
+Reviewed 2026/11/14 AEDT (Australia/Melbourne, UTC+11) / 2026/11/14 UTC.
+[#249](https://github.com/loftwah/woodhouse-new/issues/249) records an agent lane
+whose invented `lane-e@users.noreply.github.com` matched an unrelated GitHub user.
+That attribution is not evidence of an intrusion.
+
+For Woodhouse-run agents, choose an explicitly MP-approved owner-controlled verified
+GitHub email/noreply or genuine bot identity before committing. Orchestrators and
+workers inherit the approved author and committer; lane names are task labels, not
+invented email addresses. Do not use another person's identity without their explicit
+involvement. `node scripts/check-git-identity.mjs` checks effective Git author and
+committer against the authenticated account's numeric noreply and, when the token can
+read them, its verified emails. It catches the incident example; a match is not proof
+of MP's approval. A failure can also mean the token cannot read a legitimate private
+email or a different approved author is intended: verify the account and approval
+independently, rather than treating the check as an accusation or inventing an address.
+The command is optional and adds no hook or new account requirement.
+
+If configuration is wrong, correct the originating worker's Git configuration or
+per-command Git environment before the next commit, then recheck. Preserve existing
+history; coordinate correction of an already published attribution through its owning
+issue rather than rewriting shared history. Authorship is a commit assertion;
+authenticated push, co-author credit, review and merge are distinct events, and Git
+names and emails are spoofable. For unexpected contributors, inspect commit metadata,
+PR provenance, permissions and the diff. Escalate a security incident only on concrete
+signs such as unauthorised pushes, malicious changes, exposed secrets or credential misuse.
+
 ## References, planning and review
 
 Reviewed 2026/11/12 AEDT (Australia/Melbourne, UTC+11) / 2026/11/12 UTC. Apply the
