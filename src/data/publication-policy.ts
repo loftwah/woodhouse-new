@@ -18,7 +18,6 @@ export function createPublicationScheduledHandler<Args extends [unknown, unknown
 }
 
 export function publicationRequestAllowed(request: Request): boolean {
-  if (request.method !== "GET" && request.method !== "HEAD") return false;
   const url = new URL(request.url);
   let pathname: string;
   try {
@@ -39,5 +38,7 @@ export function publicationRequestAllowed(request: Request): boolean {
     const name = cookie.split("=", 1)[0]?.trim();
     if (name === "emdash-edit-mode") return false;
   }
-  return true;
+  // This single route implements only bounded public catalogue reads over MCP.
+  if (request.method === "POST") return url.pathname === "/api/v1/assets-mcp";
+  return request.method === "GET" || request.method === "HEAD";
 }
