@@ -1,0 +1,77 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import { shareNavigation } from "../data/share-browser";
+
+type Props = Omit<import("astro/types").ComponentProps<typeof BaseLayout>, "currentPath"> & {
+  heading: string;
+  section?: "gallery" | "originals" | "resources" | "preview";
+};
+const { heading, section = "gallery", ...metadata } = Astro.props;
+const query = Astro.url.searchParams;
+const links = [
+  ["gallery", "/share/", "Gallery"],
+  ["originals", "/share/originals/", "Originals"],
+  ["resources", "/share/resources/", "Resources"],
+  ["preview", "/share/preview/", "Social preview"]
+] as const;
+---
+
+<BaseLayout {...metadata} currentPath="/share/">
+  <slot slot="head" name="head" />
+  <div class="container share-toolbar">
+    <h1>{heading}</h1>
+    <nav aria-label="Share">
+      {links.map(([id, href, label]) => (
+        <a href={shareNavigation(href, query)} aria-current={id === section ? "page" : undefined}>
+          {label}
+        </a>
+      ))}
+    </nav>
+  </div>
+  <slot />
+</BaseLayout>
+<style>
+  @view-transition {
+    navigation: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*) {
+      animation-duration: 0.001ms;
+    }
+  }
+  .share-toolbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    padding-block: 0.65rem 0.35rem;
+    border-bottom: 1px solid var(--line);
+    margin-block-end: 0.75rem;
+  }
+  h1 {
+    margin: 0;
+    font: 650 clamp(1.5rem, 3vw, 2.65rem)/1.08 var(--display);
+    letter-spacing: -0.035em;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 clamp(0.75rem, 2vw, 1.65rem);
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--paper);
+    font-size: 0.9rem;
+    text-underline-offset: 0.35em;
+    text-decoration: none;
+  }
+  nav a[aria-current],
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--acid);
+    text-decoration: underline;
+  }
+</style>

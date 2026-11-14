@@ -13,10 +13,10 @@ import EditionShareKit from "../components/EditionShareKit.astro";
 import EditionShareAssets from "../components/EditionShareAssets.astro";
 import { editionShareAssets } from "../data/edition-share-kit";
 import { portfolioEdition } from "../data/portfolio-edition";
-import EditionInvitation from "../components/EditionInvitation.astro";
 import { dispatchPath } from "../data/what-we-built";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import GameMedia from "../components/GameMedia.astro";
+import ShareLayout from "../layouts/ShareLayout.astro";
+import ShowcaseGallery from "../components/ShowcaseGallery.astro";
+import { galleryWork } from "../data/share-gallery-work";
 import GalleryPagination from "../components/GalleryPagination.astro";
 import ShareActions from "../components/ShareActions.astro";
 import {
@@ -44,12 +44,9 @@ import {
   galleryMedia,
   galleryPage,
   availableProjectTypes,
-  defaultProjectType,
   projectViewRedirect,
-  projectGalleryTypes,
   kitURL,
-  type GalleryType,
-  type ProjectGalleryType
+  type GalleryType
 } from "../data/share-browser";
 export const prerender = false;
 const requested = Astro.url.searchParams.get("project");
@@ -265,12 +262,18 @@ const pagePath = canonicalGalleryURL(selected?.slug, view, collection.page);
 // filter and rail list the whole portfolio. Before this, a project whose only
 // reviewed kit was that card — Foilbury, then Liferaft — could be reached from
 // the link-card page but not selected from the archive.
-const kitProjects = projects;
 const featuredCampaign = admittedCampaign.filter(
   (item) => !selected || item.project === selected.slug
 );
 const originalArtwork = publicOriginalArtwork(publicIds).filter(
   ({ item }) => !selected || item.project === selected.slug
+);
+const reviewedMedia = projects.flatMap((project) =>
+  gameMedia
+    .filter(
+      (asset) => asset.project === project.slug && (!selected || selected.slug === project.slug)
+    )
+    .map((asset) => galleryWork(asset, project, previewSet.has(asset.id)))
 );
 const artwork = [
   ...featuredCampaign.filter((item) => !item.archived),
@@ -278,27 +281,15 @@ const artwork = [
     ? foilburyNativeArtwork
     : []),
   ...originalArtwork.map(({ item }) => item),
-  ...featuredCampaign.filter((item) => item.archived)
+  ...featuredCampaign.filter((item) => item.archived),
+  ...reviewedMedia.filter(
+    (item) =>
+      !featuredCampaign.some(
+        (work) => work.original === item.original || work.image === item.original
+      )
+  )
 ];
 const featuredSocial = campaignSocial(featuredCampaign);
-const firstArtPage = Number(Astro.url.searchParams.get("artPage") ?? 1) <= 1;
-const sketchHref = `/share/?${new URLSearchParams({ artType: "sketch", ...(selected ? { artProject: selected.slug } : {}) })}`;
-const earlierHref = `/share/?${new URLSearchParams({ artType: "earlier", ...(selected ? { artProject: selected.slug } : {}) })}`;
-const hasArtFilter =
-  ["artType", "artProject", "artFormat", "artTag"].some((key) => Astro.url.searchParams.get(key)) ||
-  ["oldest", "title", "title-desc", "largest", "shuffle"].includes(
-    Astro.url.searchParams.get("artSort") ?? ""
-  );
-const showcaseClips = gameMedia.filter(
-  (asset) =>
-    [
-      "foilbury-teaser-9x16",
-      "app-composer-studio-film-20261014",
-      "protocol11-last-card-16s"
-    ].includes(asset.id) &&
-    publicIds.has(asset.project) &&
-    (!selected || asset.project === selected.slug)
-);
 const effectivePath = showcase
   ? selected
     ? campaignCollectionPath(selected.slug)
@@ -309,7 +300,7 @@ const effectivePath = showcase
 const selectedSocial = selected ? socialCardFor(selected) : null;
 ---
 
-<BaseLayout
+<ShareLayout
   title={
     showcase
       ? `${selected?.name ?? "Games, music & things we made"} · Share gallery`
@@ -317,7 +308,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
   }
   description="Game screenshots, playable promo clips, result cards, character art and social artwork. Download an image or copy a ready post directly from the gallery."
   path={effectivePath}
-  currentPath="/share/"
+  heading={selected?.name ?? (showcase ? "Share" : viewLabel)}
   image={
     selectedSocial?.image ??
     (showcase && featuredSocial ? featuredSocial.original : "/og/woodhouse-workshop-20261018.jpg")
@@ -326,517 +317,379 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
   imageWidth={selectedSocial?.width ?? (showcase && featuredSocial ? featuredSocial.width : 1200)}
   imageHeight={selectedSocial?.height ?? (showcase && featuredSocial ? featuredSocial.height : 630)}
 >
-  <div class:list={["container share-gallery", { "showcase-page": showcase }]}>
-    {showcase && (
-      <>
-        <header class="showcase-heading">
-          <h1>{selected?.name ?? "Share artwork."}</h1>
-          <nav class="share-jumps" aria-label="More media">
-            <a href={shareNavigation(sketchHref, Astro.url.searchParams)}>
-              Sketches &amp; drawings
-            </a>
-            <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
-            <a href={shareNavigation("/share/?type=logos", Astro.url.searchParams)}>
-              Logos &amp; icons
-            </a>
-            <a href={shareNavigation("/share/originals/", Astro.url.searchParams)}>
-              Original art &amp; drawings
-            </a>
-            <a href={shareNavigation("/share/?type=clips", Astro.url.searchParams)}>Clips</a>
-            <a href="/share/resources/">Creative resources</a>
-          </nav>
-        </header>
-        <ShareArtworkWall
-          works={artwork}
-          projects={[
-            ...projects.filter(({ slug }) => artwork.some((item) => item.project === slug)),
-            ...(artwork.some(({ project }) => project === "woodhouse")
-              ? [{ slug: "woodhouse", name: "Woodhouse" }]
-              : [])
-          ]}
-        />
-        <p id="earlier-campaigns">
-          <a href={shareNavigation(earlierHref, Astro.url.searchParams)}>Earlier campaigns</a>
-        </p>
-        {firstArtPage && !hasArtFilter && showcaseClips.length > 0 && (
-          <section class="motion-selection" aria-labelledby="motion-title">
-            <h2 id="motion-title">In motion.</h2>
-            <div class="motion-gallery">
-              {showcaseClips.map((asset) => {
-                const project = projects.find((item) => item.slug === asset.project);
-                const href = project ? projectActionHref(project) : "/share/";
+  <div class="container share-gallery">
+    {showcase ? (
+      <ShareArtworkWall
+        works={artwork}
+        projects={[...projects, { slug: "woodhouse", name: "Woodhouse" }]}
+      />
+    ) : (
+      <div id="archive">
+        <div class="gallery-controls">
+          <form method="get" action="/share/" class="mobile-filters" data-gallery-filters>
+            {Astro.url.searchParams.get("analytics") === "off" && (
+              <input type="hidden" name="analytics" value="off" />
+            )}
+            {Astro.url.searchParams.has("qa") && (
+              <input type="hidden" name="qa" value={Astro.url.searchParams.get("qa")!} />
+            )}
+            <label>
+              Project
+              <select name="project">
+                <option value="">All projects</option>
+                {projects.map((p) => (
+                  <option value={p.slug} selected={selected?.slug === p.slug}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Asset type
+              <select name="type">
+                {galleryTypes
+                  .filter(([key]) => !selected || !globalTypes.includes(key))
+                  .map(([key, label]) => (
+                    <option value={key} selected={view === key}>
+                      {label}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <button type="submit" data-filter-submit>
+              Show assets
+            </button>
+          </form>
+        </div>
+        {collection.pages > 1 && (
+          <GalleryPagination
+            project={selected?.slug}
+            type={view}
+            page={collection.page}
+            pages={collection.pages}
+          />
+        )}
+        {view === "edition" && (
+          <section aria-labelledby="edition-kit-title">
+            {edition ? (
+              <>
+                <EditionShareKit compact availablePack={editionCompositePublic} />
+                <p class="result-count">
+                  {collection.total
+                    ? `${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${selected?.name ?? "Edition assets"}`
+                    : "No edition assets for this project."}
+                </p>
+                <EditionShareAssets assets={galleryPage(editionMedia, requestedPage).items} />
+              </>
+            ) : (
+              <p>The edition kit is unavailable right now.</p>
+            )}
+          </section>
+        )}
+        {["images", "clips", "artwork"].includes(view) && (
+          <section aria-label={`${selected?.name ?? "All projects"} ${viewLabel}`}>
+            {selected && (
+              <div class="section-heading">
+                {imagePack && collection.total > 0 && imagePacks.has(imagePack) && (
+                  <a href={imagePack} download={`${selected.slug}-${view}.zip`}>
+                    Download image pack
+                  </a>
+                )}
+                {selected && (
+                  <a href={projectActionHref(selected)}>{projectActionLabel(selected)}</a>
+                )}
+              </div>
+            )}
+            {collection.total ? (
+              <p class="result-count">
+                {`${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${viewLabel}`}
+              </p>
+            ) : selected ? (
+              <p class="result-count">
+                No {viewLabel.toLowerCase()} for {selected.name} in this project's reviewed media.
+                {selectedTypes.length > 1 && (
+                  <>
+                    {" Available here: "}
+                    {selectedTypes
+                      .filter((key) => key !== view)
+                      .map((key) => (
+                        <a href={galleryURL(selected.slug, key)}>{typeLabel(key)}</a>
+                      ))}
+                  </>
+                )}
+              </p>
+            ) : (
+              <p class="result-count">No {viewLabel.toLowerCase()} in this collection.</p>
+            )}
+            <ShowcaseGallery
+              items={visibleMedia.flatMap(({ id }) =>
+                reviewedMedia.filter((work) => work.id === id)
+              )}
+              compact
+              staggered
+            />
+          </section>
+        )}
+        {view === "cards" && (
+          <section aria-labelledby="link-cards-title">
+            <div class="section-heading">
+              <h2 id="link-cards-title">Link cards</h2>
+            </div>
+            <section id="projects" aria-label="Project images" class="gallery">
+              {visibleProjects.map((project, index) => {
+                const metadata = getSiteMetadata(project);
+                const fallback = getArtworkFallback(project);
+                const destination = projectActionHref(project);
                 return (
-                  <div>
-                    <GameMedia asset={asset} destination={href} />
-                    <a class="motion-action" href={shareNavigation(href, Astro.url.searchParams)}>
-                      {project ? projectActionLabel(project) : "Open project"}
+                  <figure id={`project-${project.slug}`}>
+                    <a
+                      class="image-link"
+                      href={metadata.image}
+                      data-fallback-href={fallback.image}
+                      data-fallback-label={`View ${project.name} artwork full size`}
+                      aria-label={`View ${project.name} image full size`}
+                    >
+                      <img
+                        src={metadata.image}
+                        width="1200"
+                        height="630"
+                        alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
+                        loading={index < 3 ? "eager" : "lazy"}
+                        data-gallery-image
+                        data-fallback-image={fallback.image}
+                        data-fallback-alt={fallback.alt}
+                        data-fallback-credit={fallback.credit}
+                      />
                     </a>
-                  </div>
+                    <figcaption>
+                      <div class="asset-title">
+                        <h2>{project.name}</h2>
+                        <span data-image-size>Original image</span>
+                      </div>
+                      <p class="credit" data-image-credit>
+                        {project.previewImage
+                          ? `Artwork from ${project.name}`
+                          : "Illustration by Woodhouse"}
+                      </p>
+                    </figcaption>
+                    <ShareActions
+                      caption={projectCaption(project)}
+                      image={
+                        project.previewImage
+                          ? `/api/share-image?project=${project.slug}`
+                          : metadata.image
+                      }
+                      fallbackImage={fallback.image}
+                      filename={`${project.slug}-social.jpg`}
+                      link={destination}
+                    />
+                    <div class="asset-links">
+                      <a href={destination}>{projectActionLabel(project)}</a>
+                      <a href={kitURL(project.slug, view)}>Link to this kit</a>
+                      {project.slug === "shoalshot" && nativeSharing && (
+                        <a href={destination}>Play & share a dive</a>
+                      )}
+                    </div>
+                  </figure>
                 );
               })}
+            </section>
+          </section>
+        )}
+        {view === "radio" && (
+          <section id="radio" aria-labelledby="radio-title">
+            <div class="section-heading">
+              <h2 id="radio-title">Games × Radio</h2>
+              <a href="/activity/">Analytics</a>
+            </div>
+            {radio ? (
+              <div class="gallery radio-gallery">
+                {(Object.keys(cardFormats) as CardFormat[]).map((format) => (
+                  <figure>
+                    <a
+                      class="image-link radio-preview"
+                      href={radioImage(format)}
+                      aria-label={`View ${format} radio card full size`}
+                    >
+                      <img
+                        src={radioImage(format)}
+                        width={cardFormats[format].width}
+                        height={cardFormats[format].height}
+                        alt={`Games × Radio ${format} artwork and dated listening snapshot from LoftwahFM`}
+                        loading="lazy"
+                      />
+                    </a>
+                    <figcaption>
+                      <div class="asset-title">
+                        <h3>{format[0]!.toUpperCase() + format.slice(1)}</h3>
+                        <span>
+                          {cardFormats[format].width} × {cardFormats[format].height} PNG
+                        </span>
+                      </div>
+                      <p class="credit">Official game artwork · LoftwahFM composition</p>
+                    </figcaption>
+                    <ShareActions
+                      caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\n${SITE_ORIGIN}/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
+                      image={radioImage(format, true)}
+                      filename={`loftwahfm-games-${format}.png`}
+                      link={activityLink("", radio.snapshot)}
+                    />
+                  </figure>
+                ))}
+              </div>
+            ) : (
+              <p>Radio cards are unavailable right now.</p>
+            )}
+            {radio && (
+              <p class="credit">
+                Snapshot {radio.asOf.slice(0, 16).replace("T", " ")} UTC · Listening, not project
+                popularity.
+              </p>
+            )}
+          </section>
+        )}
+        {view === "factory" && (
+          <section id="stories" aria-labelledby="stories-title">
+            <div class="section-heading">
+              <h2 id="stories-title">Factory & stories</h2>
+            </div>
+            <div class="gallery">
+              {houseImages
+                .filter((item) => visibleFactoryIds.has(item.name))
+                .map((item) => (
+                  <figure>
+                    <a
+                      class="image-link"
+                      href={item.image}
+                      aria-label={`View ${item.name} artwork full size`}
+                    >
+                      <img
+                        src={item.image}
+                        width="1200"
+                        height="630"
+                        alt={`${item.name} artwork by Woodhouse`}
+                        loading="lazy"
+                      />
+                    </a>
+                    <figcaption>
+                      <div class="asset-title">
+                        <h3>{item.name}</h3>
+                        <span>1200 × 630 JPG</span>
+                      </div>
+                      <p class="credit">Woodhouse</p>
+                    </figcaption>
+                    <ShareActions
+                      caption={item.caption}
+                      image={item.image}
+                      filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
+                      link={`${SITE_ORIGIN}${item.link}`}
+                    />
+                    <a class="story-link" href={item.link}>
+                      Read the story
+                    </a>
+                  </figure>
+                ))}
+              {stories
+                .filter((story) => visibleFactoryIds.has(story.slug))
+                .map((story) => (
+                  <figure>
+                    <a
+                      class="image-link"
+                      href={dispatchSocialCard(story.slug)}
+                      aria-label={`View ${story.title} artwork full size`}
+                    >
+                      <img
+                        src={dispatchSocialCard(story.slug)}
+                        width="1200"
+                        height="630"
+                        alt={`Woodhouse artwork for ${story.title}`}
+                        loading="lazy"
+                      />
+                    </a>
+                    <figcaption>
+                      <div class="asset-title">
+                        <h3>{story.title}</h3>
+                        <span>1200 × 630 JPG</span>
+                      </div>
+                      <p class="credit">Woodhouse</p>
+                    </figcaption>
+                    <ShareActions
+                      caption={shareCaption(
+                        story.title,
+                        story.deck,
+                        `${SITE_ORIGIN}${dispatchPath(story)}`
+                      )}
+                      image={dispatchSocialCard(story.slug)}
+                      filename={`${story.slug}.jpg`}
+                      link={`${SITE_ORIGIN}${dispatchPath(story)}`}
+                    />
+                    <a class="story-link" href={dispatchPath(story)}>
+                      Read the story
+                    </a>
+                  </figure>
+                ))}
             </div>
           </section>
         )}
-      </>
-    )}
-    <div
-      id="archive"
-      class:list={["archive", { "after-showcase": showcase }]}
-      hidden={showcase && (hasArtFilter || !firstArtPage)}
-    >
-      {showcase && <h2 class="archive-heading">Keep exploring.</h2>}
-      <header class:list={["gallery-intro", { "archive-intro": showcase }]}>
-        <div>
-          {!showcase && (
-            <h1>
-              {selected?.name ?? (view === "edition" ? "One more round." : "Share the work.")}
-            </h1>
-          )}
-          <p>
-            {view === "edition"
-              ? "The film, campaign artwork and frozen report images."
-              : "Screenshots, clips and artwork. Copy or download."}
-          </p>
-        </div>
-      </header>
-      {!showcase && view !== "edition" && <EditionInvitation />}
-      {view !== "edition" && edition && (
-        <a class="edition-kit-link" href={galleryURL(undefined, "edition")}>
-          One more round: film, campaign artwork & frozen report images →
-        </a>
-      )}
-      <div class="gallery-controls">
-        <form method="get" action="/share/" class="mobile-filters" data-gallery-filters>
-          {Astro.url.searchParams.get("analytics") === "off" && (
-            <input type="hidden" name="analytics" value="off" />
-          )}
-          {Astro.url.searchParams.has("qa") && (
-            <input type="hidden" name="qa" value={Astro.url.searchParams.get("qa")!} />
-          )}
-          <label>
-            Project
-            <select name="project">
-              <option value="">All projects</option>
-              {kitProjects.map((p) => (
-                <option value={p.slug} selected={selected?.slug === p.slug}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Asset type
-            <select name="type">
-              {galleryTypes
-                .filter(([key]) => !selected || !globalTypes.includes(key))
-                .map(([key, label]) => (
-                  <option value={key} selected={view === key}>
-                    {label}
-                  </option>
-                ))}
-            </select>
-          </label>
-          <button type="submit" data-filter-submit>
-            Show assets
-          </button>
-        </form>
-        <nav aria-label="Projects" class="project-choices">
-          <a href={galleryURL(undefined, view)} aria-current={!selected ? "page" : undefined}>
-            All projects
-          </a>
-          {kitProjects.map((project) => (
-            <a
-              href={galleryURL(
-                project.slug,
-                (projectGalleryTypes as readonly string[]).includes(view) &&
-                  availableProjectTypes(project.slug).includes(view as ProjectGalleryType)
-                  ? (view as ProjectGalleryType)
-                  : defaultProjectType(project.slug)
-              )}
-              aria-current={selected?.slug === project.slug ? "page" : undefined}
-            >
-              {project.name}
-            </a>
-          ))}
-        </nav>
-        <nav aria-label="Asset types" class="type-choices">
-          {galleryTypes.map(([key, label]) => (
-            <a
-              href={galleryURL(
-                ["radio", "factory", "logos", "social"].includes(key) ? undefined : selected?.slug,
-                key
-              )}
-              aria-current={view === key ? "page" : undefined}
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-      </div>
-      {collection.pages > 1 && (
-        <GalleryPagination
-          project={selected?.slug}
-          type={view}
-          page={collection.page}
-          pages={collection.pages}
-        />
-      )}
-      {view === "edition" && (
-        <section aria-labelledby="edition-kit-title">
-          {edition ? (
-            <>
-              <EditionShareKit compact availablePack={editionCompositePublic} />
-              <p class="result-count">
-                {collection.total
-                  ? `${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${selected?.name ?? "Edition assets"}`
-                  : "No edition assets for this project."}
-              </p>
-              <EditionShareAssets assets={galleryPage(editionMedia, requestedPage).items} />
-            </>
-          ) : (
-            <p>The edition kit is unavailable right now.</p>
-          )}
-        </section>
-      )}
-      {["images", "clips", "artwork"].includes(view) && (
-        <section aria-label={`${selected?.name ?? "All projects"} ${viewLabel}`}>
-          {selected && (
+        {view === "logos" && (
+          <section id="assets" aria-labelledby="assets-title">
             <div class="section-heading">
-              {imagePack && collection.total > 0 && imagePacks.has(imagePack) && (
-                <a href={imagePack} download={`${selected.slug}-${view}.zip`}>
-                  Download image pack
-                </a>
-              )}
-              {selected && <a href={projectActionHref(selected)}>{projectActionLabel(selected)}</a>}
+              <h2 id="assets-title">Logos & SVGs</h2>
             </div>
-          )}
-          {collection.total ? (
-            <p class="result-count">
-              {`${collection.start + 1}–${Math.min(collection.start + 6, collection.total)} of ${collection.total} · ${viewLabel}`}
-            </p>
-          ) : selected ? (
-            <p class="result-count">
-              No {viewLabel.toLowerCase()} for {selected.name} in this project's reviewed media.
-              {selectedTypes.length > 1 && (
-                <>
-                  {" Available here: "}
-                  {selectedTypes
-                    .filter((key) => key !== view)
-                    .map((key) => (
-                      <a href={galleryURL(selected.slug, key)}>{typeLabel(key)}</a>
-                    ))}
-                </>
-              )}
-            </p>
-          ) : (
-            <p class="result-count">No {viewLabel.toLowerCase()} in this collection.</p>
-          )}
-          <div class:list={["gallery", { "art-gallery": view === "artwork" }]}>
-            {visibleMedia.map((asset, index) => {
-              const project = projects.find((item) => item.slug === asset.project);
-              return (
-                <GameMedia
-                  asset={asset}
-                  destination={project ? projectActionHref(project) : "/share/"}
-                  preview={
-                    previewSet.has(asset.id) ? `/share/previews/${asset.id}.webp` : undefined
-                  }
-                  eager={index < 3}
-                />
-              );
-            })}
-          </div>
-        </section>
-      )}
-      {view === "cards" && (
-        <section aria-labelledby="link-cards-title">
-          <div class="section-heading">
-            <h2 id="link-cards-title">Link cards</h2>
-          </div>
-          <section id="projects" aria-label="Project images" class="gallery">
-            {visibleProjects.map((project, index) => {
-              const metadata = getSiteMetadata(project);
-              const fallback = getArtworkFallback(project);
-              const destination = projectActionHref(project);
-              return (
-                <figure id={`project-${project.slug}`}>
-                  <a
-                    class="image-link"
-                    href={metadata.image}
-                    data-fallback-href={fallback.image}
-                    data-fallback-label={`View ${project.name} artwork full size`}
-                    aria-label={`View ${project.name} image full size`}
-                  >
-                    <img
-                      src={metadata.image}
-                      width="1200"
-                      height="630"
-                      alt={project.previewAlt ?? `Woodhouse illustration for ${project.name}`}
-                      loading={index < 3 ? "eager" : "lazy"}
-                      data-gallery-image
-                      data-fallback-image={fallback.image}
-                      data-fallback-alt={fallback.alt}
-                      data-fallback-credit={fallback.credit}
-                    />
-                  </a>
-                  <figcaption>
-                    <div class="asset-title">
-                      <h2>{project.name}</h2>
-                      <span data-image-size>Original image</span>
-                    </div>
-                    <p class="credit" data-image-credit>
-                      {project.previewImage
-                        ? `Artwork from ${project.name}`
-                        : "Illustration by Woodhouse"}
-                    </p>
-                  </figcaption>
-                  <ShareActions
-                    caption={projectCaption(project)}
-                    image={
-                      project.previewImage
-                        ? `/api/share-image?project=${project.slug}`
-                        : metadata.image
-                    }
-                    fallbackImage={fallback.image}
-                    filename={`${project.slug}-social.jpg`}
-                    link={destination}
-                  />
-                  <div class="asset-links">
-                    <a href={destination}>{projectActionLabel(project)}</a>
-                    <a href={kitURL(project.slug, view)}>Link to this kit</a>
-                    {project.slug === "shoalshot" && nativeSharing && (
-                      <a href={destination}>Play & share a dive</a>
-                    )}
-                  </div>
-                </figure>
-              );
-            })}
-          </section>
-        </section>
-      )}
-      {view === "radio" && (
-        <section id="radio" aria-labelledby="radio-title">
-          <div class="section-heading">
-            <h2 id="radio-title">Games × Radio</h2>
-            <a href="/activity/">Analytics</a>
-          </div>
-          {radio ? (
-            <div class="gallery radio-gallery">
-              {(Object.keys(cardFormats) as CardFormat[]).map((format) => (
+            <div class="gallery small-assets">
+              {galleryPage(smallAssets, requestedPage).items.map((item) => (
                 <figure>
                   <a
-                    class="image-link radio-preview"
-                    href={radioImage(format)}
-                    aria-label={`View ${format} radio card full size`}
-                  >
-                    <img
-                      src={radioImage(format)}
-                      width={cardFormats[format].width}
-                      height={cardFormats[format].height}
-                      alt={`Games × Radio ${format} artwork and dated listening snapshot from LoftwahFM`}
-                      loading="lazy"
-                    />
-                  </a>
-                  <figcaption>
-                    <div class="asset-title">
-                      <h3>{format[0]!.toUpperCase() + format.slice(1)}</h3>
-                      <span>
-                        {cardFormats[format].width} × {cardFormats[format].height} PNG
-                      </span>
-                    </div>
-                    <p class="credit">Official game artwork · LoftwahFM composition</p>
-                  </figcaption>
-                  <ShareActions
-                    caption={`The next round has a soundtrack. Fighter, SHOALSHOT, Protocol 11 and Bubbles meet LoftwahFM.\n${SITE_ORIGIN}/share/\nhttps://fm.loftwah.com/analytics/?source=games&days=30&snapshot=${radio.snapshot}`}
-                    image={radioImage(format, true)}
-                    filename={`loftwahfm-games-${format}.png`}
-                    link={activityLink("", radio.snapshot)}
-                  />
-                </figure>
-              ))}
-            </div>
-          ) : (
-            <p>Radio cards are unavailable right now.</p>
-          )}
-          {radio && (
-            <p class="credit">
-              Snapshot {radio.asOf.slice(0, 16).replace("T", " ")} UTC · Listening, not project
-              popularity.
-            </p>
-          )}
-        </section>
-      )}
-      {view === "factory" && (
-        <section id="stories" aria-labelledby="stories-title">
-          <div class="section-heading">
-            <h2 id="stories-title">Factory & stories</h2>
-          </div>
-          <div class="gallery">
-            {houseImages
-              .filter((item) => visibleFactoryIds.has(item.name))
-              .map((item) => (
-                <figure>
-                  <a
-                    class="image-link"
+                    class="image-link svg-preview"
                     href={item.image}
-                    aria-label={`View ${item.name} artwork full size`}
+                    aria-label={`View ${item.name} full size`}
                   >
-                    <img
-                      src={item.image}
-                      width="1200"
-                      height="630"
-                      alt={`${item.name} artwork by Woodhouse`}
-                      loading="lazy"
-                    />
+                    <img src={item.image} alt={item.name} loading="lazy" />
                   </a>
                   <figcaption>
                     <div class="asset-title">
                       <h3>{item.name}</h3>
-                      <span>1200 × 630 JPG</span>
+                      <span>{"width" in item ? `${item.width} × ${item.height} WebP` : "SVG"}</span>
                     </div>
-                    <p class="credit">Woodhouse</p>
+                    <p class="credit">{item.credit}</p>
                   </figcaption>
                   <ShareActions
-                    caption={item.caption}
-                    image={item.image}
-                    filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.jpg`}
-                    link={`${SITE_ORIGIN}${item.link}`}
+                    caption={`${item.name} · ${item.credit}\n${SITE_ORIGIN}/share/`}
+                    image={
+                      "download" in item && typeof item.download === "string"
+                        ? item.download
+                        : item.image
+                    }
+                    filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
+                    link={`${SITE_ORIGIN}/share/`}
                   />
-                  <a class="story-link" href={item.link}>
-                    Read the story
-                  </a>
                 </figure>
               ))}
-            {stories
-              .filter((story) => visibleFactoryIds.has(story.slug))
-              .map((story) => (
-                <figure>
-                  <a
-                    class="image-link"
-                    href={dispatchSocialCard(story.slug)}
-                    aria-label={`View ${story.title} artwork full size`}
-                  >
-                    <img
-                      src={dispatchSocialCard(story.slug)}
-                      width="1200"
-                      height="630"
-                      alt={`Woodhouse artwork for ${story.title}`}
-                      loading="lazy"
-                    />
-                  </a>
-                  <figcaption>
-                    <div class="asset-title">
-                      <h3>{story.title}</h3>
-                      <span>1200 × 630 JPG</span>
-                    </div>
-                    <p class="credit">Woodhouse</p>
-                  </figcaption>
-                  <ShareActions
-                    caption={shareCaption(
-                      story.title,
-                      story.deck,
-                      `${SITE_ORIGIN}${dispatchPath(story)}`
-                    )}
-                    image={dispatchSocialCard(story.slug)}
-                    filename={`${story.slug}.jpg`}
-                    link={`${SITE_ORIGIN}${dispatchPath(story)}`}
-                  />
-                  <a class="story-link" href={dispatchPath(story)}>
-                    Read the story
-                  </a>
-                </figure>
-              ))}
-          </div>
-        </section>
-      )}
-      {view === "logos" && (
-        <section id="assets" aria-labelledby="assets-title">
-          <div class="section-heading">
-            <h2 id="assets-title">Logos & SVGs</h2>
-          </div>
-          <div class="gallery small-assets">
-            {galleryPage(smallAssets, requestedPage).items.map((item) => (
-              <figure>
-                <a
-                  class="image-link svg-preview"
-                  href={item.image}
-                  aria-label={`View ${item.name} full size`}
-                >
-                  <img src={item.image} alt={item.name} loading="lazy" />
-                </a>
-                <figcaption>
-                  <div class="asset-title">
-                    <h3>{item.name}</h3>
-                    <span>{"width" in item ? `${item.width} × ${item.height} WebP` : "SVG"}</span>
-                  </div>
-                  <p class="credit">{item.credit}</p>
-                </figcaption>
-                <ShareActions
-                  caption={`${item.name} · ${item.credit}\n${SITE_ORIGIN}/share/`}
-                  image={
-                    "download" in item && typeof item.download === "string"
-                      ? item.download
-                      : item.image
-                  }
-                  filename={`${item.name.toLowerCase().replaceAll(" ", "-")}.${item.image.endsWith(".webp") ? "webp" : "svg"}`}
-                  link={`${SITE_ORIGIN}/share/`}
-                />
-              </figure>
+            </div>
+          </section>
+        )}
+        {collection.pages > 1 && (
+          <GalleryPagination
+            project={selected?.slug}
+            type={view}
+            page={collection.page}
+            pages={collection.pages}
+            end
+          />
+        )}
+        <section id="social" class="social-links" aria-label="Official social profiles">
+          <h2>Post it.</h2>
+          <nav>
+            {profiles.map((item) => (
+              <a href={item.url}>{item.label}</a>
             ))}
-          </div>
+          </nav>
         </section>
-      )}
-      {collection.pages > 1 && (
-        <GalleryPagination
-          project={selected?.slug}
-          type={view}
-          page={collection.page}
-          pages={collection.pages}
-          end
-        />
-      )}
-      <section id="social" class="social-links" aria-label="Official social profiles">
-        <h2>Post it.</h2>
-        <nav>
-          {profiles.map((item) => (
-            <a href={item.url}>{item.label}</a>
-          ))}
-        </nav>
-      </section>
-    </div>
+      </div>
+    )}
   </div>
-</BaseLayout>
+</ShareLayout>
 <script>
-  for (const form of document.querySelectorAll<HTMLFormElement>("[data-gallery-filters]")) {
-    const button = form.querySelector<HTMLButtonElement>("[data-filter-submit]");
-    if (button) button.hidden = true;
-    form.addEventListener("change", () => form.requestSubmit());
-  }
-
-  // The phone gallery rails scroll horizontally. Open with the selected project
-  // or asset type visible instead of leaving the current choice off-screen, and
-  // say which edges still hold content so a fade can show the rail continues.
-  for (const nav of document.querySelectorAll<HTMLElement>(
-    ".showcase-projects, .gallery-controls nav"
-  )) {
-    const active = nav.querySelector<HTMLElement>('[aria-current="page"]');
-    if (active && nav.scrollWidth > nav.clientWidth) {
-      nav.scrollLeft = Math.max(0, active.offsetLeft - nav.offsetLeft - 8);
-    }
-    const updateEdges = () => {
-      const scrollable = nav.scrollWidth > nav.clientWidth + 2;
-      nav.toggleAttribute("data-scrollable", scrollable);
-      nav.toggleAttribute("data-at-start", !scrollable || nav.scrollLeft <= 2);
-      nav.toggleAttribute(
-        "data-at-end",
-        !scrollable || Math.ceil(nav.scrollLeft + nav.clientWidth) >= nav.scrollWidth - 2
-      );
-    };
-    updateEdges();
-    nav.addEventListener("scroll", updateEdges, { passive: true });
-    window.addEventListener("resize", updateEdges, { passive: true });
-  }
-
   for (const image of document.querySelectorAll<HTMLImageElement>("[data-gallery-image]")) {
     const label = image.closest("figure")?.querySelector("[data-image-size]");
     const describe = () => {
@@ -883,441 +736,85 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
   }
 </script>
 <style>
-  .motion-selection {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--line);
-  }
-  .motion-selection > h2 {
-    font: 600 2.5rem/1 var(--display);
-    letter-spacing: -0.03em;
-    margin: 0 0 1.25rem;
-  }
-  .motion-gallery {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-  }
-  .motion-gallery > div {
-    min-width: 0;
-  }
-  .motion-action {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    color: var(--acid);
-  }
-  @media (max-width: 700px) {
-    .motion-gallery {
-      grid-template-columns: 1fr;
-    }
-  }
-  .showcase-page {
-    width: min(100% - 2 * var(--gutter), 1440px);
-    max-width: none;
-    padding-top: 1.6rem;
-  }
-  .share-jumps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 1rem;
-  }
-  .share-jumps a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
-  .showcase-heading {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.5rem 1.5rem;
-  }
-  .showcase-heading h1 {
-    font: 600 clamp(2rem, 3.5vw, 3.5rem)/1.05 var(--display);
-    letter-spacing: -0.035em;
-    margin: 0;
-  }
-  .showcase-heading > a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-    color: var(--muted);
-    font-size: 0.85rem;
-  }
-  .showcase-projects {
-    margin: 0.5rem 0 1.2rem;
-    gap: 0.1rem 1.25rem;
-  }
-  .showcase-projects a {
-    color: var(--muted);
-  }
-  .showcase-projects a[aria-current] {
-    color: var(--acid);
-  }
-  .after-showcase {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--line);
-    scroll-margin-top: 1rem;
-  }
-  .archive-heading {
-    font: 600 2.5rem/1 var(--display);
-    letter-spacing: -0.03em;
-    margin: 0 0 0.75rem;
-  }
-  .archive-intro {
-    margin-bottom: 0.75rem;
-  }
-  @media (max-width: 700px) {
-    .showcase-page {
-      width: calc(100% - 1.5rem);
-      padding-top: 1rem;
-    }
-    .showcase-heading h1 {
-      font-size: 2.3rem;
-      max-width: 15ch;
-    }
-    .showcase-heading > a {
-      font-size: 0.8rem;
-    }
-    .showcase-projects {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      white-space: nowrap;
-      margin: 0 0 0.9rem;
-      gap: 0 1rem;
-    }
-    /* A rail that silently continues past the edge looks like a short list. The
-       fade only appears on a scrollable rail, and only on the side that still has
-       content, so the selected item is never hidden behind it. */
-    .showcase-projects[data-scrollable] {
-      scroll-padding-inline: 1rem;
-    }
-    .showcase-projects[data-scrollable]:not([data-at-end]) {
-      -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent);
-      mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent);
-    }
-    .showcase-projects[data-scrollable]:not([data-at-start]):not([data-at-end]) {
-      -webkit-mask-image: linear-gradient(
-        to right,
-        transparent 0,
-        #000 2rem,
-        #000 calc(100% - 2.5rem),
-        transparent
-      );
-      mask-image: linear-gradient(
-        to right,
-        transparent 0,
-        #000 2rem,
-        #000 calc(100% - 2.5rem),
-        transparent
-      );
-    }
-    .showcase-projects[data-scrollable]:not([data-at-start])[data-at-end] {
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 2rem);
-      mask-image: linear-gradient(to right, transparent 0, #000 2rem);
-    }
-    .showcase-projects a {
-      font-size: 0.8rem;
-    }
-  }
-
-  .edition-kit-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    margin-bottom: 1.5rem;
-    color: var(--acid);
-  }
   .share-gallery {
-    padding-block: 2.5rem 4rem;
-  }
-  .gallery-intro {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: end;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .mobile-filters {
-    display: none;
+    padding-block: 0 3rem;
   }
   .gallery-controls {
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--line);
+    margin-block: 0 1rem;
   }
-  .project-choices,
-  .type-choices {
-    gap: 0 1rem;
-  }
-  .project-choices a[aria-current],
-  .type-choices a[aria-current] {
-    color: var(--acid);
-    font-weight: 700;
-    text-decoration-thickness: 2px;
-  }
-  .type-choices {
-    padding-bottom: 0.5rem;
-  }
-  .result-count {
-    color: var(--muted);
-    margin: -0.75rem 0 1.5rem;
-    font-size: 0.875rem;
-  }
-  .gallery-intro h1 {
-    font-family: var(--display);
-    font-size: clamp(2.6rem, 4.5vw, 4rem);
-    letter-spacing: -0.035em;
-    line-height: 1;
-    margin: 0 0 0.75rem;
-  }
-  .gallery-intro p {
-    margin: 0;
-    color: var(--muted);
-  }
-  nav,
-  .asset-links {
+  .mobile-filters,
+  .section-heading,
+  .asset-links,
+  .social-links nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-  }
-  nav a,
-  .asset-links a,
-  .story-link,
-  .section-heading > a {
-    display: inline-flex;
     align-items: center;
+    gap: 0.75rem 1rem;
+  }
+  .mobile-filters label {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .mobile-filters select,
+  .mobile-filters button {
     min-height: 44px;
-    font-size: 0.875rem;
-    text-underline-offset: 0.3em;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--line);
+    background: var(--ink);
+    color: var(--paper);
+    font: inherit;
+  }
+  .mobile-filters button {
+    align-self: end;
+    cursor: pointer;
   }
   .gallery {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1.25rem;
   }
   figure {
     margin: 0;
     min-width: 0;
-    scroll-margin-top: 1.5rem;
   }
   .image-link {
     display: block;
     background: var(--surface);
   }
-  img {
-    display: block;
+  .image-link img {
     width: 100%;
     height: auto;
+    aspect-ratio: 1.7;
+    object-fit: contain;
+    display: block;
   }
-  figcaption {
-    padding-top: 0.85rem;
+  .svg-preview img {
+    padding: 0.75rem;
   }
   .asset-title {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
     justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
     gap: 0.25rem 0.75rem;
   }
-  .asset-title h2,
-  .asset-title h3 {
-    font-family: var(--display);
-    font-size: 1.25rem;
-    letter-spacing: -0.025em;
-    line-height: 1.25;
-    margin: 0;
+  .asset-title :is(h2, h3) {
+    font-size: 1rem;
+    margin-block: 0.55rem 0;
   }
   .asset-title span,
-  .credit {
+  .credit,
+  .result-count {
     color: var(--muted);
-    font-size: 0.8rem;
+    font-size: 0.875rem;
   }
-  .credit {
-    margin: 0.35rem 0 0.8rem;
-  }
-  .asset-links {
-    gap: 0.25rem 1rem;
-  }
-  section + section {
-    border-top: 1px solid var(--line);
-    margin-top: 2.5rem;
-    padding-top: 2rem;
-    scroll-margin-top: 1rem;
-  }
-  .section-heading {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 0.5rem;
-    margin-bottom: 1.4rem;
-  }
-  .section-heading h2,
-  .social-links h2 {
-    font-family: var(--display);
-    font-size: 2rem;
-    letter-spacing: -0.03em;
-    margin: 0;
-  }
-  .radio-preview {
-    aspect-ratio: 1;
-    display: block;
-    overflow: hidden;
-  }
-  .radio-preview img {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    object-fit: contain;
-  }
-  .svg-preview {
-    height: 220px;
-    display: block;
-    overflow: hidden;
-    padding: 1rem;
-  }
-  .svg-preview img {
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    object-fit: contain;
+  .story-link,
+  .asset-links a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
   }
   .social-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
-  .art-gallery {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .section-heading h3 {
-    font-family: var(--display);
-    font-size: 1.5rem;
-    margin: 0;
-  }
-  @media (max-width: 1100px) {
-    .gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .art-gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 600px) {
-    .gallery-controls > nav {
-      display: none;
-    }
-    .mobile-filters {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      padding-bottom: 0.75rem;
-    }
-    .mobile-filters label {
-      display: grid;
-      gap: 0.25rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      min-width: 0;
-    }
-    .mobile-filters select {
-      width: 100%;
-      min-height: 44px;
-      background: var(--surface);
-      color: var(--paper);
-      border: 1px solid var(--line);
-      padding: 0.5rem;
-      font: inherit;
-      font-size: 0.8rem;
-    }
-    .mobile-filters button {
-      min-height: 44px;
-      background: var(--acid);
-      color: var(--ink);
-      border: 0;
-    }
-
-    .showcase-projects {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-right: 2.25rem;
-      scrollbar-width: thin;
-      mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 2rem), transparent 100%);
-    }
-    .showcase-projects a {
-      flex-shrink: 0;
-    }
-
-    .gallery-intro nav {
-      gap: 0 0.75rem;
-    }
-    .gallery-controls .project-choices,
-    .gallery-controls .type-choices {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      padding-right: 2.25rem;
-      scrollbar-width: thin;
-    }
-    .gallery-controls .project-choices[data-scrollable],
-    .gallery-controls .type-choices[data-scrollable] {
-      scroll-padding-inline: 1rem;
-    }
-    .gallery-controls .project-choices[data-scrollable]:not([data-at-end]),
-    .gallery-controls .type-choices[data-scrollable]:not([data-at-end]) {
-      -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2rem), transparent);
-      mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2rem), transparent);
-    }
-    .gallery-controls .project-choices[data-scrollable]:not([data-at-start]):not([data-at-end]),
-    .gallery-controls .type-choices[data-scrollable]:not([data-at-start]):not([data-at-end]) {
-      -webkit-mask-image: linear-gradient(
-        to right,
-        transparent 0,
-        #000 1.5rem,
-        #000 calc(100% - 2rem),
-        transparent
-      );
-      mask-image: linear-gradient(
-        to right,
-        transparent 0,
-        #000 1.5rem,
-        #000 calc(100% - 2rem),
-        transparent
-      );
-    }
-    .gallery-controls .project-choices[data-scrollable]:not([data-at-start])[data-at-end],
-    .gallery-controls .type-choices[data-scrollable]:not([data-at-start])[data-at-end] {
-      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.5rem);
-      mask-image: linear-gradient(to right, transparent 0, #000 1.5rem);
-    }
-    .gallery-controls .project-choices a,
-    .gallery-controls .type-choices a {
-      flex-shrink: 0;
-    }
-    .gallery {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    .art-gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.5rem 0.75rem;
-    }
-    .share-gallery {
-      padding-top: 1.5rem;
-    }
-    .gallery-intro {
-      margin-bottom: 1rem;
-    }
-    .radio-preview {
-      aspect-ratio: auto;
-      height: 320px;
-    }
-    .social-links {
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
+    margin-block: 2rem;
   }
 </style>

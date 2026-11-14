@@ -1,10 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShareLayout from "../../layouts/ShareLayout.astro";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import { listProjectRecords } from "../../content/repository";
 import { contactStudies, contactStudyWorks } from "../../data/showcase-contact-studies";
 import { publicCampaignItems } from "../../data/showcase-public";
-import { shareNavigation } from "../../data/share-browser";
 
 export const prerender = false;
 const result = await listProjectRecords();
@@ -18,11 +17,11 @@ if (Astro.cache?.enabled) {
 const lead = works[0]!;
 ---
 
-<BaseLayout
+<ShareLayout
   title={contactStudies.title}
   description={contactStudies.description}
   path={contactStudies.path}
-  currentPath="/share/"
+  heading={contactStudies.title}
   image={lead.original}
   imageAlt={lead.alt}
   imageWidth={lead.width}
@@ -30,8 +29,6 @@ const lead = works[0]!;
 >
   <div class="container studies">
     <header>
-      <a href={shareNavigation("/share/", Astro.url.searchParams)}>Share gallery</a>
-      <h1>{contactStudies.title}</h1>
       <p>
         Liquid, thread, paper and ribbon. Four studies of what happens when things meet, inspired by
         the games and software we make.
@@ -47,11 +44,11 @@ const lead = works[0]!;
     </header>
     <ShowcaseGallery items={works} compact />
   </div>
-</BaseLayout>
+</ShareLayout>
 
 <style>
   .studies {
-    padding-block: clamp(2.5rem, 6vw, 6rem);
+    padding-block: 0 2rem;
   }
   header {
     margin-block-end: clamp(1.75rem, 4vw, 3rem);
