@@ -81,6 +81,7 @@ export type CampaignItem = {
   reviewedAt: string;
   addedAt?: string;
   fileModifiedAt?: string;
+  sourceReleasedAt?: string;
   archived?: true;
   socialPack?: string;
   credit: string;
