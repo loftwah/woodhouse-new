@@ -93,7 +93,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           series !== "seasonal-library" &&
           series !== "field-guide" &&
           series !== "game-rules" &&
-          series !== "architecture"
+          series !== "architecture" &&
+          series !== "commissioned"
       )
       .slice(0, 5)
       .map(({ id }) => id),
@@ -134,7 +135,8 @@ test("fresh work leads on the same review date and archived Foilbury art is off 
           !href.includes("#playbook-") &&
           !href.includes("#wild-25-") &&
           !href.includes("#share-art-") &&
-          !href.includes("#share-edition-")
+          !href.includes("#share-edition-") &&
+          !href.includes("#new-")
       )
       .map(({ href }) => href),
     [
