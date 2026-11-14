@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -91,11 +92,17 @@ test("dotenv comments and multiline values match the Node runtime parser", () =>
     `MULTILINE_SECRET="first\n${CANARY}"`,
     `export EXPORTED_TOKEN=${CANARY}`
   ].join("\n");
-  assert.deepEqual(Object.fromEntries(parseEnvFile(source)), { ...parseEnv(source) });
+  assert.deepEqual(Object.fromEntries(parseEnvFile(source)), {
+    ...parseEnv(source)
+  });
   for (const secret of privateEnvValues(parseEnvFile(source)))
-    assert.deepEqual(scanPublicText(secret, { privateValues: [secret], includeMarkers: false }), [
-      "configured private value"
-    ]);
+    assert.deepEqual(
+      scanPublicText(secret, {
+        privateValues: [secret],
+        includeMarkers: false
+      }),
+      ["configured private value"]
+    );
 });
 
 test("opaque public-prefixed credentials and commented values fail the actual artefact guard", async () => {
@@ -155,7 +162,9 @@ test("a build that leaks a synthetic secret fails before deploy", async () => {
     "dist/client/.env": `TEST_API_KEY=${CANARY}`,
     "dist/server/.dev.vars": `TEST_API_KEY=${CANARY}`,
     // A nested source map carrying the secret.
-    "dist/server/chunks/app.mjs.map": JSON.stringify({ sourcesContent: [CANARY] }),
+    "dist/server/chunks/app.mjs.map": JSON.stringify({
+      sourcesContent: [CANARY]
+    }),
     "seed/seed.json": JSON.stringify({ content: { conversations: [] } })
   });
   try {
@@ -265,4 +274,35 @@ test("an unreachable origin is reported rather than passing silently", async () 
     }
   });
   assert(results.every((r) => r.outcome === "unreachable"));
+});
+
+test("explicit trusted env supports isolated worktrees and fails closed when missing", async () => {
+  const root = await fixture({
+    "trusted.env": `TEST_API_KEY=${CANARY}`,
+    "dist/client/image.bin": Buffer.concat([Buffer.from([0, 255, 0]), Buffer.from(CANARY)])
+  });
+  try {
+    const withoutEnv = await checkBuildPrivacy({ root });
+    assert.equal(withoutEnv.ok, true);
+    assert.equal(withoutEnv.configuredValuesIncluded, false);
+    const withEnv = await checkBuildPrivacy({
+      root,
+      envFile: path.join(root, "trusted.env")
+    });
+    assert.equal(withEnv.configuredValuesIncluded, true);
+    assert.equal(withEnv.ok, false);
+    assert(withEnv.findings.some((finding) => finding.label === "configured private value"));
+    const cli = spawnSync(process.execPath, [path.resolve("scripts/check-build-privacy.mjs")], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, WOODHOUSE_PRIVACY_ENV_FILE: path.join(root, "trusted.env") }
+    });
+    assert.equal(cli.status, 1);
+    assert.match(cli.stdout, /includes configured private values/);
+    assert.match(cli.stderr, /configured private value/);
+    assert(!`${cli.stdout}${cli.stderr}`.includes(CANARY));
+    await assert.rejects(checkBuildPrivacy({ root, envFile: path.join(root, "missing.env") }));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });

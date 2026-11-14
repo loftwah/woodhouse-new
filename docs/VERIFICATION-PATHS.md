@@ -168,3 +168,19 @@ The honest reading: the checks are not the problem. Together they are 20–30s. 
 deploys, and that is what the clock is spent on. The only remaining lever is publishing fewer
 environments for a given change, which is a decision about what preview is for, not a number to reach
 by quietly dropping a check.
+
+### Private-value scans in isolated worktrees
+
+The build privacy scan always checks published paths and high-confidence credential shapes. It
+also checks credential-named values from the worktree's `.env` when present; a fresh isolated
+worktree may have no such file. To include values from an existing trusted environment file, set
+its absolute path for the build or publication command, for example:
+
+```sh
+WOODHOUSE_PRIVACY_ENV_FILE=/absolute/path/to/trusted.env pnpm run build
+```
+
+The scanner reports whether configured private values were included, without printing their names
+or values. An explicitly selected file that cannot be read fails the build. No environment file is
+required for work that does not have one; in that case the report says configured private values
+were not included. Do not copy secrets into the worktree or commit the file.
