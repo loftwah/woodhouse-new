@@ -326,7 +326,7 @@ test("parallel artefact guard scans binary bytes and retains path-specific rules
   try {
     const result = await checkBuildPrivacy({ root });
     const relative = result.findings.map(
-      ({ label, file }) => `${label}:${path.relative(root, file)}`
+      ({ label, file }) => `${label}:${path.relative(root, file).split(path.sep).join("/")}`
     );
     assert(relative.includes("configured private value:dist/client/deep/image.bin"));
     assert(relative.includes("GitHub token:dist/client/deep/video.bin"));
@@ -357,7 +357,8 @@ test("artefact guard works from an input-type module parent", async () => {
 });
 
 test("an unreadable artifact fails the parallel guard closed", async (t) => {
-  if (process.getuid?.() === 0) return t.skip("root bypasses file permissions");
+  if (process.platform === "win32" || process.getuid?.() === 0)
+    return t.skip("this platform cannot enforce the POSIX permission fixture");
   const root = await fixture({
     "dist/client/private.bin": "ordinary bytes",
     "dist/client/index.html": "safe"
