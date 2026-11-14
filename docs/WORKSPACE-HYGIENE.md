@@ -40,6 +40,21 @@ First run: 1,514 routine capture entries, 0.08 GB, repository 4.6 → 4.5 GB, fr
 That is small because the captures were the only routine material past its age; the value is that the
 852 MB of `output/` and 547 MB of `.release/` now expire instead of accumulating forever.
 
+## Close out a release
+
+Use one temporary checkout for a release when possible. Reuse its installed dependencies and
+candidate build for verification. After checking the deployed route, keep the commit and release
+receipt, then stop the local preview and browser sessions you started.
+
+From the idle checkout, run `pnpm run workspace:prune -- --builds-only` to see the size of the
+generated output. Add `--apply` to clear it. This command selects only `dist`,
+`storybook-static` and `.astro`. Use it in each checkout that built a candidate. Keep the
+checkout if it has local changes, branch-only work, private data or unarchived files.
+
+For image and media runs, verify the production downloads and the private archive index before
+retiring local originals or exported copies. Keep restore paths and generation records. Source
+media, databases and older worktree contents need their own checks before removal.
+
 ## Test residue
 
 The retained test suite already creates temporary directories under the system temp directory and
