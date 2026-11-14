@@ -1,3 +1,4 @@
+import { atlasLab } from "./showcase-atlas-lab.ts";
 import { commissionedArt, commissionedUpgrades } from "./showcase-commissioned.ts";
 import { playbook } from "./showcase-playbook.ts";
 import { fieldGuide } from "./showcase-field-guide.ts";
@@ -60,7 +61,8 @@ export type CampaignItem = {
     | "field-guide"
     | "game-rules"
     | "architecture"
-    | "commissioned";
+    | "commissioned"
+    | "atlas-lab";
   use?:
     | "banner"
     | "icon"
@@ -82,6 +84,7 @@ export type CampaignItem = {
   reviewedAt: string;
   addedAt?: string;
   fileModifiedAt?: string;
+  sourceReleasedAt?: string;
   archived?: true;
   socialPack?: string;
   credit: string;
@@ -146,6 +149,7 @@ const item = (
     : {})
 });
 const allCampaignItems: CampaignItem[] = [
+  ...atlasLab,
   ...commissionedArt,
   ...playbook,
   ...fieldGuide,

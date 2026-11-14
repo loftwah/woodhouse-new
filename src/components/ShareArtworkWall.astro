@@ -18,6 +18,7 @@ const categories = [
   ["", "All artwork"],
   ["screenshot", "Screenshots"],
   ["clip", "Clips"],
+  ["atlas-lab", "Atlas, cast & storyboards"],
   ["commissioned", "New commissions"],
   ["game-rules", "How to play"],
   ["architecture", "Architecture"],
@@ -47,6 +48,7 @@ const { works, projects } = Astro.props;
 const params = Astro.url.searchParams;
 const category = categories.find(([key]) => key === params.get("artType"))?.[0] ?? "";
 const series =
+  category === "atlas-lab" ||
   category === "commissioned" ||
   category === "game-rules" ||
   category === "architecture" ||
@@ -85,11 +87,14 @@ const featuredIds = [
   "november-foilbury",
   "november-protocol-11"
 ];
-const defaultSort = !project && !category && !placement && !tag ? "featured" : "newest";
-const sort =
-  params.get("artSort") === "featured"
-    ? defaultSort
-    : (artworkSorts.find(([value]) => value === params.get("artSort"))?.[0] ?? defaultSort);
+const defaultSort = tag === "LoftwahFM releases" ? "release-newest" : "newest";
+const availableSorts = tag === "LoftwahFM releases" || project === "loftwahfm"
+  ? artworkSorts
+  : artworkSorts.filter(([value]) => value !== "release-newest");
+const requestedSort = params.get("artSort");
+const sort = requestedSort === "featured"
+  ? requestedSort
+  : (availableSorts.find(([value]) => value === requestedSort)?.[0] ?? defaultSort);
 const featured = sort === "featured";
 const shuffleSeed = (params.get("artSeed") ?? "").match(/^[a-z0-9]{1,24}$/i)?.[0] ?? "woodhouse";
 const ordered = orderArtwork(
@@ -123,18 +128,16 @@ const path = (
   number: number,
   nextCategory: string = category,
   nextSort = sort,
-  nextSeed = shuffleSeed
+  nextSeed = shuffleSeed,
+  nextTag = tag
 ) => {
   const query = new URLSearchParams();
   if (nextCategory) query.set("artType", nextCategory);
   if (project) query.set("artProject", project);
   if (placement) query.set("artFormat", placement);
-  if (tag) query.set("artTag", tag);
-  if (
-    (nextSort !== "featured" && nextSort !== "newest") ||
-    (nextSort === "newest" && !nextCategory && !project && !placement && !tag)
-  )
-    query.set("artSort", nextSort);
+  if (nextTag) query.set("artTag", nextTag);
+  const naturalSort = nextTag === "LoftwahFM releases" ? "release-newest" : "newest";
+  if (nextSort !== naturalSort) query.set("artSort", nextSort);
   if (nextSort === "shuffle") query.set("artSeed", nextSeed);
   if (number > 1) query.set("artPage", String(number));
   return shareNavigation(`/share/${query.size ? `?${query}` : ""}`, params);
@@ -206,7 +209,7 @@ const artworkPages = Object.fromEntries(
             <option value="featured" selected={featured}>
               Recommended
             </option>
-            {artworkSorts.map(([value, label]) => (
+            {availableSorts.map(([value, label]) => (
               <option value={value} selected={value === sort}>
                 {label}
               </option>
@@ -271,6 +274,30 @@ const artworkPages = Object.fromEntries(
       </div>
     </details>
   </form>
+  {series === "atlas-lab" && (
+    <nav class="art-subjects" aria-label="Browse new artwork by subject">
+      {[
+        ["", "All new artwork"],
+        ["Composer tools", "Composer tools"],
+        ["Woodhouse workshop", "Woodhouse"],
+        ["Protocol 11 table concepts", "Protocol 11 tables"],
+        ["Protocol 11 cast", "Protocol 11 cast"],
+        ["LoftwahFM releases", "LoftwahFM releases"],
+        ["Radio show art", "LoftwahFM stations"],
+        ["Bubbles cabinet cast", "Bubbles mascots"],
+        ["Project Plates", "What / Why / How"],
+        ["Fighter roster", "Fighter roster"],
+        ["Storyboards", "Storyboards"]
+      ].map(([value, label]) => (
+        <a
+          href={path(1, category, value === "LoftwahFM releases" ? "release-newest" : "newest", shuffleSeed, value)}
+          aria-current={tag === value ? "page" : undefined}
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+  )}
   {series === "game-rules" && (
     <p class="guide-intro">Learn a first move, then choose a game to find the rest of its rules.</p>
   )}
@@ -431,6 +458,19 @@ const artworkPages = Object.fromEntries(
 </script>
 
 <style>
+  .art-subjects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.85rem;
+    margin-block: 0.5rem 1rem;
+  }
+  .art-subjects a {
+    min-height: 36px;
+    align-content: center;
+  }
+  .art-subjects a[aria-current] {
+    color: var(--accent);
+  }
   .guide-intro {
     margin-block: 1rem;
     max-width: 65ch;

@@ -6,6 +6,7 @@ const dates: Record<string, string> = fileDates;
 export const artworkSorts = [
   ["newest", "Newest files"],
   ["oldest", "Oldest files"],
+  ["release-newest", "Newest releases"],
   ["shuffle", "Shuffle"],
   ["title", "Title A–Z"],
   ["title-desc", "Title Z–A"],
@@ -36,6 +37,10 @@ export function orderArtwork(
     a.title.localeCompare(b.title, "en-AU", { sensitivity: "base" });
   const newest = (a: CampaignItem, b: CampaignItem) => artworkDate(b).localeCompare(artworkDate(a));
   return [...items].sort((a, b) => {
+    if (sort === "release-newest") {
+      return (b.sourceReleasedAt ?? "").localeCompare(a.sourceReleasedAt ?? "") ||
+        newest(a, b) || a.id.localeCompare(b.id);
+    }
     const primary =
       sort === "shuffle"
         ? shuffleRank(seed, a.id) - shuffleRank(seed, b.id)
