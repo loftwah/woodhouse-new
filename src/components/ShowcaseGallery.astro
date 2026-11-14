@@ -178,6 +178,11 @@ const productName = (slug: string) =>
                 ›
               </button>
             </nav>
+            {Boolean(item.versions?.length) && (
+              <button type="button" data-viewer-compare>
+                Compare
+              </button>
+            )}
             <form method="dialog">
               <button aria-label="Close image viewer">Close</button>
             </form>
@@ -314,6 +319,13 @@ const productName = (slug: string) =>
       for (const button of buttons) {
         button.addEventListener("click", () => browse(Number(button.dataset.viewerStep)));
       }
+      dialog.querySelector("[data-viewer-compare]")?.addEventListener("click", () => {
+        const comparison = dialog.querySelector<HTMLDetailsElement>(".viewer-comparison");
+        if (!comparison) return;
+        comparison.open = true;
+        comparison.querySelector<HTMLElement>("summary")?.focus();
+        comparison.scrollIntoView({ block: "center" });
+      });
       dialog.addEventListener("keydown", (event) => {
         if (
           event.defaultPrevented ||
@@ -525,6 +537,11 @@ const productName = (slug: string) =>
     object-fit: contain;
   }
   .viewer-toolbar {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    background: var(--ink);
+    border-block-end: 1px solid var(--line);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -626,6 +643,9 @@ const productName = (slug: string) =>
     }
     .viewer-toolbar h2 {
       font-size: 1.05rem;
+    }
+    .viewer-toolbar {
+      flex-wrap: wrap;
     }
   }
   .showcase-wall.staggered {
