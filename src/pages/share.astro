@@ -286,7 +286,9 @@ const sketchHref = `/share/?${new URLSearchParams({ artType: "sketch", ...(selec
 const earlierHref = `/share/?${new URLSearchParams({ artType: "earlier", ...(selected ? { artProject: selected.slug } : {}) })}`;
 const hasArtFilter =
   ["artType", "artProject", "artFormat", "artTag"].some((key) => Astro.url.searchParams.get(key)) ||
-  ["oldest", "title"].includes(Astro.url.searchParams.get("artSort") ?? "");
+  ["oldest", "title", "title-desc", "largest", "shuffle"].includes(
+    Astro.url.searchParams.get("artSort") ?? ""
+  );
 const showcaseClips = gameMedia.filter(
   (asset) =>
     [

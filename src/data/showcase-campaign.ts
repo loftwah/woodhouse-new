@@ -78,6 +78,7 @@ export type CampaignItem = {
   height: number;
   reviewedAt: string;
   addedAt?: string;
+  fileModifiedAt?: string;
   archived?: true;
   socialPack?: string;
   credit: string;
