@@ -1,10 +1,9 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import ShareLayout from "../../layouts/ShareLayout.astro";
 import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
 import { listProjectRecords } from "../../content/repository";
 import { originals, publicOriginalArtwork } from "../../data/showcase-originals";
 import { foilburyNativeArtwork } from "../../data/showcase-foilbury-native";
-import { shareNavigation } from "../../data/share-browser";
 
 export const prerender = false;
 const result = await listProjectRecords();
@@ -35,11 +34,12 @@ if (scope) {
 }
 ---
 
-<BaseLayout
+<ShareLayout
   title="Original art and drawings"
   description="Download the clean Woodhouse process drawings and original illustrations used in the project campaigns."
   path="/share/originals/"
-  currentPath="/share/"
+  heading={scope ? `${projectNames.get(scope)} originals` : "Originals"}
+  section="originals"
   {...(lead && {
     image: lead.original,
     imageAlt: lead.alt,
@@ -48,33 +48,20 @@ if (scope) {
   })}
 >
   <div class="container originals">
-    <header>
-      <h1>
-        {scope ? `${projectNames.get(scope)} art and drawings.` : "Original art and drawings."}
-      </h1>
-      <nav aria-label="Artwork collections">
-        <a href={shareNavigation("/share/", Astro.url.searchParams)}>Share artwork</a>
-        {currentCards.length > 0 && <a href="#current-card-art">Current card art</a>}
-        {drawings.length > 0 && <a href="#drawings">Clean drawings</a>}
-        {illustrations.length > 0 && <a href="#illustrations">Illustration sources</a>}
-        <a href={shareNavigation("/share/preview/", Astro.url.searchParams)}>Social preview</a>
-      </nav>
-      <nav aria-label="Original artwork by project">
-        <a href="/share/originals/" aria-current={scope ? undefined : "page"}>
-          All projects
-        </a>
-        {[...new Set(originals.map(({ project }) => project))]
+    <form class="original-project" method="get" action="/share/originals/">
+      <label for="original-project">Project</label>
+      <select name="project" id="original-project">
+        <option value="">All projects</option>
+        {[...new Set([...originals.map(({ project }) => project), "foilbury"])]
           .filter((project) => projectNames.has(project))
           .map((project) => (
-            <a
-              href={`/share/originals/?project=${project}`}
-              aria-current={scope === project ? "page" : undefined}
-            >
+            <option value={project} selected={scope === project}>
               {projectNames.get(project)}
-            </a>
+            </option>
           ))}
-      </nav>
-    </header>
+      </select>
+      <button>Apply</button>
+    </form>
     {currentCards.length > 0 && (
       <section id="current-card-art" aria-labelledby="current-card-art-title">
         <h2 id="current-card-art-title">Current Foilbury cabinet art</h2>
@@ -95,11 +82,25 @@ if (scope) {
     )}
     {!lead && <p>No original artwork is available yet.</p>}
   </div>
-</BaseLayout>
+</ShareLayout>
 
 <style>
+  .original-project {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .original-project :is(select, button) {
+    font: inherit;
+    min-height: 44px;
+    padding: 0.35rem 0.65rem;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--line);
+  }
   .originals {
-    padding-block: clamp(2rem, 5vw, 5rem);
+    padding-block: 0 2rem;
   }
   h1 {
     margin: 0;

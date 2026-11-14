@@ -1,16 +1,31 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import ShareActions from "../../components/ShareActions.astro";
+import ShareLayout from "../../layouts/ShareLayout.astro";
+import ShowcaseGallery from "../../components/ShowcaseGallery.astro";
+import type { CampaignItem } from "../../data/showcase-campaign";
 import { creativePlates, resourceReviewDate, resourceSources } from "../../data/creative-resources";
 
 const first = creativePlates[0]!;
+const works: CampaignItem[] = creativePlates.map((plate) => ({
+  ...plate,
+  project: "woodhouse",
+  original: plate.image,
+  image: plate.preview,
+  caption: plate.use,
+  reviewedAt: resourceReviewDate,
+  kind: "editorial composition",
+  credit: "Woodhouse · Codex ImageGen",
+  href: "/share/resources/#project-media",
+  action: "Explore",
+  source: `/share/resources/#prompt-${plate.id}`
+}));
 ---
 
-<BaseLayout
+<ShareLayout
   title="Creative resources"
   description="Original Woodhouse artwork, project media, game and interface assets, and datasets for testing."
   path="/share/resources/"
-  currentPath="/share/"
+  heading={"Creative resources"}
+  section="resources"
   image={first.image}
   imageWidth={first.width}
   imageHeight={first.height}
@@ -18,10 +33,6 @@ const first = creativePlates[0]!;
 >
   <div class="container resource-library">
     <header class="library-intro">
-      <a class="back" href="/share/">
-        Back to the Share gallery
-      </a>
-      <h1>Creative resources</h1>
       <p>
         Grab a background for your next post, find assets for a prototype, or pick a dataset to test
         an import.
@@ -37,40 +48,13 @@ const first = creativePlates[0]!;
 
     <section id="woodhouse-art" aria-labelledby="art-heading">
       <h2 id="art-heading">Original artwork</h2>
-      <div class="plates">
-        {creativePlates.map((plate, index) => (
-          <figure id={plate.id}>
-            <a href={plate.image} aria-label={`View ${plate.title} full size`}>
-              <img
-                src={plate.preview}
-                alt={plate.alt}
-                width={plate.width}
-                height={plate.height}
-                loading={index === 0 ? "eager" : "lazy"}
-                decoding="async"
-              />
-            </a>
-            <figcaption>
-              <h3>{plate.title}</h3>
-              <p>{plate.use}</p>
-              <p class="file-details">
-                Codex ImageGen · PNG · {plate.width} × {plate.height}
-              </p>
-              <ShareActions
-                caption={plate.use}
-                image={plate.image}
-                filename={`${plate.id}.png`}
-                link={`/share/resources/#${plate.id}`}
-                presentation="image"
-              />
-              <details>
-                <summary>Generation prompt</summary>
-                <p>{plate.prompt}</p>
-              </details>
-            </figcaption>
-          </figure>
-        ))}
-      </div>
+      <ShowcaseGallery items={works} compact staggered />
+      {creativePlates.map((plate) => (
+        <details id={`prompt-${plate.id}`}>
+          <summary>{plate.title} generation prompt</summary>
+          <p>{plate.prompt}</p>
+        </details>
+      ))}
     </section>
 
     <section id="project-media" class="resource-section" aria-labelledby="media-heading">
@@ -129,11 +113,11 @@ const first = creativePlates[0]!;
       Source terms reviewed <time datetime={resourceReviewDate}>12 November 2026</time>.
     </p>
   </div>
-</BaseLayout>
+</ShareLayout>
 
 <style>
   .resource-library {
-    padding-block: clamp(2rem, 6vw, 6rem);
+    padding-block: 0 2rem;
   }
   .library-intro h1 {
     max-width: 17ch;

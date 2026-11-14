@@ -5,7 +5,7 @@ import { buildNotesKit } from "../data/showcase-build-notes";
 import { wild25Kit } from "../data/showcase-wild-25";
 import { projectStories50Kit } from "../data/showcase-project-stories-50";
 import { projectStoriesKit } from "../data/showcase-project-stories";
-import { shareNavigation } from "../data/share-browser";
+import { galleryTypes, shareNavigation } from "../data/share-browser";
 import { commissionedKits } from "../data/showcase-commissioned";
 import type { CampaignItem } from "../data/showcase-campaign";
 
@@ -15,7 +15,9 @@ const collectionPacks = {
   "project-stories": { href: projectStoriesKit, label: "Download Project stories kit" }
 };
 const categories = [
-  ["", "All"],
+  ["", "All artwork"],
+  ["screenshot", "Screenshots"],
+  ["clip", "Clips"],
   ["commissioned", "New commissions"],
   ["game-rules", "How to play"],
   ["architecture", "Architecture"],
@@ -143,46 +145,42 @@ const artworkPages = Object.fromEntries(
 
 <div id="artwork" data-artwork-wall data-art-pages={JSON.stringify(artworkPages)}>
   <form class="art-filters" action="/share/" aria-label="Filter artwork">
-    {category && <input type="hidden" name="artType" value={category} />}
     {params.has("qa") && <input type="hidden" name="qa" value={params.get("qa")} />}
     {params.get("analytics") === "off" && <input type="hidden" name="analytics" value="off" />}
     {sort === "shuffle" && <input type="hidden" name="artSeed" value={shuffleSeed} />}
-    <label class="art-sort">
-      <span>Sort by</span>
-      <select name="artSort">
-        {artworkSorts.map(([value, label]) => (
-          <option value={value} selected={value === sort}>
+    <label>
+      <span>Collection</span>
+      <select name="artType">
+        {categories.map(([key, label]) => (
+          <option value={key} selected={category === key}>
             {label}
           </option>
         ))}
       </select>
     </label>
-    <a class="shuffle-link" href={`${shuffle}#artwork`}>
-      <svg
-        aria-hidden="true"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.75"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M3 6h3c4 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c1.7 0 3.2-2.3 4.5-4.8m3-4.4C15 7 16.3 6 18 6h3m-4-4 4 4-4 4" />
-      </svg>
-      {sort === "shuffle" ? "Reshuffle" : "Shuffle"}
-    </a>
-    <details class="art-filter-disclosure" open={Boolean(project || placement || tag)}>
-      <summary>Filters{project || placement || tag ? " · Active" : ""}</summary>
+    <label>
+      <span>Project</span>
+      <select name="artProject">
+        <option value="">All projects</option>
+        {projects.map(({ slug, name }) => (
+          <option value={slug} selected={slug === project}>
+            {name}
+          </option>
+        ))}
+      </select>
+    </label>
+    <button type="submit" class="art-apply">
+      Apply
+    </button>
+    <details class="art-filter-disclosure">
+      <summary>More filters{placement || tag || sort !== "newest" ? " · Active" : ""}</summary>
       <div class="art-filter-fields">
-        <label>
-          <span>Project</span>
-          <select name="artProject">
-            <option value="">All projects</option>
-            {projects.map(({ slug, name }) => (
-              <option value={slug} selected={slug === project}>
-                {name}
+        <label class="art-sort">
+          <span>Sort by</span>
+          <select name="artSort">
+            {artworkSorts.map(([value, label]) => (
+              <option value={value} selected={value === sort}>
+                {label}
               </option>
             ))}
           </select>
@@ -211,33 +209,45 @@ const artworkPages = Object.fromEntries(
             </select>
           </label>
         )}
+        <a class="shuffle-link" href={`${shuffle}#artwork`}>
+          <svg
+            aria-hidden="true"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 6h3c4 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c1.7 0 3.2-2.3 4.5-4.8m3-4.4C15 7 16.3 6 18 6h3m-4-4 4 4-4 4" />
+          </svg>
+          {sort === "shuffle" ? "Reshuffle" : "Shuffle"}
+        </a>
       </div>
     </details>
-    <button type="submit" class="art-apply">
-      Apply
-    </button>
+    <details class="media-formats">
+      <summary>Media kits</summary>
+      <div>
+        {galleryTypes.map(([type, label]) => (
+          <a
+            href={shareNavigation(
+              `/share/?${new URLSearchParams({ type, ...(["images", "clips", "cards", "artwork", "edition"].includes(type) && project && project !== "woodhouse" ? { project } : {}) })}`,
+              params
+            )}
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+    </details>
   </form>
-  <nav class="art-categories" aria-label="Artwork categories">
-    {categories.map(([key, label]) => (
-      <a href={path(1, key)} aria-current={category === key ? "page" : undefined}>
-        {label}
-      </a>
-    ))}
-  </nav>
   {series === "game-rules" && (
     <p class="guide-intro">Learn a first move, then choose a game to find the rest of its rules.</p>
   )}
   {series === "architecture" && (
     <p class="guide-intro">See what each project is made of and where the work happens.</p>
-  )}
-  {pages > 1 && (
-    <nav class="art-page-links" aria-label="Artwork pages">
-      {previous && <a href={`${previous}#artwork`}>Previous page</a>}
-      <span>
-        Page {page} of {pages}
-      </span>
-      {next && <a href={`${next}#artwork`}>Next page</a>}
-    </nav>
   )}
   {buildProjects.length > 0 && (
     <details class="art-previous">
@@ -303,6 +313,7 @@ const artworkPages = Object.fromEntries(
     </div>
   </div>
   <p class="art-pagination">
+    {previous && <a href={`${previous}#artwork`}>Previous page</a>}
     <a href={next || undefined} data-art-next hidden={!next}>
       More artwork
     </a>
@@ -403,26 +414,41 @@ const artworkPages = Object.fromEntries(
     align-items: end;
     margin-block: 0.25rem 0.75rem;
   }
-  .art-filter-disclosure {
-    align-self: end;
+  .art-filter-disclosure,
+  .media-formats {
+    position: relative;
   }
-  .art-filter-disclosure summary {
+  summary {
     min-height: 44px;
     align-content: center;
     cursor: pointer;
   }
-  .art-filter-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-block-end: 0.5rem;
+  .art-filter-fields,
+  .media-formats > div {
+    position: absolute;
+    z-index: 2;
+    inset-block-start: 100%;
+    inset-inline-end: 0;
+    background: var(--ink);
+    border: 1px solid var(--line);
+    padding: 0.75rem;
+    width: min(20rem, 84vw);
+    display: grid;
+    gap: 0.65rem;
+  }
+  .media-formats > div a {
+    min-height: 32px;
+    align-content: center;
   }
   .art-filters label {
     display: grid;
-    gap: 0.25rem;
+    gap: 0.2rem;
     min-width: 0;
     font-size: 0.82rem;
     color: var(--muted);
+  }
+  .art-filters > label select {
+    max-width: min(13rem, 45vw);
   }
   select,
   button {
@@ -434,36 +460,14 @@ const artworkPages = Object.fromEntries(
     padding: 0.45rem 0.55rem;
     font: inherit;
   }
-  .shuffle-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    min-height: 44px;
-    padding-inline: 0.65rem;
-    color: var(--acid);
-    text-underline-offset: 0.22em;
-  }
   button {
     cursor: pointer;
   }
-  .art-categories {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem 1rem;
-    overflow-x: auto;
-    white-space: nowrap;
-    margin-block-end: 1.1rem;
-  }
-  .art-categories a {
+  .shuffle-link {
     display: inline-flex;
     align-items: center;
+    gap: 0.4rem;
     min-height: 44px;
-    color: var(--paper);
-    text-underline-offset: 0.3em;
-  }
-  .art-categories a[aria-current="page"] {
-    color: var(--acid);
   }
   [data-art-batch] + [data-art-batch] {
     margin-top: 1rem;
@@ -472,57 +476,31 @@ const artworkPages = Object.fromEntries(
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem 1.15rem;
-    list-style: none;
     padding: 0;
-    margin-block: 0.65rem;
-  }
-  .art-page-links {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0 1rem;
-    margin-block: 0 0.5rem;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .art-page-links a {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
+    list-style: none;
   }
   .art-pagination {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
     gap: 0.5rem 1.25rem;
-    margin-block: 1.25rem;
+    align-items: center;
     color: var(--muted);
   }
   .art-pagination a {
-    min-height: 44px;
     padding-block: 0.75rem;
   }
-  .art-empty,
-  .art-previous {
-    margin-block: 0.75rem 1rem;
-  }
-  @media (max-width: 550px) {
+  @media (max-width: 600px) {
+    .art-filter-disclosure,
+    .media-formats {
+      position: static;
+    }
     .art-filters {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      position: relative;
     }
-    .art-filter-disclosure {
-      grid-column: 1 / -1;
-      grid-row: 2;
-    }
-    .art-filter-fields label {
-      flex: 1 1 8rem;
-    }
-    .art-apply {
-      grid-column: 1 / -1;
-    }
-    .art-categories {
-      font-size: 0.9rem;
+    .art-filter-fields,
+    .media-formats > div {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
     }
   }
 </style>

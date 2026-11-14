@@ -44,6 +44,7 @@ export type CampaignItem = {
   id: string;
   project: string;
   title: string;
+  video?: string;
   stage?: string;
   subject?: string;
   versions?: readonly CampaignVersion[];
@@ -69,7 +70,9 @@ export type CampaignItem = {
     | "feature"
     | "comparison"
     | "art"
-    | "native";
+    | "native"
+    | "screenshot"
+    | "clip";
   alt: string;
   caption: string;
   image: string;
@@ -82,7 +85,11 @@ export type CampaignItem = {
   archived?: true;
   socialPack?: string;
   credit: string;
-  kind: "editorial composition" | "production screenshot" | "published product artwork";
+  kind:
+    | "editorial composition"
+    | "production screenshot"
+    | "published product artwork"
+    | "published video";
   href: string;
   action: "Play" | "Listen" | "Try" | "Explore";
   source: string;

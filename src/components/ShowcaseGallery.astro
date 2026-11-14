@@ -1,6 +1,7 @@
 ---
 import ShareActions from "./ShareActions.astro";
 import CampaignFormats from "./CampaignFormats.astro";
+import { socialPlacements } from "../data/social-placements";
 import { shareNavigation } from "../data/share-browser";
 import type { campaignItems } from "../data/showcase-campaign";
 import { campaignResponsiveImage } from "../data/showcase-public";
@@ -50,6 +51,8 @@ const imageSizes = (item: (typeof items)[number], index: number) => {
     : `(max-width: 700px) ${mobile}, ${desktop}`;
 };
 const imageSources = (item: (typeof items)[number]) => {
+  if (item.original.startsWith("/share/") || item.video || item.image.startsWith("/share/"))
+    return undefined;
   const image = campaignResponsiveImage(item);
   return `${image.thumbnail} ${image.thumbnailWidth}w, ${item.image} ${image.fullWidth}w`;
 };
@@ -101,7 +104,7 @@ const productName = (slug: string) =>
           decoding="async"
         />
         <span class="view-affordance" aria-hidden="true">
-          View
+          {item.video ? "Play clip" : "View"}
         </span>
       </a>
       <figcaption>
@@ -138,12 +141,14 @@ const productName = (slug: string) =>
           fallbackImage={item.image}
           filename={downloadFor(item).split("/").pop() ?? `${item.id}.jpg`}
           link={item.href}
+          mediaType={item.video ? "video" : "image"}
           presentation="gallery"
         >
           <p class="work-credit">
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
           {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {!item.formats && <a href={item.source}>Source</a>}
           {item.socialPack && (
             <a class="collection-link" href={item.socialPack} download>
               Download social pack
@@ -188,15 +193,36 @@ const productName = (slug: string) =>
             </form>
           </div>
         </div>
-        <img
-          src={item.image}
-          data-viewer-original={item.original}
-          data-viewer-preview={item.image}
-          loading="lazy"
-          alt={item.alt}
-          width={item.width}
-          height={item.height}
-        />
+        {item.video ? (
+          <video
+            controls
+            playsinline
+            preload="none"
+            poster={item.image}
+            width={item.width}
+            height={item.height}
+            aria-label={item.title}
+          >
+            <source src={item.video} type="video/mp4" />
+            <track
+              kind="captions"
+              src={item.video.replace(/\.mp4$/, ".vtt")}
+              srclang="en"
+              label="Sound captions"
+            />
+            <a href={item.video}>Download clip</a>
+          </video>
+        ) : (
+          <img
+            src={item.image}
+            data-viewer-original={item.original}
+            data-viewer-preview={item.image}
+            loading="lazy"
+            alt={item.alt}
+            width={item.width}
+            height={item.height}
+          />
+        )}
         <div class="viewer-caption">
           <p role="status" data-viewer-status></p>
           <p>
@@ -212,6 +238,25 @@ const productName = (slug: string) =>
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
           {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {!item.formats && <a href={item.source}>Source</a>}
+          {item.formats &&
+            socialPlacements.some(({ format }) =>
+              item.formats?.some(({ label }) => label === format)
+            ) && (
+              <a
+                href={shareNavigation(
+                  `/share/preview/?${new URLSearchParams({
+                    art: item.id,
+                    platform: socialPlacements.find(({ format }) =>
+                      item.formats?.some(({ label }) => label === format)
+                    )!.id
+                  })}`,
+                  Astro.url.searchParams
+                )}
+              >
+                Preview social placement
+              </a>
+            )}
           {item.versions?.map((version) => (
             <details class="viewer-comparison">
               <summary>Compare with {version.label.toLowerCase()}</summary>
@@ -267,6 +312,7 @@ const productName = (slug: string) =>
               fallbackImage={item.image}
               filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
               link={item.href}
+              mediaType={item.video ? "video" : "image"}
               presentation="copy"
             />
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
@@ -329,6 +375,8 @@ const productName = (slug: string) =>
       dialog.addEventListener("keydown", (event) => {
         if (
           event.defaultPrevented ||
+          (event.target instanceof Element &&
+            event.target.closest("video, input, select, textarea, [contenteditable]")) ||
           event.altKey ||
           event.ctrlKey ||
           event.metaKey ||
@@ -373,7 +421,27 @@ const productName = (slug: string) =>
           image.src = image.dataset.viewerOriginal;
         }
       });
+      let gesture: { x: number; y: number } | undefined;
+      dialog.addEventListener("pointerdown", (event) => {
+        if (
+          event.pointerType === "touch" &&
+          event.target instanceof Element &&
+          event.target.matches("img[data-viewer-original]")
+        )
+          gesture = { x: event.clientX, y: event.clientY };
+      });
+      dialog.addEventListener("pointercancel", () => {
+        gesture = undefined;
+      });
+      dialog.addEventListener("pointerup", (event) => {
+        if (!gesture || event.pointerType !== "touch") return;
+        const dx = event.clientX - gesture.x;
+        const dy = event.clientY - gesture.y;
+        gesture = undefined;
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) browse(dx > 0 ? -1 : 1);
+      });
       dialog.addEventListener("close", () => {
+        dialog.querySelector("video")?.pause();
         if (!document.querySelector(".art-viewer[open]")) {
           link.focus({ preventScroll: true });
           link.scrollIntoView({ block: "nearest", inline: "nearest" });
@@ -398,6 +466,14 @@ const productName = (slug: string) =>
   });
 </script>
 <style>
+  .art-viewer video {
+    display: block;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+    max-height: 70dvh;
+    background: var(--ink);
+  }
   .viewer-comparison {
     border-block-start: 1px solid var(--line);
     margin-block: 0.75rem;
@@ -530,6 +606,7 @@ const productName = (slug: string) =>
     background: rgb(0 0 0 / 88%);
   }
   .art-viewer > img {
+    touch-action: pan-y pinch-zoom;
     display: block;
     width: 100%;
     height: auto;
