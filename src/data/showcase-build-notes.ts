@@ -3400,7 +3400,7 @@ const art = [
     "foilbury",
     "feature",
     "A finish catches light · Build note",
-    "A finish catches light in a architectural maquette under noon light treatment for Foilbury.",
+    "Sunlight catches a gold-foil Foilbury character and the words ‘Light on Gold’ on a textured paper tag, beside a roll of foil, a leaf stamp and a miniature stone arch.",
     "The cabinet lets you inspect Moss in Plain, Silver, Gold and Diamond. Move the light before judging the finish. The cabinet gives the actual card a place to show what changes.",
     "https://foilbury.loftwah.com/cabinet/moss",
     "Explore",
