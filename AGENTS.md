@@ -60,6 +60,20 @@ For copy, UI text, character writing or artwork briefs, also read the relevant p
 references. Use the source through the existing editorial routine; backend-only work does not
 need the full guide. [#204](https://github.com/loftwah/woodhouse-new/issues/204) tracks adoption.
 
+## Public demos use real project work
+
+Use our real, owned project work for public demos, launch material, social posts
+and live acceptance. Select assets and copy fit for the destination, show the
+actual product or work, and link to its canonical public page. Carry the exact
+asset revision, alt text or captions, source, rights and credits into the
+approval and published result. Apply the same quality standard to a proof as to
+the work we would publish on purpose.
+
+Use synthetic fixtures in isolated automated checks and within products
+explicitly limited to fictional data. Keep existing privacy and publication
+boundaries. [Share catalogue #234](https://github.com/loftwah/woodhouse-new/issues/234) and
+[Composer Share #477](https://github.com/loftwah/app-composer/issues/477) track the Share workflow.
+
 ## Routing and verification — reviewed 16 October 2026
 
 [docs/AGENT_INDEX.md](docs/AGENT_INDEX.md) routes tasks to the existing launch, verification, release and continuation paths. Use the current host's skill catalogue and available tools; a checked-in skill or an upstream example is not evidence it ran here. Apply the delivery contract above when older guidance imposes routine checkpoint stops or duplicated qualification.
