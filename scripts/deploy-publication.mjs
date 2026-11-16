@@ -357,7 +357,6 @@ const preflight = await together({
         verbose: true
       })
     );
-    await timed("migration check", verifyMigrations);
   },
   ...(environment === "production"
     ? {
@@ -368,6 +367,9 @@ const preflight = await together({
       }
     : {})
 });
+// The migration check consumes the manifest emitted by this exact build.
+// Running it in parallel could read a stale manifest or fail on a fresh tree.
+await timed("migration check", verifyMigrations);
 const secretNamesBefore = preflight["secret inventory before deploy"];
 if (environment === "production") {
   await timed("production recovery point", () =>
