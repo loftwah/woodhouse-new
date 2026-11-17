@@ -8,7 +8,7 @@ import { SITE_ORIGIN } from "./site-origin";
 const absolute = (path: string) => new URL(path, SITE_ORIGIN).href;
 const commissions = new Map(commissionManifest.artwork.map((entry) => [entry.original, entry]));
 const identifier = /^[a-z0-9][a-z0-9-]{0,127}$/;
-const filters = ["project", "kind", "orientation", "q", "limit", "after"];
+const filters = ["project", "kind", "orientation", "q", "limit", "after", "view"];
 const kinds = ["editorial composition", "production screenshot", "published product artwork"];
 
 function file(url: string, width?: number, height?: number) {
@@ -31,6 +31,7 @@ function record(item: CampaignItem) {
     kind: item.kind,
     stage: item.stage ?? null,
     use: item.use ?? null,
+    tags: item.tags ?? [],
     reviewedAt: item.reviewedAt,
     credit: item.credit,
     visibility: "public",
@@ -79,9 +80,11 @@ export async function shareCatalogue(params: URLSearchParams, id?: string) {
   const after = params.get("after");
   const q = params.get("q")?.trim().toLowerCase();
   const limit = params.get("limit") ?? "24";
+  const view = params.get("view");
   if (
     (id !== undefined && (!identifier.test(id) || params.size > 0)) ||
     [...params.keys()].some((key) => !filters.includes(key) || params.getAll(key).length !== 1) ||
+    (view !== null && (view !== "gallery" || params.size !== 1)) ||
     (project !== null && !identifier.test(project)) ||
     (after !== null && !identifier.test(after)) ||
     (kind !== null && !kinds.includes(kind)) ||
@@ -103,6 +106,31 @@ export async function shareCatalogue(params: URLSearchParams, id?: string) {
     return item
       ? reply({ version: 1, asset: record(item) })
       : reply({ error: "Asset not found." }, 404);
+  }
+
+  // Public projection for the gallery. Eligibility is evaluated by the
+  // same live publication/source checks as the existing list and detail APIs.
+  if (view === "gallery") {
+    const assets = [...new Map(items.map((item) => [item.id, item])).values()].map((item) => ({
+      id: item.id,
+      project: item.project,
+      title: item.title,
+      alt: item.alt,
+      description: item.caption,
+      kind: item.kind,
+      stage: item.stage ?? null,
+      use: item.use ?? null,
+      tags: item.tags ?? [],
+      reviewedAt: item.reviewedAt,
+      credit: item.credit,
+      visibility: "public",
+      shareUrl: absolute(campaignCollectionPath(item.project)),
+      previewUrl: absolute(item.image),
+      thumbnailUrl: absolute(item.thumbnail ?? item.image),
+      thumbnailWidth: item.width,
+      thumbnailHeight: item.height,
+    }));
+    return reply({ version: 1, assets });
   }
 
   const matches = items.filter(
