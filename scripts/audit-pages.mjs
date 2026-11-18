@@ -22,6 +22,9 @@ if (!/^https?:\/\//.test(origin))
   );
 const focusedPaths = args.filter((arg) => arg.startsWith("--path=")).map((arg) => arg.slice(7));
 if (focusedPaths.length) auditScopeArguments(focusedPaths);
+const documentOnly = args.includes("--document-only");
+if (documentOnly && !focusedPaths.length)
+  throw new Error("--document-only requires an explicit page path.");
 const intervalOption = args.find((arg) => arg.startsWith("--request-interval="));
 const requestInterval = Number(intervalOption?.slice("--request-interval=".length) ?? 0);
 if (!Number.isInteger(requestInterval) || requestInterval < 0 || requestInterval > 1000)
@@ -399,7 +402,9 @@ const linkedPaths = new Set([...linkedFrom].map((link) => new URL(link, origin).
 // linking page. Shared navigation and downloads otherwise repeat the same GET.
 const targetFindings = new Map();
 const pageSet = new Set(pages);
-const uncheckedTargets = [...linkedFrom].filter((target) => !pageSet.has(target));
+const uncheckedTargets = documentOnly
+  ? []
+  : [...linkedFrom].filter((target) => !pageSet.has(target));
 const redirectStatuses = new Set([301, 302, 303, 307, 308]);
 await pool(uncheckedTargets, async (target) => {
   let url = new URL(target, origin);
@@ -506,11 +511,15 @@ if (riskyFallbacks.length)
   );
 
 console.log(
-  `Audited ${checked.length} ${focusedPaths.length ? "selected" : "sitemap"} pages, ${linkedFrom.size} distinct internal link targets, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}. ${riskyAbsent}/${riskyPaths.length} credential paths returned a clean 4xx.`
+  `Audited ${checked.length} ${focusedPaths.length ? "selected" : "sitemap"} pages, ${uncheckedTargets.length} additional internal link targets fetched, ${socialImages.size} same-origin social images and ${titles.size} unique titles at ${origin}. ${riskyAbsent}/${riskyPaths.length} credential paths returned a clean 4xx.`
 );
 if (findings.length) {
   for (const finding of findings) console.error("Page audit failed: " + finding);
   process.exitCode = 1;
 } else {
-  console.log("No broken links, private values or document-structure findings.");
+  console.log(
+    documentOnly
+      ? "No private values or document-structure findings on the selected pages."
+      : "No broken links, private values or document-structure findings."
+  );
 }

@@ -14,9 +14,9 @@ import { publicationAuditScope, auditScopeArguments } from "./publication-audit-
 import { showcasePublication } from "./showcase-publication.mjs";
 
 const root = process.cwd();
-const environment = process.argv.filter((arg) => arg !== "--")[2];
+const [environment, ...releaseArgs] = process.argv.slice(2).filter((arg) => arg !== "--");
 if (!["preview", "production"].includes(environment))
-  throw new Error("Usage: pnpm run deploy:publication -- preview|production");
+  throw new Error("Usage: pnpm run deploy:publication -- preview|production [--require-preview] [--path=/route/ | --full-audit]");
 const targets = {
   preview: {
     worker: "woodhouse-loftwah-preview",
@@ -38,13 +38,14 @@ const targets = {
   }
 };
 const target = targets[environment];
-let auditScope = publicationAuditScope(process.argv.slice(3));
+const requirePreview = releaseArgs.includes("--require-preview");
+if (requirePreview && environment !== "production")
+  throw new Error("--require-preview applies to production only.");
+if (releaseArgs.some((arg) => !["--require-preview", "--full-audit"].includes(arg) && !arg.startsWith("--path=")))
+  throw new Error("Unknown publication option.");
+let auditScope = publicationAuditScope(releaseArgs);
 
-// The owner target is three minutes from change to verified production, five at
-// the outside. A claim about the release path is only worth what the receipt
-// says, so every release records where its own time went. These marks are
-// bookkeeping, not gates: a slow provider upload is reported, never converted
-// into a failed release or a passing one.
+// Record actual wall time, including overlapping work and provider waits.
 const startedAt = Date.now();
 const durations = [];
 async function timed(stage, operation) {
@@ -99,6 +100,8 @@ async function auditPages(origin, scope) {
   // Full production audits saw intermittent failures on public record reads
   // at the default rate. Four requests per second passed the same assertions.
   if (environment === "production" && scope === null) args.push("--request-interval=250");
+  if (environment === "production" && !requirePreview && scope !== null)
+    args.push("--document-only");
   for (let attempt = 1; ; attempt += 1) {
     try {
       await run("pnpm", args, { verbose: true });
@@ -251,7 +254,7 @@ async function verifyPreview() {
   if (!Object.hasOwn(receipt, "auditScope")) throw new Error("Preview audit scope is missing.");
   auditScopeArguments(receipt.auditScope);
   if (
-    process.argv.some((arg) => arg === "--full-audit" || arg.startsWith("--path=")) &&
+    releaseArgs.some((arg) => arg === "--full-audit" || arg.startsWith("--path=")) &&
     JSON.stringify(auditScope) !== JSON.stringify(receipt.auditScope)
   )
     throw new Error("Production audit scope differs from the accepted preview.");
@@ -360,10 +363,8 @@ const preflight = await together({
   },
   ...(environment === "production"
     ? {
-        "main and accepted preview": async () => {
-          await verifyMain();
-          await verifyPreview();
-        }
+        "clean pushed main": verifyMain,
+        ...(requirePreview ? { "accepted preview": verifyPreview } : {})
       }
     : {})
 });
@@ -447,6 +448,7 @@ const manifest = {
   origin: target.origin,
   mode: "read-only",
   auditScope,
+  auditMode: environment === "production" && !requirePreview && auditScope !== null ? "documents" : "links",
   workerVersion,
   sourceDigest,
   gitCommit: identity.identity.gitCommit,

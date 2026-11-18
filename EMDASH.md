@@ -451,9 +451,9 @@ have no jump link; withdrawn projects lose their story and action.
    card. Without one the renderer uses the existing generic Woodhouse art, never
    the first edition's title/date. Keep a dated cover count-free because current
    project admission may differ later. Preserve former card URLs as history.
-6. `pnpm run verify`, reviewed seed-model install on preview then production, and
-   clean pushed-main `deploy:publication -- preview` → `production` retain their
-   normal checks. Verify the live source/content identities and actual reading
+6. Validate the seed, install the reviewed seed model on preview then production, and run
+   `deploy:publication -- preview` followed by `deploy:publication -- production --require-preview`
+   from clean pushed main. Verify the live source/content identities and actual reading
    address. This is a reading release, not editorial activation, MP taste or
    physical-device acceptance.
 

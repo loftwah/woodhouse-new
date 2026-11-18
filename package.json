@@ -52,7 +52,6 @@
     "lab:artifacts": "node lab/artifacts-lifecycle/report.mjs",
     "lab:evidence": "node lab/evidence-replay/report.mjs",
     "test:host-reservation": "python3 -m unittest discover -s scripts -p host_validation_test.py",
-    "verify": "node scripts/verify.mjs",
     "workspace:prune": "node scripts/prune-workspace.mjs",
     "social-cards": "python3 scripts/render-social-cards.py",
     "social-cards:record": "node scripts/social-cards.mjs",
@@ -70,9 +69,7 @@
     "deploy:publication": "node scripts/deploy-publication.mjs",
     "edition:rehearse": "node scripts/rehearse-edition.mjs",
     "showcase:delivery": "node scripts/showcase-delivery.mjs",
-    "test:showcase": "node --test scripts/discord-showcase.test.mjs scripts/showcase-delivery.test.mjs scripts/showcase-publication.test.mjs",
-    "hooks:install": "node scripts/install-git-hooks.mjs",
-    "hooks:check": "node scripts/install-git-hooks.mjs --check"
+    "test:showcase": "node --test scripts/discord-showcase.test.mjs scripts/showcase-delivery.test.mjs scripts/showcase-publication.test.mjs"
   },
   "emdash": {
     "seed": "seed/seed.json"

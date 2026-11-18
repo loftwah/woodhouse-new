@@ -21,7 +21,7 @@ a story is not proof that the public route behaves that way.
 - GitHub owns work state: #16 intelligence, #18 discovery/adoption, #17 audience/value, #19 creative quality, #34 analytics, #54 this delivery improvement. Extend existing work before creating a ticket. Historical founding briefs are background, not a substitute for current accepted requirements.
 - Public tracking configuration: [TRACKING-CONFIG-PILOT.md](TRACKING-CONFIG-PILOT.md) records the read-only method, the observed → inferred → unknown split, and the standing decision not to add a tag manager. Use it as a pre-pitch check, not a scanner.
 - Provider model lifecycles: [MODEL-LIFECYCLE.md](MODEL-LIFECYCLE.md) holds the dated inventory, the verified shutdown dates and where each migration was routed. Recheck it monthly in the #16 intelligence pass, and immediately when a provider announces a retirement.
-- Check costs and the right lane: [VERIFICATION-PATHS.md](VERIFICATION-PATHS.md) has the measured timings and the route per change type. The full local pipeline is ~44 seconds; typecheck and build are 86% of it.
+- Check costs and choose a focused check using [VERIFICATION-PATHS.md](VERIFICATION-PATHS.md).
 - Async request-path work: [ASYNC-WATERFALL-AUDIT.md](ASYNC-WATERFALL-AUDIT.md) records the Woodhouse inventory from #163 — what was parallelised, what is deliberately ordered, and the candidates with exact call sites. Add to it rather than re-deriving the analysis.
 - Stack freshness: [STACK-REFRESH.md](STACK-REFRESH.md) holds the dated before/after versions, the deferred majors with reasons, the advisory review and the Workers compatibility position for #159. Update it in place on each refresh.
 - Codebase structure: [UNTANGLE-CODEBASE.md](UNTANGLE-CODEBASE.md) records the reviewed `untangle-codebase` skill (`.agents/skills/untangle-codebase/`), the decision log from #168 and the fixes still owed. Add to it rather than starting a parallel audit.
@@ -106,9 +106,9 @@ method to its own product; retired projects stay outside that rollout.
 
 | Work | Existing path and proof |
 | --- | --- |
-| Local source change | `pnpm install --frozen-lockfile`, then `pnpm dev` on an explicitly owned port. `pnpm run verify` is the complete local pipeline. Focused `node --test scripts/<name>.test.mjs` or `node --experimental-strip-types --test src/<path>.test.ts` supplies quick feedback, followed by required checks. |
+| Local source change | `pnpm install --frozen-lockfile`, then `pnpm dev` on an explicitly owned port. Run a focused check for the changed behaviour. |
 | Inspect a running instance | `pnpm run verify:build -- <origin>` reads `/build.json`; compare its source fingerprint/environment with the intended tree. `pnpm run verify:content -- preview\|production` checks the CMS model independently. HTTP 200 alone proves neither. |
-| Public reading release | Follow [ARCHITECTURE.md's publication path](../ARCHITECTURE.md#public-publication-and-editorial-activation): `pnpm run deploy:publication -- preview --path=/affected/route/`, then production from clean pushed main and the same accepted source. Repeat `--path` for affected journeys; use `--full-audit` for broad shared changes. Production inherits the preview scope. The script builds, verifies content/boundaries, audits the selected pages, records the Worker and checks active traffic. Do not use the full editorial path merely to publish reading surfaces. |
+| Public reading release | From clean pushed main, run `pnpm run deploy:publication -- production --path=/affected/route/`. Use the isolated preview and `--require-preview` for changes that need rehearsal. See [verification and release paths](VERIFICATION-PATHS.md). |
 | Full editorial activation | `pnpm run deploy:preview`, `pnpm run release:status`, then `pnpm run deploy` only after the actual acceptance/recovery observations in [EMDASH.md](../EMDASH.md#full-editorial-production-deployment-gate). `evidence:capture` collects observations; `evidence:record` records an asserted pass, never decides one. Each check binds to the exact preview source, URL and Worker. Old unbound checks must be repeated, not relabelled. |
 | Reader journey | Drive the actual route and native controls with available browser tools. Check phone/desktop when visuals change. For discovery, follow a dossier's source link into its product; for activity, change a product/date/measure and inspect unavailable states. Use the existing `?analytics=off` measurement exclusion before automated interaction; do not manufacture public activity. `audit:pages -- <origin>` proves page structure/privacy, not visual quality or physical sharing. |
 | Retain and clean | Store bounded private logs, screenshots and exact source/environment identity under ignored `output/` or `.release/`. Stop only servers/browser sessions created by this run, remove owned scratch fixtures, and confirm the evidence survives. Preserve other worktrees, captures and browser/session data. For idle release checkouts, `pnpm run workspace:prune -- --builds-only --apply` clears rebuildable output. `pnpm run workspace:prune` reports what is past retention; add `-- --apply` to delete, `-- --builds` to include build output. Policy and measured sizes: [WORKSPACE-HYGIENE.md](WORKSPACE-HYGIENE.md). |
@@ -116,66 +116,9 @@ method to its own product; retired projects stay outside that rollout.
 
 ## Shared local validation capacity
 
-Reviewed 6 November 2026: `pnpm run verify -- --quick` runs lint and the
-focused tests. `pnpm run verify` also validates the seed, typechecks and builds;
-the build includes the privacy scan. Tests run at concurrency two to limit host
-load. The host reservation is held only for typecheck and build. Use
-`--light`, `--heavy`, or `--stage <script>` for a focused lane; a split run is
-not a combined release receipt. Follow the publication or editorial path for
-release-specific evidence.
-
-MP requested a much smaller routine suite on 6 November 2026. Removed tests
-covered presentation and copy, static content, implementation details, and
-completed lab experiments; routine verification also stopped enforcing format,
-dead-code, generated-asset freshness, dependency-audit, local Doctor, lab and
-host-reservation checks on every change. Those checks previously guarded style,
-unused code, asset drift, dependency review, schema wiring and scheduler process
-races; relevant existing commands remain available for work in those areas.
-The retained tests cover privacy and consent, publication boundaries, safe
-image fetching, credentials and enquiries, release evidence and identity, and
-R2 recovery. This is a deliberate reduction in automated regression coverage.
-
-The slot is host resource arbitration, not repository ownership. It does not
-make two builds in one worktree safe: one writer still owns integration and
-deployment, and `pnpm run build` or a release script must not run beside
-`pnpm run verify` in the same worktree.
-
-The public-safe implementation lives in `scripts/host-validation.py`; consumers
-vendor identical bytes rather than build another scheduler. Python 3 with POSIX
-`fcntl` is required; no package or service is installed. Ordinary editing and
-focused unit checks remain independent.
-
-FIFO kernel-locked tickets establish order. Owner/project, operation, source,
-heartbeat and generation are stored only under
-`~/.local/state/loftwah/validation-v1/` with private permissions. A waiter names
-the holder and stops after one hour; expiration never steals live ownership.
-The persistent lock inode must not be removed. Admission and source/release
-checks remain each project's responsibility after acquisition.
-
-A quarantine blocks handover until ownership is proved. The wait diagnostic
-names the generation, how many recorded or lineage-marked processes survive and
-whether the completion record exists. `python3 scripts/host-validation.py
---recover` clears it only when the capacity lock is free and nothing from that
-generation survives; otherwise it refuses and reports what is still live. Never
-delete `capacity.lock` or `queue.lock`, never kill an unrelated process, and
-never relabel a live reservation.
-
-Participating commands must own their subprocess lifetime and call
-`completeHostValidation()` after cleanup, including failure/cancellation paths.
-Descendants must preserve the inherited `LOFTWAH_VALIDATION_LINEAGE` UUID chain.
-This finds owned jobs across detach, reparenting and supervisor crashes; unrelated
-processes are excluded. Only the marker is extracted in memory, never raw
-arguments or environment variables in diagnostics. Missing acknowledgements,
-corrupt journals or surviving owned children block handover. Pre-launch identities
-persist for crash recovery. Fatal cleanup uncertainty quarantines capacity rather
-than killing unrelated processes or guessing from a stale heartbeat. This is a
-cooperative contract, not a sandbox for hostile commands clearing their markers.
-Do not nest reservations.
-Direct commands, interactive browsers and nonparticipating tools remain outside
-the reservation; normal safety measurements are still required. Run
-`pnpm run test:host-reservation` for real process-race/cancellation/crash tests.
-Issue #91 owns adoption and handover evidence; its duplicate #92 is reconciled.
-Private project diagnostics must never enter this public repository or issue.
+Reviewed 18 November 2026. Use direct, focused checks. One writer owns each worktree's build output.
+The shared `scripts/host-validation.py` remains available to projects that need host capacity
+arbitration. Issue #91 owns adoption and recovery evidence.
 
 ## Handoff and continuation
 

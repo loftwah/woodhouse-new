@@ -120,9 +120,16 @@ export function scanPublicText(
   value,
   { privateValues = [], includeMarkers = true, includePatterns = false } = {}
 ) {
-  const text = Buffer.isBuffer(value) ? value.toString("utf8") : String(value);
+  // Markers and token patterns use ASCII. A one-byte string preserves those
+  // bytes and their word boundaries in media without decoding gigabytes as UTF-8.
+  // Configured non-ASCII literals still require the original UTF-8 semantics.
+  const needsUtf8 = privateValues.some(
+    (secret) => typeof secret === "string" && /[^\x00-\x7f]/.test(secret)
+  );
+  const text = Buffer.isBuffer(value) ? value.toString(needsUtf8 ? "utf8" : "latin1") : String(value);
   const findings = [];
-  if (PRIVATE_EMAIL.test(text)) findings.push("private email address");
+  if (/@deanlofts\.xyz/i.test(text) && PRIVATE_EMAIL.test(text))
+    findings.push("private email address");
   for (const privateValue of privateValues) {
     if (
       typeof privateValue === "string" &&
