@@ -44,6 +44,7 @@ if (requirePreview && environment !== "production")
 if (releaseArgs.some((arg) => !["--require-preview", "--full-audit"].includes(arg) && !arg.startsWith("--path=")))
   throw new Error("Unknown publication option.");
 let auditScope = publicationAuditScope(releaseArgs);
+const routine = environment === "production" && !requirePreview && auditScope !== null;
 
 // Record actual wall time, including overlapping work and provider waits.
 const startedAt = Date.now();
@@ -100,8 +101,7 @@ async function auditPages(origin, scope) {
   // Full production audits saw intermittent failures on public record reads
   // at the default rate. Four requests per second passed the same assertions.
   if (environment === "production" && scope === null) args.push("--request-interval=250");
-  if (environment === "production" && !requirePreview && scope !== null)
-    args.push("--document-only");
+  if (routine) args.push("--document-only");
   for (let attempt = 1; ; attempt += 1) {
     try {
       await run("pnpm", args, { verbose: true });
@@ -142,9 +142,7 @@ async function verifySecretNames() {
     throw Error("Required Worker secret names are missing.");
   return [...names].sort();
 }
-const sourceDigest = await computeSourceDigest(root);
 const checks = [];
-const seed = JSON.parse(await readFile(path.join(root, "seed/seed.json"), "utf8"));
 
 async function verifyServedContent(origin, identity) {
   const response = await fetch(origin + "/agents/facts.json", {
@@ -227,19 +225,22 @@ async function verifyBoundary(origin) {
   checks.push("CMS, previews, mutations and enquiry form are disabled");
 }
 
-async function verifyMain() {
+async function cleanHead() {
   if ((await run("git", ["status", "--porcelain"])).trim())
     throw new Error("Production requires a clean reviewed tree.");
   if ((await run("git", ["branch", "--show-current"])).trim() !== "main")
     throw new Error("Production publication must be built from main.");
-  await run("git", ["fetch", "origin", "main"]);
-  const [head, remoteMain] = (await run("git", ["rev-parse", "HEAD", "origin/main"]))
-    .trim()
-    .split("\n");
-  if (head !== remoteMain) throw new Error("Production publication must match origin/main.");
+  return (await run("git", ["rev-parse", "HEAD"])).trim();
 }
 
-async function verifyPreview() {
+async function verifyMain(expectedCommit) {
+  await run("git", ["fetch", "origin", "main"]);
+  const remoteMain = (await run("git", ["rev-parse", "origin/main"])).trim();
+  if (expectedCommit !== remoteMain)
+    throw new Error("Production publication must match origin/main.");
+}
+
+async function verifyPreview(sourceDigest) {
   const receipt = JSON.parse(
     await readFile(path.join(root, ".release/publication-preview.json"), "utf8")
   );
@@ -345,7 +346,11 @@ async function verifyMigrations() {
     throw new Error("Core migrations must already be clean; publication does not apply them.");
 }
 
+const expectedCommit = environment === "production" ? await timed("clean main", cleanHead) : null;
+const seed = JSON.parse(await readFile(path.join(root, "seed/seed.json"), "utf8"));
+const fingerprint = computeSourceDigest(root);
 const preflight = await together({
+  "source fingerprint": () => fingerprint,
   build: () =>
     run("pnpm", ["run", environment === "production" ? "build" : "build:preview"], {
       verbose: true
@@ -363,8 +368,12 @@ const preflight = await together({
   },
   ...(environment === "production"
     ? {
-        "clean pushed main": verifyMain,
-        ...(requirePreview ? { "accepted preview": verifyPreview } : {})
+        "remote main": () => verifyMain(expectedCommit),
+        "production recovery point": () =>
+          run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { verbose: true }),
+        ...(requirePreview
+          ? { "accepted preview": async () => verifyPreview(await fingerprint) }
+          : {})
       }
     : {})
 });
@@ -372,11 +381,7 @@ const preflight = await together({
 // Running it in parallel could read a stale manifest or fail on a fresh tree.
 await timed("migration check", verifyMigrations);
 const secretNamesBefore = preflight["secret inventory before deploy"];
-if (environment === "production") {
-  await timed("production recovery point", () =>
-    run("pnpm", ["run", "backup:d1:bookmark", "--", "production"], { verbose: true })
-  );
-}
+const sourceDigest = preflight["source fingerprint"];
 const configPath = path.join(root, "dist/server/wrangler.json");
 const config = JSON.parse(await readFile(configPath, "utf8"));
 const db = config.d1_databases?.find((entry) => entry.binding === "DB");
@@ -399,12 +404,17 @@ if (
 )
   throw new Error("Publication manifest does not match the configured environment.");
 config.vars.WOODHOUSE_PUBLICATION_MODE = "read-only";
+// Keep local maps for diagnosis and skip sending them in routine publication.
+if (routine) config.upload_source_maps = false;
 // An unaccepted scheduler must not run, even when the runtime handler would refuse it.
 // Analytics-only schedule never invokes CMS maintenance or authoring.
 config.triggers = { crons: environment === "production" ? ["17 * * * *"] : [] };
 await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
-if ((await computeSourceDigest(root)) !== sourceDigest)
-  throw new Error("Source changed during preflight; rebuild before uploading.");
+const sourceChanged =
+  environment === "production"
+    ? (await cleanHead()) !== expectedCommit
+    : (await computeSourceDigest(root)) !== sourceDigest;
+if (sourceChanged) throw new Error("Source changed during preflight; rebuild before uploading.");
 const deployment = await timed("upload and deploy", () =>
   run("pnpm", [
     "exec",
@@ -417,7 +427,7 @@ const deployment = await timed("upload and deploy", () =>
   ])
 );
 for (const line of deployment.split(/\r?\n/)) {
-  if (/^(Uploaded |Deployed |Current Version ID:)/.test(line)) console.log(line);
+  if (/^(Uploaded |Deployed |Current Version ID:|No updated asset files)/.test(line)) console.log(line);
 }
 const workerVersion = /Current Version ID:\s*([a-f0-9-]{36})/i.exec(deployment)?.[1];
 if (!workerVersion) throw new Error("Wrangler did not return the deployed Worker version.");
@@ -427,17 +437,22 @@ const identity = await timed("build identity", () =>
     expectedEnvironment: environment
   })
 );
-if (!identity.ok || (environment === "production" && identity.identity?.gitClean !== true))
+if (
+  !identity.ok ||
+  (expectedCommit &&
+    (identity.identity?.gitClean !== true || identity.identity?.gitCommit !== expectedCommit))
+)
   throw new Error("The deployed origin does not report the intended reviewed build.");
 const verified = await together({
   "served content": () => verifyServedContent(target.origin, identity.identity),
   "publication boundary": () => verifyBoundary(target.origin),
-  "secret inventory": verifySecretNames
+  "secret inventory": verifySecretNames,
+  ...(routine ? { "page audit": () => auditPages(target.origin, auditScope) } : {})
 });
 const secretNames = verified["secret inventory"];
 // Leave the crawler isolated from the other origin probes so they cannot add
 // load to the public record reads during a sitemap-wide audit.
-await timed("page audit", () => auditPages(target.origin, auditScope));
+if (!routine) await timed("page audit", () => auditPages(target.origin, auditScope));
 // The audit can retry; check traffic last so a replaced version cannot earn a receipt.
 await timed("active traffic", () => verifyActiveVersion(target.worker, workerVersion));
 const directory = path.join(root, ".release");
@@ -448,7 +463,7 @@ const manifest = {
   origin: target.origin,
   mode: "read-only",
   auditScope,
-  auditMode: environment === "production" && !requirePreview && auditScope !== null ? "documents" : "links",
+  auditMode: routine ? "documents" : "links",
   workerVersion,
   sourceDigest,
   gitCommit: identity.identity.gitCommit,

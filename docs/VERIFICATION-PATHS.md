@@ -27,7 +27,8 @@ pnpm run deploy:publication -- production --path=/affected/route/
 This builds once with the artifact privacy scan, checks production data, bindings, migrations and
 secrets, records the D1 recovery point, then uploads once. The live check proves exact source,
 active Worker traffic, served content, the read-only boundary, and the selected documents,
-social images and credential paths. Link crawling is available via `pnpm run audit:pages` or
+social images and credential paths. Source maps stay in the local build for routine publication.
+Live stack traces use compiled locations. Link crawling is available via `pnpm run audit:pages` or
 `--full-audit` when the changed behaviour requires a sitemap-wide check.
 
 For changes requiring preview acceptance, run the existing two-environment path.
