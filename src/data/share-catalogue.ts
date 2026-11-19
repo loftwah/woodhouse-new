@@ -32,8 +32,13 @@ function file(url: string, width?: number, height?: number) {
   };
 }
 
-function record(item: CampaignItem) {
+function originalFile(item: CampaignItem) {
   const master = item.formats?.find((format) => format.image === item.original);
+  const commission = commissions.get(item.original);
+  return file(item.original, master?.width ?? commission?.width, master?.height ?? commission?.height);
+}
+
+function record(item: CampaignItem) {
   const commission = commissions.get(item.original);
   return {
     id: item.id,
@@ -55,11 +60,7 @@ function record(item: CampaignItem) {
     thumbnailUrl: absolute(item.thumbnail ?? item.image),
     sourceUrl: absolute(item.source),
     original: {
-      ...file(
-        item.original,
-        master?.width ?? commission?.width,
-        master?.height ?? commission?.height
-      ),
+      ...originalFile(item),
       sha256: commission?.sha256 ?? null,
       version: commission?.version ?? null,
       parent: commission?.parent ?? null
@@ -137,6 +138,7 @@ export async function shareCatalogue(params: URLSearchParams, id?: string) {
       shareUrl: absolute(campaignCollectionPath(item.project)),
       previewUrl: absolute(item.image),
       thumbnailUrl: absolute(item.thumbnail ?? item.image),
+      original: originalFile(item),
       thumbnailWidth: item.width,
       thumbnailHeight: item.height,
     }));
