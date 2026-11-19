@@ -45,8 +45,9 @@ const categories = [
 type Props = {
   works: CampaignItem[];
   projects: { slug: string; name: string }[];
+  catalogueIds: ReadonlySet<string>;
 };
-const { works, projects } = Astro.props;
+const { works, projects, catalogueIds } = Astro.props;
 const params = Astro.url.searchParams;
 const maxSearchLength = 120;
 const search = (params.get("artQ") ?? "").slice(0, maxSearchLength).trim();
@@ -445,6 +446,7 @@ const artworkPages = Object.fromEntries(
         minimal
         showPlacement={Boolean(placement)}
         placement={placement}
+        catalogueIds={catalogueIds}
       />
     </div>
   </div>
