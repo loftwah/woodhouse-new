@@ -15,6 +15,7 @@ import { projectActionHref, projectActionLabel } from "../../data/project-action
 import { defaultProjectType } from "../../data/share-browser";
 import { projectCaption } from "../../data/share-desk";
 import { liveProjectArtwork } from "../../data/live-project-artwork";
+import { catalogueAssetIds } from "../../data/share-catalogue";
 
 export const prerender = false;
 const result = await listProjectRecords();
@@ -24,13 +25,13 @@ if (result.error)
     headers: { "cache-control": "private, no-store" }
   });
 const slug = Astro.params.slug ?? "";
+const slugs = result.projects.map((entry) => entry.slug);
 const recordedProject = result.projects.find((entry) => entry.slug === slug);
 const project = recordedProject ? await liveProjectArtwork(recordedProject) : undefined;
-const items = publicCampaignItems(result.projects.map((entry) => entry.slug)).filter(
-  (item) => item.project === slug
-);
+const items = publicCampaignItems(slugs).filter((item) => item.project === slug);
 if (!project && (slug !== "woodhouse" || !items.length))
   return new Response("Gallery not found.", { status: 404 });
+const catalogueIds = items.length ? catalogueAssetIds(slugs) : undefined;
 if (Astro.cache?.enabled) for (const hint of result.cacheHints) Astro.cache.set(hint);
 const name = project?.name ?? "Woodhouse";
 const projectHref = project ? projectActionHref(project) : "/";
@@ -172,11 +173,17 @@ const hostOf = (href: string) => {
       </section>
     ) : (
       <>
-        <ShowcaseGallery items={currentItems} compact staggered />
+        <ShowcaseGallery items={currentItems} compact staggered catalogueIds={catalogueIds} />
         {archivedItems.length > 0 && (
           <section class="earlier-artwork" aria-labelledby="earlier-artwork-title">
             <h2 id="earlier-artwork-title">Earlier artwork</h2>
-            <ShowcaseGallery items={archivedItems} compact staggered eager={false} />
+            <ShowcaseGallery
+              items={archivedItems}
+              compact
+              staggered
+              eager={false}
+              catalogueIds={catalogueIds}
+            />
           </section>
         )}
       </>
