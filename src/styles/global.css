@@ -3830,3 +3830,23 @@ body {
     font-size: 1rem;
   }
 }
+
+/* A doubled root font makes the masthead's brand and tools each wider than a
+   320px content box. Wrap them into two rows and keep the disclosure panel in
+   flow: its absolute 15rem panel otherwise hangs off the left of the screen. */
+@media (max-width: 360px) {
+  .site-header__inner {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .brand {
+    min-width: 0;
+  }
+  .site-header__tools {
+    margin-inline-start: auto;
+  }
+  .mobile-index nav {
+    position: static;
+    min-width: 0;
+  }
+}

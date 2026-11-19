@@ -828,4 +828,12 @@ const productName = (slug: string) =>
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
+  /* Enlarged text needs the full measure for a title: two narrow tracks made
+     long captions overflow. One column keeps every work at its authored size. */
+  @media (max-width: 360px) {
+    .showcase-wall.staggered {
+      grid-template-columns: minmax(0, 1fr);
+      overflow-wrap: anywhere;
+    }
+  }
 </style>

@@ -420,4 +420,18 @@ const hostOf = (href: string) => {
       max-height: none;
     }
   }
+  /* With enlarged text the fixed 132px thumbnail and an unbreakable hostname
+     cannot share a 320px line. Stack the preview and let the address wrap so
+     the one link stays whole and its artwork stays large. */
+  @media (max-width: 360px) {
+    .work-card__unfurl {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .work-card__unfurl img {
+      width: 100%;
+    }
+    .work-card__unfurl small {
+      overflow-wrap: anywhere;
+    }
+  }
 </style>
