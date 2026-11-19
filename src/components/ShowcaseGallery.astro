@@ -13,6 +13,7 @@ type Props = {
   eager?: boolean;
   showPlacement?: boolean;
   placement?: string;
+  catalogueIds?: ReadonlySet<string>;
 };
 const {
   items,
@@ -21,8 +22,10 @@ const {
   staggered = false,
   eager = true,
   showPlacement = false,
-  placement
+  placement,
+  catalogueIds
 } = Astro.props;
+const catalogueHref = (id: string) => `/api/v1/assets/${encodeURIComponent(id)}`;
 const containerWidth = "min(calc(100vw - clamp(2.5rem, 8vw, 9rem)), 1440px)";
 const imageSizes = (item: (typeof items)[number], index: number) => {
   if (staggered) {
@@ -124,6 +127,11 @@ const productName = (slug: string) =>
           <p class="work-placement">
             {formatFor(item)?.label} · {formatFor(item)?.width} × {formatFor(item)?.height}
           </p>
+        )}
+        {catalogueIds?.has(item.id) && (
+          <a class="collection-link catalogue-link" href={catalogueHref(item.id)}>
+            Catalogue record (JSON)
+          </a>
         )}
         {!minimal && item.stage && (
           <p class="process-note">
@@ -332,6 +340,11 @@ const productName = (slug: string) =>
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
               Project gallery
             </a>
+            {catalogueIds?.has(item.id) && (
+              <a class="catalogue-link" href={catalogueHref(item.id)}>
+                Catalogue record (JSON)
+              </a>
+            )}
           </div>
         </div>
       </dialog>

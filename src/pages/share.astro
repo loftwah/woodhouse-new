@@ -9,6 +9,7 @@ import {
   campaignSocial,
   campaignCollectionPath
 } from "../data/showcase-public";
+import { catalogueAssetIds } from "../data/share-catalogue";
 import EditionShareKit from "../components/EditionShareKit.astro";
 import EditionShareAssets from "../components/EditionShareAssets.astro";
 import { editionShareAssets } from "../data/edition-share-kit";
@@ -297,6 +298,10 @@ const artwork = [
   )
 ];
 const featuredSocial = campaignSocial(featuredCampaign);
+// Only cards with a real public catalogue record get the hand-off link.
+const catalogueIds = result.error
+  ? new Set<string>()
+  : catalogueAssetIds(result.projects.map(({ slug }) => slug));
 const effectivePath = showcase
   ? selected
     ? campaignCollectionPath(selected.slug)
@@ -329,6 +334,7 @@ const selectedSocial = selected ? socialCardFor(selected) : null;
       <ShareArtworkWall
         works={artwork}
         projects={[...projects, { slug: "woodhouse", name: "Woodhouse" }]}
+        catalogueIds={catalogueIds}
       />
     ) : (
       <div id="archive">

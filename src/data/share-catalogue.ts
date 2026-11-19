@@ -11,6 +11,19 @@ const identifier = /^[a-z0-9][a-z0-9-]{0,127}$/;
 const filters = ["project", "kind", "orientation", "q", "limit", "after", "view"];
 const kinds = ["editorial composition", "production screenshot", "published product artwork"];
 
+/** The published records shared by the list, detail and gallery projections. */
+function catalogueItems(slugs: string[]): CampaignItem[] {
+  return [
+    ...publicCampaignItems(slugs),
+    ...publicOriginalArtwork(new Set(slugs)).map(({ item }) => item)
+  ];
+}
+
+/** Stable IDs with a public catalogue record; the gallery links only these. */
+export function catalogueAssetIds(slugs: string[]): Set<string> {
+  return new Set(catalogueItems(slugs).map(({ id }) => id).filter((id) => identifier.test(id)));
+}
+
 function file(url: string, width?: number, height?: number) {
   return {
     url: absolute(url),
@@ -97,10 +110,7 @@ export async function shareCatalogue(params: URLSearchParams, id?: string) {
   const result = await listProjectRecords();
   if (result.error) return reply({ error: "The catalogue is unavailable." }, 503);
   const slugs = result.projects.map(({ slug }) => slug);
-  const items: CampaignItem[] = [
-    ...publicCampaignItems(slugs),
-    ...publicOriginalArtwork(new Set(slugs)).map(({ item }) => item)
-  ];
+  const items: CampaignItem[] = catalogueItems(slugs);
   if (id !== undefined) {
     const item = items.find((entry) => entry.id === id);
     return item
