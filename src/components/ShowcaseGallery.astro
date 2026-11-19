@@ -235,8 +235,27 @@ const productName = (slug: string) =>
             height={item.height}
           />
         )}
-        <div class="viewer-caption">
+        <div class="viewer-file">
           <p role="status" data-viewer-status></p>
+          <div class="viewer-file-actions">
+            <a href={item.original} data-viewer-download download>
+              {item.video ? "Download clip" : "Download original"}
+            </a>
+            <ShareActions
+              caption={item.caption}
+              image={item.original}
+              shareSource={item.formats ? item.original : item.image}
+              fallbackImage={item.image}
+              filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
+              link={item.href}
+              mediaType={item.video ? "video" : "image"}
+              presentation="copy"
+            />
+          </div>
+          {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
+          {!item.formats && <a href={item.source}>Source</a>}
+        </div>
+        <div class="viewer-caption">
           <p>
             {item.stage && <strong>{item.stage} · </strong>}
             {item.issue ? item.caption.split("\n")[0] : item.caption}
@@ -249,8 +268,6 @@ const productName = (slug: string) =>
           <p class="work-credit">
             {item.kind} · {item.credit} · {item.reviewedAt}
           </p>
-          {item.formats && <CampaignFormats formats={item.formats} source={item.source} />}
-          {!item.formats && <a href={item.source}>Source</a>}
           {item.formats &&
             socialPlacements.some(({ format }) =>
               item.formats?.some(({ label }) => label === format)
@@ -324,19 +341,6 @@ const productName = (slug: string) =>
             <a class="product-action" href={shareNavigation(item.href, Astro.url.searchParams)}>
               {item.action} {item.subject ?? productName(item.project)}
             </a>
-            <a href={item.original} data-viewer-download download>
-              {item.video ? "Download clip" : "Download original"}
-            </a>
-            <ShareActions
-              caption={item.caption}
-              image={item.original}
-              shareSource={item.formats ? item.original : item.image}
-              fallbackImage={item.image}
-              filename={item.original.split("/").pop() ?? `${item.id}.jpg`}
-              link={item.href}
-              mediaType={item.video ? "video" : "image"}
-              presentation="copy"
-            />
             <a href={shareNavigation(`/share/${item.project}/`, Astro.url.searchParams)}>
               Project gallery
             </a>
@@ -692,6 +696,29 @@ const productName = (slug: string) =>
   .viewer-caption p {
     margin-block: 0.5rem;
     max-width: 75ch;
+  }
+  .viewer-file {
+    padding: 0.75rem 1rem;
+    border-block-end: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .viewer-file [role="status"] {
+    margin: 0 0 0.35rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .viewer-file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1rem;
+  }
+  .viewer-file-actions > a[data-viewer-download] {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--acid);
+    font-weight: 650;
   }
   .viewer-actions {
     display: flex;
