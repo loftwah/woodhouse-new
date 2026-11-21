@@ -4,6 +4,12 @@ The Loftwah Software Factory.
 
 Woodhouse is an evidence-led public observatory, engineering journal, project portfolio and professional record for the software factory operated by Dean Lofts.
 
+## Legacy and successor
+
+Woodhouse is the origin of [App Composer](https://github.com/loftwah/app-composer), which grew from its ideas about project-aware agents, the software factory, evidence-led delivery and a coherent portfolio. **App Composer has succeeded Woodhouse as the active creation, orchestration, project intelligence, CI/CD and SRE platform.** New shared work belongs there or in the appropriate independent project, not in a second Woodhouse implementation.
+
+Woodhouse remains here deliberately: it is a working piece of the Loftwah story, a historical/public reference and a source of reusable lessons. The operational instructions below describe this repository's own implementation and are retained for reference; they do not grant Woodhouse authority over current App Composer projects. Preserve the existing project and its history. Migrate only proven capabilities that App Composer actually needs, verify replacement paths first and avoid breaking existing public links or content.
+
 ## Product surface
 
 - The factory floor presents an explicitly dated portfolio snapshot.
