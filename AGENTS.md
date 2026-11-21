@@ -1,5 +1,9 @@
 # Agent instructions
 
+## Preservation mode and App Composer succession — owner direction, 2026/11/21 (Australia/Melbourne AEDT, UTC+11; 2026/11/21 UTC)
+
+[App Composer](https://github.com/loftwah/app-composer) grew from Woodhouse and is now the active home for shared project/portfolio coordination, agent workflows, CI/CD, SRE and product operations. Woodhouse remains available as its own project, public record and historical origin, not as an active portfolio authority. Do not open new shared-platform work here or make Composer depend on this repository. Preserve the website, source, public URLs and evidence; make only necessary repairs, historical corrections or explicitly authorised maintenance. Move useful concepts and capabilities to the appropriate active owner only after verifying their need and safe replacement. The operating procedures below describe how this preserved repository was built and are not instructions to resume general Woodhouse feature development.
+
 ## Routine change-to-production service target — current owner direction
 
 **Two minutes maximum for routine delivery, reviewed 18 November 2026.** Measure from the first relevant change or the start of qualification, whichever comes first, through the verified live result. Focused checks, review, push, build, upload and live verification share that budget. The clock stays with the change across handoffs and retries.
